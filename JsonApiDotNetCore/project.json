@@ -6,6 +6,9 @@
     "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
     "Microsoft.Extensions.Localization.Abstractions": "1.0.0",
     "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.Extensions.Logging": "1.0.0",
+    "Microsoft.Extensions.Logging.Console": "1.0.0",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "System.ComponentModel.TypeConverter": "4.1.0"
   },
   "frameworks": {

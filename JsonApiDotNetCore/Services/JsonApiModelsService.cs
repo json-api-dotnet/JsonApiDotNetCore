@@ -12,7 +12,6 @@ namespace JsonApiDotNetCore.Services
         public void HandleJsonApiRoute(string route)
         {
             var modelType = _jsonApiModelConfiguration.GetTypeForRoute(route);
-            // TODO:
         }
     }
 }
