@@ -26,7 +26,7 @@ app.UseJsonApi();
   - [ ] POST /{namespace}/{entities}/
   - [ ] PUT /{namespace}/{entities}/{id}
   - [ ] DELETE /{namespace}/{entities}/{id}
-  - [ ] PATCH /{namespace}/{entities}/{id}
+  - [ ] ? PATCH /{namespace}/{entities}/{id}
 - [ ] Check to see if there is a controller override specified (interface vs. abstract vs. concrete controller), if so call the override methods instead
 - [ ] End the request pipeline
 
