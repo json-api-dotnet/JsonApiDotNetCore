@@ -9,9 +9,10 @@ namespace JsonApiDotNetCore.Middleware
       private readonly RequestDelegate _next;
       private readonly ILogger _logger;
 
-      public JsonApiMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
+      public JsonApiMiddleware(RequestDelegate next, ILogger<JsonApiMiddleware> logger)
       {
           _next = next;
+          _logger = logger;
       }
 
       public async Task Invoke(HttpContext context)
