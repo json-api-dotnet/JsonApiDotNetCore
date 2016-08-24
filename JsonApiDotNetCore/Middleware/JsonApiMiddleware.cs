@@ -26,13 +26,17 @@ namespace JsonApiDotNetCore.Middleware
 
       public async Task Invoke(HttpContext context)
       {
-        _logger.LogInformation("Handling request: " + context.Request.Path);
+        _logger.LogInformation("Passing request to JsonApiService: " + context.Request.Path);
 
-        _jsonApiService.HandleJsonApiRoute(context, _serviceProvider);
+        var wasHandled = _jsonApiService.HandleJsonApiRoute(context, _serviceProvider);
 
-        await _next.Invoke(context);
-
-        _logger.LogInformation("Finished handling request.");
+        if(!wasHandled) {
+          _logger.LogInformation("Request not handled by JsonApiService. Middleware pipeline continued.");
+          await _next.Invoke(context);
+        }
+        else {
+          _logger.LogInformation("Request handled by JsonApiService. Middleware pipeline terminated.");
+        }
       }
   }
 }
