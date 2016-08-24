@@ -53,13 +53,13 @@ namespace JsonApiDotNetCore.Services
           if (string.IsNullOrEmpty(resourceId))
           {
             var result = controller.Get();
-            result.Value = SerializeResponse(jsonApiContext, result.Value);
+            result.Value = SerializeResponse(context, jsonApiContext, result.Value);
             SendResponse(context, result);
           }
           else
           {
             var result = controller.Get(resourceId);
-            result.Value = SerializeResponse(jsonApiContext, result.Value);
+            result.Value = SerializeResponse(context, jsonApiContext, result.Value);
             SendResponse(context, result);
           }
           break;
@@ -77,12 +77,12 @@ namespace JsonApiDotNetCore.Services
       }
     }
 
-    private string SerializeResponse(JsonApiContext context, object resultValue)
+    private string SerializeResponse(HttpContext context, JsonApiContext jsonApiContext, object resultValue)
     {
       var response = new JsonApiDocument
       {
-        Links =
-        Data = GetJsonApiDocumentData(context, resultValue)
+        Links = GetJsonApiDocumentLinks(context, jsonApiContext),
+        Data = GetJsonApiDocumentData(jsonApiContext, resultValue)
       };
 
       return JsonConvert.SerializeObject(response, new JsonSerializerSettings
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCore.Services
       {
         {
           "self",
-          RouteBuilder.BuildRoute(context.Request.Host.Host, _jsonApiModelConfiguration.Namespace,
+          RouteBuilder.BuildRoute(context.Request.Scheme, context.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
             jsonApiContext.Route.ContextPropertyName.ToCamelCase())
         }
       };

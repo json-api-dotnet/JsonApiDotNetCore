@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Configuration
 {
   public class JsonApiModelConfiguration : IJsonApiModelConfiguration
   {
-    private string _namespace;
+    public string Namespace;
     private readonly List<Route> _routes = new List<Route>();
 
     public IMapper ResourceMaps;
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Configuration
 
     public void SetDefaultNamespace(string ns)
     {
-      _namespace = ns;
+      Namespace = ns;
     }
 
     public void DefineResourceMapping(MapperConfiguration mapperConfiguration)
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Configuration
           var route = new Route
           {
             ModelType = modelType,
-            PathString = RouteBuilder.BuildRoute(_namespace, property.Name),
+            PathString = RouteBuilder.BuildRoute(Namespace, property.Name),
             ContextPropertyName = property.Name
           };
 
@@ -76,7 +76,5 @@ namespace JsonApiDotNetCore.Configuration
       }
       return null;
     }
-
-
   }
 }

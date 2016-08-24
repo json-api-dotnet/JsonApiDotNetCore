@@ -2,9 +2,9 @@
 {
   public static class RouteBuilder
   {
-    public static string BuildRoute(string hostname, string nameSpace, string modelRouteName)
+    public static string BuildRoute(string protocol, string host, string nameSpace, string modelRouteName)
     {
-      return $"{hostname}/{nameSpace}/{modelRouteName}";
+      return $"{protocol}://{host}/{nameSpace}/{modelRouteName}";
     }
     public static string BuildRoute(string nameSpace, string modelRouteName)
     {
