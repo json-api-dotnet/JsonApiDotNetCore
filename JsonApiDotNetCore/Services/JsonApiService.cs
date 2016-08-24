@@ -139,8 +139,8 @@ namespace JsonApiDotNetCore.Services
     private static void SendResponse(HttpContext context, ObjectResult result)
     {
       context.Response.StatusCode = result.StatusCode ?? 500;
-      context.Response.WriteAsync(result.Value.ToString());
       context.Response.ContentType = "application/vnd.api+json";
+      context.Response.WriteAsync(result.Value.ToString());
       context.Response.Body.Flush();
     }
 
@@ -166,7 +166,7 @@ namespace JsonApiDotNetCore.Services
       jsonApiContext.Route.Model.GetProperties().Where(propertyInfo => propertyInfo.GetMethod.IsVirtual).ToList().ForEach(
         virtualProperty =>
         {
-          relationships.Add(virtualProperty.Name, GetRelationshipLinks(jsonApiContext, resource, virtualProperty.Name));
+          relationships.Add(virtualProperty.Name, GetRelationshipLinks(jsonApiContext, resource, virtualProperty.Name.ToCamelCase()));
         });
       return relationships;
     }

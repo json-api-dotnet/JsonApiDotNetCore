@@ -42,6 +42,7 @@ namespace JsonApiDotNetCoreExample
               config.DefineResourceMapping(new MapperConfiguration(cfg =>
               {
                 cfg.CreateMap<TodoItem, TodoItemResource>();
+                cfg.CreateMap<Person, PersonResource>();
               }));
             });
         }

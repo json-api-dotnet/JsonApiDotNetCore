@@ -1,15 +1,15 @@
+using System.Collections.Generic;
 using JsonApiDotNetCore.Attributes;
 using JsonApiDotNetCoreExample.Resources;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-  [JsonApiResource(typeof(TodoItemResource))]
-  public class TodoItem
+  [JsonApiResource(typeof(PersonResource))]
+  public class Person
   {
     public int Id { get; set; }
     public string Name { get; set; }
 
-    public int PersonId { get; set; }
-    public virtual Person Owner { get; set; }
+    public virtual List<TodoItem> TodoItems { get; set; }
   }
 }

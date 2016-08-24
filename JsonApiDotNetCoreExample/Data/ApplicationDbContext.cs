@@ -10,5 +10,6 @@ namespace JsonApiDotNetCoreExample.Data
     { }
 
     public DbSet<TodoItem> TodoItems { get; set; }
+    public DbSet<Person> People { get; set; }
   }
 }
