@@ -23,7 +23,9 @@ namespace JsonApiDotNetCore.Services
 
     public object Get(string id)
     {
-      return (GetDbSetFromContext(Route.ContextPropertyName) as IQueryable<IModel>)?.FirstOrDefault(x => x.Id.ToString() == id);
+      // HACK: I _believe_ by casting to IEnumerable, we are loading all records into memory there has to be a better way...
+      //        Also, we are making a BIG assumption that the resource has an attribute Id and not ResourceId which is allowed by EF
+      return (GetDbSetFromContext(Route.ContextPropertyName) as IEnumerable<dynamic>)?.FirstOrDefault(x => x.Id.ToString() == id);
     }
 
     private object GetDbSetFromContext(string propName)
