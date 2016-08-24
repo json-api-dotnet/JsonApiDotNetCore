@@ -138,6 +138,7 @@ namespace JsonApiDotNetCore.Services
     {
       context.Response.StatusCode = result.StatusCode ?? 500;
       context.Response.WriteAsync(result.Value.ToString());
+      context.Response.ContentType = "application/vnd.api+json";
       context.Response.Body.Flush();
     }
 
