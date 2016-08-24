@@ -13,6 +13,7 @@ using JsonApiDotNetCore.Attributes;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.JsonApi;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -113,7 +114,7 @@ namespace JsonApiDotNetCore.Services
     {
       return new JsonApiDatum
       {
-        Type = context.Route.ContextPropertyName,
+        Type = context.Route.ContextPropertyName.ToCamelCase(),
         Id = resource.Id,
         Attributes = GetAttributesFromResource(resource)
       };
