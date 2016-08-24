@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
-using JsonApiDotNetCore.Abstractions;
-using JsonApiDotNetCore.Attributes;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +12,10 @@ namespace JsonApiDotNetCore.Configuration
   public class JsonApiModelConfiguration : IJsonApiModelConfiguration
   {
     public string Namespace;
-    private readonly List<RouteDefinition> _routes = new List<RouteDefinition>();
-
     public IMapper ResourceMaps;
-
     public Type ContextType { get; set; }
+
+    private readonly List<RouteDefinition> _routes = new List<RouteDefinition>();
 
     public void SetDefaultNamespace(string ns)
     {

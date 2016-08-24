@@ -15,6 +15,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.JsonApi;
 using JsonApiDotNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -121,7 +122,8 @@ namespace JsonApiDotNetCore.Services
         Type = context.Route.RouteDefinition.ContextPropertyName.ToCamelCase(),
         Id = resource.Id,
         Attributes = GetAttributesFromResource(resource),
-        Links = GetJsonApiDatumLinks(context, resource)
+        Links = GetJsonApiDatumLinks(context, resource),
+        Relationships = BuildRelationshipsObject(context, resource)
       };
     }
 
@@ -147,28 +149,33 @@ namespace JsonApiDotNetCore.Services
       var request = jsonApiContext.HttpContext.Request;
       var route = jsonApiContext.Route;
 
-      var links = new Dictionary<string, string>
-      {
-        {
-          "self",
-          RouteBuilder.BuildRoute(request.Scheme, request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
-            route.RouteDefinition.ContextPropertyName.ToCamelCase(), route.ResourceId)
-        }
-      };
-      return links;
+      return DocumentBuilder.BuildSelfLink(request.Scheme, request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
+        route.RouteDefinition.ContextPropertyName.ToCamelCase(), route.ResourceId);
     }
 
     private Dictionary<string, string> GetJsonApiDatumLinks(JsonApiContext jsonApiContext, IJsonApiResource resource)
     {
-      var links = new Dictionary<string, string>
-      {
+      return DocumentBuilder.BuildSelfLink(jsonApiContext.HttpContext.Request.Scheme,
+        jsonApiContext.HttpContext.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
+        jsonApiContext.Route.RouteDefinition.ContextPropertyName.ToCamelCase(), resource.Id);
+    }
+
+    private Dictionary<string, object> BuildRelationshipsObject(JsonApiContext jsonApiContext, IJsonApiResource resource)
+    {
+      var relationships = new Dictionary<string, object>();
+      jsonApiContext.Route.Model.GetProperties().Where(propertyInfo => propertyInfo.GetMethod.IsVirtual).ToList().ForEach(
+        virtualProperty =>
         {
-          "self",
-          RouteBuilder.BuildRoute(jsonApiContext.HttpContext.Request.Scheme, jsonApiContext.HttpContext.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
-            jsonApiContext.Route.RouteDefinition.ContextPropertyName.ToCamelCase(), resource.Id)
-        }
-      };
-      return links;
+          relationships.Add(virtualProperty.Name, GetRelationshipLinks(jsonApiContext, resource, virtualProperty.Name));
+        });
+      return relationships;
+    }
+
+    private Dictionary<string, string> GetRelationshipLinks(JsonApiContext jsonApiContext, IJsonApiResource resource, string relationshipName)
+    {
+      return DocumentBuilder.BuildRelationshipLinks(jsonApiContext.HttpContext.Request.Scheme,
+        jsonApiContext.HttpContext.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
+        jsonApiContext.Route.RouteDefinition.ContextPropertyName.ToCamelCase(), resource.Id, relationshipName);
     }
   }
 }
