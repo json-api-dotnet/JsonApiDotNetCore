@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Services
 {
     public static class IServiceCollectionExtensions
     {
-        public static void AddJsonApiDotNetCore(this IServiceCollection services, Action<IJsonApiModelConfiguration> configurationAction)
+        public static void AddJsonApi(this IServiceCollection services, Action<IJsonApiModelConfiguration> configurationAction)
         {
             var config = new JsonApiModelConfiguration();
             configurationAction.Invoke(config);

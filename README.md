@@ -1,11 +1,17 @@
 # JSON API .Net Core
 
+JSON API Spec Conformance: **Non Conforming**
+
 ## Usage
 
-- Confiure the service:
+- Configure the service:
 
 ```
-services.AddJsonApiDotNetCore(config => {
+services.AddDbContext<ApplicationDbContext>(options =>
+  options.UseNpgsql(Configuration["Data:ConnectionString"]),
+  ServiceLifetime.Transient);
+
+services.AddJsonApi(config => {
   config.UseContext<ApplicationDbContext>();
   config.SetDefaultNamespace("api/v1");
 });
@@ -17,16 +23,8 @@ services.AddJsonApiDotNetCore(config => {
 app.UseJsonApi();
 ```
 
+## Current Assumptions
 
-## TODO
-
-- Middleware should check whether or not the route has been configured and create the controller instance
-  - [ ] GET /{namespace}/{entities}/
-  - [ ] GET /{namespace}/{entities}/{id}
-  - [ ] POST /{namespace}/{entities}/
-  - [ ] PUT /{namespace}/{entities}/{id}
-  - [ ] DELETE /{namespace}/{entities}/{id}
-  - [ ] ? PATCH /{namespace}/{entities}/{id}
-- [ ] Check to see if there is a controller override specified (interface vs. abstract vs. concrete controller), if so call the override methods instead
-- [ ] End the request pipeline
-
+- Using Entity Framework
+- All entities in the specified context should have controllers
+- All entities are served from the same namespace (i.e. 'api/v1')

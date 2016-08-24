@@ -6,19 +6,16 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Attributes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using JsonApiDotNetCore.Controllers;
 
 namespace JsonApiDotNetCore.Services
 {
     public class JsonApiModelConfiguration : IJsonApiModelConfiguration
     {
         private string _namespace;
-        private Dictionary<string, Type> _routes;
-        private Type _contextType;
-
-        public JsonApiModelConfiguration()
-        {
-          _routes = new Dictionary<string, Type>();
-        }
+        private List<Route> _routes = new List<Route>();
+        public Type ContextType { get; set; }
 
         public void SetDefaultNamespace(string ns)
         {
@@ -27,31 +24,50 @@ namespace JsonApiDotNetCore.Services
 
         public void UseContext<T>()
         {
-          _contextType = typeof(T);
+          // TODO: assert the context is of type DbContext
+          ContextType = typeof(T);
           LoadModelRoutesFromContext();
         }
 
-        public Type GetTypeForRoute(string route)
-        {
-            Type t;
-            return _routes.TryGetValue(route, out t) ? t : null;;
-        }
-
-        public void LoadModelRoutesFromContext()
+        private void LoadModelRoutesFromContext()
         {
           // Assumption: all DbSet<> types should be included in the route list
-          var properties = _contextType.GetProperties().ToList();
+          var properties = ContextType.GetProperties().ToList();
+
           properties.ForEach(property => {
-            if(property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)) {
+            if(property.PropertyType.GetTypeInfo().IsGenericType &&
+              property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)) {
+
               var modelType = property.PropertyType.GetGenericArguments()[0];
-              _routes.Add(BuildRoute(modelType), modelType);
+
+              var route = new Route {
+                ModelType = modelType,
+                PathString = BuildRoute(modelType),
+                ContextPropertyName = property.Name
+              };
+
+              _routes.Add(route);
             }
           });
         }
 
+        public ControllerMethodIdentifier GetControllerMethodIdentifierForRoute(PathString route, string requestMethod)
+        {
+          PathString remainingPathString;
+
+          foreach(Route rte in _routes)
+          {
+            if(route.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
+            {
+              return new ControllerMethodIdentifier(rte.ModelType, requestMethod, remainingPathString, rte);
+            }
+          }
+          return null;
+        }
+
         private string BuildRoute(Type type)
         {
-          return $"{_namespace}/{GetModelRouteName(type)}";
+          return $"/{_namespace}/{GetModelRouteName(type)}";
         }
 
         private string GetModelRouteName(Type type)
