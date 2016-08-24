@@ -1,27 +1,23 @@
-using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using JsonApiDotNetCore.Controllers;
 using System.Linq;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services
 {
   public class JsonApiContext
   {
-    private object _dbContext;
-    private Route _route;
+    private readonly object _dbContext;
+    public Route Route;
 
     public JsonApiContext(Route route, object dbContext)
     {
-      _route = route;
+      Route = route;
       _dbContext = dbContext;
     }
 
     public List<object> Get()
     {
-      return (GetDbSetFromContext(_route.ContextPropertyName) as IEnumerable<object>).ToList();
+      return (GetDbSetFromContext(Route.ContextPropertyName) as IEnumerable<object>).ToList();
     }
 
     private object GetDbSetFromContext(string propName)
