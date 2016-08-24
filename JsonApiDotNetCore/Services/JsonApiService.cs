@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Services
     private void CallControllerMethod(Route route, HttpContext context)
     {
       var dbContext = _serviceProvider.GetService(_jsonApiModelConfiguration.ContextType);
-      var jsonApiContext = new JsonApiContext(route, dbContext);
+      var jsonApiContext = new JsonApiContext(context, route, dbContext);
       var controller = new JsonApiController(context, jsonApiContext);
 
       switch (route.RequestMethod)
@@ -52,13 +52,13 @@ namespace JsonApiDotNetCore.Services
           if (string.IsNullOrEmpty(route.ResourceId))
           {
             var result = controller.Get();
-            result.Value = SerializeResponse(context, jsonApiContext, result.Value);
+            result.Value = SerializeResponse(jsonApiContext, result.Value);
             SendResponse(context, result);
           }
           else
           {
             var result = controller.Get(route.ResourceId);
-            result.Value = SerializeResponse(context, jsonApiContext, result.Value);
+            result.Value = SerializeResponse(jsonApiContext, result.Value);
             SendResponse(context, result);
           }
           break;
@@ -76,11 +76,11 @@ namespace JsonApiDotNetCore.Services
       }
     }
 
-    private string SerializeResponse(HttpContext context, JsonApiContext jsonApiContext, object resultValue)
+    private string SerializeResponse(JsonApiContext jsonApiContext, object resultValue)
     {
       var response = new JsonApiDocument
       {
-        Links = GetJsonApiDocumentLinks(context, jsonApiContext),
+        Links = GetJsonApiDocumentLinks(jsonApiContext),
         Data = GetJsonApiDocumentData(jsonApiContext, resultValue)
       };
 
@@ -114,13 +114,14 @@ namespace JsonApiDotNetCore.Services
       return (IJsonApiResource)_jsonApiModelConfiguration.ResourceMaps.Map(entity, entity.GetType(), type);
     }
 
-    private static JsonApiDatum ResourceToJsonApiDatum(JsonApiContext context, IJsonApiResource resource)
+    private JsonApiDatum ResourceToJsonApiDatum(JsonApiContext context, IJsonApiResource resource)
     {
       return new JsonApiDatum
       {
         Type = context.Route.RouteDefinition.ContextPropertyName.ToCamelCase(),
         Id = resource.Id,
-        Attributes = GetAttributesFromResource(resource)
+        Attributes = GetAttributesFromResource(resource),
+        Links = GetJsonApiDatumLinks(context, resource)
       };
     }
 
@@ -140,14 +141,30 @@ namespace JsonApiDotNetCore.Services
       context.Response.Body.Flush();
     }
 
-    private Dictionary<string, string> GetJsonApiDocumentLinks(HttpContext context, JsonApiContext jsonApiContext)
+    private Dictionary<string, string> GetJsonApiDocumentLinks(JsonApiContext jsonApiContext)
+    {
+      var request = jsonApiContext.HttpContext.Request;
+      var route = jsonApiContext.Route;
+
+      var links = new Dictionary<string, string>
+      {
+        {
+          "self",
+          RouteBuilder.BuildRoute(request.Scheme, request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
+            route.RouteDefinition.ContextPropertyName.ToCamelCase(), route.ResourceId)
+        }
+      };
+      return links;
+    }
+
+    private Dictionary<string, string> GetJsonApiDatumLinks(JsonApiContext jsonApiContext, IJsonApiResource resource)
     {
       var links = new Dictionary<string, string>
       {
         {
           "self",
-          RouteBuilder.BuildRoute(context.Request.Scheme, context.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
-            jsonApiContext.Route.RouteDefinition.ContextPropertyName.ToCamelCase(), jsonApiContext.Route.ResourceId)
+          RouteBuilder.BuildRoute(jsonApiContext.HttpContext.Request.Scheme, jsonApiContext.HttpContext.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
+            jsonApiContext.Route.RouteDefinition.ContextPropertyName.ToCamelCase(), resource.Id)
         }
       };
       return links;

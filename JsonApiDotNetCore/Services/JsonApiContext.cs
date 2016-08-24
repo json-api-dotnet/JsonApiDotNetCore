@@ -3,16 +3,20 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
 {
   public class JsonApiContext
   {
-    private readonly object _dbContext;
-    public Route Route;
+    public HttpContext HttpContext { get; set; }
+    public Route Route { get; set; }
 
-    public JsonApiContext(Route route, object dbContext)
+    private readonly object _dbContext;
+
+    public JsonApiContext(HttpContext httpContext, Route route, object dbContext)
     {
+      HttpContext = httpContext;
       Route = route;
       _dbContext = dbContext;
     }
