@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using JsonApiDotNetCore.JsonApi;
 using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
