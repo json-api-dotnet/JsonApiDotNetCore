@@ -7,6 +7,7 @@ using AutoMapper;
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Attributes;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,7 +55,7 @@ namespace JsonApiDotNetCore.Configuration
           var route = new Route
           {
             ModelType = modelType,
-            PathString = BuildRoute(property.Name),
+            PathString = RouteBuilder.BuildRoute(_namespace, property.Name),
             ContextPropertyName = property.Name
           };
 
@@ -76,9 +77,6 @@ namespace JsonApiDotNetCore.Configuration
       return null;
     }
 
-    private string BuildRoute(string modelRouteName)
-    {
-      return $"/{_namespace}/{modelRouteName}";
-    }
+
   }
 }

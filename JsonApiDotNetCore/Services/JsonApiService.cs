@@ -15,6 +15,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.JsonApi;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Routing;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -80,6 +81,7 @@ namespace JsonApiDotNetCore.Services
     {
       var response = new JsonApiDocument
       {
+        Links =
         Data = GetJsonApiDocumentData(context, resultValue)
       };
 
@@ -137,6 +139,19 @@ namespace JsonApiDotNetCore.Services
       context.Response.StatusCode = result.StatusCode ?? 500;
       context.Response.WriteAsync(result.Value.ToString());
       context.Response.Body.Flush();
+    }
+
+    private Dictionary<string, string> GetJsonApiDocumentLinks(HttpContext context, JsonApiContext jsonApiContext)
+    {
+      var links = new Dictionary<string, string>
+      {
+        {
+          "self",
+          RouteBuilder.BuildRoute(context.Request.Host.Host, _jsonApiModelConfiguration.Namespace,
+            jsonApiContext.Route.ContextPropertyName.ToCamelCase())
+        }
+      };
+      return links;
     }
   }
 }
