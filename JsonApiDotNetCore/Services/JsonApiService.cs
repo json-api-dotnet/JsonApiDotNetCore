@@ -14,7 +14,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.JsonApi;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Routing;
 
 namespace JsonApiDotNetCore.Services
@@ -33,24 +32,24 @@ namespace JsonApiDotNetCore.Services
     {
       _serviceProvider = serviceProvider;
 
-      var route = context.Request.Path;
-      var requestMethod = context.Request.Method;
-      var controllerMethodIdentifier = _jsonApiModelConfiguration.GetControllerMethodIdentifierForRoute(route, requestMethod);
-      if (controllerMethodIdentifier == null) return false;
-      CallControllerMethod(controllerMethodIdentifier, context);
+      var route = _jsonApiModelConfiguration.GetRouteForRequest(context.Request);
+      if (route == null) return false;
+
+      CallControllerMethod(route, context);
+
       return true;
     }
 
-    private void CallControllerMethod(ControllerMethodIdentifier controllerMethodIdentifier, HttpContext context)
+    private void CallControllerMethod(Route route, HttpContext context)
     {
       var dbContext = _serviceProvider.GetService(_jsonApiModelConfiguration.ContextType);
-      var jsonApiContext = new JsonApiContext(controllerMethodIdentifier.Route, dbContext);
+      var jsonApiContext = new JsonApiContext(route, dbContext);
       var controller = new JsonApiController(context, jsonApiContext);
-      var resourceId = controllerMethodIdentifier.GetResourceId();
-      switch (controllerMethodIdentifier.RequestMethod)
+
+      switch (route.RequestMethod)
       {
         case "GET":
-          if (string.IsNullOrEmpty(resourceId))
+          if (string.IsNullOrEmpty(route.ResourceId))
           {
             var result = controller.Get();
             result.Value = SerializeResponse(context, jsonApiContext, result.Value);
@@ -58,7 +57,7 @@ namespace JsonApiDotNetCore.Services
           }
           else
           {
-            var result = controller.Get(resourceId);
+            var result = controller.Get(route.ResourceId);
             result.Value = SerializeResponse(context, jsonApiContext, result.Value);
             SendResponse(context, result);
           }
@@ -67,13 +66,13 @@ namespace JsonApiDotNetCore.Services
           controller.Post(null);
           break;
         case "PUT":
-          controller.Put(resourceId, null);
+          controller.Put(route.ResourceId, null);
           break;
         case "DELETE":
-          controller.Delete(resourceId);
+          controller.Delete(route.ResourceId);
           break;
         default:
-          throw new ArgumentException("Request method not supported", nameof(controllerMethodIdentifier));
+          throw new ArgumentException("Request method not supported", nameof(route));
       }
     }
 
@@ -119,7 +118,7 @@ namespace JsonApiDotNetCore.Services
     {
       return new JsonApiDatum
       {
-        Type = context.Route.ContextPropertyName.ToCamelCase(),
+        Type = context.Route.RouteDefinition.ContextPropertyName.ToCamelCase(),
         Id = resource.Id,
         Attributes = GetAttributesFromResource(resource)
       };
@@ -148,7 +147,7 @@ namespace JsonApiDotNetCore.Services
         {
           "self",
           RouteBuilder.BuildRoute(context.Request.Scheme, context.Request.Host.ToString(), _jsonApiModelConfiguration.Namespace,
-            jsonApiContext.Route.ContextPropertyName.ToCamelCase())
+            jsonApiContext.Route.RouteDefinition.ContextPropertyName.ToCamelCase(), jsonApiContext.Route.ResourceId)
         }
       };
       return links;

@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Configuration
   public class JsonApiModelConfiguration : IJsonApiModelConfiguration
   {
     public string Namespace;
-    private readonly List<Route> _routes = new List<Route>();
+    private readonly List<RouteDefinition> _routes = new List<RouteDefinition>();
 
     public IMapper ResourceMaps;
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
 
           var modelType = property.PropertyType.GetGenericArguments()[0];
 
-          var route = new Route
+          var route = new RouteDefinition
           {
             ModelType = modelType,
             PathString = RouteBuilder.BuildRoute(Namespace, property.Name),
@@ -64,14 +64,14 @@ namespace JsonApiDotNetCore.Configuration
       });
     }
 
-    public ControllerMethodIdentifier GetControllerMethodIdentifierForRoute(PathString route, string requestMethod)
+    public Route GetRouteForRequest(HttpRequest request)
     {
       foreach (var rte in _routes)
       {
         PathString remainingPathString;
-        if (route.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
+        if (request.Path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
         {
-          return new ControllerMethodIdentifier(rte.ModelType, requestMethod, remainingPathString, rte);
+          return new Route(rte.ModelType, request.Method, remainingPathString, rte);
         }
       }
       return null;

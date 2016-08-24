@@ -1,8 +1,8 @@
 using System;
 
-namespace JsonApiDotNetCore.Abstractions
+namespace JsonApiDotNetCore.Routing
 {
-  public class Route
+  public class RouteDefinition
   {
     public Type ModelType { get; set; }
     public string PathString { get; set; }

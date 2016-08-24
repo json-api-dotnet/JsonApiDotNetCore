@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Abstractions;
+using JsonApiDotNetCore.Routing;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -18,14 +19,14 @@ namespace JsonApiDotNetCore.Services
 
     public List<object> Get()
     {
-      return (GetDbSetFromContext(Route.ContextPropertyName) as IEnumerable<object>)?.ToList();
+      return (GetDbSetFromContext(Route.RouteDefinition.ContextPropertyName) as IEnumerable<object>)?.ToList();
     }
 
     public object Get(string id)
     {
       // HACK: I _believe_ by casting to IEnumerable, we are loading all records into memory there has to be a better way...
       //        Also, we are making a BIG assumption that the resource has an attribute Id and not ResourceId which is allowed by EF
-      return (GetDbSetFromContext(Route.ContextPropertyName) as IEnumerable<dynamic>)?.FirstOrDefault(x => x.Id.ToString() == id);
+      return (GetDbSetFromContext(Route.RouteDefinition.ContextPropertyName) as IEnumerable<dynamic>)?.FirstOrDefault(x => x.Id.ToString() == id);
     }
 
     private object GetDbSetFromContext(string propName)
