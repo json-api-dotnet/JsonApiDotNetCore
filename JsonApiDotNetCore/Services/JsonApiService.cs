@@ -57,7 +57,9 @@ namespace JsonApiDotNetCore.Services
           }
           else
           {
-            controller.Get(resourceId);
+            var result = controller.Get(resourceId);
+            result.Value = SerializeResponse(jsonApiContext, result.Value);
+            SendResponse(context, result);
           }
           break;
         case "POST":

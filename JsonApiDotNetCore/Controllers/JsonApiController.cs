@@ -22,9 +22,10 @@ namespace JsonApiDotNetCore.Controllers
       return new OkObjectResult(entities);
     }
 
-    public IActionResult Get(string id)
+    public ObjectResult Get(string id)
     {
-      return new OkResult();
+      var entity = _jsonApiContext.Get(id);
+      return new OkObjectResult(entity);
     }
 
     public IActionResult Post(object entity)
