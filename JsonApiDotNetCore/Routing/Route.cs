@@ -22,12 +22,7 @@ namespace JsonApiDotNetCore.Routing
 
     private void SetResourceId()
     {
-      if(RemainingPath.HasValue)
-      {
-        ResourceId = RemainingPath.ToUriComponent().Trim('/');
-      }
-      ResourceId = null;
+      ResourceId = RemainingPath.HasValue ? RemainingPath.ToUriComponent().Trim('/') : null;
     }
-
   }
 }
