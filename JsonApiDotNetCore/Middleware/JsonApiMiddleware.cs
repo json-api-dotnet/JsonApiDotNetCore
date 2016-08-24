@@ -28,15 +28,23 @@ namespace JsonApiDotNetCore.Middleware
       {
         _logger.LogInformation("Passing request to JsonApiService: " + context.Request.Path);
 
-        var wasHandled = _jsonApiService.HandleJsonApiRoute(context, _serviceProvider);
+        if(context.Request.ContentType == "application/vnd.api+json") {
+          var wasHandled = _jsonApiService.HandleJsonApiRoute(context, _serviceProvider);
+        }
+        else
+        {
+          _logger.LogInformation("Content-Type invalid for JsonAPI");
 
-        if(!wasHandled) {
-          _logger.LogInformation("Request not handled by JsonApiService. Middleware pipeline continued.");
           await _next.Invoke(context);
+
+          RespondUnsupportedMediaType(context);
         }
-        else {
-          _logger.LogInformation("Request handled by JsonApiService. Middleware pipeline terminated.");
-        }
+      }
+
+      private void RespondUnsupportedMediaType(HttpContext context)
+      {
+        context.Response.StatusCode = 415;
+        context.Response.Body.Flush();
       }
   }
 }
