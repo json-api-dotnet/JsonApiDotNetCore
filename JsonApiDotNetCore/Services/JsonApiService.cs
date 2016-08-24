@@ -14,14 +14,16 @@ namespace JsonApiDotNetCore.Services
       _jsonApiModelConfiguration = configuration;
     }
 
-    public void HandleJsonApiRoute(HttpContext context, IServiceProvider serviceProvider)
+    public bool HandleJsonApiRoute(HttpContext context, IServiceProvider serviceProvider)
     {
       _serviceProvider = serviceProvider;
 
       var route = context.Request.Path;
       var requestMethod = context.Request.Method;
       var controllerMethodIdentifier = _jsonApiModelConfiguration.GetControllerMethodIdentifierForRoute(route, requestMethod);
+      if (controllerMethodIdentifier == null) return false;
       CallControllerMethod(controllerMethodIdentifier, context);
+      return true;
     }
 
     private void CallControllerMethod(ControllerMethodIdentifier controllerMethodIdentifier, HttpContext context)
