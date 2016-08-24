@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Attributes;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.JsonApi;
 using JsonApiDotNetCore.Extensions;
 
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCore.Services
           }
           break;
         case "POST":
-          controller.Post(null); // TODO: need the request body
+          controller.Post(null);
           break;
         case "PUT":
           controller.Put(resourceId, null);
@@ -129,7 +130,7 @@ namespace JsonApiDotNetCore.Services
         );
     }
 
-    private void SendResponse(HttpContext context, ObjectResult result)
+    private static void SendResponse(HttpContext context, ObjectResult result)
     {
       context.Response.StatusCode = result.StatusCode ?? 500;
       context.Response.WriteAsync(result.Value.ToString());

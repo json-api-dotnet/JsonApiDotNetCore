@@ -18,12 +18,17 @@ namespace JsonApiDotNetCore.Services
 
     public List<object> Get()
     {
-      return (GetDbSetFromContext(Route.ContextPropertyName) as IEnumerable<object>).ToList();
+      return (GetDbSetFromContext(Route.ContextPropertyName) as IEnumerable<object>)?.ToList();
+    }
+
+    public object Get(string id)
+    {
+      return (GetDbSetFromContext(Route.ContextPropertyName) as IQueryable<IModel>)?.FirstOrDefault(x => x.Id.ToString() == id);
     }
 
     private object GetDbSetFromContext(string propName)
     {
-      return _dbContext.GetType().GetProperties().FirstOrDefault(pI => pI.Name == propName).GetValue(_dbContext, null);
+      return _dbContext.GetType().GetProperties().FirstOrDefault(pI => pI.Name == propName)?.GetValue(_dbContext, null);
     }
   }
 }

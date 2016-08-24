@@ -7,18 +7,18 @@ namespace JsonApiDotNetCore.Controllers
 {
   public class JsonApiController
   {
-    private HttpContext HttpContext;
-    private JsonApiContext JsonApiContext;
+    private HttpContext _httpContext;
+    private readonly JsonApiContext _jsonApiContext;
 
     public JsonApiController(HttpContext context, JsonApiContext jsonApiContext)
     {
-      JsonApiContext = jsonApiContext;
-      HttpContext = context;
+      _jsonApiContext = jsonApiContext;
+      _httpContext = context;
     }
 
     public ObjectResult Get()
     {
-      var entities = JsonApiContext.Get();
+      var entities = _jsonApiContext.Get();
       return new OkObjectResult(entities);
     }
 
