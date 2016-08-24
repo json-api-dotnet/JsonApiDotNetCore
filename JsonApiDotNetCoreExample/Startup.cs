@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Data;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExample.Resources;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -40,6 +39,10 @@ namespace JsonApiDotNetCoreExample
             services.AddJsonApi(config => {
               config.SetDefaultNamespace("api/v1");
               config.UseContext<ApplicationDbContext>();
+              config.DefineResourceMapping(new MapperConfiguration(cfg =>
+              {
+                cfg.CreateMap<TodoItem, TodoItemResource>();
+              }));
             });
         }
 

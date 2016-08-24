@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Abstractions;
+using JsonApiDotNetCore.Attributes;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Http;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.JsonApi;
@@ -80,27 +83,37 @@ namespace JsonApiDotNetCore.Services
     {
       var enumerableResult = result as IEnumerable;
 
-      if (enumerableResult == null) return ResourceToJsonApiDatum(context, result);
+      if (enumerableResult == null) return ResourceToJsonApiDatum(context, EntityToJsonApiResource(result));
 
       var data = new List<JsonApiDatum>();
       foreach (var resource in enumerableResult)
       {
-        data.Add(ResourceToJsonApiDatum(context, resource));
+        data.Add(ResourceToJsonApiDatum(context, EntityToJsonApiResource(resource)));
       }
       return data;
     }
 
-    private JsonApiDatum ResourceToJsonApiDatum(JsonApiContext context, object resource)
+    private IJsonApiResource EntityToJsonApiResource(object entity)
+    {
+      var resource = entity as IJsonApiResource;
+      if (resource != null) return resource;
+
+      var attributes = TypeDescriptor.GetAttributes(entity);
+      var type = ((JsonApiResourceAttribute)attributes[typeof(JsonApiResourceAttribute)]).JsonApiResourceType;
+      return (IJsonApiResource)_jsonApiModelConfiguration.ResourceMaps.Map(entity, entity.GetType(), type);
+    }
+
+    private static JsonApiDatum ResourceToJsonApiDatum(JsonApiContext context, IJsonApiResource resource)
     {
       return new JsonApiDatum
       {
         Type = context.Route.ContextPropertyName,
-        Id = ((IJsonApiResource)resource).Id,
+        Id = resource.Id,
         Attributes = GetAttributesFromResource(resource)
       };
     }
 
-    private static Dictionary<string, object> GetAttributesFromResource(object resource)
+    private static Dictionary<string, object> GetAttributesFromResource(IJsonApiResource resource)
     {
       return resource.GetType().GetProperties()
         .Where(propertyInfo => propertyInfo.GetMethod.IsVirtual == false)

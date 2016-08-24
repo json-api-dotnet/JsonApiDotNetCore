@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Middleware
       private readonly IServiceProvider _serviceProvider;
 
       public JsonApiMiddleware(RequestDelegate next,
-        ILogger<JsonApiMiddleware> logger,
+        ILogger logger,
         JsonApiService jsonApiService,
         IServiceProvider serviceProvider)
       {

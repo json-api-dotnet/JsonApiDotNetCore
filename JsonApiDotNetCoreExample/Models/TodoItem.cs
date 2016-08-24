@@ -1,12 +1,12 @@
-using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Attributes;
+using JsonApiDotNetCoreExample.Resources;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCoreExample.Models
 {
-  [SerializationFormat("todoItem","todoItems")]
-  public class TodoItem : IJsonApiResource
+  [JsonApiResource(typeof(TodoItemResource))]
+  public class TodoItem
   {
-    public string Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
   }
 }

@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Abstractions;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Controllers

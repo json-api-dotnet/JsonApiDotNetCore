@@ -1,7 +1,7 @@
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Data
+namespace JsonApiDotNetCoreExample.Data
 {
   public class ApplicationDbContext : DbContext
   {
