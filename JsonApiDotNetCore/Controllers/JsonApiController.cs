@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Controllers
       HttpContext = context;
     }
 
-    public IActionResult Get()
+    public ObjectResult Get()
     {
       var entities = JsonApiContext.Get();
       return new OkObjectResult(entities);

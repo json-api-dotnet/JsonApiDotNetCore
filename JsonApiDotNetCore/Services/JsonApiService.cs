@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Attributes;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.AspNetCore.Http;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.JsonApi;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -48,7 +50,8 @@ namespace JsonApiDotNetCore.Services
           if (string.IsNullOrEmpty(resourceId))
           {
             var result = controller.Get();
-            SendResponse(context, SerializeResponse(jsonApiContext, result));
+            result.Value = SerializeResponse(jsonApiContext, result.Value);
+            SendResponse(context, result);
           }
           else
           {
@@ -69,14 +72,17 @@ namespace JsonApiDotNetCore.Services
       }
     }
 
-    private string SerializeResponse(JsonApiContext context, object result)
+    private string SerializeResponse(JsonApiContext context, object resultValue)
     {
       var response = new JsonApiDocument
       {
-        Data = GetJsonApiDocumentData(context, result)
+        Data = GetJsonApiDocumentData(context, resultValue)
       };
 
-      return JsonConvert.SerializeObject(response);
+      return JsonConvert.SerializeObject(response, new JsonSerializerSettings
+      {
+          ContractResolver = new CamelCasePropertyNamesContractResolver()
+      });
     }
 
     private object GetJsonApiDocumentData(JsonApiContext context, object result)
@@ -122,9 +128,10 @@ namespace JsonApiDotNetCore.Services
         );
     }
 
-    private void SendResponse(HttpContext context, string content)
+    private void SendResponse(HttpContext context, ObjectResult result)
     {
-      context.Response.WriteAsync(content);
+      context.Response.StatusCode = result.StatusCode ?? 500;
+      context.Response.WriteAsync(result.Value.ToString());
       context.Response.Body.Flush();
     }
   }
