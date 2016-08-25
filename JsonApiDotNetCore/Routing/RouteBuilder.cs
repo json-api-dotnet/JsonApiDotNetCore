@@ -23,13 +23,13 @@ namespace JsonApiDotNetCore.Routing
     {
       var remainingPathString = SetBaseRouteDefinition();
 
-      if (!remainingPathString.HasValue)
+      if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}
         return new Route(_baseRouteDefinition.ModelType, _request.Method, null, _baseRouteDefinition);
       }
 
       remainingPathString = SetBaseResourceId(remainingPathString);
-      if (!remainingPathString.HasValue)
+      if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}/{baseResourceId}
         return new Route(_baseRouteDefinition.ModelType, _request.Method, _baseResourceId, _baseRouteDefinition);
       }
@@ -44,6 +44,11 @@ namespace JsonApiDotNetCore.Routing
 
       var relationshipType = GetTypeOfRelatedResource(relatedResource);
       return new RelationalRoute(_baseRouteDefinition.ModelType, _request.Method, _baseResourceId, _baseRouteDefinition, relationshipType, relatedResource);
+    }
+
+    private bool PathStringIsEmpty(PathString pathString)
+    {
+      return pathString.HasValue ? string.IsNullOrEmpty(pathString.ToString().TrimStart('/')) : false;
     }
 
     private PathString SetBaseRouteDefinition()

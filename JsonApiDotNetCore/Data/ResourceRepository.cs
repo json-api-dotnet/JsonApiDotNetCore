@@ -26,19 +26,18 @@ namespace JsonApiDotNetCore.Data
 
     public object Get(string id)
     {
-      var relationalRoute = _context.Route as RelationalRoute;
-      if (relationalRoute == null)
+      if (_context.Route is RelationalRoute)
       {
-        return GetEntityById(_context.Route.BaseModelType, id, null);
+        return GetRelated(id, _context.Route as RelationalRoute);
       }
-      return GetRelated(id, relationalRoute);
+      return GetEntityById(_context.Route.BaseModelType, id, null);
     }
 
     private object GetRelated(string id, RelationalRoute relationalRoute)
     {
       // HACK: this would rely on lazy loading to work...will probably fail
-      var entity = GetEntityById(relationalRoute.RelationalType, id, relationalRoute.RelationshipName);
-      return relationalRoute.RelationalType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase()).GetValue(entity);
+      var entity = GetEntityById(relationalRoute.BaseModelType, id, relationalRoute.RelationshipName);
+      return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase()).GetValue(entity);
     }
 
 
@@ -52,30 +51,21 @@ namespace JsonApiDotNetCore.Data
     {
       // HACK: I _believe_ by casting to IEnumerable, we are loading all records into memory, if so... find a better way...
       //        Also, we are making a BIG assumption that the resource has an attribute Id and not ResourceId which is allowed by EF
-      var methodToCall = typeof(ResourceRepository).GetMethods().Single(method => method.Name.Equals("GetDbSet"));
-      var genericMethod = methodToCall.MakeGenericMethod(modelType);
-      genericMethod.Invoke(genericMethod, null);
-      var dbSet = genericMethod.Invoke(this, null);
+      var dataAccessorInstance = Activator.CreateInstance(typeof(GenericDataAccess));
+      var dataAccessorMethod = dataAccessorInstance.GetType().GetMethod("GetDbSet");
+      var genericMethod = dataAccessorMethod.MakeGenericMethod(modelType);
+      var dbSet = genericMethod.Invoke(dataAccessorInstance, new [] {((DbContext) _context.DbContext) });
 
       if (!string.IsNullOrEmpty(includedRelationship))
       {
-        var includeMethod = typeof(ResourceRepository).GetMethods().Single(method => method.Name.Equals("IncludeEntity"));
+        var includeMethod =  dataAccessorInstance.GetType().GetMethod("IncludeEntity");
         var genericIncludeMethod = includeMethod.MakeGenericMethod(modelType);
-        genericIncludeMethod.Invoke(genericMethod, null);
-        dbSet = genericIncludeMethod.Invoke(this, new []{ dbSet, includedRelationship });
+        dbSet = genericIncludeMethod.Invoke(dataAccessorInstance, new []{ dbSet, includedRelationship.ToProperCase() });
       }
 
       return (dbSet as IEnumerable<dynamic>).SingleOrDefault(x => x.Id.ToString() == id);
     }
 
-    private DbSet<T> GetDbSet<T>() where T : class
-    {
-      return ((DbContext) _context.DbContext).Set<T>();
-    }
 
-    private IQueryable<T> IncludeEntity<T>(IQueryable<T> queryable, string includedEntityName) where T : class
-    {
-      return queryable.Include(includedEntityName);
-    }
   }
 }

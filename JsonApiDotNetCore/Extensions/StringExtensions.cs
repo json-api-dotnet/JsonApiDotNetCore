@@ -14,5 +14,15 @@ namespace JsonApiDotNetCore.Extensions
       }
       return str;
     }
+    public static string ToProperCase(this string str)
+    {
+      var splittedPhraseChars = str.ToCharArray();
+      if (splittedPhraseChars.Length > 0)
+      {
+        splittedPhraseChars[0] = new string(splittedPhraseChars[0], 1).ToUpper().ToCharArray()[0];
+        return new String(splittedPhraseChars);
+      }
+      return str;
+    }
   }
 }
