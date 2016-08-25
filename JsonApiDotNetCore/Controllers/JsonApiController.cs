@@ -18,12 +18,18 @@ namespace JsonApiDotNetCore.Controllers
     public ObjectResult Get()
     {
       var entities = _resourceRepository.Get();
+      if(entities == null || entities.Count == 0) {
+        return new NotFoundObjectResult(null);
+      }
       return new OkObjectResult(entities);
     }
 
     public ObjectResult Get(string id)
     {
       var entity = _resourceRepository.Get(id);
+      if(entity == null) {
+        return new NotFoundObjectResult(null);
+      }
       return new OkObjectResult(entity);
     }
 
