@@ -14,8 +14,13 @@ services.AddDbContext<ApplicationDbContext>(options =>
   ServiceLifetime.Transient);
 
 services.AddJsonApi(config => {
-  config.UseContext<ApplicationDbContext>();
   config.SetDefaultNamespace("api/v1");
+  config.UseContext<ApplicationDbContext>();
+  config.DefineResourceMapping(dictionary =>
+  {
+    dictionary.Add(typeof(TodoItem), typeof(TodoItemResource));
+    dictionary.Add(typeof(Person), typeof(PersonResource));
+  });
 });
 ```
 
