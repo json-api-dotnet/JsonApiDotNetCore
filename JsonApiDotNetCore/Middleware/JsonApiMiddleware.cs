@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Services;
@@ -10,12 +11,12 @@ namespace JsonApiDotNetCore.Middleware
   {
       private readonly RequestDelegate _next;
       private readonly ILogger _logger;
-      private readonly JsonApiService _jsonApiService;
+      private readonly Router _jsonApiService;
       private readonly IServiceProvider _serviceProvider;
 
       public JsonApiMiddleware(RequestDelegate next,
         ILogger<JsonApiMiddleware> logger,
-        JsonApiService jsonApiService,
+        Router jsonApiService,
         IServiceProvider serviceProvider)
       {
         _next = next;

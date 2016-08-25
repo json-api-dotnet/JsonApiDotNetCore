@@ -1,46 +1,45 @@
-using System;
-using Microsoft.AspNetCore.Http;
+using JsonApiDotNetCore.Abstractions;
+using JsonApiDotNetCore.Data;
 using Microsoft.AspNetCore.Mvc;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Controllers
 {
   public class JsonApiController
   {
-    private HttpContext _httpContext;
-    private readonly JsonApiContext _jsonApiContext;
+    protected readonly JsonApiContext JsonApiContext;
+    private readonly ResourceRepository _resourceRepository;
 
-    public JsonApiController(HttpContext context, JsonApiContext jsonApiContext)
+    public JsonApiController(JsonApiContext jsonApiContext, ResourceRepository resourceRepository)
     {
-      _jsonApiContext = jsonApiContext;
-      _httpContext = context;
+      JsonApiContext = jsonApiContext;
+      _resourceRepository = resourceRepository;
     }
 
     public ObjectResult Get()
     {
-      var entities = _jsonApiContext.Get();
+      var entities = _resourceRepository.Get();
       return new OkObjectResult(entities);
     }
 
     public ObjectResult Get(string id)
     {
-      var entity = _jsonApiContext.Get(id);
+      var entity = _resourceRepository.Get(id);
       return new OkObjectResult(entity);
     }
 
-    public IActionResult Post(object entity)
+    public ObjectResult Post(object entity)
     {
-      return new OkResult();
+      return new CreatedResult(JsonApiContext.HttpContext.Request.Path, entity);
     }
 
-    public IActionResult Put(string id, object entity)
+    public ObjectResult Put(string id, object entity)
     {
-      return new OkResult();
+      return new OkObjectResult(entity);
     }
 
-    public IActionResult Delete(string id)
+    public ObjectResult Delete(string id)
     {
-      return new OkResult();
+      return new OkObjectResult(null);
     }
   }
 }

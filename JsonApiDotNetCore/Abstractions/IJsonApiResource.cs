@@ -1,4 +1,7 @@
-﻿namespace JsonApiDotNetCore.Abstractions
+﻿using System;
+using System.Collections.Generic;
+
+namespace JsonApiDotNetCore.Abstractions
 {
   public interface IJsonApiResource
   {

@@ -11,11 +11,15 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "System.ComponentModel.TypeConverter": "4.1.0",
-    "AutoMapper": "4.2.1"
+    "AutoMapper": "4.2.1",
+    "System.Reflection.Extensions": "4.0.1"
   },
   "frameworks": {
     "netstandard1.6": {
-      "imports": "dnxcore50"
+      "imports": "dnxcore50",
+      "dependencies": {
+        "System.Reflection.TypeExtensions": "4.1.0"
+      }
     },
     "net452": {}
   },

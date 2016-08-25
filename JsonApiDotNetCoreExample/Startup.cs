@@ -39,11 +39,11 @@ namespace JsonApiDotNetCoreExample
             services.AddJsonApi(config => {
               config.SetDefaultNamespace("api/v1");
               config.UseContext<ApplicationDbContext>();
-              config.DefineResourceMapping(new MapperConfiguration(cfg =>
+              config.DefineResourceMapping(dictionary =>
               {
-                cfg.CreateMap<TodoItem, TodoItemResource>();
-                cfg.CreateMap<Person, PersonResource>();
-              }));
+                dictionary.Add(typeof(TodoItem), typeof(TodoItemResource));
+                dictionary.Add(typeof(Person), typeof(PersonResource));
+              });
             });
         }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JsonApiDotNetCore.Abstractions;
 
 namespace JsonApiDotNetCoreExample.Resources

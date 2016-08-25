@@ -1,28 +1,20 @@
 using System;
-using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Routing
 {
   public class Route
   {
-    public Route(Type model, string requestMethod, PathString remainingPath, RouteDefinition routeDefinition)
+    public Route(Type baseModelType, string requestMethod, string resourceId, RouteDefinition baseRouteDefinition)
     {
-      Model = model;
+      BaseModelType = baseModelType;
       RequestMethod = requestMethod;
-      RemainingPath = remainingPath;
-      RouteDefinition = routeDefinition;
-      SetResourceId();
+      ResourceId = resourceId;
+      BaseRouteDefinition = baseRouteDefinition;
     }
 
-    public Type Model { get; set; }
+    public Type BaseModelType { get; set; }
     public string RequestMethod { get; set; }
-    public PathString RemainingPath { get; set; }
-    public RouteDefinition RouteDefinition { get; set; }
+    public RouteDefinition BaseRouteDefinition { get; set; }
     public string ResourceId { get; set; }
-
-    private void SetResourceId()
-    {
-      ResourceId = RemainingPath.HasValue ? RemainingPath.ToUriComponent().Trim('/') : null;
-    }
   }
 }

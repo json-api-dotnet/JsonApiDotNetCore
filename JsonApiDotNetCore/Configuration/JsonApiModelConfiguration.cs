@@ -13,19 +13,29 @@ namespace JsonApiDotNetCore.Configuration
   public class JsonApiModelConfiguration : IJsonApiModelConfiguration
   {
     public string Namespace;
-    public IMapper ResourceMaps;
+    public IMapper ResourceMapper;
     public Type ContextType { get; set; }
-
-    private readonly List<RouteDefinition> _routes = new List<RouteDefinition>();
+    public List<RouteDefinition> Routes = new List<RouteDefinition>();
+    public Dictionary<Type, Type>  ResourceMapDefinitions = new Dictionary<Type, Type>();
 
     public void SetDefaultNamespace(string ns)
     {
       Namespace = ns;
     }
 
-    public void DefineResourceMapping(MapperConfiguration mapperConfiguration)
+    public void DefineResourceMapping(Action<Dictionary<Type,Type>> mapping)
     {
-      ResourceMaps = mapperConfiguration.CreateMapper();
+      mapping.Invoke(ResourceMapDefinitions);
+
+      var mapConfiguration = new MapperConfiguration(cfg =>
+      {
+        foreach (var definition in ResourceMapDefinitions)
+        {
+          cfg.CreateMap(definition.Key, definition.Value);
+        }
+      });
+
+      ResourceMapper = mapConfiguration.CreateMapper();
     }
 
     public void UseContext<T>()
@@ -55,22 +65,10 @@ namespace JsonApiDotNetCore.Configuration
             ContextPropertyName = property.Name
           };
 
-          _routes.Add(route);
+          Routes.Add(route);
         }
       });
     }
 
-    public Route GetRouteForRequest(HttpRequest request)
-    {
-      foreach (var rte in _routes)
-      {
-        PathString remainingPathString;
-        if (request.Path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
-        {
-          return new Route(rte.ModelType, request.Method, remainingPathString, rte);
-        }
-      }
-      return null;
-    }
   }
 }
