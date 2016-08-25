@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Extensions
       if (!path.HasValue) return string.Empty;
 
       var splitPath = SplitPath(path);
-      remainingSegments = new PathString(RemoveFirstSegmentFromPath(splitPath));
+      remainingSegments = new PathString($"/{RemoveFirstSegmentFromPath(splitPath)}");
       return splitPath[0];
     }
 

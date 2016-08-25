@@ -54,8 +54,8 @@ namespace JsonApiDotNetCore.Routing
         if (_request.Path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
         {
           _baseRouteDefinition = rte;
+          return remainingPathString;
         }
-        return remainingPathString;
       }
       throw new Exception("Route is not defined.");
     }

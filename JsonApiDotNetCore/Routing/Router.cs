@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Routing
       var context = _jsonApiContext.HttpContext;
       context.Response.StatusCode = result.StatusCode ?? 500;
       context.Response.ContentType = "application/vnd.api+json";
-      context.Response.WriteAsync(result.Value.ToString());
+      context.Response.WriteAsync(result.Value == null ? "" : result.Value.ToString());
       context.Response.Body.Flush();
     }
   }
