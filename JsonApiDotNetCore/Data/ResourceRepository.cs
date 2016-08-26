@@ -67,7 +67,9 @@ namespace JsonApiDotNetCore.Data
 
     public void Add(object entity)
     {
-      ((DbSet<object>)GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName)).Add(entity);
+      var dbSetAddMethod = typeof(DbSet<>).GetMethod("Add");
+      var dbSet = GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName);
+      dbSetAddMethod.Invoke(dbSet, new [] { entity });
     }
 
     public int SaveChanges()
