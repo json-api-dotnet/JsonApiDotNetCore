@@ -55,7 +55,6 @@ namespace JsonApiDotNetCore.Abstractions
         }
       }
 
-
       return model;
     }
   }

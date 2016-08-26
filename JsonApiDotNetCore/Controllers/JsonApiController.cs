@@ -1,6 +1,8 @@
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Data;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Controllers
 {
@@ -40,14 +42,32 @@ namespace JsonApiDotNetCore.Controllers
       return new CreatedResult(JsonApiContext.HttpContext.Request.Path, entity);
     }
 
-    public ObjectResult Put(string id, object entity)
+    public ObjectResult Patch(string id, Dictionary<PropertyInfo, object> entityPatch)
     {
+      var entity = _resourceRepository.Get(id);
+      if(entity == null) {
+        return new NotFoundObjectResult(null);
+      }
+
+      entity = PatchEntity(entity, entityPatch);
+      _resourceRepository.SaveChanges();
+
       return new OkObjectResult(entity);
     }
 
     public ObjectResult Delete(string id)
     {
       return new OkObjectResult(null);
+    }
+
+    protected object PatchEntity(object entity, Dictionary<PropertyInfo, object> entityPatch)
+    {
+      foreach(var attrPatch in entityPatch)
+      {
+        attrPatch.Key.SetValue(entity, attrPatch.Value);
+      }
+
+      return entity;
     }
   }
 }
