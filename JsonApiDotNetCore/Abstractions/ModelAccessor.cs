@@ -37,21 +37,24 @@ namespace JsonApiDotNetCore.Abstractions
         });
       }
 
-      foreach (var relationship in jsonApiRelationships)
-      {
-        var relationshipName = relationship.Key;
-        var relationshipId = ((JObject) relationship.Value)["data"]["id"];
-        var relationshipPropertyName = $"{relationshipName}Id";
-
-        modelProperties.ForEach(pI =>
+      if(jsonApiRelationships != null) {
+        foreach (var relationship in jsonApiRelationships)
         {
-          if (pI.Name.ToProperCase() == relationshipPropertyName.ToProperCase())
+          var relationshipId = ((JObject) relationship.Value)["data"]["id"].ToString();
+          var relationshipTypeName = ((JObject) relationship.Value)["data"]["type"];
+          var relationshipPropertyName = $"{relationshipTypeName}Id";
+
+          modelProperties.ForEach(pI =>
           {
-            var convertedValue = Convert.ChangeType(relationshipId, pI.PropertyType);
-            pI.SetValue(model, convertedValue);
-          }
-        });
+            if (pI.Name.ToProperCase() == relationshipPropertyName.ToProperCase())
+            {
+              var convertedValue = Convert.ChangeType(relationshipId, pI.PropertyType);
+              pI.SetValue(model, convertedValue);
+            }
+          });
+        }
       }
+
 
       return model;
     }
