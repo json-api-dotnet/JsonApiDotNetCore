@@ -38,3 +38,4 @@ app.UseJsonApi();
 - Using Entity Framework
 - All entities in the specified context should have controllers
 - All entities are served from the same namespace (i.e. 'api/v1')
+- All entities have a primary key "Id" and not "EntityId"
