@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.JsonApi;
+using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Abstractions
 {
@@ -21,7 +22,7 @@ namespace JsonApiDotNetCore.Abstractions
       return relationshipType;
     }
 
-    public static object SetValuesOnModelInstance(object model, Dictionary<string, object> jsonApiAttributes)
+    public static object SetValuesOnModelInstance(object model, Dictionary<string, object> jsonApiAttributes, Dictionary<string, object> jsonApiRelationships)
     {
       var modelProperties = model.GetType().GetProperties().ToList();
       foreach (var attribute in jsonApiAttributes)
@@ -35,6 +36,23 @@ namespace JsonApiDotNetCore.Abstractions
           }
         });
       }
+
+      foreach (var relationship in jsonApiRelationships)
+      {
+        var relationshipName = relationship.Key;
+        var relationshipId = ((JObject) relationship.Value)["data"]["id"];
+        var relationshipPropertyName = $"{relationshipName}Id";
+
+        modelProperties.ForEach(pI =>
+        {
+          if (pI.Name.ToProperCase() == relationshipPropertyName.ToProperCase())
+          {
+            var convertedValue = Convert.ChangeType(relationshipId, pI.PropertyType);
+            pI.SetValue(model, convertedValue);
+          }
+        });
+      }
+
       return model;
     }
   }

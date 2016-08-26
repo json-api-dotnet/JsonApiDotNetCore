@@ -21,7 +21,10 @@ namespace JsonApiDotNetCore.Services
       var body = GetRequestBody(_context.HttpContext.Request.Body);
       var document = JsonConvert.DeserializeObject<JsonApiDocument>(body);
       var entity = Activator.CreateInstance(_context.GetEntityType());
-      return ModelAccessor.SetValuesOnModelInstance(entity, ((JsonApiDatum)((JObject)document.Data).ToObject(typeof(JsonApiDatum))).Attributes);
+      var datum = ((JsonApiDatum) ((JObject) document.Data).ToObject(typeof(JsonApiDatum)));
+      var attributes = datum.Attributes;
+      var relationships = datum.Relationships;
+      return ModelAccessor.SetValuesOnModelInstance(entity, attributes, relationships);
     }
 
     private static string GetRequestBody(Stream body)
