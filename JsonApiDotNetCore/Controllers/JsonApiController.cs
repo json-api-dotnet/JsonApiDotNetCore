@@ -57,6 +57,8 @@ namespace JsonApiDotNetCore.Controllers
 
     public ObjectResult Delete(string id)
     {
+      _resourceRepository.Delete(id);
+      _resourceRepository.SaveChanges();
       return new OkObjectResult(null);
     }
 

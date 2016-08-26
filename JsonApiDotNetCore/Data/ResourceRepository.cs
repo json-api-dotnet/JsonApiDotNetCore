@@ -72,6 +72,14 @@ namespace JsonApiDotNetCore.Data
       dbSetAddMethod.Invoke(dbSet, new [] { entity });
     }
 
+    public void Delete(string id)
+    {
+      var entity = Get(id);
+      var dbSet = GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName);
+      var dbSetAddMethod = dbSet.GetType().GetMethod("Remove");
+      dbSetAddMethod.Invoke(dbSet, new [] { entity });
+    }
+
     public int SaveChanges()
     {
       return ((DbContext)_context.DbContext).SaveChanges();
