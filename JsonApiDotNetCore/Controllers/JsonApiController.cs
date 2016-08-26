@@ -35,6 +35,8 @@ namespace JsonApiDotNetCore.Controllers
 
     public ObjectResult Post(object entity)
     {
+      _resourceRepository.Add(entity);
+      _resourceRepository.SaveChanges();
       return new CreatedResult(JsonApiContext.HttpContext.Request.Path, entity);
     }
 

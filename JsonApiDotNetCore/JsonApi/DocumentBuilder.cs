@@ -50,9 +50,9 @@ namespace JsonApiDotNetCore.JsonApi
       var resource = entity as IJsonApiResource;
       if (resource != null) return resource;
 
-      var attributes = TypeDescriptor.GetAttributes(_resource);
+      var attributes = TypeDescriptor.GetAttributes(entity);
       var type = ((JsonApiResourceAttribute)attributes[typeof(JsonApiResourceAttribute)]).JsonApiResourceType;
-      return (IJsonApiResource)_context.Configuration.ResourceMapper.Map(_resource, _resource.GetType(), type);
+      return (IJsonApiResource)_context.Configuration.ResourceMapper.Map(entity, entity.GetType(), type);
     }
 
     private JsonApiDatum ResourceToJsonApiDatum(IJsonApiResource resource)

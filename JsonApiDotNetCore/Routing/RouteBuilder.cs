@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Routing
 
     private bool PathStringIsEmpty(PathString pathString)
     {
-      return pathString.HasValue ? string.IsNullOrEmpty(pathString.ToString().TrimStart('/')) : false;
+      return pathString.HasValue ? string.IsNullOrEmpty(pathString.ToString().TrimStart('/')) : true;
     }
 
     private PathString SetBaseRouteDefinition()

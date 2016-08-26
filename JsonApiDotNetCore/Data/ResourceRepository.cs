@@ -40,11 +40,10 @@ namespace JsonApiDotNetCore.Data
       return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase()).GetValue(entity);
     }
 
-
     private IQueryable GetDbSetFromContext(string propName)
     {
       var dbContext = _context.DbContext;
-      return (IQueryable)dbContext.GetType().GetProperties().FirstOrDefault(pI => pI.Name.ToCamelCase() == propName)?.GetValue(dbContext, null);
+      return (IQueryable)dbContext.GetType().GetProperties().FirstOrDefault(pI => pI.Name.ToProperCase() == propName.ToProperCase())?.GetValue(dbContext, null);
     }
 
     private object GetEntityById(Type modelType, string id, string includedRelationship)
@@ -66,6 +65,15 @@ namespace JsonApiDotNetCore.Data
       return (dbSet as IEnumerable<dynamic>).SingleOrDefault(x => x.Id.ToString() == id);
     }
 
+    public void Add(object entity)
+    {
+      ((DbSet<object>)GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName)).Add(entity);
+    }
+
+    public int SaveChanges()
+    {
+      return ((DbContext)_context.DbContext).SaveChanges();
+    }
 
   }
 }
