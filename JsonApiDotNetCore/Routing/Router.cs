@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Routing
         case "GET":
           return string.IsNullOrEmpty(route.ResourceId) ? controller.Get() : controller.Get(route.ResourceId);
         case "POST":
-          return controller.Post(null);
+          return controller.Post(new JsonApiDeserializer(_jsonApiContext).GetEntity());
         case "PUT":
           return controller.Put(route.ResourceId, null);
         case "DELETE":
