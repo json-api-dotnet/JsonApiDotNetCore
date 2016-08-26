@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Routing
 
     private object SerializeResult(object result)
     {
-      return result == null ? null : new JsonApiSerializer(_jsonApiContext, _jsonApiModelConfiguration).ToJsonApiDocument(result);
+      return result == null ? null : new JsonApiSerializer(_jsonApiContext).ToJsonApiDocument(result);
     }
 
     private void SendResponse(ObjectResult result)

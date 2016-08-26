@@ -2,6 +2,8 @@ using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Abstractions
 {
@@ -23,6 +25,18 @@ namespace JsonApiDotNetCore.Abstractions
     public Type GetJsonApiResourceType()
     {
       return Configuration.ResourceMapDefinitions[Route.BaseModelType];
+    }
+
+    public string GetEntityName()
+    {
+      return (!(Route is RelationalRoute) ? Route.BaseRouteDefinition.ContextPropertyName
+      : Configuration.Routes.Single(r => r.ModelType == ((RelationalRoute)Route).RelationalType).ContextPropertyName).ToCamelCase();
+    }
+
+    public Type GetEntityType()
+    {
+      return !(Route is RelationalRoute) ? Route.BaseRouteDefinition.ModelType
+      : ((RelationalRoute)Route).RelationalType;
     }
   }
 }
