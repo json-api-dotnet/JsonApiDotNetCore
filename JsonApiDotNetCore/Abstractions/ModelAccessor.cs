@@ -24,7 +24,20 @@ namespace JsonApiDotNetCore.Abstractions
 
     public static object SetValuesOnModelInstance(object model, Dictionary<string, object> jsonApiAttributes, Dictionary<string, object> jsonApiRelationships)
     {
-      var modelProperties = model.GetType().GetProperties().ToList();
+      var patches = GetEntityPatch(model.GetType(), jsonApiAttributes, jsonApiRelationships);
+      foreach(var patch in patches)
+      {
+         patch.Key.SetValue(model, patch.Value);
+      }
+
+      return model;
+    }
+
+    public static Dictionary<PropertyInfo, object> GetEntityPatch(Type modelType, Dictionary<string, object> jsonApiAttributes, Dictionary<string, object> jsonApiRelationships)
+    {
+      var patchDefinitions = new Dictionary<PropertyInfo, object>();
+
+      var modelProperties = modelType.GetProperties().ToList();
       foreach (var attribute in jsonApiAttributes)
       {
         modelProperties.ForEach(pI =>
@@ -32,7 +45,7 @@ namespace JsonApiDotNetCore.Abstractions
           if (pI.Name.ToProperCase() == attribute.Key.ToProperCase())
           {
             var convertedValue = Convert.ChangeType(attribute.Value, pI.PropertyType);
-            pI.SetValue(model, convertedValue);
+            patchDefinitions.Add(pI, convertedValue);
           }
         });
       }
@@ -49,13 +62,13 @@ namespace JsonApiDotNetCore.Abstractions
             if (pI.Name.ToProperCase() == relationshipPropertyName.ToProperCase())
             {
               var convertedValue = Convert.ChangeType(relationshipId, pI.PropertyType);
-              pI.SetValue(model, convertedValue);
+              patchDefinitions.Add(pI, convertedValue);
             }
           });
         }
       }
 
-      return model;
+      return patchDefinitions;
     }
   }
 }

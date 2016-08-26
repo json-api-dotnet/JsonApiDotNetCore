@@ -53,25 +53,9 @@ namespace JsonApiDotNetCore.Services
     {
       var datum = GetSignularJsonApiDatum();
       var attributes = datum.Attributes;
-      // var relationships = datum.Relationships;
+      var relationships = datum.Relationships;
 
-      var patchDefinitions = new Dictionary<PropertyInfo, object>();
-
-      var modelProperties = _context.GetEntityType().GetProperties().ToList();
-
-      foreach (var attribute in attributes)
-      {
-        modelProperties.ForEach(pI =>
-        {
-          if (pI.Name.ToProperCase() == attribute.Key.ToProperCase())
-          {
-            var convertedValue = Convert.ChangeType(attribute.Value, pI.PropertyType);
-            patchDefinitions.Add(pI, convertedValue);
-          }
-        });
-      }
-
-      return patchDefinitions;
+      return ModelAccessor.GetEntityPatch(_context.GetEntityType(), attributes, relationships);
     }
 
   }
