@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Routing
 {
-  public class Router
+  public class Router : IRouter
   {
     private readonly JsonApiModelConfiguration _jsonApiModelConfiguration;
     private IServiceProvider _serviceProvider;

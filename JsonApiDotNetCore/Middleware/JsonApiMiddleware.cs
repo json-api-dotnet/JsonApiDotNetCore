@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -11,17 +10,17 @@ namespace JsonApiDotNetCore.Middleware
   {
       private readonly RequestDelegate _next;
       private readonly ILogger _logger;
-      private readonly Router _jsonApiService;
+      private readonly IRouter _router;
       private readonly IServiceProvider _serviceProvider;
 
       public JsonApiMiddleware(RequestDelegate next,
         ILogger<JsonApiMiddleware> logger,
-        Router jsonApiService,
+        IRouter router,
         IServiceProvider serviceProvider)
       {
         _next = next;
         _logger = logger;
-        _jsonApiService = jsonApiService;
+        _router = router;
         _serviceProvider = serviceProvider;
       }
 
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Middleware
         _logger.LogInformation("Passing request to JsonApiService: " + context.Request.Path);
 
         if(context.Request.ContentType == "application/vnd.api+json") {
-          var wasHandled = _jsonApiService.HandleJsonApiRoute(context, _serviceProvider);
+          _router.HandleJsonApiRoute(context, _serviceProvider);
         }
         else
         {

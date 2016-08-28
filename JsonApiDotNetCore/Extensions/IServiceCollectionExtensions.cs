@@ -2,7 +2,6 @@ using System;
 using AutoMapper;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Routing;
-using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Extensions
@@ -18,7 +17,6 @@ namespace JsonApiDotNetCore.Extensions
       {
         config.ResourceMapper = new MapperConfiguration(cfg => {}).CreateMapper();
       }
-
       services.AddSingleton(_ => new Router(config));
     }
   }

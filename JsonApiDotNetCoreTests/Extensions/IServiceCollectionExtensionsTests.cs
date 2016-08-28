@@ -21,6 +21,5 @@ namespace JsonApiDotNetCoreTests.Extensions.UnitTests
             // assert
             Assert.True(serviceCollection.ContainsType(typeof(Router)));
         }
-
     }
 }
