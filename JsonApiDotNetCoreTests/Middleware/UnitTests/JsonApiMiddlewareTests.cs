@@ -8,8 +8,6 @@ using System.IO;
 
 namespace JsonApiDotNetCoreTests.Middleware.UnitTests
 {
-    // see example explanation on xUnit.net website:
-    // https://xunit.github.io/docs/getting-started-dotnet-core.html
     public class JsonApiMiddlewareTests
     {
         [Fact]

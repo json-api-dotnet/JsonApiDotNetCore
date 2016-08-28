@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Controllers
 {
-  public class JsonApiController
+  public class JsonApiController : IJsonApiController
   {
     protected readonly JsonApiContext JsonApiContext;
     private readonly ResourceRepository _resourceRepository;

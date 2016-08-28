@@ -1,10 +1,12 @@
 using System;
+using System.Text;
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Routing
 {
@@ -13,17 +15,21 @@ namespace JsonApiDotNetCore.Routing
     private readonly JsonApiModelConfiguration _jsonApiModelConfiguration;
     private IServiceProvider _serviceProvider;
     private JsonApiContext _jsonApiContext;
+    private IRouteBuilder _routeBuilder;
+    private IControllerBuilder _controllerBuilder;
 
-    public Router(JsonApiModelConfiguration configuration)
+    public Router(JsonApiModelConfiguration configuration, IRouteBuilder routeBuilder, IControllerBuilder controllerBuilder)
     {
       _jsonApiModelConfiguration = configuration;
+      _routeBuilder = routeBuilder;
+      _controllerBuilder = controllerBuilder;
     }
 
     public bool HandleJsonApiRoute(HttpContext context, IServiceProvider serviceProvider)
     {
       _serviceProvider = serviceProvider;
 
-      var route = new RouteBuilder(context.Request, _jsonApiModelConfiguration).BuildFromRequest();
+      var route = _routeBuilder.BuildFromRequest(context.Request);
       if (route == null) return false;
 
       InitializeContext(context, route);
@@ -40,7 +46,8 @@ namespace JsonApiDotNetCore.Routing
 
     private void CallController()
     {
-      var controller = new ControllerBuilder(_jsonApiContext).BuildController();
+      var controller = _controllerBuilder.BuildController(_jsonApiContext);
+
       var result = ActivateControllerMethod(controller);
 
       result.Value = SerializeResult(result.Value);
@@ -48,7 +55,7 @@ namespace JsonApiDotNetCore.Routing
       SendResponse(result);
     }
 
-    private ObjectResult ActivateControllerMethod(JsonApiController controller)
+    private ObjectResult ActivateControllerMethod(IJsonApiController controller)
     {
       var route = _jsonApiContext.Route;
       switch (route.RequestMethod)
@@ -76,7 +83,7 @@ namespace JsonApiDotNetCore.Routing
       var context = _jsonApiContext.HttpContext;
       context.Response.StatusCode = result.StatusCode ?? 500;
       context.Response.ContentType = "application/vnd.api+json";
-      context.Response.WriteAsync(result.Value == null ? "" : result.Value.ToString());
+      context.Response.WriteAsync(result.Value == null ? "" : result.Value.ToString(), Encoding.UTF8);
       context.Response.Body.Flush();
     }
   }
