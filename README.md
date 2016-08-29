@@ -76,7 +76,7 @@ services.AddJsonApi(config => {
 });
 ```
 
-The controller **must** implement `IJsonApiController`, and it **may** inherit from `JsonApiController`.
+The controller **must** implement `IJsonApiController`, and it **may** inherit from [JsonApiController](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/JsonApiDotNetCore/Controllers/JsonApiController.cs).
 Constructor dependency injection will work like normal. 
 Any services added in your `Startup.ConfigureServices()` method will be injected into the constructor parameters.
 
@@ -85,7 +85,7 @@ public class TodoItemsController : JsonApiController, IJsonApiController
 {
   private ApplicationDbContext _dbContext;
 
-  public TodoItemsController(JsonApiContext jsonApiContext, ResourceRepository resourceRepository, ApplicationDbContext applicationDbContext) 
+  public TodoItemsController(IJsonApiContext jsonApiContext, ResourceRepository resourceRepository, ApplicationDbContext applicationDbContext) 
   : base(jsonApiContext, resourceRepository)
   {
     _dbContext = applicationDbContext;
@@ -97,6 +97,8 @@ public class TodoItemsController : JsonApiController, IJsonApiController
   }
 }
 ```
+
+You can access the HttpContext from [IJsonApiContext](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/JsonApiDotNetCore/Abstractions/IJsonApiContext.cs).
 
 
 ## References
