@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Abstractions
 {
-  public class JsonApiContext
+  public class JsonApiContext : IJsonApiContext
   {
     public HttpContext HttpContext { get; }
     public Route Route { get; }

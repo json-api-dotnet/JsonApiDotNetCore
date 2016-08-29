@@ -8,10 +8,10 @@ namespace JsonApiDotNetCore.Controllers
 {
   public class JsonApiController : IJsonApiController
   {
-    protected readonly JsonApiContext JsonApiContext;
+    protected readonly IJsonApiContext JsonApiContext;
     private readonly ResourceRepository _resourceRepository;
 
-    public JsonApiController(JsonApiContext jsonApiContext, ResourceRepository resourceRepository)
+    public JsonApiController(IJsonApiContext jsonApiContext, ResourceRepository resourceRepository)
     {
       JsonApiContext = jsonApiContext;
       _resourceRepository = resourceRepository;
