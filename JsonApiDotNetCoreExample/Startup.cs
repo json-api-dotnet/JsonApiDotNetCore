@@ -41,6 +41,10 @@ namespace JsonApiDotNetCoreExample
               config.SetDefaultNamespace("api/v1");
               config.UseContext<ApplicationDbContext>();
               config.UseController(typeof(TodoItem), typeof(TodoItemsController));
+              config.AddResourceMapping<Person, PersonResource>(map =>
+              {
+                map.ForMember("Name", opt => opt.MapFrom(src => $"{((Person)src).Name}_1"));
+              });
             });
         }
 

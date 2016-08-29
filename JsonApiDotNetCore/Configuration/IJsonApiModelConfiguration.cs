@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AutoMapper;
 using JsonApiDotNetCore.Abstractions;
 
 namespace JsonApiDotNetCore.Configuration
@@ -23,10 +24,11 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Define explicit mapping of a model to a class that implements IJsonApiResource
     /// </summary>
-    /// <param name="modelType"></param>
-    /// <param name="resourceType"></param>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TResource"></typeparam>
+    /// <param name="mappingExpression"></param>
     /// <exception cref="ArgumentException"></exception>
-    void AddResourceMapping(Type modelType, Type resourceType);
+    void AddResourceMapping<TModel, TResource>(Action<IMappingExpression> mappingExpression);
 
     /// <summary>
     /// Specifies a controller override class for a particular model type.

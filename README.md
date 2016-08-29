@@ -49,11 +49,19 @@ public class PersonResource : IJsonApiResource
 }
 ``` 
 
-We use [AutoMapper](http://automapper.org/) as the mapping tool. 
-You can specify a custom mapping configuration in your `Startup` class like so:
+We use [AutoMapper](http://automapper.org/) to map from the context model to the JsonApiResource. 
+The below snippet shows how you can specify a custom mapping expression in your `Startup` class that will apped '_1' to the resource name.
+Check out [AutoMapper's Wiki](https://github.com/AutoMapper/AutoMapper/wiki) for detailed mapping options.
 
 ```
-// not implemented
+services.AddJsonApi(config => {
+  ...
+  config.AddResourceMapping<Person, PersonResource>(map =>
+  {
+    map.ForMember("Name", opt => opt.MapFrom(src => $"{((Person)src).Name}_1"));
+  });
+  ...
+});
 ```
 
 ## Overriding controllers

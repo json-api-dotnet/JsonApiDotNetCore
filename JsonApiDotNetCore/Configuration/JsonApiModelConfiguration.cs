@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Configuration
     public IMapper ResourceMapper;
     public Type ContextType { get; set; }
     public List<RouteDefinition> Routes = new List<RouteDefinition>();
-    public Dictionary<Type, Type>  ResourceMapDefinitions = new Dictionary<Type, Type>();
+    public Dictionary<Type, Tuple<Type, Action<IMappingExpression>>>  ResourceMapDefinitions = new Dictionary<Type, Tuple<Type, Action<IMappingExpression>>>();
     public Dictionary<Type, Type> ControllerOverrides = new Dictionary<Type, Type>();
 
     public void SetDefaultNamespace(string ns)
@@ -26,13 +26,15 @@ namespace JsonApiDotNetCore.Configuration
       Namespace = ns;
     }
 
-    // TODO: change to AddResourceMapping(Type, Type)
-    public void AddResourceMapping(Type modelType, Type resourceType)
+    public void AddResourceMapping<TModel, TResource>(Action<IMappingExpression> mappingExpression)
     {
+      var resourceType = typeof(TResource);
+      var modelType = typeof(TModel);
+
       if (!resourceType.GetInterfaces().Contains(typeof(IJsonApiResource)))
         throw new ArgumentException("Specified type does not implement IJsonApiResource", nameof(resourceType));
 
-      ResourceMapDefinitions.Add(modelType, resourceType);
+      ResourceMapDefinitions.Add(modelType, new Tuple<Type, Action<IMappingExpression>>(resourceType, mappingExpression));
     }
 
     public void UseController(Type modelType, Type controllerType)

@@ -3,6 +3,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Linq.Expressions;
 using AutoMapper;
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Attributes;
@@ -68,10 +69,10 @@ namespace JsonApiDotNetCore.Configuration
       {
         foreach (var definition in Config.ResourceMapDefinitions)
         {
-          cfg.CreateMap(definition.Key, definition.Value);
+          var mappingExpression = cfg.CreateMap(definition.Key, definition.Value.Item1);
+          definition.Value.Item2?.Invoke(mappingExpression);
         }
       });
-
       Config.ResourceMapper = mapConfiguration.CreateMapper();
     }
 
@@ -87,7 +88,7 @@ namespace JsonApiDotNetCore.Configuration
         // do not overwrite custom definitions
         if(!Config.ResourceMapDefinitions.ContainsKey(modelType.UnderlyingSystemType))
         {
-          Config.ResourceMapDefinitions.Add(modelType.UnderlyingSystemType, resourceType);
+          Config.ResourceMapDefinitions.Add(modelType.UnderlyingSystemType, new Tuple<Type, Action<IMappingExpression>>(resourceType, null));
         }
       }
     }

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Abstractions
 
     public Type GetJsonApiResourceType()
     {
-      return Configuration.ResourceMapDefinitions[Route.BaseModelType];
+      return Configuration.ResourceMapDefinitions[Route.BaseModelType].Item1;
     }
 
     public string GetEntityName()
