@@ -16,11 +16,6 @@ services.AddDbContext<ApplicationDbContext>(options =>
 services.AddJsonApi(config => {
   config.SetDefaultNamespace("api/v1");
   config.UseContext<ApplicationDbContext>();
-  config.DefineResourceMapping(dictionary =>
-  {
-    dictionary.Add(typeof(TodoItem), typeof(TodoItemResource));
-    dictionary.Add(typeof(Person), typeof(PersonResource));
-  });
 });
 ```
 
@@ -29,6 +24,72 @@ services.AddJsonApi(config => {
 ```
 app.UseJsonApi();
 ```
+
+## Specifying The Presenter / ViewModel
+
+When you define a model, you **must** specify the associated `JsonApiResource` class which **must** implement `IJsonApiResource`. 
+This is used for mapping out only the data that should be available to client applications.
+
+For example:
+
+```
+[JsonApiResource(typeof(PersonResource))]
+public class Person
+{
+  public int Id { get; set; }
+  public string Name { get; set; }
+  public string SomethingSecret { get; set; }
+  public virtual List<TodoItem> TodoItems { get; set; }
+}
+
+public class PersonResource : IJsonApiResource
+{
+  public string Id { get; set; }
+  public string Name { get; set; }
+}
+``` 
+
+We use [AutoMapper](http://automapper.org/) as the mapping tool. 
+You can specify a custom mapping configuration in your `Startup` class like so:
+
+```
+// not implemented
+```
+
+## Overriding controllers
+
+You can define your own controllers that implement the `IJsonApiController` like so:
+
+```
+services.AddJsonApi(config => {
+  ...
+  config.UseController(typeof(TodoItem), typeof(TodoItemsController));
+  ...
+});
+```
+
+The controller **must** implement `IJsonApiController`, and it **may** inherit from `JsonApiController`.
+Constructor dependency injection will work like normal. 
+Any services added in your `Startup.ConfigureServices()` method will be injected into the constructor parameters.
+
+```
+public class TodoItemsController : JsonApiController, IJsonApiController
+{
+  private ApplicationDbContext _dbContext;
+
+  public TodoItemsController(JsonApiContext jsonApiContext, ResourceRepository resourceRepository, ApplicationDbContext applicationDbContext) 
+  : base(jsonApiContext, resourceRepository)
+  {
+    _dbContext = applicationDbContext;
+  }
+
+  public override ObjectResult Get()
+  {
+    return new OkObjectResult(_dbContext.TodoItems.ToList());
+  }
+}
+```
+
 
 ## References
 [JsonApi Specification](http://jsonapi.org/)

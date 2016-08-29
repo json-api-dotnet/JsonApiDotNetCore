@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExample.Resources;
@@ -39,11 +40,7 @@ namespace JsonApiDotNetCoreExample
             services.AddJsonApi(config => {
               config.SetDefaultNamespace("api/v1");
               config.UseContext<ApplicationDbContext>();
-              config.DefineResourceMapping(dictionary =>
-              {
-                dictionary.Add(typeof(TodoItem), typeof(TodoItemResource));
-                dictionary.Add(typeof(Person), typeof(PersonResource));
-              });
+              config.UseController(typeof(TodoItem), typeof(TodoItemsController));
             });
         }
 

@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Routing
       SendResponse(result);
     }
 
-    private ObjectResult ActivateControllerMethod(JsonApiController controller)
+    private ObjectResult ActivateControllerMethod(IJsonApiController controller)
     {
       var route = _jsonApiContext.Route;
       switch (route.RequestMethod)
