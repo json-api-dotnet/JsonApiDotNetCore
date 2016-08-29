@@ -33,9 +33,9 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Specifies a controller override class for a particular model type.
     /// </summary>
-    /// <param name="modelType"></param>
-    /// <param name="controllerType"></param>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TController"></typeparam>
     /// <exception cref="ArgumentException"></exception>
-    void UseController(Type modelType, Type controllerType);
+    void UseController<TModel, TController>();
   }
 }

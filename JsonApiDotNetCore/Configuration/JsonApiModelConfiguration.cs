@@ -37,9 +37,12 @@ namespace JsonApiDotNetCore.Configuration
       ResourceMapDefinitions.Add(modelType, new Tuple<Type, Action<IMappingExpression>>(resourceType, mappingExpression));
     }
 
-    public void UseController(Type modelType, Type controllerType)
+    public void UseController<TModel, TController>()
     {
-      if(!controllerType.GetInterfaces().Contains(typeof(IJsonApiController)))
+      var modelType = typeof(TModel);
+      var controllerType = typeof(TController);
+
+      if (!controllerType.GetInterfaces().Contains(typeof(IJsonApiController)))
         throw new ArgumentException("Specified type does not implement IJsonApiController", nameof(controllerType));
 
       ControllerOverrides[modelType] = controllerType;

@@ -74,7 +74,7 @@ You can define your own controllers that implement the `IJsonApiController` like
 ```
 services.AddJsonApi(config => {
   ...
-  config.UseController(typeof(TodoItem), typeof(TodoItemsController));
+  config.UseController<TodoItem, TodoItemsController>();
   ...
 });
 ```
