@@ -27,8 +27,10 @@ app.UseJsonApi();
 
 ## Specifying The Presenter / ViewModel
 
-When you define a model, you **must** specify the associated `JsonApiResource` class which **must** implement `IJsonApiResource`. 
-This is used for mapping out only the data that should be available to client applications.
+ - When you define a model, you **MUST** specify the associated resource class using the `JsonApiResource` attribute.
+ - The specified resource class **MUST** implement `IJsonApiResource`. 
+
+The resource class defines how the model will be exposed to client applications.
 
 For example:
 
@@ -49,8 +51,8 @@ public class PersonResource : IJsonApiResource
 }
 ``` 
 
-We use [AutoMapper](http://automapper.org/) to map from the context model to the JsonApiResource. 
-The below snippet shows how you can specify a custom mapping expression in your `Startup` class that will apped '_1' to the resource name.
+We use [AutoMapper](http://automapper.org/) to map from the model class to the resource class. 
+The below snippet shows how you can specify a custom mapping expression in your `Startup` class that will append `_1` to the resource name.
 Check out [AutoMapper's Wiki](https://github.com/AutoMapper/AutoMapper/wiki) for detailed mapping options.
 
 ```
@@ -58,6 +60,7 @@ services.AddJsonApi(config => {
   ...
   config.AddResourceMapping<Person, PersonResource>(map =>
   {
+    // resource.Name = model.Name + "_1"
     map.ForMember("Name", opt => opt.MapFrom(src => $"{((Person)src).Name}_1"));
   });
   ...
@@ -76,7 +79,7 @@ services.AddJsonApi(config => {
 });
 ```
 
-The controller **must** implement `IJsonApiController`, and it **may** inherit from [JsonApiController](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/JsonApiDotNetCore/Controllers/JsonApiController.cs).
+The controller **MUST** implement `IJsonApiController`, and it **MAY** inherit from [JsonApiController](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/JsonApiDotNetCore/Controllers/JsonApiController.cs).
 Constructor dependency injection will work like normal. 
 Any services added in your `Startup.ConfigureServices()` method will be injected into the constructor parameters.
 
