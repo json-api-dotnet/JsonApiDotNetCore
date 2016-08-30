@@ -1,10 +1,20 @@
 # JSON API .Net Core
 
+[![Build status](https://ci.appveyor.com/api/projects/status/9fvgeoxdikwkom10?svg=true)](https://ci.appveyor.com/project/jaredcnance/json-api-dotnet-core)
+
 JSON API Spec Conformance: **Non Conforming**
 
-Go [here](https://github.com/Research-Institute/json-api-dotnet-core/wiki/Request-Examples) to see examples of HTTP requests and responses 
+## Installation
+
+For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-institute) package feed 
+(https://www.myget.org/F/research-institute/api/v3/index.json) 
+to your nuget configuration.
+
+NuGet packages will be published at v0.1.0. 
 
 ## Usage
+
+Go [here](https://github.com/Research-Institute/json-api-dotnet-core/wiki/Request-Examples) to see examples of HTTP requests and responses
 
 - Configure the service:
 
