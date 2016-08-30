@@ -43,26 +43,7 @@ namespace JsonApiDotNetCore.Data
 
     private object GetEntityById(Type modelType, string id, string includedRelationship)
     {
-      // get generic dbSet
-      var dataAccessorInstance = Activator.CreateInstance(typeof(GenericDataAccess));
-      var dataAccessorGetDbSetMethod = dataAccessorInstance.GetType().GetMethod("GetDbSet");
-      var genericGetDbSetMethod = dataAccessorGetDbSetMethod.MakeGenericMethod(modelType);
-      var dbSet = genericGetDbSetMethod.Invoke(dataAccessorInstance, new [] {((DbContext) _context.DbContext) });
-
-      // include relationships if requested
-      if (!string.IsNullOrEmpty(includedRelationship))
-      {
-        var includeMethod =  dataAccessorInstance.GetType().GetMethod("IncludeEntity");
-        var genericIncludeMethod = includeMethod.MakeGenericMethod(modelType);
-        dbSet = genericIncludeMethod.Invoke(dataAccessorInstance, new []{ dbSet, includedRelationship.ToProperCase() });
-      }
-
-      // get the SingleOrDefault value by Id
-      var dataAccessorSingleOrDefaultMethod = dataAccessorInstance.GetType().GetMethod("SingleOrDefault");
-      var genericSingleOrDefaultMethod = dataAccessorSingleOrDefaultMethod.MakeGenericMethod(modelType);
-      var entity = genericSingleOrDefaultMethod.Invoke(dataAccessorInstance, new[] { dbSet, "Id", id });
-
-      return entity;
+      return new GenericDataAccessAbstraction(_context.DbContext, modelType, includedRelationship).SingleOrDefault(id);;
     }
 
     public void Add(object entity)

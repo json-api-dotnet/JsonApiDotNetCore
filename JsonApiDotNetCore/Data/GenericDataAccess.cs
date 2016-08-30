@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Data
       return queryable.Include(includedEntityName);
     }
 
-    public T SingleOrDefault<T>(object query, string param, string value)
+    public T SingleOrDefault<T>(object query, string param, object value)
     {
       var queryable = (IQueryable<T>) query;
       var currentType = queryable.ElementType;
@@ -30,9 +30,16 @@ namespace JsonApiDotNetCore.Data
         throw new ArgumentException($"'{param}' is not a valid property of '{currentType}'");
       }
 
-      var prm = Expression.Parameter(currentType, property.Name);
-      var left = Expression.Convert(Expression.PropertyOrField(prm, property.Name), typeof(string));
-      var right = Expression.Constant(1, property.PropertyType);
+      // convert the incoming value to the target value type
+      // "1" -> 1
+      var convertedValue = Convert.ChangeType(value, property.PropertyType);
+      // {model}
+      var prm = Expression.Parameter(currentType, "model");
+      // {model.Id}
+      var left = Expression.PropertyOrField(prm, property.Name);
+      // {1}
+      var right = Expression.Constant(convertedValue, property.PropertyType);
+      // {model.Id == 1}
       var body = Expression.Equal(left, right);
       var where = Expression.Lambda<Func<T, bool>>(body, prm);
 
