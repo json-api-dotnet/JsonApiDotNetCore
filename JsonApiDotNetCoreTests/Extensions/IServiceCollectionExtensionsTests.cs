@@ -2,6 +2,7 @@ using Xunit;
 using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCoreTests.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreTests.Extensions.UnitTests
 {
@@ -16,10 +17,12 @@ namespace JsonApiDotNetCoreTests.Extensions.UnitTests
             var serviceCollection = new ServiceCollection();
 
             // act
-            serviceCollection.AddJsonApi(config => {});
+            serviceCollection.AddJsonApi(config => {
+              config.UseContext<DbContext>();
+            });
 
             // assert
-            Assert.True(serviceCollection.ContainsType(typeof(Router)));
+            Assert.True(serviceCollection.ContainsType(typeof(IRouter)));
         }
     }
 }

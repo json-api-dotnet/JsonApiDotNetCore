@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCore.Extensions
     {
       var configBuilder = new JsonApiConfigurationBuilder(configurationAction);
       var config = configBuilder.Build();
-      IRouter router = new Router(config);
+      IRouter router = new Router(config, new RouteBuilder(config), new ControllerBuilder());
       services.AddSingleton(_ => router);
     }
   }

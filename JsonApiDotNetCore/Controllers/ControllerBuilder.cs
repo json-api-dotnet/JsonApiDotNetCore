@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Reflection;
+using System.Linq;
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Data;
 
 namespace JsonApiDotNetCore.Controllers
 {
-  public class ControllerBuilder
+  public class ControllerBuilder : IControllerBuilder
   {
-    private readonly JsonApiContext _context;
-
-    public ControllerBuilder(JsonApiContext context)
+    private JsonApiContext _context { get; set; }
+    public IJsonApiController BuildController(JsonApiContext context)
     {
       _context = context;
-    }
-
-    public IJsonApiController BuildController()
-    {
       var overrideController = GetOverrideController();
       return overrideController ?? new JsonApiController(_context, new ResourceRepository(_context));
     }

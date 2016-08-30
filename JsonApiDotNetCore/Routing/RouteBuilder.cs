@@ -6,32 +6,30 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Routing
 {
-  public class RouteBuilder
+  public class RouteBuilder : IRouteBuilder
   {
     private RouteDefinition _baseRouteDefinition;
     private string _baseResourceId;
-    private readonly HttpRequest _request;
     private readonly JsonApiModelConfiguration _configuration;
 
-    public RouteBuilder(HttpRequest request, JsonApiModelConfiguration configuration)
+    public RouteBuilder(JsonApiModelConfiguration configuration)
     {
-      _request = request;
       _configuration = configuration;
     }
 
-    public Route BuildFromRequest()
+    public Route BuildFromRequest(HttpRequest request)
     {
-      var remainingPathString = SetBaseRouteDefinition();
+      var remainingPathString = SetBaseRouteDefinition(request.Path);
 
       if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}
-        return new Route(_baseRouteDefinition.ModelType, _request.Method, null, _baseRouteDefinition);
+        return new Route(_baseRouteDefinition.ModelType, request.Method, null, _baseRouteDefinition);
       }
 
       remainingPathString = SetBaseResourceId(remainingPathString);
       if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}/{baseResourceId}
-        return new Route(_baseRouteDefinition.ModelType, _request.Method, _baseResourceId, _baseRouteDefinition);
+        return new Route(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition);
       }
 
       // { baseResource}/{ baseResourceId}/{relatedResourceName}
@@ -43,7 +41,7 @@ namespace JsonApiDotNetCore.Routing
       }
 
       var relationshipType = GetTypeOfRelatedResource(relatedResource);
-      return new RelationalRoute(_baseRouteDefinition.ModelType, _request.Method, _baseResourceId, _baseRouteDefinition, relationshipType, relatedResource);
+      return new RelationalRoute(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, relationshipType, relatedResource);
     }
 
     private bool PathStringIsEmpty(PathString pathString)
@@ -51,12 +49,12 @@ namespace JsonApiDotNetCore.Routing
       return pathString.HasValue ? string.IsNullOrEmpty(pathString.ToString().TrimStart('/')) : true;
     }
 
-    private PathString SetBaseRouteDefinition()
+    private PathString SetBaseRouteDefinition(PathString path)
     {
       foreach (var rte in _configuration.Routes)
       {
         PathString remainingPathString;
-        if (_request.Path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
+        if (path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
         {
           _baseRouteDefinition = rte;
           return remainingPathString;
@@ -75,7 +73,6 @@ namespace JsonApiDotNetCore.Routing
     {
       return ModelAccessor.GetTypeFromModelRelationshipName(_baseRouteDefinition.ModelType, relationshipName);
     }
-
 
     // TODO: Why is this here?
     public static string BuildRoute(string nameSpace, string resourceCollectionName)
