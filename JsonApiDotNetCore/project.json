@@ -1,5 +1,9 @@
 {
-  "version": "1.0.0-*",
+  "version": "0.1.0-alpha-*",
+  "packOptions": {
+    "licenseUrl": "https://github.com/Research-Institute/json-api-dotnet-core/tree/master/JsonApiDotNetCore/LICENSE",
+    "projectUrl": "https://github.com/Research-Institute/json-api-dotnet-core/"
+  },
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
