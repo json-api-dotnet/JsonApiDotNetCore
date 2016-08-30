@@ -8,6 +8,7 @@
     "moq": "4.6.38-alpha"
   },
   "frameworks": {
+    "net451": {},
     "netcoreapp1.0": {
       "imports": [
         "dotnet5.6",

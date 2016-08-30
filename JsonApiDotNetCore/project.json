@@ -19,13 +19,13 @@
     "System.Reflection.Extensions": "4.0.1"
   },
   "frameworks": {
+    "net451": {},
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
         "System.Reflection.TypeExtensions": "4.1.0"
       }
-    },
-    "net452": {}
+    }
   },
   "tooling": {
     "defaultNamespace": "JsonApiDotNetCore"

@@ -20,8 +20,8 @@ dotnet test ./JsonApiDotNetCoreTests -c Release -f netcoreapp1.0
 dotnet build ./JsonApiDotNetCoreTests -c Release -f net451
 
 mono \
-./test/JsonApiDotNetCoreTests/bin/Release/net451/*/dotnet-test-xunit.exe \
-./test/JsonApiDotNetCoreTests/bin/Release/net451/*/JsonApiDotNetCoreTests.dll
+./JsonApiDotNetCoreTests/bin/Release/net451/*/dotnet-test-xunit.exe \
+./JsonApiDotNetCoreTests/bin/Release/net451/*/JsonApiDotNetCoreTests.dll
 
 revision=${TRAVIS_JOB_ID:=1}
 revision=$(printf "%04d" $revision)
