@@ -25,18 +25,14 @@ namespace JsonApiDotNetCore.Data
 
     public object Get(string id)
     {
-      if (_context.Route is RelationalRoute)
-      {
-        return GetRelated(id, _context.Route as RelationalRoute);
-      }
-      return GetEntityById(_context.Route.BaseModelType, id, null);
+      var route = _context.Route as RelationalRoute;
+      return route != null ? GetRelated(id, route) : GetEntityById(_context.Route.BaseModelType, id, null);
     }
 
     private object GetRelated(string id, RelationalRoute relationalRoute)
     {
-      // HACK: this would rely on lazy loading to work...will probably fail
       var entity = GetEntityById(relationalRoute.BaseModelType, id, relationalRoute.RelationshipName);
-      return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase()).GetValue(entity);
+      return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase())?.GetValue(entity);
     }
 
     private IQueryable GetDbSetFromContext(string propName)
@@ -47,13 +43,13 @@ namespace JsonApiDotNetCore.Data
 
     private object GetEntityById(Type modelType, string id, string includedRelationship)
     {
-      // HACK: I _believe_ by casting to IEnumerable, we are loading all records into memory, if so... find a better way...
-      //        Also, we are making a BIG assumption that the resource has an attribute Id and not ResourceId which is allowed by EF
+      // get generic dbSet
       var dataAccessorInstance = Activator.CreateInstance(typeof(GenericDataAccess));
-      var dataAccessorMethod = dataAccessorInstance.GetType().GetMethod("GetDbSet");
-      var genericMethod = dataAccessorMethod.MakeGenericMethod(modelType);
-      var dbSet = genericMethod.Invoke(dataAccessorInstance, new [] {((DbContext) _context.DbContext) });
+      var dataAccessorGetDbSetMethod = dataAccessorInstance.GetType().GetMethod("GetDbSet");
+      var genericGetDbSetMethod = dataAccessorGetDbSetMethod.MakeGenericMethod(modelType);
+      var dbSet = genericGetDbSetMethod.Invoke(dataAccessorInstance, new [] {((DbContext) _context.DbContext) });
 
+      // include relationships if requested
       if (!string.IsNullOrEmpty(includedRelationship))
       {
         var includeMethod =  dataAccessorInstance.GetType().GetMethod("IncludeEntity");
@@ -61,7 +57,12 @@ namespace JsonApiDotNetCore.Data
         dbSet = genericIncludeMethod.Invoke(dataAccessorInstance, new []{ dbSet, includedRelationship.ToProperCase() });
       }
 
-      return (dbSet as IEnumerable<dynamic>).SingleOrDefault(x => x.Id.ToString() == id);
+      // get the SingleOrDefault value by Id
+      var dataAccessorSingleOrDefaultMethod = dataAccessorInstance.GetType().GetMethod("SingleOrDefault");
+      var genericSingleOrDefaultMethod = dataAccessorSingleOrDefaultMethod.MakeGenericMethod(modelType);
+      var entity = genericSingleOrDefaultMethod.Invoke(dataAccessorInstance, new[] { dbSet, "Id", id });
+
+      return entity;
     }
 
     public void Add(object entity)
