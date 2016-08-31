@@ -4,7 +4,6 @@ using Moq;
 using Xunit;
 using JsonApiDotNetCore.Data;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 
 namespace JsonApiDotNetCoreTests.Data.UnitTests
@@ -21,19 +20,17 @@ namespace JsonApiDotNetCoreTests.Data.UnitTests
                 new TodoItem { Id = 2, Name = "BBB" }
             }.AsQueryable();
 
-            //var mockSet = new Mock<IQueryable<TodoItem>>();
             var mockSet = new Mock<DbSet<TodoItem>>();
             mockSet.As<IQueryable<TodoItem>>().Setup(m => m.Provider).Returns(data.Provider);
             mockSet.As<IQueryable<TodoItem>>().Setup(m => m.Expression).Returns(data.Expression);
             mockSet.As<IQueryable<TodoItem>>().Setup(m => m.ElementType).Returns(data.ElementType);
             mockSet.As<IQueryable<TodoItem>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
-
             var genericDataAccess = new GenericDataAccess();
 
             // act
             var item1 = genericDataAccess.SingleOrDefault<TodoItem>(mockSet.Object, "Id", 1);
-            var item2 = genericDataAccess.SingleOrDefault<TodoItem>(mockSet.Object, "Id", 2);
+            var item2 = genericDataAccess.SingleOrDefault<TodoItem>(mockSet.Object, "Name", "BBB");
 
             // assert
             Assert.Equal(1, item1.Id);
