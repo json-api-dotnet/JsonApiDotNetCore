@@ -22,34 +22,20 @@ namespace JsonApiDotNetCore.Data
     public T SingleOrDefault<T>(object query, string param, object value)
     {
       var queryable = (IQueryable<T>) query;
-      var currentType = queryable.ElementType;
-      var property = currentType.GetProperty(param);
-
-      if (property == null)
-      {
-        throw new ArgumentException($"'{param}' is not a valid property of '{currentType}'");
-      }
-
-      // convert the incoming value to the target value type
-      // "1" -> 1
-      var convertedValue = Convert.ChangeType(value, property.PropertyType);
-      // {model}
-      var prm = Expression.Parameter(currentType, "model");
-      // {model.Id}
-      var left = Expression.PropertyOrField(prm, property.Name);
-      // {1}
-      var right = Expression.Constant(convertedValue, property.PropertyType);
-      // {model.Id == 1}
-      var body = Expression.Equal(left, right);
-      var where = Expression.Lambda<Func<T, bool>>(body, prm);
-
-      return queryable.SingleOrDefault(where);
+      var expression = GetEqualityExpressionForProperty(queryable, param, value);
+      return queryable.SingleOrDefault(expression);
     }
 
     public IQueryable<T> Where<T>(object query, string param, object value)
     {
       var queryable = (IQueryable<T>) query;
-      var currentType = queryable.ElementType;
+      var expression = GetEqualityExpressionForProperty(queryable, param, value);
+      return queryable.Where(expression);
+    }
+
+    private Expression<Func<T,bool>> GetEqualityExpressionForProperty<T>(IQueryable<T> query, string param, object value)
+    {
+      var currentType = query.ElementType;
       var property = currentType.GetProperty(param);
 
       if (property == null)
@@ -68,9 +54,7 @@ namespace JsonApiDotNetCore.Data
       var right = Expression.Constant(convertedValue, property.PropertyType);
       // {model.Id == 1}
       var body = Expression.Equal(left, right);
-      var where = Expression.Lambda<Func<T, bool>>(body, prm);
-
-      return queryable.Where(where);
+      return Expression.Lambda<Func<T, bool>>(body, prm);
     }
   }
 }
