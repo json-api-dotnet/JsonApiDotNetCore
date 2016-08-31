@@ -20,7 +20,10 @@ namespace JsonApiDotNetCore.Routing
 
     public Route BuildFromRequest(HttpRequest request)
     {
-      var remainingPathString = SetBaseRouteDefinition(request.Path);
+      PathString remainingPathString;
+      _baseRouteDefinition = SetBaseRouteDefinition(request.Path, out remainingPathString);
+
+      if(_baseRouteDefinition == null) return null;
 
       var querySet = new QuerySet(request.Query);
 
@@ -52,18 +55,18 @@ namespace JsonApiDotNetCore.Routing
       return pathString.HasValue ? string.IsNullOrEmpty(pathString.ToString().TrimStart('/')) : true;
     }
 
-    private PathString SetBaseRouteDefinition(PathString path)
+    private RouteDefinition SetBaseRouteDefinition(PathString path, out PathString remainingPath)
     {
+      PathString remainingPathTemp;
       foreach (var rte in _configuration.Routes)
       {
-        PathString remainingPathString;
-        if (path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
+        if (path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathTemp))
         {
-          _baseRouteDefinition = rte;
-          return remainingPathString;
+          remainingPath = remainingPathTemp;
+          return rte;
         }
       }
-      throw new Exception("Route is not defined.");
+      return null;
     }
 
     private PathString SetBaseResourceId(PathString remainPathString)

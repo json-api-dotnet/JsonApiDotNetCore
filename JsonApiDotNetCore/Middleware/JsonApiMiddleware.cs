@@ -29,7 +29,9 @@ namespace JsonApiDotNetCore.Middleware
         _logger.LogInformation("Passing request to JsonApiService: " + context.Request.Path);
 
         if(context.Request.ContentType == "application/vnd.api+json") {
-          _router.HandleJsonApiRoute(context, _serviceProvider);
+          var routeWasHandled = _router.HandleJsonApiRoute(context, _serviceProvider);
+          if(!routeWasHandled)
+            RespondNotFound(context);
         }
         else
         {
@@ -44,6 +46,12 @@ namespace JsonApiDotNetCore.Middleware
       private void RespondUnsupportedMediaType(HttpContext context)
       {
         context.Response.StatusCode = 415;
+        context.Response.Body.Flush();
+      }
+
+      private void RespondNotFound(HttpContext context)
+      {
+        context.Response.StatusCode = 404;
         context.Response.Body.Flush();
       }
   }
