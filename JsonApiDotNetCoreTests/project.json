@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-alpha",
   "testRunner": "xunit",
   "dependencies": {
-    "JsonApiDotNetCore": "1.0.0",
+    "JsonApiDotNetCore": "0.1.0",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "xunit": "2.2.0-beta2-build3300",
     "moq": "4.6.38-alpha"
@@ -32,7 +32,7 @@
     "defaultNamespace": "JsonApiDotNetCoreTests"
   },
   "tools": {
-   "Microsoft.DotNet.Watcher.Tools": {
+    "Microsoft.DotNet.Watcher.Tools": {
       "version": "1.0.0-*",
       "imports": "portable-net451+win8"
     }

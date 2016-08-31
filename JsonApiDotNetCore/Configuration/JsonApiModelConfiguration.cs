@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using JsonApiDotNetCore.Abstractions;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.JsonApi;
 using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
@@ -16,59 +18,42 @@ namespace JsonApiDotNetCore.Configuration
     public IMapper ResourceMapper;
     public Type ContextType { get; set; }
     public List<RouteDefinition> Routes = new List<RouteDefinition>();
-    public Dictionary<Type, Type>  ResourceMapDefinitions = new Dictionary<Type, Type>();
+    public Dictionary<Type, Tuple<Type, Action<IMappingExpression>>>  ResourceMapDefinitions = new Dictionary<Type, Tuple<Type, Action<IMappingExpression>>>();
+    public Dictionary<Type, Type> ControllerOverrides = new Dictionary<Type, Type>();
 
     public void SetDefaultNamespace(string ns)
     {
       Namespace = ns;
     }
 
-    public void DefineResourceMapping(Action<Dictionary<Type,Type>> mapping)
+    public void AddResourceMapping<TModel, TResource>(Action<IMappingExpression> mappingExpression)
     {
-      mapping.Invoke(ResourceMapDefinitions);
+      var resourceType = typeof(TResource);
+      var modelType = typeof(TModel);
 
-      var mapConfiguration = new MapperConfiguration(cfg =>
-      {
-        foreach (var definition in ResourceMapDefinitions)
-        {
-          cfg.CreateMap(definition.Key, definition.Value);
-        }
-      });
+      if (!resourceType.GetInterfaces().Contains(typeof(IJsonApiResource)))
+        throw new ArgumentException("Specified type does not implement IJsonApiResource", nameof(resourceType));
 
-      ResourceMapper = mapConfiguration.CreateMapper();
+      ResourceMapDefinitions.Add(modelType, new Tuple<Type, Action<IMappingExpression>>(resourceType, mappingExpression));
+    }
+
+    public void UseController<TModel, TController>()
+    {
+      var modelType = typeof(TModel);
+      var controllerType = typeof(TController);
+
+      if (!controllerType.GetInterfaces().Contains(typeof(IJsonApiController)))
+        throw new ArgumentException("Specified type does not implement IJsonApiController", nameof(controllerType));
+
+      ControllerOverrides[modelType] = controllerType;
     }
 
     public void UseContext<T>()
     {
-      // TODO: assert the context is of type DbContext
       ContextType = typeof(T);
-      LoadModelRoutesFromContext();
+
+      if (!typeof(DbContext).IsAssignableFrom(ContextType))
+        throw new ArgumentException("Context Type must derive from DbContext", nameof(T));
     }
-
-    private void LoadModelRoutesFromContext()
-    {
-      // Assumption: all DbSet<> types should be included in the route list
-      var properties = ContextType.GetProperties().ToList();
-
-      properties.ForEach(property =>
-      {
-        if (property.PropertyType.GetTypeInfo().IsGenericType &&
-          property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
-        {
-
-          var modelType = property.PropertyType.GetGenericArguments()[0];
-
-          var route = new RouteDefinition
-          {
-            ModelType = modelType,
-            PathString = RouteBuilder.BuildRoute(Namespace, property.Name),
-            ContextPropertyName = property.Name
-          };
-
-          Routes.Add(route);
-        }
-      });
-    }
-
   }
 }

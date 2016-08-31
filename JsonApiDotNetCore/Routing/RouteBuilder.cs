@@ -2,6 +2,7 @@
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Routing.Query;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Routing
@@ -19,17 +20,22 @@ namespace JsonApiDotNetCore.Routing
 
     public Route BuildFromRequest(HttpRequest request)
     {
-      var remainingPathString = SetBaseRouteDefinition(request.Path);
+      PathString remainingPathString;
+      _baseRouteDefinition = SetBaseRouteDefinition(request.Path, out remainingPathString);
+
+      if(_baseRouteDefinition == null) return null;
+
+      var querySet = new QuerySet(request.Query);
 
       if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}
-        return new Route(_baseRouteDefinition.ModelType, request.Method, null, _baseRouteDefinition);
+        return new Route(_baseRouteDefinition.ModelType, request.Method, null, _baseRouteDefinition, querySet);
       }
 
       remainingPathString = SetBaseResourceId(remainingPathString);
       if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}/{baseResourceId}
-        return new Route(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition);
+        return new Route(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, querySet);
       }
 
       // { baseResource}/{ baseResourceId}/{relatedResourceName}
@@ -41,7 +47,7 @@ namespace JsonApiDotNetCore.Routing
       }
 
       var relationshipType = GetTypeOfRelatedResource(relatedResource);
-      return new RelationalRoute(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, relationshipType, relatedResource);
+      return new RelationalRoute(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, querySet, relationshipType, relatedResource);
     }
 
     private bool PathStringIsEmpty(PathString pathString)
@@ -49,18 +55,18 @@ namespace JsonApiDotNetCore.Routing
       return pathString.HasValue ? string.IsNullOrEmpty(pathString.ToString().TrimStart('/')) : true;
     }
 
-    private PathString SetBaseRouteDefinition(PathString path)
+    private RouteDefinition SetBaseRouteDefinition(PathString path, out PathString remainingPath)
     {
+      PathString remainingPathTemp;
       foreach (var rte in _configuration.Routes)
       {
-        PathString remainingPathString;
-        if (path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathString))
+        if (path.StartsWithSegments(new PathString(rte.PathString), StringComparison.OrdinalIgnoreCase, out remainingPathTemp))
         {
-          _baseRouteDefinition = rte;
-          return remainingPathString;
+          remainingPath = remainingPathTemp;
+          return rte;
         }
       }
-      throw new Exception("Route is not defined.");
+      return null;
     }
 
     private PathString SetBaseResourceId(PathString remainPathString)

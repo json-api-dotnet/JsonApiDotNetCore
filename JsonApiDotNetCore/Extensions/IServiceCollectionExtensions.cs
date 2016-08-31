@@ -11,14 +11,10 @@ namespace JsonApiDotNetCore.Extensions
   {
     public static void AddJsonApi(this IServiceCollection services, Action<IJsonApiModelConfiguration> configurationAction)
     {
-      var config = new JsonApiModelConfiguration();
-      configurationAction.Invoke(config);
-
-      if (config.ResourceMapper == null)
-      {
-        config.ResourceMapper = new MapperConfiguration(cfg => {}).CreateMapper();
-      }
-      services.AddSingleton(_ => new Router(config, new RouteBuilder(config), new ControllerBuilder()));
+      var configBuilder = new JsonApiConfigurationBuilder(configurationAction);
+      var config = configBuilder.Build();
+      IRouter router = new Router(config, new RouteBuilder(config), new ControllerBuilder());
+      services.AddSingleton(_ => router);
     }
   }
 }

@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Abstractions
 {
-  public class JsonApiContext
+  public class JsonApiContext : IJsonApiContext
   {
     public HttpContext HttpContext { get; }
     public Route Route { get; }
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Abstractions
 
     public Type GetJsonApiResourceType()
     {
-      return Configuration.ResourceMapDefinitions[Route.BaseModelType];
+      return Configuration.ResourceMapDefinitions[Route.BaseModelType].Item1;
     }
 
     public string GetEntityName()

@@ -8,25 +8,25 @@ namespace JsonApiDotNetCore.Controllers
 {
   public class JsonApiController : IJsonApiController
   {
-    protected readonly JsonApiContext JsonApiContext;
+    protected readonly IJsonApiContext JsonApiContext;
     private readonly ResourceRepository _resourceRepository;
 
-    public JsonApiController(JsonApiContext jsonApiContext, ResourceRepository resourceRepository)
+    public JsonApiController(IJsonApiContext jsonApiContext, ResourceRepository resourceRepository)
     {
       JsonApiContext = jsonApiContext;
       _resourceRepository = resourceRepository;
     }
 
-    public ObjectResult Get()
+    public virtual ObjectResult Get()
     {
       var entities = _resourceRepository.Get();
-      if(entities == null || entities.Count == 0) {
+      if(entities == null) {
         return new NotFoundObjectResult(null);
       }
       return new OkObjectResult(entities);
     }
 
-    public ObjectResult Get(string id)
+    public virtual ObjectResult Get(string id)
     {
       var entity = _resourceRepository.Get(id);
       if(entity == null) {
@@ -35,14 +35,14 @@ namespace JsonApiDotNetCore.Controllers
       return new OkObjectResult(entity);
     }
 
-    public ObjectResult Post(object entity)
+    public virtual ObjectResult Post(object entity)
     {
       _resourceRepository.Add(entity);
       _resourceRepository.SaveChanges();
       return new CreatedResult(JsonApiContext.HttpContext.Request.Path, entity);
     }
 
-    public ObjectResult Patch(string id, Dictionary<PropertyInfo, object> entityPatch)
+    public virtual ObjectResult Patch(string id, Dictionary<PropertyInfo, object> entityPatch)
     {
       var entity = _resourceRepository.Get(id);
       if(entity == null) {
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Controllers
       return new OkObjectResult(entity);
     }
 
-    public ObjectResult Delete(string id)
+    public virtual ObjectResult Delete(string id)
     {
       _resourceRepository.Delete(id);
       _resourceRepository.SaveChanges();
