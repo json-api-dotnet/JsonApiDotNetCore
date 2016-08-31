@@ -2,6 +2,7 @@
 using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Routing.Query;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Routing
@@ -21,15 +22,17 @@ namespace JsonApiDotNetCore.Routing
     {
       var remainingPathString = SetBaseRouteDefinition(request.Path);
 
+      var querySet = new QuerySet(request.Query);
+
       if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}
-        return new Route(_baseRouteDefinition.ModelType, request.Method, null, _baseRouteDefinition);
+        return new Route(_baseRouteDefinition.ModelType, request.Method, null, _baseRouteDefinition, querySet);
       }
 
       remainingPathString = SetBaseResourceId(remainingPathString);
       if (PathStringIsEmpty(remainingPathString))
       { // {baseResource}/{baseResourceId}
-        return new Route(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition);
+        return new Route(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, querySet);
       }
 
       // { baseResource}/{ baseResourceId}/{relatedResourceName}
@@ -41,7 +44,7 @@ namespace JsonApiDotNetCore.Routing
       }
 
       var relationshipType = GetTypeOfRelatedResource(relatedResource);
-      return new RelationalRoute(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, relationshipType, relatedResource);
+      return new RelationalRoute(_baseRouteDefinition.ModelType, request.Method, _baseResourceId, _baseRouteDefinition, querySet, relationshipType, relatedResource);
     }
 
     private bool PathStringIsEmpty(PathString pathString)

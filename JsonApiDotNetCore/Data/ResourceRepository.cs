@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace JsonApiDotNetCore.Data
 {
@@ -20,7 +21,15 @@ namespace JsonApiDotNetCore.Data
 
     public List<object> Get()
     {
-      return (GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName) as IEnumerable<object>)?.ToList();
+      IQueryable dbSet;
+      var filter = _context.Route.Query.Filter;
+      if(filter != null) {
+        dbSet = FilterEntities(_context.Route.BaseModelType, filter.PropertyName, filter.PropertyValue, null);
+      }
+      else {
+        dbSet = GetDbSet(_context.Route.BaseModelType, null);
+      }
+      return ((IEnumerable<object>)dbSet).ToList();
     }
 
     public object Get(string id)
@@ -35,10 +44,10 @@ namespace JsonApiDotNetCore.Data
       return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase())?.GetValue(entity);
     }
 
-    private IQueryable GetDbSetFromContext(string propName)
+    private IQueryable GetDbSet(Type modelType, string includedRelationship)
     {
       var dbContext = _context.DbContext;
-      return (IQueryable)dbContext.GetType().GetProperties().FirstOrDefault(pI => pI.Name.ToProperCase() == propName.ToProperCase())?.GetValue(dbContext, null);
+      return (IQueryable)new GenericDataAccessAbstraction(_context.DbContext, modelType, includedRelationship).GetDbSet();
     }
 
     private object GetEntityById(Type modelType, string id, string includedRelationship)
@@ -46,9 +55,14 @@ namespace JsonApiDotNetCore.Data
       return new GenericDataAccessAbstraction(_context.DbContext, modelType, includedRelationship).SingleOrDefault("Id", id);
     }
 
+    private IQueryable FilterEntities(Type modelType, string property, string value, string includedRelationship)
+    {
+      return new GenericDataAccessAbstraction(_context.DbContext, modelType, includedRelationship).Filter(property, value);
+    }
+
     public void Add(object entity)
     {
-      var dbSet = GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName);
+      var dbSet = GetDbSet(_context.Route.BaseModelType, null);
       var dbSetAddMethod = dbSet.GetType().GetMethod("Add");
       dbSetAddMethod.Invoke(dbSet, new [] { entity });
     }
@@ -56,7 +70,7 @@ namespace JsonApiDotNetCore.Data
     public void Delete(string id)
     {
       var entity = Get(id);
-      var dbSet = GetDbSetFromContext(_context.Route.BaseRouteDefinition.ContextPropertyName);
+      var dbSet = GetDbSet(_context.Route.BaseModelType, null);
       var dbSetAddMethod = dbSet.GetType().GetMethod("Remove");
       dbSetAddMethod.Invoke(dbSet, new [] { entity });
     }

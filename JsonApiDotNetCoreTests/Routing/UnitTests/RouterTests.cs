@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreTests.Routing.UnitTests
           httpResponseMock.Setup(r => r.Body).Returns(new MemoryStream());
           httpContextMock.Setup(c => c.Response).Returns(httpResponseMock.Object);
 
-          var route = new Route(null, "GET", null, null);
+          var route = new Route(null, "GET", null, null, null);
 
           var routeBuilderMock = new Mock<IRouteBuilder>();
           routeBuilderMock.Setup(rb => rb.BuildFromRequest(null)).Returns(route);
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreTests.Routing.UnitTests
           httpResponseMock.Setup(r => r.Body).Returns(new MemoryStream());
           httpContextMock.Setup(c => c.Response).Returns(httpResponseMock.Object);
 
-          var route = new Route(null, "GET", resourceId, null);
+          var route = new Route(null, "GET", resourceId, null, null);
 
           var routeBuilderMock = new Mock<IRouteBuilder>();
           routeBuilderMock.Setup(rb => rb.BuildFromRequest(null)).Returns(route);

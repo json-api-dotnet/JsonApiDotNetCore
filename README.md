@@ -118,9 +118,10 @@ You can access the HttpContext from [IJsonApiContext](https://github.com/Researc
 ## References
 [JsonApi Specification](http://jsonapi.org/)
 
-## Current Assumptions
+## Current Entity Requirements
 
 - Using Entity Framework
 - All entities in the specified context should have controllers
 - All entities are served from the same namespace (i.e. 'api/v1')
 - All entities have a primary key "Id" and not "EntityId"
+- All entity names are proper case, "Id" not "id"

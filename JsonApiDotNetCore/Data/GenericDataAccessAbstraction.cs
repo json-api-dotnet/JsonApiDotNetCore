@@ -27,10 +27,10 @@ namespace JsonApiDotNetCore.Data
       return InvokeGenericDataAccessMethod("SingleOrDefault", new[] { dbSet, propertyName, value });
     }
 
-    public object Filter(string propertyName, string value)
+    public IQueryable Filter(string propertyName, string value)
     {
       var dbSet = GetDbSet();
-      return InvokeGenericDataAccessMethod("Where", new[] { dbSet, propertyName, value });
+      return (IQueryable)InvokeGenericDataAccessMethod("Where", new[] { dbSet, propertyName, value });
     }
 
     private object InvokeGenericDataAccessMethod(string methodName, params object[] propertyValues)
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Data
       return genericDataAccessorMethod.Invoke(_dataAccessorInstance, propertyValues);
     }
 
-    private object GetDbSet()
+    public object GetDbSet()
     {
       var dataAccessorGetDbSetMethod = _dataAccessorInstance.GetType().GetMethod("GetDbSet");
       var genericGetDbSetMethod = dataAccessorGetDbSetMethod.MakeGenericMethod(_modelType);
