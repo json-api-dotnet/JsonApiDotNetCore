@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Data
 
     private object GetEntityById(Type modelType, string id, string includedRelationship)
     {
-      return new GenericDataAccessAbstraction(_context.DbContext, modelType, includedRelationship).SingleOrDefault(id);;
+      return new GenericDataAccessAbstraction(_context.DbContext, modelType, includedRelationship).SingleOrDefault("Id", id);
     }
 
     public void Add(object entity)

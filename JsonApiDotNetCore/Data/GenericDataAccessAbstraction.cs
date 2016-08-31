@@ -21,23 +21,35 @@ namespace JsonApiDotNetCore.Data
       _includedRelationship = includedRelationship?.ToProperCase();
     }
 
-    public object SingleOrDefault(string id)
+    public object SingleOrDefault(string propertyName, string value)
     {
       var dbSet = GetDbSet();
-      if (!string.IsNullOrEmpty(_includedRelationship))
-      {
-        dbSet = IncludeRelationshipInContext(dbSet);
-      }
-      var dataAccessorSingleOrDefaultMethod = _dataAccessorInstance.GetType().GetMethod("SingleOrDefault");
-      var genericSingleOrDefaultMethod = dataAccessorSingleOrDefaultMethod.MakeGenericMethod(_modelType);
-      return genericSingleOrDefaultMethod.Invoke(_dataAccessorInstance, new[] { dbSet, "Id", id });
+      return InvokeGenericDataAccessMethod("SingleOrDefault", new[] { dbSet, propertyName, value });
+    }
+
+    public object Filter(string propertyName, string value)
+    {
+      var dbSet = GetDbSet();
+      return InvokeGenericDataAccessMethod("Where", new[] { dbSet, propertyName, value });
+    }
+
+    private object InvokeGenericDataAccessMethod(string methodName, params object[] propertyValues)
+    {
+      var dataAccessorMethod = _dataAccessorInstance.GetType().GetMethod(methodName);
+      var genericDataAccessorMethod = dataAccessorMethod.MakeGenericMethod(_modelType);
+      return genericDataAccessorMethod.Invoke(_dataAccessorInstance, propertyValues);
     }
 
     private object GetDbSet()
     {
       var dataAccessorGetDbSetMethod = _dataAccessorInstance.GetType().GetMethod("GetDbSet");
       var genericGetDbSetMethod = dataAccessorGetDbSetMethod.MakeGenericMethod(_modelType);
-      return genericGetDbSetMethod.Invoke(_dataAccessorInstance, new [] { _dbContext });
+      var dbSet = genericGetDbSetMethod.Invoke(_dataAccessorInstance, new [] { _dbContext });
+      if (!string.IsNullOrEmpty(_includedRelationship))
+      {
+        dbSet = IncludeRelationshipInContext(dbSet);
+      }
+      return dbSet;
     }
 
     private object IncludeRelationshipInContext(object dbSet)
