@@ -105,19 +105,23 @@ namespace JsonApiDotNetCore.JsonApi
       };
     }
 
-    private Dictionary<string, string> GetRelationshipLinks(IJsonApiResource resource, string relationshipName)
+    private Dictionary<string, Dictionary<string, string>> GetRelationshipLinks(IJsonApiResource resource, string relationshipName)
     {
       return BuildRelationshipLinks(_context.HttpContext.Request.Scheme,
         _context.HttpContext.Request.Host.ToString(), _context.Configuration.Namespace,
        _context.GetEntityName(), resource.Id, relationshipName);
     }
 
-    private Dictionary<string, string> BuildRelationshipLinks(string protocol, string host, string nameSpace, string resourceCollectionName, string resourceId, string relationshipName)
+    private Dictionary<string, Dictionary<string, string>> BuildRelationshipLinks(string protocol, string host, string nameSpace, string resourceCollectionName, string resourceId, string relationshipName)
     {
-      return new Dictionary<string, string>
+      return new Dictionary<string, Dictionary<string, string>>
       {
-        {"self", $"{protocol}://{host}/{nameSpace}/{resourceCollectionName}/{resourceId}/relationships/{relationshipName}"},
-        {"related", $"{protocol}://{host}/{nameSpace}/{resourceCollectionName}/{resourceId}/{relationshipName}"}
+        {
+          "links", new Dictionary<string, string> {
+            {"self", $"{protocol}://{host}/{nameSpace}/{resourceCollectionName}/{resourceId}/relationships/{relationshipName}"},
+            {"related", $"{protocol}://{host}/{nameSpace}/{resourceCollectionName}/{resourceId}/{relationshipName}"}
+          }
+        }
       };
     }
   }

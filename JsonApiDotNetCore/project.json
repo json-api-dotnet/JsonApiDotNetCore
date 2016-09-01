@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packOptions": {
     "licenseUrl": "https://github.com/Research-Institute/json-api-dotnet-core/tree/master/JsonApiDotNetCore/LICENSE",
     "projectUrl": "https://github.com/Research-Institute/json-api-dotnet-core/"
