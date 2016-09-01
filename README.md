@@ -2,6 +2,8 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/9fvgeoxdikwkom10?svg=true)](https://ci.appveyor.com/project/jaredcnance/json-api-dotnet-core)
 [![Travis](https://img.shields.io/travis/Research-Institute/json-api-dotnet-core.svg?maxAge=3600&label=travis)](https://travis-ci.org/Research-Institute/json-api-dotnet-core)
+[![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
+[![MyGet CI](https://img.shields.io/myget/research-institute/v/JsonApiDotNetCore.svg)](https://www.myget.org/feed/research-institute/package/nuget/JsonApiDotNetCore)
 
 JSON API Spec Conformance: **Non Conforming**
 
@@ -11,7 +13,11 @@ For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-in
 (https://www.myget.org/F/research-institute/api/v3/index.json) 
 to your nuget configuration.
 
-NuGet packages will be published at v0.1.0. 
+`Install-Package JsonApiDotNetCore`
+
+```
+"JsonApiDotNetCore": "0.1.0"
+```
 
 ## Usage
 
