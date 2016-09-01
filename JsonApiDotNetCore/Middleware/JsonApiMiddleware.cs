@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -28,19 +29,37 @@ namespace JsonApiDotNetCore.Middleware
       {
         _logger.LogInformation("Passing request to JsonApiService: " + context.Request.Path);
 
-        if(context.Request.ContentType == "application/vnd.api+json") {
+        if(IsJsonApiRequest(context)) {
           var routeWasHandled = _router.HandleJsonApiRoute(context, _serviceProvider);
           if(!routeWasHandled)
             RespondNotFound(context);
         }
         else
         {
-          _logger.LogInformation("Content-Type invalid for JsonAPI");
-
           await _next.Invoke(context);
 
           RespondUnsupportedMediaType(context);
         }
+      }
+
+      private bool IsJsonApiRequest(HttpContext context)
+      {
+        StringValues acceptHeader;
+        if(context.Request.Headers.TryGetValue("Accept", out acceptHeader) && acceptHeader == "application/vnd.api+json")
+        {
+          if(context.Request.ContentLength > 0) {
+            if(context.Request.ContentType == "application/vnd.api+json") {
+              return true;
+            }
+            _logger.LogInformation("Content-Type invalid for JsonAPI");
+            return false;
+          }
+          return true;
+        }
+
+        _logger.LogInformation("Accept header invalid for JsonAPI");
+
+        return false;
       }
 
       private void RespondUnsupportedMediaType(HttpContext context)
