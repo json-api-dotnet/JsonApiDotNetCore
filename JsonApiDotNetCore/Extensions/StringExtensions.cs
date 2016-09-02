@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -6,21 +7,43 @@ namespace JsonApiDotNetCore.Extensions
   {
     public static string ToCamelCase(this string str)
     {
-      var splittedPhraseChars = str.ToCharArray();
-      if (splittedPhraseChars.Length > 0)
+      var chars = str.ToCharArray();
+      if (chars.Length > 0)
       {
-        splittedPhraseChars[0] = new string(splittedPhraseChars[0], 1).ToLower().ToCharArray()[0];
-        return new String(splittedPhraseChars);
+        chars[0] = new string(chars[0], 1).ToLower().ToCharArray()[0];
+        return new String(chars);
       }
       return str;
     }
+
     public static string ToProperCase(this string str)
     {
-      var splittedPhraseChars = str.ToCharArray();
-      if (splittedPhraseChars.Length > 0)
+      var chars = str.ToCharArray();
+      if (chars.Length > 0)
       {
-        splittedPhraseChars[0] = new string(splittedPhraseChars[0], 1).ToUpper().ToCharArray()[0];
-        return new String(splittedPhraseChars);
+        chars[0] = new string(chars[0], 1).ToUpper().ToCharArray()[0];
+        return new String(chars);
+      }
+      return str;
+    }
+
+    public static string Dasherize(this string str)
+    {
+      var chars = str.ToCharArray();
+      if (chars.Length > 0)
+      {
+        var builder = new StringBuilder();
+        for(var i = 0; i  < chars.Length; i++)
+        {
+          if(char.IsUpper(chars[i])) {
+            var hashedString = (i > 0) ? $"-{char.ToLower(chars[i])}" : $"{char.ToLower(chars[i])}";
+            builder.Append(hashedString);
+          }
+          else {
+            builder.Append(chars[i]);
+          }
+        }
+        return builder.ToString();
       }
       return str;
     }
