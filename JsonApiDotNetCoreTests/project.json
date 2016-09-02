@@ -1,8 +1,7 @@
 {
-  "version": "1.0.0-alpha",
   "testRunner": "xunit",
   "dependencies": {
-    "JsonApiDotNetCore": "0.1.2",
+    "JsonApiDotNetCore": "0.1.4-beta-*",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "xunit": "2.2.0-beta2-build3300",
     "moq": "4.6.38-alpha"

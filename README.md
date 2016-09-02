@@ -5,19 +5,15 @@
 [![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
 [![MyGet CI](https://img.shields.io/myget/research-institute/v/JsonApiDotNetCore.svg)](https://www.myget.org/feed/research-institute/package/nuget/JsonApiDotNetCore)
 
-JSON API Spec Conformance: **Non Conforming**
-
 ## Installation
+
+`Install-Package JsonApiDotNetCore`
+
+Click [here](https://www.nuget.org/packages/JsonApiDotNetCore/) for the latest NuGet version.
 
 For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-institute) package feed 
 (https://www.myget.org/F/research-institute/api/v3/index.json) 
 to your nuget configuration.
-
-`Install-Package JsonApiDotNetCore`
-
-```
-"JsonApiDotNetCore": "0.1.0"
-```
 
 ## Usage
 
@@ -42,7 +38,9 @@ services.AddJsonApi(config => {
 app.UseJsonApi();
 ```
 
-## Specifying The Presenter / ViewModel
+## Specifying The JsonApiResources
+
+You can think of these as the presenter / view model definitions for your models. 
 
  - When you define a model, you **MUST** specify the associated resource class using the `JsonApiResource` attribute.
  - The specified resource class **MUST** implement `IJsonApiResource`. 

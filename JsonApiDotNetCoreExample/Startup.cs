@@ -32,7 +32,8 @@ namespace JsonApiDotNetCoreExample
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddCors();
+
             services.AddDbContext<ApplicationDbContext>(options =>
               options.UseNpgsql(Configuration["Data:ConnectionString"]),
               ServiceLifetime.Transient);
@@ -53,6 +54,9 @@ namespace JsonApiDotNetCoreExample
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(builder =>
+                      builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
             app.UseJsonApi();
         }

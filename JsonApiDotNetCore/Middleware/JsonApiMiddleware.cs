@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Middleware
         _logger.LogInformation("Passing request to JsonApiService: " + context.Request.Path);
 
         if(IsJsonApiRequest(context)) {
-          var routeWasHandled = _router.HandleJsonApiRoute(context, _serviceProvider);
+          var routeWasHandled = await _router.HandleJsonApiRouteAsync(context, _serviceProvider);
           if(!routeWasHandled)
             RespondNotFound(context);
         }
