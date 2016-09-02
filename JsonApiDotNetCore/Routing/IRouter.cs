@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Routing
 {
   public interface IRouter
   {
-    bool HandleJsonApiRoute(HttpContext context, IServiceProvider serviceProvider);
+    Task<bool> HandleJsonApiRouteAsync(HttpContext context, IServiceProvider serviceProvider);
   }
 }
