@@ -9,15 +9,13 @@ JSON API Spec Conformance: **Non Conforming**
 
 ## Installation
 
+`Install-Package JsonApiDotNetCore`
+
+Click [here](https://www.nuget.org/packages/JsonApiDotNetCore/) for the latest NuGet version.
+
 For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-institute) package feed 
 (https://www.myget.org/F/research-institute/api/v3/index.json) 
 to your nuget configuration.
-
-`Install-Package JsonApiDotNetCore`
-
-```
-"JsonApiDotNetCore": "0.1.0"
-```
 
 ## Usage
 
