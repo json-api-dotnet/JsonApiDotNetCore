@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Abstractions
     public string GetEntityName()
     {
       return (!(Route is RelationalRoute) ? Route.BaseRouteDefinition.ContextPropertyName
-      : Configuration.Routes.Single(r => r.ModelType == ((RelationalRoute)Route).RelationalType).ContextPropertyName).ToCamelCase();
+      : Configuration.Routes.Single(r => r.ModelType == ((RelationalRoute)Route).RelationalType).ContextPropertyName).Dasherize();
     }
 
     public Type GetEntityType()

@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Data
     private object GetRelated(string id, RelationalRoute relationalRoute)
     {
       var entity = GetEntityById(relationalRoute.BaseModelType, id, relationalRoute.RelationshipName);
-      return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.ToCamelCase() == relationalRoute.RelationshipName.ToCamelCase())?.GetValue(entity);
+      return relationalRoute.BaseModelType.GetProperties().FirstOrDefault(pi => pi.Name.Dasherize() == relationalRoute.RelationshipName.Dasherize())?.GetValue(entity);
     }
 
     private IQueryable GetDbSet(Type modelType, string includedRelationship)

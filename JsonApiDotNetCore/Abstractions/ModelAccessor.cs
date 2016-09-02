@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Abstractions
     {
       var properties = modelType.GetProperties().Where(propertyInfo => propertyInfo.GetMethod.IsVirtual).ToList();
       var relationshipType = properties.FirstOrDefault(
-        virtualProperty => virtualProperty.Name.ToCamelCase() == relationshipName.ToCamelCase())?.PropertyType;
+        virtualProperty => virtualProperty.Name.Dasherize() == relationshipName.Dasherize())?.PropertyType;
       if(relationshipType.GetTypeInfo().IsGenericType)
       {
         return relationshipType.GetGenericArguments().Single();

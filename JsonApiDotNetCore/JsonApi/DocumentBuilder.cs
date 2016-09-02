@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.JsonApi
       _context.GetEntityType().GetProperties().Where(propertyInfo => propertyInfo.GetMethod.IsVirtual).ToList().ForEach(
         virtualProperty =>
         {
-          relationships.Add(virtualProperty.Name, GetRelationshipLinks(resource, virtualProperty.Name.ToCamelCase()));
+          relationships.Add(virtualProperty.Name.Dasherize(), GetRelationshipLinks(resource, virtualProperty.Name.Dasherize().Dasherize()));
         });
       return relationships;
     }
