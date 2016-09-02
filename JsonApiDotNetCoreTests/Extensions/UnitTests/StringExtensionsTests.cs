@@ -19,6 +19,7 @@ namespace JsonApiDotNetCoreTests.Extensions.UnitTests
 
         [Theory]
         [InlineData("todoItem", "TodoItem")]
+        [InlineData("todo-items", "TodoItems")]
         public void ToProperCase_ConvertsString_ToProperCase(string input, string expectedOutput)
         {
             // arrange
