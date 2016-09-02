@@ -1,8 +1,21 @@
 {
   "version": "0.1.3-beta-*",
   "packOptions": {
+    "summary": "Complete JSONAPI Middleware, Routing, and Controller package for .Net Core",
+    "tags": [
+      "dotnetcore",
+      "jsonapi",
+      "emberjs"
+    ],
+    "owners": [
+      "Jared Nance",
+      "Children's Research Institue"
+    ],
     "licenseUrl": "https://github.com/Research-Institute/json-api-dotnet-core/tree/master/JsonApiDotNetCore/LICENSE",
-    "projectUrl": "https://github.com/Research-Institute/json-api-dotnet-core/"
+    "projectUrl": "https://github.com/Research-Institute/json-api-dotnet-core",
+    "repository": {
+      "url": "https://github.com/Research-Institute/json-api-dotnet-core"
+    }
   },
   "dependencies": {
     "NETStandard.Library": "1.6.0",
