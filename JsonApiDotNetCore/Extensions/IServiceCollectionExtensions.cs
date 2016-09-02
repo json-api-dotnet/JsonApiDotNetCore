@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Extensions
   {
     public static void AddJsonApi(this IServiceCollection services, Action<IJsonApiModelConfiguration> configurationAction)
     {
-      services.AddScoped(_ => {
+      services.AddTransient(_ => {
         var configBuilder = new JsonApiConfigurationBuilder(configurationAction);
         var config = configBuilder.Build();
         return (IRouter)new Router(config, new RouteBuilder(config), new ControllerBuilder());

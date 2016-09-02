@@ -14,7 +14,6 @@ namespace JsonApiDotNetCore.Routing
     {
         private readonly JsonApiModelConfiguration _jsonApiModelConfiguration;
         private IServiceProvider _serviceProvider;
-        private JsonApiContext _jsonApiContext;
         private IRouteBuilder _routeBuilder;
         private IControllerBuilder _controllerBuilder;
 
@@ -32,40 +31,41 @@ namespace JsonApiDotNetCore.Routing
             var route = _routeBuilder.BuildFromRequest(context.Request);
             if (route == null) return false;
 
-            InitializeContext(context, route);
-            await CallController(context);
+            var jsonApiContext = InitializeContext(context, route);
+            await CallController(jsonApiContext);
 
             return true;
         }
 
-        private void InitializeContext(HttpContext context, Route route)
+        private JsonApiContext InitializeContext(HttpContext context, Route route)
         {
             var dbContext = _serviceProvider.GetService(_jsonApiModelConfiguration.ContextType);
-            _jsonApiContext = new JsonApiContext(context, route, dbContext, _jsonApiModelConfiguration);
+            Console.WriteLine("InitializingContext");
+            return new JsonApiContext(context, route, dbContext, _jsonApiModelConfiguration);
         }
 
-        private async Task CallController(HttpContext context)
+        private async Task CallController(JsonApiContext jsonApiContext)
         {
-            var controller = _controllerBuilder.BuildController(_jsonApiContext);
+            var controller = _controllerBuilder.BuildController(jsonApiContext);
 
-            var result = ActivateControllerMethod(controller);
+            var result = ActivateControllerMethod(controller, jsonApiContext);
 
-            result.Value = SerializeResult(result.Value);
+            result.Value = SerializeResult(result.Value, jsonApiContext);
 
-            await SendResponse(context, result);
+            await SendResponse(jsonApiContext.HttpContext, result);
         }
 
-        private ObjectResult ActivateControllerMethod(IJsonApiController controller)
+        private ObjectResult ActivateControllerMethod(IJsonApiController controller, JsonApiContext jsonApiContext)
         {
-            var route = _jsonApiContext.Route;
+            var route = jsonApiContext.Route;
             switch (route.RequestMethod)
             {
                 case "GET":
                     return string.IsNullOrEmpty(route.ResourceId) ? controller.Get() : controller.Get(route.ResourceId);
                 case "POST":
-                    return controller.Post(new JsonApiDeserializer(_jsonApiContext).GetEntityFromRequest());
+                    return controller.Post(new JsonApiDeserializer(jsonApiContext).GetEntityFromRequest());
                 case "PATCH":
-                    return controller.Patch(route.ResourceId, new JsonApiDeserializer(_jsonApiContext).GetEntityPatch());
+                    return controller.Patch(route.ResourceId, new JsonApiDeserializer(jsonApiContext).GetEntityPatch());
                 case "DELETE":
                     return controller.Delete(route.ResourceId);
                 default:
@@ -73,9 +73,9 @@ namespace JsonApiDotNetCore.Routing
             }
         }
 
-        private object SerializeResult(object result)
+        private object SerializeResult(object result, JsonApiContext jsonApiContext)
         {
-            return result == null ? null : new JsonApiSerializer(_jsonApiContext).ToJsonApiDocument(result);
+            return result == null ? null : new JsonApiSerializer(jsonApiContext).ToJsonApiDocument(result);
         }
 
         private async Task SendResponse(HttpContext context, ObjectResult result)
