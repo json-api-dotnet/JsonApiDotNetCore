@@ -5,8 +5,6 @@
 [![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
 [![MyGet CI](https://img.shields.io/myget/research-institute/v/JsonApiDotNetCore.svg)](https://www.myget.org/feed/research-institute/package/nuget/JsonApiDotNetCore)
 
-JSON API Spec Conformance: **Non Conforming**
-
 ## Installation
 
 `Install-Package JsonApiDotNetCore`
@@ -40,7 +38,9 @@ services.AddJsonApi(config => {
 app.UseJsonApi();
 ```
 
-## Specifying The Presenter / ViewModel
+## Specifying The JsonApiResources
+
+You can think of these as the presenter / view model definitions for your models. 
 
  - When you define a model, you **MUST** specify the associated resource class using the `JsonApiResource` attribute.
  - The specified resource class **MUST** implement `IJsonApiResource`. 
