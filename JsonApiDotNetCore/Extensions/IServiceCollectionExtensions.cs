@@ -1,5 +1,4 @@
 using System;
-using AutoMapper;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Routing;
@@ -11,10 +10,11 @@ namespace JsonApiDotNetCore.Extensions
   {
     public static void AddJsonApi(this IServiceCollection services, Action<IJsonApiModelConfiguration> configurationAction)
     {
-      var configBuilder = new JsonApiConfigurationBuilder(configurationAction);
-      var config = configBuilder.Build();
-      IRouter router = new Router(config, new RouteBuilder(config), new ControllerBuilder());
-      services.AddSingleton(_ => router);
+      services.AddScoped(_ => {
+        var configBuilder = new JsonApiConfigurationBuilder(configurationAction);
+        var config = configBuilder.Build();
+        return (IRouter)new Router(config, new RouteBuilder(config), new ControllerBuilder());
+      });
     }
   }
 }

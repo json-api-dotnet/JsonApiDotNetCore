@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Routing
             if (route == null) return false;
 
             InitializeContext(context, route);
-            await CallController();
+            await CallController(context);
 
             return true;
         }
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Routing
             _jsonApiContext = new JsonApiContext(context, route, dbContext, _jsonApiModelConfiguration);
         }
 
-        private async Task CallController()
+        private async Task CallController(HttpContext context)
         {
             var controller = _controllerBuilder.BuildController(_jsonApiContext);
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Routing
 
             result.Value = SerializeResult(result.Value);
 
-            await SendResponse(result);
+            await SendResponse(context, result);
         }
 
         private ObjectResult ActivateControllerMethod(IJsonApiController controller)
@@ -78,9 +78,8 @@ namespace JsonApiDotNetCore.Routing
             return result == null ? null : new JsonApiSerializer(_jsonApiContext).ToJsonApiDocument(result);
         }
 
-        private async Task SendResponse(ObjectResult result)
+        private async Task SendResponse(HttpContext context, ObjectResult result)
         {
-            var context = _jsonApiContext.HttpContext;
             context.Response.StatusCode = result.StatusCode ?? 500;
             context.Response.ContentType = "application/vnd.api+json";
             await context.Response.WriteAsync(result.Value == null ? "" : result.Value.ToString(), Encoding.UTF8);
