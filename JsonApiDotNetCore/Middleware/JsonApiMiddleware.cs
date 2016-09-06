@@ -36,6 +36,8 @@ namespace JsonApiDotNetCore.Middleware
         }
         else
         {
+          _logger.LogWarning("Request not handled by JsonApiDotNetCore");
+
           await _next.Invoke(context);
 
           RespondUnsupportedMediaType(context);
@@ -51,14 +53,13 @@ namespace JsonApiDotNetCore.Middleware
             if(context.Request.ContentType == "application/vnd.api+json") {
               return true;
             }
-            _logger.LogInformation("Content-Type invalid for JsonAPI");
+            _logger.LogWarning("Content-Type invalid for JsonAPI, must be application/vnd.api+json");
             return false;
           }
           return true;
         }
 
-        _logger.LogInformation("Accept header invalid for JsonAPI");
-
+        _logger.LogWarning("Accept header invalid for JsonAPI, must be application/vnd.api+json");
         return false;
       }
 
