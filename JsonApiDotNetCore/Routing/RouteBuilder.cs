@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Routing
     // TODO: Why is this here?
     public static string BuildRoute(string nameSpace, string resourceCollectionName)
     {
-      return $"/{nameSpace}/{resourceCollectionName}";
+      return $"/{nameSpace}/{resourceCollectionName.Dasherize()}";
     }
   }
 }

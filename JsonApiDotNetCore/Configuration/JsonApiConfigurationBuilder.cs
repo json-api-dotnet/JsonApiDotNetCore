@@ -3,9 +3,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Linq.Expressions;
 using AutoMapper;
-using JsonApiDotNetCore.Abstractions;
 using JsonApiDotNetCore.Attributes;
 
 namespace JsonApiDotNetCore.Configuration

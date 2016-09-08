@@ -67,7 +67,8 @@ public class PersonResource : IJsonApiResource
 ``` 
 
 We use [AutoMapper](http://automapper.org/) to map from the model class to the resource class. 
-The below snippet shows how you can specify a custom mapping expression in your `Startup` class that will append `_1` to the resource name.
+The below snippet is a trivial example of how you can specify a custom mapping expression in your `Startup` class.
+In this example, the first and last name are concatenated and used for the value of the resource's DisplayName property.
 Check out [AutoMapper's Wiki](https://github.com/AutoMapper/AutoMapper/wiki) for detailed mapping options.
 
 ```
@@ -76,7 +77,7 @@ services.AddJsonApi(config => {
   config.AddResourceMapping<Person, PersonResource>(map =>
   {
     // resource.Name = model.Name + "_1"
-    map.ForMember("Name", opt => opt.MapFrom(src => $"{((Person)src).Name}_1"));
+    map.ForMember("DisplayName", opt => opt.MapFrom(src => $"{((Person)src).FirstName} {((Person)src).LastName}"));
   });
   ...
 });
@@ -94,9 +95,11 @@ services.AddJsonApi(config => {
 });
 ```
 
-The controller **MUST** implement `IJsonApiController`, and it **MAY** inherit from [JsonApiController](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/JsonApiDotNetCore/Controllers/JsonApiController.cs).
+- The controller **MUST** implement `IJsonApiController`
+- Controllers **MAY** inherit from [JsonApiController](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/JsonApiDotNetCore/Controllers/JsonApiController.cs).
+
 Constructor dependency injection will work like normal. 
-Any services added in your `Startup.ConfigureServices()` method will be injected into the constructor parameters.
+Any services in your `Startup.ConfigureServices()` method will be injected into the constructor parameters.
 
 ```
 public class TodoItemsController : JsonApiController, IJsonApiController
