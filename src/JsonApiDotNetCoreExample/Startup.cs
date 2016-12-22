@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -31,6 +32,8 @@ namespace JsonApiDotNetCoreExample
             services.AddDbContext<AppDbContext>(options => {
                 options.UseNpgsql(_getDbConnectionString());
             }, ServiceLifetime.Transient);
+            
+            services.AddJsonApi<AppDbContext>();
 
             services.AddMvc();
         }
@@ -42,7 +45,7 @@ namespace JsonApiDotNetCoreExample
             AppDbContext context)
         {
             context.Database.Migrate();
-            
+
             loggerFactory.AddConsole(_config.GetSection("Logging"));
             loggerFactory.AddDebug();
             app.UseJsonApi();

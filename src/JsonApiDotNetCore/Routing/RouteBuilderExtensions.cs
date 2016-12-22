@@ -29,12 +29,7 @@ namespace JsonApiDotNetCore.Routing
             }
 
             return app.UseMvc();
-            // routes =>
-            // { 
-            //     routes.MapRoute(
-            //         name: "relational",
-            //         template: "{controller}/{id:int}");
-            // }
+           
         }
     }
 }

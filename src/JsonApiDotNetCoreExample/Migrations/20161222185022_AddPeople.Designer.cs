@@ -8,9 +8,10 @@ using JsonApiDotNetCoreExample.Data;
 namespace JsonApiDotNetCoreExample.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161222185022_AddPeople")]
+    partial class AddPeople
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -31,20 +32,9 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("OwnerId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
-
                     b.ToTable("TodoItems");
-                });
-
-            modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItem", b =>
-                {
-                    b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
-                        .WithMany("TodoItems")
-                        .HasForeignKey("OwnerId");
                 });
         }
     }
