@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,11 @@ namespace JsonApiDotNetCore.Extensions
         {
             var contextGraphBuilder = new ContextGraphBuilder<T>();
             var contextGraph = contextGraphBuilder.Build();
-            services.AddSingleton(contextGraph);
+
+            var jsonApiContext = new JsonApiContext();
+            jsonApiContext.ContextGraph = contextGraph;
+
+            services.AddSingleton<IJsonApiContext>(jsonApiContext);
         }
     }
 }

@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreExample.Controllers
 {
     [Route("api/[controller]")]
-    public class TodoItemsController : JsonApiController<TodoItem>
+    public class PeopleController : JsonApiController<Person>
     {
-        public TodoItemsController(
+        public PeopleController(
             ILoggerFactory loggerFactory,
             AppDbContext context, IJsonApiContext jsonApiContext) 
             : base(loggerFactory, context, jsonApiContext)

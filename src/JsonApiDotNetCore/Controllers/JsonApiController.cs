@@ -1,8 +1,10 @@
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
@@ -10,16 +12,35 @@ namespace JsonApiDotNetCore.Controllers
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
+        private readonly IJsonApiContext _jsonApiContext;
+        private readonly ILogger _logger;
 
-        public JsonApiController(DbContext context)
+        public JsonApiController(
+            ILoggerFactory loggerFactory,
+            DbContext context, 
+            IJsonApiContext jsonApiContext)
         { 
             _context = context;
             _dbSet = context.GetDbSet<T>();
+            _jsonApiContext = jsonApiContext;
+
+            _logger = loggerFactory.CreateLogger<JsonApiController<T>>();
+            _logger.LogInformation("JsonApiController activated");
+        }
+
+        public JsonApiController(
+            DbContext context, 
+            IJsonApiContext jsonApiContext)
+        { 
+            _context = context;
+            _dbSet = context.GetDbSet<T>();
+            _jsonApiContext = jsonApiContext;
         }
 
         [HttpGet]
         public virtual IActionResult Get() 
         {
+            _logger.LogInformation("");
             var entities = _dbSet.ToList();
             return Ok(entities);
         }
@@ -35,10 +56,30 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(entity);
         }
 
-        [HttpGet("{id}/{relationship}")]
-        public virtual IActionResult GetRelationship(int id, string relation) 
+        [HttpGet("{id}/{relationshipName}")]
+        public virtual IActionResult GetRelationship(int id, string relationshipName) 
         {
-            return Ok("Get id/relationship");
+            relationshipName = _jsonApiContext.ContextGraph.GetRelationshipName<T>(relationshipName);
+
+            if(relationshipName == null)
+                return NotFound();
+
+            var entity = _dbSet
+                .Include(relationshipName)
+                .FirstOrDefault(e => e.Id == id);
+            
+            if(entity == null)
+                return NotFound();
+
+            _logger?.LogInformation($"Looking up relationship '{relationshipName}' on {entity.GetType().Name}");
+
+            var relationship = _jsonApiContext.ContextGraph
+                .GetRelationship<T>(entity, relationshipName);
+
+            if(relationship == null)
+                return NotFound();
+
+            return Ok(relationship);
         }
 
         [HttpPatch("{id}")]
