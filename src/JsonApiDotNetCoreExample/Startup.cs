@@ -25,8 +25,6 @@ namespace JsonApiDotNetCoreExample
             _config = builder.Build();
         }
 
-        
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options => {
@@ -34,8 +32,6 @@ namespace JsonApiDotNetCoreExample
             }, ServiceLifetime.Transient);
             
             services.AddJsonApi<AppDbContext>();
-
-            services.AddMvc();
         }
 
         public void Configure(

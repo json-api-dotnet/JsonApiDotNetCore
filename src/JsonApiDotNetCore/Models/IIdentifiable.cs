@@ -2,6 +2,11 @@ namespace JsonApiDotNetCore.Models
 {
     public interface IIdentifiable
     {
-        int Id { get; set; }
+        object Id { get; set; }
+    }
+
+    public interface IIdentifiable<T> : IIdentifiable
+    {
+        new T Id { get; set; }
     }
 }

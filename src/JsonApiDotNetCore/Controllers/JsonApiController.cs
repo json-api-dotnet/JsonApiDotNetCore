@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiController<T> : Controller where T : class, IIdentifiable
+    public class JsonApiController<T> : Controller where T : class, IIdentifiable<int>
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;

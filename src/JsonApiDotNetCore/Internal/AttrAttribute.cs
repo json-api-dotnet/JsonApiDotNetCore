@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -11,5 +12,13 @@ namespace JsonApiDotNetCore.Internal
 
         public string PublicAttributeName { get; set; }
         public string InternalAttributeName { get; set; }
+
+        public object GetValue(object entity)
+        {
+            return entity
+                .GetType()
+                .GetProperty(InternalAttributeName)
+                .GetValue(entity);
+        }
     }
 }

@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -14,6 +15,13 @@ namespace JsonApiDotNetCore.Internal
             return Entities
                 .FirstOrDefault(e => 
                     e.EntityName.ToLower() == dbSetName.ToLower());
+        }
+
+        public ContextEntity GetContextEntity(Type entityType)
+        {
+            return Entities
+                .FirstOrDefault(e => 
+                    e.EntityType == entityType);
         }
 
         public object GetRelationship<TParent>(TParent entity, string relationshipName)

@@ -4,9 +4,9 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Person : IIdentifiable
+    public class Person : Identifiable<int>
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         
         [Attr("firstName")]
         public string FirstName { get; set; }

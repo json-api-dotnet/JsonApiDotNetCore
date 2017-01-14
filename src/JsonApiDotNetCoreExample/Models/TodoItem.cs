@@ -3,9 +3,9 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class TodoItem : IIdentifiable
+    public class TodoItem : Identifiable<int>
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         
         [Attr("description")]
         public string Description { get; set; }
