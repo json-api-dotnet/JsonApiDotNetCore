@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Controllers
 {
@@ -25,7 +26,8 @@ namespace JsonApiDotNetCore.Controllers
             _jsonApiContext = jsonApiContext;
 
             _logger = loggerFactory.CreateLogger<JsonApiController<T>>();
-            _logger.LogInformation("JsonApiController activated");
+            _logger.LogInformation($@"JsonApiController activated with ContextGraph: 
+                {JsonConvert.SerializeObject(jsonApiContext.ContextGraph)}");
         }
 
         public JsonApiController(

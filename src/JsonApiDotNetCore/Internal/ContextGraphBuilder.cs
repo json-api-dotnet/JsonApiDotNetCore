@@ -32,19 +32,37 @@ namespace JsonApiDotNetCore.Internal
             
             foreach(var property in contextProperties)
             {
-                var type = property.PropertyType;
+                var dbSetType = property.PropertyType;
                 
-                if (type.GetTypeInfo().IsGenericType 
-                    && type.GetGenericTypeDefinition() == typeof(DbSet<>))
+                if (dbSetType.GetTypeInfo().IsGenericType 
+                    && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 {
+                    var entityType = dbSetType.GetGenericArguments()[0];
                     entities.Add(new ContextEntity {
                         EntityName = property.Name,
-                        EntityType = type.GetGenericArguments()[0]
+                        EntityType = entityType,
+                        Attributes = _getAttributes(entityType)
                     });
                 }                    
             }
 
             _entities = entities;
+        }
+
+        private List<AttrAttribute> _getAttributes(Type entityType)
+        {
+            var attributes = new List<AttrAttribute>();
+            
+            var properties = entityType.GetProperties();
+
+            foreach(var prop in properties)
+            {
+                var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
+                if(attribute == null) continue;
+                attribute.InternalAttributeName = prop.Name;
+                attributes.Add(attribute);
+            }
+            return attributes;
         }
 
         private void _loadRelationships()

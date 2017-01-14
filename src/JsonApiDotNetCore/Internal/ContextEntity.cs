@@ -7,6 +7,7 @@ namespace JsonApiDotNetCore.Internal
     {
         public string EntityName { get; set; }
         public Type EntityType { get; set; }
+        public List<AttrAttribute> Attributes { get; set; }
         public List<Relationship> Relationships { get; set; }
     }
 }

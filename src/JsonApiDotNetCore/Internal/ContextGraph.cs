@@ -9,6 +9,13 @@ namespace JsonApiDotNetCore.Internal
     {
         public List<ContextEntity> Entities { get; set; }
 
+        public ContextEntity GetContextEntity(string dbSetName)
+        {
+            return Entities
+                .FirstOrDefault(e => 
+                    e.EntityName.ToLower() == dbSetName.ToLower());
+        }
+
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
             var parentEntityType = typeof(TParent);

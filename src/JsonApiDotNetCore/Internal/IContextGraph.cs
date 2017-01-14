@@ -4,5 +4,6 @@ namespace JsonApiDotNetCore.Internal
     {
         object GetRelationship<TParent>(TParent entity, string relationshipName);
         string GetRelationshipName<TParent>(string relationshipName);
+        ContextEntity GetContextEntity(string dbSetName);
     }
 }
