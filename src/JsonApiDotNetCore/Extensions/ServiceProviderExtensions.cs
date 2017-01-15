@@ -12,7 +12,6 @@ namespace JsonApiDotNetCore.Extensions
         public static void AddJsonApi<T>(this IServiceCollection services) where T : DbContext
         {
             services.AddJsonApiInternals<T>();
-            
             services.AddMvc()
                 .AddMvcOptions(options => options.SerializeAsJsonApi());
         }
@@ -22,10 +21,8 @@ namespace JsonApiDotNetCore.Extensions
             var contextGraphBuilder = new ContextGraphBuilder<T>();
             var contextGraph = contextGraphBuilder.Build();
 
-            var jsonApiContext = new JsonApiContext();
-            jsonApiContext.ContextGraph = contextGraph;
-
-            services.AddSingleton<IJsonApiContext>(jsonApiContext);
+            services.AddSingleton<IContextGraph>(contextGraph);
+            services.AddSingleton<IJsonApiContext, JsonApiContext>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options)

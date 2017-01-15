@@ -3,7 +3,7 @@
 - [x] Add inbound serialization formatting
 - [x] Add POST
 - [x] Add PATCH
-- [ ] Add DELETE
+- [x] Add DELETE
 - [ ] Add Relationships
 - [ ] Add support for authorization/context-scoping middleware
 - [ ] BadRequest should be 422 in POST

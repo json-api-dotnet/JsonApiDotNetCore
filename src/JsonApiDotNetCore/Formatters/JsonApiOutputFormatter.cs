@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -27,12 +26,12 @@ namespace JsonApiDotNetCore.Formatters
                 throw new ArgumentNullException(nameof(context));
 
             var response = context.HttpContext.Response;
-            
+
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
-                var contextGraph = context.HttpContext.RequestServices.GetService<IJsonApiContext>().ContextGraph;
+                var jsonApiContext = context.HttpContext.RequestServices.GetService<IJsonApiContext>();
 
-                var responseContent = JsonApiSerializer.Serialize(context.Object, contextGraph);
+                var responseContent = JsonApiSerializer.Serialize(context.Object, jsonApiContext);
 
                 await writer.WriteAsync(responseContent);
 

@@ -13,10 +13,10 @@ namespace JsonApiDotNetCore.Controllers
     {
         public JsonApiController(
             ILoggerFactory loggerFactory,
-            DbContext context, 
+            DbContext context,
             IJsonApiContext jsonApiContext)
             : base(loggerFactory, context, jsonApiContext)
-            { }
+        { }
     }
 
     public class JsonApiController<T, TId> : Controller where T : class, IIdentifiable<TId>
@@ -28,9 +28,9 @@ namespace JsonApiDotNetCore.Controllers
 
         public JsonApiController(
             ILoggerFactory loggerFactory,
-            DbContext context, 
+            DbContext context,
             IJsonApiContext jsonApiContext)
-        { 
+        {
             _context = context;
             _dbSet = context.GetDbSet<T>();
             _jsonApiContext = jsonApiContext;
@@ -41,45 +41,51 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         public JsonApiController(
-            DbContext context, 
+            DbContext context,
             IJsonApiContext jsonApiContext)
-        { 
+        {
             _context = context;
             _dbSet = context.GetDbSet<T>();
             _jsonApiContext = jsonApiContext;
         }
 
         [HttpGet]
-        public virtual IActionResult Get() 
+        public virtual IActionResult Get()
         {
+            ApplyContext();
+
             var entities = _dbSet.ToList();
             return Ok(entities);
         }
 
         [HttpGet("{id}")]
-        public virtual IActionResult Get(TId id) 
+        public virtual IActionResult Get(TId id)
         {
+            ApplyContext();
+
             var entity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
-            
-            if(entity == null)
+
+            if (entity == null)
                 return NotFound();
 
             return Ok(entity);
         }
 
         [HttpGet("{id}/{relationshipName}")]
-        public virtual IActionResult GetRelationship(TId id, string relationshipName) 
+        public virtual IActionResult GetRelationship(TId id, string relationshipName)
         {
+            ApplyContext();
+
             relationshipName = _jsonApiContext.ContextGraph.GetRelationshipName<T>(relationshipName);
 
-            if(relationshipName == null)
+            if (relationshipName == null)
                 return NotFound();
 
             var entity = _dbSet
                 .Include(relationshipName)
                 .FirstOrDefault(e => e.Id.Equals(id));
-            
-            if(entity == null)
+
+            if (entity == null)
                 return NotFound();
 
             _logger?.LogInformation($"Looking up relationship '{relationshipName}' on {entity.GetType().Name}");
@@ -87,18 +93,20 @@ namespace JsonApiDotNetCore.Controllers
             var relationship = _jsonApiContext.ContextGraph
                 .GetRelationship<T>(entity, relationshipName);
 
-            if(relationship == null)
+            if (relationship == null)
                 return NotFound();
 
             return Ok(relationship);
         }
 
         [HttpPost]
-        public virtual IActionResult Post([FromBody] T entity) 
+        public virtual IActionResult Post([FromBody] T entity)
         {
-            if(entity == null)
+            ApplyContext();
+
+            if (entity == null)
                 return BadRequest();
-            
+
             _dbSet.Add(entity);
             _context.SaveChanges();
 
@@ -106,18 +114,21 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         [HttpPatch("{id}")]
-        public virtual IActionResult Patch(int id, [FromBody] T entity) 
+        public virtual IActionResult Patch(int id, [FromBody] T entity)
         {
-            if(entity == null)
+            ApplyContext();
+
+            if (entity == null)
                 return BadRequest();
-            
+
             var oldEntity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
-            if(oldEntity == null)
+            if (oldEntity == null)
                 return NotFound();
 
             var requestEntity = _jsonApiContext.RequestEntity;
 
-            requestEntity.Attributes.ForEach(attr => {
+            requestEntity.Attributes.ForEach(attr =>
+            {
                 attr.SetValue(oldEntity, attr.GetValue(entity));
             });
 
@@ -133,15 +144,17 @@ namespace JsonApiDotNetCore.Controllers
         // }
 
         [HttpDelete("{id}")]
-        public virtual IActionResult Delete(TId id) 
+        public virtual IActionResult Delete(TId id)
         {
+            ApplyContext();
+
             var entity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
-            if(entity == null)
+            if (entity == null)
                 return NotFound();
-            
+
             _dbSet.Remove(entity);
             _context.SaveChanges();
-            
+
             return Ok();
         }
 
@@ -150,5 +163,11 @@ namespace JsonApiDotNetCore.Controllers
         // {
         //     return Ok("Delete Id/relationship");
         // }
+
+        private void ApplyContext()
+        {
+            _jsonApiContext.RequestEntity = _jsonApiContext.ContextGraph.GetContextEntity(typeof(T));
+            _jsonApiContext.ApplyContext(HttpContext);
+        }
     }
 }

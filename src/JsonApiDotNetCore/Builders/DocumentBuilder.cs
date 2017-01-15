@@ -1,16 +1,19 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Builders
 {
     public class DocumentBuilder
     {
-        private IContextGraph _contextGraph;
+        private IJsonApiContext _jsonApiContext;
+        private IContextGraph _contextGraph;        
 
-        public DocumentBuilder(IContextGraph contextGraph)
+        public DocumentBuilder(IJsonApiContext jsonApiContext)
         {
-            _contextGraph = contextGraph;
+            _jsonApiContext = jsonApiContext;
+            _contextGraph = jsonApiContext.ContextGraph;
         }
 
         public Document Build(IIdentifiable entity)
@@ -50,7 +53,8 @@ namespace JsonApiDotNetCore.Builders
             {
                 Type = contextEntity.EntityName,
                 Id = entity.Id.ToString(),
-                Attributes = new Dictionary<string, object>()
+                Attributes = new Dictionary<string, object>(),
+                Relationships = new Dictionary<string, Dictionary<string, object>>()
             };
 
             contextEntity.Attributes.ForEach(attr =>
@@ -58,7 +62,21 @@ namespace JsonApiDotNetCore.Builders
                 data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
             });
 
+            _addRelationships(data, contextEntity, entity);            
+
             return data;
+        }
+
+        private void _addRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)
+        {
+            var linkBuilder = new LinkBuilder(_jsonApiContext);
+
+            contextEntity.Relationships.ForEach(r => {
+                data.Relationships.Add("links", new Dictionary<string,object> {
+                    {"self", linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)},
+                    {"related", linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)},
+                });
+            });
         }
     }
 }
