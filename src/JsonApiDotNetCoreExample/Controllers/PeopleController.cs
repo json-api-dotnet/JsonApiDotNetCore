@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public PeopleController(
             IJsonApiContext jsonApiContext,
-            IEntityRepository<Person, int> entityRepository,
+            IEntityRepository<Person> entityRepository,
             ILoggerFactory loggerFactory) 
             : base(jsonApiContext, entityRepository, loggerFactory)
         { }

@@ -8,6 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
 {
+    public class DefaultEntityRepository<TEntity> 
+        : DefaultEntityRepository<TEntity, int>,
+        IEntityRepository<TEntity> 
+        where TEntity : class, IIdentifiable<int>
+    {
+        public DefaultEntityRepository(
+            DbContext context,
+            ILoggerFactory loggerFactory,
+            IJsonApiContext jsonApiContext)
+        : base(context, loggerFactory, jsonApiContext)
+        { }
+    }
+
     public class DefaultEntityRepository<TEntity, TId> 
         : IEntityRepository<TEntity, TId> 
         where TEntity : class, IIdentifiable<TId>

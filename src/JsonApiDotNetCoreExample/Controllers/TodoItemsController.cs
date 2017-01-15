@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public TodoItemsController(
            IJsonApiContext jsonApiContext,
-            IEntityRepository<TodoItem, int> entityRepository,
+            IEntityRepository<TodoItem> entityRepository,
             ILoggerFactory loggerFactory) 
             : base(jsonApiContext, entityRepository, loggerFactory)
         { }
