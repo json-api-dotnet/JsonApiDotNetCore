@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Services;
@@ -9,26 +10,34 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class ServiceProviderExtensions
     {
-        public static void AddJsonApi<T>(this IServiceCollection services) where T : DbContext
+        public static void AddJsonApi<TContext>(this IServiceCollection services) 
+            where TContext : DbContext
         {
-            services.AddJsonApiInternals<T>();
+            services.AddJsonApiInternals<TContext>();
             services.AddMvc()
                 .AddMvcOptions(options => options.SerializeAsJsonApi());
         }
 
-        public static void AddJsonApiInternals<T>(this IServiceCollection services) where T : DbContext
+        public static void AddJsonApiInternals<TContext>(this IServiceCollection services) 
+            where TContext : DbContext
         {
-            var contextGraphBuilder = new ContextGraphBuilder<T>();
+            var contextGraphBuilder = new ContextGraphBuilder<TContext>();
             var contextGraph = contextGraphBuilder.Build();
+
+            services.AddScoped(typeof(DbContext), typeof(TContext));
+
+            services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
+            // services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
             services.AddSingleton<IContextGraph>(contextGraph);
             services.AddSingleton<IJsonApiContext, JsonApiContext>();
+            services.AddScoped<JsonApiRouteHandler>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options)
         {
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
-
+            
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
         }
     }

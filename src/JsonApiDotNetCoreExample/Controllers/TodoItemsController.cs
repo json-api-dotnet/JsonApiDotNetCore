@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,9 +11,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class TodoItemsController : JsonApiController<TodoItem>
     {
         public TodoItemsController(
-            ILoggerFactory loggerFactory,
-            AppDbContext context, IJsonApiContext jsonApiContext) 
-            : base(loggerFactory, context, jsonApiContext)
+           IJsonApiContext jsonApiContext,
+            IEntityRepository<TodoItem, int> entityRepository,
+            ILoggerFactory loggerFactory) 
+            : base(jsonApiContext, entityRepository, loggerFactory)
         { }
     }
 }

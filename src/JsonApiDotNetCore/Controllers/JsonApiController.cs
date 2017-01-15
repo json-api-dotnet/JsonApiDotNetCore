@@ -1,9 +1,10 @@
 using System.Linq;
-using JsonApiDotNetCore.Extensions;
+using System.Threading.Tasks;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -12,28 +13,26 @@ namespace JsonApiDotNetCore.Controllers
     public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
     {
         public JsonApiController(
-            ILoggerFactory loggerFactory,
-            DbContext context,
-            IJsonApiContext jsonApiContext)
-            : base(loggerFactory, context, jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IEntityRepository<T, int> entityRepository,
+            ILoggerFactory loggerFactory)
+            : base(jsonApiContext, entityRepository, loggerFactory)
         { }
     }
 
     public class JsonApiController<T, TId> : Controller where T : class, IIdentifiable<TId>
     {
-        private readonly DbContext _context;
-        private readonly DbSet<T> _dbSet;
+        private readonly IEntityRepository<T, TId> _entities;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly ILogger _logger;
 
         public JsonApiController(
-            ILoggerFactory loggerFactory,
-            DbContext context,
-            IJsonApiContext jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IEntityRepository<T, TId> entityRepository,
+            ILoggerFactory loggerFactory)
         {
-            _context = context;
-            _dbSet = context.GetDbSet<T>();
             _jsonApiContext = jsonApiContext;
+            _entities = entityRepository;
 
             _logger = loggerFactory.CreateLogger<JsonApiController<T, TId>>();
             _logger.LogTrace($@"JsonApiController activated with ContextGraph: 
@@ -41,12 +40,11 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         public JsonApiController(
-            DbContext context,
-            IJsonApiContext jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IEntityRepository<T, TId> entityRepository)
         {
-            _context = context;
-            _dbSet = context.GetDbSet<T>();
             _jsonApiContext = jsonApiContext;
+            _entities = entityRepository;
         }
 
         [HttpGet]
@@ -54,16 +52,17 @@ namespace JsonApiDotNetCore.Controllers
         {
             ApplyContext();
 
-            var entities = _dbSet.ToList();
+            var entities = _entities.Get().ToList();
+
             return Ok(entities);
         }
 
         [HttpGet("{id}")]
-        public virtual IActionResult Get(TId id)
+        public virtual async Task<IActionResult> GetAsync(TId id)
         {
             ApplyContext();
 
-            var entity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
+            var entity = await _entities.GetAsync(id);
 
             if (entity == null)
                 return NotFound();
@@ -72,7 +71,7 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         [HttpGet("{id}/{relationshipName}")]
-        public virtual IActionResult GetRelationship(TId id, string relationshipName)
+        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
             ApplyContext();
 
@@ -81,9 +80,7 @@ namespace JsonApiDotNetCore.Controllers
             if (relationshipName == null)
                 return NotFound();
 
-            var entity = _dbSet
-                .Include(relationshipName)
-                .FirstOrDefault(e => e.Id.Equals(id));
+            var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
 
             if (entity == null)
                 return NotFound();
@@ -100,41 +97,29 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Post([FromBody] T entity)
+        public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
             ApplyContext();
 
             if (entity == null)
                 return BadRequest();
 
-            _dbSet.Add(entity);
-            _context.SaveChanges();
+            await _entities.CreateAsync(entity);
 
             return Created(HttpContext.Request.Path, entity);
         }
 
         [HttpPatch("{id}")]
-        public virtual IActionResult Patch(int id, [FromBody] T entity)
+        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
             ApplyContext();
 
             if (entity == null)
                 return BadRequest();
 
-            var oldEntity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
-            if (oldEntity == null)
-                return NotFound();
+            var updatedEntity = await _entities.UpdateAsync(id, entity);
 
-            var requestEntity = _jsonApiContext.RequestEntity;
-
-            requestEntity.Attributes.ForEach(attr =>
-            {
-                attr.SetValue(oldEntity, attr.GetValue(entity));
-            });
-
-            _context.SaveChanges();
-
-            return Ok(oldEntity);
+            return Ok(updatedEntity);
         }
 
         // [HttpPatch("{id}/{relationship}")]
@@ -144,16 +129,14 @@ namespace JsonApiDotNetCore.Controllers
         // }
 
         [HttpDelete("{id}")]
-        public virtual IActionResult Delete(TId id)
+        public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
             ApplyContext();
 
-            var entity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
-            if (entity == null)
-                return NotFound();
+            var wasDeleted = await _entities.DeleteAsync(id);
 
-            _dbSet.Remove(entity);
-            _context.SaveChanges();
+            if (!wasDeleted)
+                return NotFound();
 
             return Ok();
         }
@@ -166,6 +149,7 @@ namespace JsonApiDotNetCore.Controllers
 
         private void ApplyContext()
         {
+            var routeData = HttpContext.GetRouteData();
             _jsonApiContext.RequestEntity = _jsonApiContext.ContextGraph.GetContextEntity(typeof(T));
             _jsonApiContext.ApplyContext(HttpContext);
         }
