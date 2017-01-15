@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Data
 
             await _context.SaveChangesAsync();
 
-            return entity;
+            return oldEntity;
         }
 
         public async Task<bool> DeleteAsync(TId id)
