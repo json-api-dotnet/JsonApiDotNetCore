@@ -20,5 +20,16 @@ namespace JsonApiDotNetCore.Internal
                 .GetProperty(InternalAttributeName)
                 .GetValue(entity);
         }
+
+        public void SetValue(object entity, object newValue)
+        {
+            var propertyInfo = entity
+                .GetType()
+                .GetProperty(InternalAttributeName);
+                
+            var convertedValue = Convert.ChangeType(newValue, propertyInfo.PropertyType);
+            
+            propertyInfo.SetValue(entity, convertedValue);
+        }
     }
 }

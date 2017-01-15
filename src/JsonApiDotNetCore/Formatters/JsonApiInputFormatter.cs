@@ -36,8 +36,8 @@ namespace JsonApiDotNetCore.Formatters
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
-                var contextGraph = context.HttpContext.RequestServices.GetService<IJsonApiContext>().ContextGraph;
-                var model = JsonApiDeSerializer.Deserialize(body, contextGraph);
+                var jsonApiContext = context.HttpContext.RequestServices.GetService<IJsonApiContext>();
+                var model = JsonApiDeSerializer.Deserialize(body, jsonApiContext);
 
                 return InputFormatterResult.SuccessAsync(model);
             }

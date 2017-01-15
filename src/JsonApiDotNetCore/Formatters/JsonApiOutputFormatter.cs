@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Formatters
                 throw new ArgumentNullException(nameof(context));
 
             var response = context.HttpContext.Response;
-
+            
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
                 var contextGraph = context.HttpContext.RequestServices.GetService<IJsonApiContext>().ContextGraph;

@@ -5,19 +5,21 @@ using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {
     public static class JsonApiDeSerializer
     {
-        public static object Deserialize(string requestBody, IContextGraph contextGraph)
+        public static object Deserialize(string requestBody, IJsonApiContext context)
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
 
             var entityTypeName = document.Data.Type.ToProperCase();
 
-            var contextEntity = contextGraph.GetContextEntity(entityTypeName);
+            var contextEntity = context.ContextGraph.GetContextEntity(entityTypeName);
+            context.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
 

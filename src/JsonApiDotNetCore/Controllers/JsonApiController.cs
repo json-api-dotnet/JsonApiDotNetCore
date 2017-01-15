@@ -9,7 +9,17 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiController<T> : Controller where T : class, IIdentifiable<int>
+    public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
+    {
+        public JsonApiController(
+            ILoggerFactory loggerFactory,
+            DbContext context, 
+            IJsonApiContext jsonApiContext)
+            : base(loggerFactory, context, jsonApiContext)
+            { }
+    }
+
+    public class JsonApiController<T, TId> : Controller where T : class, IIdentifiable<TId>
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -25,8 +35,8 @@ namespace JsonApiDotNetCore.Controllers
             _dbSet = context.GetDbSet<T>();
             _jsonApiContext = jsonApiContext;
 
-            _logger = loggerFactory.CreateLogger<JsonApiController<T>>();
-            _logger.LogInformation($@"JsonApiController activated with ContextGraph: 
+            _logger = loggerFactory.CreateLogger<JsonApiController<T, TId>>();
+            _logger.LogTrace($@"JsonApiController activated with ContextGraph: 
                 {JsonConvert.SerializeObject(jsonApiContext.ContextGraph)}");
         }
 
@@ -42,15 +52,14 @@ namespace JsonApiDotNetCore.Controllers
         [HttpGet]
         public virtual IActionResult Get() 
         {
-            _logger.LogInformation("");
             var entities = _dbSet.ToList();
             return Ok(entities);
         }
 
         [HttpGet("{id}")]
-        public virtual IActionResult Get(int id) 
+        public virtual IActionResult Get(TId id) 
         {
-            var entity = _dbSet.FirstOrDefault(e => e.Id == id);
+            var entity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
             
             if(entity == null)
                 return NotFound();
@@ -59,7 +68,7 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         [HttpGet("{id}/{relationshipName}")]
-        public virtual IActionResult GetRelationship(int id, string relationshipName) 
+        public virtual IActionResult GetRelationship(TId id, string relationshipName) 
         {
             relationshipName = _jsonApiContext.ContextGraph.GetRelationshipName<T>(relationshipName);
 
@@ -68,7 +77,7 @@ namespace JsonApiDotNetCore.Controllers
 
             var entity = _dbSet
                 .Include(relationshipName)
-                .FirstOrDefault(e => e.Id == id);
+                .FirstOrDefault(e => e.Id.Equals(id));
             
             if(entity == null)
                 return NotFound();
@@ -99,26 +108,47 @@ namespace JsonApiDotNetCore.Controllers
         [HttpPatch("{id}")]
         public virtual IActionResult Patch(int id, [FromBody] T entity) 
         {
+            if(entity == null)
+                return BadRequest();
             
-            return Ok("Patch Id");
+            var oldEntity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
+            if(oldEntity == null)
+                return NotFound();
+
+            var requestEntity = _jsonApiContext.RequestEntity;
+
+            requestEntity.Attributes.ForEach(attr => {
+                attr.SetValue(oldEntity, attr.GetValue(entity));
+            });
+
+            _context.SaveChanges();
+
+            return Ok(oldEntity);
         }
 
-        [HttpPatch("{id}/{relationship}")]
-        public virtual IActionResult PatchRelationship(int id, string relation) 
-        {
-            return Ok("Patch Id/relationship");
-        }
+        // [HttpPatch("{id}/{relationship}")]
+        // public virtual IActionResult PatchRelationship(int id, string relation) 
+        // {
+        //     return Ok("Patch Id/relationship");
+        // }
 
         [HttpDelete("{id}")]
-        public virtual IActionResult Delete(int id) 
+        public virtual IActionResult Delete(TId id) 
         {
-            return Ok("Delete Id");
+            var entity = _dbSet.FirstOrDefault(e => e.Id.Equals(id));
+            if(entity == null)
+                return NotFound();
+            
+            _dbSet.Remove(entity);
+            _context.SaveChanges();
+            
+            return Ok();
         }
 
-        [HttpDelete("{id}/{relationship}")]
-        public virtual IActionResult Delete(int id, string relation) 
-        {
-            return Ok("Delete Id/relationship");
-        }
+        // [HttpDelete("{id}/{relationship}")]
+        // public virtual IActionResult Delete(int id, string relation) 
+        // {
+        //     return Ok("Delete Id/relationship");
+        // }
     }
 }
