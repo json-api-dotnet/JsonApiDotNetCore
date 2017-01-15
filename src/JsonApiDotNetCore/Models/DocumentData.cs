@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.Models
         [JsonProperty("type")]
         public string Type
         {
-            get { return _type; }
-            set { _type = value.Dasherize(); }
+            get { return _type.Dasherize(); }
+            set { _type = value; }
         }
 
         [JsonProperty("id")]

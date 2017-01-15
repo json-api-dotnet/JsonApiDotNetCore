@@ -12,7 +12,8 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public PeopleController(
             ILoggerFactory loggerFactory,
-            AppDbContext context, IJsonApiContext jsonApiContext) 
+            AppDbContext context, 
+            IJsonApiContext jsonApiContext) 
             : base(loggerFactory, context, jsonApiContext)
         { }
     }

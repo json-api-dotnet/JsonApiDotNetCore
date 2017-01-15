@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -11,7 +11,6 @@ namespace JsonApiDotNetCore.Formatters
 {
     public class JsonApiInputFormatter : IInputFormatter
     {
-
         public bool CanRead(InputFormatterContext context)
         {
             if (context == null)
@@ -19,7 +18,7 @@ namespace JsonApiDotNetCore.Formatters
 
             var contentTypeString = context.HttpContext.Request.ContentType;
 
-            return string.IsNullOrEmpty(contentTypeString) || contentTypeString == "application/vnd.api+json";
+            return contentTypeString == "application/vnd.api+json";
         }
 
         public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
@@ -37,7 +36,7 @@ namespace JsonApiDotNetCore.Formatters
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
-                var contextGraph = context.HttpContext.RequestServices.GetService<IContextGraph>();
+                var contextGraph = context.HttpContext.RequestServices.GetService<IJsonApiContext>().ContextGraph;
                 var model = JsonApiDeSerializer.Deserialize(body, contextGraph);
 
                 return InputFormatterResult.SuccessAsync(model);

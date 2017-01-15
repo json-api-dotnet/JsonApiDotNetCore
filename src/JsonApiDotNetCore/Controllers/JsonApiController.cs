@@ -84,9 +84,22 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(relationship);
         }
 
-        [HttpPatch("{id}")]
-        public virtual IActionResult Patch(int id) 
+        [HttpPost]
+        public virtual IActionResult Post([FromBody] T entity) 
         {
+            if(entity == null)
+                return BadRequest();
+            
+            _dbSet.Add(entity);
+            _context.SaveChanges();
+
+            return Created(HttpContext.Request.Path, entity);
+        }
+
+        [HttpPatch("{id}")]
+        public virtual IActionResult Patch(int id, [FromBody] T entity) 
+        {
+            
             return Ok("Patch Id");
         }
 
