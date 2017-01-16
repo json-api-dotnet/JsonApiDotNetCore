@@ -162,9 +162,14 @@ namespace JsonApiDotNetCore.Controllers
         {
             if(!HttpContext.Request.Query.Any())
                 return entities;
+            
+            var querySet = new QuerySet<T>( _jsonApiContext);
 
-            return new QuerySet<T>( _jsonApiContext)
-                .ApplyQuery(entities);
+            entities = _entities.Filter(entities, querySet.Filter);
+
+            entities = _entities.Sort(entities, querySet.SortParameters);
+
+            return entities;
         }
     }
 }

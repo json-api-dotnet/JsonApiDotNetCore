@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
@@ -78,62 +74,6 @@ namespace JsonApiDotNetCore.Internal.Query
                 .FirstOrDefault(attr => 
                     attr.InternalAttributeName.ToLower() == propertyName.ToLower()
             );
-        }
-
-        public IQueryable<T> ApplyQuery(IQueryable<T> entities)
-        {
-            entities = ApplyFilter(entities);
-            entities = ApplySort(entities);
-            return entities;
-        }
-
-        private IQueryable<T> ApplyFilter(IQueryable<T> entities)
-        {
-            if(Filter == null)
-                return entities;
-
-            var expression = GetEqualityExpressionForProperty(entities, 
-                Filter.FilteredAttribute.InternalAttributeName, Filter.PropertyValue);
-
-            return entities.Where(expression);
-        }
-
-        private IQueryable<T> ApplySort(IQueryable<T> entities)
-        {
-            if(SortParameters == null || SortParameters.Count == 0)
-                return entities;
-            
-            SortParameters.ForEach(sortParam => {
-                if(sortParam.Direction == SortDirection.Ascending)
-                    entities = entities.OrderBy(sortParam.SortedAttribute.InternalAttributeName);
-                else
-                    entities = entities.OrderByDescending(sortParam.SortedAttribute.InternalAttributeName);
-            });
-
-            return entities;
-        }
-
-        private Expression<Func<T, bool>> GetEqualityExpressionForProperty(IQueryable<T> query, string param, object value)
-        {
-            var currentType = query.ElementType;
-            var property = currentType.GetProperty(param);
-
-            if (property == null)
-                throw new ArgumentException($"'{param}' is not a valid property of '{currentType}'");
-
-            // convert the incoming value to the target value type
-            // "1" -> 1
-            var convertedValue = Convert.ChangeType(value, property.PropertyType);
-            // {model}
-            var prm = Expression.Parameter(currentType, "model");
-            // {model.Id}
-            var left = Expression.PropertyOrField(prm, property.Name);
-            // {1}
-            var right = Expression.Constant(convertedValue, property.PropertyType);
-            // {model.Id == 1}
-            var body = Expression.Equal(left, right);
-
-            return Expression.Lambda<Func<T, bool>>(body, prm);
         }
     }
 }

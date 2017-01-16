@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
@@ -14,6 +16,10 @@ namespace JsonApiDotNetCore.Data
         where TEntity : class, IIdentifiable<TId>
     {
         IQueryable<TEntity> Get();
+
+        IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery);
+
+        IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries);
 
         Task<TEntity> GetAsync(TId id);
 

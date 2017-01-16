@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
@@ -41,31 +43,54 @@ namespace JsonApiDotNetCore.Data
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
         }
 
-        public IQueryable<TEntity> Get()
+        public virtual IQueryable<TEntity> Get()
         {
             return _dbSet;
         }
 
-        public async Task<TEntity> GetAsync(TId id)
+        public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities,  FilterQuery filterQuery)
+        {
+            if(filterQuery == null)
+                return entities;
+
+            return entities
+                .Filter(filterQuery);
+        }
+
+        public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
+        {
+            if(sortQueries == null || sortQueries.Count == 0)
+                return entities;
+
+            var orderedEntities = entities.Sort(sortQueries[0]);
+
+            if(sortQueries.Count() > 1)
+                for(var i=1; i < sortQueries.Count(); i++)
+                    orderedEntities = orderedEntities.Sort(sortQueries[i]);
+
+            return orderedEntities;
+        }
+
+        public virtual async Task<TEntity> GetAsync(TId id)
         {
             return await _dbSet.FirstOrDefaultAsync(e => e.Id.Equals(id));
         }
 
-        public async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
+        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
             return await _dbSet
                 .Include(relationshipName)
                 .FirstOrDefaultAsync(e => e.Id.Equals(id));
         }
 
-        public async Task<TEntity> CreateAsync(TEntity entity)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<TEntity> UpdateAsync(TId id, TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)
         {
             var oldEntity = await GetAsync(id);
 
@@ -82,7 +107,7 @@ namespace JsonApiDotNetCore.Data
             return oldEntity;
         }
 
-        public async Task<bool> DeleteAsync(TId id)
+        public virtual async Task<bool> DeleteAsync(TId id)
         {
             var entity = await GetAsync(id);
 

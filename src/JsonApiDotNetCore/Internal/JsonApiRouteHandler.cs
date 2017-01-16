@@ -36,9 +36,7 @@ namespace JsonApiDotNetCore.Internal
         public VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             // We return null here because we're not responsible for generating the url, the route is.
             return null;
@@ -47,9 +45,7 @@ namespace JsonApiDotNetCore.Internal
         public Task RouteAsync(RouteContext context)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             var candidates = _actionSelector.SelectCandidates(context);
             if (candidates == null || candidates.Count == 0)
