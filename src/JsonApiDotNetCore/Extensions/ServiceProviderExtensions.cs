@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,9 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
             services.AddSingleton<IContextGraph>(contextGraph);
-            services.AddSingleton<IJsonApiContext, JsonApiContext>();
+            services.AddSingleton<IJsonApiContext,JsonApiContext>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped<JsonApiRouteHandler>();
         }
 

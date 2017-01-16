@@ -18,6 +18,7 @@ namespace JsonApiDotNetCore.Serialization
         private static string _serializeDocuments(object entity, IJsonApiContext jsonApiContext)
         {
             var documentBuilder = new DocumentBuilder(jsonApiContext);
+
             var entities = entity as IEnumerable<IIdentifiable>;
             var documents = documentBuilder.Build(entities);
             return JsonConvert.SerializeObject(documents);

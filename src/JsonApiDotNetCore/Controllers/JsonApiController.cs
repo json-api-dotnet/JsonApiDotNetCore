@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -34,7 +33,7 @@ namespace JsonApiDotNetCore.Controllers
             IEntityRepository<T, TId> entityRepository,
             ILoggerFactory loggerFactory)
         {
-            _jsonApiContext = jsonApiContext;
+            _jsonApiContext = jsonApiContext.ApplyContext<T>();
             _entities = entityRepository;
 
             _logger = loggerFactory.CreateLogger<JsonApiController<T, TId>>();
@@ -53,8 +52,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpGet]
         public virtual IActionResult Get()
         {
-            ApplyContext();
-
             var entities = _entities.Get();
 
             entities = ApplyQuery(entities);
@@ -65,8 +62,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            ApplyContext();
-
             var entity = await _entities.GetAsync(id);
 
             if (entity == null)
@@ -78,8 +73,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpGet("{id}/{relationshipName}")]
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            ApplyContext();
-
             relationshipName = _jsonApiContext.ContextGraph
                 .GetRelationshipName<T>(relationshipName);
 
@@ -103,8 +96,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
-            ApplyContext();
-
             if (entity == null)
                 return BadRequest();
 
@@ -116,8 +107,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpPatch("{id}")]
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
-            ApplyContext();
-
             if (entity == null)
                 return BadRequest();
 
@@ -135,8 +124,6 @@ namespace JsonApiDotNetCore.Controllers
         [HttpDelete("{id}")]
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
-            ApplyContext();
-
             var wasDeleted = await _entities.DeleteAsync(id);
 
             if (!wasDeleted)
@@ -151,19 +138,12 @@ namespace JsonApiDotNetCore.Controllers
         //     return Ok("Delete Id/relationship");
         // }
 
-        private void ApplyContext()
-        {
-            var routeData = HttpContext.GetRouteData();
-            _jsonApiContext.RequestEntity = _jsonApiContext.ContextGraph.GetContextEntity(typeof(T));
-            _jsonApiContext.ApplyContext(HttpContext);
-        }
-
         private IQueryable<T> ApplyQuery(IQueryable<T> entities)
         {
             if(!HttpContext.Request.Query.Any())
                 return entities;
             
-            var querySet = new QuerySet<T>( _jsonApiContext);
+            var querySet = new QuerySet<T>(_jsonApiContext);
 
             entities = _entities.Filter(entities, querySet.Filter);
 

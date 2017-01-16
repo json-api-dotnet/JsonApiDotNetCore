@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Services
 {
     public interface IJsonApiContext
     {
-        void ApplyContext(HttpContext context);
+        IJsonApiContext ApplyContext<T>();
         IContextGraph ContextGraph { get; set; }
         ContextEntity RequestEntity { get; set; }
         string BasePath { get; set; }

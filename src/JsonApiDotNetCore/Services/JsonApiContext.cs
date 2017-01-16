@@ -6,9 +6,13 @@ namespace JsonApiDotNetCore.Services
 {
     public class JsonApiContext : IJsonApiContext
     {
-        public JsonApiContext(IContextGraph contextGraph)
+        private IHttpContextAccessor _httpContextAccessor;
+        public JsonApiContext(
+            IContextGraph contextGraph,
+            IHttpContextAccessor httpContextAccessor)
         {
             ContextGraph = contextGraph;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IContextGraph ContextGraph { get; set; }
@@ -16,11 +20,18 @@ namespace JsonApiDotNetCore.Services
         public string BasePath { get; set; }
         public IQueryCollection Query { get; set; }
 
-        public void ApplyContext(HttpContext context)
+        public IJsonApiContext ApplyContext<T>()
         {
+            var context = _httpContextAccessor.HttpContext;
+
+            RequestEntity = ContextGraph.GetContextEntity(typeof(T));
+            
+            Query = context.Request.Query;
+
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);
-            Query = context.Request.Query;
-        }        
+            
+            return this;
+        }
     }
 }
