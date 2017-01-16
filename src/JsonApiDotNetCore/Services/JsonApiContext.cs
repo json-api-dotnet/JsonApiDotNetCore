@@ -14,11 +14,13 @@ namespace JsonApiDotNetCore.Services
         public IContextGraph ContextGraph { get; set; }
         public ContextEntity RequestEntity { get; set; }
         public string BasePath { get; set; }
+        public IQueryCollection Query { get; set; }
 
         public void ApplyContext(HttpContext context)
         {
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);
+            Query = context.Request.Query;
         }        
     }
 }

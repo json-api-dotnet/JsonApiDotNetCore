@@ -9,5 +9,6 @@ namespace JsonApiDotNetCore.Services
         IContextGraph ContextGraph { get; set; }
         ContextEntity RequestEntity { get; set; }
         string BasePath { get; set; }
+        IQueryCollection Query { get; set; }
     }
 }

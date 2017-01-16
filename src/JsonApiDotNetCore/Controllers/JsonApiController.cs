@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,8 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
+    public class JsonApiController<T> 
+    : JsonApiController<T, int> where T : class, IIdentifiable<int>
     {
         public JsonApiController(
             IJsonApiContext jsonApiContext,
@@ -20,7 +22,8 @@ namespace JsonApiDotNetCore.Controllers
         { }
     }
 
-    public class JsonApiController<T, TId> : Controller where T : class, IIdentifiable<TId>
+    public class JsonApiController<T, TId> 
+    : Controller where T : class, IIdentifiable<TId>
     {
         private readonly IEntityRepository<T, TId> _entities;
         private readonly IJsonApiContext _jsonApiContext;
@@ -52,7 +55,9 @@ namespace JsonApiDotNetCore.Controllers
         {
             ApplyContext();
 
-            var entities = _entities.Get().ToList();
+            var entities = _entities.Get();
+
+            entities = ApplyQuery(entities);
 
             return Ok(entities);
         }
@@ -75,7 +80,8 @@ namespace JsonApiDotNetCore.Controllers
         {
             ApplyContext();
 
-            relationshipName = _jsonApiContext.ContextGraph.GetRelationshipName<T>(relationshipName);
+            relationshipName = _jsonApiContext.ContextGraph
+                .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
                 return NotFound();
@@ -84,8 +90,6 @@ namespace JsonApiDotNetCore.Controllers
 
             if (entity == null)
                 return NotFound();
-
-            _logger?.LogInformation($"Looking up relationship '{relationshipName}' on {entity.GetType().Name}");
 
             var relationship = _jsonApiContext.ContextGraph
                 .GetRelationship<T>(entity, relationshipName);
@@ -152,6 +156,15 @@ namespace JsonApiDotNetCore.Controllers
             var routeData = HttpContext.GetRouteData();
             _jsonApiContext.RequestEntity = _jsonApiContext.ContextGraph.GetContextEntity(typeof(T));
             _jsonApiContext.ApplyContext(HttpContext);
+        }
+
+        private IQueryable<T> ApplyQuery(IQueryable<T> entities)
+        {
+            if(!HttpContext.Request.Query.Any())
+                return entities;
+
+            return new QuerySet<T>( _jsonApiContext)
+                .ApplyQuery(entities);
         }
     }
 }
