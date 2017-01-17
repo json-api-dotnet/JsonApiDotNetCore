@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Internal
 
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
-            var parentEntityType = typeof(TParent);
+            var parentEntityType = entity.GetType();
 
             var navigationProperty = parentEntityType
                 .GetProperties()

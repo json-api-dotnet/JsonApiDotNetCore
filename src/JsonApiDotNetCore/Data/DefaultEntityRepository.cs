@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -119,6 +120,11 @@ namespace JsonApiDotNetCore.Data
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
+        {
+            return entities.Include(relationshipName);
         }
     }
 }

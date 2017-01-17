@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Internal.Query
 
         public FilterQuery Filter { get; set; }
         public List<SortQuery> SortParameters { get; set; }
+        public List<string> IncludedRelationships { get; set; }
 
         private void BuildQuerySet()
         {
@@ -30,6 +32,12 @@ namespace JsonApiDotNetCore.Internal.Query
                 if (pair.Key.StartsWith("sort"))
                 {
                     SortParameters = ParseSortParameters(pair.Value);
+                    continue;
+                }
+
+                if (pair.Key.StartsWith("include"))
+                {
+                    IncludedRelationships = ParseIncludedRelationships(pair.Value);
                 }
             }
         }
@@ -66,6 +74,11 @@ namespace JsonApiDotNetCore.Internal.Query
             });
 
             return sortParameters;
+        }
+
+        private List<string> ParseIncludedRelationships(string value)
+        {
+            return value.Split(',').ToList();
         }
 
         private AttrAttribute GetAttribute(string propertyName)

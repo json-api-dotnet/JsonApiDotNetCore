@@ -17,6 +17,8 @@ namespace JsonApiDotNetCore.Data
     {
         IQueryable<TEntity> Get();
 
+        IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName);
+
         IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery);
 
         IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries);

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -156,6 +158,19 @@ namespace JsonApiDotNetCore.Controllers
             entities = _entities.Filter(entities, querySet.Filter);
 
             entities = _entities.Sort(entities, querySet.SortParameters);
+
+            if(querySet != null)
+                entities = IncludeRelationships(entities, querySet.IncludedRelationships);
+
+            return entities;
+        }
+
+        private IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)
+        {
+            _jsonApiContext.IncludedRelationships = relationships;
+
+            foreach(var r in relationships)
+                entities = _entities.Include(entities, r.ToProperCase());
 
             return entities;
         }

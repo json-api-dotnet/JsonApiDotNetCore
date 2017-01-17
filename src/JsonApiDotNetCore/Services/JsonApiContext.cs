@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -20,6 +22,7 @@ namespace JsonApiDotNetCore.Services
         public string BasePath { get; set; }
         public IQueryCollection Query { get; set; }
         public bool IsRelationshipData { get; set; }
+        public List<string> IncludedRelationships { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
