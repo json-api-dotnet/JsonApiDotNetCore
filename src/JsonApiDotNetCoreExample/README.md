@@ -10,6 +10,7 @@
 - [x] Sorting
 - [x] Fetching relationships
 - [x] Creating relationships
+- [x] Refactor relationships links to use an POCO that contains data and links objects
 - [ ] Include Entities
 - [ ] BadRequest should be 422 in POST
 - [ ] Add integration tests to example project
@@ -23,7 +24,7 @@
 - [ ] Dasherized route support
 - [ ] Sorting/Filtering should be handled by the repository so that it is not dependeny on EF ?
 - [ ] Rename ContextEntity ?? 
-- [x] Refactor relationships links to use an POCO that contains data and links objects
+
 
 ## Usage
 

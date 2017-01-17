@@ -78,9 +78,9 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Relationships.ForEach(r => {
                 var relationshipData = new RelationshipData {
-                    Links = new Dictionary<string, string> {
-                        {"self", linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)},
-                        {"related", linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)}
+                    Links = new Links {
+                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName),
+                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)
                     }
                 };
                 data.Relationships.Add(r.RelationshipName.Dasherize(), relationshipData);

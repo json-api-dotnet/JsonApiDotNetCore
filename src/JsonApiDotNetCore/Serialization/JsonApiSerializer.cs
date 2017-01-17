@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization
             var documentBuilder = new DocumentBuilder(jsonApiContext);
             var entities = entity as IEnumerable<IIdentifiable>;
             var documents = documentBuilder.Build(entities);
-            return JsonConvert.SerializeObject(documents);
+            return _serialize(documents);
         }
 
         private static string _serializeDocument(object entity, IJsonApiContext jsonApiContext)
@@ -28,7 +28,12 @@ namespace JsonApiDotNetCore.Serialization
             var documentBuilder = new DocumentBuilder(jsonApiContext);
             var identifiableEntity = entity as IIdentifiable;
             var document = documentBuilder.Build(identifiableEntity);
-            return JsonConvert.SerializeObject(document, new JsonSerializerSettings {
+            return _serialize(document);
+        }
+
+        private static string _serialize(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore
             });
         }

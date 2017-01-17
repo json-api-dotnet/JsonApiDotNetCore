@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Models
 {
     public class RelationshipData
     {
         [JsonProperty("links")]
-        public Dictionary<string, string> Links { get; set; }
+        public Links Links { get; set; }
 
         [JsonProperty("data")]
         public object ExposedData { 
@@ -18,7 +19,12 @@ namespace JsonApiDotNetCore.Models
             }
             set {
                 if(value is IEnumerable)
-                    ManyData = (List<Dictionary<string, string>>)value;
+                    if(value is JObject)
+                        SingleData = ((JObject)value).ToObject<Dictionary<string, string>>();   
+                    else if(value is JArray)
+                        ManyData = ((JArray)value).ToObject<List<Dictionary<string, string>>>();
+                    else
+                        ManyData = (List<Dictionary<string, string>>)value;
                 else
                     SingleData = (Dictionary<string, string>)value;
             }
