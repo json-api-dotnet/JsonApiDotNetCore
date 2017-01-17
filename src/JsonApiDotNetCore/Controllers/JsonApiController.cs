@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCore.Controllers
     }
 
     public class JsonApiController<T, TId> 
-    : Controller where T : class, IIdentifiable<TId>
+    : JsonApiControllerMixin where T : class, IIdentifiable<TId>
     {
         private readonly IEntityRepository<T, TId> _entities;
         private readonly IJsonApiContext _jsonApiContext;
@@ -188,11 +187,6 @@ namespace JsonApiDotNetCore.Controllers
                 entities = _entities.Include(entities, r.ToProperCase());
 
             return entities;
-        }
-
-        protected IActionResult UnprocessableEntity()
-        {
-            return new StatusCodeResult(422);
         }
     }
 }
