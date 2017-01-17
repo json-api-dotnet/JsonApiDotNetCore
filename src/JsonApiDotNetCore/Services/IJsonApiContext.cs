@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
-using Microsoft.AspNetCore.Http;
+using JsonApiDotNetCore.Internal.Query;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -11,7 +10,7 @@ namespace JsonApiDotNetCore.Services
         IContextGraph ContextGraph { get; set; }
         ContextEntity RequestEntity { get; set; }
         string BasePath { get; set; }
-        IQueryCollection Query { get; set; }
+        QuerySet QuerySet { get; set; }
         bool IsRelationshipData { get; set; }
         List<string> IncludedRelationships { get; set; }
     }

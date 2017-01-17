@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -56,7 +57,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             var entities = _entities.Get();
 
-            entities = ApplyQuery(entities);
+            entities = ApplySortAndFilterQuery(entities);
+
+            if(_jsonApiContext.QuerySet != null)
+                entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             return Ok(entities);
         }
@@ -64,12 +68,26 @@ namespace JsonApiDotNetCore.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            var entity = await _entities.GetAsync(id);
+            T entity;
+            if(_jsonApiContext.QuerySet?.IncludedRelationships != null)
+                entity = await _getWithRelationshipsAsync(id);
+            else
+                entity = await _entities.GetAsync(id);
 
             if (entity == null)
                 return NotFound();
 
             return Ok(entity);
+        }
+
+        private async Task<T> _getWithRelationshipsAsync(TId id)
+        {
+            var query = _entities.Get();
+            _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
+            {
+                query = _entities.Include(query, r.ToProperCase());
+            });
+            return await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         [HttpGet("{id}/relationships/{relationshipName}")]
@@ -148,19 +166,16 @@ namespace JsonApiDotNetCore.Controllers
         //     return Ok("Delete Id/relationship");
         // }
 
-        private IQueryable<T> ApplyQuery(IQueryable<T> entities)
+        private IQueryable<T> ApplySortAndFilterQuery(IQueryable<T> entities)
         {
-            if(!HttpContext.Request.Query.Any())
+            var query = _jsonApiContext.QuerySet;
+
+            if(_jsonApiContext.QuerySet == null)
                 return entities;
-            
-            var querySet = new QuerySet<T>(_jsonApiContext);
 
-            entities = _entities.Filter(entities, querySet.Filter);
+            entities = _entities.Filter(entities, query.Filter);
 
-            entities = _entities.Sort(entities, querySet.SortParameters);
-
-            if(querySet != null)
-                entities = IncludeRelationships(entities, querySet.IncludedRelationships);
+            entities = _entities.Sort(entities, query.SortParameters);
 
             return entities;
         }

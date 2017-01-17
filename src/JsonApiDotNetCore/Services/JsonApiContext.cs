@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Internal.Query;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -20,7 +21,7 @@ namespace JsonApiDotNetCore.Services
         public IContextGraph ContextGraph { get; set; }
         public ContextEntity RequestEntity { get; set; }
         public string BasePath { get; set; }
-        public IQueryCollection Query { get; set; }
+        public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
         public List<string> IncludedRelationships { get; set; }
 
@@ -30,7 +31,11 @@ namespace JsonApiDotNetCore.Services
 
             RequestEntity = ContextGraph.GetContextEntity(typeof(T));
             
-            Query = context.Request.Query;
+            if(context.Request.Query.Any())
+            {
+                QuerySet = new QuerySet(this, context.Request.Query);
+                IncludedRelationships = QuerySet.IncludedRelationships;
+            }                
 
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);

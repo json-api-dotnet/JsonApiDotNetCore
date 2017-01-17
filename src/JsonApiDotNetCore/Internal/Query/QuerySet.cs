@@ -1,27 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class QuerySet<T>
+    public class QuerySet
     {
         IJsonApiContext _jsonApiContext;
 
-        public QuerySet(IJsonApiContext jsonApiContext)
+        public QuerySet(IJsonApiContext jsonApiContext, IQueryCollection query)
         {
             _jsonApiContext = jsonApiContext;
-            BuildQuerySet();
+            BuildQuerySet(query);
         }
 
         public FilterQuery Filter { get; set; }
         public List<SortQuery> SortParameters { get; set; }
         public List<string> IncludedRelationships { get; set; }
 
-        private void BuildQuerySet()
+        private void BuildQuerySet(IQueryCollection query)
         {
-            foreach (var pair in _jsonApiContext.Query)
+            foreach (var pair in query)
             {
                 if (pair.Key.StartsWith("filter"))
                 {
@@ -78,7 +79,10 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private List<string> ParseIncludedRelationships(string value)
         {
-            return value.Split(',').ToList();
+            return value
+                .Split(',')
+                .Select(s => s.ToProperCase())
+                .ToList();
         }
 
         private AttrAttribute GetAttribute(string propertyName)
