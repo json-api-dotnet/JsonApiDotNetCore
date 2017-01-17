@@ -23,7 +23,7 @@
 - [ ] Dasherized route support
 - [ ] Sorting/Filtering should be handled by the repository so that it is not dependeny on EF ?
 - [ ] Rename ContextEntity ?? 
-- [ ] Refactor relationships links to use an POCO that contains data and links objects
+- [x] Refactor relationships links to use an POCO that contains data and links objects
 
 ## Usage
 

@@ -23,6 +23,6 @@ namespace JsonApiDotNetCore.Models
 
         
         [JsonProperty("relationships")]
-        public Dictionary<string, Dictionary<string, object>> Relationships { get; set; }
+        public Dictionary<string, RelationshipData> Relationships { get; set; }
     }
 }

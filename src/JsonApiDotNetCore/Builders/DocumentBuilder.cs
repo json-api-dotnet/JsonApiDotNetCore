@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCore.Builders
                 return data;
 
             data.Attributes = new Dictionary<string, object>();
-            data.Relationships = new Dictionary<string, Dictionary<string, object>>();
+            data.Relationships = new Dictionary<string, RelationshipData>();
 
             contextEntity.Attributes.ForEach(attr =>
             {
@@ -76,10 +77,13 @@ namespace JsonApiDotNetCore.Builders
             var linkBuilder = new LinkBuilder(_jsonApiContext);
 
             contextEntity.Relationships.ForEach(r => {
-                data.Relationships.Add("links", new Dictionary<string,object> {
-                    {"self", linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)},
-                    {"related", linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)},
-                });
+                var relationshipData = new RelationshipData {
+                    Links = new Dictionary<string, string> {
+                        {"self", linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)},
+                        {"related", linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)}
+                    }
+                };
+                data.Relationships.Add(r.RelationshipName.Dasherize(), relationshipData);
             });
         }
     }

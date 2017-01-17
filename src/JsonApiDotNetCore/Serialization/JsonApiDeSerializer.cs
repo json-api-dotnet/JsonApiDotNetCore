@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         private static object _setRelationships(
-            object entity, ContextEntity contextEntity, Dictionary<string, Dictionary<string, object>> relationships)
+            object entity, ContextEntity contextEntity, Dictionary<string, RelationshipData> relationships)
         {
             if(relationships == null)
                 return entity;
@@ -68,10 +68,10 @@ namespace JsonApiDotNetCore.Serialization
                 if (entityProperty == null)
                     throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.RelationshipName}", nameof(entity));
 
-                Dictionary<string, object> relationshipData;
+                RelationshipData relationshipData;
                 if (relationships.TryGetValue(attr.RelationshipName.Dasherize(), out relationshipData))
                 {
-                    var data = ((JObject)relationshipData["data"]).ToObject<Dictionary<string,string>>();
+                    var data = (Dictionary<string,string>)relationshipData.ExposedData;
                     var newValue = data["id"];
                     var convertedValue = Convert.ChangeType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
