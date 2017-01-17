@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExample
                 options.UseNpgsql(_getDbConnectionString());
             }, ServiceLifetime.Transient);
             
-            services.AddJsonApi<AppDbContext>();
+            services.AddJsonApi<AppDbContext>(opt => opt.Namespace = "api/v1");
         }
 
         public void Configure(

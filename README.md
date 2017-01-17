@@ -108,7 +108,7 @@ public class ThingsController : JsonApiController<Thing>
 }
 ```
 
-#### Non-Integer Type Keys
+### Non-Integer Type Keys
 
 If your model is using a type other than `int` for the primary key,
 you should explicitly declare it in the controller
@@ -125,4 +125,24 @@ public class ThingsController : JsonApiController<Thing, Guid>
     : base(jsonApiContext, entityRepository, loggerFactory)
     { }
 }
+```
+
+## Routing
+
+By default the library will configure routes for each controller. 
+Based on the [recommendations](http://jsonapi.org/recommendations/)
+outlined in the JSONAPI spec, routes are hyphenated. For example:
+
+```
+/todo-items --> TodoItemsController
+NOT /todoItems
+```
+
+### Namespacing and Versioning URLs
+
+You can add a namespace to the URL by specifying it in `ConfigureServices`:
+
+```
+services.AddJsonApi<AppDbContext>(
+    opt => opt.Namespace = "api/v1");
 ```
