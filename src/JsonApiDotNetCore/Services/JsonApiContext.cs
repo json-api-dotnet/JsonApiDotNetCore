@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Services
         public ContextEntity RequestEntity { get; set; }
         public string BasePath { get; set; }
         public IQueryCollection Query { get; set; }
+        public bool IsRelationshipData { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {

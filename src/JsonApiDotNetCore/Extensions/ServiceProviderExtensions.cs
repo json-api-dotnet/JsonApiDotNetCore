@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
             services.AddSingleton<IContextGraph>(contextGraph);
-            services.AddSingleton<IJsonApiContext,JsonApiContext>();
+            services.AddScoped<IJsonApiContext,JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<JsonApiRouteHandler>();

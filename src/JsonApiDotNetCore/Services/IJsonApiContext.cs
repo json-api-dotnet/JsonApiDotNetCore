@@ -10,5 +10,6 @@ namespace JsonApiDotNetCore.Services
         ContextEntity RequestEntity { get; set; }
         string BasePath { get; set; }
         IQueryCollection Query { get; set; }
+        bool IsRelationshipData { get; set; }
     }
 }

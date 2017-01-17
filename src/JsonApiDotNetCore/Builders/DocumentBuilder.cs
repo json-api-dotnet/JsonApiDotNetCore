@@ -52,10 +52,14 @@ namespace JsonApiDotNetCore.Builders
             var data = new DocumentData
             {
                 Type = contextEntity.EntityName,
-                Id = entity.Id.ToString(),
-                Attributes = new Dictionary<string, object>(),
-                Relationships = new Dictionary<string, Dictionary<string, object>>()
+                Id = entity.Id.ToString()
             };
+
+            if(_jsonApiContext.IsRelationshipData)
+                return data;
+
+            data.Attributes = new Dictionary<string, object>();
+            data.Relationships = new Dictionary<string, Dictionary<string, object>>();
 
             contextEntity.Attributes.ForEach(attr =>
             {

@@ -18,18 +18,19 @@ namespace JsonApiDotNetCore.Serialization
         private static string _serializeDocuments(object entity, IJsonApiContext jsonApiContext)
         {
             var documentBuilder = new DocumentBuilder(jsonApiContext);
-
             var entities = entity as IEnumerable<IIdentifiable>;
             var documents = documentBuilder.Build(entities);
             return JsonConvert.SerializeObject(documents);
         }
 
-         private static string _serializeDocument(object entity, IJsonApiContext jsonApiContext)
+        private static string _serializeDocument(object entity, IJsonApiContext jsonApiContext)
         {
             var documentBuilder = new DocumentBuilder(jsonApiContext);
             var identifiableEntity = entity as IIdentifiable;
             var document = documentBuilder.Build(identifiableEntity);
-            return JsonConvert.SerializeObject(document);
+            return JsonConvert.SerializeObject(document, new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore
+            });
         }
     }
 }

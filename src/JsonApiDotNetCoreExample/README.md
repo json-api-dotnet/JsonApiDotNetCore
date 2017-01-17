@@ -8,6 +8,7 @@
 - [x] Add support for authorization/context-scoping middleware
 - [x] Filtering
 - [x] Sorting
+- [x] Fetching relationships
 - [ ] Creating relationships
 - [ ] Include Entities
 - [ ] BadRequest should be 422 in POST

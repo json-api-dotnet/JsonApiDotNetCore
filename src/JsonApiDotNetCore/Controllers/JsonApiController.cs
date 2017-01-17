@@ -70,6 +70,14 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(entity);
         }
 
+        [HttpGet("{id}/relationships/{relationshipName}")]
+        public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
+        {
+            _jsonApiContext.IsRelationshipData = true;
+
+            return await GetRelationshipAsync(id, relationshipName);
+        }
+
         [HttpGet("{id}/{relationshipName}")]
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
