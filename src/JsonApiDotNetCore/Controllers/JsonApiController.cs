@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Controllers
                 .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
-                return NotFound();
+                return UnprocessableEntity();
 
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
 
@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
             if (entity == null)
-                return BadRequest();
+                return UnprocessableEntity();
 
             await _entities.CreateAsync(entity);
 
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
             if (entity == null)
-                return BadRequest();
+                return UnprocessableEntity();
 
             var updatedEntity = await _entities.UpdateAsync(id, entity);
 
@@ -188,6 +188,11 @@ namespace JsonApiDotNetCore.Controllers
                 entities = _entities.Include(entities, r.ToProperCase());
 
             return entities;
+        }
+
+        protected IActionResult UnprocessableEntity()
+        {
+            return new StatusCodeResult(422);
         }
     }
 }

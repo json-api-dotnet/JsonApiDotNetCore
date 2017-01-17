@@ -11,8 +11,8 @@
 - [x] Fetching relationships
 - [x] Creating relationships
 - [x] Refactor relationships links to use an POCO that contains data and links objects
-- [ ] Include Entities
-- [ ] BadRequest should be 422 in POST
+- [x] Include Entities
+- [x] BadRequest should be 422 in POST
 - [ ] Add integration tests to example project
 - [ ] Add logging
 - [ ] Configure Different Repositories
