@@ -9,7 +9,7 @@
 - [x] Filtering
 - [x] Sorting
 - [x] Fetching relationships
-- [ ] Creating relationships
+- [x] Creating relationships
 - [ ] Include Entities
 - [ ] BadRequest should be 422 in POST
 - [ ] Add integration tests to example project
@@ -23,6 +23,7 @@
 - [ ] Dasherized route support
 - [ ] Sorting/Filtering should be handled by the repository so that it is not dependeny on EF ?
 - [ ] Rename ContextEntity ?? 
+- [ ] Refactor relationships links to use an POCO that contains data and links objects
 
 ## Usage
 
@@ -58,18 +59,33 @@ public class Person : Identifiable<int>
 
 ### Relationships
 
-In order for navigation properties to be identified in the model, 
-they should be labeled as virtual:
+In order for navigation properties to be identified in the model, they should be labeled as virtual.
 
 ```
 public class Person : Identifiable<int>
 {
     public override int Id { get; set; }
     
-    [Attr("firstName")]
+    [Attr("first-name")]
     public string FirstName { get; set; }
 
     public virtual List<TodoItem> TodoItems { get; set; }
+}
+```
+
+Dependent relationships should contain a property in the form `{RelationshipName}Id`. 
+For example, a `TodoItem` may have an `Owner` and so the Id attribute should be `OwnerId` like so:
+
+```
+public class TodoItem : Identifiable<int>
+{
+    public override int Id { get; set; }
+    
+    [Attr("description")]
+    public string Description { get; set; }
+
+    public int OwnerId { get; set; }
+    public virtual Person Owner { get; set; }
 }
 ```
 

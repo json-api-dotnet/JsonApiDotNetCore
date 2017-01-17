@@ -8,8 +8,8 @@ using JsonApiDotNetCoreExample.Data;
 namespace JsonApiDotNetCoreExample.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20161222185204_AssociatedTodoItemsToAPerson")]
-    partial class AssociatedTodoItemsToAPerson
+    [Migration("20170117003343_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +22,10 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
                     b.HasKey("Id");
 
                     b.ToTable("People");
@@ -32,7 +36,9 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("OwnerId");
+                    b.Property<string>("Description");
+
+                    b.Property<int>("OwnerId");
 
                     b.HasKey("Id");
 
@@ -45,7 +51,8 @@ namespace JsonApiDotNetCoreExample.Migrations
                 {
                     b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
                         .WithMany("TodoItems")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

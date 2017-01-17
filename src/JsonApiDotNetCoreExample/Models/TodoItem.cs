@@ -10,6 +10,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("description")]
         public string Description { get; set; }
         
+        public int OwnerId { get; set; }
         public virtual Person Owner { get; set; }
     }
 }
