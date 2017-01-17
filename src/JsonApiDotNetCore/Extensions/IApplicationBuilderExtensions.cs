@@ -7,6 +7,7 @@ namespace JsonApiDotNetCore.Routing
         public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app)
         {
             app.UseMvc();
+            
             return app;
         }
     }

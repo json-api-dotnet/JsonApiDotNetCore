@@ -32,7 +32,10 @@ namespace JsonApiDotNetCore.Extensions
         {
             services.AddJsonApiInternals<TContext>();
             services.AddMvc()
-                .AddMvcOptions(opt => opt.SerializeAsJsonApi(jsonApiOptions));
+                .AddMvcOptions(opt => {
+                    opt.Filters.Add(typeof(JsonApiExceptionFilter));
+                    opt.SerializeAsJsonApi(jsonApiOptions);
+                });
         }
 
         public static void AddJsonApiInternals<TContext>(this IServiceCollection services) 

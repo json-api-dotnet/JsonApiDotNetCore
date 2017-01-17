@@ -34,9 +34,9 @@ namespace JsonApiDotNetCore.Builders
         public Documents Build(IEnumerable<IIdentifiable> entities)
         {
             var entityType = entities
-                .GetType()
-                .GenericTypeArguments[0];
-
+            .GetType()
+            .GenericTypeArguments[0];
+        
             var contextEntity = _contextGraph.GetContextEntity(entityType);
 
             var documents = new Documents
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Builders
             foreach (var entity in entities)
                 documents.Data.Add(_getData(contextEntity, entity));
 
-            return documents;
+            return documents;      
         }
 
         private DocumentData _getData(ContextEntity contextEntity, IIdentifiable entity)
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCore.Builders
                     }
                 };
 
-                if (_jsonApiContext.IncludedRelationships.Contains(r.RelationshipName.ToProperCase()))
+                if (_hasRelationship(r.RelationshipName))
                 {
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.RelationshipName);
@@ -105,6 +105,13 @@ namespace JsonApiDotNetCore.Builders
                 data.Relationships.Add(r.RelationshipName.Dasherize(), relationshipData);
             });
         }
+
+        private bool _hasRelationship(string relationshipName)
+        {
+            return _jsonApiContext.IncludedRelationships != null && 
+                _jsonApiContext.IncludedRelationships.Contains(relationshipName.ToProperCase());
+        }
+
         private List<Dictionary<string, string>> GetRelationships(IEnumerable<object> entities, string relationshipName)
         {
             var objType = entities.GetType().GenericTypeArguments[0];

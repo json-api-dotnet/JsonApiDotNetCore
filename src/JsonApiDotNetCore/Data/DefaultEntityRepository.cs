@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -124,7 +125,12 @@ namespace JsonApiDotNetCore.Data
 
         public IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
-            return entities.Include(relationshipName);
+            var entity = _jsonApiContext.RequestEntity;
+            if(entity.Relationships.Any(r => r.RelationshipName == relationshipName))
+                return entities.Include(relationshipName);
+
+            throw new JsonApiException("400", "Invalid relationship",
+                $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
     }
 }
