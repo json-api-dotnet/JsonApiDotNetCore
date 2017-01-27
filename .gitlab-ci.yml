@@ -9,6 +9,6 @@ build:
  stage: build
  script:
   - 'dotnet pack ./src/JsonApiDotNetCore -c Release -o ./artifacts'
-  - 'mono NuGet.exe push ./artifacts/*.nupkg %NugetAPIKey% -Source %NugetSource%'
+  - 'mono /bin/NuGet.exe push ./artifacts/*.nupkg %NugetAPIKey% -Source %NugetSource%'
  only:
    - master
