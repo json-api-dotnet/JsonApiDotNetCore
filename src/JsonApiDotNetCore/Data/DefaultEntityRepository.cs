@@ -75,14 +75,14 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await _dbSet.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return await _dbSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
             return await _dbSet
                 .Include(relationshipName)
-                .FirstOrDefaultAsync(e => e.Id.Equals(id));
+                .SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)

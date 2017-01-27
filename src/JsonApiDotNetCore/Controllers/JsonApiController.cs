@@ -101,7 +101,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
             relationshipName = _jsonApiContext.ContextGraph
-                .GetRelationshipName<T>(relationshipName);
+                .GetRelationshipName<T>(relationshipName.ToProperCase());
 
             if (relationshipName == null)
                 return UnprocessableEntity();
