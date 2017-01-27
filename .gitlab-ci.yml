@@ -15,6 +15,6 @@ build:
 publish:
   stage: deploy
   script:
-   - 'mono /bin/NuGet.exe push ./artifacts/*.nupkg $NUGET_KEY -Source $NUGET_SOURCE'
+   - 'mono /bin/NuGet.exe push ./artifacts/**.nupkg -ApiKey $NUGET_KEY'
   only:
-   - master
+   - tags
