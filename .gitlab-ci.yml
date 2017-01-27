@@ -17,4 +17,4 @@ publish:
   script:
    - 'mono /bin/NuGet.exe push ./artifacts/*.nupkg $NUGET_KEY -Source $NUGET_SOURCE'
   only:
-   - tags
+   - master
