@@ -2,7 +2,8 @@ stages:
   - build
 
 before_script:
-  - 'dotnet restore'
+  - 'whoami'
+  - 'sudo dotnet restore'
 
 build:
  stage: build
