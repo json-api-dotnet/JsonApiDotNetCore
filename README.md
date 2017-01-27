@@ -1,3 +1,5 @@
+[![build status](https://gitlab.cmh.edu/jcnance/JsonApiDotnetCore/badges/master/build.svg)](https://gitlab.cmh.edu/jcnance/JsonApiDotnetCore/commits/master)
+
 # Task List 
 
 - [x] Add inbound serialization formatting
