@@ -7,10 +7,6 @@ using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using System.Reflection;
-using System;
 
 namespace JsonApiDotNetCoreExample
 {

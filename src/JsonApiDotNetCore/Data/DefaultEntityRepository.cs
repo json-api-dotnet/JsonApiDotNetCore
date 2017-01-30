@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using X.PagedList;
 
 namespace JsonApiDotNetCore.Data
 {
@@ -135,7 +135,13 @@ namespace JsonApiDotNetCore.Data
 
         public async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
-            return await entities.ToPagedListAsync(pageNumber, pageSize);
+            if(pageSize > 0)
+                return await entities
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+            return await entities.ToListAsync();
         }
     }
 }
