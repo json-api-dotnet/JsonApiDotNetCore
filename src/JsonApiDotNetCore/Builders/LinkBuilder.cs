@@ -36,12 +36,12 @@ namespace JsonApiDotNetCore.Builders
 
         public string GetSelfRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/relationships/{child.Dasherize()}";
+            return $"{_context.BasePath}/relationships/{child.Dasherize()}";
         }
 
         public string GetRelatedRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/{child.Dasherize()}";
+            return $"{_context.BasePath}/{child.Dasherize()}";
         }
     }
 }

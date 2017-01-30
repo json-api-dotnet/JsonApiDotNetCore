@@ -27,6 +27,10 @@
 - [ ] Ability to disable dasherization of names
 - [ ] Rename ContextEntity ?? 
 
+# Generators
+
+- TODO: Document usage of the yeoman jadn generator
+
 ## Usage
 
 - Add Middleware
