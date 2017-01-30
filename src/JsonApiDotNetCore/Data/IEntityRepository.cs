@@ -23,6 +23,8 @@ namespace JsonApiDotNetCore.Data
 
         IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries);
 
+        Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber);
+
         Task<TEntity> GetAsync(TId id);
 
         Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName);

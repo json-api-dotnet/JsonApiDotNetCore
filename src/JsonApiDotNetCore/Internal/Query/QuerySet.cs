@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
@@ -14,9 +15,11 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             _jsonApiContext = jsonApiContext;
             BuildQuerySet(query);
+            PageQuery = new PageQuery();
         }
 
         public FilterQuery Filter { get; set; }
+        public PageQuery PageQuery { get; set; }
         public List<SortQuery> SortParameters { get; set; }
         public List<string> IncludedRelationships { get; set; }
 
@@ -40,6 +43,11 @@ namespace JsonApiDotNetCore.Internal.Query
                 {
                     IncludedRelationships = ParseIncludedRelationships(pair.Value);
                 }
+
+                if(pair.Key.StartsWith("page"))
+                {
+                    PageQuery = ParsePageQuery(pair.Key, pair.Value);
+                }
             }
         }
 
@@ -53,6 +61,21 @@ namespace JsonApiDotNetCore.Internal.Query
                 return null;
 
             return new FilterQuery(attribute, value);
+        }
+
+        private PageQuery ParsePageQuery(string key, string value)
+        {
+            // expected input = page[size]=10
+            //                  page[number]=1
+
+            var propertyName = key.Split('[', ']')[1];
+            
+            if(propertyName == "size")
+                PageQuery.PageSize = Convert.ToInt32(value);
+            else if (propertyName == "number")
+                PageQuery.PageOffset = Convert.ToInt32(value);
+
+            return PageQuery;
         }
 
         // sort=id,name

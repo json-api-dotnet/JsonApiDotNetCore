@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using X.PagedList;
 
 namespace JsonApiDotNetCore.Data
 {
@@ -131,6 +131,11 @@ namespace JsonApiDotNetCore.Data
 
             throw new JsonApiException("400", "Invalid relationship",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
+        }
+
+        public async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
+        {
+            return await entities.ToPagedListAsync(pageNumber, pageSize);
         }
     }
 }

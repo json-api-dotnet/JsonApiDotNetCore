@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Extensions
         private static void _addInternals<TContext>(IServiceCollection services, JsonApiOptions jsonApiOptions)
             where TContext : DbContext
         {
-            services.AddJsonApiInternals<TContext>();
+            services.AddJsonApiInternals<TContext>(jsonApiOptions);
             services.AddMvc()
                 .AddMvcOptions(opt => {
                     opt.Filters.Add(typeof(JsonApiExceptionFilter));
@@ -38,17 +38,17 @@ namespace JsonApiDotNetCore.Extensions
                 });
         }
 
-        public static void AddJsonApiInternals<TContext>(this IServiceCollection services) 
+        public static void AddJsonApiInternals<TContext>(this IServiceCollection services, JsonApiOptions jsonApiOptions) 
             where TContext : DbContext
         {
             var contextGraphBuilder = new ContextGraphBuilder<TContext>();
             var contextGraph = contextGraphBuilder.Build();
 
             services.AddScoped(typeof(DbContext), typeof(TContext));
-
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
+            services.AddSingleton<JsonApiOptions>(jsonApiOptions);
             services.AddSingleton<IContextGraph>(contextGraph);
             services.AddScoped<IJsonApiContext,JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -7,6 +7,10 @@ using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using System.Reflection;
+using System;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -31,7 +35,10 @@ namespace JsonApiDotNetCoreExample
                 options.UseNpgsql(_getDbConnectionString());
             }, ServiceLifetime.Transient);
             
-            services.AddJsonApi<AppDbContext>(opt => opt.Namespace = "api/v1");
+            services.AddJsonApi<AppDbContext>(opt => {
+                opt.Namespace = "api/v1";
+                opt.DefaultPageSize = 1;
+            });
         }
 
         public void Configure(

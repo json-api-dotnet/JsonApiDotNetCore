@@ -52,16 +52,19 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         [HttpGet]
-        public virtual IActionResult Get()
+        public virtual async Task<IActionResult> GetAsync()
         {
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
 
-            if(_jsonApiContext.QuerySet != null)
+            if (_jsonApiContext.QuerySet != null)
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
-            return Ok(entities);
+            // pagination should be done last since it will execute the query
+            var pagedEntities = await ApplyPageQueryAsync(entities);
+
+            return Ok(pagedEntities);
         }
 
         [HttpGet("{id}")]
@@ -142,12 +145,6 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(updatedEntity);
         }
 
-        // [HttpPatch("{id}/{relationship}")]
-        // public virtual IActionResult PatchRelationship(int id, string relation) 
-        // {
-        //     return Ok("Patch Id/relationship");
-        // }
-
         [HttpDelete("{id}")]
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
@@ -158,12 +155,6 @@ namespace JsonApiDotNetCore.Controllers
 
             return Ok();
         }
-
-        // [HttpDelete("{id}/{relationship}")]
-        // public virtual IActionResult Delete(int id, string relation) 
-        // {
-        //     return Ok("Delete Id/relationship");
-        // }
 
         private IQueryable<T> ApplySortAndFilterQuery(IQueryable<T> entities)
         {
@@ -177,6 +168,18 @@ namespace JsonApiDotNetCore.Controllers
             entities = _entities.Sort(entities, query.SortParameters);
 
             return entities;
+        }
+
+        private async Task<IEnumerable<T>> ApplyPageQueryAsync(IQueryable<T> entities)
+        {
+            if(_jsonApiContext.Options.DefaultPageSize == 0 && (_jsonApiContext.QuerySet == null || _jsonApiContext.QuerySet.PageQuery.PageSize == 0))
+                return entities;
+
+            var query = _jsonApiContext.QuerySet.PageQuery;
+            var pageNumber = query.PageOffset > 0 ? query.PageOffset : 1;
+            var pageSize = query.PageSize > 0 ? query.PageSize : _jsonApiContext.Options.DefaultPageSize;
+
+            return await _entities.PageAsync(entities, pageSize, pageNumber);
         }
 
         private IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)
