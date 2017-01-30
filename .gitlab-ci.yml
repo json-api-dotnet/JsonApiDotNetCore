@@ -8,13 +8,7 @@ before_script:
 build:
  stage: build
  script:
-  - 'dotnet pack ./src/JsonApiDotNetCore -c Release -o ./artifacts'
+  - dotnet pack ./src/JsonApiDotNetCore -c Release -o ./artifacts
+  - mono /bin/NuGet.exe push artifacts/**.nupkg -ApiKey $NUGET_KEY
  only:
    - master
-
-publish:
-  stage: deploy
-  script:
-   - 'mono /bin/NuGet.exe push ./artifacts/**.nupkg -ApiKey $NUGET_KEY'
-  only:
-   - tags
