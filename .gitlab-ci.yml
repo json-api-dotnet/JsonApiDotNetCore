@@ -8,8 +8,7 @@ before_script:
 build:
  stage: build
  script:
-  - 'dotnet pack ./src/JsonApiDotNetCore -c Release -o ./artifacts'
-  - 'mono /bin/NuGet.exe push artifacts/*.nupkg $NUGET_KEY -Source $NUGET_SOURCE'
+  - dotnet pack ./src/JsonApiDotNetCore -c Release -o ./artifacts
+  - mono /bin/NuGet.exe push artifacts/*.nupkg $NUGET_KEY -Source $NUGET_SOURCE
  only:
    - master
-   
