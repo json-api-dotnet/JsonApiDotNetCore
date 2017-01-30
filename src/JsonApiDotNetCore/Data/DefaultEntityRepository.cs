@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
-        public IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
+        public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
             if(entity.Relationships.Any(r => r.RelationshipName == relationshipName))
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Data
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
 
-        public async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
+        public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
             if(pageSize > 0)
                 return await entities

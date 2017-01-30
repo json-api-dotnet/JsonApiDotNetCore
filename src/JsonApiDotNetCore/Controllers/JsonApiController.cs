@@ -167,8 +167,9 @@ namespace JsonApiDotNetCore.Controllers
             if(_jsonApiContext.QuerySet == null)
                 return entities;
 
-            if(query.Filter != null)
-                entities = _entities.Filter(entities, query.Filter);
+            if(query.Filters.Count > 0)
+                foreach(var filter in query.Filters)
+                    entities = _entities.Filter(entities, filter);
 
             if(query.SortParameters != null && query.SortParameters.Count > 0)
                 entities = _entities.Sort(entities, query.SortParameters);

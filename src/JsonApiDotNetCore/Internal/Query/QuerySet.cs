@@ -17,10 +17,11 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             _jsonApiContext = jsonApiContext;
             PageQuery = new PageQuery();
+            Filters = new List<FilterQuery>();
             BuildQuerySet(query);
         }
 
-        public FilterQuery Filter { get; set; }
+        public List<FilterQuery> Filters { get; set; }
         public PageQuery PageQuery { get; set; }
         public List<SortQuery> SortParameters { get; set; }
         public List<string> IncludedRelationships { get; set; }
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCore.Internal.Query
             {
                 if (pair.Key.StartsWith("filter"))
                 {
-                    Filter = ParseFilterQuery(pair.Key, pair.Value);
+                    Filters.Add(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCore.Internal.Query
             var attribute = GetAttribute(propertyName);
 
             if (attribute == null)
-                return null;
+                throw new JsonApiException("400", $"{propertyName} is not a valid property.");
             
             return new FilterQuery(attribute, value);
         }
