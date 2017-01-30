@@ -27,6 +27,10 @@
 - [ ] Ability to disable dasherization of names
 - [ ] Rename ContextEntity ?? 
 
+# Generators
+
+- TODO: Document usage of the yeoman jadn generator
+
 ## Usage
 
 - Add Middleware
@@ -146,4 +150,14 @@ You can add a namespace to the URL by specifying it in `ConfigureServices`:
 ```
 services.AddJsonApi<AppDbContext>(
     opt => opt.Namespace = "api/v1");
+```
+
+## Pagination
+
+If you would like pagination implemented by default, you can specify the page size
+when setting up the services:
+
+```
+ services.AddJsonApi<AppDbContext>(
+     opt => opt.DefaultPageSize = 10);
 ```
