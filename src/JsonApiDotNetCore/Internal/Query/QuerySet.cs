@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
@@ -10,13 +11,16 @@ namespace JsonApiDotNetCore.Internal.Query
     {
         IJsonApiContext _jsonApiContext;
 
-        public QuerySet(IJsonApiContext jsonApiContext, IQueryCollection query)
+        public QuerySet(
+            IJsonApiContext jsonApiContext, 
+            IQueryCollection query)
         {
             _jsonApiContext = jsonApiContext;
             BuildQuerySet(query);
         }
 
         public FilterQuery Filter { get; set; }
+        public PageQuery PageQuery { get; set; }
         public List<SortQuery> SortParameters { get; set; }
         public List<string> IncludedRelationships { get; set; }
 
@@ -40,6 +44,11 @@ namespace JsonApiDotNetCore.Internal.Query
                 {
                     IncludedRelationships = ParseIncludedRelationships(pair.Value);
                 }
+
+                if (pair.Key.StartsWith("page"))
+                {
+                    PageQuery = ParsePageQuery(pair.Key, pair.Value);
+                }
             }
         }
 
@@ -49,10 +58,26 @@ namespace JsonApiDotNetCore.Internal.Query
             var propertyName = key.Split('[', ']')[1];
             var attribute = GetAttribute(propertyName);
 
-            if(attribute == null)
+            if (attribute == null)
                 return null;
-
+            
             return new FilterQuery(attribute, value);
+        }
+
+        private PageQuery ParsePageQuery(string key, string value)
+        {
+            // expected input = page[size]=10
+            //                  page[number]=1
+            PageQuery = PageQuery ?? new PageQuery();
+
+            var propertyName = key.Split('[', ']')[1];
+            
+            if (propertyName == "size")
+                PageQuery.PageSize = Convert.ToInt32(value);
+            else if (propertyName == "number")
+                PageQuery.PageOffset = Convert.ToInt32(value);
+
+            return PageQuery;
         }
 
         // sort=id,name
@@ -88,7 +113,7 @@ namespace JsonApiDotNetCore.Internal.Query
         private AttrAttribute GetAttribute(string propertyName)
         {
             return _jsonApiContext.RequestEntity.Attributes
-                .FirstOrDefault(attr => 
+                .FirstOrDefault(attr =>
                     attr.InternalAttributeName.ToLower() == propertyName.ToLower()
             );
         }

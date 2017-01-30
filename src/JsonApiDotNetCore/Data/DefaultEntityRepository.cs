@@ -132,5 +132,16 @@ namespace JsonApiDotNetCore.Data
             throw new JsonApiException("400", "Invalid relationship",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
+
+        public async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
+        {
+            if(pageSize > 0)
+                return await entities
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+            return await entities.ToListAsync();
+        }
     }
 }
