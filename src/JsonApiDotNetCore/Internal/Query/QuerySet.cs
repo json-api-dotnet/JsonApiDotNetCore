@@ -16,6 +16,7 @@ namespace JsonApiDotNetCore.Internal.Query
             IQueryCollection query)
         {
             _jsonApiContext = jsonApiContext;
+            PageQuery = new PageQuery();
             BuildQuerySet(query);
         }
 
@@ -55,7 +56,7 @@ namespace JsonApiDotNetCore.Internal.Query
         private FilterQuery ParseFilterQuery(string key, string value)
         {
             // expected input = filter[id]=1
-            var propertyName = key.Split('[', ']')[1];
+            var propertyName = key.Split('[', ']')[1].ToProperCase();
             var attribute = GetAttribute(propertyName);
 
             if (attribute == null)
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCore.Internal.Query
                     p = p.Substring(1);
                 }
 
-                var attribute = GetAttribute(p);
+                var attribute = GetAttribute(p.ToProperCase());
 
                 sortParameters.Add(new SortQuery(direction, attribute));
             });
