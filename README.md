@@ -161,3 +161,14 @@ when setting up the services:
  services.AddJsonApi<AppDbContext>(
      opt => opt.DefaultPageSize = 10);
 ```
+
+## Defining Custom Data Access Methods
+
+You can implement custom methods for accessing the data by creating an implementation of 
+`IEntityRepository<TEntity, TId>`. If you only need minor changes you can override the 
+methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository should then be
+add to the service collection in `Startup.ConfigureServices` like so:
+
+```
+services.AddScoped<IEntityRepository<MyEntity,Guid>, MyEntityRepository>();
+```
