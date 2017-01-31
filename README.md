@@ -145,3 +145,25 @@ add to the service collection in `Startup.ConfigureServices` like so:
 ```
 services.AddScoped<IEntityRepository<MyEntity,Guid>, MyEntityRepository>();
 ```
+
+
+## Filtering
+
+You can filter resources by attributes using the `filter` query parameter. 
+By default, all attributes are filterable.
+The filtering strategy we have selected, uses the following form:
+
+```
+?filter[attribute]=value
+```
+
+For operations other than equality, the query can be prefixed with an operation
+identifier):
+
+```
+?filter[attribute]=eq:value
+?filter[attribute]=lt:value
+?filter[attribute]=gt:value
+?filter[attribute]=le:value
+?filter[attribute]=ge:value
+```

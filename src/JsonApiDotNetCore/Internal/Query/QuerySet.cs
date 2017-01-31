@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Internal.Query
             {
                 if (pair.Key.StartsWith("filter"))
                 {
-                    Filters.Add(ParseFilterQuery(pair.Key, pair.Value));
+                    Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
@@ -54,16 +54,53 @@ namespace JsonApiDotNetCore.Internal.Query
             }
         }
 
-        private FilterQuery ParseFilterQuery(string key, string value)
+        private List<FilterQuery> ParseFilterQuery(string key, string value)
         {
             // expected input = filter[id]=1
+            // expected input = filter[id]=eq:1
+            var queries = new List<FilterQuery>();
+
             var propertyName = key.Split('[', ']')[1].ToProperCase();
             var attribute = GetAttribute(propertyName);
 
             if (attribute == null)
                 throw new JsonApiException("400", $"{propertyName} is not a valid property.");
             
-            return new FilterQuery(attribute, value);
+            var values = value.Split(',');
+            foreach(var val in values)
+                queries.Add(ParseFilterOperation(attribute, val));
+
+            return queries;
+        }
+
+        private FilterQuery ParseFilterOperation(AttrAttribute attribute, string value)
+        {
+            if(value.Length < 3)
+                return new FilterQuery(attribute, value, FilterOperations.eq);
+             
+            var prefix = value.Substring(0, 3);
+
+            if(prefix[2] != ':')
+                return new FilterQuery(attribute, value, FilterOperations.eq);
+            
+            // remove prefix from value
+            value = value.Substring(3, value.Length - 3);
+
+            switch(prefix)
+            {
+                case "eq:":
+                    return new FilterQuery(attribute, value, FilterOperations.eq);
+                case "lt:":
+                    return new FilterQuery(attribute, value, FilterOperations.lt);
+                case "gt:":
+                    return new FilterQuery(attribute, value, FilterOperations.gt);
+                case "le:":
+                    return new FilterQuery(attribute, value, FilterOperations.le);
+                case "ge:":
+                    return new FilterQuery(attribute, value, FilterOperations.ge);
+            }
+
+            throw new JsonApiException("400", $"Invalid filter prefix '{prefix}'");
         }
 
         private PageQuery ParsePageQuery(string key, string value)

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 
 namespace JsonApiDotNetCore.Extensions
@@ -11,23 +12,23 @@ namespace JsonApiDotNetCore.Extensions
     {
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery)
         {
-            if(sortQuery.Direction == SortDirection.Descending)
+            if (sortQuery.Direction == SortDirection.Descending)
                 return source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName);
-                
+
             return source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery)
         {
-            if(sortQuery.Direction == SortDirection.Descending)
+            if (sortQuery.Direction == SortDirection.Descending)
                 return source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName);
-                
+
             return source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)
         {
-           return CallGenericOrderMethod(source, propertyName, "OrderBy");
+            return CallGenericOrderMethod(source, propertyName, "OrderBy");
         }
 
         public static IOrderedQueryable<TSource> OrderByDescending<TSource>(this IQueryable<TSource> source, string propertyName)
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCore.Extensions
 
         private static IOrderedQueryable<TSource> CallGenericOrderMethod<TSource>(IQueryable<TSource> source, string propertyName, string method)
         {
-             // {x}
+            // {x}
             var parameter = Expression.Parameter(typeof(TSource), "x");
             // {x.propertyName}
             var property = Expression.Property(parameter, propertyName);
@@ -64,7 +65,7 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, FilterQuery filterQuery)
         {
-            if(filterQuery == null)
+            if (filterQuery == null)
                 return source;
 
             var concreteType = typeof(TSource);
@@ -73,21 +74,51 @@ namespace JsonApiDotNetCore.Extensions
             if (property == null)
                 throw new ArgumentException($"'{filterQuery.FilteredAttribute.InternalAttributeName}' is not a valid property of '{concreteType}'");
 
-            // convert the incoming value to the target value type
-            // "1" -> 1
-            var convertedValue = Convert.ChangeType(filterQuery.PropertyValue, property.PropertyType);
-            // {model}
-            var parameter = Expression.Parameter(concreteType, "model");
-            // {model.Id}
-            var left = Expression.PropertyOrField(parameter, property.Name);
-            // {1}
-            var right = Expression.Constant(convertedValue, property.PropertyType);
-            // {model.Id == 1}
-            var body = Expression.Equal(left, right);
+            try
+            {
+                // convert the incoming value to the target value type
+                // "1" -> 1
+                var convertedValue = Convert.ChangeType(filterQuery.PropertyValue, property.PropertyType);
+                // {model}
+                var parameter = Expression.Parameter(concreteType, "model");
+                // {model.Id}
+                var left = Expression.PropertyOrField(parameter, property.Name);
+                // {1}
+                var right = Expression.Constant(convertedValue, property.PropertyType);
 
-            var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+                var body = Expression.Equal(left, right);
+                switch (filterQuery.FilterOperation)
+                {
+                    case FilterOperations.eq:
+                        // {model.Id == 1}
+                        body = Expression.Equal(left, right);
+                        break;
+                    case FilterOperations.lt:
+                        // {model.Id < 1}
+                        body = Expression.LessThan(left, right);
+                        break;
+                    case FilterOperations.gt:
+                        // {model.Id > 1}
+                        body = Expression.GreaterThan(left, right);
+                        break;
+                    case FilterOperations.le:
+                        // {model.Id <= 1}
+                        body = Expression.LessThanOrEqual(left, right);
+                        break;
+                    case FilterOperations.ge:
+                        // {model.Id <= 1}
+                        body = Expression.GreaterThanOrEqual(left, right);
+                        break;
+                }
 
-            return source.Where(lambda);
+                var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                return source.Where(lambda);
+            }
+            catch (FormatException)
+            {
+                throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
+            }
         }
     }
 }
