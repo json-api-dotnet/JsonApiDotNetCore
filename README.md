@@ -1,32 +1,5 @@
 [![build status](https://gitlab.cmh.edu/jcnance/JsonApiDotnetCore/badges/master/build.svg)](https://gitlab.cmh.edu/jcnance/JsonApiDotnetCore/commits/master)
 
-# Task List 
-
-- [x] Add inbound serialization formatting
-- [x] Add POST
-- [x] Add PATCH
-- [x] Add DELETE
-- [x] Add Relationships
-- [x] Add support for authorization/context-scoping middleware
-- [x] Filtering
-- [x] Sorting
-- [x] Fetching relationships
-- [x] Creating relationships
-- [x] Refactor relationships links to use an POCO that contains data and links objects
-- [x] Include Entities
-- [x] BadRequest should be 422 in POST
-- [x] Dasherized route support
-- [x] Contributing Guide
-- [ ] Pagination
-- [ ] Add integration tests to example project
-- [ ] Add logging
-- [ ] Configure Different Repositories
-- [ ] Build definitions
-- [ ] Tests
-- [ ] Allow for presenters with mappings
-- [ ] Ability to disable dasherization of names
-- [ ] Rename ContextEntity ?? 
-
 # Generators
 
 - TODO: Document usage of the yeoman jadn generator

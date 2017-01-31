@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Formatters
 
         public void OnException(ExceptionContext context)
         {
-            _logger.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
+            _logger?.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
 
             var jsonApiException = context.Exception as JsonApiException;
             

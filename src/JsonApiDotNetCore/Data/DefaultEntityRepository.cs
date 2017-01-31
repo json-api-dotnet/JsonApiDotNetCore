@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Data
             var entity = _jsonApiContext.RequestEntity;
             if(entity.Relationships.Any(r => r.RelationshipName == relationshipName))
                 return entities.Include(relationshipName);
-
+            
             throw new JsonApiException("400", "Invalid relationship",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
