@@ -42,9 +42,10 @@ namespace JsonApiDotNetCore.Formatters
                 string responseContent;
                 try
                 {
-                    if(context.Object.GetType() == typeof(Error))
+                    if(context.Object.GetType() == typeof(Error) || jsonApiContext.RequestEntity == null)
                     {
-                        logger?.LogInformation("Response was type <Error>. Serializing as plain JSON.");
+                        logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
+                        
                         responseContent = JsonConvert.SerializeObject(context.Object);
                     }
                     else
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCore.Formatters
                 }
                 catch(Exception e)
                 {
-                    logger?.LogError("An error ocurred while formatting the response.", e);
+                    logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
                     responseContent = new Error("400", e.Message).GetJson();
                     response.StatusCode = 400;
                 }
