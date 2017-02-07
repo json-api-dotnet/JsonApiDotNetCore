@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -111,7 +110,10 @@ namespace JsonApiDotNetCore.Controllers
                 .GetRelationshipName<T>(relationshipName.ToProperCase());
 
             if (relationshipName == null)
+            {
+                _logger?.LogInformation($"Relationship name not specified returning 422");
                 return UnprocessableEntity();
+            }
 
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
 
@@ -131,7 +133,10 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
             if (entity == null)
+            {
+                _logger?.LogInformation($"Entity cannot be null returning 422");
                 return UnprocessableEntity();
+            }
 
             await _entities.CreateAsync(entity);
 
@@ -142,7 +147,10 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
             if (entity == null)
+            {
+                _logger?.LogInformation($"Entity cannot be null returning 422");
                 return UnprocessableEntity();
+            }
 
             var updatedEntity = await _entities.UpdateAsync(id, entity);
 

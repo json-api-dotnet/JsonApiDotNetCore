@@ -167,3 +167,18 @@ identifier):
 ?filter[attribute]=le:value
 ?filter[attribute]=ge:value
 ```
+
+# Tests
+
+## Running
+
+I am using DotNetCoreDocs to generate sample requests and documentation.
+
+1. To run the tests, start a postgres server and verify the connection properties define in `/test/JsonApiDotNetCoreExampleTests/appsettings.json`
+2. `cd ./test/JsonApiDotNetCoreExampleTests`
+3. `dotnet test`
+4. `cd ./src/JsonApiDotNetCoreExample`
+5. `dotnet run`
+6. `open http://localhost:5000/docs`
+
+

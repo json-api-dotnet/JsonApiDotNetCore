@@ -7,6 +7,9 @@ using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
+using DotNetCoreDocs.Configuration;
+using DotNetCoreDocs.Middleware;
+using System;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -25,21 +28,36 @@ namespace JsonApiDotNetCoreExample
             _config = builder.Build();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => {
+            var loggerFactory = new LoggerFactory();
+            loggerFactory
+              .AddConsole(LogLevel.Trace);
+            services.AddSingleton<ILoggerFactory>(loggerFactory);
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
                 options.UseNpgsql(_getDbConnectionString());
             }, ServiceLifetime.Transient);
-            
-            services.AddJsonApi<AppDbContext>(opt => {
+
+            services.AddJsonApi<AppDbContext>(opt =>
+            {
                 opt.Namespace = "api/v1";
-                opt.DefaultPageSize = 1;
+                opt.DefaultPageSize = 5;
             });
+
+            services.AddDocumentationConfiguration(_config);
+
+            var provider = services.BuildServiceProvider();
+            var appContext = provider.GetRequiredService<AppDbContext>();
+            if(appContext == null)
+                throw new ArgumentException();
+            return provider;
         }
 
         public void Configure(
-            IApplicationBuilder app, 
-            IHostingEnvironment env, 
+            IApplicationBuilder app,
+            IHostingEnvironment env,
             ILoggerFactory loggerFactory,
             AppDbContext context)
         {
@@ -47,6 +65,9 @@ namespace JsonApiDotNetCoreExample
 
             loggerFactory.AddConsole(_config.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseDocs();
+
             app.UseJsonApi();
         }
 

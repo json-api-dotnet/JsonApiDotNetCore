@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
@@ -33,16 +34,23 @@ namespace JsonApiDotNetCore.Formatters
                 return InputFormatterResult.SuccessAsync(null);
             }
 
+            var loggerFactory = GetService<ILoggerFactory>(context);
+            var logger = loggerFactory?.CreateLogger<JsonApiInputFormatter>();
+
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
-                var jsonApiContext = context.HttpContext.RequestServices.GetService<IJsonApiContext>();
+                var jsonApiContext = GetService<IJsonApiContext>(context);
                 var model = JsonApiDeSerializer.Deserialize(body, jsonApiContext);
+
+                if(model == null)
+                    logger?.LogError("An error occurred while de-serializing the payload");
 
                 return InputFormatterResult.SuccessAsync(model);
             }
-            catch (JsonSerializationException)
+            catch (JsonSerializationException ex)
             {
+                logger?.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
                 context.HttpContext.Response.StatusCode = 422;
                 return InputFormatterResult.FailureAsync();
             }
@@ -54,6 +62,11 @@ namespace JsonApiDotNetCore.Formatters
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        private TService GetService<TService>(InputFormatterContext context)
+        {
+            return context.HttpContext.RequestServices.GetService<TService>();
         }
     }
 }

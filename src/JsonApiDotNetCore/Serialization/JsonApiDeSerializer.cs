@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -17,24 +16,50 @@ namespace JsonApiDotNetCore.Serialization
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
 
-            var entityTypeName = document.Data.Type.ToProperCase();
+            var entity = DataToObject(document.Data, context);
+
+            return entity;
+        }
+
+        public static List<TEntity> DeserializeList<TEntity>(string requestBody, IJsonApiContext context)
+        {
+            var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
+
+            var deserializedList = new List<TEntity>();
+            foreach (var data in documents.Data)
+            {
+                var entity = DataToObject(data, context);
+                deserializedList.Add((TEntity)entity);
+            }
+
+            return deserializedList;
+        }
+
+        private static object DataToObject(DocumentData data, IJsonApiContext context)
+        {
+            var entityTypeName = data.Type.ToProperCase();
 
             var contextEntity = context.ContextGraph.GetContextEntity(entityTypeName);
             context.RequestEntity = contextEntity;
-
-            var entity = Activator.CreateInstance(contextEntity.EntityType);
-
-            entity = _setEntityAttributes(entity, contextEntity, document.Data.Attributes);
-            entity = _setRelationships(entity, contextEntity, document.Data.Relationships);
             
-            return entity;
+            var entity = Activator.CreateInstance(contextEntity.EntityType);
+            
+            entity = _setEntityAttributes(entity, contextEntity, data.Attributes);
+            entity = _setRelationships(entity, contextEntity, data.Relationships);
+
+            var identifiableEntity = (IIdentifiable)entity;
+
+            if(data.Id != null)
+                identifiableEntity.Id = Convert.ChangeType(data.Id, identifiableEntity.Id.GetType());
+
+            return identifiableEntity;
         }
 
         private static object _setEntityAttributes(
             object entity, ContextEntity contextEntity, Dictionary<string, object> attributeValues)
         {
             var entityProperties = entity.GetType().GetProperties();
-            
+
             foreach (var attr in contextEntity.Attributes)
             {
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalAttributeName);
@@ -56,22 +81,26 @@ namespace JsonApiDotNetCore.Serialization
         private static object _setRelationships(
             object entity, ContextEntity contextEntity, Dictionary<string, RelationshipData> relationships)
         {
-            if(relationships == null)
+            if (relationships == null || relationships.Count == 0)
                 return entity;
 
             var entityProperties = entity.GetType().GetProperties();
-            
+
             foreach (var attr in contextEntity.Relationships)
             {
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.RelationshipName}Id");
 
                 if (entityProperty == null)
-                    throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.RelationshipName}", nameof(entity));
-
+                    throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.RelationshipName}");
+                
+                var relationshipName = attr.RelationshipName.Dasherize();
                 RelationshipData relationshipData;
-                if (relationships.TryGetValue(attr.RelationshipName.Dasherize(), out relationshipData))
+                if (relationships.TryGetValue(relationshipName, out relationshipData))
                 {
-                    var data = (Dictionary<string,string>)relationshipData.ExposedData;
+                    var data = (Dictionary<string, string>)relationshipData.ExposedData;
+                    
+                    if(data == null) continue;
+                    
                     var newValue = data["id"];
                     var convertedValue = Convert.ChangeType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
