@@ -2,19 +2,42 @@
 
 # Generators
 
-- TODO: Document usage of the yeoman jadn generator
+You can install the [Yeoman generators](https://github.com/Research-Institute/json-api-dotnet-core-generators) 
+to make building applications much easier.
 
 ## Usage
 
-- Add Middleware
+You need to do 3 things:
+
+- Add Middleware and Services
 - Define Models
 - Define Controllers
+
+I recommend reading the details below, but once you're familiar with the
+setup, you can use the Yeoman generator to generate the required classes.
+
+## Middleware and Services
+
+Add the following to your `Startup.ConfigureServices` method. 
+Replace `AppDbContext` with your DbContext. 
+
+```csharp
+services.AddJsonApi<AppDbContext>();
+```
+
+Add the middleware to the `Startup.Configure` method. 
+Note that under the hood, this will call `app.UseMvc()` 
+so there is no need to add that as well.
+
+```csharp
+app.UseJsonApi();
+```
 
 ## Defining Models
 
 Your models should inherit `Identifiable<TId>` where `TId` is the type of the primary key, like so:
 
-```
+```csharp
 public class Person : Identifiable<Guid>
 {
     public override Guid Id { get; set; }
@@ -26,7 +49,7 @@ public class Person : Identifiable<Guid>
 If you want an attribute on your model to be publicly available, 
 add the `AttrAttribute` and provide the outbound name.
 
-```
+```csharp
 public class Person : Identifiable<int>
 {
     public override int Id { get; set; }
@@ -38,9 +61,10 @@ public class Person : Identifiable<int>
 
 ### Relationships
 
-In order for navigation properties to be identified in the model, they should be labeled as virtual.
+In order for navigation properties to be identified in the model, 
+they should be labeled as virtual.
 
-```
+```csharp
 public class Person : Identifiable<int>
 {
     public override int Id { get; set; }
@@ -55,7 +79,7 @@ public class Person : Identifiable<int>
 Dependent relationships should contain a property in the form `{RelationshipName}Id`. 
 For example, a `TodoItem` may have an `Owner` and so the Id attribute should be `OwnerId` like so:
 
-```
+```csharp
 public class TodoItem : Identifiable<int>
 {
     public override int Id { get; set; }
@@ -73,7 +97,7 @@ public class TodoItem : Identifiable<int>
 You need to create controllers that inherit from `JsonApiController<TEntity>` or `JsonApiController<TEntity, TId>`
 where `TEntity` is the model that inherits from `Identifiable<TId>`.
 
-```
+```csharp
 [Route("api/[controller]")]
 public class ThingsController : JsonApiController<Thing>
 {
@@ -92,7 +116,7 @@ If your model is using a type other than `int` for the primary key,
 you should explicitly declare it in the controller
 and repository generic type definitions:
 
-```
+```csharp
 [Route("api/[controller]")]
 public class ThingsController : JsonApiController<Thing, Guid>
 {
@@ -120,7 +144,7 @@ NOT /todoItems
 
 You can add a namespace to the URL by specifying it in `ConfigureServices`:
 
-```
+```csharp
 services.AddJsonApi<AppDbContext>(
     opt => opt.Namespace = "api/v1");
 ```
@@ -130,7 +154,7 @@ services.AddJsonApi<AppDbContext>(
 If you would like pagination implemented by default, you can specify the page size
 when setting up the services:
 
-```
+```csharp
  services.AddJsonApi<AppDbContext>(
      opt => opt.DefaultPageSize = 10);
 ```
@@ -145,7 +169,6 @@ add to the service collection in `Startup.ConfigureServices` like so:
 ```
 services.AddScoped<IEntityRepository<MyEntity,Guid>, MyEntityRepository>();
 ```
-
 
 ## Filtering
 
@@ -180,5 +203,3 @@ I am using DotNetCoreDocs to generate sample requests and documentation.
 4. `cd ./src/JsonApiDotNetCoreExample`
 5. `dotnet run`
 6. `open http://localhost:5000/docs`
-
-
