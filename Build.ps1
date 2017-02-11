@@ -60,8 +60,5 @@ $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BU
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
 exec { & dotnet build .\src\JsonApiDotNetCore -c Release }
-exec { & dotnet build .\test\JsonApiDotNetCoreExampleTests -c Release }
-
-exec { & dotnet test .\test\JsonApiDotNetCoreExampleTests -c Release }
 
 exec { & dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision }
