@@ -190,7 +190,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            Console.WriteLine(">>>" + JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             var description = new RequestProperties("Post TodoItem");
@@ -198,7 +197,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
             // Act
             var response = await _fixture.MakeRequest<TodoItem>(description, request);
             var body = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(">>>>>>>>" + body + response.StatusCode);
             var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext);
 
             // Assert

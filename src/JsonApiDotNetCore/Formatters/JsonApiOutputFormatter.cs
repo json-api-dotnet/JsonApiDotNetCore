@@ -34,22 +34,23 @@ namespace JsonApiDotNetCore.Formatters
             logger?.LogInformation("Formatting response as JSONAPI");
 
             var response = context.HttpContext.Response;
-
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
                 var jsonApiContext = GetService<IJsonApiContext>(context);
-
+                
                 string responseContent;
                 try
                 {
                     if(context.Object.GetType() == typeof(Error) || jsonApiContext.RequestEntity == null)
                     {
                         logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
-                        
                         responseContent = JsonConvert.SerializeObject(context.Object);
                     }
                     else
+                    {
+                        response.ContentType = "application/vnd.api+json";
                         responseContent = JsonApiSerializer.Serialize(context.Object, jsonApiContext);
+                    }
                 }
                 catch(Exception e)
                 {
@@ -57,7 +58,7 @@ namespace JsonApiDotNetCore.Formatters
                     responseContent = new Error("400", e.Message).GetJson();
                     response.StatusCode = 400;
                 }
-
+                
                 await writer.WriteAsync(responseContent);
                 await writer.FlushAsync();       
             }
