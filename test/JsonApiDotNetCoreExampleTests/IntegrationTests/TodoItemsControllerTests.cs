@@ -64,6 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
             Assert.True(deserializedBody.Count <= expectedEntitiesPerPage);
         }
 
+
         [Fact]
         public async Task Can_Paginate_TodoItems()
         {
@@ -148,6 +149,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(todoItem.Id, deserializedBody.Id);
+            Assert.Equal(todoItem.Description, deserializedBody.Description);
+            Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
+        }
+
+        [Fact]
+        public async Task Can_Get_TodoItem_WithOwner()
+        {
+            // Arrange
+            var person = new Person();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner";
+
+            var description = new RequestProperties("Get TodoItem By Id", new Dictionary<string, string> {
+                { "/todo-items/{id}", "TodoItem Id" },
+                { "?include={relationship}", "Included Relationship" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(person.Id, deserializedBody.OwnerId);
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
