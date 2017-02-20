@@ -164,16 +164,6 @@ services.AddJsonApi<AppDbContext>(
     opt => opt.Namespace = "api/v1");
 ```
 
-## Pagination
-
-If you would like pagination implemented by default, you can specify the page size
-when setting up the services:
-
-```csharp
- services.AddJsonApi<AppDbContext>(
-     opt => opt.DefaultPageSize = 10);
-```
-
 ## Defining Custom Data Access Methods
 
 You can implement custom methods for accessing the data by creating an implementation of 
@@ -181,8 +171,25 @@ You can implement custom methods for accessing the data by creating an implement
 methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository should then be
 add to the service collection in `Startup.ConfigureServices` like so:
 
-```
+```csharp
 services.AddScoped<IEntityRepository<MyEntity,Guid>, MyEntityRepository>();
+```
+
+## Pagination
+
+Resources can be paginated. 
+The following query would set the page size to 10 and get page 2.
+
+```
+?page[size]=10&page[number]=2
+```
+
+If you would like pagination implemented by default, you can specify the page size
+when setting up the services:
+
+```csharp
+ services.AddJsonApi<AppDbContext>(
+     opt => opt.DefaultPageSize = 10);
 ```
 
 ## Filtering
@@ -205,7 +212,6 @@ identifier):
 ?filter[attribute]=le:value
 ?filter[attribute]=ge:value
 ```
-
 
 ## Sorting
 
