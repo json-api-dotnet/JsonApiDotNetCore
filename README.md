@@ -206,6 +206,16 @@ identifier):
 ?filter[attribute]=ge:value
 ```
 
+
+## Sorting
+
+Resources can be sorted by an attribute:
+
+```
+?sort=attribute // ascending
+?sort=-attribute // descending
+```
+
 # Tests
 
 ## Running
