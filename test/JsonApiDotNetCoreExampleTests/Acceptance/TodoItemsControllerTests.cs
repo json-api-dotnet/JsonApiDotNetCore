@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Xunit;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Serialization;
+using System.Linq;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -365,6 +366,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(newTodoItem.Description, deserializedBody.Description);
             Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
+        }
+
+        [Fact]
+        public async Task Can_Delete_TodoItem()
+        {
+            // Arrange
+             var person = new Person();
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("DELETE");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(string.Empty);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            var description = new RequestProperties("Delete TodoItem");
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Null(_context.TodoItems.FirstOrDefault(t => t.Id == todoItem.Id));
         }
     }
 }
