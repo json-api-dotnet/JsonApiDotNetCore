@@ -285,7 +285,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinial = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal
                     },
                     relationships = new
                     {
@@ -343,7 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     attributes = new
                     {
                         description = newTodoItem.Description,
-                        ordinial = newTodoItem.Ordinal
+                        ordinal = newTodoItem.Ordinal
                     }
                 }
             };
