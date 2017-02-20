@@ -45,12 +45,16 @@ namespace JsonApiDotNetCore.Internal.Query
                 if (pair.Key.StartsWith("include"))
                 {
                     IncludedRelationships = ParseIncludedRelationships(pair.Value);
+                    continue;
                 }
 
                 if (pair.Key.StartsWith("page"))
                 {
                     PageQuery = ParsePageQuery(pair.Key, pair.Value);
+                    continue;
                 }
+
+                throw new JsonApiException("400", $"{pair} is not a valid query.");
             }
         }
 

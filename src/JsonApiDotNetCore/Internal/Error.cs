@@ -4,6 +4,9 @@ namespace JsonApiDotNetCore.Internal
 {
     public class Error
     {
+        public Error()
+        { }
+        
         public Error(string status, string title)
         {
             Status = status;
