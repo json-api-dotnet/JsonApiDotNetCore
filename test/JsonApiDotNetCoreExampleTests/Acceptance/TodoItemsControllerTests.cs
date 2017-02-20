@@ -119,8 +119,90 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
 
-            foreach(var todoItemResult in deserializedBody)
+            foreach (var todoItemResult in deserializedBody)
                 Assert.Equal(todoItem.Ordinal, todoItemResult.Ordinal);
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Ordinal_Ascending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 5;
+            var person = new Person();
+
+            for (var i = 1; i < numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = person;
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?sort=ordinal";
+
+            var description = new RequestProperties("Sort TodoItems Ascending", new Dictionary<string, string> {
+                { "?sort=attr", "Sort on attribute" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+
+            var priorOrdinal = 0;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Ordinal > priorOrdinal);
+            }                
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Ordinal_Descending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 5;
+            var person = new Person();
+
+            for (var i = 1; i < numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = person;
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?sort=-ordinal";
+
+            var description = new RequestProperties("Sort TodoItems Descending", new Dictionary<string, string> {
+                { "?sort=-attr", "Sort on attribute" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+
+            var priorOrdinal = numberOfItems + 1;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Ordinal < priorOrdinal);
+            }                
         }
 
         [Fact]
@@ -206,7 +288,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         owner = new
                         {
-                            data = new {
+                            data = new
+                            {
                                 type = "people",
                                 id = person.Id.ToString()
                             }
