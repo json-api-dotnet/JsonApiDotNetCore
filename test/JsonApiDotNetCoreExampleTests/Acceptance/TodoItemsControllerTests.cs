@@ -157,10 +157,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
 
-            var priorOrdinal = 0;
+            long priorOrdinal = 0;
             foreach (var todoItemResult in deserializedBody)
             {
                 Assert.True(todoItemResult.Ordinal > priorOrdinal);
+                priorOrdinal = todoItemResult.Ordinal;
             }                
         }
 
@@ -198,10 +199,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
 
-            var priorOrdinal = numberOfItems + 1;
+            long priorOrdinal = numberOfItems + 1;
             foreach (var todoItemResult in deserializedBody)
             {
                 Assert.True(todoItemResult.Ordinal < priorOrdinal);
+                priorOrdinal = todoItemResult.Ordinal;
             }                
         }
 
