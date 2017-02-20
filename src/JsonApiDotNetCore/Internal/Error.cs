@@ -28,12 +28,5 @@ namespace JsonApiDotNetCore.Internal
         
         [JsonProperty("status")]
         public string Status { get; set; }
-
-        public string GetJson()
-        {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore
-            });
-        }
     }
 }
