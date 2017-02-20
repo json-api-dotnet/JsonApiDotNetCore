@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 
 namespace JsonApiDotNetCore.Routing
@@ -6,8 +7,10 @@ namespace JsonApiDotNetCore.Routing
     {
         public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app)
         {
+            app.UseMiddleware<RequestMiddleware>();
+
             app.UseMvc();
-            
+
             return app;
         }
     }

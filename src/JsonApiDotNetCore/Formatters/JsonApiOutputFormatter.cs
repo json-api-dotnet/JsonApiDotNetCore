@@ -34,38 +34,55 @@ namespace JsonApiDotNetCore.Formatters
             logger?.LogInformation("Formatting response as JSONAPI");
 
             var response = context.HttpContext.Response;
-
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
                 var jsonApiContext = GetService<IJsonApiContext>(context);
 
+                response.ContentType = "application/vnd.api+json";
                 string responseContent;
                 try
                 {
-                    if(context.Object.GetType() == typeof(Error) || jsonApiContext.RequestEntity == null)
-                    {
-                        logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
-                        
-                        responseContent = JsonConvert.SerializeObject(context.Object);
-                    }
-                    else
-                        responseContent = JsonApiSerializer.Serialize(context.Object, jsonApiContext);
+                    responseContent = GetResponseBody(context.Object, jsonApiContext, logger);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
-                    responseContent = new Error("400", e.Message).GetJson();
+                    var errors = new ErrorCollection();
+                    errors.Add(new Error("400", e.Message));
+                    responseContent = errors.GetJson();
                     response.StatusCode = 400;
                 }
 
                 await writer.WriteAsync(responseContent);
-                await writer.FlushAsync();       
+                await writer.FlushAsync();
             }
         }
 
         private T GetService<T>(OutputFormatterWriteContext context)
         {
             return context.HttpContext.RequestServices.GetService<T>();
+        }
+
+        private string GetResponseBody(object responseObject, IJsonApiContext jsonApiContext, ILogger logger)
+        {
+            if (responseObject.GetType() == typeof(Error) || jsonApiContext.RequestEntity == null)
+            {
+                if (responseObject.GetType() == typeof(Error))
+                {
+                    var errors = new ErrorCollection();
+                    errors.Add((Error)responseObject);
+                    return errors.GetJson();
+                }
+                else
+                {
+                    logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
+                    return JsonConvert.SerializeObject(responseObject);
+                }
+            }
+            else
+            {
+                return JsonApiSerializer.Serialize(responseObject, jsonApiContext);
+            }
         }
     }
 }

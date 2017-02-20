@@ -4,6 +4,9 @@ namespace JsonApiDotNetCore.Internal
 {
     public class Error
     {
+        public Error()
+        { }
+        
         public Error(string status, string title)
         {
             Status = status;
@@ -25,12 +28,5 @@ namespace JsonApiDotNetCore.Internal
         
         [JsonProperty("status")]
         public string Status { get; set; }
-
-        public string GetJson()
-        {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore
-            });
-        }
     }
 }

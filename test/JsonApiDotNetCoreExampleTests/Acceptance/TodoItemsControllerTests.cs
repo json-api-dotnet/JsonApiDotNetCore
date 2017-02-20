@@ -15,9 +15,9 @@ using Newtonsoft.Json;
 using Xunit;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Serialization;
-using System;
+using System.Linq;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
     public class TodoItemControllerTests
@@ -120,8 +120,92 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
 
-            foreach(var todoItemResult in deserializedBody)
+            foreach (var todoItemResult in deserializedBody)
                 Assert.Equal(todoItem.Ordinal, todoItemResult.Ordinal);
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Ordinal_Ascending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 5;
+            var person = new Person();
+
+            for (var i = 1; i < numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = person;
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?sort=ordinal";
+
+            var description = new RequestProperties("Sort TodoItems Ascending", new Dictionary<string, string> {
+                { "?sort=attr", "Sort on attribute" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+
+            long priorOrdinal = 0;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Ordinal > priorOrdinal);
+                priorOrdinal = todoItemResult.Ordinal;
+            }                
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Ordinal_Descending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 5;
+            var person = new Person();
+
+            for (var i = 1; i < numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = person;
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?sort=-ordinal";
+
+            var description = new RequestProperties("Sort TodoItems Descending", new Dictionary<string, string> {
+                { "?sort=-attr", "Sort on attribute" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+
+            long priorOrdinal = numberOfItems + 1;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Ordinal < priorOrdinal);
+                priorOrdinal = todoItemResult.Ordinal;
+            }                
         }
 
         [Fact]
@@ -154,6 +238,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
         }
 
         [Fact]
+        public async Task Can_Get_TodoItem_WithOwner()
+        {
+            // Arrange
+            var person = new Person();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner";
+
+            var description = new RequestProperties("Get TodoItem By Id", new Dictionary<string, string> {
+                { "/todo-items/{id}", "TodoItem Id" },
+                { "?include={relationship}", "Included Relationship" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(person.Id, deserializedBody.OwnerId);
+            Assert.Equal(todoItem.Id, deserializedBody.Id);
+            Assert.Equal(todoItem.Description, deserializedBody.Description);
+            Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
+        }
+
+        [Fact]
         public async Task Can_Post_TodoItem()
         {
             // Arrange
@@ -170,13 +285,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinial = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal
                     },
                     relationships = new
                     {
                         owner = new
                         {
-                            data = new {
+                            data = new
+                            {
                                 type = "people",
                                 id = person.Id.ToString()
                             }
@@ -190,7 +306,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            Console.WriteLine(">>>" + JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             var description = new RequestProperties("Post TodoItem");
@@ -198,12 +313,89 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
             // Act
             var response = await _fixture.MakeRequest<TodoItem>(description, request);
             var body = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(">>>>>>>>" + body + response.StatusCode);
             var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext);
 
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
+        }
+
+        [Fact]
+        public async Task Can_Patch_TodoItem()
+        {
+            // Arrange
+             var person = new Person();
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var newTodoItem = _todoItemFaker.Generate();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new
+                    {
+                        description = newTodoItem.Description,
+                        ordinal = newTodoItem.Ordinal
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            var description = new RequestProperties("Patch TodoItem");
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(newTodoItem.Description, deserializedBody.Description);
+            Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
+        }
+
+        [Fact]
+        public async Task Can_Delete_TodoItem()
+        {
+            // Arrange
+             var person = new Person();
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("DELETE");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(string.Empty);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            var description = new RequestProperties("Delete TodoItem");
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Null(_context.TodoItems.FirstOrDefault(t => t.Id == todoItem.Id));
         }
     }
 }
