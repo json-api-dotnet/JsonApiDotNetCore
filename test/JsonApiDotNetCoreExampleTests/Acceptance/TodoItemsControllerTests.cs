@@ -15,9 +15,8 @@ using Newtonsoft.Json;
 using Xunit;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Serialization;
-using System;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
     public class TodoItemControllerTests
@@ -63,7 +62,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests
             Assert.NotEmpty(deserializedBody);
             Assert.True(deserializedBody.Count <= expectedEntitiesPerPage);
         }
-
 
         [Fact]
         public async Task Can_Paginate_TodoItems()
