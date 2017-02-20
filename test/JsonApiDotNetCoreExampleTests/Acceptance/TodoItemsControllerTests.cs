@@ -318,5 +318,53 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
         }
+
+        [Fact]
+        public async Task Can_Patch_TodoItem()
+        {
+            // Arrange
+             var person = new Person();
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var newTodoItem = _todoItemFaker.Generate();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new
+                    {
+                        description = newTodoItem.Description,
+                        ordinial = newTodoItem.Ordinal
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            var description = new RequestProperties("Patch TodoItem");
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(newTodoItem.Description, deserializedBody.Description);
+            Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
+        }
     }
 }
