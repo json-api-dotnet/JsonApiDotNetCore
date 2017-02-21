@@ -83,8 +83,8 @@ namespace JsonApiDotNetCore.Builders
                 {
                     Links = new Links
                     {
-                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName),
-                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)
+                        Self = linkBuilder.GetSelfRelationLink(entity.Id.ToString(), r.RelationshipName),
+                        Related = linkBuilder.GetRelatedRelationLink(entity.Id.ToString(), r.RelationshipName)
                     }
                 };
 
