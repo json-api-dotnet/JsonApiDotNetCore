@@ -24,24 +24,26 @@ namespace JsonApiDotNetCore.Builders
         {
             var nSpace = string.Empty;
             var segments = path.Split('/');
+            
             for(var i = 1; i < segments.Length; i++)
             {
-                if(segments[i].ToLower() == entityName.ToLower())
+                if(segments[i].ToLower() == entityName.Dasherize()) 
                     break;
-                
+
                 nSpace += $"/{segments[i].Dasherize()}";
             }
+                
             return nSpace;
         }
 
         public string GetSelfRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/relationships/{child.Dasherize()}";
+            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/relationships/{child.Dasherize()}";
         }
 
         public string GetRelatedRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/{child.Dasherize()}";
+            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/{child.Dasherize()}";
         }
     }
 }
