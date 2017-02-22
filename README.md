@@ -8,6 +8,24 @@
 
 JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.org/) compliant web servers. Unlike other .Net implementations, this library provides all the required middleware to build a complete server. All you need to focus on is defining the resources. However, the library is also fully extensible so you can customize the implementation to meet your specific needs.
 
+# Table Of Contents
+- [Installation](#installation)
+- [Generators](#generators)
+- [Usage](#usage)
+	- [Middleware and Services](#middleware-and-services)
+	- [Defining Models](#defining-models)
+		- [Specifying Public Attributes](#specifying-public-attributes)
+		- [Relationships](#relationships)
+	- [Defining Controllers](#defining-controllers)
+		- [Non-Integer Type Keys](#non-integer-type-keys)
+	- [Routing](#routing)
+		- [Namespacing and Versioning URLs](#namespacing-and-versioning-urls)
+	- [Defining Custom Data Access Methods](#defining-custom-data-access-methods)
+	- [Pagination](#pagination)
+	- [Filtering](#filtering)
+	- [Sorting](#sorting)
+- [Tests](#tests)
+
 ## Installation
 
 `Install-Package JsonApiDotnetCore`
