@@ -175,7 +175,34 @@ methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository shoul
 add to the service collection in `Startup.ConfigureServices` like so:
 
 ```csharp
-services.AddScoped<IEntityRepository<MyEntity,Guid>, MyEntityRepository>();
+services.AddScoped<IEntityRepository<MyEntity,Guid>, MyAuthorizedEntityRepository>();
+```
+
+A sample implementation might look like:
+
+```chsarp
+public class MyAuthorizedEntityRepository : DefaultEntityRepository<MyEntity>
+{
+    private readonly ILogger _logger;
+    private readonly AppDbContext _context;
+    private readonly IAuthenticationService _authenticationService;
+
+    public MyAuthorizedEntityRepository(AppDbContext context,
+        ILoggerFactory loggerFactory,
+        IJsonApiContext jsonApiContext,
+        IAuthenticationService authenticationService)
+    : base(context, loggerFactory, jsonApiContext)
+    { 
+        _context = context;
+        _logger = loggerFactory.CreateLogger<MyEntityRepository>();
+        _authenticationService = authenticationService;
+    }
+
+    public override IQueryable<MyEntity> Get()
+    {
+        return base.Get().Where(e => e.UserId == _authenticationService.UserId);
+    }
+}
 ```
 
 ## Pagination
