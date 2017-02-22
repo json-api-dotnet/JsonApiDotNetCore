@@ -11,4 +11,4 @@ branches:
   only:
     - master
 script:
-  - ./build.shgit 
+  - ./build.sh
