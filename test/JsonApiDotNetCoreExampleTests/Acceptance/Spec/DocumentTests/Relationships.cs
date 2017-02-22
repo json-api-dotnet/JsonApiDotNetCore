@@ -11,9 +11,8 @@ using Xunit;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using System.Linq;
-using System;
 
-namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
+namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
     public class Relationships
