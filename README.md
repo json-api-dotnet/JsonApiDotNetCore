@@ -18,7 +18,7 @@ For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-in
 (https://www.myget.org/F/research-institute/api/v3/index.json) 
 to your nuget configuration.
 
-# Generators
+## Generators
 
 You can install the [Yeoman generators](https://github.com/Research-Institute/json-api-dotnet-core-generators) 
 to make building applications much easier.
@@ -34,7 +34,7 @@ You need to do 3 things:
 I recommend reading the details below, but once you're familiar with the
 setup, you can use the Yeoman generator to generate the required classes.
 
-## Middleware and Services
+### Middleware and Services
 
 Add the following to your `Startup.ConfigureServices` method. 
 Replace `AppDbContext` with your DbContext. 
@@ -51,7 +51,7 @@ so there is no need to add that as well.
 app.UseJsonApi();
 ```
 
-## Defining Models
+### Defining Models
 
 Your models should inherit `Identifiable<TId>` where `TId` is the type of the primary key, like so:
 
@@ -62,7 +62,7 @@ public class Person : Identifiable<Guid>
 }
 ```
 
-### Specifying Public Attributes
+#### Specifying Public Attributes
 
 If you want an attribute on your model to be publicly available, 
 add the `AttrAttribute` and provide the outbound name.
@@ -77,7 +77,7 @@ public class Person : Identifiable<int>
 }
 ```
 
-### Relationships
+#### Relationships
 
 In order for navigation properties to be identified in the model, 
 they should be labeled as virtual.
@@ -110,7 +110,7 @@ public class TodoItem : Identifiable<int>
 }
 ```
 
-## Defining Controllers
+### Defining Controllers
 
 You need to create controllers that inherit from `JsonApiController<TEntity>` or `JsonApiController<TEntity, TId>`
 where `TEntity` is the model that inherits from `Identifiable<TId>`.
@@ -128,7 +128,7 @@ public class ThingsController : JsonApiController<Thing>
 }
 ```
 
-### Non-Integer Type Keys
+#### Non-Integer Type Keys
 
 If your model is using a type other than `int` for the primary key,
 you should explicitly declare it in the controller
@@ -147,7 +147,7 @@ public class ThingsController : JsonApiController<Thing, Guid>
 }
 ```
 
-## Routing
+### Routing
 
 By default the library will configure routes for each controller. 
 Based on the [recommendations](http://jsonapi.org/recommendations/)
@@ -158,7 +158,7 @@ outlined in the JSONAPI spec, routes are hyphenated. For example:
 NOT /todoItems
 ```
 
-### Namespacing and Versioning URLs
+#### Namespacing and Versioning URLs
 
 You can add a namespace to the URL by specifying it in `ConfigureServices`:
 
@@ -167,7 +167,7 @@ services.AddJsonApi<AppDbContext>(
     opt => opt.Namespace = "api/v1");
 ```
 
-## Defining Custom Data Access Methods
+### Defining Custom Data Access Methods
 
 You can implement custom methods for accessing the data by creating an implementation of 
 `IEntityRepository<TEntity, TId>`. If you only need minor changes you can override the 
@@ -205,7 +205,7 @@ public class MyAuthorizedEntityRepository : DefaultEntityRepository<MyEntity>
 }
 ```
 
-## Pagination
+### Pagination
 
 Resources can be paginated. 
 The following query would set the page size to 10 and get page 2.
@@ -222,7 +222,7 @@ when setting up the services:
      opt => opt.DefaultPageSize = 10);
 ```
 
-## Filtering
+### Filtering
 
 You can filter resources by attributes using the `filter` query parameter. 
 By default, all attributes are filterable.
@@ -243,7 +243,7 @@ identifier):
 ?filter[attribute]=ge:value
 ```
 
-## Sorting
+### Sorting
 
 Resources can be sorted by an attribute:
 
@@ -252,9 +252,7 @@ Resources can be sorted by an attribute:
 ?sort=-attribute // descending
 ```
 
-# Tests
-
-## Running
+## Tests
 
 I am using DotNetCoreDocs to generate sample requests and documentation.
 
