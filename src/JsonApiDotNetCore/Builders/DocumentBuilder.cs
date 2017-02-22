@@ -27,15 +27,17 @@ namespace JsonApiDotNetCore.Builders
                 Data = _getData(contextEntity, entity)
             };
 
+            document.Included = _appendIncludedObject(document.Included, contextEntity, entity);
+
             return document;
         }
 
         public Documents Build(IEnumerable<IIdentifiable> entities)
         {
             var entityType = entities
-            .GetType()
-            .GenericTypeArguments[0];
-        
+                .GetType()
+                .GenericTypeArguments[0];
+
             var contextEntity = _contextGraph.GetContextEntity(entityType);
 
             var documents = new Documents
@@ -44,9 +46,25 @@ namespace JsonApiDotNetCore.Builders
             };
 
             foreach (var entity in entities)
+            {
                 documents.Data.Add(_getData(contextEntity, entity));
+                documents.Included = _appendIncludedObject(documents.Included, contextEntity, entity);
+            }
 
-            return documents;      
+            return documents;
+        }
+
+        private List<DocumentData> _appendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)
+        {
+            var includedEntities = _getIncludedEntities(contextEntity, entity);
+            if (includedEntities.Count > 0)
+            {
+                if (includedObject == null)
+                    includedObject = new List<DocumentData>();
+                includedObject.AddRange(includedEntities);
+            }
+
+            return includedObject;
         }
 
         private DocumentData _getData(ContextEntity contextEntity, IIdentifiable entity)
@@ -61,20 +79,21 @@ namespace JsonApiDotNetCore.Builders
                 return data;
 
             data.Attributes = new Dictionary<string, object>();
-            data.Relationships = new Dictionary<string, RelationshipData>();
 
             contextEntity.Attributes.ForEach(attr =>
             {
                 data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
             });
 
-            _addRelationships(data, contextEntity, entity);
+            if (contextEntity.Relationships.Count > 0)
+                _addRelationships(data, contextEntity, entity);
 
             return data;
         }
 
         private void _addRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)
         {
+            data.Relationships = new Dictionary<string, RelationshipData>();
             var linkBuilder = new LinkBuilder(_jsonApiContext);
 
             contextEntity.Relationships.ForEach(r =>
@@ -88,12 +107,12 @@ namespace JsonApiDotNetCore.Builders
                     }
                 };
 
-                if (_hasRelationship(r.RelationshipName))
+                if (_relationshipIsIncluded(r.RelationshipName))
                 {
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.RelationshipName);
 
-                    if(navigationEntity is IEnumerable)
+                    if (navigationEntity is IEnumerable)
                         relationshipData.ManyData = _getRelationships((IEnumerable<object>)navigationEntity, r.RelationshipName);
                     else
                         relationshipData.SingleData = _getRelationship(navigationEntity, r.RelationshipName);
@@ -103,20 +122,60 @@ namespace JsonApiDotNetCore.Builders
             });
         }
 
-        private bool _hasRelationship(string relationshipName)
+        private List<DocumentData> _getIncludedEntities(ContextEntity contextEntity, IIdentifiable entity)
         {
-            return _jsonApiContext.IncludedRelationships != null && 
+            var included = new List<DocumentData>();
+
+            contextEntity.Relationships.ForEach(r =>
+            {
+                if (!_relationshipIsIncluded(r.RelationshipName)) return;
+
+                var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, r.RelationshipName);
+
+                if (navigationEntity is IEnumerable)
+                    foreach (var includedEntity in (IEnumerable)navigationEntity)
+                        included.Add(_getIncludedEntity((IIdentifiable)includedEntity));
+                else
+                    included.Add(_getIncludedEntity((IIdentifiable)navigationEntity));
+            });
+
+            return included;
+        }
+
+        private DocumentData _getIncludedEntity(IIdentifiable entity)
+        {
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
+
+            var data = new DocumentData
+            {
+                Type = contextEntity.EntityName,
+                Id = entity.Id.ToString()
+            };
+
+            data.Attributes = new Dictionary<string, object>();
+
+            contextEntity.Attributes.ForEach(attr =>
+            {
+                data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
+            });
+
+            return data;
+        }
+
+        private bool _relationshipIsIncluded(string relationshipName)
+        {
+            return _jsonApiContext.IncludedRelationships != null &&
                 _jsonApiContext.IncludedRelationships.Contains(relationshipName.ToProperCase());
         }
 
         private List<Dictionary<string, string>> _getRelationships(IEnumerable<object> entities, string relationshipName)
         {
             var objType = entities.GetType().GenericTypeArguments[0];
-            
+
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
             var relationships = new List<Dictionary<string, string>>();
-            foreach(var entity in entities)
+            foreach (var entity in entities)
             {
                 relationships.Add(new Dictionary<string, string> {
                     {"type", typeName.EntityName.Dasherize() },
@@ -128,7 +187,7 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<string, string> _getRelationship(object entity, string relationshipName)
         {
             var objType = entity.GetType();
-            
+
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
             return new Dictionary<string, string> {
