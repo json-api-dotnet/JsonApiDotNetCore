@@ -8,10 +8,10 @@ namespace JsonApiDotNetCoreExample.Models
     {
         public override int Id { get; set; }
         
-        [Attr("firstName")]
+        [Attr("first-name")]
         public string FirstName { get; set; }
 
-        [Attr("lastName")]
+        [Attr("last-name")]
         public string LastName { get; set; }
 
         public virtual List<TodoItem> TodoItems { get; set; }
