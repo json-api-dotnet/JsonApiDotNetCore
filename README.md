@@ -180,7 +180,7 @@ services.AddScoped<IEntityRepository<MyEntity,Guid>, MyAuthorizedEntityRepositor
 
 A sample implementation might look like:
 
-```chsarp
+```csharp
 public class MyAuthorizedEntityRepository : DefaultEntityRepository<MyEntity>
 {
     private readonly ILogger _logger;
