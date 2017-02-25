@@ -245,7 +245,7 @@ when setting up the services:
 
 The total number of records can be added to the document meta by setting it in the options:
 
-```
+```csharp
 services.AddJsonApi<AppDbContext>(opt =>
 {
     opt.DefaultPageSize = 5;
@@ -287,7 +287,7 @@ Resources can be sorted by an attribute:
 
 Resource meta can be defined by implementing `IHasMeta` on the model class:
 
-```
+```csharp
 public class Person : Identifiable<int>, IHasMeta
 {
     // ...
