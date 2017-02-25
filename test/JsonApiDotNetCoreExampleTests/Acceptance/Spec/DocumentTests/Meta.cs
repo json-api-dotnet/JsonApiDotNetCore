@@ -12,6 +12,8 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using System.Linq;
 using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreExample.Models;
+using System.Collections;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
@@ -49,6 +51,47 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
             Assert.Equal((long)expectedCount, (long)documents.Meta["total-records"]);
+        }
+
+        [Fact]
+        public async Task EntityThatImplements_IHasMeta_Contains_MetaData()
+        {
+            // arrange
+            var person = new Person();
+            var expectedMeta = person.GetMeta(null);
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/people";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(documents.Meta);
+            Assert.NotNull(expectedMeta);
+            Assert.NotEmpty(expectedMeta);
+            
+            foreach(var hash in expectedMeta)
+            {
+                if(hash.Value is IList)
+                {
+                    var listValue = (IList)hash.Value;
+                    for(var i=0; i < listValue.Count; i++)
+                        Assert.Equal(listValue[i].ToString(), ((IList)documents.Meta[hash.Key])[i].ToString());
+                }
+                else
+                {
+                    Assert.Equal(hash.Value, documents.Meta[hash.Key]);
+                }
+            }                
         }
     }
 }

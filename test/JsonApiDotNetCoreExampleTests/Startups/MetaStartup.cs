@@ -1,14 +1,10 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using DotNetCoreDocs.Configuration;
-using DotNetCoreDocs.Middleware;
 using System;
 using JsonApiDotNetCoreExample;
 
