@@ -64,6 +64,9 @@ namespace JsonApiDotNetCore.Controllers
             if (_jsonApiContext.QuerySet != null && _jsonApiContext.QuerySet.IncludedRelationships != null && _jsonApiContext.QuerySet.IncludedRelationships.Count > 0)
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
+            if (_jsonApiContext.Options.IncludeTotalRecordCount)
+                _jsonApiContext.TotalRecords = await entities.CountAsync();
+
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
 

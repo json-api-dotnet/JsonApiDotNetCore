@@ -20,6 +20,7 @@ namespace JsonApiDotNetCore.Services
             _httpContextAccessor = httpContextAccessor;
             Options = options;
         }
+
         public JsonApiOptions Options { get; set; }
         public IContextGraph ContextGraph { get; set; }
         public ContextEntity RequestEntity { get; set; }
@@ -27,6 +28,7 @@ namespace JsonApiDotNetCore.Services
         public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
         public List<string> IncludedRelationships { get; set; }
+        public int TotalRecords { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {

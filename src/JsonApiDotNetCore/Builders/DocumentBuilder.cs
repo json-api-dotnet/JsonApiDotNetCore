@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -24,7 +25,8 @@ namespace JsonApiDotNetCore.Builders
 
             var document = new Document
             {
-                Data = _getData(contextEntity, entity)
+                Data = _getData(contextEntity, entity),
+                Meta = _getMeta(entity)
             };
 
             document.Included = _appendIncludedObject(document.Included, contextEntity, entity);
@@ -42,7 +44,8 @@ namespace JsonApiDotNetCore.Builders
 
             var documents = new Documents
             {
-                Data = new List<DocumentData>()
+                Data = new List<DocumentData>(),
+                Meta = _getMeta(entities.FirstOrDefault())
             };
 
             foreach (var entity in entities)
@@ -52,6 +55,23 @@ namespace JsonApiDotNetCore.Builders
             }
 
             return documents;
+        }
+
+        private Dictionary<string, object> _getMeta(IIdentifiable entity)
+        {
+            if (entity == null) return null;
+
+            var meta = new Dictionary<string, object>();
+            var metaEntity = entity as IHasMeta;
+            
+            if(metaEntity != null)
+                meta = metaEntity.GetMeta(_jsonApiContext);
+
+            if(_jsonApiContext.Options.IncludeTotalRecordCount)
+                meta["total-records"] = _jsonApiContext.TotalRecords;
+            
+            if(meta.Count > 0) return meta;
+            return null;
         }
 
         private List<DocumentData> _appendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)

@@ -24,6 +24,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Pagination](#pagination)
 	- [Filtering](#filtering)
 	- [Sorting](#sorting)
+    - [Meta](#meta)
 - [Tests](#tests)
 
 ## Installation
@@ -240,6 +241,18 @@ when setting up the services:
      opt => opt.DefaultPageSize = 10);
 ```
 
+**Total Record Count**
+
+The total number of records can be added to the document meta by setting it in the options:
+
+```
+services.AddJsonApi<AppDbContext>(opt =>
+{
+    opt.DefaultPageSize = 5;
+    opt.IncludeTotalRecordCount = true;
+});
+```
+
 ### Filtering
 
 You can filter resources by attributes using the `filter` query parameter. 
@@ -268,6 +281,25 @@ Resources can be sorted by an attribute:
 ```
 ?sort=attribute // ascending
 ?sort=-attribute // descending
+```
+
+### Meta
+
+Resource meta can be defined by implementing `IHasMeta` on the model class:
+
+```
+public class Person : Identifiable<int>, IHasMeta
+{
+    // ...
+
+    public Dictionary<string, object> GetMeta(IJsonApiContext context)
+    {
+        return new Dictionary<string, object> {
+            { "copyright", "Copyright 2015 Example Corp." },
+            { "authors", new string[] { "Jared Nance" } }
+        };
+    }
+}
 ```
 
 ## Tests
