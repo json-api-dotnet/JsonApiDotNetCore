@@ -1,14 +1,10 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class Document
+    public class Document : DocumentBase
     {
         [JsonProperty("data")]
         public DocumentData Data { get; set; }
-        
-        [JsonProperty("included")]
-        public List<DocumentData> Included { get; set; }
     }
 }
