@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExample
 {
     public class Startup
     {
-        private readonly IConfiguration _config;
+        public readonly IConfiguration Config;
 
         public Startup(IHostingEnvironment env)
         {
@@ -25,10 +25,10 @@ namespace JsonApiDotNetCoreExample
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            _config = builder.Build();
+            Config = builder.Build();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExample
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseNpgsql(_getDbConnectionString());
+                options.UseNpgsql(GetDbConnectionString());
             }, ServiceLifetime.Transient);
 
             services.AddJsonApi<AppDbContext>(opt =>
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreExample
                 opt.DefaultPageSize = 5;
             });
 
-            services.AddDocumentationConfiguration(_config);
+            services.AddDocumentationConfiguration(Config);
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExample
             return provider;
         }
 
-        public void Configure(
+        public virtual void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
             ILoggerFactory loggerFactory,
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExample
         {
             context.Database.Migrate();
 
-            loggerFactory.AddConsole(_config.GetSection("Logging"));
+            loggerFactory.AddConsole(Config.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseDocs();
@@ -71,9 +71,9 @@ namespace JsonApiDotNetCoreExample
             app.UseJsonApi();
         }
 
-        private string _getDbConnectionString()
+        public string GetDbConnectionString()
         {
-            return _config["Data:DefaultConnection"];
+            return Config["Data:DefaultConnection"];
         }
     }
 }

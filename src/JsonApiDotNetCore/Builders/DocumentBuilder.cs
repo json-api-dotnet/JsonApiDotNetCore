@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Builders
             if (entity == null) return null;
 
             var meta = new Dictionary<string, object>();
-            var metaEntity = (IHasMeta)entity;
+            var metaEntity = entity as IHasMeta;
             
             if(metaEntity != null)
                 meta = metaEntity.GetMeta(_jsonApiContext);
