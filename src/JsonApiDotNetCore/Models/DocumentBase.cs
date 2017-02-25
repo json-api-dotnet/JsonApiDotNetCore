@@ -7,5 +7,6 @@ namespace JsonApiDotNetCore.Models
     {        
         [JsonProperty("included")]
         public List<DocumentData> Included { get; set; }
+        public Dictionary<string, object> Meta { get; set; }
     }
 }
