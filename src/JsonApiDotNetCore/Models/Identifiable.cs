@@ -1,6 +1,9 @@
 namespace JsonApiDotNetCore.Models
 {
-    public abstract class Identifiable<T> : IIdentifiable<T>, IIdentifiable
+    public class Identifiable : Identifiable<int>
+    {}
+    
+    public class Identifiable<T> : IIdentifiable<T>, IIdentifiable
     {
         public T Id { get; set; }
 
