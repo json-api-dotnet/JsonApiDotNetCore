@@ -3,9 +3,8 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class TodoItem : Identifiable<int>
+    public class TodoItem : Identifiable
     {
-        
         [Attr("description")]
         public string Description { get; set; }
 
@@ -14,5 +13,8 @@ namespace JsonApiDotNetCoreExample.Models
         
         public int? OwnerId { get; set; }
         public virtual Person Owner { get; set; }
+
+        public int? CollectionId { get; set; }
+        public virtual TodoItemCollection Collection { get; set; }
     }
 }
