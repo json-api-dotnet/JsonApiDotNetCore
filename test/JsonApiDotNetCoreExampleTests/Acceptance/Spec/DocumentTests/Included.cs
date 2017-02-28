@@ -234,7 +234,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task Request_ToIncludeRelationshipPath_Returns_400()
+        public async Task Request_ToIncludeDeeplyNestedRelationships_Returns_400()
         {
             // arrange
             var person = _context.People.First();
