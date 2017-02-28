@@ -23,6 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private AppDbContext _context;
         private Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
+        private Faker<TodoItemCollection> _todoItemCollectionFaker;
 
         public Included(DocsFixture<Startup, JsonDocWriter> fixture)
         {
@@ -35,6 +36,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number());
+
+            _todoItemCollectionFaker = new Faker<TodoItemCollection>()
+                .RuleFor(t => t.Name, f => f.Company.CatchPhrase());
         }
 
         [Fact]
@@ -162,6 +166,46 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(numberOfTodoItems, document.Included.Count);
+        }
+
+        [Fact]
+        public async Task Can_Include_MultipleRelationships()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            var todoItemCollection = _todoItemCollectionFaker.Generate();
+            todoItemCollection.Owner = person;
+
+            const int numberOfTodoItems = 5;
+            for (var i = 0; i < numberOfTodoItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Owner = person;
+                todoItem.Collection = todoItemCollection;
+                _context.TodoItems.Add(todoItem);
+                _context.SaveChanges();
+            }
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+
+            var route = $"/api/v1/people/{person.Id}?include=todo-items,todo-item-collections";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(responseString);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(document.Included);
+            Assert.Equal(numberOfTodoItems + 1, document.Included.Count);
         }
     }
 }
