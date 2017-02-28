@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Builders
                 meta = metaEntity.GetMeta(_jsonApiContext);
 
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
-                meta["total-records"] = _jsonApiContext.TotalRecords;
+                meta["total-records"] = _jsonApiContext.PageManager.TotalRecords;
             
             if(meta.Count > 0) return meta;
             return null;

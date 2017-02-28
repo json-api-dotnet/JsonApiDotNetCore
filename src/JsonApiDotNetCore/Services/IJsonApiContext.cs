@@ -15,6 +15,6 @@ namespace JsonApiDotNetCore.Services
         QuerySet QuerySet { get; set; }
         bool IsRelationshipData { get; set; }
         List<string> IncludedRelationships { get; set; }
-        int TotalRecords { get; set; }
+        PageManager PageManager { get; set; }
     }
 }

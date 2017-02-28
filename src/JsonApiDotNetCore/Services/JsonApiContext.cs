@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCore.Services
         public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
         public List<string> IncludedRelationships { get; set; }
-        public int TotalRecords { get; set; }
+        public PageManager PageManager { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
@@ -40,12 +41,26 @@ namespace JsonApiDotNetCore.Services
             {
                 QuerySet = new QuerySet(this, context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;
-            }                
+            }
 
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);
+            PageManager = GetPageManager();
             
             return this;
+        }
+
+        private PageManager GetPageManager()
+        {
+            if(Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
+                return new PageManager();
+            
+            var query = QuerySet?.PageQuery ?? new PageQuery(); 
+
+            return new PageManager {
+                CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
+                PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
+            };
         }
     }
 }
