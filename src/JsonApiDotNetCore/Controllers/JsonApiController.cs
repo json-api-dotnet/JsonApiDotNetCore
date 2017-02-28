@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,9 +126,6 @@ namespace JsonApiDotNetCore.Controllers
 
             var relationship = _jsonApiContext.ContextGraph
                 .GetRelationship<T>(entity, relationshipName);
-
-            if (relationship == null)
-                return NotFound();
 
             return Ok(relationship);
         }

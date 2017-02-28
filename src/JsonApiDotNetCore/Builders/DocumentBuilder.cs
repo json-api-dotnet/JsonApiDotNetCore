@@ -132,7 +132,9 @@ namespace JsonApiDotNetCore.Builders
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.RelationshipName);
 
-                    if (navigationEntity is IEnumerable)
+                    if(navigationEntity == null)
+                        relationshipData.SingleData = null;
+                    else if (navigationEntity is IEnumerable)
                         relationshipData.ManyData = _getRelationships((IEnumerable<object>)navigationEntity, r.RelationshipName);
                     else
                         relationshipData.SingleData = _getRelationship(navigationEntity, r.RelationshipName);
@@ -164,6 +166,8 @@ namespace JsonApiDotNetCore.Builders
 
         private DocumentData _getIncludedEntity(IIdentifiable entity)
         {
+            if(entity == null) return null;
+            
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
             var data = new DocumentData
