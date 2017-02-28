@@ -7,8 +7,6 @@ namespace JsonApiDotNetCoreExample.Models
 {
     public class Person : Identifiable<int>, IHasMeta
     {
-        public override int Id { get; set; }
-        
         [Attr("first-name")]
         public string FirstName { get; set; }
 

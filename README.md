@@ -76,9 +76,7 @@ Your models should inherit `Identifiable<TId>` where `TId` is the type of the pr
 
 ```csharp
 public class Person : Identifiable<Guid>
-{
-    public override Guid Id { get; set; }
-}
+{ }
 ```
 
 #### Specifying Public Attributes
@@ -89,8 +87,6 @@ add the `AttrAttribute` and provide the outbound name.
 ```csharp
 public class Person : Identifiable<int>
 {
-    public override int Id { get; set; }
-    
     [Attr("first-name")]
     public string FirstName { get; set; }
 }
@@ -104,8 +100,6 @@ they should be labeled as virtual.
 ```csharp
 public class Person : Identifiable<int>
 {
-    public override int Id { get; set; }
-    
     [Attr("first-name")]
     public string FirstName { get; set; }
 
@@ -119,8 +113,6 @@ For example, a `TodoItem` may have an `Owner` and so the Id attribute should be 
 ```csharp
 public class TodoItem : Identifiable<int>
 {
-    public override int Id { get; set; }
-    
     [Attr("description")]
     public string Description { get; set; }
 
