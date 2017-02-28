@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -63,6 +64,34 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
             Assert.Equal(expectedBody, body);
+
+            context.Dispose();
+        }
+
+        [Fact]
+        public async Task Request_ForRelationshipLink_ThatDoesNotExist_Returns_404()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var todoItem = context.TodoItems.First();
+            var todoItemId = todoItem.Id;
+            context.TodoItems.Remove(todoItem);
+            await context.SaveChangesAsync();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items/{todoItemId}/owner";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+
+            // assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             context.Dispose();
         }
