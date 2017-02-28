@@ -13,6 +13,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
+using System.Linq;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
@@ -206,6 +207,54 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(numberOfTodoItems + 1, document.Included.Count);
+        }
+
+        [Fact]
+        public async Task Request_ToIncludeUnknownRelationship_Returns_400()
+        {
+            // arrange
+            var person = _context.People.First();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+
+            var route = $"/api/v1/people/{person.Id}?include=non-existent-relationship";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Request_ToIncludeRelationshipPath_Returns_400()
+        {
+            // arrange
+            var person = _context.People.First();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+
+            var route = $"/api/v1/people/{person.Id}?include=owner.name";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }
 }
