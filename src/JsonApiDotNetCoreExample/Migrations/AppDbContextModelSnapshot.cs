@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExample.Migrations
 
                     b.Property<long>("Ordinal");
 
-                    b.Property<int>("OwnerId");
+                    b.Property<int?>("OwnerId");
 
                     b.HasKey("Id");
 
@@ -52,8 +52,7 @@ namespace JsonApiDotNetCoreExample.Migrations
                 {
                     b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
                         .WithMany("TodoItems")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OwnerId");
                 });
         }
     }
