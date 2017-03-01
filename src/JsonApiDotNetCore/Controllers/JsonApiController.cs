@@ -158,6 +158,8 @@ namespace JsonApiDotNetCore.Controllers
 
             var updatedEntity = await _entities.UpdateAsync(id, entity);
 
+            if(updatedEntity == null)  return NotFound();
+            
             return Ok(updatedEntity);
         }
 
