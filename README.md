@@ -113,7 +113,7 @@ public class Person : Identifiable<int>
 #### Relationships
 
 In order for navigation properties to be identified in the model, 
-they should be labeled as virtual.
+they should be labeled with the appropriate attribute (either `HasOne` or `HasMany`).
 
 ```csharp
 public class Person : Identifiable<int>
@@ -121,6 +121,7 @@ public class Person : Identifiable<int>
     [Attr("first-name")]
     public string FirstName { get; set; }
 
+    [HasMany("todo-items")]
     public virtual List<TodoItem> TodoItems { get; set; }
 }
 ```
@@ -135,6 +136,8 @@ public class TodoItem : Identifiable<int>
     public string Description { get; set; }
 
     public int OwnerId { get; set; }
+
+    [HasOne("owner")]
     public virtual Person Owner { get; set; }
 }
 ```
