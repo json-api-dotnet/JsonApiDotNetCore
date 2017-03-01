@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 
@@ -32,6 +33,8 @@ namespace JsonApiDotNetCore.Data
         Task<TEntity> CreateAsync(TEntity entity);
 
         Task<TEntity> UpdateAsync(TId id, TEntity entity);
+
+        Task UpdateRelationshipsAsync(object parent, Relationship relationship, IEnumerable<string> relationshipIds);
 
         Task<bool> DeleteAsync(TId id);
     }
