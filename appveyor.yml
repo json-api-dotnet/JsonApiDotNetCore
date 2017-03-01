@@ -4,6 +4,7 @@ pull_requests:
 branches:
   only:
   - master
+  - staging
 nuget:
   disable_publish_on_pr: true
 build_script:
