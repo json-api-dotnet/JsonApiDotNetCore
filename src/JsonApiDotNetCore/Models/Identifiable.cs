@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Models
     
     public class Identifiable<T> : IIdentifiable<T>, IIdentifiable
     {
-        public T Id { get; set; }
+        public virtual T Id { get; set; }
 
         object IIdentifiable.Id
         {

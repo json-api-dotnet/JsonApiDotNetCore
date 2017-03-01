@@ -86,6 +86,17 @@ public class Person : Identifiable
 { }
 ```
 
+If you need to hang annotations or attributes on the `Id` property, you can override the virtual member:
+
+```csharp
+public class Person : Identifiable
+{ 
+    [Key]
+    [Column("person_id")]
+    public override int Id { get; set; }
+}
+```
+
 #### Specifying Public Attributes
 
 If you want an attribute on your model to be publicly available, 
