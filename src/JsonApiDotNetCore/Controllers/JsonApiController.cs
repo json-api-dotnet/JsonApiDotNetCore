@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -138,6 +137,10 @@ namespace JsonApiDotNetCore.Controllers
                 _logger?.LogInformation($"Entity cannot be null returning 422");
                 return UnprocessableEntity();
             }
+
+            var stringId = entity.Id.ToString();
+            if(stringId.Length > 0 && stringId != "0")
+                return Forbidden();
 
             await _entities.CreateAsync(entity);
 
