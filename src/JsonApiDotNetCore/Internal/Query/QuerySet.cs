@@ -147,6 +147,9 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private List<string> ParseIncludedRelationships(string value)
         {
+            if(value.Contains("."))
+                throw new JsonApiException("400", "Deeply nested relationships are not supported");
+
             return value
                 .Split(',')
                 .Select(s => s.ToProperCase())

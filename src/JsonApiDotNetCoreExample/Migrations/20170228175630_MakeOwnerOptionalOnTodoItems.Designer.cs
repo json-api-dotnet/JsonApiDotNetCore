@@ -8,9 +8,10 @@ using JsonApiDotNetCoreExample.Data;
 namespace JsonApiDotNetCoreExample.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170228175630_MakeOwnerOptionalOnTodoItems")]
+    partial class MakeOwnerOptionalOnTodoItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -35,8 +36,6 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CollectionId");
-
                     b.Property<string>("Description");
 
                     b.Property<long>("Ordinal");
@@ -45,46 +44,16 @@ namespace JsonApiDotNetCoreExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CollectionId");
-
                     b.HasIndex("OwnerId");
 
                     b.ToTable("TodoItems");
                 });
 
-            modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItemCollection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("OwnerId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("TodoItemCollection");
-                });
-
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItem", b =>
                 {
-                    b.HasOne("JsonApiDotNetCoreExample.Models.TodoItemCollection", "Collection")
-                        .WithMany("TodoItems")
-                        .HasForeignKey("CollectionId");
-
                     b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
                         .WithMany("TodoItems")
                         .HasForeignKey("OwnerId");
-                });
-
-            modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItemCollection", b =>
-                {
-                    b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
-                        .WithMany("TodoItemCollections")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

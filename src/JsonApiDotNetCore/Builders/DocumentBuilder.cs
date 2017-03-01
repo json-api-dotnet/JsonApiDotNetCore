@@ -26,7 +26,8 @@ namespace JsonApiDotNetCore.Builders
             var document = new Document
             {
                 Data = _getData(contextEntity, entity),
-                Meta = _getMeta(entity)
+                Meta = _getMeta(entity),
+                Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
             };
 
             document.Included = _appendIncludedObject(document.Included, contextEntity, entity);
@@ -45,7 +46,8 @@ namespace JsonApiDotNetCore.Builders
             var documents = new Documents
             {
                 Data = new List<DocumentData>(),
-                Meta = _getMeta(entities.FirstOrDefault())
+                Meta = _getMeta(entities.FirstOrDefault()),
+                Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
             };
 
             foreach (var entity in entities)
@@ -68,7 +70,7 @@ namespace JsonApiDotNetCore.Builders
                 meta = metaEntity.GetMeta(_jsonApiContext);
 
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
-                meta["total-records"] = _jsonApiContext.TotalRecords;
+                meta["total-records"] = _jsonApiContext.PageManager.TotalRecords;
             
             if(meta.Count > 0) return meta;
             return null;
@@ -132,7 +134,9 @@ namespace JsonApiDotNetCore.Builders
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.RelationshipName);
 
-                    if (navigationEntity is IEnumerable)
+                    if(navigationEntity == null)
+                        relationshipData.SingleData = null;
+                    else if (navigationEntity is IEnumerable)
                         relationshipData.ManyData = _getRelationships((IEnumerable<object>)navigationEntity, r.RelationshipName);
                     else
                         relationshipData.SingleData = _getRelationship(navigationEntity, r.RelationshipName);
@@ -164,6 +168,8 @@ namespace JsonApiDotNetCore.Builders
 
         private DocumentData _getIncludedEntity(IIdentifiable entity)
         {
+            if(entity == null) return null;
+            
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
             var data = new DocumentData

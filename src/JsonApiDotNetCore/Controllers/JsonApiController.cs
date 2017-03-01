@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -65,7 +66,7 @@ namespace JsonApiDotNetCore.Controllers
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
-                _jsonApiContext.TotalRecords = await entities.CountAsync();
+                _jsonApiContext.PageManager.TotalRecords = await entities.CountAsync();
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -125,9 +126,6 @@ namespace JsonApiDotNetCore.Controllers
 
             var relationship = _jsonApiContext.ContextGraph
                 .GetRelationship<T>(entity, relationshipName);
-
-            if (relationship == null)
-                return NotFound();
 
             return Ok(relationship);
         }
@@ -190,17 +188,15 @@ namespace JsonApiDotNetCore.Controllers
 
         private async Task<IEnumerable<T>> ApplyPageQueryAsync(IQueryable<T> entities)
         {
-            if(_jsonApiContext.Options.DefaultPageSize == 0 && (_jsonApiContext.QuerySet == null || _jsonApiContext.QuerySet.PageQuery.PageSize == 0))
+            var pageManager = _jsonApiContext.PageManager;
+            if(!pageManager.IsPaginated)
                 return entities;
 
             var query = _jsonApiContext.QuerySet?.PageQuery ?? new PageQuery();
-            
-            var pageNumber = query.PageOffset > 0 ? query.PageOffset : 1;
-            var pageSize = query.PageSize > 0 ? query.PageSize : _jsonApiContext.Options.DefaultPageSize;
 
-            _logger?.LogInformation($"Applying paging query. Fetching page {pageNumber} with {pageSize} entities");
+            _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
 
-            return await _entities.PageAsync(entities, pageSize, pageNumber);
+            return await _entities.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage);
         }
 
         private IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)
