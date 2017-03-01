@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Update_ToManyRelationship_ThroughLink()
+        public async Task Can_Update_ToMany_Relationship_ThroughLink()
         {
             // arrange
             var person = _personFaker.Generate();
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            
+
             var content = new
             {
                 data = new List<object>
@@ -83,6 +83,49 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(personsTodoItems);
+        }
+
+        [Fact]
+        public async Task Can_Update_ToOne_Relationship_ThroughLink()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "person",
+                    id = $"{person.Id}"
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}/relationships/owner";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+            var todoItemsOwner = _context.TodoItems.Include(t => t.Owner).Single(t => t.Id == todoItem.Id);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(todoItemsOwner);
         }
     }
 }

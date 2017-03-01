@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
@@ -19,8 +21,17 @@ namespace JsonApiDotNetCore.Internal
         {
             var relationshipType = relationship.BaseType;
 
-            var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.Id.ToString())).ToList();
-            relationship.SetValue(parent, entities);
+            // TODO: replace with relationship.IsMany
+            if(relationship.Type.GetInterfaces().Contains(typeof(IEnumerable)))
+            {
+                var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.Id.ToString())).ToList();
+                relationship.SetValue(parent, entities);
+            }
+            else
+            {
+                var entity = _context.GetDbSet<T>().SingleOrDefault(x => relationshipIds.First() == x.Id.ToString());
+                relationship.SetValue(parent, entity);
+            }            
 
             await _context.SaveChangesAsync();
         }
