@@ -26,7 +26,8 @@ namespace JsonApiDotNetCore.Builders
             var document = new Document
             {
                 Data = _getData(contextEntity, entity),
-                Meta = _getMeta(entity)
+                Meta = _getMeta(entity),
+                Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
             };
 
             document.Included = _appendIncludedObject(document.Included, contextEntity, entity);
@@ -45,7 +46,8 @@ namespace JsonApiDotNetCore.Builders
             var documents = new Documents
             {
                 Data = new List<DocumentData>(),
-                Meta = _getMeta(entities.FirstOrDefault())
+                Meta = _getMeta(entities.FirstOrDefault()),
+                Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
             };
 
             foreach (var entity in entities)

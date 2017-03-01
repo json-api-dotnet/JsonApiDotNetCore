@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
@@ -58,6 +57,7 @@ namespace JsonApiDotNetCore.Services
             var query = QuerySet?.PageQuery ?? new PageQuery(); 
 
             return new PageManager {
+                DefaultPageSize = Options.DefaultPageSize,
                 CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
             };
