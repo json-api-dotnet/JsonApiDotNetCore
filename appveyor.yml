@@ -19,7 +19,7 @@ deploy:
     secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
   skip_symbols: true
   on:
-    branch: master
+    branch: staging
 - provider: NuGet
   name: production
   api_key:
