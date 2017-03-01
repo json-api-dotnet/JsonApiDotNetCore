@@ -106,6 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         {
             // arrange
             _context.People.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.TodoItems.RemoveRange(_context.TodoItems);
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = person;

@@ -105,7 +105,13 @@ namespace JsonApiDotNetCore.Data
 
             await _context.SaveChangesAsync();
 
-            return oldEntity;
+        return oldEntity;
+        }
+
+        public async Task UpdateRelationshipsAsync(object parent, Relationship relationship, IEnumerable<string> relationshipIds)
+        {
+            var genericProcessor = GenericProcessorFactory.GetProcessor(relationship.BaseType, _context);
+            await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
         public virtual async Task<bool> DeleteAsync(TId id)

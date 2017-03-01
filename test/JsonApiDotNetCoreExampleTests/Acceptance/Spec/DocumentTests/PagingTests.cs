@@ -13,7 +13,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
-using System.Linq;
 using System;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests

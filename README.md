@@ -79,6 +79,24 @@ public class Person : Identifiable<Guid>
 { }
 ```
 
+You can use the non-generic `Identifiable` if your primary key is an integer:
+
+```csharp
+public class Person : Identifiable
+{ }
+```
+
+If you need to hang annotations or attributes on the `Id` property, you can override the virtual member:
+
+```csharp
+public class Person : Identifiable
+{ 
+    [Key]
+    [Column("person_id")]
+    public override int Id { get; set; }
+}
+```
+
 #### Specifying Public Attributes
 
 If you want an attribute on your model to be publicly available, 

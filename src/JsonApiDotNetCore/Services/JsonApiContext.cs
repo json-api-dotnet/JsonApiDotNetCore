@@ -27,12 +27,14 @@ namespace JsonApiDotNetCore.Services
         public string BasePath { get; set; }
         public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
+        public bool IsRelationshipPath { get; private set; }
         public List<string> IncludedRelationships { get; set; }
         public PageManager PageManager { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
             var context = _httpContextAccessor.HttpContext;
+            var path = context.Request.Path.Value.Split('/');
 
             RequestEntity = ContextGraph.GetContextEntity(typeof(T));
             
@@ -45,7 +47,7 @@ namespace JsonApiDotNetCore.Services
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);
             PageManager = GetPageManager();
-            
+            IsRelationshipPath = path[path.Length - 2] == "relationships";
             return this;
         }
 

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -139,9 +138,13 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
             }
 
+            var stringId = entity.Id.ToString();
+            if(stringId.Length > 0 && stringId != "0")
+                return Forbidden();
+
             await _entities.CreateAsync(entity);
 
-            return Created(HttpContext.Request.Path, entity);
+            return Created($"{HttpContext.Request.Path}/{entity.Id}", entity);
         }
 
         [HttpPatch("{id}")]
@@ -155,7 +158,39 @@ namespace JsonApiDotNetCore.Controllers
 
             var updatedEntity = await _entities.UpdateAsync(id, entity);
 
+            if(updatedEntity == null)  return NotFound();
+
             return Ok(updatedEntity);
+        }
+
+        [HttpPatch("{id}/relationships/{relationshipName}")]
+        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
+        {
+            relationshipName = _jsonApiContext.ContextGraph
+                .GetRelationshipName<T>(relationshipName.ToProperCase());
+
+            if (relationshipName == null)
+            {
+                _logger?.LogInformation($"Relationship name not specified returning 422");
+                return UnprocessableEntity();
+            }
+
+            var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+
+            if (entity == null)
+                return NotFound();
+
+            var relationship = _jsonApiContext.ContextGraph
+                .GetContextEntity(typeof(T))
+                .Relationships
+                .FirstOrDefault(r => r.RelationshipName == relationshipName);
+
+            var relationshipIds = relationships.Select(r=>r.Id);
+            
+            await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
+
+            return Ok();
+            
         }
 
         [HttpDelete("{id}")]

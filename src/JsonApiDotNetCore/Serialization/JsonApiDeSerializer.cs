@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -15,11 +16,20 @@ namespace JsonApiDotNetCore.Serialization
         public static object Deserialize(string requestBody, IJsonApiContext context)
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
-
             var entity = DataToObject(document.Data, context);
-
             return entity;
         }
+
+        public static object DeserializeRelationship(string requestBody, IJsonApiContext context)
+        {
+            var data = JToken.Parse(requestBody)["data"];
+
+            if(data is JArray)
+                return data.ToObject<List<DocumentData>>();
+
+            return new List<DocumentData> { data.ToObject<DocumentData>() };
+        }
+
 
         public static List<TEntity> DeserializeList<TEntity>(string requestBody, IJsonApiContext context)
         {
