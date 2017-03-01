@@ -48,8 +48,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         {
             // arrange
             var pageSize = 5;
-            var numberOfTodoItems = _context.TodoItems.Count();
-            var numberOfPages = (int)Math.Ceiling(decimal.Divide(numberOfTodoItems, pageSize));
+            const int minimumNumberOfRecords = 11;
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            for(var i=0; i < minimumNumberOfRecords; i++)
+                _context.TodoItems.Add(_todoItemFaker.Generate());
+
+            await _context.SaveChangesAsync();
+
+            var numberOfPages = (int)Math.Ceiling(decimal.Divide(minimumNumberOfRecords, pageSize));
             var startPageNumber = 2;
 
             var builder = new WebHostBuilder()
