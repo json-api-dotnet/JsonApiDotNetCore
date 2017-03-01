@@ -144,7 +144,7 @@ namespace JsonApiDotNetCore.Controllers
 
             await _entities.CreateAsync(entity);
 
-            return Created(HttpContext.Request.Path, entity);
+            return Created($"{HttpContext.Request.Path}/{entity.Id}", entity);
         }
 
         [HttpPatch("{id}")]
