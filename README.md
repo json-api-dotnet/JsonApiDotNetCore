@@ -79,6 +79,13 @@ public class Person : Identifiable<Guid>
 { }
 ```
 
+You can use the non-generic `Identifiable` if your primary key is an integer:
+
+```csharp
+public class Person : Identifiable
+{ }
+```
+
 #### Specifying Public Attributes
 
 If you want an attribute on your model to be publicly available, 
