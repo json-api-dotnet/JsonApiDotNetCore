@@ -5,6 +5,9 @@ namespace JsonApiDotNetCore.Models
 {
     public class DocumentBase
     {
+        [JsonProperty("links")]
+        public RootLinks Links { get; set; }
+
         [JsonProperty("included")]
         public List<DocumentData> Included { get; set; }
 
@@ -20,6 +23,11 @@ namespace JsonApiDotNetCore.Models
         public bool ShouldSerializeMeta()
         {
             return (Meta != null);
+        }
+
+        public bool ShouldSerializeLinks()
+        {
+            return (Links != null);
         }
     }
 }

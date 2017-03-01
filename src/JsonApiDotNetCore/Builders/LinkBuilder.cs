@@ -1,4 +1,3 @@
-
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +43,11 @@ namespace JsonApiDotNetCore.Builders
         public string GetRelatedRelationLink(string parent, string parentId, string child)
         {
             return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/{child.Dasherize()}";
+        }
+
+        public string GetPageLink(int pageOffset, int pageSize)
+        {
+            return $"{_context.BasePath}/{_context.RequestEntity.EntityName.Dasherize()}?page[size]={pageSize}&page[number]={pageOffset}";
         }
     }
 }
