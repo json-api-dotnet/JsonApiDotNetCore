@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task PostRequest_ShouldReceiveLocationHeader_InResponse()
+        public async Task ShouldReceiveLocationHeader_InResponse()
         {
             // arrange
             var builder = new WebHostBuilder()
@@ -104,6 +104,40 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal($"/api/v1/todo-items/{deserializedBody.Id}", response.Headers.Location.ToString());
+        }
+
+        [Fact]
+        public async Task Respond_409_ToIncorrectEntityType()
+        {
+            // arrange
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+            var httpMethod = new HttpMethod("POST");
+            var route = "/api/v1/todo-items";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+            var todoItem = _todoItemFaker.Generate();
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    attributes = new
+                    {
+                        description = todoItem.Description,
+                        ordinal = todoItem.Ordinal
+                    }
+                }
+            };
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            
+            // act
+            var response = await client.SendAsync(request);
+
+            // assert
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         }
     }
 }
