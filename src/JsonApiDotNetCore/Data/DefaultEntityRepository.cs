@@ -105,7 +105,13 @@ namespace JsonApiDotNetCore.Data
 
             await _context.SaveChangesAsync();
 
-            return oldEntity;
+        return oldEntity;
+        }
+
+        public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        {
+            var genericProcessor = GenericProcessorFactory.GetProcessor(relationship.Type, _context);
+            await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
         public virtual async Task<bool> DeleteAsync(TId id)
@@ -125,7 +131,7 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
-            if(entity.Relationships.Any(r => r.RelationshipName == relationshipName))
+            if(entity.Relationships.Any(r => r.InternalRelationshipName == relationshipName))
                 return entities.Include(relationshipName);
             
             throw new JsonApiException("400", "Invalid relationship",

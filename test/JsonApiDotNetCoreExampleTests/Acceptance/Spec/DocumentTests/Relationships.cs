@@ -11,6 +11,8 @@ using Xunit;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using System.Linq;
+using Bogus;
+using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
@@ -19,10 +21,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     {
         private DocsFixture<Startup, JsonDocWriter> _fixture;
         private AppDbContext _context;
+        private Faker<TodoItem> _todoItemFaker;
+
         public Relationships(DocsFixture<Startup, JsonDocWriter> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
+             _todoItemFaker = new Faker<TodoItem>()
+                .RuleFor(t => t.Description, f => f.Lorem.Sentence())
+                .RuleFor(t => t.Ordinal, f => f.Random.Number());
         }
 
         [Fact]
@@ -31,9 +38,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
+            
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -41,8 +52,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data[0];
+            var document = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
+            var data = document.Data;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{data.Id}/relationships/owner";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{data.Id}/owner";
 
@@ -56,13 +67,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_ManyToOne_Relationships_ById()
         {
             // arrange
-            var todoItemId = _context.TodoItems.Last().Id;
-
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
+            
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItemId}";
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -72,8 +85,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Document>(responseString).Data;
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{todoItemId}/relationships/owner";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{todoItemId}/owner";
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/relationships/owner";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/owner";
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

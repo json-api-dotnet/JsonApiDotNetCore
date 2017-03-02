@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -15,11 +16,20 @@ namespace JsonApiDotNetCore.Serialization
         public static object Deserialize(string requestBody, IJsonApiContext context)
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
-
             var entity = DataToObject(document.Data, context);
-
             return entity;
         }
+
+        public static object DeserializeRelationship(string requestBody, IJsonApiContext context)
+        {
+            var data = JToken.Parse(requestBody)["data"];
+
+            if(data is JArray)
+                return data.ToObject<List<DocumentData>>();
+
+            return new List<DocumentData> { data.ToObject<DocumentData>() };
+        }
+
 
         public static List<TEntity> DeserializeList<TEntity>(string requestBody, IJsonApiContext context)
         {
@@ -41,16 +51,16 @@ namespace JsonApiDotNetCore.Serialization
 
             var contextEntity = context.ContextGraph.GetContextEntity(entityTypeName);
             context.RequestEntity = contextEntity;
-            
+
             var entity = Activator.CreateInstance(contextEntity.EntityType);
-            
+
             entity = _setEntityAttributes(entity, contextEntity, data.Attributes);
             entity = _setRelationships(entity, contextEntity, data.Relationships);
 
             var identifiableEntity = (IIdentifiable)entity;
 
-            if(data.Id != null)
-                identifiableEntity.Id = Convert.ChangeType(data.Id, identifiableEntity.Id.GetType());
+            if (data.Id != null)
+                identifiableEntity.Id = ChangeType(data.Id, identifiableEntity.Id.GetType());
 
             return identifiableEntity;
         }
@@ -70,7 +80,7 @@ namespace JsonApiDotNetCore.Serialization
                 object newValue;
                 if (attributeValues.TryGetValue(attr.PublicAttributeName.Dasherize(), out newValue))
                 {
-                    var convertedValue = Convert.ChangeType(newValue, entityProperty.PropertyType);
+                    var convertedValue = ChangeType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
                 }
             }
@@ -88,26 +98,41 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (var attr in contextEntity.Relationships)
             {
-                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.RelationshipName}Id");
+                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
 
                 if (entityProperty == null)
-                    throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.RelationshipName}");
-                
-                var relationshipName = attr.RelationshipName.Dasherize();
+                    throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+
+                var relationshipName = attr.InternalRelationshipName.Dasherize();
                 RelationshipData relationshipData;
                 if (relationships.TryGetValue(relationshipName, out relationshipData))
                 {
                     var data = (Dictionary<string, string>)relationshipData.ExposedData;
-                    
-                    if(data == null) continue;
-                    
+
+                    if (data == null) continue;
+
                     var newValue = data["id"];
-                    var convertedValue = Convert.ChangeType(newValue, entityProperty.PropertyType);
+                    var convertedValue = ChangeType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
                 }
             }
 
             return entity;
+        }
+
+        private static object ChangeType(object value, Type conversion)
+        {
+            var t = conversion;
+
+            if (t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null)
+                    return null;
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return Convert.ChangeType(value, t);
         }
     }
 }

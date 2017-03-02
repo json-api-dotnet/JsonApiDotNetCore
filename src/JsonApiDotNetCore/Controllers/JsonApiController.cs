@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Controllers
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
-                _jsonApiContext.TotalRecords = await entities.CountAsync();
+                _jsonApiContext.PageManager.TotalRecords = await entities.CountAsync();
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -126,9 +126,6 @@ namespace JsonApiDotNetCore.Controllers
             var relationship = _jsonApiContext.ContextGraph
                 .GetRelationship<T>(entity, relationshipName);
 
-            if (relationship == null)
-                return NotFound();
-
             return Ok(relationship);
         }
 
@@ -141,9 +138,13 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
             }
 
+            var stringId = entity.Id.ToString();
+            if(stringId.Length > 0 && stringId != "0")
+                return Forbidden();
+
             await _entities.CreateAsync(entity);
 
-            return Created(HttpContext.Request.Path, entity);
+            return Created($"{HttpContext.Request.Path}/{entity.Id}", entity);
         }
 
         [HttpPatch("{id}")]
@@ -157,7 +158,39 @@ namespace JsonApiDotNetCore.Controllers
 
             var updatedEntity = await _entities.UpdateAsync(id, entity);
 
+            if(updatedEntity == null)  return NotFound();
+
             return Ok(updatedEntity);
+        }
+
+        [HttpPatch("{id}/relationships/{relationshipName}")]
+        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
+        {
+            relationshipName = _jsonApiContext.ContextGraph
+                .GetRelationshipName<T>(relationshipName.ToProperCase());
+
+            if (relationshipName == null)
+            {
+                _logger?.LogInformation($"Relationship name not specified returning 422");
+                return UnprocessableEntity();
+            }
+
+            var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+
+            if (entity == null)
+                return NotFound();
+
+            var relationship = _jsonApiContext.ContextGraph
+                .GetContextEntity(typeof(T))
+                .Relationships
+                .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
+
+            var relationshipIds = relationships.Select(r=>r.Id);
+            
+            await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
+
+            return Ok();
+            
         }
 
         [HttpDelete("{id}")]
@@ -190,17 +223,15 @@ namespace JsonApiDotNetCore.Controllers
 
         private async Task<IEnumerable<T>> ApplyPageQueryAsync(IQueryable<T> entities)
         {
-            if(_jsonApiContext.Options.DefaultPageSize == 0 && (_jsonApiContext.QuerySet == null || _jsonApiContext.QuerySet.PageQuery.PageSize == 0))
+            var pageManager = _jsonApiContext.PageManager;
+            if(!pageManager.IsPaginated)
                 return entities;
 
             var query = _jsonApiContext.QuerySet?.PageQuery ?? new PageQuery();
-            
-            var pageNumber = query.PageOffset > 0 ? query.PageOffset : 1;
-            var pageSize = query.PageSize > 0 ? query.PageSize : _jsonApiContext.Options.DefaultPageSize;
 
-            _logger?.LogInformation($"Applying paging query. Fetching page {pageNumber} with {pageSize} entities");
+            _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
 
-            return await _entities.PageAsync(entities, pageSize, pageNumber);
+            return await _entities.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage);
         }
 
         private IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)

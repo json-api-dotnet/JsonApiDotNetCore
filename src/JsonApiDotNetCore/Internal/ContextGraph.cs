@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Internal
                 .FirstOrDefault(p => p.Name.ToLower() == relationshipName.ToLower());
 
             if(navigationProperty == null)
-                return null;
+                throw new JsonApiException("400", $"{parentEntityType} does not contain a relationship named {relationshipName}");
 
             return navigationProperty.GetValue(entity);
         }
@@ -46,8 +46,8 @@ namespace JsonApiDotNetCore.Internal
                     e.EntityType == entityType)
                 .Relationships
                 .FirstOrDefault(r => 
-                    r.RelationshipName.ToLower() == relationshipName.ToLower())
-                ?.RelationshipName;
+                    r.InternalRelationshipName.ToLower() == relationshipName.ToLower())
+                ?.InternalRelationshipName;
         }
     }
 }

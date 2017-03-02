@@ -5,17 +5,19 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Person : Identifiable<int>, IHasMeta
+    public class Person : Identifiable, IHasMeta
     {
-        public override int Id { get; set; }
-        
         [Attr("first-name")]
         public string FirstName { get; set; }
 
         [Attr("last-name")]
         public string LastName { get; set; }
 
+        [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
+        
+        [HasMany("todo-item-collections")]
+        public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
         {

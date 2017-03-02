@@ -41,7 +41,9 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
                 var jsonApiContext = GetService<IJsonApiContext>(context);
-                var model = JsonApiDeSerializer.Deserialize(body, jsonApiContext);
+                var model = jsonApiContext.IsRelationshipPath ? 
+                    JsonApiDeSerializer.DeserializeRelationship(body, jsonApiContext) :
+                    JsonApiDeSerializer.Deserialize(body, jsonApiContext);
 
                 if(model == null)
                     logger?.LogError("An error occurred while de-serializing the payload");

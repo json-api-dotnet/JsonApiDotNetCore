@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -8,6 +9,6 @@ namespace JsonApiDotNetCore.Internal
         public string EntityName { get; set; }
         public Type EntityType { get; set; }
         public List<AttrAttribute> Attributes { get; set; }
-        public List<Relationship> Relationships { get; set; }
+        public List<RelationshipAttribute> Relationships { get; set; }
     }
 }

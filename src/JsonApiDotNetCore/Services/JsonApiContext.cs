@@ -27,12 +27,14 @@ namespace JsonApiDotNetCore.Services
         public string BasePath { get; set; }
         public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
+        public bool IsRelationshipPath { get; private set; }
         public List<string> IncludedRelationships { get; set; }
-        public int TotalRecords { get; set; }
+        public PageManager PageManager { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
             var context = _httpContextAccessor.HttpContext;
+            var path = context.Request.Path.Value.Split('/');
 
             RequestEntity = ContextGraph.GetContextEntity(typeof(T));
             
@@ -40,12 +42,27 @@ namespace JsonApiDotNetCore.Services
             {
                 QuerySet = new QuerySet(this, context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;
-            }                
+            }
 
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);
-            
+            PageManager = GetPageManager();
+            IsRelationshipPath = path[path.Length - 2] == "relationships";
             return this;
+        }
+
+        private PageManager GetPageManager()
+        {
+            if(Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
+                return new PageManager();
+            
+            var query = QuerySet?.PageQuery ?? new PageQuery(); 
+
+            return new PageManager {
+                DefaultPageSize = Options.DefaultPageSize,
+                CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
+                PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
+            };
         }
     }
 }

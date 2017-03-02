@@ -76,8 +76,24 @@ Your models should inherit `Identifiable<TId>` where `TId` is the type of the pr
 
 ```csharp
 public class Person : Identifiable<Guid>
-{
-    public override Guid Id { get; set; }
+{ }
+```
+
+You can use the non-generic `Identifiable` if your primary key is an integer:
+
+```csharp
+public class Person : Identifiable
+{ }
+```
+
+If you need to hang annotations or attributes on the `Id` property, you can override the virtual member:
+
+```csharp
+public class Person : Identifiable
+{ 
+    [Key]
+    [Column("person_id")]
+    public override int Id { get; set; }
 }
 ```
 
@@ -89,8 +105,6 @@ add the `AttrAttribute` and provide the outbound name.
 ```csharp
 public class Person : Identifiable<int>
 {
-    public override int Id { get; set; }
-    
     [Attr("first-name")]
     public string FirstName { get; set; }
 }
@@ -99,16 +113,15 @@ public class Person : Identifiable<int>
 #### Relationships
 
 In order for navigation properties to be identified in the model, 
-they should be labeled as virtual.
+they should be labeled with the appropriate attribute (either `HasOne` or `HasMany`).
 
 ```csharp
 public class Person : Identifiable<int>
 {
-    public override int Id { get; set; }
-    
     [Attr("first-name")]
     public string FirstName { get; set; }
 
+    [HasMany("todo-items")]
     public virtual List<TodoItem> TodoItems { get; set; }
 }
 ```
@@ -119,12 +132,12 @@ For example, a `TodoItem` may have an `Owner` and so the Id attribute should be 
 ```csharp
 public class TodoItem : Identifiable<int>
 {
-    public override int Id { get; set; }
-    
     [Attr("description")]
     public string Description { get; set; }
 
     public int OwnerId { get; set; }
+
+    [HasOne("owner")]
     public virtual Person Owner { get; set; }
 }
 ```
@@ -224,6 +237,9 @@ public class MyAuthorizedEntityRepository : DefaultEntityRepository<MyEntity>
 }
 ```
 
+For more examples, take a look at the customization tests 
+in `./test/JsonApiDotNetCoreExampleTests/Acceptance/Extensibility`.
+
 ### Pagination
 
 Resources can be paginated. 
@@ -272,6 +288,7 @@ identifier):
 ?filter[attribute]=gt:value
 ?filter[attribute]=le:value
 ?filter[attribute]=ge:value
+?filter[attribute]=like:value
 ```
 
 ### Sorting

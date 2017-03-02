@@ -35,9 +35,29 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("CollectionId");
+
                     b.Property<string>("Description");
 
                     b.Property<long>("Ordinal");
+
+                    b.Property<int?>("OwnerId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CollectionId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("TodoItems");
+                });
+
+            modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItemCollection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
 
                     b.Property<int>("OwnerId");
 
@@ -45,13 +65,24 @@ namespace JsonApiDotNetCoreExample.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("TodoItems");
+                    b.ToTable("TodoItemCollection");
                 });
 
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItem", b =>
                 {
+                    b.HasOne("JsonApiDotNetCoreExample.Models.TodoItemCollection", "Collection")
+                        .WithMany("TodoItems")
+                        .HasForeignKey("CollectionId");
+
                     b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
                         .WithMany("TodoItems")
+                        .HasForeignKey("OwnerId");
+                });
+
+            modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItemCollection", b =>
+                {
+                    b.HasOne("JsonApiDotNetCoreExample.Models.Person", "Owner")
+                        .WithMany("TodoItemCollections")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

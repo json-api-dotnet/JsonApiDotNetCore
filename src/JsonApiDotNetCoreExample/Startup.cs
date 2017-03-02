@@ -44,6 +44,7 @@ namespace JsonApiDotNetCoreExample
             {
                 opt.Namespace = "api/v1";
                 opt.DefaultPageSize = 5;
+                opt.IncludeTotalRecordCount = true;
             });
 
             services.AddDocumentationConfiguration(Config);
@@ -52,6 +53,7 @@ namespace JsonApiDotNetCoreExample
             var appContext = provider.GetRequiredService<AppDbContext>();
             if(appContext == null)
                 throw new ArgumentException();
+                
             return provider;
         }
 

@@ -11,5 +11,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             return new StatusCodeResult(422);
         }
+
+        protected IActionResult Forbidden()
+        {
+            return new StatusCodeResult(403);
+        }
     }
 }

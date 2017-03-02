@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -65,23 +66,35 @@ namespace JsonApiDotNetCore.Formatters
 
         private string GetResponseBody(object responseObject, IJsonApiContext jsonApiContext, ILogger logger)
         {
+            if (responseObject == null)
+                return GetNullDataResponse();
+
             if (responseObject.GetType() == typeof(Error) || jsonApiContext.RequestEntity == null)
+                return GetErrorJson(responseObject, logger);
+            
+            return JsonApiSerializer.Serialize(responseObject, jsonApiContext);
+        }
+
+        private string GetNullDataResponse()
+        {
+            return JsonConvert.SerializeObject(new Document
             {
-                if (responseObject.GetType() == typeof(Error))
-                {
-                    var errors = new ErrorCollection();
-                    errors.Add((Error)responseObject);
-                    return errors.GetJson();
-                }
-                else
-                {
-                    logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
-                    return JsonConvert.SerializeObject(responseObject);
-                }
+                Data = null
+            });
+        }
+
+        private string GetErrorJson(object responseObject, ILogger logger)
+        {
+            if (responseObject.GetType() == typeof(Error))
+            {
+                var errors = new ErrorCollection();
+                errors.Add((Error)responseObject);
+                return errors.GetJson();
             }
             else
             {
-                return JsonApiSerializer.Serialize(responseObject, jsonApiContext);
+                logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
+                return JsonConvert.SerializeObject(responseObject);
             }
         }
     }
