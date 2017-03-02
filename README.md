@@ -237,6 +237,9 @@ public class MyAuthorizedEntityRepository : DefaultEntityRepository<MyEntity>
 }
 ```
 
+For more examples, take a look at the customization tests 
+in `./test/JsonApiDotNetCoreExampleTests/Acceptance/Extensibility`.
+
 ### Pagination
 
 Resources can be paginated. 
