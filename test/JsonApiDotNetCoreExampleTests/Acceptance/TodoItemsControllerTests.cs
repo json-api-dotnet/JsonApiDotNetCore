@@ -125,6 +125,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Can_Filter_TodoItems_Using_Like_Operator()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Ordinal = 999999;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+            var substring = todoItem.Description.Substring(1, todoItem.Description.Length - 2);
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[description]=like:{substring}";
+
+            var description = new RequestProperties("Filter TodoItems Where Attribute Like", new Dictionary<string, string> {
+                { "?filter[...]=", "Filter on attribute" }
+            });
+
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+
+            foreach (var todoItemResult in deserializedBody)
+                Assert.Contains(substring, todoItem.Description);
+        }
+
+        [Fact]
         public async Task Can_Sort_TodoItems_By_Ordinal_Ascending()
         {
             // Arrange
