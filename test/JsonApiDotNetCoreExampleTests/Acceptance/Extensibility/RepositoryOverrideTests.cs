@@ -1,14 +1,9 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
-using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.TestHost;]
 using Xunit;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExampleTests.Startups;
 using JsonApiDotNetCoreExample.Models;
@@ -16,7 +11,7 @@ using JsonApiDotNetCoreExampleTests.Services;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 
-namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
+namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
     public class RepositoryOverrideTests
