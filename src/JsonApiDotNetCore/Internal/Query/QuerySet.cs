@@ -4,6 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal.Query
 {

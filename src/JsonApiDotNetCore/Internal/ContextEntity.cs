@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Internal

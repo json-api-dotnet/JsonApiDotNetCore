@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {

@@ -1,3 +1,5 @@
+using JsonApiDotNetCore.Models;
+
 namespace JsonApiDotNetCore.Internal.Query
 {
     public class FilterQuery
