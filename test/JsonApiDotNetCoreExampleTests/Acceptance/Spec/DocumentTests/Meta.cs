@@ -34,7 +34,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         {
             // arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
-            var expectedCount = _context.TodoItems.Count();
+            _context.TodoItems.Add(new TodoItem());
+            _context.SaveChanges();
+            var expectedCount = 1;
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
 
