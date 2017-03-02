@@ -17,12 +17,11 @@ namespace JsonApiDotNetCore.Internal
             _context = context;
         }
 
-        public async Task UpdateRelationshipsAsync(object parent, Relationship relationship, IEnumerable<string> relationshipIds)
+        public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var relationshipType = relationship.BaseType;
+            var relationshipType = relationship.Type;
 
-            // TODO: replace with relationship.IsMany
-            if(relationship.Type.GetInterfaces().Contains(typeof(IEnumerable)))
+            if(relationship.IsHasMany)
             {
                 var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.Id.ToString())).ToList();
                 relationship.SetValue(parent, entities);

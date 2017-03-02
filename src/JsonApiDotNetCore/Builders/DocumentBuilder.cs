@@ -124,25 +124,25 @@ namespace JsonApiDotNetCore.Builders
                 {
                     Links = new Links
                     {
-                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName),
-                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.RelationshipName)
+                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.InternalRelationshipName),
+                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.InternalRelationshipName)
                     }
                 };
 
-                if (_relationshipIsIncluded(r.RelationshipName))
+                if (_relationshipIsIncluded(r.InternalRelationshipName))
                 {
                     var navigationEntity = _jsonApiContext.ContextGraph
-                        .GetRelationship(entity, r.RelationshipName);
+                        .GetRelationship(entity, r.InternalRelationshipName);
 
                     if(navigationEntity == null)
                         relationshipData.SingleData = null;
                     else if (navigationEntity is IEnumerable)
-                        relationshipData.ManyData = _getRelationships((IEnumerable<object>)navigationEntity, r.RelationshipName);
+                        relationshipData.ManyData = _getRelationships((IEnumerable<object>)navigationEntity, r.InternalRelationshipName);
                     else
-                        relationshipData.SingleData = _getRelationship(navigationEntity, r.RelationshipName);
+                        relationshipData.SingleData = _getRelationship(navigationEntity, r.InternalRelationshipName);
                 }
 
-                data.Relationships.Add(r.RelationshipName.Dasherize(), relationshipData);
+                data.Relationships.Add(r.InternalRelationshipName.Dasherize(), relationshipData);
             });
         }
 
@@ -152,9 +152,9 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Relationships.ForEach(r =>
             {
-                if (!_relationshipIsIncluded(r.RelationshipName)) return;
+                if (!_relationshipIsIncluded(r.InternalRelationshipName)) return;
 
-                var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, r.RelationshipName);
+                var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, r.InternalRelationshipName);
 
                 if (navigationEntity is IEnumerable)
                     foreach (var includedEntity in (IEnumerable)navigationEntity)

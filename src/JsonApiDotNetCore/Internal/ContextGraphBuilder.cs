@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -14,7 +15,6 @@ namespace JsonApiDotNetCore.Internal
         public ContextGraph<T> Build()
         {
             _getFirstLevelEntities();
-            _loadRelationships();
 
             var graph = new ContextGraph<T>
             {
@@ -41,7 +41,8 @@ namespace JsonApiDotNetCore.Internal
                     entities.Add(new ContextEntity {
                         EntityName = property.Name,
                         EntityType = entityType,
-                        Attributes = _getAttributes(entityType)
+                        Attributes = _getAttributes(entityType),
+                        Relationships = _getRelationships(entityType)
                     });
                 }                    
             }
@@ -65,38 +66,29 @@ namespace JsonApiDotNetCore.Internal
             return attributes;
         }
 
-        private void _loadRelationships()
-        {          
-            _entities.ForEach(entity => {
+        private List<RelationshipAttribute> _getRelationships(Type entityType)
+        {
+            var attributes = new List<RelationshipAttribute>();
+            
+            var properties = entityType.GetProperties();
 
-                var relationships = new List<Relationship>();
-                var properties = entity.EntityType.GetProperties();
-                
-                foreach(var entityProperty in properties)
-                {
-                    var propertyType = entityProperty.PropertyType;
-                    
-                    if(_isValidEntity(propertyType) 
-                        || (propertyType.GetTypeInfo().IsGenericType && _isValidEntity(propertyType.GetGenericArguments()[0])))
-                        relationships.Add(_getRelationshipFromPropertyInfo(entityProperty));
-                }
-
-                entity.Relationships = relationships;
-            });
+            foreach(var prop in properties)
+            {
+                var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
+                if(attribute == null) continue;
+                attribute.InternalRelationshipName = prop.Name;
+                attribute.Type = _getRelationshipType(attribute, prop);
+                attributes.Add(attribute);
+            }
+            return attributes;
         }
 
-        private bool _isValidEntity(Type type)
+        private Type _getRelationshipType(RelationshipAttribute relation, PropertyInfo prop)
         {
-            var validEntityRelationshipTypes = _entities.Select(e => e.EntityType);
-            return validEntityRelationshipTypes.Contains(type);
-        }
-
-        private Relationship _getRelationshipFromPropertyInfo(PropertyInfo propertyInfo)
-        {
-            return new Relationship {
-                Type = propertyInfo.PropertyType,
-                RelationshipName = propertyInfo.Name
-            };
+            if(relation.IsHasMany)
+                return prop.PropertyType.GetGenericArguments()[0];
+            else
+                return prop.PropertyType;
         }
     }
 }

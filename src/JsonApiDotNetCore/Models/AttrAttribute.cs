@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Models
 {
     public class AttrAttribute : Attribute
     {
