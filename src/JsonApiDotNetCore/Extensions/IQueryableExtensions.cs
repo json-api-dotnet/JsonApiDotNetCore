@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Extensions
                 // {1}
                 var right = Expression.Constant(convertedValue, property.PropertyType);
 
-                var body = Expression.Equal(left, right);
+                Expression body;
                 switch (filterQuery.FilterOperation)
                 {
                     case FilterOperations.eq:
@@ -109,6 +109,12 @@ namespace JsonApiDotNetCore.Extensions
                         // {model.Id <= 1}
                         body = Expression.GreaterThanOrEqual(left, right);
                         break;
+                    case FilterOperations.like:
+                        // {model.Id <= 1}
+                        body = Expression.Call(left, "Contains", null, right);
+                        break;
+                    default:
+                        throw new JsonApiException("500", $"Unknown filter operation {filterQuery.FilterOperation}");
                 }
 
                 var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
