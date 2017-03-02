@@ -50,7 +50,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseBody);
             var documents = JsonConvert.DeserializeObject<Documents>(responseBody);
             
             // assert
