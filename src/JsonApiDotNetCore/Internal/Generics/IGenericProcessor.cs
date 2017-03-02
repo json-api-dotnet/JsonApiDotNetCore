@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
     public interface IGenericProcessor
     {
-        Task UpdateRelationshipsAsync(object parent, Relationship relationship, IEnumerable<string> relationshipIds);
+        Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
     }
 }

@@ -183,7 +183,7 @@ namespace JsonApiDotNetCore.Controllers
             var relationship = _jsonApiContext.ContextGraph
                 .GetContextEntity(typeof(T))
                 .Relationships
-                .FirstOrDefault(r => r.RelationshipName == relationshipName);
+                .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
 
             var relationshipIds = relationships.Select(r=>r.Id);
             

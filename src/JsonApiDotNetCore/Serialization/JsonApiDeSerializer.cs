@@ -98,12 +98,12 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (var attr in contextEntity.Relationships)
             {
-                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.RelationshipName}Id");
+                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
 
                 if (entityProperty == null)
-                    throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.RelationshipName}");
+                    throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
-                var relationshipName = attr.RelationshipName.Dasherize();
+                var relationshipName = attr.InternalRelationshipName.Dasherize();
                 RelationshipData relationshipData;
                 if (relationships.TryGetValue(relationshipName, out relationshipData))
                 {

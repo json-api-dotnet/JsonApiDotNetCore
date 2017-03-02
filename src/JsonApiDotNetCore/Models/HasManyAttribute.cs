@@ -1,3 +1,5 @@
+using System;
+
 namespace JsonApiDotNetCore.Models
 {
     public class HasManyAttribute : RelationshipAttribute
