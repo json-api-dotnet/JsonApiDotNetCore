@@ -6,6 +6,7 @@ namespace JsonApiDotNetCore.Internal.Query
         lt = 1,
         gt = 2,
         le = 3,
-        ge = 4
+        ge = 4,
+        like = 5
     }
 }
