@@ -13,7 +13,10 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("last-name")]
         public string LastName { get; set; }
 
+        [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
+        
+        [HasMany("todo-item-collections")]
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
