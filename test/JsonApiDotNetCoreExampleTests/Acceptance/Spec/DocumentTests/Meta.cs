@@ -14,6 +14,7 @@ using System.Linq;
 using JsonApiDotNetCoreExampleTests.Startups;
 using JsonApiDotNetCoreExample.Models;
 using System.Collections;
+using System;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
@@ -32,6 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Total_Record_Count_Included()
         {
             // arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
             var expectedCount = _context.TodoItems.Count();
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
@@ -45,7 +47,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseBody);
+            var documents = JsonConvert.DeserializeObject<Documents>(responseBody);
             
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
