@@ -83,26 +83,29 @@ namespace JsonApiDotNetCore.Internal.Query
             if(value.Length < 3)
                 return new FilterQuery(attribute, value, FilterOperations.eq);
              
-            var prefix = value.Substring(0, 3);
+            var operation = value.Split(':');
 
-            if(prefix[2] != ':')
+            if(operation.Length == 1)
                 return new FilterQuery(attribute, value, FilterOperations.eq);
             
             // remove prefix from value
-            value = value.Substring(3, value.Length - 3);
+            var prefix = operation[0];
+            value = operation[1];
 
             switch(prefix)
             {
-                case "eq:":
+                case "eq":
                     return new FilterQuery(attribute, value, FilterOperations.eq);
-                case "lt:":
+                case "lt":
                     return new FilterQuery(attribute, value, FilterOperations.lt);
-                case "gt:":
+                case "gt":
                     return new FilterQuery(attribute, value, FilterOperations.gt);
-                case "le:":
+                case "le":
                     return new FilterQuery(attribute, value, FilterOperations.le);
-                case "ge:":
+                case "ge":
                     return new FilterQuery(attribute, value, FilterOperations.ge);
+                case "like":
+                    return new FilterQuery(attribute, value, FilterOperations.like);
             }
 
             throw new JsonApiException("400", $"Invalid filter prefix '{prefix}'");

@@ -285,6 +285,7 @@ identifier):
 ?filter[attribute]=gt:value
 ?filter[attribute]=le:value
 ?filter[attribute]=ge:value
+?filter[attribute]=like:value
 ```
 
 ### Sorting
