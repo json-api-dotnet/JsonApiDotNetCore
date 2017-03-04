@@ -29,7 +29,23 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 
 ## Installation
 
-`Install-Package JsonApiDotnetCore`
+- Visual Studio
+```
+Install-Package JsonApiDotnetCore
+```
+
+- project.json
+```json
+"JsonApiDotNetCore": "1.0.0"
+```
+
+- *.csproj
+```xml
+<ItemGroup>
+    <!-- ... -->
+    <PackageReference Include="JsonApiDotNetCore" Version="1.0.0" />
+</ItemGroup>
+```
 
 Click [here](https://www.nuget.org/packages/JsonApiDotnetCore/) for the latest NuGet version.
 
