@@ -9,6 +9,7 @@
 JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.org/) compliant web servers. Unlike other .Net implementations, this library provides all the required middleware to build a complete server. All you need to focus on is defining the resources. However, the library is also fully extensible so you can customize the implementation to meet your specific needs.
 
 # Table Of Contents
+- [Comprehensive Demo](#comprehensive-demo)
 - [Installation](#installation)
 - [Generators](#generators)
 - [Usage](#usage)
@@ -26,6 +27,12 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Sorting](#sorting)
     - [Meta](#meta)
 - [Tests](#tests)
+
+## Comprehensive Demo
+
+The following is a WIP demo showing how to create a web application using this library, EmberJS and PostgreSQL. If there are specific topics you'd like to see in future videos, comment on the playlist.
+
+[![Goto Playlist](https://img.youtube.com/vi/KAMuo6K7VcE/0.jpg)](https://www.youtube.com/watch?v=KAMuo6K7VcE&list=PLu4Bq53iqJJAo1RF0TY4Q5qCG7n9AqSZf)
 
 ## Installation
 
