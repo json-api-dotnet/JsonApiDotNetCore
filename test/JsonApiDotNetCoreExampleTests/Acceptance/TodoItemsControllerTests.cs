@@ -424,7 +424,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var response = await _fixture.MakeRequest<TodoItem>(description, request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
             Assert.Null(_context.TodoItems.FirstOrDefault(t => t.Id == todoItem.Id));
         }
     }
