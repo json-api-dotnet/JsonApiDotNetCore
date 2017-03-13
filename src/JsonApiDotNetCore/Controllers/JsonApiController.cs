@@ -201,7 +201,7 @@ namespace JsonApiDotNetCore.Controllers
             if (!wasDeleted)
                 return NotFound();
 
-            return Ok();
+            return NoContent();
         }
 
         private IQueryable<T> ApplySortAndFilterQuery(IQueryable<T> entities)
