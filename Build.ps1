@@ -52,7 +52,7 @@ if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 EnsurePsbuildInstalled
 
-exec { & dotnet restore ./src/JsonApiDotNetCore/JsonApiDotNetCore.csproj }
+exec { & dotnet restore .\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj }
 
 #Invoke-MSBuild
 
