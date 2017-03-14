@@ -9,9 +9,11 @@ if [ -d $artifactsFolder ]; then
   rm -R $artifactsFolder
 fi
 
-dotnet restore
+dotnet restore ./src/JsonApiDotNetCore/JsonApiDotNetCore.csproj
+dotnet restore ./src/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj
+dotnet restore ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
 
-dotnet test ./test/JsonApiDotNetCoreExampleTests -c Release -f netcoreapp1.0
+dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
 
 revision=${TRAVIS_JOB_ID:=1}
 revision=$(printf "%04d" $revision)
