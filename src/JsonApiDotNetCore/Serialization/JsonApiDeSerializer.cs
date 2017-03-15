@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Serialization
             var identifiableEntity = (IIdentifiable)entity;
 
             if (data.Id != null)
-                identifiableEntity.Id = ChangeType(data.Id, identifiableEntity.Id.GetType());
+                identifiableEntity.Id = data.Id;
 
             return identifiableEntity;
         }
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Serialization
                 object newValue;
                 if (attributeValues.TryGetValue(attr.PublicAttributeName.Dasherize(), out newValue))
                 {
-                    var convertedValue = ChangeType(newValue, entityProperty.PropertyType);
+                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
                 }
             }
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Serialization
                     if (data == null) continue;
 
                     var newValue = data["id"];
-                    var convertedValue = ChangeType(newValue, entityProperty.PropertyType);
+                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
                 }
             }
@@ -120,19 +120,7 @@ namespace JsonApiDotNetCore.Serialization
             return entity;
         }
 
-        private static object ChangeType(object value, Type conversion)
-        {
-            var t = conversion;
 
-            if (t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
-            {
-                if (value == null)
-                    return null;
-
-                t = Nullable.GetUnderlyingType(t);
-            }
-
-            return Convert.ChangeType(value, t);
-        }
+        
     }
 }
