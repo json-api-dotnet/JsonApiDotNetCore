@@ -7,7 +7,7 @@ dotnet build .\src\JsonApiDotNetCore -c Release
 echo "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
 echo "VERSION-SUFFIX: alpha1-$revision"
 
-If($env:APPVEYOR_REPO_TAG) {
+If($env:APPVEYOR_REPO_TAG -eq $true) {
     echo "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts "
     dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts 
 }
