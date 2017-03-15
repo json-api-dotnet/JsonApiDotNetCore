@@ -5,4 +5,4 @@ dotnet restore .\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj
 dotnet build .\src\JsonApiDotNetCore -c Release
 
 If($env:APPVEYOR_REPO_TAG) { dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts }
-Else { dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision }
+Else { dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision }
