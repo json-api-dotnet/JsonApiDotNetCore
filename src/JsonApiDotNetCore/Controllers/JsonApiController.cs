@@ -137,9 +137,8 @@ namespace JsonApiDotNetCore.Controllers
                 _logger?.LogInformation($"Entity cannot be null returning 422");
                 return UnprocessableEntity();
             }
-
-            var stringId = entity.Id.ToString();
-            if(stringId.Length > 0 && stringId != "0")
+            
+            if(!entity.IsIdEmpty())
                 return Forbidden();
 
             await _entities.CreateAsync(entity);

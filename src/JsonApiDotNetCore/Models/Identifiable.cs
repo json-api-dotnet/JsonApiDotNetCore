@@ -12,5 +12,10 @@ namespace JsonApiDotNetCore.Models
             get { return Id; }
             set { Id = (T)value; }
         }
+
+        public bool IsIdEmpty()
+        {
+            return Id != null;
+        }
     }
 }
