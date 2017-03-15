@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext);
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(body, _jsonApiContext, _fixture.GetService<AppDbContext>());
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

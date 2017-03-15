@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Formatters
 {
@@ -37,13 +38,15 @@ namespace JsonApiDotNetCore.Formatters
             var loggerFactory = GetService<ILoggerFactory>(context);
             var logger = loggerFactory?.CreateLogger<JsonApiInputFormatter>();
 
+            var dbContext = GetService<DbContext>(context);
+
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
                 var jsonApiContext = GetService<IJsonApiContext>(context);
                 var model = jsonApiContext.IsRelationshipPath ? 
                     JsonApiDeSerializer.DeserializeRelationship(body, jsonApiContext) :
-                    JsonApiDeSerializer.Deserialize(body, jsonApiContext);
+                    JsonApiDeSerializer.Deserialize(body, jsonApiContext, dbContext);
 
                 if(model == null)
                     logger?.LogError("An error occurred while de-serializing the payload");

@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Internal;
+using System;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExample.Models
         public long Ordinal { get; set; }
         
         public int? OwnerId { get; set; }
-        public int? CollectionId { get; set; }
+        public Guid? CollectionId { get; set; }
 
         [HasOne("owner")]
         public virtual Person Owner { get; set; }
