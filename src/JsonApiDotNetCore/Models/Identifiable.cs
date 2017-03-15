@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
@@ -11,7 +11,8 @@ namespace JsonApiDotNetCore.Models
     {
         public virtual T Id { get; set; }
 
-        string IIdentifiable.Id
+        [NotMapped]
+        public string StringId
         {
             get { return GetStringId(Id); }
             set { Id = (T)GetConcreteId(value); }

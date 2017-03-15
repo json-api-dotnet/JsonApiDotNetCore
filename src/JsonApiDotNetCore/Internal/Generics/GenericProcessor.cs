@@ -23,12 +23,12 @@ namespace JsonApiDotNetCore.Internal
 
             if(relationship.IsHasMany)
             {
-                var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.Id.ToString())).ToList();
+                var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.StringId)).ToList();
                 relationship.SetValue(parent, entities);
             }
             else
             {
-                var entity = _context.GetDbSet<T>().SingleOrDefault(x => relationshipIds.First() == x.Id.ToString());
+                var entity = _context.GetDbSet<T>().SingleOrDefault(x => relationshipIds.First() == x.StringId);
                 relationship.SetValue(parent, entity);
             }            
 

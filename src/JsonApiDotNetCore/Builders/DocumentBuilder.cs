@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Builders
             var data = new DocumentData
             {
                 Type = contextEntity.EntityName,
-                Id = entity.Id.ToString()
+                Id = entity.StringId
             };
 
             if (_jsonApiContext.IsRelationshipData)
@@ -124,8 +124,8 @@ namespace JsonApiDotNetCore.Builders
                 {
                     Links = new Links
                     {
-                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.InternalRelationshipName),
-                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.Id.ToString(), r.InternalRelationshipName)
+                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.InternalRelationshipName),
+                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.InternalRelationshipName)
                     }
                 };
 
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCore.Builders
             var data = new DocumentData
             {
                 Type = contextEntity.EntityName,
-                Id = entity.Id.ToString()
+                Id = entity.StringId
             };
 
             data.Attributes = new Dictionary<string, object>();
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCore.Builders
             {
                 relationships.Add(new Dictionary<string, string> {
                     {"type", typeName.EntityName.Dasherize() },
-                    {"id", ((IIdentifiable)entity).Id.ToString() }
+                    {"id", ((IIdentifiable)entity).StringId }
                 });
             }
             return relationships;
@@ -218,7 +218,7 @@ namespace JsonApiDotNetCore.Builders
 
             return new Dictionary<string, string> {
                     {"type", typeName.EntityName.Dasherize() },
-                    {"id", ((IIdentifiable)entity).Id.ToString() }
+                    {"id", ((IIdentifiable)entity).StringId }
                 };
         }
     }

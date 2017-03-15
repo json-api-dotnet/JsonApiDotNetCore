@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Serialization
             var identifiableEntity = (IIdentifiable)entity;
 
             if (data.Id != null)
-                identifiableEntity.Id = data.Id;
+                identifiableEntity.StringId = data.Id;
 
             return identifiableEntity;
         }
