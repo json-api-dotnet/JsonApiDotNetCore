@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class TodoItemCollection : Identifiable
+    public class TodoItemCollection : Identifiable<Guid>
     {
         [Attr("name")]
         public string Name { get; set; }

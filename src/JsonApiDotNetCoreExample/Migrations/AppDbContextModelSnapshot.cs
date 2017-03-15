@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample.Migrations
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
+                .HasAnnotation("ProductVersion", "1.1.1");
 
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.Person", b =>
                 {
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CollectionId");
+                    b.Property<Guid?>("CollectionId");
 
                     b.Property<string>("Description");
 
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExample.Migrations
 
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItemCollection", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
