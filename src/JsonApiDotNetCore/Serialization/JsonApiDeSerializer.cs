@@ -8,15 +8,19 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections;
+using JsonApiDotNetCore.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Serialization
 {
     public static class JsonApiDeSerializer
     {
-        public static object Deserialize(string requestBody, IJsonApiContext context)
+        public static object Deserialize(string requestBody, IJsonApiContext context,
+            DbContext dbContext)
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
-            var entity = DataToObject(document.Data, context);
+            var entity = DataToObject(document.Data, context, dbContext);
             return entity;
         }
 
@@ -31,21 +35,24 @@ namespace JsonApiDotNetCore.Serialization
         }
 
 
-        public static List<TEntity> DeserializeList<TEntity>(string requestBody, IJsonApiContext context)
+        public static List<TEntity> DeserializeList<TEntity>(string requestBody, IJsonApiContext context,
+            DbContext dbContext)
         {
             var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
 
             var deserializedList = new List<TEntity>();
             foreach (var data in documents.Data)
             {
-                var entity = DataToObject(data, context);
+                var entity = DataToObject(data, context, dbContext);
                 deserializedList.Add((TEntity)entity);
             }
 
             return deserializedList;
         }
 
-        private static object DataToObject(DocumentData data, IJsonApiContext context)
+        private static object DataToObject(DocumentData data, 
+            IJsonApiContext context,
+            DbContext dbContext)
         {
             var entityTypeName = data.Type.ToProperCase();
 
@@ -53,9 +60,9 @@ namespace JsonApiDotNetCore.Serialization
             context.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
-
+            
             entity = _setEntityAttributes(entity, contextEntity, data.Attributes);
-            entity = _setRelationships(entity, contextEntity, data.Relationships);
+            entity = _setRelationships(entity, contextEntity, data.Relationships, dbContext);
 
             var identifiableEntity = (IIdentifiable)entity;
 
@@ -68,6 +75,9 @@ namespace JsonApiDotNetCore.Serialization
         private static object _setEntityAttributes(
             object entity, ContextEntity contextEntity, Dictionary<string, object> attributeValues)
         {
+            if (attributeValues == null || attributeValues.Count == 0)
+                return entity;
+
             var entityProperties = entity.GetType().GetProperties();
 
             foreach (var attr in contextEntity.Attributes)
@@ -89,7 +99,10 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         private static object _setRelationships(
-            object entity, ContextEntity contextEntity, Dictionary<string, RelationshipData> relationships)
+            object entity, 
+            ContextEntity contextEntity, 
+            Dictionary<string, RelationshipData> relationships,
+            DbContext context)
         {
             if (relationships == null || relationships.Count == 0)
                 return entity;
@@ -98,29 +111,68 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (var attr in contextEntity.Relationships)
             {
-                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
-
-                if (entityProperty == null)
-                    throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
-
-                var relationshipName = attr.InternalRelationshipName.Dasherize();
-                RelationshipData relationshipData;
-                if (relationships.TryGetValue(relationshipName, out relationshipData))
-                {
-                    var data = (Dictionary<string, string>)relationshipData.ExposedData;
-
-                    if (data == null) continue;
-
-                    var newValue = data["id"];
-                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
-                    entityProperty.SetValue(entity, convertedValue);
-                }
+                if (attr.IsHasOne)
+                    entity = _setHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships);
+                else
+                    entity = _setHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships, context);
             }
 
             return entity;
         }
 
+        private static object _setHasOneRelationship(object entity, 
+            PropertyInfo[] entityProperties, 
+            RelationshipAttribute attr, 
+            ContextEntity contextEntity, 
+            Dictionary<string, RelationshipData> relationships)
+        {
+            var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
 
-        
+            if (entityProperty == null)
+                throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+
+            var relationshipName = attr.InternalRelationshipName.Dasherize();
+
+            if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
+            {
+                var data = (Dictionary<string, string>)relationshipData.ExposedData;
+
+                if (data == null) return entity;
+
+                var newValue = data["id"];
+                var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+                entityProperty.SetValue(entity, convertedValue);
+            }
+
+            return entity;
+        }
+
+        private static object _setHasManyRelationship(object entity,
+            PropertyInfo[] entityProperties, 
+            RelationshipAttribute attr, 
+            ContextEntity contextEntity, 
+            Dictionary<string, RelationshipData> relationships,
+            DbContext context)
+        {
+            var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
+
+            if (entityProperty == null)
+                throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+
+            var relationshipName = attr.InternalRelationshipName.Dasherize();
+
+            if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
+            {
+                var data = (List<Dictionary<string, string>>)relationshipData.ExposedData;
+
+                if (data == null) return entity;
+
+                var genericProcessor = GenericProcessorFactory.GetProcessor(attr.Type, context);
+                var ids = relationshipData.ManyData.Select(r => r["id"]);
+                genericProcessor.SetRelationships(entity, attr, ids);    
+            }
+
+            return entity;
+        }
     }
 }
