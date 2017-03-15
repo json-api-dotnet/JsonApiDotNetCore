@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExample.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("TodoItemCollection");
+                    b.ToTable("TodoItemCollections");
                 });
 
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItem", b =>

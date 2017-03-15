@@ -8,7 +8,7 @@ using JsonApiDotNetCoreExample.Data;
 namespace JsonApiDotNetCoreExample.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170315021529_initial")]
+    [Migration("20170315140127_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExample.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("TodoItemCollection");
+                    b.ToTable("TodoItemCollections");
                 });
 
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.TodoItem", b =>

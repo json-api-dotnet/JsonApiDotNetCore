@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExample.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TodoItemCollection",
+                name: "TodoItemCollections",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -33,9 +33,9 @@ namespace JsonApiDotNetCoreExample.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TodoItemCollection", x => x.Id);
+                    table.PrimaryKey("PK_TodoItemCollections", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TodoItemCollection_People_OwnerId",
+                        name: "FK_TodoItemCollections_People_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "People",
                         principalColumn: "Id",
@@ -57,9 +57,9 @@ namespace JsonApiDotNetCoreExample.Migrations
                 {
                     table.PrimaryKey("PK_TodoItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TodoItems_TodoItemCollection_CollectionId",
+                        name: "FK_TodoItems_TodoItemCollections_CollectionId",
                         column: x => x.CollectionId,
-                        principalTable: "TodoItemCollection",
+                        principalTable: "TodoItemCollections",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -81,8 +81,8 @@ namespace JsonApiDotNetCoreExample.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TodoItemCollection_OwnerId",
-                table: "TodoItemCollection",
+                name: "IX_TodoItemCollections_OwnerId",
+                table: "TodoItemCollections",
                 column: "OwnerId");
         }
 
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExample.Migrations
                 name: "TodoItems");
 
             migrationBuilder.DropTable(
-                name: "TodoItemCollection");
+                name: "TodoItemCollections");
 
             migrationBuilder.DropTable(
                 name: "People");
