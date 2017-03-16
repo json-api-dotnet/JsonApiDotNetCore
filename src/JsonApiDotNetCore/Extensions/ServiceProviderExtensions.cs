@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
@@ -54,6 +55,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<JsonApiRouteHandler>();
+
+            services.AddScoped<IMetaBuilder, MetaBuilder>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
