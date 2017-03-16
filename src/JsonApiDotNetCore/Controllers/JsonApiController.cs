@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
             }
 
-            if (!string.IsNullOrEmpty(entity.StringId))
+            if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
                 return Forbidden();
 
             await _entities.CreateAsync(entity);
