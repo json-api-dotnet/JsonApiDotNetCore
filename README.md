@@ -26,6 +26,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Filtering](#filtering)
 	- [Sorting](#sorting)
     - [Meta](#meta)
+    - [Client Generated Ids](#client-generated-ids)
 - [Tests](#tests)
 
 ## Comprehensive Demo
@@ -340,6 +341,20 @@ public class Person : Identifiable<int>, IHasMeta
         };
     }
 }
+```
+
+### Client Generated Ids
+
+By default, the server will respond with a `403 Forbidden` HTTP Status Code if a `POST` request is
+received with a client generated id. However, this can be allowed by setting the `AllowClientGeneratedIds`
+flag in the options:
+
+```csharp
+services.AddJsonApi<AppDbContext>(opt =>
+{
+    opt.AllowClientGeneratedIds = true;
+    // ..
+});
 ```
 
 ## Tests
