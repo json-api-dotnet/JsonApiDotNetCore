@@ -62,16 +62,16 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<string, object> _getMeta(IIdentifiable entity)
         {
             if (entity == null) return null;
-
-            var meta = new Dictionary<string, object>();
-            var metaEntity = entity as IHasMeta;
             
-            if(metaEntity != null)
-                meta = metaEntity.GetMeta(_jsonApiContext);
+            var builder = _jsonApiContext.MetaBuilder;
+
+            if(entity is IHasMeta metaEntity)
+                builder.Add(metaEntity.GetMeta(_jsonApiContext));
 
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
-                meta["total-records"] = _jsonApiContext.PageManager.TotalRecords;
+                builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
             
+            var meta = builder.Build();
             if(meta.Count > 0) return meta;
             return null;
         }
