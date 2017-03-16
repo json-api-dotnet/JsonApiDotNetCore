@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Extensions
 {
-    public static class ServiceProviderExtensions
+    public static class IServiceCollectionExtensions
     {
         public static void AddJsonApi<TContext>(this IServiceCollection services) 
             where TContext : DbContext
