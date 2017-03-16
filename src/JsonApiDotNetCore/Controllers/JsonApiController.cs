@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiController<T> 
+    public class JsonApiController<T>
     : JsonApiController<T, int> where T : class, IIdentifiable<int>
     {
         public JsonApiController(
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Controllers
         { }
     }
 
-    public class JsonApiController<T, TId> 
+    public class JsonApiController<T, TId>
     : JsonApiControllerMixin where T : class, IIdentifiable<TId>
     {
         private readonly IEntityRepository<T, TId> _entities;
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
             T entity;
-            if(_jsonApiContext.QuerySet?.IncludedRelationships != null)
+            if (_jsonApiContext.QuerySet?.IncludedRelationships != null)
                 entity = await _getWithRelationshipsAsync(id);
             else
                 entity = await _entities.GetAsync(id);
@@ -138,8 +138,7 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
             }
 
-            var stringId = entity.Id.ToString();
-            if(stringId.Length > 0 && stringId != "0")
+            if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
                 return Forbidden();
 
             await _entities.CreateAsync(entity);
@@ -158,7 +157,7 @@ namespace JsonApiDotNetCore.Controllers
 
             var updatedEntity = await _entities.UpdateAsync(id, entity);
 
-            if(updatedEntity == null)  return NotFound();
+            if (updatedEntity == null) return NotFound();
 
             return Ok(updatedEntity);
         }
@@ -185,12 +184,12 @@ namespace JsonApiDotNetCore.Controllers
                 .Relationships
                 .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
 
-            var relationshipIds = relationships.Select(r=>r.Id);
-            
+            var relationshipIds = relationships.Select(r => r.Id);
+
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
 
             return Ok();
-            
+
         }
 
         [HttpDelete("{id}")]
@@ -208,14 +207,14 @@ namespace JsonApiDotNetCore.Controllers
         {
             var query = _jsonApiContext.QuerySet;
 
-            if(_jsonApiContext.QuerySet == null)
+            if (_jsonApiContext.QuerySet == null)
                 return entities;
 
-            if(query.Filters.Count > 0)
-                foreach(var filter in query.Filters)
+            if (query.Filters.Count > 0)
+                foreach (var filter in query.Filters)
                     entities = _entities.Filter(entities, filter);
 
-            if(query.SortParameters != null && query.SortParameters.Count > 0)
+            if (query.SortParameters != null && query.SortParameters.Count > 0)
                 entities = _entities.Sort(entities, query.SortParameters);
 
             return entities;
@@ -224,7 +223,7 @@ namespace JsonApiDotNetCore.Controllers
         private async Task<IEnumerable<T>> ApplyPageQueryAsync(IQueryable<T> entities)
         {
             var pageManager = _jsonApiContext.PageManager;
-            if(!pageManager.IsPaginated)
+            if (!pageManager.IsPaginated)
                 return entities;
 
             var query = _jsonApiContext.QuerySet?.PageQuery ?? new PageQuery();
@@ -238,7 +237,7 @@ namespace JsonApiDotNetCore.Controllers
         {
             _jsonApiContext.IncludedRelationships = relationships;
 
-            foreach(var r in relationships)
+            foreach (var r in relationships)
                 entities = _entities.Include(entities, r.ToProperCase());
 
             return entities;

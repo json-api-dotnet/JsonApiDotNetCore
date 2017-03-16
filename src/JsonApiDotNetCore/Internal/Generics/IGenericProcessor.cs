@@ -7,5 +7,6 @@ namespace JsonApiDotNetCore.Internal
     public interface IGenericProcessor
     {
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
+        void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
     }
 }

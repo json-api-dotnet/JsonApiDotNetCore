@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
@@ -19,20 +17,25 @@ namespace JsonApiDotNetCore.Internal
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
+            SetRelationships(parent, relationship, relationshipIds);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        {
             var relationshipType = relationship.Type;
 
-            if(relationship.IsHasMany)
+            if (relationship.IsHasMany)
             {
-                var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.Id.ToString())).ToList();
+                var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.StringId)).ToList();
                 relationship.SetValue(parent, entities);
             }
             else
             {
-                var entity = _context.GetDbSet<T>().SingleOrDefault(x => relationshipIds.First() == x.Id.ToString());
+                var entity = _context.GetDbSet<T>().SingleOrDefault(x => relationshipIds.First() == x.StringId);
                 relationship.SetValue(parent, entity);
-            }            
-
-            await _context.SaveChangesAsync();
+            }
         }
     }
 }

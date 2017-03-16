@@ -10,14 +10,21 @@ using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Services;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
+using DotNetCoreDocs;
+using JsonApiDotNetCoreExample;
+using DotNetCoreDocs.Writers;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
     public class RepositoryOverrideTests
     {
-        public RepositoryOverrideTests()
-        { }
+        private DocsFixture<Startup, JsonDocWriter> _fixture;
+
+        public RepositoryOverrideTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        {
+            _fixture = fixture;
+        }
 
         [Fact]
         public async Task Total_Record_Count_Included()
@@ -50,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(responseBody, jsonApiContext);
+            var deserializedBody = JsonApiDeSerializer.DeserializeList<TodoItem>(responseBody, jsonApiContext, _fixture.GetService<AppDbContext>());
             
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
