@@ -5,5 +5,6 @@ namespace JsonApiDotNetCore.Configuration
         public string Namespace { get; set; }
         public int DefaultPageSize { get; set; }
         public bool IncludeTotalRecordCount { get; set; }
+        public bool AllowClientGeneratedIds { get; set; }
     }
 }
