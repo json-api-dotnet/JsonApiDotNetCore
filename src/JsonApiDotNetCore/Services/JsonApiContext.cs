@@ -14,11 +14,13 @@ namespace JsonApiDotNetCore.Services
         public JsonApiContext(
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,
-            JsonApiOptions options)
+            JsonApiOptions options,
+            IMetaBuilder metaBuilder)
         {
             ContextGraph = contextGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
+            MetaBuilder = metaBuilder;
         }
 
         public JsonApiOptions Options { get; set; }
@@ -30,6 +32,7 @@ namespace JsonApiDotNetCore.Services
         public bool IsRelationshipPath { get; private set; }
         public List<string> IncludedRelationships { get; set; }
         public PageManager PageManager { get; set; }
+        public IMetaBuilder MetaBuilder { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
