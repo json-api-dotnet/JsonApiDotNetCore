@@ -44,14 +44,14 @@ Install-Package JsonApiDotnetCore
 
 - project.json
 ```json
-"JsonApiDotNetCore": "1.1.0"
+"JsonApiDotNetCore": "1.2.0"
 ```
 
 - *.csproj
 ```xml
 <ItemGroup>
     <!-- ... -->
-    <PackageReference Include="JsonApiDotNetCore" Version="1.1.0" />
+    <PackageReference Include="JsonApiDotNetCore" Version="1.2.0" />
 </ItemGroup>
 ```
 
