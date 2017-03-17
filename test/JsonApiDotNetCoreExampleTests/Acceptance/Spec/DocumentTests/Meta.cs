@@ -10,11 +10,9 @@ using Newtonsoft.Json;
 using Xunit;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
-using System.Linq;
 using JsonApiDotNetCoreExampleTests.Startups;
 using JsonApiDotNetCoreExample.Models;
 using System.Collections;
-using System;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
