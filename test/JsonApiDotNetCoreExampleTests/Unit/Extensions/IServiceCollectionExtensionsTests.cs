@@ -45,6 +45,10 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
             Assert.NotNull(provider.GetService<IDocumentBuilder>());
             Assert.NotNull(provider.GetService<IJsonApiSerializer>());
             Assert.NotNull(provider.GetService<IJsonApiWriter>());
+            Assert.NotNull(provider.GetService<IJsonApiReader>());
+            Assert.NotNull(provider.GetService<IJsonApiDeSerializer>());
+            Assert.NotNull(provider.GetService<IGenericProcessorFactory>());
+            Assert.NotNull(provider.GetService(typeof(GenericProcessor<TodoItem>)));
         }
     }
 }

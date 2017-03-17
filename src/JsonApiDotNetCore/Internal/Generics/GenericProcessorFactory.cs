@@ -3,17 +3,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal
 {
-    /// <summary>
-    /// Used to generate a generic operations processor when the types
-    /// are not know until runtime. The typical use case would be for
-    /// accessing relationship data.
-    /// </summary>
-    public static class GenericProcessorFactory
+    public class GenericProcessorFactory : IGenericProcessorFactory
     {
-        public static IGenericProcessor GetProcessor(Type type, DbContext dbContext)
+        private readonly DbContext _dbContext;
+        private readonly IServiceProvider _serviceProvider;
+
+        public GenericProcessorFactory(DbContext dbContext, 
+            IServiceProvider serviceProvider)
         {
-            var repositoryType = typeof(GenericProcessor<>).MakeGenericType(type);
-            return (IGenericProcessor)Activator.CreateInstance(repositoryType, dbContext);
+            _dbContext = dbContext;
+            _serviceProvider = serviceProvider;
+        }
+
+        public IGenericProcessor GetProcessor(Type type)
+        {
+            var processorType = typeof(GenericProcessor<>).MakeGenericType(type);
+            return (IGenericProcessor)_serviceProvider.GetService(processorType);
         }
     }
 }

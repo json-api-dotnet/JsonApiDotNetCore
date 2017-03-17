@@ -19,5 +19,6 @@ namespace JsonApiDotNetCore.Services
         bool IsRelationshipPath { get; }
         PageManager PageManager { get; set; }
         IMetaBuilder MetaBuilder { get; set; }
+        IGenericProcessorFactory GenericProcessorFactory { get; set; }
     }
 }

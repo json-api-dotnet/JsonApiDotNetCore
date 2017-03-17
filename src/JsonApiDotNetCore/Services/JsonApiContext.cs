@@ -15,12 +15,14 @@ namespace JsonApiDotNetCore.Services
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,
             JsonApiOptions options,
-            IMetaBuilder metaBuilder)
+            IMetaBuilder metaBuilder,
+            IGenericProcessorFactory genericProcessorFactory)
         {
             ContextGraph = contextGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
             MetaBuilder = metaBuilder;
+            GenericProcessorFactory = genericProcessorFactory;
         }
 
         public JsonApiOptions Options { get; set; }
@@ -33,6 +35,7 @@ namespace JsonApiDotNetCore.Services
         public List<string> IncludedRelationships { get; set; }
         public PageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
+        public IGenericProcessorFactory GenericProcessorFactory { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {

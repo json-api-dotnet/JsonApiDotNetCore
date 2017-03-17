@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TEntity> _dbSet;
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
+        private readonly IGenericProcessorFactory _genericProcessorFactory;
 
         public DefaultEntityRepository(
             DbContext context,
@@ -42,6 +43,7 @@ namespace JsonApiDotNetCore.Data
             _dbSet = context.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
+            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
         }
 
         public virtual IQueryable<TEntity> Get()
@@ -110,7 +112,7 @@ namespace JsonApiDotNetCore.Data
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var genericProcessor = GenericProcessorFactory.GetProcessor(relationship.Type, _context);
+            var genericProcessor = _genericProcessorFactory.GetProcessor(relationship.Type);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
