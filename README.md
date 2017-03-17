@@ -326,6 +326,10 @@ Resources can be sorted by an attribute:
 
 ### Meta
 
+Meta objects can be assigned in two ways:
+ - Resource meta
+ - Request Meta
+
 Resource meta can be defined by implementing `IHasMeta` on the model class:
 
 ```csharp
@@ -342,6 +346,9 @@ public class Person : Identifiable<int>, IHasMeta
     }
 }
 ```
+
+Request Meta can be added by injecting a service that implements `IRequestMeta`.
+In the event of a key collision, the Request Meta will take precendence. 
 
 ### Client Generated Ids
 
