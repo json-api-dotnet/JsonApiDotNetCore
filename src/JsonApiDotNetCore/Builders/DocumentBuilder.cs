@@ -8,15 +8,23 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public class DocumentBuilder
+    public class DocumentBuilder : IDocumentBuilder
     {
         private IJsonApiContext _jsonApiContext;
         private IContextGraph _contextGraph;
+        private readonly IRequestMeta _requestMeta;
 
         public DocumentBuilder(IJsonApiContext jsonApiContext)
         {
             _jsonApiContext = jsonApiContext;
             _contextGraph = jsonApiContext.ContextGraph;
+        }
+
+        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta)
+        {
+            _jsonApiContext = jsonApiContext;
+            _contextGraph = jsonApiContext.ContextGraph;
+            _requestMeta = requestMeta;
         }
 
         public Document Build(IIdentifiable entity)
@@ -62,16 +70,19 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<string, object> _getMeta(IIdentifiable entity)
         {
             if (entity == null) return null;
-
-            var meta = new Dictionary<string, object>();
-            var metaEntity = entity as IHasMeta;
             
-            if(metaEntity != null)
-                meta = metaEntity.GetMeta(_jsonApiContext);
+            var builder = _jsonApiContext.MetaBuilder;
+
+            if(entity is IHasMeta metaEntity)
+                builder.Add(metaEntity.GetMeta(_jsonApiContext));
 
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
-                meta["total-records"] = _jsonApiContext.PageManager.TotalRecords;
+                builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
             
+            if(_requestMeta != null)
+                builder.Add(_requestMeta.GetMeta());
+
+            var meta = builder.Build();
             if(meta.Count > 0) return meta;
             return null;
         }

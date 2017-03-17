@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
@@ -17,6 +18,7 @@ namespace JsonApiDotNetCore.Services
         List<string> IncludedRelationships { get; set; }
         bool IsRelationshipPath { get; }
         PageManager PageManager { get; set; }
-        
+        IMetaBuilder MetaBuilder { get; set; }
+        IGenericProcessorFactory GenericProcessorFactory { get; set; }
     }
 }
