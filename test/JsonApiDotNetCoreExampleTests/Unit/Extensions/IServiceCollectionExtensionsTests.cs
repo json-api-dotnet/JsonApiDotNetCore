@@ -11,6 +11,8 @@ using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.Extensions.Caching.Memory;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Formatters;
 
 namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
 {
@@ -40,6 +42,9 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
             Assert.NotNull(provider.GetService<IJsonApiContext>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder>());
+            Assert.NotNull(provider.GetService<IDocumentBuilder>());
+            Assert.NotNull(provider.GetService<IJsonApiSerializer>());
+            Assert.NotNull(provider.GetService<IJsonApiWriter>());
         }
     }
 }

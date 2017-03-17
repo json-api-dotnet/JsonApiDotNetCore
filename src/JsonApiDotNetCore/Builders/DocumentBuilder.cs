@@ -8,11 +8,17 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public class DocumentBuilder
+    public class DocumentBuilder : IDocumentBuilder
     {
         private IJsonApiContext _jsonApiContext;
         private IContextGraph _contextGraph;
         private readonly IRequestMeta _requestMeta;
+
+        public DocumentBuilder(IJsonApiContext jsonApiContext)
+        {
+            _jsonApiContext = jsonApiContext;
+            _contextGraph = jsonApiContext.ContextGraph;
+        }
 
         public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta)
         {
@@ -73,9 +79,8 @@ namespace JsonApiDotNetCore.Builders
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
             
-            var requestMeta = _requestMeta?.GetMeta();
-            if(requestMeta != null)
-                builder.Add(requestMeta);
+            if(_requestMeta != null)
+                builder.Add(_requestMeta.GetMeta());
 
             var meta = builder.Build();
             if(meta.Count > 0) return meta;

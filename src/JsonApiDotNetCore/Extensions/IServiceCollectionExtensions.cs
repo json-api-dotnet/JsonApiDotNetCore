@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,9 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<JsonApiRouteHandler>();
 
             services.AddScoped<IMetaBuilder, MetaBuilder>();
+            services.AddScoped<IDocumentBuilder, DocumentBuilder>();
+            services.AddScoped<IJsonApiSerializer, JsonApiSerializer>();
+            services.AddScoped<IJsonApiWriter, JsonApiWriter>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
