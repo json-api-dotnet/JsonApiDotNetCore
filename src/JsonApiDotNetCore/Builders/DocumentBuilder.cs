@@ -12,11 +12,13 @@ namespace JsonApiDotNetCore.Builders
     {
         private IJsonApiContext _jsonApiContext;
         private IContextGraph _contextGraph;
+        private readonly IRequestMeta _requestMeta;
 
-        public DocumentBuilder(IJsonApiContext jsonApiContext)
+        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta)
         {
             _jsonApiContext = jsonApiContext;
             _contextGraph = jsonApiContext.ContextGraph;
+            _requestMeta = requestMeta;
         }
 
         public Document Build(IIdentifiable entity)
@@ -71,6 +73,10 @@ namespace JsonApiDotNetCore.Builders
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
             
+            var requestMeta = _requestMeta?.GetMeta();
+            if(requestMeta != null)
+                builder.Add(requestMeta);
+
             var meta = builder.Build();
             if(meta.Count > 0) return meta;
             return null;

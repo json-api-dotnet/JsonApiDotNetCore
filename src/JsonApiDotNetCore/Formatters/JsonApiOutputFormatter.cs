@@ -32,6 +32,8 @@ namespace JsonApiDotNetCore.Formatters
             var logger = GetService<ILoggerFactory>(context)?
                 .CreateLogger<JsonApiOutputFormatter>();
 
+            var requestMeta = GetService<IRequestMeta>(context);
+
             logger?.LogInformation("Formatting response as JSONAPI");
 
             var response = context.HttpContext.Response;
@@ -43,7 +45,7 @@ namespace JsonApiDotNetCore.Formatters
                 string responseContent;
                 try
                 {
-                    responseContent = GetResponseBody(context.Object, jsonApiContext, logger);
+                    responseContent = GetResponseBody(context.Object, jsonApiContext, requestMeta, logger);
                 }
                 catch (Exception e)
                 {
@@ -64,7 +66,10 @@ namespace JsonApiDotNetCore.Formatters
             return context.HttpContext.RequestServices.GetService<T>();
         }
 
-        private string GetResponseBody(object responseObject, IJsonApiContext jsonApiContext, ILogger logger)
+        private string GetResponseBody(object responseObject, 
+            IJsonApiContext jsonApiContext, 
+            IRequestMeta requestMeta, 
+            ILogger logger)
         {
             if (responseObject == null)
                 return GetNullDataResponse();
@@ -72,7 +77,7 @@ namespace JsonApiDotNetCore.Formatters
             if (responseObject.GetType() == typeof(Error) || jsonApiContext.RequestEntity == null)
                 return GetErrorJson(responseObject, logger);
             
-            return JsonApiSerializer.Serialize(responseObject, jsonApiContext);
+            return JsonApiSerializer.Serialize(responseObject, jsonApiContext, requestMeta);
         }
 
         private string GetNullDataResponse()
