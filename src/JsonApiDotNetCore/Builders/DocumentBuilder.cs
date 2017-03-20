@@ -183,11 +183,7 @@ namespace JsonApiDotNetCore.Builders
             
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
-            var data = new DocumentData
-            {
-                Type = contextEntity.EntityName,
-                Id = entity.StringId
-            };
+            var data = _getData(contextEntity, entity);
 
             data.Attributes = new Dictionary<string, object>();
 
