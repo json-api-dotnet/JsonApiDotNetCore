@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -32,6 +33,20 @@ namespace JsonApiDotNetCore.Internal
         public ErrorCollection GetError()
         {
             return _errors;
+        }
+
+        public int GetStatusCode()
+        {
+            if(_errors.Errors.Count == 1)
+                return _errors.Errors[0].StatusCode;
+
+            if(_errors.Errors.FirstOrDefault(e => e.StatusCode >= 500) != null)
+                return 500;
+                
+            if(_errors.Errors.FirstOrDefault(e => e.StatusCode >= 400) != null)
+                return 400;
+            
+            return 500;
         }
     }
 }
