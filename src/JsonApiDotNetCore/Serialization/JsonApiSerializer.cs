@@ -1,37 +1,87 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {
-    public static class JsonApiSerializer
+    public class JsonApiSerializer : IJsonApiSerializer
     {
-        public static string Serialize(object entity, IJsonApiContext jsonApiContext)
+        private readonly IDocumentBuilder _documentBuilder;
+        private readonly ILogger<JsonApiSerializer> _logger;
+        private readonly IJsonApiContext _jsonApiContext;
+
+        public JsonApiSerializer(
+            IJsonApiContext jsonApiContext,
+            IDocumentBuilder documentBuilder)
         {
-            if (entity is IEnumerable<IIdentifiable>)
-                return _serializeDocuments(entity, jsonApiContext);
-            return _serializeDocument(entity, jsonApiContext);           
+            _jsonApiContext = jsonApiContext;
+            _documentBuilder = documentBuilder;            
         }
 
-        private static string _serializeDocuments(object entity, IJsonApiContext jsonApiContext)
+        public JsonApiSerializer(
+            IJsonApiContext jsonApiContext,
+            IDocumentBuilder documentBuilder, 
+            ILoggerFactory loggerFactory)
         {
-            var documentBuilder = new DocumentBuilder(jsonApiContext);
+            _jsonApiContext = jsonApiContext;
+            _documentBuilder = documentBuilder;
+            _logger = loggerFactory?.CreateLogger<JsonApiSerializer>();
+        }
+
+        public string Serialize(object entity)
+        {
+            if (entity == null)
+                return GetNullDataResponse();
+
+            if (entity.GetType() == typeof(ErrorCollection) || _jsonApiContext.RequestEntity == null)
+                return GetErrorJson(entity, _logger);
+
+            if (entity is IEnumerable<IIdentifiable>)
+                return SerializeDocuments(entity);
+
+            return SerializeDocument(entity);           
+        }
+
+        private string GetNullDataResponse()
+        {
+            return JsonConvert.SerializeObject(new Document
+            {
+                Data = null
+            });
+        }
+
+        private string GetErrorJson(object responseObject, ILogger logger)
+        {
+            if (responseObject is ErrorCollection errorCollection)
+            {
+                return errorCollection.GetJson();
+            }
+            else
+            {
+                logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
+                return JsonConvert.SerializeObject(responseObject);
+            }
+        }
+
+        private string SerializeDocuments(object entity)
+        {
             var entities = entity as IEnumerable<IIdentifiable>;
-            var documents = documentBuilder.Build(entities);
+            var documents = _documentBuilder.Build(entities);
             return _serialize(documents);
         }
 
-        private static string _serializeDocument(object entity, IJsonApiContext jsonApiContext)
+        private string SerializeDocument(object entity)
         {
-            var documentBuilder = new DocumentBuilder(jsonApiContext);
             var identifiableEntity = entity as IIdentifiable;
-            var document = documentBuilder.Build(identifiableEntity);
+            var document = _documentBuilder.Build(identifiableEntity);
             return _serialize(document);
         }
 
-        private static string _serialize(object obj)
+        private string _serialize(object obj)
         {
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore

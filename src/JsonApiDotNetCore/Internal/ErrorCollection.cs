@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -20,7 +21,8 @@ namespace JsonApiDotNetCore.Internal
         public string GetJson()
         {
             return JsonConvert.SerializeObject(this, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
         }
     }

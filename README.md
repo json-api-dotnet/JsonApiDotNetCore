@@ -27,6 +27,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Sorting](#sorting)
     - [Meta](#meta)
     - [Client Generated Ids](#client-generated-ids)
+    - [Custom Errors](#custom-errors)
 - [Tests](#tests)
 
 ## Comprehensive Demo
@@ -44,14 +45,14 @@ Install-Package JsonApiDotnetCore
 
 - project.json
 ```json
-"JsonApiDotNetCore": "1.1.0"
+"JsonApiDotNetCore": "1.2.0"
 ```
 
 - *.csproj
 ```xml
 <ItemGroup>
     <!-- ... -->
-    <PackageReference Include="JsonApiDotNetCore" Version="1.1.0" />
+    <PackageReference Include="JsonApiDotNetCore" Version="1.2.0" />
 </ItemGroup>
 ```
 
@@ -326,6 +327,10 @@ Resources can be sorted by an attribute:
 
 ### Meta
 
+Meta objects can be assigned in two ways:
+ - Resource meta
+ - Request Meta
+
 Resource meta can be defined by implementing `IHasMeta` on the model class:
 
 ```csharp
@@ -343,6 +348,9 @@ public class Person : Identifiable<int>, IHasMeta
 }
 ```
 
+Request Meta can be added by injecting a service that implements `IRequestMeta`.
+In the event of a key collision, the Request Meta will take precendence. 
+
 ### Client Generated Ids
 
 By default, the server will respond with a `403 Forbidden` HTTP Status Code if a `POST` request is
@@ -355,6 +363,38 @@ services.AddJsonApi<AppDbContext>(opt =>
     opt.AllowClientGeneratedIds = true;
     // ..
 });
+```
+
+### Custom Errors
+
+By default, errors will only contain the properties defined by the internal [Error](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/src/JsonApiDotNetCore/Internal/Error.cs) class. However, you can create your own by inheriting from `Error` and either throwing it in a `JsonApiException` or returning the error from your controller.
+
+```chsarp
+// custom error definition
+public class CustomError : Error {
+    public CustomError(string status, string title, string detail, string myProp)
+    : base(status, title, detail)
+    {
+        MyCustomProperty = myProp;
+    }
+    public string MyCustomProperty { get; set; }
+}
+
+// throwing a custom error
+public void MyMethod() {
+    var error = new CustomError("507", "title", "detail", "custom");
+    throw new JsonApiException(error);
+}
+
+// returning from controller
+[HttpPost]
+public override async Task<IActionResult> PostAsync([FromBody] MyEntity entity)
+{
+    if(_db.IsFull)
+        return new ObjectResult(new CustomError("507", "Database is full.", "Theres no more room.", "Sorry."));
+
+    // ...
+}
 ```
 
 ## Tests

@@ -28,5 +28,8 @@ namespace JsonApiDotNetCore.Internal
         
         [JsonProperty("status")]
         public string Status { get; set; }
+
+        [JsonIgnore]
+        public int StatusCode { get { return int.Parse(Status); } }
     }
 }

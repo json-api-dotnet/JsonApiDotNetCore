@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Extensions;
 using DotNetCoreDocs.Configuration;
 using System;
 using JsonApiDotNetCoreExample;
+using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExampleTests.Services;
 
 namespace JsonApiDotNetCoreExampleTests.Startups
 {
@@ -38,6 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.Startups
             });
 
             services.AddDocumentationConfiguration(Config);
+            services.AddScoped<IRequestMeta, MetaService>();
 
             return services.BuildServiceProvider();
         }

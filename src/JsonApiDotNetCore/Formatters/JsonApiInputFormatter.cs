@@ -1,13 +1,7 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Formatters
 {
@@ -23,55 +17,10 @@ namespace JsonApiDotNetCore.Formatters
             return contentTypeString == "application/vnd.api+json";
         }
 
-        public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
+        public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            var request = context.HttpContext.Request;
-
-            if (request.ContentLength == 0)
-            {
-                return InputFormatterResult.SuccessAsync(null);
-            }
-
-            var loggerFactory = GetService<ILoggerFactory>(context);
-            var logger = loggerFactory?.CreateLogger<JsonApiInputFormatter>();
-
-            var dbContext = GetService<DbContext>(context);
-
-            try
-            {
-                var body = GetRequestBody(context.HttpContext.Request.Body);
-                var jsonApiContext = GetService<IJsonApiContext>(context);
-                var model = jsonApiContext.IsRelationshipPath ? 
-                    JsonApiDeSerializer.DeserializeRelationship(body, jsonApiContext) :
-                    JsonApiDeSerializer.Deserialize(body, jsonApiContext, dbContext);
-
-                if(model == null)
-                    logger?.LogError("An error occurred while de-serializing the payload");
-
-                return InputFormatterResult.SuccessAsync(model);
-            }
-            catch (JsonSerializationException ex)
-            {
-                logger?.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
-                context.HttpContext.Response.StatusCode = 422;
-                return InputFormatterResult.FailureAsync();
-            }
-        }
-
-        private string GetRequestBody(Stream body)
-        {
-            using (var reader = new StreamReader(body))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        private TService GetService<TService>(InputFormatterContext context)
-        {
-            return context.HttpContext.RequestServices.GetService<TService>();
+            var reader = context.HttpContext.RequestServices.GetService<IJsonApiReader>();
+            return await reader.ReadAsync(context);
         }
     }
 }

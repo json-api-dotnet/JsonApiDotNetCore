@@ -1,4 +1,4 @@
-using System;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -8,6 +8,15 @@ namespace JsonApiDotNetCore.Models
         : base(publicName)
         {
             PublicRelationshipName = publicName;
+        }
+
+        public override void SetValue(object entity, object newValue)
+        {
+            var propertyInfo = entity
+                .GetType()
+                .GetProperty(InternalRelationshipName);
+            
+            propertyInfo.SetValue(entity, newValue);        
         }
     }
 }

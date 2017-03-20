@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -14,11 +15,16 @@ namespace JsonApiDotNetCore.Services
         public JsonApiContext(
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,
-            JsonApiOptions options)
+            JsonApiOptions options,
+            IMetaBuilder metaBuilder,
+            IGenericProcessorFactory genericProcessorFactory)
         {
             ContextGraph = contextGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
+            MetaBuilder = metaBuilder;
+            GenericProcessorFactory = genericProcessorFactory;
+            RelationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
         }
 
         public JsonApiOptions Options { get; set; }
@@ -30,6 +36,9 @@ namespace JsonApiDotNetCore.Services
         public bool IsRelationshipPath { get; private set; }
         public List<string> IncludedRelationships { get; set; }
         public PageManager PageManager { get; set; }
+        public IMetaBuilder MetaBuilder { get; set; }
+        public IGenericProcessorFactory GenericProcessorFactory { get; set; }
+        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
