@@ -369,7 +369,7 @@ services.AddJsonApi<AppDbContext>(opt =>
 
 By default, errors will only contain the properties defined by the internal [Error](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/src/JsonApiDotNetCore/Internal/Error.cs) class. However, you can create your own by inheriting from `Error` and either throwing it in a `JsonApiException` or returning the error from your controller.
 
-```chsarp
+```csharp
 // custom error definition
 public class CustomError : Error {
     public CustomError(string status, string title, string detail, string myProp)
