@@ -11,6 +11,7 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -124,7 +125,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            var updatedTodoItem = _context.TodoItems
+            var updatedTodoItem = _context.TodoItems.AsNoTracking()
+                .Include(t => t.Owner)
                 .SingleOrDefault(t => t.Id == todoItem.Id);
 
             // Assert
