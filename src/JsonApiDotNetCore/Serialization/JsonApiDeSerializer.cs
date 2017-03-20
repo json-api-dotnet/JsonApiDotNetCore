@@ -141,12 +141,18 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
+                var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
+                        .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
+                
                 var data = (Dictionary<string, string>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
                 var newValue = data["id"];
                 var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+
+                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+
                 entityProperty.SetValue(entity, convertedValue);
             }
 

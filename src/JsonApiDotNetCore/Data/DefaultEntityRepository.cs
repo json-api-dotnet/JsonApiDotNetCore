@@ -105,9 +105,12 @@ namespace JsonApiDotNetCore.Data
                 attr.SetValue(oldEntity, attr.GetValue(entity));
             });
 
+            foreach(var relationship in _jsonApiContext.RelationshipsToUpdate)
+                relationship.Key.SetValue(oldEntity, relationship.Value);
+
             await _context.SaveChangesAsync();
 
-        return oldEntity;
+            return oldEntity;
         }
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)

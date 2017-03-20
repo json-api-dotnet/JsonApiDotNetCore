@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -23,6 +24,7 @@ namespace JsonApiDotNetCore.Services
             Options = options;
             MetaBuilder = metaBuilder;
             GenericProcessorFactory = genericProcessorFactory;
+            RelationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
         }
 
         public JsonApiOptions Options { get; set; }
@@ -36,6 +38,7 @@ namespace JsonApiDotNetCore.Services
         public PageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
+        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
 
         public IJsonApiContext ApplyContext<T>()
         {
