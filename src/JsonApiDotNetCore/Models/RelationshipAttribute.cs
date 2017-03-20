@@ -1,9 +1,8 @@
 using System;
-using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class RelationshipAttribute : Attribute
+    public abstract class RelationshipAttribute : Attribute
     {
         protected RelationshipAttribute(string publicName)
         {
@@ -16,13 +15,6 @@ namespace JsonApiDotNetCore.Models
         public bool IsHasMany { get { return this.GetType() == typeof(HasManyAttribute); } }
         public bool IsHasOne { get { return this.GetType() == typeof(HasOneAttribute); } }
 
-        public void SetValue(object entity, object newValue)
-        {
-            var propertyInfo = entity
-                .GetType()
-                .GetProperty(InternalRelationshipName);
-            
-            propertyInfo.SetValue(entity, newValue);        
-        }
+        public abstract void SetValue(object entity, object newValue);
     }
 }
