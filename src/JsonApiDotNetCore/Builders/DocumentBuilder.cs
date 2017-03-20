@@ -169,12 +169,19 @@ namespace JsonApiDotNetCore.Builders
 
                 if (navigationEntity is IEnumerable)
                     foreach (var includedEntity in (IEnumerable)navigationEntity)
-                        included.Add(_getIncludedEntity((IIdentifiable)includedEntity));
+                        _addIncludedEntity(included, (IIdentifiable)includedEntity);
                 else
-                    included.Add(_getIncludedEntity((IIdentifiable)navigationEntity));
+                    _addIncludedEntity(included, (IIdentifiable)navigationEntity);
             });
 
             return included;
+        }
+
+        private void _addIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
+        {
+            var includedEntity = _getIncludedEntity(entity);
+            if(includedEntity != null)
+                entities.Add(includedEntity);
         }
 
         private DocumentData _getIncludedEntity(IIdentifiable entity)
@@ -183,11 +190,7 @@ namespace JsonApiDotNetCore.Builders
             
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
-            var data = new DocumentData
-            {
-                Type = contextEntity.EntityName,
-                Id = entity.StringId
-            };
+            var data = _getData(contextEntity, entity);
 
             data.Attributes = new Dictionary<string, object>();
 
