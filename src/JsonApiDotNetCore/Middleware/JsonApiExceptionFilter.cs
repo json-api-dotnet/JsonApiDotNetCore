@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Formatters
             
             var error = jsonApiException.GetError();
             var result = new ObjectResult(error);
-            result.StatusCode = Convert.ToInt16(error.Status);
+            result.StatusCode = jsonApiException.GetStatusCode();
             context.Result = result;         
         }
     }

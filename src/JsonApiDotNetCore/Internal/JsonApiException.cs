@@ -1,31 +1,52 @@
 using System;
+using System.Linq;
 
 namespace JsonApiDotNetCore.Internal
 {
     public class JsonApiException : Exception
     {
-        private string _statusCode;
-        private string _detail;
-        private string _message;
+        private ErrorCollection _errors = new ErrorCollection();
+
+        public JsonApiException(ErrorCollection errorCollection)
+        { 
+            _errors = errorCollection;
+        }
+
+        public JsonApiException(Error error)
+        : base(error.Title)
+        { 
+            _errors.Add(error);
+        }
 
         public JsonApiException(string statusCode, string message)
         : base(message)
         { 
-            _statusCode = statusCode;
-            _message = message;
+            _errors.Add(new Error(statusCode, message, null));
         }
 
         public JsonApiException(string statusCode, string message, string detail)
         : base(message)
         { 
-            _statusCode = statusCode;
-            _message = message;
-            _detail = detail;            
+            _errors.Add(new Error(statusCode, message, detail));
         }
 
-        public Error GetError()
+        public ErrorCollection GetError()
         {
-            return new Error(_statusCode, _message, _detail);
+            return _errors;
+        }
+
+        public int GetStatusCode()
+        {
+            if(_errors.Errors.Count == 1)
+                return _errors.Errors[0].StatusCode;
+
+            if(_errors.Errors.FirstOrDefault(e => e.StatusCode >= 500) != null)
+                return 500;
+                
+            if(_errors.Errors.FirstOrDefault(e => e.StatusCode >= 400) != null)
+                return 400;
+            
+            return 500;
         }
     }
 }
