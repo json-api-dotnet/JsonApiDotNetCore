@@ -1,4 +1,3 @@
-
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -125,6 +124,26 @@ namespace JsonApiDotNetCore.Extensions
             {
                 throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
             }
+        }
+        public static IQueryable<TSource> Select<TSource>(this IQueryable source, string[] columns)
+        {
+            var sourceType = source.ElementType;
+            
+            var resultType = typeof(TSource);
+
+            // {model}
+            var parameter = Expression.Parameter(sourceType, "model");
+            
+            var bindings = columns.Select(column => Expression.Bind(
+                resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
+            
+            var body = Expression.MemberInit(Expression.New(resultType), bindings);
+            
+            var selector = Expression.Lambda(body, parameter);
+
+            return source.Provider.CreateQuery<TSource>(
+                Expression.Call(typeof(Queryable), "Select", new Type[] { sourceType, resultType },
+                    source.Expression, Expression.Quote(selector)));
         }
     }
 }
