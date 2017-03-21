@@ -13,7 +13,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
-using System.Diagnostics;
+using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -40,17 +40,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
+            var expectedSql = $@"SELECT 't'.'Id', 't'.'Description'
+                                FROM 'TodoItems' AS 't'
+                                WHERE 't'.'Id' = {todoItem.Id}".Normalize();
 
             // act
-            var result = await _dbContext
+            var query = _dbContext
                 .TodoItems
                 .Where(t=>t.Id == todoItem.Id)
-                .Select(fields)
-                .FirstAsync();
+                .Select(fields);
+
+            var resultSql = query.ToSql().Normalize();
+            var result = await query.FirstAsync();
 
             // assert
             Assert.Equal(0, result.Ordinal);
             Assert.Equal(todoItem.Description, result.Description);
+            Assert.Equal(expectedSql, resultSql);
         }
 
         [Fact]
