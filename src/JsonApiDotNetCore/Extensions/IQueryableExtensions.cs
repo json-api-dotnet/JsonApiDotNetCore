@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -125,8 +126,11 @@ namespace JsonApiDotNetCore.Extensions
                 throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
             }
         }
-        public static IQueryable<dynamic> Select<TSource>(this IQueryable<TSource> source, string[] columns)
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns)
         {
+            if(columns == null || columns.Count() == 0)
+                return source;
+
             var sourceType = source.ElementType;
             
             var resultType = typeof(TSource);
@@ -141,9 +145,11 @@ namespace JsonApiDotNetCore.Extensions
             var body = Expression.MemberInit(Expression.New(resultType), bindings);
             
             // { model => new TodoItem() { Property = model.Property } }
-            var selector = Expression.Lambda<Func<TSource, dynamic>>(body, parameter);
-
-            return source.Select(selector);
+            var selector = Expression.Lambda(body, parameter);
+            
+            return source.Provider.CreateQuery<TSource>(
+                Expression.Call(typeof(Queryable), "Select", new Type[] { sourceType, resultType },
+                source.Expression, Expression.Quote(selector)));
         }
     }
 }
