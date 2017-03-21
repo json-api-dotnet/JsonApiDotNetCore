@@ -8,23 +8,33 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections;
-using JsonApiDotNetCore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Serialization
 {
-    public static class JsonApiDeSerializer
+    public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
-        public static object Deserialize(string requestBody, IJsonApiContext context,
-            DbContext dbContext)
+        private readonly DbContext _dbContext;
+        private readonly IJsonApiContext _jsonApiContext;
+        private readonly IGenericProcessorFactory _genericProcessorFactor;
+
+        public JsonApiDeSerializer(DbContext dbContext, 
+            IJsonApiContext jsonApiContext,
+            IGenericProcessorFactory genericProcessorFactory)
+        {
+            _dbContext = dbContext;
+            _jsonApiContext = jsonApiContext;
+            _genericProcessorFactor = genericProcessorFactory;
+        }
+
+        public object Deserialize(string requestBody)
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
-            var entity = DataToObject(document.Data, context, dbContext);
+            var entity = DataToObject(document.Data);
             return entity;
         }
 
-        public static object DeserializeRelationship(string requestBody, IJsonApiContext context)
+        public object DeserializeRelationship(string requestBody)
         {
             var data = JToken.Parse(requestBody)["data"];
 
@@ -35,34 +45,31 @@ namespace JsonApiDotNetCore.Serialization
         }
 
 
-        public static List<TEntity> DeserializeList<TEntity>(string requestBody, IJsonApiContext context,
-            DbContext dbContext)
+        public List<TEntity> DeserializeList<TEntity>(string requestBody)
         {
             var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
 
             var deserializedList = new List<TEntity>();
             foreach (var data in documents.Data)
             {
-                var entity = DataToObject(data, context, dbContext);
+                var entity = DataToObject(data);
                 deserializedList.Add((TEntity)entity);
             }
 
             return deserializedList;
         }
 
-        private static object DataToObject(DocumentData data, 
-            IJsonApiContext context,
-            DbContext dbContext)
+        private object DataToObject(DocumentData data)
         {
             var entityTypeName = data.Type.ToProperCase();
 
-            var contextEntity = context.ContextGraph.GetContextEntity(entityTypeName);
-            context.RequestEntity = contextEntity;
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entityTypeName);
+            _jsonApiContext.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
             
             entity = _setEntityAttributes(entity, contextEntity, data.Attributes);
-            entity = _setRelationships(entity, contextEntity, data.Relationships, dbContext);
+            entity = _setRelationships(entity, contextEntity, data.Relationships);
 
             var identifiableEntity = (IIdentifiable)entity;
 
@@ -72,7 +79,7 @@ namespace JsonApiDotNetCore.Serialization
             return identifiableEntity;
         }
 
-        private static object _setEntityAttributes(
+        private object _setEntityAttributes(
             object entity, ContextEntity contextEntity, Dictionary<string, object> attributeValues)
         {
             if (attributeValues == null || attributeValues.Count == 0)
@@ -98,11 +105,10 @@ namespace JsonApiDotNetCore.Serialization
             return entity;
         }
 
-        private static object _setRelationships(
+        private object _setRelationships(
             object entity, 
             ContextEntity contextEntity, 
-            Dictionary<string, RelationshipData> relationships,
-            DbContext context)
+            Dictionary<string, RelationshipData> relationships)
         {
             if (relationships == null || relationships.Count == 0)
                 return entity;
@@ -114,13 +120,13 @@ namespace JsonApiDotNetCore.Serialization
                 if (attr.IsHasOne)
                     entity = _setHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships);
                 else
-                    entity = _setHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships, context);
+                    entity = _setHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
             }
 
             return entity;
         }
 
-        private static object _setHasOneRelationship(object entity, 
+        private object _setHasOneRelationship(object entity, 
             PropertyInfo[] entityProperties, 
             RelationshipAttribute attr, 
             ContextEntity contextEntity, 
@@ -135,24 +141,29 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
+                var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
+                        .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
+                
                 var data = (Dictionary<string, string>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
                 var newValue = data["id"];
                 var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+
+                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+
                 entityProperty.SetValue(entity, convertedValue);
             }
 
             return entity;
         }
 
-        private static object _setHasManyRelationship(object entity,
+        private object _setHasManyRelationship(object entity,
             PropertyInfo[] entityProperties, 
             RelationshipAttribute attr, 
             ContextEntity contextEntity, 
-            Dictionary<string, RelationshipData> relationships,
-            DbContext context)
+            Dictionary<string, RelationshipData> relationships)
         {
             var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
 
@@ -167,7 +178,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var genericProcessor = GenericProcessorFactory.GetProcessor(attr.Type, context);
+                var genericProcessor = _genericProcessorFactor.GetProcessor(attr.Type);
                 var ids = relationshipData.ManyData.Select(r => r["id"]);
                 genericProcessor.SetRelationships(entity, attr, ids);    
             }

@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext, context);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItemCollection)JsonApiDeSerializer.Deserialize(body, _jsonApiContext, context);
+            var deserializedBody = (TodoItemCollection)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -269,7 +269,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItemCollection)JsonApiDeSerializer.Deserialize(body, _jsonApiContext, context);
+            var deserializedBody = (TodoItemCollection)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
             var newId = deserializedBody.Id;
             var contextCollection = context.TodoItemCollections
                 .Include(c => c.Owner)
@@ -312,7 +312,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)JsonApiDeSerializer.Deserialize(body, _jsonApiContext, _fixture.GetService<AppDbContext>());
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);

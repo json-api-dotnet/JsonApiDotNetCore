@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TEntity> _dbSet;
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
+        private readonly IGenericProcessorFactory _genericProcessorFactory;
 
         public DefaultEntityRepository(
             DbContext context,
@@ -42,11 +43,12 @@ namespace JsonApiDotNetCore.Data
             _dbSet = context.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
+            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
         }
 
         public virtual IQueryable<TEntity> Get()
         {
-            return _dbSet;
+            return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
         }
 
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities,  FilterQuery filterQuery)
@@ -74,12 +76,12 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await _dbSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await Get().SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
-            return await _dbSet
+            return await Get()
                 .Include(relationshipName)
                 .SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
@@ -103,14 +105,17 @@ namespace JsonApiDotNetCore.Data
                 attr.SetValue(oldEntity, attr.GetValue(entity));
             });
 
+            foreach(var relationship in _jsonApiContext.RelationshipsToUpdate)
+                relationship.Key.SetValue(oldEntity, relationship.Value);
+
             await _context.SaveChangesAsync();
 
-        return oldEntity;
+            return oldEntity;
         }
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var genericProcessor = GenericProcessorFactory.GetProcessor(relationship.Type, _context);
+            var genericProcessor = _genericProcessorFactory.GetProcessor(relationship.Type);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 

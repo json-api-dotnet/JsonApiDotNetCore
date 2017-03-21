@@ -8,15 +8,23 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public class DocumentBuilder
+    public class DocumentBuilder : IDocumentBuilder
     {
         private IJsonApiContext _jsonApiContext;
         private IContextGraph _contextGraph;
+        private readonly IRequestMeta _requestMeta;
 
         public DocumentBuilder(IJsonApiContext jsonApiContext)
         {
             _jsonApiContext = jsonApiContext;
             _contextGraph = jsonApiContext.ContextGraph;
+        }
+
+        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta)
+        {
+            _jsonApiContext = jsonApiContext;
+            _contextGraph = jsonApiContext.ContextGraph;
+            _requestMeta = requestMeta;
         }
 
         public Document Build(IIdentifiable entity)
@@ -25,12 +33,12 @@ namespace JsonApiDotNetCore.Builders
 
             var document = new Document
             {
-                Data = _getData(contextEntity, entity),
-                Meta = _getMeta(entity),
+                Data = GetData(contextEntity, entity),
+                Meta = GetMeta(entity),
                 Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
             };
 
-            document.Included = _appendIncludedObject(document.Included, contextEntity, entity);
+            document.Included = AppendIncludedObject(document.Included, contextEntity, entity);
 
             return document;
         }
@@ -46,39 +54,42 @@ namespace JsonApiDotNetCore.Builders
             var documents = new Documents
             {
                 Data = new List<DocumentData>(),
-                Meta = _getMeta(entities.FirstOrDefault()),
+                Meta = GetMeta(entities.FirstOrDefault()),
                 Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
             };
 
             foreach (var entity in entities)
             {
-                documents.Data.Add(_getData(contextEntity, entity));
-                documents.Included = _appendIncludedObject(documents.Included, contextEntity, entity);
+                documents.Data.Add(GetData(contextEntity, entity));
+                documents.Included = AppendIncludedObject(documents.Included, contextEntity, entity);
             }
 
             return documents;
         }
 
-        private Dictionary<string, object> _getMeta(IIdentifiable entity)
+        private Dictionary<string, object> GetMeta(IIdentifiable entity)
         {
             if (entity == null) return null;
-
-            var meta = new Dictionary<string, object>();
-            var metaEntity = entity as IHasMeta;
             
-            if(metaEntity != null)
-                meta = metaEntity.GetMeta(_jsonApiContext);
+            var builder = _jsonApiContext.MetaBuilder;
+
+            if(entity is IHasMeta metaEntity)
+                builder.Add(metaEntity.GetMeta(_jsonApiContext));
 
             if(_jsonApiContext.Options.IncludeTotalRecordCount)
-                meta["total-records"] = _jsonApiContext.PageManager.TotalRecords;
+                builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
             
+            if(_requestMeta != null)
+                builder.Add(_requestMeta.GetMeta());
+
+            var meta = builder.Build();
             if(meta.Count > 0) return meta;
             return null;
         }
 
-        private List<DocumentData> _appendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)
+        private List<DocumentData> AppendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)
         {
-            var includedEntities = _getIncludedEntities(contextEntity, entity);
+            var includedEntities = GetIncludedEntities(contextEntity, entity);
             if (includedEntities.Count > 0)
             {
                 if (includedObject == null)
@@ -89,7 +100,7 @@ namespace JsonApiDotNetCore.Builders
             return includedObject;
         }
 
-        private DocumentData _getData(ContextEntity contextEntity, IIdentifiable entity)
+        private DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
         {
             var data = new DocumentData
             {
@@ -104,16 +115,24 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Attributes.ForEach(attr =>
             {
-                data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
+                if(ShouldIncludeAttribute(attr))
+                    data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
             });
 
             if (contextEntity.Relationships.Count > 0)
-                _addRelationships(data, contextEntity, entity);
+                AddRelationships(data, contextEntity, entity);
 
             return data;
         }
 
-        private void _addRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)
+        private bool ShouldIncludeAttribute(AttrAttribute attr)
+        {
+            return (_jsonApiContext.QuerySet == null 
+                || _jsonApiContext.QuerySet.Fields.Count == 0 
+                || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
+        }
+
+        private void AddRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)
         {
             data.Relationships = new Dictionary<string, RelationshipData>();
             var linkBuilder = new LinkBuilder(_jsonApiContext);
@@ -129,7 +148,7 @@ namespace JsonApiDotNetCore.Builders
                     }
                 };
 
-                if (_relationshipIsIncluded(r.InternalRelationshipName))
+                if (RelationshipIsIncluded(r.InternalRelationshipName))
                 {
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.InternalRelationshipName);
@@ -137,46 +156,49 @@ namespace JsonApiDotNetCore.Builders
                     if(navigationEntity == null)
                         relationshipData.SingleData = null;
                     else if (navigationEntity is IEnumerable)
-                        relationshipData.ManyData = _getRelationships((IEnumerable<object>)navigationEntity, r.InternalRelationshipName);
+                        relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity, r.InternalRelationshipName);
                     else
-                        relationshipData.SingleData = _getRelationship(navigationEntity, r.InternalRelationshipName);
+                        relationshipData.SingleData = GetRelationship(navigationEntity, r.InternalRelationshipName);
                 }
 
                 data.Relationships.Add(r.InternalRelationshipName.Dasherize(), relationshipData);
             });
         }
 
-        private List<DocumentData> _getIncludedEntities(ContextEntity contextEntity, IIdentifiable entity)
+        private List<DocumentData> GetIncludedEntities(ContextEntity contextEntity, IIdentifiable entity)
         {
             var included = new List<DocumentData>();
 
             contextEntity.Relationships.ForEach(r =>
             {
-                if (!_relationshipIsIncluded(r.InternalRelationshipName)) return;
+                if (!RelationshipIsIncluded(r.InternalRelationshipName)) return;
 
                 var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, r.InternalRelationshipName);
 
                 if (navigationEntity is IEnumerable)
                     foreach (var includedEntity in (IEnumerable)navigationEntity)
-                        included.Add(_getIncludedEntity((IIdentifiable)includedEntity));
+                        AddIncludedEntity(included, (IIdentifiable)includedEntity);
                 else
-                    included.Add(_getIncludedEntity((IIdentifiable)navigationEntity));
+                    AddIncludedEntity(included, (IIdentifiable)navigationEntity);
             });
 
             return included;
         }
 
-        private DocumentData _getIncludedEntity(IIdentifiable entity)
+        private void AddIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
+        {
+            var includedEntity = GetIncludedEntity(entity);
+            if(includedEntity != null)
+                entities.Add(includedEntity);
+        }
+
+        private DocumentData GetIncludedEntity(IIdentifiable entity)
         {
             if(entity == null) return null;
             
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
-            var data = new DocumentData
-            {
-                Type = contextEntity.EntityName,
-                Id = entity.StringId
-            };
+            var data = GetData(contextEntity, entity);
 
             data.Attributes = new Dictionary<string, object>();
 
@@ -188,13 +210,13 @@ namespace JsonApiDotNetCore.Builders
             return data;
         }
 
-        private bool _relationshipIsIncluded(string relationshipName)
+        private bool RelationshipIsIncluded(string relationshipName)
         {
             return _jsonApiContext.IncludedRelationships != null &&
                 _jsonApiContext.IncludedRelationships.Contains(relationshipName.ToProperCase());
         }
 
-        private List<Dictionary<string, string>> _getRelationships(IEnumerable<object> entities, string relationshipName)
+        private List<Dictionary<string, string>> GetRelationships(IEnumerable<object> entities, string relationshipName)
         {
             var objType = entities.GetType().GenericTypeArguments[0];
 
@@ -210,7 +232,7 @@ namespace JsonApiDotNetCore.Builders
             }
             return relationships;
         }
-        private Dictionary<string, string> _getRelationship(object entity, string relationshipName)
+        private Dictionary<string, string> GetRelationship(object entity, string relationshipName)
         {
             var objType = entity.GetType();
 
