@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Extensions
                 throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
             }
         }
-        public static IQueryable<TSource> Select<TSource>(this IQueryable source, string[] columns)
+        public static IQueryable<dynamic> Select<TSource>(this IQueryable<TSource> source, string[] columns)
         {
             var sourceType = source.ElementType;
             
@@ -137,13 +137,13 @@ namespace JsonApiDotNetCore.Extensions
             var bindings = columns.Select(column => Expression.Bind(
                 resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
             
+            // { new Model () { Property = model.Property } }
             var body = Expression.MemberInit(Expression.New(resultType), bindings);
             
-            var selector = Expression.Lambda(body, parameter);
+            // { model => new TodoItem() { Property = model.Property } }
+            var selector = Expression.Lambda<Func<TSource, dynamic>>(body, parameter);
 
-            return source.Provider.CreateQuery<TSource>(
-                Expression.Call(typeof(Queryable), "Select", new Type[] { sourceType, resultType },
-                    source.Expression, Expression.Quote(selector)));
+            return source.Select(selector);
         }
     }
 }
