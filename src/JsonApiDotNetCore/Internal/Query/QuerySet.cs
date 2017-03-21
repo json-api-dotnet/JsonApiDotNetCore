@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Internal.Query
             _jsonApiContext = jsonApiContext;
             PageQuery = new PageQuery();
             Filters = new List<FilterQuery>();
+            Fields = new List<string>();
             BuildQuerySet(query);
         }
 
@@ -26,6 +27,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public PageQuery PageQuery { get; set; }
         public List<SortQuery> SortParameters { get; set; }
         public List<string> IncludedRelationships { get; set; }
+        public List<string> Fields { get; set; }
 
         private void BuildQuerySet(IQueryCollection query)
         {
@@ -52,6 +54,12 @@ namespace JsonApiDotNetCore.Internal.Query
                 if (pair.Key.StartsWith("page"))
                 {
                     PageQuery = ParsePageQuery(pair.Key, pair.Value);
+                    continue;
+                }
+
+                if (pair.Key.StartsWith("fields"))
+                {
+                    Fields = ParseFieldsQuery(pair.Key, pair.Value);
                     continue;
                 }
 
@@ -158,6 +166,29 @@ namespace JsonApiDotNetCore.Internal.Query
                 .Split(',')
                 .Select(s => s.ToProperCase())
                 .ToList();
+        }
+
+        private List<string> ParseFieldsQuery(string key, string value)
+        {
+            // expected: fields[TYPE]=prop1,prop2
+            var typeName = key.Split('[', ']')[1];
+
+            var includedFields = new List<string> { "Id" };
+
+            if(typeName != _jsonApiContext.RequestEntity.EntityName.Dasherize()) 
+                return includedFields;
+
+            var fields = value.Split(',');
+            foreach(var field in fields)
+            {
+                var internalAttrName = _jsonApiContext.RequestEntity
+                    .Attributes
+                    .SingleOrDefault(attr => attr.PublicAttributeName == field)
+                    .InternalAttributeName;
+                includedFields.Add(internalAttrName);
+            }
+
+            return includedFields;
         }
 
         private AttrAttribute GetAttribute(string propertyName)
