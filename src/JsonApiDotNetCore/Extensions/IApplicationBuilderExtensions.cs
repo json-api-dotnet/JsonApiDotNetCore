@@ -10,9 +10,7 @@ namespace JsonApiDotNetCore.Routing
             app.UseMiddleware<RequestMiddleware>();
 
             if (useMvc)
-            {
                 app.UseMvc();
-            }
 
             return app;
         }
