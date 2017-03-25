@@ -5,11 +5,12 @@ namespace JsonApiDotNetCore.Routing
 {
     public static class IApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app)
+        public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app, bool useMvc = true)
         {
             app.UseMiddleware<RequestMiddleware>();
 
-            app.UseMvc();
+            if (useMvc)
+                app.UseMvc();
 
             return app;
         }

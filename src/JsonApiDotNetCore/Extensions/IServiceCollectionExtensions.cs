@@ -18,22 +18,38 @@ namespace JsonApiDotNetCore.Extensions
         public static void AddJsonApi<TContext>(this IServiceCollection services) 
             where TContext : DbContext
         {
-            _addInternals<TContext>(services, new JsonApiOptions());
+            var mvcBuilder = services.AddMvc();
+            AddInternals<TContext>(services, new JsonApiOptions(), mvcBuilder);
         }
 
         public static void AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options) 
             where TContext : DbContext
         {
             var config = new JsonApiOptions();
+            
             options(config);
-            _addInternals<TContext>(services, config);
+
+            var mvcBuilder = services.AddMvc();
+            AddInternals<TContext>(services, config, mvcBuilder);
         }
 
-        private static void _addInternals<TContext>(IServiceCollection services, JsonApiOptions jsonApiOptions)
-            where TContext : DbContext
+         public static void AddJsonApi<TContext>(this IServiceCollection services, 
+            Action<JsonApiOptions> options,
+            IMvcBuilder mvcBuilder) where TContext : DbContext
+        {
+            var config = new JsonApiOptions();
+            
+            options(config);
+
+            AddInternals<TContext>(services, config, mvcBuilder);
+        }
+
+        private static void AddInternals<TContext>(IServiceCollection services, 
+            JsonApiOptions jsonApiOptions,
+            IMvcBuilder mvcBuilder) where TContext : DbContext
         {
             services.AddJsonApiInternals<TContext>(jsonApiOptions);
-            services.AddMvc()
+            mvcBuilder
                 .AddMvcOptions(opt => {
                     opt.Filters.Add(typeof(JsonApiExceptionFilter));
                     opt.SerializeAsJsonApi(jsonApiOptions);
