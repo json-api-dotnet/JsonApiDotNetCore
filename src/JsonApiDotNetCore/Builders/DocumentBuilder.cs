@@ -188,7 +188,8 @@ namespace JsonApiDotNetCore.Builders
         private void AddIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
         {
             var includedEntity = GetIncludedEntity(entity);
-            if(includedEntity != null)
+
+            if(includedEntity != null && !entities.Any(doc => doc.Id == includedEntity.Id && doc.Type == includedEntity.Type))
                 entities.Add(includedEntity);
         }
 
