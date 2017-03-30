@@ -15,6 +15,9 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
+
+        [HasMany("assigned-todo-items")]
+        public virtual List<TodoItem> AssignedTodoItems { get; set; }
         
         [HasMany("todo-item-collections")]
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
