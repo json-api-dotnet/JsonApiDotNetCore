@@ -24,6 +24,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Defining Custom Data Access Methods](#defining-custom-data-access-methods)
 	- [Pagination](#pagination)
 	- [Filtering](#filtering)
+		- [Custom Filters](#custom-filters)
 	- [Sorting](#sorting)
     - [Meta](#meta)
     - [Client Generated Ids](#client-generated-ids)
@@ -315,6 +316,31 @@ identifier):
 ?filter[attribute]=le:value
 ?filter[attribute]=ge:value
 ?filter[attribute]=like:value
+```
+
+#### Custom Filters
+
+You can customize the filter implementation by overriding the method in the `DefaultEntityRepository` like so:
+
+```csharp
+public class MyEntityRepository : DefaultEntityRepository<MyEntity>
+{
+    public MyEntityRepository(
+    	AppDbContext context,
+        ILoggerFactory loggerFactory,
+        IJsonApiContext jsonApiContext)
+    : base(context, loggerFactory, jsonApiContext)
+    { }
+    
+    public override IQueryable<TEntity> Filter(IQueryable<TEntity> entities,  FilterQuery filterQuery)
+    {
+        // use the base filtering method    
+        entities = base.Filter(entities, filterQuery);
+	
+	// implement custom method
+	return ApplyMyCustomFilter(entities, filterQuery);
+    }
+}
 ```
 
 ### Sorting
