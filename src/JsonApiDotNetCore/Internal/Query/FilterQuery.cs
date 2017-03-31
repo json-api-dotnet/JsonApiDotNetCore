@@ -1,18 +1,16 @@
-using JsonApiDotNetCore.Models;
-
 namespace JsonApiDotNetCore.Internal.Query
 {
     public class FilterQuery
     {
-        public FilterQuery(AttrAttribute filteredAttribute, string propertyValue, FilterOperations filterOperation)
+        public FilterQuery(string key, string value, string operation)
         {
-            FilteredAttribute = filteredAttribute;
-            PropertyValue = propertyValue;
-            FilterOperation = filterOperation;
+            Key = key;
+            Value = value;
+            Operation = operation;
         }
         
-        public AttrAttribute FilteredAttribute { get; set; }
-        public string PropertyValue { get; set; }
-        public FilterOperations FilterOperation { get; set; }
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string Operation { get; set; }
     }
 }

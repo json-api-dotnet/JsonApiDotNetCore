@@ -135,6 +135,40 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
+        public async Task GET_Included_DoesNot_Duplicate_Records_ForMultipleRelationshipsOfSameType()
+        {
+            // arrange
+            _context.People.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            todoItem.Assignee = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner&include=assignee";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
+            var data = documents.Data;
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(documents.Included);
+            Assert.Equal(1, documents.Included.Count);
+        }
+
+        [Fact]
         public async Task GET_ById_Included_Contains_SideloadedData_ForOneToMany()
         {
             // arrange

@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Extensions
             return (IOrderedQueryable<TSource>)result;
         }
 
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, FilterQuery filterQuery)
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, AttrFilterQuery filterQuery)
         {
             if (filterQuery == null)
                 return source;
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Extensions
             {
                 // convert the incoming value to the target value type
                 // "1" -> 1
-                var convertedValue = Convert.ChangeType(filterQuery.PropertyValue, property.PropertyType);
+                var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, property.PropertyType);
                 // {model}
                 var parameter = Expression.Parameter(concreteType, "model");
                 // {model.Id}

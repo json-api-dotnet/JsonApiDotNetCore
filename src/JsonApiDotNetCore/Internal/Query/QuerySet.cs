@@ -74,49 +74,32 @@ namespace JsonApiDotNetCore.Internal.Query
             var queries = new List<FilterQuery>();
 
             var propertyName = key.Split('[', ']')[1].ToProperCase();
-            var attribute = GetAttribute(propertyName);
-
-            if (attribute == null)
-                throw new JsonApiException("400", $"{propertyName} is not a valid property.");
             
             var values = value.Split(',');
             foreach(var val in values)
-                queries.Add(ParseFilterOperation(attribute, val));
+            {
+                (var operation, var filterValue) = ParseFilterOperation(val);
+                queries.Add(new FilterQuery(propertyName, filterValue, operation));
+            }
 
             return queries;
         }
 
-        private FilterQuery ParseFilterOperation(AttrAttribute attribute, string value)
+        private (string operation, string value) ParseFilterOperation(string value)
         {
             if(value.Length < 3)
-                return new FilterQuery(attribute, value, FilterOperations.eq);
+                return (string.Empty, value);
              
             var operation = value.Split(':');
 
             if(operation.Length == 1)
-                return new FilterQuery(attribute, value, FilterOperations.eq);
+                return (string.Empty, value);
             
             // remove prefix from value
             var prefix = operation[0];
             value = operation[1];
 
-            switch(prefix)
-            {
-                case "eq":
-                    return new FilterQuery(attribute, value, FilterOperations.eq);
-                case "lt":
-                    return new FilterQuery(attribute, value, FilterOperations.lt);
-                case "gt":
-                    return new FilterQuery(attribute, value, FilterOperations.gt);
-                case "le":
-                    return new FilterQuery(attribute, value, FilterOperations.le);
-                case "ge":
-                    return new FilterQuery(attribute, value, FilterOperations.ge);
-                case "like":
-                    return new FilterQuery(attribute, value, FilterOperations.like);
-            }
-
-            throw new JsonApiException("400", $"Invalid filter prefix '{prefix}'");
+            return (prefix, value);;
         }
 
         private PageQuery ParsePageQuery(string key, string value)
