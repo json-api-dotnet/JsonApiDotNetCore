@@ -63,6 +63,8 @@ namespace JsonApiDotNetCore.Extensions
             var contextGraph = contextGraphBuilder.Build();
 
             services.AddScoped(typeof(DbContext), typeof(TContext));
+            services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
