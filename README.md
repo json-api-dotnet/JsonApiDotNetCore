@@ -228,6 +228,23 @@ services.AddJsonApi<AppDbContext>(
 
 ### Defining Custom Data Access Methods
 
+By default, data retrieval is distributed across 3 layers:
+1. `JsonApiController`
+2. `EntityResourceService`
+3. `DefaultEntityRepository`
+
+Customization can be done at any of these layers.
+
+#### Custom Controller Methods
+
+TODO
+
+#### Custom Resource Service Implementation
+
+TODO
+
+#### Custom Entity Repository Implementation
+
 You can implement custom methods for accessing the data by creating an implementation of 
 `IEntityRepository<TEntity, TId>`. If you only need minor changes you can override the 
 methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository should then be
