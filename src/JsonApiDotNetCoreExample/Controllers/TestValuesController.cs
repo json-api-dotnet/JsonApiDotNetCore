@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-  [Route("[controller]")]
-  public class TestValuesController : Controller
-  {
-    [HttpGet]
-    public IActionResult Get()
+    [Route("[controller]")]
+    public class TestValuesController : Controller
     {
-      var result = new string[] { "value" };
-      return Ok(result);
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var result = new string[] { "value" };
+            return Ok(result);
+        }
     }
-  }
 }
