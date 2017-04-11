@@ -13,6 +13,8 @@ using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Serialization;
 using System.Linq;
 using Person = JsonApiDotNetCoreExample.Models.Person;
+using Newtonsoft.Json;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -82,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include[owner]&filter[owner.first-name]={person.FirstName}";
+            var route = $"/api/v1/todo-items?include=owner&filter[owner.first-name]={person.FirstName}";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -90,15 +92,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture
-                .GetService<IJsonApiDeSerializer>()
-                .DeserializeList<TodoItem>(body);
+            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var included = documents.Included;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotEmpty(deserializedBody);
-            foreach(var item in  deserializedBody)
-                Assert.Equal(person.FirstName, item.Owner.FirstName);
+            Assert.NotNull(included);
+            Assert.NotEmpty(included);
+            foreach(var item in included)
+                Assert.Equal(person.FirstName, item.Attributes["first-name"]);
         }
     }
 }
