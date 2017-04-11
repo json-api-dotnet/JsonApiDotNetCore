@@ -12,5 +12,6 @@ namespace JsonApiDotNetCore.Internal.Query
         public string Key { get; set; }
         public string Value { get; set; }
         public string Operation { get; set; }
+        public bool IsAttributeOfRelationship => Key.Contains(".");
     }
 }
