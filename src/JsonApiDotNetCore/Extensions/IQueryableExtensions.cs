@@ -86,36 +86,7 @@ namespace JsonApiDotNetCore.Extensions
                 // {1}
                 var right = Expression.Constant(convertedValue, property.PropertyType);
 
-                Expression body;
-                switch (filterQuery.FilterOperation)
-                {
-                    case FilterOperations.eq:
-                        // {model.Id == 1}
-                        body = Expression.Equal(left, right);
-                        break;
-                    case FilterOperations.lt:
-                        // {model.Id < 1}
-                        body = Expression.LessThan(left, right);
-                        break;
-                    case FilterOperations.gt:
-                        // {model.Id > 1}
-                        body = Expression.GreaterThan(left, right);
-                        break;
-                    case FilterOperations.le:
-                        // {model.Id <= 1}
-                        body = Expression.LessThanOrEqual(left, right);
-                        break;
-                    case FilterOperations.ge:
-                        // {model.Id <= 1}
-                        body = Expression.GreaterThanOrEqual(left, right);
-                        break;
-                    case FilterOperations.like:
-                        // {model.Id <= 1}
-                        body = Expression.Call(left, "Contains", null, right);
-                        break;
-                    default:
-                        throw new JsonApiException("500", $"Unknown filter operation {filterQuery.FilterOperation}");
-                }
+                var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
 
                 var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
 
@@ -126,27 +97,109 @@ namespace JsonApiDotNetCore.Extensions
                 throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
             }
         }
+
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, RelatedAttrFilterQuery filterQuery)
+        {
+            if (filterQuery == null)
+                return source;
+
+            var concreteType = typeof(TSource);
+            var relation = concreteType.GetProperty(filterQuery.FilteredRelationship.InternalRelationshipName);
+            if (relation == null)
+                throw new ArgumentException($"'{filterQuery.FilteredRelationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
+
+            var relatedType = filterQuery.FilteredRelationship.Type;
+            var relatedAttr = relatedType.GetProperty(filterQuery.FilteredAttribute.InternalAttributeName);
+            if (relatedAttr == null)
+                throw new ArgumentException($"'{filterQuery.FilteredAttribute.InternalAttributeName}' is not a valid attribute of '{filterQuery.FilteredRelationship.InternalRelationshipName}'");
+
+            try
+            {
+                // convert the incoming value to the target value type
+                // "1" -> 1
+                var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, relatedAttr.PropertyType);
+                // {model}
+                var parameter = Expression.Parameter(concreteType, "model");
+
+                // {model.Relationship}
+                var leftRelationship = Expression.PropertyOrField(parameter, relation.Name);
+
+                // {model.Relationship.Attr}
+                var left = Expression.PropertyOrField(leftRelationship, relatedAttr.Name);
+
+                // {1}
+                var right = Expression.Constant(convertedValue, relatedAttr.PropertyType);
+
+                var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
+
+                var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                return source.Where(lambda);
+            }
+            catch (FormatException)
+            {
+                throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {relatedAttr.PropertyType.Name}");
+            }
+        }
+
+        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
+        {
+            Expression body;
+            switch (operation)
+            {
+                case FilterOperations.eq:
+                    // {model.Id == 1}
+                    body = Expression.Equal(left, right);
+                    break;
+                case FilterOperations.lt:
+                    // {model.Id < 1}
+                    body = Expression.LessThan(left, right);
+                    break;
+                case FilterOperations.gt:
+                    // {model.Id > 1}
+                    body = Expression.GreaterThan(left, right);
+                    break;
+                case FilterOperations.le:
+                    // {model.Id <= 1}
+                    body = Expression.LessThanOrEqual(left, right);
+                    break;
+                case FilterOperations.ge:
+                    // {model.Id <= 1}
+                    body = Expression.GreaterThanOrEqual(left, right);
+                    break;
+                case FilterOperations.like:
+                    // {model.Id <= 1}
+                    body = Expression.Call(left, "Contains", null, right);
+                    break;
+                default:
+                    throw new JsonApiException("500", $"Unknown filter operation {operation}");
+            }
+
+            return body;
+        }
+
+
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns)
         {
-            if(columns == null || columns.Count() == 0)
+            if (columns == null || columns.Count() == 0)
                 return source;
 
             var sourceType = source.ElementType;
-            
+
             var resultType = typeof(TSource);
 
             // {model}
             var parameter = Expression.Parameter(sourceType, "model");
-            
+
             var bindings = columns.Select(column => Expression.Bind(
                 resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
-            
+
             // { new Model () { Property = model.Property } }
             var body = Expression.MemberInit(Expression.New(resultType), bindings);
-            
+
             // { model => new TodoItem() { Property = model.Property } }
             var selector = Expression.Lambda(body, parameter);
-            
+
             return source.Provider.CreateQuery<TSource>(
                 Expression.Call(typeof(Queryable), "Select", new Type[] { sourceType, resultType },
                 source.Expression, Expression.Quote(selector)));
