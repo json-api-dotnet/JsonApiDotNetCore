@@ -19,18 +19,14 @@ namespace JsonApiDotNetCore.Extensions
             where TContext : DbContext
         {
             var mvcBuilder = services.AddMvc();
-            AddInternals<TContext>(services, new JsonApiOptions(), mvcBuilder);
+            AddJsonApi<TContext>(services, (opt) => {}, mvcBuilder);
         }
 
         public static void AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options) 
             where TContext : DbContext
         {
-            var config = new JsonApiOptions();
-            
-            options(config);
-
             var mvcBuilder = services.AddMvc();
-            AddInternals<TContext>(services, config, mvcBuilder);
+            AddJsonApi<TContext>(services, options, mvcBuilder);
         }
 
          public static void AddJsonApi<TContext>(this IServiceCollection services, 
@@ -41,40 +37,44 @@ namespace JsonApiDotNetCore.Extensions
             
             options(config);
 
-            AddInternals<TContext>(services, config, mvcBuilder);
-        }
+            if(config.ContextGraph == null)
+                config.BuildContextGraph<TContext>(null);
 
-        private static void AddInternals<TContext>(IServiceCollection services, 
-            JsonApiOptions jsonApiOptions,
-            IMvcBuilder mvcBuilder) where TContext : DbContext
-        {
-            services.AddJsonApiInternals<TContext>(jsonApiOptions);
+            services.AddScoped(typeof(DbContext), typeof(TContext));
+
             mvcBuilder
                 .AddMvcOptions(opt => {
                     opt.Filters.Add(typeof(JsonApiExceptionFilter));
-                    opt.SerializeAsJsonApi(jsonApiOptions);
+                    opt.SerializeAsJsonApi(config);
                 });
+
+            AddJsonApiInternals(services, config);
         }
 
-        public static void AddJsonApiInternals<TContext>(this IServiceCollection services, JsonApiOptions jsonApiOptions) 
-            where TContext : DbContext
+        public static void AddJsonApi(this IServiceCollection services, 
+            Action<JsonApiOptions> options,
+            IMvcBuilder mvcBuilder)
         {
-            var contextGraphBuilder = new ContextGraphBuilder<TContext>();
-            var contextGraph = contextGraphBuilder.Build();
+            var config = new JsonApiOptions();
+            
+            options(config);
 
-            services.AddScoped(typeof(DbContext), typeof(TContext));
-            services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
-            services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
+            AddJsonApiInternals(services, config);
+        }
+
+        public static void AddJsonApiInternals(
+            this IServiceCollection services, 
+            JsonApiOptions jsonApiOptions)
+        {
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
-
+            services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
             services.AddSingleton<JsonApiOptions>(jsonApiOptions);
-            services.AddSingleton<IContextGraph>(contextGraph);
+            services.AddSingleton<IContextGraph>(jsonApiOptions.ContextGraph);
             services.AddScoped<IJsonApiContext,JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddScoped<JsonApiRouteHandler>();
-
             services.AddScoped<IMetaBuilder, MetaBuilder>();
             services.AddScoped<IDocumentBuilder, DocumentBuilder>();
             services.AddScoped<IJsonApiSerializer, JsonApiSerializer>();

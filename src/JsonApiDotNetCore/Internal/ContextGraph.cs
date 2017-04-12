@@ -1,12 +1,11 @@
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class ContextGraph<T> : IContextGraph where T : DbContext
+    public class ContextGraph : IContextGraph
     {
         public List<ContextEntity> Entities { get; set; }
 
