@@ -29,12 +29,9 @@ namespace JsonApiDotNetCore.Internal
             }
         }
 
-        private bool IsJsonApiController(ControllerModel controller) 
+        private bool IsJsonApiController(ControllerModel controller)
         {
-            var controllerBaseType = controller.ControllerType.BaseType;
-            if(!controllerBaseType.IsConstructedGenericType) return false;
-            var genericTypeDefinition = controllerBaseType.GetGenericTypeDefinition();
-            return (genericTypeDefinition == typeof(JsonApiController<,>) || genericTypeDefinition == typeof(JsonApiController<>));
+            return controller.ControllerType.IsSubclassOf(typeof(JsonApiControllerMixin));
         }
     }
 }

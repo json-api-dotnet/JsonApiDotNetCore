@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiControllerMixin : Controller
+    public abstract class JsonApiControllerMixin : Controller
     {
-        public JsonApiControllerMixin()
+        protected JsonApiControllerMixin()
         { }
 
         protected IActionResult UnprocessableEntity()
