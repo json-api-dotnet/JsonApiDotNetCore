@@ -15,55 +15,62 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class IServiceCollectionExtensions
     {
-        public static void AddJsonApi<TContext>(this IServiceCollection services) 
+        public static void AddJsonApi<TContext>(this IServiceCollection services)
             where TContext : DbContext
         {
             var mvcBuilder = services.AddMvc();
-            AddJsonApi<TContext>(services, (opt) => {}, mvcBuilder);
+            AddJsonApi<TContext>(services, (opt) => { }, mvcBuilder);
         }
 
-        public static void AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options) 
+        public static void AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options)
             where TContext : DbContext
         {
             var mvcBuilder = services.AddMvc();
             AddJsonApi<TContext>(services, options, mvcBuilder);
         }
 
-         public static void AddJsonApi<TContext>(this IServiceCollection services, 
-            Action<JsonApiOptions> options,
-            IMvcBuilder mvcBuilder) where TContext : DbContext
+        public static void AddJsonApi<TContext>(this IServiceCollection services,
+           Action<JsonApiOptions> options,
+           IMvcBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
-            
+
             options(config);
 
-            if(config.ContextGraph == null)
-                config.BuildContextGraph<TContext>(null);
-
-            services.AddScoped(typeof(DbContext), typeof(TContext));
-
             mvcBuilder
-                .AddMvcOptions(opt => {
+                .AddMvcOptions(opt =>
+                {
                     opt.Filters.Add(typeof(JsonApiExceptionFilter));
                     opt.SerializeAsJsonApi(config);
                 });
 
-            AddJsonApiInternals(services, config);
+            AddJsonApiInternals<TContext>(services, config);
         }
 
-        public static void AddJsonApi(this IServiceCollection services, 
+        public static void AddJsonApi(this IServiceCollection services,
             Action<JsonApiOptions> options,
             IMvcBuilder mvcBuilder)
         {
             var config = new JsonApiOptions();
-            
+
             options(config);
 
             AddJsonApiInternals(services, config);
         }
 
+        public static void AddJsonApiInternals<TContext>(
+            this IServiceCollection services,
+            JsonApiOptions jsonApiOptions) where TContext : DbContext
+        {
+            if (jsonApiOptions.ContextGraph == null)
+                jsonApiOptions.BuildContextGraph<TContext>(null);
+
+            services.AddScoped(typeof(DbContext), typeof(TContext));
+            AddJsonApiInternals(services, jsonApiOptions);
+        }
+
         public static void AddJsonApiInternals(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
@@ -72,7 +79,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
             services.AddSingleton<JsonApiOptions>(jsonApiOptions);
             services.AddSingleton<IContextGraph>(jsonApiOptions.ContextGraph);
-            services.AddScoped<IJsonApiContext,JsonApiContext>();
+            services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IMetaBuilder, MetaBuilder>();
@@ -88,7 +95,7 @@ namespace JsonApiDotNetCore.Extensions
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
         {
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
-            
+
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
 
             options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
