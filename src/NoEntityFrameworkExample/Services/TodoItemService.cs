@@ -24,6 +24,7 @@ namespace NoEntityFrameworkExample.Services
             return Task.Run<IEnumerable<TodoItem>>(() => {
                 return new List<TodoItem> {
                     new TodoItem {
+                        Id = 1,
                         Description = "description"
                     }
                 };

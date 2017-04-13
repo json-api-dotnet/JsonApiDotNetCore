@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -23,7 +24,6 @@ namespace JsonApiDotNetCore.Builders
                 Entities = Entities,
                 UsesDbContext = _usesDbContext
             };
-
             return graph;
         }
 
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Builders
         public void AddDbContext<T>() where T : DbContext
         {
             _usesDbContext = true;
-            
+
             var contextType = typeof(T);
 
             var entities = new List<ContextEntity>();
