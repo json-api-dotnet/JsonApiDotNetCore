@@ -7,5 +7,6 @@ namespace JsonApiDotNetCore.Builders
     {
         IContextGraph Build();
         void AddResource<TResource>(string pluralizedTypeName) where TResource : class;
+        void AddDbContext<T>() where T : DbContext;
     }
 }
