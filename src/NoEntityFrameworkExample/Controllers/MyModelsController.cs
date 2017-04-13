@@ -5,11 +5,11 @@ using NoEntityFrameworkExample.Models;
 
 namespace NoEntityFrameworkExample.Controllers
 {
-    public class TodoItemsController : JsonApiController<TodoItem>
+    public class MyModelsController : JsonApiController<MyModel>
     {
-        public TodoItemsController(
+        public MyModelsController(
             IJsonApiContext jsonApiContext, 
-            IResourceService<TodoItem> resourceService, 
+            IResourceService<MyModel> resourceService, 
             ILoggerFactory loggerFactory) 
             : base(jsonApiContext, resourceService, loggerFactory)
         { }

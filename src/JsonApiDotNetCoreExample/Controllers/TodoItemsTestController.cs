@@ -11,19 +11,19 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         protected AbstractTodoItemsController(
             IJsonApiContext jsonApiContext,
-            IEntityRepository<T, int> entityRepository,
+            IResourceService<T, int> service,
             ILoggerFactory loggerFactory)
-            : base(jsonApiContext, entityRepository, loggerFactory)
+            : base(jsonApiContext, service, loggerFactory)
         {
         }
-}
+    }
     public class TodoItemsTestController : AbstractTodoItemsController<TodoItem>
     {
         public TodoItemsTestController(
             IJsonApiContext jsonApiContext,
-            IEntityRepository<TodoItem> entityRepository,
+            IResourceService<TodoItem> service,
             ILoggerFactory loggerFactory) 
-            : base(jsonApiContext, entityRepository, loggerFactory)
+            : base(jsonApiContext, service, loggerFactory)
         { }
     }
 }

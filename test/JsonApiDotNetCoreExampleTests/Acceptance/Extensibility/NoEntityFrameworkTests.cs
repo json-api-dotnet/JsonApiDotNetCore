@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var client = server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/my-models";
 
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -33,7 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             Console.WriteLine(responseBody);
-            var deserializedBody = server.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(responseBody);
+            var deserializedBody = server.GetService<IJsonApiDeSerializer>()
+                .DeserializeList<MyModel>(responseBody);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

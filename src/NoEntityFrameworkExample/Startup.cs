@@ -34,11 +34,11 @@ namespace NoEntityFrameworkExample
             services.AddJsonApi(options => {
                 options.Namespace = "api/v1";
                 options.BuildContextGraph((builder) => {
-                    builder.AddResource<TodoItem>("TodoItems");
+                    builder.AddResource<MyModel>("MyModels");
                 });
             }, mvcBuilder);
             
-            services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
+            services.AddScoped<IResourceService<MyModel>, MyModelService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,9 +7,9 @@ using NoEntityFrameworkExample.Models;
 
 namespace NoEntityFrameworkExample.Services
 {
-    public class TodoItemService : IResourceService<TodoItem>
+    public class MyModelService : IResourceService<MyModel>
     {
-        public Task<TodoItem> CreateAsync(TodoItem entity)
+        public Task<MyModel> CreateAsync(MyModel entity)
         {
             throw new NotImplementedException();
         }
@@ -19,11 +19,11 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TodoItem>> GetAsync()
+        public Task<IEnumerable<MyModel>> GetAsync()
         {
-            return Task.Run<IEnumerable<TodoItem>>(() => {
-                return new List<TodoItem> {
-                    new TodoItem {
+            return Task.Run<IEnumerable<MyModel>>(() => {
+                return new List<MyModel> {
+                    new MyModel {
                         Id = 1,
                         Description = "description"
                     }
@@ -31,7 +31,7 @@ namespace NoEntityFrameworkExample.Services
             });
         }
 
-        public Task<TodoItem> GetAsync(int id)
+        public Task<MyModel> GetAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -46,7 +46,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<TodoItem> UpdateAsync(int id, TodoItem entity)
+        public Task<MyModel> UpdateAsync(int id, MyModel entity)
         {
             throw new NotImplementedException();
         }

@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace NoEntityFrameworkExample.Models
 {
-    public class TodoItem : Identifiable
+    public class MyModel : Identifiable
     {
         [Attr("description")]
         public string Description { get; set; }
