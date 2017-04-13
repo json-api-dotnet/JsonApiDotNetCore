@@ -55,6 +55,13 @@ namespace JsonApiDotNetCore.Extensions
 
             options(config);
 
+            mvcBuilder
+                .AddMvcOptions(opt =>
+                {
+                    opt.Filters.Add(typeof(JsonApiExceptionFilter));
+                    opt.SerializeAsJsonApi(config);
+                });
+
             AddJsonApiInternals(services, config);
         }
 
@@ -73,6 +80,12 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
+            if(!jsonApiOptions.ContextGraph.UsesDbContext)
+            {
+                services.AddScoped<DbContext>();
+                services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);
+            }
+
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));

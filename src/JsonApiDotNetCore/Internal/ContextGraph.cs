@@ -8,6 +8,7 @@ namespace JsonApiDotNetCore.Internal
     public class ContextGraph : IContextGraph
     {
         public List<ContextEntity> Entities { get; set; }
+        public bool UsesDbContext  { get; set; }
 
         public ContextEntity GetContextEntity(string dbSetName)
         {

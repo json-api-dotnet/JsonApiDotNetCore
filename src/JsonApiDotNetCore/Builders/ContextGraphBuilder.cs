@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Builders
     public class ContextGraphBuilder : IContextGraphBuilder
     {
         private List<ContextEntity> Entities;
-
+        private bool _usesDbContext;
         public ContextGraphBuilder()
         {
             Entities = new List<ContextEntity>();
@@ -20,7 +20,8 @@ namespace JsonApiDotNetCore.Builders
         {
             var graph = new ContextGraph()
             {
-                Entities = Entities
+                Entities = Entities,
+                UsesDbContext = _usesDbContext
             };
 
             return graph;
@@ -81,6 +82,8 @@ namespace JsonApiDotNetCore.Builders
 
         public void AddDbContext<T>() where T : DbContext
         {
+            _usesDbContext = true;
+            
             var contextType = typeof(T);
 
             var entities = new List<ContextEntity>();
