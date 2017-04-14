@@ -180,9 +180,9 @@ public class ThingsController : JsonApiController<Thing>
 {
     public ThingsController(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<Thing> entityRepository,
+        IResourceService<Thing> resourceService,
         ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, entityRepository, loggerFactory)
+    : base(jsonApiContext, resourceService, loggerFactory)
     { }
 }
 ```
@@ -199,9 +199,9 @@ public class ThingsController : JsonApiController<Thing, Guid>
 {
     public ThingsController(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<Thing, Guid> entityRepository,
+        IResourceService<Thing, Guid> resourceService,
         ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, entityRepository, loggerFactory)
+    : base(jsonApiContext, resourceService, loggerFactory)
     { }
 }
 ```
