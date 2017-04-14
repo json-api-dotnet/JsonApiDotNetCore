@@ -236,6 +236,27 @@ By default, data retrieval is distributed across 3 layers:
 
 Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
 
+#### Not Using Entity Framework?
+
+Out of the box, the library uses your `DbContext` to create a "ContextGraph" or map of all your models and their relationships. If, however, you have models that are not members of a `DbContext`, you can manually create this graph like so:
+
+```csharp
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add framework services.
+    var mvcBuilder = services.AddMvc();
+
+    services.AddJsonApi(options => {
+        options.Namespace = "api/v1";
+        options.BuildContextGraph((builder) => {
+            builder.AddResource<MyModel>("my-models");
+        });
+    }, mvcBuilder);
+    // ...
+}
+```
+
 #### Custom Resource Service Implementation
 
 By default, this library uses Entity Framework. If you'd like to use another ORM that does not implement `IQueryable`, you can inject a custom service like so:
