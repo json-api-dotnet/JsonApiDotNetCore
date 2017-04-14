@@ -10,11 +10,11 @@ namespace JsonApiDotNetCore.Internal
         public List<ContextEntity> Entities { get; set; }
         public bool UsesDbContext  { get; set; }
 
-        public ContextEntity GetContextEntity(string dbSetName)
+        public ContextEntity GetContextEntity(string entityName)
         {
             return Entities
                 .FirstOrDefault(e => 
-                    e.EntityName.ToLower() == dbSetName.ToLower());
+                    e.EntityName.ToLower() == entityName.ToLower());
         }
 
         public ContextEntity GetContextEntity(Type entityType)

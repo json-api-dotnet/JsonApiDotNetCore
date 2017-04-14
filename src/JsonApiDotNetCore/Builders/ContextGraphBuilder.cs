@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using Newtonsoft.Json;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Builders
                     var entityType = dbSetType.GetGenericArguments()[0];
                     entities.Add(new ContextEntity
                     {
-                        EntityName = property.Name,
+                        EntityName = property.Name.Dasherize(),
                         EntityType = entityType,
                         Attributes = GetAttributes(entityType),
                         Relationships = GetRelationships(entityType)

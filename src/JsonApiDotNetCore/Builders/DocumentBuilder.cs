@@ -143,8 +143,8 @@ namespace JsonApiDotNetCore.Builders
                 {
                     Links = new Links
                     {
-                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.InternalRelationshipName),
-                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.InternalRelationshipName)
+                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName),
+                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName)
                     }
                 };
 
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Builders
             foreach (var entity in entities)
             {
                 relationships.Add(new Dictionary<string, string> {
-                    {"type", typeName.EntityName.Dasherize() },
+                    {"type", typeName.EntityName },
                     {"id", ((IIdentifiable)entity).StringId }
                 });
             }
@@ -240,7 +240,7 @@ namespace JsonApiDotNetCore.Builders
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
             return new Dictionary<string, string> {
-                    {"type", typeName.EntityName.Dasherize() },
+                    {"type", typeName.EntityName },
                     {"id", ((IIdentifiable)entity).StringId }
                 };
         }

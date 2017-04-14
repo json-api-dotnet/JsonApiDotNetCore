@@ -61,9 +61,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object DataToObject(DocumentData data)
         {
-            var entityTypeName = data.Type.ToProperCase();
-
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entityTypeName);
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type);
             _jsonApiContext.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);

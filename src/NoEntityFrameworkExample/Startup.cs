@@ -34,7 +34,7 @@ namespace NoEntityFrameworkExample
             services.AddJsonApi(options => {
                 options.Namespace = "api/v1";
                 options.BuildContextGraph((builder) => {
-                    builder.AddResource<MyModel>("MyModels");
+                    builder.AddResource<MyModel>("my-models");
                 });
             }, mvcBuilder);
             
