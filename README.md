@@ -229,23 +229,45 @@ services.AddJsonApi<AppDbContext>(
 ### Defining Custom Data Access Methods
 
 By default, data retrieval is distributed across 3 layers:
+
 1. `JsonApiController`
 2. `EntityResourceService`
 3. `DefaultEntityRepository`
 
-Customization can be done at any of these layers.
-
-#### Custom Controller Methods
-
-TODO
+Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
 
 #### Custom Resource Service Implementation
 
-TODO
+By default, this library uses Entity Framework. If you'd like to use another ORM that does not implement `IQueryable`, you can inject a custom service like so:
+
+```csharp
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddScoped<IResourceService<MyModel>, MyModelService>();
+    // ...
+}
+```
+
+```csharp
+// MyModelService.cs
+public class MyModelService : IResourceService<MyModel>
+{
+    private readonly IMyModelDAL _dal;
+    public MyModelService(IMyModelDAL dal)
+    { 
+        _dal = dal;
+    } 
+    public Task<IEnumerable<MyModel>> GetAsync()
+    {
+        return await _dal.GetModelAsync();
+    }
+}
+```
 
 #### Custom Entity Repository Implementation
 
-You can implement custom methods for accessing the data by creating an implementation of 
+If you want to use EF, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of 
 `IEntityRepository<TEntity, TId>`. If you only need minor changes you can override the 
 methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository should then be
 add to the service collection in `Startup.ConfigureServices` like so:
