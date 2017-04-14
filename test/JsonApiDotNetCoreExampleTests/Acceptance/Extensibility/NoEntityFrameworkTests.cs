@@ -9,7 +9,9 @@ using NoEntityFrameworkExample.Models;
 using System.Threading.Tasks;
 using System.Net;
 using System;
-using System.Diagnostics;
+using Newtonsoft.Json;
+using JsonApiDotNetCore.Models;
+using System.Collections.Generic;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
@@ -32,12 +34,28 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseBody);
             var deserializedBody = server.GetService<IJsonApiDeSerializer>()
                 .DeserializeList<MyModel>(responseBody);
+                
+            var expectedBody = JsonConvert.SerializeObject(new Documents {
+                Data = new List<DocumentData> {
+                    new DocumentData {
+                        Id = "1",
+                        Type = "my-models",
+                        Attributes = new Dictionary<string, object> {
+                            {"description", "description"}
+                        }
+                    }
+                }
+            }, new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore
+            })
+            .Replace(" ", string.Empty)
+            .ToLower();
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedBody, responseBody);
         }
     }
 }
