@@ -9,15 +9,12 @@ using System.Threading.Tasks;
 using System.Net;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExample.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     public class NoEntityFrameworkTests
     {
         private readonly TestServer _server;
-        private readonly IConfiguration _config;
         private readonly AppDbContext _context;
 
         public NoEntityFrameworkTests()
@@ -25,11 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             _server = new TestServer(builder);
-            _config = _server.GetService<IConfiguration>();
-
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseNpgsql(_config.GetValue<string>("Data:DefaultConnection"));
-            _context = new AppDbContext(optionsBuilder.Options);
+            _context = _server.GetService<AppDbContext>();
             _context.Database.EnsureCreated();
         }
 

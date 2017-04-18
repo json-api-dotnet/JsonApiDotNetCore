@@ -1,5 +1,6 @@
 ﻿using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoEntityFrameworkExample.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace NoEntityFrameworkExample
 {
@@ -36,16 +38,23 @@ namespace NoEntityFrameworkExample
                     builder.AddResource<TodoItem>("custom-todo-items");
                 });
             }, mvcBuilder);
-            
+
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
+
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
+            optionsBuilder.UseNpgsql(Configuration.GetValue<string>("Data:DefaultConnection")); 
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton<DbContextOptions<AppDbContext>>(optionsBuilder.Options);
+            services.AddScoped<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, AppDbContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            context.Database.Migrate();
 
             app.UseMvc();
         }
