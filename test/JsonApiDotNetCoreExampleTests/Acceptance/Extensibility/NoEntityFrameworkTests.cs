@@ -5,13 +5,9 @@ using Microsoft.AspNetCore.TestHost;
 using NoEntityFrameworkExample;
 using System.Net.Http;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
-using NoEntityFrameworkExample.Models;
 using System.Threading.Tasks;
 using System.Net;
-using System;
-using Newtonsoft.Json;
-using JsonApiDotNetCore.Models;
-using System.Collections.Generic;
+using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
@@ -23,11 +19,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
+
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/my-models";
+            var route = $"/api/v1/custom-todo-items";
 
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -35,27 +32,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var deserializedBody = server.GetService<IJsonApiDeSerializer>()
-                .DeserializeList<MyModel>(responseBody);
-                
-            var expectedBody = JsonConvert.SerializeObject(new Documents {
-                Data = new List<DocumentData> {
-                    new DocumentData {
-                        Id = "1",
-                        Type = "my-models",
-                        Attributes = new Dictionary<string, object> {
-                            {"description", "description"}
-                        }
-                    }
-                }
-            }, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore
-            })
-            .Replace(" ", string.Empty)
-            .ToLower();
+                .DeserializeList<TodoItem>(responseBody);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(expectedBody, responseBody);
+            Assert.NotNull(deserializedBody);
+            Assert.NotEmpty(deserializedBody);
         }
     }
 }

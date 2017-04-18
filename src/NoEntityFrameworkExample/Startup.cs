@@ -1,12 +1,11 @@
 ﻿using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NoEntityFrameworkExample.Models;
 using NoEntityFrameworkExample.Services;
 
 namespace NoEntityFrameworkExample
@@ -34,11 +33,12 @@ namespace NoEntityFrameworkExample
             services.AddJsonApi(options => {
                 options.Namespace = "api/v1";
                 options.BuildContextGraph((builder) => {
-                    builder.AddResource<MyModel>("my-models");
+                    builder.AddResource<TodoItem>("custom-todo-items");
                 });
             }, mvcBuilder);
             
-            services.AddScoped<IResourceService<MyModel>, MyModelService>();
+            services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,12 +10,15 @@
 
   <ItemGroup>
     <ProjectReference Include="../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="../JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
+    <PackageReference Include="Npgsql" Version="3.2.2" />
+    <PackageReference Include="Dapper" Version="1.50.2" />
   </ItemGroup>
 
 </Project>
