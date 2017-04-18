@@ -10,7 +10,7 @@ using System.Net;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExample.Data;
 
-namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
+namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {
     public class NoEntityFrameworkTests
     {

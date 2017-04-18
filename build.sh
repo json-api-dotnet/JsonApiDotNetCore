@@ -8,3 +8,4 @@ dotnet restore ./src/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj
 dotnet restore ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
 
 dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
+dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj

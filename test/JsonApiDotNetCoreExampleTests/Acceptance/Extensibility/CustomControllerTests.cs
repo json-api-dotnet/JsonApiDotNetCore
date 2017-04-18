@@ -1,13 +1,10 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetCoreDocs.Models;
-using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
