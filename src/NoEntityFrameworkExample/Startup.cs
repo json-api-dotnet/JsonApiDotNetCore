@@ -54,7 +54,7 @@ namespace NoEntityFrameworkExample
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            context.Database.Migrate();
+            context.Database.EnsureCreated();
 
             app.UseMvc();
         }
