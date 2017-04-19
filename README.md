@@ -17,6 +17,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Defining Models](#defining-models)
 		- [Specifying Public Attributes](#specifying-public-attributes)
 		- [Relationships](#relationships)
+        - [Resource Names](#resource-names)
 	- [Defining Controllers](#defining-controllers)
 		- [Non-Integer Type Keys](#non-integer-type-keys)
 	- [Routing](#routing)
@@ -168,6 +169,23 @@ public class TodoItem : Identifiable<int>
     public virtual Person Owner { get; set; }
 }
 ```
+
+#### Resource Names
+
+If a DbContext is specified when adding the services, the context will be used to define the resources and their names.
+
+```csharp
+public DbSet<MyModel> SomeModels { get; set; } // this will be translated into "some-models"
+```
+
+However, you can specify a custom name like so:
+
+```csharp
+[Resource("some-models")]
+public DbSet<MyModel> MyModels { get; set; } // this will be translated into "some-models"
+```
+
+For further resource customizations, please see the section on [Defining Custom Data Access Methods](#defining-custom-data-access-methods).
 
 ### Defining Controllers
 
