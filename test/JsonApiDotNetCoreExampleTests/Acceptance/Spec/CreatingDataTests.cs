@@ -54,13 +54,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.People.Add(owner);
             await context.SaveChangesAsync();
 
-            var route = "/api/v1/todo-item-collections";
+            var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var content = new
             {
                 data = new
                 {
-                    type = "todo-item-collections",
+                    type = "todo-collections",
                     relationships = new
                     {
                         owner = new
@@ -180,14 +180,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.People.Add(owner);
             await context.SaveChangesAsync();
 
-            var route = "/api/v1/todo-item-collections";
+            var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var clientDefinedId = Guid.NewGuid();
             var content = new
             {
                 data = new
                 {
-                    type = "todo-item-collections",
+                    type = "todo-collections",
                     id = $"{clientDefinedId}",
                     relationships = new
                     {
@@ -234,13 +234,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var route = "/api/v1/todo-item-collections";
+            var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var content = new
             {
                 data = new
                 {
-                    type = "todo-item-collections",
+                    type = "todo-collections",
                     relationships = new Dictionary<string, dynamic>
                     {
                         {  "owner",  new {

@@ -147,7 +147,6 @@ namespace JsonApiDotNetCore.Internal.Query
 
             return value
                 .Split(',')
-                .Select(s => s.ToProperCase())
                 .ToList();
         }
 

@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Configuration
         public void BuildContextGraph(Action<IContextGraphBuilder> builder)
         {
             if(builder == null)
-                throw new ArgumentException("Cannot build non-EF context graph without a IContextGraphBuilder action", nameof(builder));
+                throw new ArgumentException("Cannot build non-EF context graph without an IContextGraphBuilder action", nameof(builder));
 
             var contextGraphBuilder = new ContextGraphBuilder();
 

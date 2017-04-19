@@ -138,10 +138,11 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
-            if(entity.Relationships.Any(r => r.InternalRelationshipName == relationshipName))
-                return entities.Include(relationshipName);
+            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
+            if(relationship != null)
+                return entities.Include(relationship.InternalRelationshipName);
             
-            throw new JsonApiException("400", "Invalid relationship",
+            throw new JsonApiException("400", $"Invalid relationship {relationshipName} on {entity.EntityName}",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
 

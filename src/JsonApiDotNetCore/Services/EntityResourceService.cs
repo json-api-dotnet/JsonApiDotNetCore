@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Services
       var query = _entities.Get();
       _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
       {
-        query = _entities.Include(query, r.ToProperCase());
+        query = _entities.Include(query, r);
       });
       return await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
     }
@@ -174,9 +174,9 @@ namespace JsonApiDotNetCore.Services
     private IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)
     {
       _jsonApiContext.IncludedRelationships = relationships;
-
+      
       foreach (var r in relationships)
-        entities = _entities.Include(entities, r.ToProperCase());
+        entities = _entities.Include(entities, r);
 
       return entities;
     }

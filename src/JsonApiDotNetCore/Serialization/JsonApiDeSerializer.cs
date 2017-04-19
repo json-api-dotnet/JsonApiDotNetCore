@@ -135,7 +135,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entityProperty == null)
                 throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
-            var relationshipName = attr.InternalRelationshipName.Dasherize();
+            var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entityProperty == null)
                 throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
-            var relationshipName = attr.InternalRelationshipName.Dasherize();
+            var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
