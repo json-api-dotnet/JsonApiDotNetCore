@@ -64,9 +64,14 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<TodoItem> CreateAsync(TodoItem entity)
+        public async Task<TodoItem> CreateAsync(TodoItem entity)
         {
-            throw new NotImplementedException();
+            return (await QueryAsync<TodoItem>(async connection =>
+            {
+                var query = "insert into \"TodoItems\" (\"Description\", \"Ordinal\") values (@description, @ordinal) returning \"Id\",\"Description\",\"Ordinal\"";
+                var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal });
+                return result;
+            })).SingleOrDefault();
         }
 
         public Task<bool> DeleteAsync(int id)
