@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Serialization
                     throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an attribute named {attr.InternalAttributeName}", nameof(entity));
 
                 object newValue;
-                if (attributeValues.TryGetValue(attr.PublicAttributeName.Dasherize(), out newValue))
+                if (attributeValues.TryGetValue(attr.PublicAttributeName, out newValue))
                 {
                     var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
