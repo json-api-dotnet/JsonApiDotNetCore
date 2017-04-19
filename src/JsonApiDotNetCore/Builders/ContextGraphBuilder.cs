@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Builders
                     var entityType = dbSetType.GetGenericArguments()[0];
                     entities.Add(new ContextEntity
                     {
-                        EntityName = property.Name.Dasherize(),
+                        EntityName = GetResourceName(property),
                         EntityType = entityType,
                         Attributes = GetAttributes(entityType),
                         Relationships = GetRelationships(entityType)
@@ -109,6 +109,15 @@ namespace JsonApiDotNetCore.Builders
             }
 
             Entities = entities;
+        }
+
+        private string GetResourceName(PropertyInfo property)
+        {
+            var resourceAttribute = property.GetCustomAttribute(typeof(ResourceAttribute));
+            if(resourceAttribute == null)
+                return property.Name.Dasherize();
+
+            return ((ResourceAttribute)resourceAttribute).ResourceName;
         }
     }
 }
