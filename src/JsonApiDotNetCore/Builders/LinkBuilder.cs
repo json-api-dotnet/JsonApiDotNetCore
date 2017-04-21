@@ -26,10 +26,10 @@ namespace JsonApiDotNetCore.Builders
             
             for(var i = 1; i < segments.Length; i++)
             {
-                if(segments[i].ToLower() == entityName.Dasherize()) 
+                if(segments[i].ToLower() == entityName) 
                     break;
 
-                nSpace += $"/{segments[i].Dasherize()}";
+                nSpace += $"/{segments[i]}";
             }
                 
             return nSpace;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Builders
 
         public string GetSelfRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/relationships/{child.Dasherize()}";
+            return $"{_context.BasePath}/{parent}/{parentId}/relationships/{child}";
         }
 
         public string GetRelatedRelationLink(string parent, string parentId, string child)
