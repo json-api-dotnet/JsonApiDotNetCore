@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExample
             ILoggerFactory loggerFactory,
             AppDbContext context)
         {
-            context.Database.Migrate();
+            context.Database.EnsureCreated();
 
             loggerFactory.AddConsole(Config.GetSection("Logging"));
             loggerFactory.AddDebug();

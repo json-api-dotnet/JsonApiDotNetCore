@@ -147,7 +147,6 @@ namespace JsonApiDotNetCore.Internal.Query
 
             return value
                 .Split(',')
-                .Select(s => s.ToProperCase())
                 .ToList();
         }
 
@@ -158,7 +157,7 @@ namespace JsonApiDotNetCore.Internal.Query
 
             var includedFields = new List<string> { "Id" };
 
-            if(typeName != _jsonApiContext.RequestEntity.EntityName.Dasherize()) 
+            if(typeName != _jsonApiContext.RequestEntity.EntityName) 
                 return includedFields;
 
             var fields = value.Split(',');

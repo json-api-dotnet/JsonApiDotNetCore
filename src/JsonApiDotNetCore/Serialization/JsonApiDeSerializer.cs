@@ -61,9 +61,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object DataToObject(DocumentData data)
         {
-            var entityTypeName = data.Type.ToProperCase();
-
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entityTypeName);
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type);
             _jsonApiContext.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
@@ -95,7 +93,7 @@ namespace JsonApiDotNetCore.Serialization
                     throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an attribute named {attr.InternalAttributeName}", nameof(entity));
 
                 object newValue;
-                if (attributeValues.TryGetValue(attr.PublicAttributeName.Dasherize(), out newValue))
+                if (attributeValues.TryGetValue(attr.PublicAttributeName, out newValue))
                 {
                     var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
@@ -137,7 +135,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entityProperty == null)
                 throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
-            var relationshipName = attr.InternalRelationshipName.Dasherize();
+            var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
@@ -170,7 +168,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entityProperty == null)
                 throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
-            var relationshipName = attr.InternalRelationshipName.Dasherize();
+            var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {

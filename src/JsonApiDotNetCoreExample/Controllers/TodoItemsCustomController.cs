@@ -2,15 +2,27 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCore.Controllers
+namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class JsonApiController<T>
-    : JsonApiController<T, int> where T : class, IIdentifiable<int>
+    [Route("custom/route/todo-items")]
+    public class TodoItemsCustomController : CustomJsonApiController<TodoItem>
     {
-        public JsonApiController(
+        public TodoItemsCustomController(
+            IJsonApiContext jsonApiContext,
+            IResourceService<TodoItem> resourceService,
+            ILoggerFactory loggerFactory) 
+            : base(jsonApiContext, resourceService, loggerFactory)
+        { }
+    }
+
+    public class CustomJsonApiController<T>
+    : CustomJsonApiController<T, int> where T : class, IIdentifiable<int>
+    {
+        public CustomJsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService,
             ILoggerFactory loggerFactory)
@@ -18,24 +30,34 @@ namespace JsonApiDotNetCore.Controllers
         { }
     }
 
-    public class JsonApiController<T, TId>
-    : JsonApiControllerMixin where T : class, IIdentifiable<TId>
+    public class CustomJsonApiController<T, TId>
+    : Controller where T : class, IIdentifiable<TId>
     {
         private readonly ILogger _logger;
         private readonly IResourceService<T, TId> _resourceService;
         private readonly IJsonApiContext _jsonApiContext;
 
-        public JsonApiController(
+        protected IActionResult UnprocessableEntity()
+        {
+            return new StatusCodeResult(422);
+        }
+
+        protected IActionResult Forbidden()
+        {
+            return new StatusCodeResult(403);
+        }
+
+        public CustomJsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService,
             ILoggerFactory loggerFactory)
         {
             _jsonApiContext = jsonApiContext.ApplyContext<T>();
             _resourceService = resourceService;
-            _logger = loggerFactory.CreateLogger<JsonApiController<T, TId>>();
+            _logger = loggerFactory.CreateLogger<JsonApiDotNetCore.Controllers.JsonApiController<T, TId>>();
         }
 
-        public JsonApiController(
+        public CustomJsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         {
@@ -65,16 +87,16 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
             var relationship = _resourceService.GetRelationshipAsync(id, relationshipName);
-            if(relationship == null) 
+            if (relationship == null)
                 return NotFound();
-            
+
             return await GetRelationshipAsync(id, relationshipName);
         }
 
         [HttpGet("{id}/{relationshipName}")]
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            var relationship = await _resourceService.GetRelationshipAsync(id, relationshipName);                
+            var relationship = await _resourceService.GetRelationshipAsync(id, relationshipName);
             return Ok(relationship);
         }
 
@@ -97,10 +119,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             if (entity == null)
                 return UnprocessableEntity();
-            
+
             var updatedEntity = await _resourceService.UpdateAsync(id, entity);
-            
-            if(updatedEntity == null)
+
+            if (updatedEntity == null)
                 return NotFound();
 
             return Ok(updatedEntity);

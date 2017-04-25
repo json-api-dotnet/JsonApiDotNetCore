@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,8 @@ namespace JsonApiDotNetCoreExample.Data
 
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Person> People { get; set; }
+
+        [Resource("todo-collections")]
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
     }
 }
