@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -143,12 +142,12 @@ namespace JsonApiDotNetCore.Builders
                 {
                     Links = new Links
                     {
-                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.InternalRelationshipName),
-                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.InternalRelationshipName)
+                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName),
+                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName)
                     }
                 };
 
-                if (RelationshipIsIncluded(r.InternalRelationshipName))
+                if (RelationshipIsIncluded(r.PublicRelationshipName))
                 {
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.InternalRelationshipName);
@@ -161,7 +160,7 @@ namespace JsonApiDotNetCore.Builders
                         relationshipData.SingleData = GetRelationship(navigationEntity, r.InternalRelationshipName);
                 }
 
-                data.Relationships.Add(r.InternalRelationshipName.Dasherize(), relationshipData);
+                data.Relationships.Add(r.PublicRelationshipName, relationshipData);
             });
         }
 
@@ -171,7 +170,7 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Relationships.ForEach(r =>
             {
-                if (!RelationshipIsIncluded(r.InternalRelationshipName)) return;
+                if (!RelationshipIsIncluded(r.PublicRelationshipName)) return;
 
                 var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, r.InternalRelationshipName);
 
@@ -214,7 +213,7 @@ namespace JsonApiDotNetCore.Builders
         private bool RelationshipIsIncluded(string relationshipName)
         {
             return _jsonApiContext.IncludedRelationships != null &&
-                _jsonApiContext.IncludedRelationships.Contains(relationshipName.ToProperCase());
+                _jsonApiContext.IncludedRelationships.Contains(relationshipName);
         }
 
         private List<Dictionary<string, string>> GetRelationships(IEnumerable<object> entities, string relationshipName)
@@ -227,7 +226,7 @@ namespace JsonApiDotNetCore.Builders
             foreach (var entity in entities)
             {
                 relationships.Add(new Dictionary<string, string> {
-                    {"type", typeName.EntityName.Dasherize() },
+                    {"type", typeName.EntityName },
                     {"id", ((IIdentifiable)entity).StringId }
                 });
             }
@@ -240,7 +239,7 @@ namespace JsonApiDotNetCore.Builders
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
             return new Dictionary<string, string> {
-                    {"type", typeName.EntityName.Dasherize() },
+                    {"type", typeName.EntityName },
                     {"id", ((IIdentifiable)entity).StringId }
                 };
         }

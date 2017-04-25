@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>JsonApiDotNetCoreExampleTests</AssemblyName>
+    <AssemblyName>NoEntityFrameworkTests</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>JsonApiDotNetCoreExampleTests</PackageId>
+    <PackageId>NoEntityFrameworkTests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
+    <ProjectReference Include="../../test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj" />
     <ProjectReference Include="../../src/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
   </ItemGroup>
 

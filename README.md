@@ -17,6 +17,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 	- [Defining Models](#defining-models)
 		- [Specifying Public Attributes](#specifying-public-attributes)
 		- [Relationships](#relationships)
+        - [Resource Names](#resource-names)
 	- [Defining Controllers](#defining-controllers)
 		- [Non-Integer Type Keys](#non-integer-type-keys)
 	- [Routing](#routing)
@@ -169,6 +170,23 @@ public class TodoItem : Identifiable<int>
 }
 ```
 
+#### Resource Names
+
+If a DbContext is specified when adding the services, the context will be used to define the resources and their names.
+
+```csharp
+public DbSet<MyModel> SomeModels { get; set; } // this will be translated into "some-models"
+```
+
+However, you can specify a custom name like so:
+
+```csharp
+[Resource("some-models")]
+public DbSet<MyModel> MyModels { get; set; } // this will be translated into "some-models"
+```
+
+For further resource customizations, please see the section on [Defining Custom Data Access Methods](#defining-custom-data-access-methods).
+
 ### Defining Controllers
 
 You need to create controllers that inherit from `JsonApiController<TEntity>` or `JsonApiController<TEntity, TId>`
@@ -180,9 +198,9 @@ public class ThingsController : JsonApiController<Thing>
 {
     public ThingsController(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<Thing> entityRepository,
+        IResourceService<Thing> resourceService,
         ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, entityRepository, loggerFactory)
+    : base(jsonApiContext, resourceService, loggerFactory)
     { }
 }
 ```
@@ -199,9 +217,9 @@ public class ThingsController : JsonApiController<Thing, Guid>
 {
     public ThingsController(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<Thing, Guid> entityRepository,
+        IResourceService<Thing, Guid> resourceService,
         ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, entityRepository, loggerFactory)
+    : base(jsonApiContext, resourceService, loggerFactory)
     { }
 }
 ```
@@ -228,7 +246,67 @@ services.AddJsonApi<AppDbContext>(
 
 ### Defining Custom Data Access Methods
 
-You can implement custom methods for accessing the data by creating an implementation of 
+By default, data retrieval is distributed across 3 layers:
+
+1. `JsonApiController`
+2. `EntityResourceService`
+3. `DefaultEntityRepository`
+
+Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
+
+#### Not Using Entity Framework?
+
+Out of the box, the library uses your `DbContext` to create a "ContextGraph" or map of all your models and their relationships. If, however, you have models that are not members of a `DbContext`, you can manually create this graph like so:
+
+```csharp
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add framework services.
+    var mvcBuilder = services.AddMvc();
+
+    services.AddJsonApi(options => {
+        options.Namespace = "api/v1";
+        options.BuildContextGraph((builder) => {
+            builder.AddResource<MyModel>("my-models");
+        });
+    }, mvcBuilder);
+    // ...
+}
+```
+
+#### Custom Resource Service Implementation
+
+By default, this library uses Entity Framework. If you'd like to use another ORM that does not implement `IQueryable`, you can inject a custom service like so:
+
+```csharp
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddScoped<IResourceService<MyModel>, MyModelService>();
+    // ...
+}
+```
+
+```csharp
+// MyModelService.cs
+public class MyModelService : IResourceService<MyModel>
+{
+    private readonly IMyModelDAL _dal;
+    public MyModelService(IMyModelDAL dal)
+    { 
+        _dal = dal;
+    } 
+    public Task<IEnumerable<MyModel>> GetAsync()
+    {
+        return await _dal.GetModelAsync();
+    }
+}
+```
+
+#### Custom Entity Repository Implementation
+
+If you want to use EF, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of 
 `IEntityRepository<TEntity, TId>`. If you only need minor changes you can override the 
 methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository should then be
 add to the service collection in `Startup.ConfigureServices` like so:

@@ -228,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/people/{person.Id}?include=todo-items,todo-item-collections";
+            var route = $"/api/v1/people/{person.Id}?include=todo-items,todo-collections";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
