@@ -1,3 +1,4 @@
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -32,7 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context = fixture.GetService<AppDbContext>();
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number());
+                .RuleFor(t => t.Ordinal, f => f.Random.Number())
+				.RuleFor(t => t.CreatedDate, f => f.Date.Past());
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
@@ -58,7 +60,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinal = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal,
+						createdDate = DateTime.Now
                     }
                 }
             };
@@ -100,7 +103,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinal = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal,
+						createdDate = DateTime.Now
                     },
                     relationships = new
                     {

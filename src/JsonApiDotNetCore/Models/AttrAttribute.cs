@@ -26,10 +26,15 @@ namespace JsonApiDotNetCore.Models
             var propertyInfo = entity
                 .GetType()
                 .GetProperty(InternalAttributeName);
-                
-            var convertedValue = Convert.ChangeType(newValue, propertyInfo.PropertyType);
-            
-            propertyInfo.SetValue(entity, convertedValue);
+
+			if (propertyInfo != null)
+			{
+				Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+
+				var convertedValue = (newValue == null) ? null : Convert.ChangeType(newValue, t);
+
+				propertyInfo.SetValue(entity, convertedValue, null);
+			}
         }
     }
 }

@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DotNetCoreDocs;
@@ -30,7 +30,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number());
+                .RuleFor(t => t.Ordinal, f => f.Random.Number())
+				.RuleFor(t => t.CreatedDate, f => f.Date.Past());
 
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())

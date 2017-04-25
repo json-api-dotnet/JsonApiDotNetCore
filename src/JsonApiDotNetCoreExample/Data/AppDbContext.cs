@@ -1,5 +1,6 @@
-using JsonApiDotNetCoreExample.Models;
+﻿using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace JsonApiDotNetCoreExample.Data
 {
@@ -11,7 +12,10 @@ namespace JsonApiDotNetCoreExample.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TodoItem>()
+			modelBuilder.Entity<TodoItem>()
+			    .Property(t => t.CreatedDate).HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
+			
+			modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.Assignee)
                 .WithMany(p => p.AssignedTodoItems)
                 .HasForeignKey(t => t.AssigneeId);

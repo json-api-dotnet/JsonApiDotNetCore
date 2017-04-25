@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
@@ -18,6 +18,12 @@ namespace JsonApiDotNetCoreExample.Models
 
         [Attr("guid-property")]
         public Guid GuidProperty { get; set; }
+
+		[Attr("created-date")]
+		public DateTime CreatedDate { get; set; }
+
+		[Attr("achieved-date")]
+		public DateTime? AchievedDate { get; set; }
         
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }
