@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -10,8 +9,7 @@ namespace JsonApiDotNetCore.Internal
             if(value == null)
                 return null;
 
-            if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
-                type = Nullable.GetUnderlyingType(type);            
+           type = Nullable.GetUnderlyingType(type) ?? type;
 
             var stringValue = value.ToString();
             

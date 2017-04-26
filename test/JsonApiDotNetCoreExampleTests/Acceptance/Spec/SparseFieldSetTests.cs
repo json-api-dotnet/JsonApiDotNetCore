@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DotNetCoreDocs;
 using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
@@ -33,14 +33,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Select_Sparse_Fieldsets()
         {
             // arrange
-            var fields = new string[] { "Id", "Description" };
+            var fields = new string[] { "Id", "Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem {
                 Description = "description",
-                Ordinal = 1
+                Ordinal = 1,
+                CreatedDate = System.DateTime.Now,
+                AchievedDate = System.DateTime.Now.AddDays(2)
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
-            var expectedSql = $@"SELECT 't'.'Id', 't'.'Description'
+            var expectedSql = $@"SELECT 't'.'Id', 't'.'Description', 't'.'CreatedDate', 't'.'AchievedDate'
                                 FROM 'TodoItems' AS 't'
                                 WHERE 't'.'Id' = {todoItem.Id}".Normalize();
 
@@ -56,6 +58,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // assert
             Assert.Equal(0, result.Ordinal);
             Assert.Equal(todoItem.Description, result.Description);
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), result.CreatedDate.ToString("G"));
+            Assert.Equal(todoItem.AchievedDate.GetValueOrDefault().ToString("G"), result.AchievedDate.GetValueOrDefault().ToString("G"));
             Assert.Equal(expectedSql, resultSql);
         }
 
@@ -65,7 +69,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // arrange
             var todoItem = new TodoItem {
                 Description = "description",
-                Ordinal = 1
+                Ordinal = 1, 
+                CreatedDate = System.DateTime.Now
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -76,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description";
+            var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description,created-date";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // act
@@ -86,8 +91,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // assert
             Assert.Equal(todoItem.StringId, deserializeBody.Data.Id);
-            Assert.Equal(1, deserializeBody.Data.Attributes.Count);
+            Assert.Equal(2, deserializeBody.Data.Attributes.Count);
             Assert.Equal(todoItem.Description, deserializeBody.Data.Attributes["description"]);
+            Assert.Equal(todoItem.CreatedDate, deserializeBody.Data.Attributes["created-date"]);
         }
     }
 }
