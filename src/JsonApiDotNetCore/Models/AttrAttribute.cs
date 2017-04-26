@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -27,14 +28,12 @@ namespace JsonApiDotNetCore.Models
                 .GetType()
                 .GetProperty(InternalAttributeName);
 
-			if (propertyInfo != null)
-			{
-				Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+            if (propertyInfo != null)
+            {
+                var convertedValue = TypeHelper.ConvertType(newValue, propertyInfo.PropertyType);
 
-				var convertedValue = (newValue == null) ? null : Convert.ChangeType(newValue, t);
-
-				propertyInfo.SetValue(entity, convertedValue, null);
-			}
+                propertyInfo.SetValue(entity, convertedValue);
+            }
         }
     }
 }
