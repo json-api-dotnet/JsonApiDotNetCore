@@ -37,8 +37,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = new TodoItem {
                 Description = "description",
                 Ordinal = 1,
-				CreatedDate = System.DateTime.Now,
-				AchievedDate = System.DateTime.Now.AddDays(2)
+                CreatedDate = System.DateTime.Now,
+                AchievedDate = System.DateTime.Now.AddDays(2)
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -58,8 +58,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // assert
             Assert.Equal(0, result.Ordinal);
             Assert.Equal(todoItem.Description, result.Description);
-			Assert.Equal(todoItem.CreatedDate.ToString("G"), result.CreatedDate.ToString("G"));
-			Assert.Equal(todoItem.AchievedDate.GetValueOrDefault().ToString("G"), result.AchievedDate.GetValueOrDefault().ToString("G"));
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), result.CreatedDate.ToString("G"));
+            Assert.Equal(todoItem.AchievedDate.GetValueOrDefault().ToString("G"), result.AchievedDate.GetValueOrDefault().ToString("G"));
             Assert.Equal(expectedSql, resultSql);
         }
 
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = new TodoItem {
                 Description = "description",
                 Ordinal = 1, 
-				CreatedDate = System.DateTime.Now
+                CreatedDate = System.DateTime.Now
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todoItem.StringId, deserializeBody.Data.Id);
             Assert.Equal(2, deserializeBody.Data.Attributes.Count);
             Assert.Equal(todoItem.Description, deserializeBody.Data.Attributes["description"]);
-			Assert.Equal(todoItem.CreatedDate, deserializeBody.Data.Attributes["created-date"]);
+            Assert.Equal(todoItem.CreatedDate, deserializeBody.Data.Attributes["created-date"]);
         }
     }
 }

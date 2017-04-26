@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
-				.RuleFor(t => t.CreatedDate, f => f.Date.Past());
+                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         description = todoItem.Description,
                         ordinal = todoItem.Ordinal, 
-						createdDate = DateTime.Now
+                        createdDate = DateTime.Now
                     }
                 }
             };
@@ -148,7 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         description = todoItem.Description,
                         ordinal = todoItem.Ordinal,
-						createdDate = DateTime.Now
+                        createdDate = DateTime.Now
                     }
                 }
             };
@@ -306,7 +306,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         description = todoItem.Description,
                         ordinal = todoItem.Ordinal,
-						createdDate = DateTime.Now
+                        createdDate = DateTime.Now
                     }
                 }
             };
@@ -344,7 +344,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         description = todoItem.Description,
                         ordinal = todoItem.Ordinal,
-						createdDate = DateTime.Now
+                        createdDate = DateTime.Now
                     }
                 }
             };

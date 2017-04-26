@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
-				.RuleFor(t => t.CreatedDate, f => f.Date.Past());
+                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName());

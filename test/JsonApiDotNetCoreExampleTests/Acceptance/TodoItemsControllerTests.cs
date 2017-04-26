@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
-				.RuleFor(t => t.CreatedDate, f => f.Date.Past());
+                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
         }
 
         [Fact]
@@ -266,8 +266,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
-			Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-			Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(null, deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -299,8 +299,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
-			Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-			Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(null, deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -319,9 +319,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
-						{ "description", todoItem.Description },
-						{ "ordinal", todoItem.Ordinal },
-						{ "created-date", todoItem.CreatedDate }
+                        { "description", todoItem.Description },
+                        { "ordinal", todoItem.Ordinal },
+                        { "created-date", todoItem.CreatedDate }
                     },
                     relationships = new
                     {
@@ -354,8 +354,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
-			Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-			Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(null, deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -379,12 +379,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
-					{
-						{ "description", newTodoItem.Description },
-						{ "ordinal", newTodoItem.Ordinal },
-						{ "created-date", newTodoItem.CreatedDate }
-					}
-				}
+                    {
+                        { "description", newTodoItem.Description },
+                        { "ordinal", newTodoItem.Ordinal },
+                        { "created-date", newTodoItem.CreatedDate }
+                    }
+                }
             };
 
             var httpMethod = new HttpMethod("PATCH");
@@ -405,116 +405,116 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(newTodoItem.Description, deserializedBody.Description);
             Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
-			Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-			Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(null, deserializedBody.AchievedDate);
         }
 
-		[Fact]
-		public async Task Can_Patch_TodoItemWithNullable()
-		{
-			// Arrange
-			var person = new Person();
-			_context.People.Add(person);
-			_context.SaveChanges();
+        [Fact]
+        public async Task Can_Patch_TodoItemWithNullable()
+        {
+            // Arrange
+            var person = new Person();
+            _context.People.Add(person);
+            _context.SaveChanges();
 
-			var todoItem = _todoItemFaker.Generate();
-			todoItem.AchievedDate = System.DateTime.Now;
-			todoItem.Owner = person;
-			_context.TodoItems.Add(todoItem);
-			_context.SaveChanges();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.AchievedDate = System.DateTime.Now;
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
 
-			var newTodoItem = _todoItemFaker.Generate();
-			newTodoItem.AchievedDate = System.DateTime.Now.AddDays(2);
+            var newTodoItem = _todoItemFaker.Generate();
+            newTodoItem.AchievedDate = System.DateTime.Now.AddDays(2);
 
-			var content = new
-			{
-				data = new
-				{
-					type = "todo-items",
-					attributes = new Dictionary<string, object>()
-					{
-						{ "description", newTodoItem.Description },
-						{ "ordinal", newTodoItem.Ordinal },
-						{ "created-date", newTodoItem.CreatedDate },
-						{ "achieved-date", newTodoItem.AchievedDate }
-					}
-				}
-			};
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new Dictionary<string, object>()
+                    {
+                        { "description", newTodoItem.Description },
+                        { "ordinal", newTodoItem.Ordinal },
+                        { "created-date", newTodoItem.CreatedDate },
+                        { "achieved-date", newTodoItem.AchievedDate }
+                    }
+                }
+            };
 
-			var httpMethod = new HttpMethod("PATCH");
-			var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
 
-			var request = new HttpRequestMessage(httpMethod, route);
-			request.Content = new StringContent(JsonConvert.SerializeObject(content));
-			request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-			var description = new RequestProperties("Patch TodoItem");
+            var description = new RequestProperties("Patch TodoItem");
 
-			// Act
-			var response = await _fixture.MakeRequest<TodoItem>(description, request);
-			var body = await response.Content.ReadAsStringAsync();
-			var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(newTodoItem.Description, deserializedBody.Description);
-			Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
-			Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-			Assert.Equal(newTodoItem.AchievedDate.GetValueOrDefault().ToString("G"), deserializedBody.AchievedDate.GetValueOrDefault().ToString("G"));
-		}
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(newTodoItem.Description, deserializedBody.Description);
+            Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
+            Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(newTodoItem.AchievedDate.GetValueOrDefault().ToString("G"), deserializedBody.AchievedDate.GetValueOrDefault().ToString("G"));
+        }
 
-		[Fact]
-		public async Task Can_Patch_TodoItemWithNullValue()
-		{
-			// Arrange
-			var person = new Person();
-			_context.People.Add(person);
-			_context.SaveChanges();
+        [Fact]
+        public async Task Can_Patch_TodoItemWithNullValue()
+        {
+            // Arrange
+            var person = new Person();
+            _context.People.Add(person);
+            _context.SaveChanges();
 
-			var todoItem = _todoItemFaker.Generate();
-			todoItem.AchievedDate = System.DateTime.Now;
-			todoItem.Owner = person;
-			_context.TodoItems.Add(todoItem);
-			_context.SaveChanges();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.AchievedDate = System.DateTime.Now;
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
 
-			var newTodoItem = _todoItemFaker.Generate();
+            var newTodoItem = _todoItemFaker.Generate();
 
-			var content = new
-			{
-				data = new
-				{
-					type = "todo-items",
-					attributes = new Dictionary<string, object>()
-					{
-						{ "description", newTodoItem.Description },
-						{ "ordinal", newTodoItem.Ordinal },
-						{ "created-date", newTodoItem.CreatedDate },
-						{ "achieved-date", null }
-					}
-				}
-			};
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new Dictionary<string, object>()
+                    {
+                        { "description", newTodoItem.Description },
+                        { "ordinal", newTodoItem.Ordinal },
+                        { "created-date", newTodoItem.CreatedDate },
+                        { "achieved-date", null }
+                    }
+                }
+            };
 
-			var httpMethod = new HttpMethod("PATCH");
-			var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
 
-			var request = new HttpRequestMessage(httpMethod, route);
-			request.Content = new StringContent(JsonConvert.SerializeObject(content));
-			request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-			var description = new RequestProperties("Patch TodoItem");
+            var description = new RequestProperties("Patch TodoItem");
 
-			// Act
-			var response = await _fixture.MakeRequest<TodoItem>(description, request);
-			var body = await response.Content.ReadAsStringAsync();
-			var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            // Act
+            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
-			// Assert
-			Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-			Assert.Equal(newTodoItem.Description, deserializedBody.Description);
-			Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
-			Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-			Assert.Equal(null, deserializedBody.AchievedDate);
-		}
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(newTodoItem.Description, deserializedBody.Description);
+            Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
+            Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(null, deserializedBody.AchievedDate);
+        }
 
         [Fact]
         public async Task Can_Delete_TodoItem()
