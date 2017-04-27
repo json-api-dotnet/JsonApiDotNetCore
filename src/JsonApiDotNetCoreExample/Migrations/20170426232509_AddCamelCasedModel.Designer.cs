@@ -8,9 +8,10 @@ using JsonApiDotNetCoreExample.Data;
 namespace JsonApiDotNetCoreExample.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170426232509_AddCamelCasedModel")]
+    partial class AddCamelCasedModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)

@@ -1,8 +1,6 @@
 ﻿using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace JsonApiDotNetCoreExample.Data
 {
@@ -33,5 +31,8 @@ namespace JsonApiDotNetCoreExample.Data
 
         [Resource("todo-collections")]
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
+
+        [Resource("camelCasedModels")]
+        public DbSet<CamelCasedModel> CamelCasedModels { get; set; }
     }
 }

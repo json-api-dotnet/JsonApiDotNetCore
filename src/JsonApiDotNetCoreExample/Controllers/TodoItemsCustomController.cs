@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
+    [DisableRoutingConvention]
     [Route("custom/route/todo-items")]
     public class TodoItemsCustomController : CustomJsonApiController<TodoItem>
     {
