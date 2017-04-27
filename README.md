@@ -22,6 +22,7 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 		- [Non-Integer Type Keys](#non-integer-type-keys)
 	- [Routing](#routing)
 		- [Namespacing and Versioning URLs](#namespacing-and-versioning-urls)
+        - [Disable Convention](#disable-convention)
 	- [Defining Custom Data Access Methods](#defining-custom-data-access-methods)
 	- [Pagination](#pagination)
 	- [Filtering](#filtering)
@@ -242,6 +243,24 @@ You can add a namespace to the URL by specifying it in `ConfigureServices`:
 ```csharp
 services.AddJsonApi<AppDbContext>(
     opt => opt.Namespace = "api/v1");
+```
+
+#### Disable Convention
+
+You can disable the dasherized convention and specify your own template
+by using the `DisableRoutingConvention` Attribute:
+
+```csharp
+[DisableRoutingConvention]
+public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
+{
+    public CamelCasedModelsController(
+        IJsonApiContext jsonApiContext,
+        IResourceService<CamelCasedModel> resourceService,
+        ILoggerFactory loggerFactory) 
+        : base(jsonApiContext, resourceService, loggerFactory)
+    { }
+}
 ```
 
 ### Defining Custom Data Access Methods
