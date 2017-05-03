@@ -1,7 +1,4 @@
 ﻿using JsonApiDotNetCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Unit.Models

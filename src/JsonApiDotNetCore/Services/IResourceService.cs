@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Services
         where T : class, IIdentifiable<int>
     { }
 
-    public interface IResourceService<T, TId> 
+    public interface IResourceService<T, in TId> 
         where T : class, IIdentifiable<TId>
     {
         Task<IEnumerable<T>> GetAsync();

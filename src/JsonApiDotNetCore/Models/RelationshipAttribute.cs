@@ -12,8 +12,8 @@ namespace JsonApiDotNetCore.Models
         public string PublicRelationshipName { get; set; }
         public string InternalRelationshipName { get; set; }
         public Type Type { get; set; }
-        public bool IsHasMany { get { return this.GetType() == typeof(HasManyAttribute); } }
-        public bool IsHasOne { get { return this.GetType() == typeof(HasOneAttribute); } }
+        public bool IsHasMany => GetType() == typeof(HasManyAttribute);
+        public bool IsHasOne => GetType() == typeof(HasOneAttribute);
 
         public abstract void SetValue(object entity, object newValue);
 
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Models
 
         public override bool Equals(object obj)
         {
-            RelationshipAttribute attr = obj as RelationshipAttribute;
+            var attr = obj as RelationshipAttribute;
             if (attr == null)
             {
                 return false;

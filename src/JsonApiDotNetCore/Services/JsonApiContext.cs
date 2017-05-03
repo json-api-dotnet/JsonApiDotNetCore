@@ -3,6 +3,7 @@ using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCore.Services
 {
     public class JsonApiContext : IJsonApiContext
     {
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public JsonApiContext(
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,

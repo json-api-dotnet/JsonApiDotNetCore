@@ -13,6 +13,7 @@ using Microsoft.Extensions.Caching.Memory;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Formatters;
+using JsonApiDotNetCore.Internal.Generics;
 
 namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
 {

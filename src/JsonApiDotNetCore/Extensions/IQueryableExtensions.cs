@@ -8,22 +8,21 @@ using JsonApiDotNetCore.Internal.Query;
 
 namespace JsonApiDotNetCore.Extensions
 {
+    // ReSharper disable once InconsistentNaming
     public static class IQueryableExtensions
     {
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery)
         {
-            if (sortQuery.Direction == SortDirection.Descending)
-                return source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName);
-
-            return source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
+            return sortQuery.Direction == SortDirection.Descending 
+                ? source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName) 
+                : source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery)
         {
-            if (sortQuery.Direction == SortDirection.Descending)
-                return source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName);
-
-            return source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
+            return sortQuery.Direction == SortDirection.Descending 
+                ? source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName) 
+                : source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)
@@ -181,7 +180,9 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns)
         {
-            if (columns == null || columns.Count() == 0)
+            var enumeratedColumns = columns as IList<string> ?? columns.ToList();
+
+            if (columns == null || enumeratedColumns.Any() == false)
                 return source;
 
             var sourceType = source.ElementType;
@@ -191,7 +192,7 @@ namespace JsonApiDotNetCore.Extensions
             // {model}
             var parameter = Expression.Parameter(sourceType, "model");
 
-            var bindings = columns.Select(column => Expression.Bind(
+            var bindings = enumeratedColumns.Select(column => Expression.Bind(
                 resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
 
             // { new Model () { Property = model.Property } }
@@ -201,7 +202,7 @@ namespace JsonApiDotNetCore.Extensions
             var selector = Expression.Lambda(body, parameter);
 
             return source.Provider.CreateQuery<TSource>(
-                Expression.Call(typeof(Queryable), "Select", new Type[] { sourceType, resultType },
+                Expression.Call(typeof(Queryable), "Select", new[] { sourceType, resultType },
                 source.Expression, Expression.Quote(selector)));
         }
     }

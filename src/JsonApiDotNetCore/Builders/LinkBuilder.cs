@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -6,7 +5,7 @@ namespace JsonApiDotNetCore.Builders
 {
     public class LinkBuilder
     {
-        IJsonApiContext _context;
+        private readonly IJsonApiContext _context;
 
         public LinkBuilder(IJsonApiContext context)
         {

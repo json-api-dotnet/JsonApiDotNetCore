@@ -10,18 +10,18 @@ namespace JsonApiDotNetCore.Builders
 {
     public class ContextGraphBuilder : IContextGraphBuilder
     {
-        private List<ContextEntity> Entities;
+        private List<ContextEntity> _entities;
         private bool _usesDbContext;
         public ContextGraphBuilder()
         {
-            Entities = new List<ContextEntity>();
+            _entities = new List<ContextEntity>();
         }
 
         public IContextGraph Build()
         {
             var graph = new ContextGraph()
             {
-                Entities = Entities,
+                Entities = _entities,
                 UsesDbContext = _usesDbContext
             };
             return graph;
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Builders
         public void AddResource<TResource>(string pluralizedTypeName) where TResource : class
         {
             var entityType = typeof(TResource);
-            Entities.Add(new ContextEntity
+            _entities.Add(new ContextEntity
             {
                 EntityName = pluralizedTypeName,
                 EntityType = entityType,
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Builders
                 }
             }
 
-            Entities = entities;
+            _entities = entities;
         }
 
         private string GetResourceName(PropertyInfo property)

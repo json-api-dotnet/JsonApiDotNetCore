@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Internal
 {
     public class DasherizedRoutingConvention : IApplicationModelConvention
     {
-        private string _namespace;
+        private readonly string _namespace;
         public DasherizedRoutingConvention(string nspace)
         {
             _namespace = nspace;
@@ -20,12 +20,9 @@ namespace JsonApiDotNetCore.Internal
         {
             foreach (var controller in application.Controllers)
             {
-                var template = string.Empty;
-                
-                if (IsDasherizedJsonApiController(controller))
-                    template = $"{_namespace}/{controller.ControllerName.Dasherize()}";
-                else 
-                    template = GetTemplate(controller);
+                var template = IsDasherizedJsonApiController(controller) 
+                    ? $"{_namespace}/{controller.ControllerName.Dasherize()}" 
+                    : GetTemplate(controller);
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel()
                 {
@@ -45,10 +42,9 @@ namespace JsonApiDotNetCore.Internal
         {
             var type = controller.ControllerType;
             var routeAttr = type.GetCustomAttribute<RouteAttribute>();
-            if(routeAttr != null)
-                return ((RouteAttribute)routeAttr).Template;
-
-            return controller.ControllerName;
+            return routeAttr != null 
+                ? routeAttr.Template 
+                : controller.ControllerName;
         }
     }
 }

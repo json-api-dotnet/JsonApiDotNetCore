@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -69,9 +70,10 @@ namespace JsonApiDotNetCore.Data
 
             var orderedEntities = entities.Sort(sortQueries[0]);
 
-            if(sortQueries.Count() > 1)
-                for(var i=1; i < sortQueries.Count(); i++)
-                    orderedEntities = orderedEntities.Sort(sortQueries[i]);
+            if (sortQueries.Count <= 1) return orderedEntities;
+
+            for(var i=1; i < sortQueries.Count; i++)
+                orderedEntities = orderedEntities.Sort(sortQueries[i]);
 
             return orderedEntities;
         }
