@@ -20,8 +20,7 @@ namespace JsonApiDotNetCore.Configuration
             
             contextGraphBuilder.AddDbContext<TContext>();
 
-            if(builder != null)
-                builder(contextGraphBuilder);
+            builder?.Invoke(contextGraphBuilder);
 
             ContextGraph = contextGraphBuilder.Build();
         }

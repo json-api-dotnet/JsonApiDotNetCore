@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using DotNetCoreDocs;
-using DotNetCoreDocs.Models;
 using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -14,10 +13,8 @@ using Newtonsoft.Json;
 using Xunit;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Serialization;
-using System.Linq;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
-using System;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {

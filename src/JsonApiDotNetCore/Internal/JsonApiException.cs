@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Internal
 {
     public class JsonApiException : Exception
     {
-        private ErrorCollection _errors = new ErrorCollection();
+        private readonly ErrorCollection _errors = new ErrorCollection();
 
         public JsonApiException(ErrorCollection errorCollection)
         { 

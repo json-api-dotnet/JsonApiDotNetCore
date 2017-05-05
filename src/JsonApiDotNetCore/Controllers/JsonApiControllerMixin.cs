@@ -4,9 +4,6 @@ namespace JsonApiDotNetCore.Controllers
 {
     public abstract class JsonApiControllerMixin : Controller
     {
-        protected JsonApiControllerMixin()
-        { }
-
         protected IActionResult UnprocessableEntity()
         {
             return new StatusCodeResult(422);

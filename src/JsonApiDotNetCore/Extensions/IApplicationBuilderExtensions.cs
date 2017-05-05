@@ -1,8 +1,9 @@
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 
-namespace JsonApiDotNetCore.Routing
+namespace JsonApiDotNetCore.Extensions
 {
+    // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions
     {
         public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app, bool useMvc = true)

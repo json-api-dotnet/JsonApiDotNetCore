@@ -3,14 +3,13 @@
 using System.Reflection;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace JsonApiDotNetCore.Internal
 {
     public class DasherizedRoutingConvention : IApplicationModelConvention
     {
-        private string _namespace;
+        private readonly string _namespace;
         public DasherizedRoutingConvention(string nspace)
         {
             _namespace = nspace;
@@ -20,14 +19,11 @@ namespace JsonApiDotNetCore.Internal
         {
             foreach (var controller in application.Controllers)
             {
-                var template = string.Empty;
-                
-                if (IsDasherizedJsonApiController(controller))
-                    template = $"{_namespace}/{controller.ControllerName.Dasherize()}";
-                else 
-                    template = GetTemplate(controller);
+                if (IsDasherizedJsonApiController(controller) == false)
+                    continue;
 
-                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel()
+                var template = $"{_namespace}/{controller.ControllerName.Dasherize()}";
+                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {
                     Template = template
                 };
@@ -39,16 +35,6 @@ namespace JsonApiDotNetCore.Internal
             var type = controller.ControllerType;
             var notDisabled = type.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
             return notDisabled && type.IsSubclassOf(typeof(JsonApiControllerMixin));
-        }
-
-        private string GetTemplate(ControllerModel controller)
-        {
-            var type = controller.ControllerType;
-            var routeAttr = type.GetCustomAttribute<RouteAttribute>();
-            if(routeAttr != null)
-                return ((RouteAttribute)routeAttr).Template;
-
-            return controller.ControllerName;
         }
     }
 }

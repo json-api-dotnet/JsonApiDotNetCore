@@ -4,6 +4,8 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Generics;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Extensions
 {
+    // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
         public static void AddJsonApi<TContext>(this IServiceCollection services)

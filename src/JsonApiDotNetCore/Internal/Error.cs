@@ -30,6 +30,6 @@ namespace JsonApiDotNetCore.Internal
         public string Status { get; set; }
 
         [JsonIgnore]
-        public int StatusCode { get { return int.Parse(Status); } }
+        public int StatusCode => int.Parse(Status);
     }
 }

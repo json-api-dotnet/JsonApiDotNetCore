@@ -11,10 +11,12 @@ namespace JsonApiDotNetCore.Internal
 {
     public class JsonApiRouteHandler : IRouter
     {
-        private IActionContextAccessor _actionContextAccessor;
-        private IActionInvokerFactory _actionInvokerFactory;
-        private IActionSelector _actionSelector;
-        public JsonApiRouteHandler(IActionInvokerFactory actionInvokerFactory,
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IActionInvokerFactory _actionInvokerFactory;
+        private readonly IActionSelector _actionSelector;
+
+        public JsonApiRouteHandler(
+            IActionInvokerFactory actionInvokerFactory,
             IActionSelector actionSelector)
             : this(actionInvokerFactory, actionSelector, actionContextAccessor: null)
         {
@@ -28,7 +30,6 @@ namespace JsonApiDotNetCore.Internal
             // The IActionContextAccessor is optional. We want to avoid the overhead of using CallContext
             // if possible.
             _actionContextAccessor = actionContextAccessor;
-
             _actionInvokerFactory = actionInvokerFactory;
             _actionSelector = actionSelector;
         }

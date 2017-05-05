@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DotNetCoreDocs;
 using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
+using StringExtensions = JsonApiDotNetCoreExampleTests.Helpers.Extensions.StringExtensions;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -33,18 +36,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Select_Sparse_Fieldsets()
         {
             // arrange
-            var fields = new string[] { "Id", "Description", "CreatedDate", "AchievedDate" };
+            var fields = new List<string> { "Id", "Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem {
                 Description = "description",
                 Ordinal = 1,
-                CreatedDate = System.DateTime.Now,
-                AchievedDate = System.DateTime.Now.AddDays(2)
+                CreatedDate = DateTime.Now,
+                AchievedDate = DateTime.Now.AddDays(2)
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
-            var expectedSql = $@"SELECT 't'.'Id', 't'.'Description', 't'.'CreatedDate', 't'.'AchievedDate'
+            var expectedSql = StringExtensions.Normalize($@"SELECT 't'.'Id', 't'.'Description', 't'.'CreatedDate', 't'.'AchievedDate'
                                 FROM 'TodoItems' AS 't'
-                                WHERE 't'.'Id' = {todoItem.Id}".Normalize();
+                                WHERE 't'.'Id' = {todoItem.Id}");
 
             // act
             var query = _dbContext
@@ -52,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .Where(t=>t.Id == todoItem.Id)
                 .Select(fields);
 
-            var resultSql = query.ToSql().Normalize();
+            var resultSql = StringExtensions.Normalize(query.ToSql());
             var result = await query.FirstAsync();
 
             // assert
@@ -70,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = new TodoItem {
                 Description = "description",
                 Ordinal = 1, 
-                CreatedDate = System.DateTime.Now
+                CreatedDate = DateTime.Now
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
@@ -93,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todoItem.StringId, deserializeBody.Data.Id);
             Assert.Equal(2, deserializeBody.Data.Attributes.Count);
             Assert.Equal(todoItem.Description, deserializeBody.Data.Attributes["description"]);
-            Assert.Equal(todoItem.CreatedDate, deserializeBody.Data.Attributes["created-date"]);
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.Data.Attributes["created-date"]).ToString("G"));
         }
     }
 }

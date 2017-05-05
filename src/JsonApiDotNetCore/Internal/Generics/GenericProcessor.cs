@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Internal.Generics
 {
     public class GenericProcessor<T> : IGenericProcessor where T : class, IIdentifiable
     {
@@ -24,8 +24,6 @@ namespace JsonApiDotNetCore.Internal
 
         public void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var relationshipType = relationship.Type;
-
             if (relationship.IsHasMany)
             {
                 var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.StringId)).ToList();

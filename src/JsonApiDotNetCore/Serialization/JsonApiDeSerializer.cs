@@ -2,27 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Serialization
 {
     public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
-        private readonly DbContext _dbContext;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactor;
 
-        public JsonApiDeSerializer(DbContext dbContext, 
+        public JsonApiDeSerializer( 
             IJsonApiContext jsonApiContext,
             IGenericProcessorFactory genericProcessorFactory)
         {
-            _dbContext = dbContext;
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactor = genericProcessorFactory;
         }
@@ -115,10 +112,9 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (var attr in contextEntity.Relationships)
             {
-                if (attr.IsHasOne)
-                    entity = _setHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships);
-                else
-                    entity = _setHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
+                entity = attr.IsHasOne 
+                    ? _setHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships) 
+                    : _setHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
             }
 
             return entity;
