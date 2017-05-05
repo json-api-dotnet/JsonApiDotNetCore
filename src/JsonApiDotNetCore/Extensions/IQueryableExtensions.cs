@@ -177,12 +177,9 @@ namespace JsonApiDotNetCore.Extensions
             return body;
         }
 
-
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<string> columns)
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)
         {
-            var enumeratedColumns = columns as IList<string> ?? columns.ToList();
-
-            if (columns == null || enumeratedColumns.Any() == false)
+            if (columns == null || columns.Any() == false)
                 return source;
 
             var sourceType = source.ElementType;
@@ -192,7 +189,7 @@ namespace JsonApiDotNetCore.Extensions
             // {model}
             var parameter = Expression.Parameter(sourceType, "model");
 
-            var bindings = enumeratedColumns.Select(column => Expression.Bind(
+            var bindings = columns.Select(column => Expression.Bind(
                 resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
 
             // { new Model () { Property = model.Property } }

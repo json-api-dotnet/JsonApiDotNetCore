@@ -59,8 +59,8 @@ namespace JsonApiDotNetCore.Data
 
             if(filterQuery.IsAttributeOfRelationship)
                 return entities.Filter(new RelatedAttrFilterQuery(_jsonApiContext, filterQuery));
-            else
-                return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
+            
+            return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
         }
 
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
