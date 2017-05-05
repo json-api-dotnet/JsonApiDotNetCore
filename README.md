@@ -248,9 +248,10 @@ services.AddJsonApi<AppDbContext>(
 #### Disable Convention
 
 You can disable the dasherized convention and specify your own template
-by using the `DisableRoutingConvention` Attribute:
+by using the `DisableRoutingConvention` Attribute. 
 
 ```csharp
+[Route("[controller]")]
 [DisableRoutingConvention]
 public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
 {
@@ -260,6 +261,22 @@ public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
         ILoggerFactory loggerFactory) 
         : base(jsonApiContext, resourceService, loggerFactory)
     { }
+}
+```
+
+It is important to note that your routes *must* still end with the model name in the same format
+as the resource name. This is so that we can build accurrate resource links in the json:api document.
+For example, if you define a resource as `MyModels` the controller route must match:
+
+```csharp
+// resource definition
+builder.AddResource<TodoItem>("myModels");
+
+// controller definition
+[Route("api/myModels")]
+[DisableRoutingConvention]
+public class TodoItemsController : JsonApiController<TodoItem>
+{ //...
 }
 ```
 
@@ -287,7 +304,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddJsonApi(options => {
         options.Namespace = "api/v1";
         options.BuildContextGraph((builder) => {
-            builder.AddResource<MyModel>("my-models");
+            builder.AddResource<MyModel>("my-models");1
         });
     }, mvcBuilder);
     // ...

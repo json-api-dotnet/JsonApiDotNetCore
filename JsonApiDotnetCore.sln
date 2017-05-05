@@ -15,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B4D998-CECB-454D-9F32-085A897577BE}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoEntityFrameworkExample", "src\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj", "{570165EC-62B5-4684-A139-8D2A30DD4475}"
