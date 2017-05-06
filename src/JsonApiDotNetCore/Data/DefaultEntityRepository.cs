@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -58,8 +59,8 @@ namespace JsonApiDotNetCore.Data
 
             if(filterQuery.IsAttributeOfRelationship)
                 return entities.Filter(new RelatedAttrFilterQuery(_jsonApiContext, filterQuery));
-            else
-                return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
+            
+            return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
         }
 
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
@@ -69,9 +70,10 @@ namespace JsonApiDotNetCore.Data
 
             var orderedEntities = entities.Sort(sortQueries[0]);
 
-            if(sortQueries.Count() > 1)
-                for(var i=1; i < sortQueries.Count(); i++)
-                    orderedEntities = orderedEntities.Sort(sortQueries[i]);
+            if (sortQueries.Count <= 1) return orderedEntities;
+
+            for(var i=1; i < sortQueries.Count; i++)
+                orderedEntities = orderedEntities.Sort(sortQueries[i]);
 
             return orderedEntities;
         }
@@ -138,10 +140,11 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
-            if(entity.Relationships.Any(r => r.InternalRelationshipName == relationshipName))
-                return entities.Include(relationshipName);
+            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
+            if(relationship != null)
+                return entities.Include(relationship.InternalRelationshipName);
             
-            throw new JsonApiException("400", "Invalid relationship",
+            throw new JsonApiException("400", $"Invalid relationship {relationshipName} on {entity.EntityName}",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
 

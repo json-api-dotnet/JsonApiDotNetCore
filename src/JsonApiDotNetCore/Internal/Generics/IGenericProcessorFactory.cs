@@ -1,6 +1,6 @@
 using System;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Internal.Generics
 {
     /// <summary>
     /// Used to generate a generic operations processor when the types

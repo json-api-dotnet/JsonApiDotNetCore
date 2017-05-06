@@ -19,10 +19,10 @@ namespace JsonApiDotNetCore.Models
             }
             set {
                 if(value is IEnumerable)
-                    if(value is JObject)
-                        SingleData = ((JObject)value).ToObject<Dictionary<string, string>>();   
-                    else if(value is JArray)
-                        ManyData = ((JArray)value).ToObject<List<Dictionary<string, string>>>();
+                    if(value is JObject jObject)
+                        SingleData = jObject.ToObject<Dictionary<string, string>>();   
+                    else if(value is JArray jArray)
+                        ManyData = jArray.ToObject<List<Dictionary<string, string>>>();
                     else
                         ManyData = (List<Dictionary<string, string>>)value;
                 else

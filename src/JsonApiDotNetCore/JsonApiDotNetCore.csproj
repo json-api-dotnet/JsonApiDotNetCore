@@ -1,11 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>1.3.1</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net45+win8</PackageTargetFallback>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
+    <PackageProjectUrl>https://github.com/Research-Institute/json-api-dotnet-core</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Research-Institute/json-api-dotnet-core/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Research-Institute/json-api-dotnet-core</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.1" />

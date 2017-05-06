@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Models
         [HasMany("assigned-todo-items")]
         public virtual List<TodoItem> AssignedTodoItems { get; set; }
         
-        [HasMany("todo-item-collections")]
+        [HasMany("todo-collections")]
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)

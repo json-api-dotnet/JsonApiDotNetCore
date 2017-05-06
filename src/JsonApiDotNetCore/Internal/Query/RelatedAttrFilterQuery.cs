@@ -21,11 +21,9 @@ namespace JsonApiDotNetCore.Internal.Query
                 throw new JsonApiException("400", $"{relationshipArray[0]} is not a valid relationship.");
 
             var attribute = GetAttribute(relationship, relationshipArray[1]);
-            if (attribute == null)
-                throw new JsonApiException("400", $"{relationshipArray[1]} is not a valid attribute on {relationshipArray[0]}.");
 
             FilteredRelationship = relationship;
-            FilteredAttribute = attribute;
+            FilteredAttribute = attribute ?? throw new JsonApiException("400", $"{relationshipArray[1]} is not a valid attribute on {relationshipArray[0]}.");
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);
         }
@@ -33,7 +31,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public AttrAttribute FilteredAttribute { get; set; }
         public string PropertyValue { get; set; }
         public FilterOperations FilterOperation { get; set; }
-        public RelationshipAttribute FilteredRelationship { get; private set; }
+        public RelationshipAttribute FilteredRelationship { get; }
 
         private RelationshipAttribute GetRelationship(string propertyName)
         {

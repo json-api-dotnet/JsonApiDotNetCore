@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DotNetCoreDocs;
@@ -36,7 +36,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number());
+                .RuleFor(t => t.Ordinal, f => f.Random.Number())
+                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
 
             _todoItemCollectionFaker = new Faker<TodoItemCollection>()
                 .RuleFor(t => t.Name, f => f.Company.CatchPhrase());
@@ -227,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/people/{person.Id}?include=todo-items,todo-item-collections";
+            var route = $"/api/v1/people/{person.Id}?include=todo-items,todo-collections";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

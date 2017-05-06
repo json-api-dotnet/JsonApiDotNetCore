@@ -1,20 +1,20 @@
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class ContextGraph<T> : IContextGraph where T : DbContext
+    public class ContextGraph : IContextGraph
     {
         public List<ContextEntity> Entities { get; set; }
+        public bool UsesDbContext  { get; set; }
 
-        public ContextEntity GetContextEntity(string dbSetName)
+        public ContextEntity GetContextEntity(string entityName)
         {
             return Entities
                 .FirstOrDefault(e => 
-                    e.EntityName.ToLower() == dbSetName.ToLower());
+                    e.EntityName.ToLower() == entityName.ToLower());
         }
 
         public ContextEntity GetContextEntity(Type entityType)

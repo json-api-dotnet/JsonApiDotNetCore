@@ -9,18 +9,18 @@
 JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.org/) compliant web servers. Unlike other .Net implementations, this library provides all the required middleware to build a complete server. All you need to focus on is defining the resources. However, the library is also fully extensible so you can customize the implementation to meet your specific needs.
 
 # Table Of Contents
-- [Comprehensive Demo](#comprehensive-demo)
 - [Installation](#installation)
-- [Generators](#generators)
 - [Usage](#usage)
 	- [Middleware and Services](#middleware-and-services)
 	- [Defining Models](#defining-models)
 		- [Specifying Public Attributes](#specifying-public-attributes)
 		- [Relationships](#relationships)
+        - [Resource Names](#resource-names)
 	- [Defining Controllers](#defining-controllers)
 		- [Non-Integer Type Keys](#non-integer-type-keys)
 	- [Routing](#routing)
 		- [Namespacing and Versioning URLs](#namespacing-and-versioning-urls)
+        - [Disable Convention](#disable-convention)
 	- [Defining Custom Data Access Methods](#defining-custom-data-access-methods)
 	- [Pagination](#pagination)
 	- [Filtering](#filtering)
@@ -32,12 +32,6 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
     - [Sparse Fieldsets](#sparse-fieldsets)
 - [Tests](#tests)
 
-## Comprehensive Demo
-
-The following is a WIP demo showing how to create a web application using this library, EmberJS and PostgreSQL. If there are specific topics you'd like to see in future videos, comment on the playlist.
-
-[![Goto Playlist](https://img.youtube.com/vi/KAMuo6K7VcE/0.jpg)](https://www.youtube.com/watch?v=KAMuo6K7VcE&list=PLu4Bq53iqJJAo1RF0TY4Q5qCG7n9AqSZf)
-
 ## Installation
 
 - Visual Studio
@@ -47,14 +41,14 @@ Install-Package JsonApiDotnetCore
 
 - project.json
 ```json
-"JsonApiDotNetCore": "1.3.0"
+"JsonApiDotNetCore": "2.0.0"
 ```
 
 - *.csproj
 ```xml
 <ItemGroup>
     <!-- ... -->
-    <PackageReference Include="JsonApiDotNetCore" Version="1.3.0" />
+    <PackageReference Include="JsonApiDotNetCore" Version="2.0.0" />
 </ItemGroup>
 ```
 
@@ -64,21 +58,13 @@ For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-in
 (https://www.myget.org/F/research-institute/api/v3/index.json) 
 to your nuget configuration.
 
-## Generators
-
-You can install the [Yeoman generators](https://github.com/Research-Institute/json-api-dotnet-core-generators) 
-to make building applications much easier.
-
 ## Usage
 
-You need to do 3 things:
+The most basic use case requires 3 things:
 
 - Add Middleware and Services
 - Define Models
 - Define Controllers
-
-I recommend reading the details below, but once you're familiar with the
-setup, you can use the Yeoman generator to generate the required classes.
 
 ### Middleware and Services
 
@@ -169,6 +155,23 @@ public class TodoItem : Identifiable<int>
 }
 ```
 
+#### Resource Names
+
+If a DbContext is specified when adding the services, the context will be used to define the resources and their names.
+
+```csharp
+public DbSet<MyModel> SomeModels { get; set; } // this will be translated into "some-models"
+```
+
+However, you can specify a custom name like so:
+
+```csharp
+[Resource("some-models")]
+public DbSet<MyModel> MyModels { get; set; } // this will be translated into "some-models"
+```
+
+For further resource customizations, please see the section on [Defining Custom Data Access Methods](#defining-custom-data-access-methods).
+
 ### Defining Controllers
 
 You need to create controllers that inherit from `JsonApiController<TEntity>` or `JsonApiController<TEntity, TId>`
@@ -180,9 +183,9 @@ public class ThingsController : JsonApiController<Thing>
 {
     public ThingsController(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<Thing> entityRepository,
+        IResourceService<Thing> resourceService,
         ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, entityRepository, loggerFactory)
+    : base(jsonApiContext, resourceService, loggerFactory)
     { }
 }
 ```
@@ -199,9 +202,9 @@ public class ThingsController : JsonApiController<Thing, Guid>
 {
     public ThingsController(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<Thing, Guid> entityRepository,
+        IResourceService<Thing, Guid> resourceService,
         ILoggerFactory loggerFactory) 
-    : base(jsonApiContext, entityRepository, loggerFactory)
+    : base(jsonApiContext, resourceService, loggerFactory)
     { }
 }
 ```
@@ -226,9 +229,104 @@ services.AddJsonApi<AppDbContext>(
     opt => opt.Namespace = "api/v1");
 ```
 
+#### Disable Convention
+
+You can disable the dasherized convention and specify your own template
+by using the `DisableRoutingConvention` Attribute. 
+
+```csharp
+[Route("[controller]")]
+[DisableRoutingConvention]
+public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
+{
+    public CamelCasedModelsController(
+        IJsonApiContext jsonApiContext,
+        IResourceService<CamelCasedModel> resourceService,
+        ILoggerFactory loggerFactory) 
+        : base(jsonApiContext, resourceService, loggerFactory)
+    { }
+}
+```
+
+It is important to note that your routes *must* still end with the model name in the same format
+as the resource name. This is so that we can build accurrate resource links in the json:api document.
+For example, if you define a resource as `MyModels` the controller route must match:
+
+```csharp
+// resource definition
+builder.AddResource<TodoItem>("myModels");
+
+// controller definition
+[Route("api/myModels")]
+[DisableRoutingConvention]
+public class TodoItemsController : JsonApiController<TodoItem>
+{ //...
+}
+```
+
 ### Defining Custom Data Access Methods
 
-You can implement custom methods for accessing the data by creating an implementation of 
+By default, data retrieval is distributed across 3 layers:
+
+1. `JsonApiController`
+2. `EntityResourceService`
+3. `DefaultEntityRepository`
+
+Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible to keep the controllers free of unnecessary logic.
+
+#### Not Using Entity Framework?
+
+Out of the box, the library uses your `DbContext` to create a "ContextGraph" or map of all your models and their relationships. If, however, you have models that are not members of a `DbContext`, you can manually create this graph like so:
+
+```csharp
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add framework services.
+    var mvcBuilder = services.AddMvc();
+
+    services.AddJsonApi(options => {
+        options.Namespace = "api/v1";
+        options.BuildContextGraph((builder) => {
+            builder.AddResource<MyModel>("my-models");1
+        });
+    }, mvcBuilder);
+    // ...
+}
+```
+
+#### Custom Resource Service Implementation
+
+By default, this library uses Entity Framework. If you'd like to use another ORM that does not implement `IQueryable`, you can inject a custom service like so:
+
+```csharp
+// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddScoped<IResourceService<MyModel>, MyModelService>();
+    // ...
+}
+```
+
+```csharp
+// MyModelService.cs
+public class MyModelService : IResourceService<MyModel>
+{
+    private readonly IMyModelDAL _dal;
+    public MyModelService(IMyModelDAL dal)
+    { 
+        _dal = dal;
+    } 
+    public Task<IEnumerable<MyModel>> GetAsync()
+    {
+        return await _dal.GetModelAsync();
+    }
+}
+```
+
+#### Custom Entity Repository Implementation
+
+If you want to use EF, but need additional data access logic (such as authorization), you can implement custom methods for accessing the data by creating an implementation of 
 `IEntityRepository<TEntity, TId>`. If you only need minor changes you can override the 
 methods defined in `DefaultEntityRepository<TEntity, TId>`. The repository should then be
 add to the service collection in `Startup.ConfigureServices` like so:

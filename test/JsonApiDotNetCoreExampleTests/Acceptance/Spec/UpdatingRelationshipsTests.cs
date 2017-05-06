@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 using Bogus;
 using DotNetCoreDocs;
@@ -39,7 +37,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number());
+                .RuleFor(t => t.Ordinal, f => f.Random.Number())
+                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
         }
 
         [Fact]

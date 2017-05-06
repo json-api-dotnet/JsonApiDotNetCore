@@ -1,4 +1,5 @@
-using JsonApiDotNetCoreExample.Models;
+﻿using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExample.Data
@@ -12,6 +13,9 @@ namespace JsonApiDotNetCoreExample.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TodoItem>()
+                .Property(t => t.CreatedDate).HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
+            
+            modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.Assignee)
                 .WithMany(p => p.AssignedTodoItems)
                 .HasForeignKey(t => t.AssigneeId);
@@ -24,6 +28,11 @@ namespace JsonApiDotNetCoreExample.Data
 
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Person> People { get; set; }
+
+        [Resource("todo-collections")]
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
+
+        [Resource("camelCasedModels")]
+        public DbSet<CamelCasedModel> CamelCasedModels { get; set; }
     }
 }

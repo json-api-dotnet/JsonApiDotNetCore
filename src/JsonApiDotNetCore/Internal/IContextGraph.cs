@@ -8,5 +8,6 @@ namespace JsonApiDotNetCore.Internal
         string GetRelationshipName<TParent>(string relationshipName);
         ContextEntity GetContextEntity(string dbSetName);
         ContextEntity GetContextEntity(Type entityType);
+        bool UsesDbContext { get; set; }
     }
 }

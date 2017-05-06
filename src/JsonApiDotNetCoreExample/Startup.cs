@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using JsonApiDotNetCore.Routing;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
@@ -63,7 +62,7 @@ namespace JsonApiDotNetCoreExample
             ILoggerFactory loggerFactory,
             AppDbContext context)
         {
-            context.Database.Migrate();
+            context.Database.EnsureCreated();
 
             loggerFactory.AddConsole(Config.GetSection("Logging"));
             loggerFactory.AddDebug();

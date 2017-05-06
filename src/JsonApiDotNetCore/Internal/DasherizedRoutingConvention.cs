@@ -1,5 +1,6 @@
 // REF: https://github.com/aspnet/Entropy/blob/dev/samples/Mvc.CustomRoutingConvention/NameSpaceRoutingConvention.cs
 // REF: https://github.com/aspnet/Mvc/issues/5691
+using System.Reflection;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -8,7 +9,7 @@ namespace JsonApiDotNetCore.Internal
 {
     public class DasherizedRoutingConvention : IApplicationModelConvention
     {
-        private string _namespace;
+        private readonly string _namespace;
         public DasherizedRoutingConvention(string nspace)
         {
             _namespace = nspace;
@@ -17,21 +18,23 @@ namespace JsonApiDotNetCore.Internal
         public void Apply(ApplicationModel application)
         {
             foreach (var controller in application.Controllers)
-            {                
-                if (IsJsonApiController(controller))
+            {
+                if (IsDasherizedJsonApiController(controller) == false)
+                    continue;
+
+                var template = $"{_namespace}/{controller.ControllerName.Dasherize()}";
+                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {
-                    var template = $"{_namespace}/{controller.ControllerName.Dasherize()}";
-                    controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel()
-                    {
-                        Template = template
-                    };
-                }
+                    Template = template
+                };
             }
         }
 
-        private bool IsJsonApiController(ControllerModel controller)
+        private bool IsDasherizedJsonApiController(ControllerModel controller)
         {
-            return controller.ControllerType.IsSubclassOf(typeof(JsonApiControllerMixin));
+            var type = controller.ControllerType;
+            var notDisabled = type.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
+            return notDisabled && type.IsSubclassOf(typeof(JsonApiControllerMixin));
         }
     }
 }

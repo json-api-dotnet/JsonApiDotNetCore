@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Internal.Generics
 {
     public class GenericProcessorFactory : IGenericProcessorFactory
     {

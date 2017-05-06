@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Internal.Generics
 {
     public interface IGenericProcessor
     {

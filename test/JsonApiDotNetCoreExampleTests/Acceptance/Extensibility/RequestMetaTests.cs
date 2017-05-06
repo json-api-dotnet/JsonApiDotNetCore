@@ -11,8 +11,6 @@ using DotNetCoreDocs.Writers;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using System.Collections;
-using System.Diagnostics;
-using System.Threading;
 using JsonApiDotNetCoreExampleTests.Startups;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility

@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -35,7 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _jsonApiContext = fixture.GetService<IJsonApiContext>();
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number());
+                .RuleFor(t => t.Ordinal, f => f.Random.Number())
+                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
         }
 
         [Fact]
@@ -54,13 +55,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.People.Add(owner);
             await context.SaveChangesAsync();
 
-            var route = "/api/v1/todo-item-collections";
+            var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var content = new
             {
                 data = new
                 {
-                    type = "todo-item-collections",
+                    type = "todo-collections",
                     relationships = new
                     {
                         owner = new
@@ -107,7 +108,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinal = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal, 
+                        createdDate = DateTime.Now
                     }
                 }
             };
@@ -145,7 +147,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinal = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal,
+                        createdDate = DateTime.Now
                     }
                 }
             };
@@ -180,14 +183,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.People.Add(owner);
             await context.SaveChangesAsync();
 
-            var route = "/api/v1/todo-item-collections";
+            var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var clientDefinedId = Guid.NewGuid();
             var content = new
             {
                 data = new
                 {
-                    type = "todo-item-collections",
+                    type = "todo-collections",
                     id = $"{clientDefinedId}",
                     relationships = new
                     {
@@ -234,13 +237,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var route = "/api/v1/todo-item-collections";
+            var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var content = new
             {
                 data = new
                 {
-                    type = "todo-item-collections",
+                    type = "todo-collections",
                     relationships = new Dictionary<string, dynamic>
                     {
                         {  "owner",  new {
@@ -302,7 +305,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinal = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal,
+                        createdDate = DateTime.Now
                     }
                 }
             };
@@ -339,7 +343,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     attributes = new
                     {
                         description = todoItem.Description,
-                        ordinal = todoItem.Ordinal
+                        ordinal = todoItem.Ordinal,
+                        createdDate = DateTime.Now
                     }
                 }
             };

@@ -10,10 +10,8 @@ namespace JsonApiDotNetCore.Internal
         public int PageSize { get; set; }
         public int DefaultPageSize { get; set; }
         public int CurrentPage { get; set; }
-        public bool IsPaginated { get { return PageSize > 0; } }
-        public int TotalPages { 
-            get { return (TotalRecords == 0) ? -1: (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize)); }
-        }
+        public bool IsPaginated => PageSize > 0;
+        public int TotalPages => (TotalRecords == 0) ? -1: (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize));
 
         public RootLinks GetPageLinks(LinkBuilder linkBuilder)
         {            
@@ -22,9 +20,7 @@ namespace JsonApiDotNetCore.Internal
             
             var rootLinks = new RootLinks();
 
-            var includePageSize = DefaultPageSize != PageSize;
-
-             if(CurrentPage > 1)
+            if(CurrentPage > 1)
                 rootLinks.First = linkBuilder.GetPageLink(1, PageSize);
 
             if(CurrentPage > 1)

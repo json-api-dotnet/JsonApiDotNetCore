@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -6,7 +5,7 @@ namespace JsonApiDotNetCore.Builders
 {
     public class LinkBuilder
     {
-        IJsonApiContext _context;
+        private readonly IJsonApiContext _context;
 
         public LinkBuilder(IJsonApiContext context)
         {
@@ -26,10 +25,10 @@ namespace JsonApiDotNetCore.Builders
             
             for(var i = 1; i < segments.Length; i++)
             {
-                if(segments[i].ToLower() == entityName.Dasherize()) 
+                if(segments[i].ToLower() == entityName) 
                     break;
 
-                nSpace += $"/{segments[i].Dasherize()}";
+                nSpace += $"/{segments[i]}";
             }
                 
             return nSpace;
@@ -37,17 +36,17 @@ namespace JsonApiDotNetCore.Builders
 
         public string GetSelfRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/relationships/{child.Dasherize()}";
+            return $"{_context.BasePath}/{parent}/{parentId}/relationships/{child}";
         }
 
         public string GetRelatedRelationLink(string parent, string parentId, string child)
         {
-            return $"{_context.BasePath}/{parent.Dasherize()}/{parentId}/{child.Dasherize()}";
+            return $"{_context.BasePath}/{parent}/{parentId}/{child}";
         }
 
         public string GetPageLink(int pageOffset, int pageSize)
         {
-            return $"{_context.BasePath}/{_context.RequestEntity.EntityName.Dasherize()}?page[size]={pageSize}&page[number]={pageOffset}";
+            return $"{_context.BasePath}/{_context.RequestEntity.EntityName}?page[size]={pageSize}&page[number]={pageOffset}";
         }
     }
 }

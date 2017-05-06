@@ -37,17 +37,16 @@ namespace JsonApiDotNetCore.Middleware
 
         private static bool IsValidAcceptHeader(HttpContext context)
         {
-            var acceptHeaders = new StringValues();
-            if (context.Request.Headers.TryGetValue("Accept", out acceptHeaders))
+            if (context.Request.Headers.TryGetValue("Accept", out StringValues acceptHeaders) == false)
+                return true;
+
+            foreach (var acceptHeader in acceptHeaders)
             {
-                foreach (var acceptHeader in acceptHeaders)
-                {
-                    if (ContainsMediaTypeParameters(acceptHeader))
-                    {
-                        FlushResponse(context, 406);
-                        return false;
-                    }
-                }
+                if (ContainsMediaTypeParameters(acceptHeader) == false)
+                    continue;
+
+                FlushResponse(context, 406);
+                return false;
             }
             return true;
         }

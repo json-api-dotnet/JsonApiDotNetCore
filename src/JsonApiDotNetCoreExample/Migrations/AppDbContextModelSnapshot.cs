@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using JsonApiDotNetCoreExample.Data;
 
 namespace JsonApiDotNetCoreExample.Migrations
@@ -15,6 +14,18 @@ namespace JsonApiDotNetCoreExample.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "1.1.1");
+
+            modelBuilder.Entity("JsonApiDotNetCoreExample.Models.CamelCasedModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CompoundAttr");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CamelCasedModels");
+                });
 
             modelBuilder.Entity("JsonApiDotNetCoreExample.Models.Person", b =>
                 {
@@ -35,9 +46,15 @@ namespace JsonApiDotNetCoreExample.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("AchievedDate");
+
                     b.Property<int?>("AssigneeId");
 
                     b.Property<Guid?>("CollectionId");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Description");
 

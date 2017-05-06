@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Internal.Query
 {
     public class QuerySet
     {
-        IJsonApiContext _jsonApiContext;
+        private readonly IJsonApiContext _jsonApiContext;
 
         public QuerySet(
             IJsonApiContext jsonApiContext, 
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Internal.Query
             var prefix = operation[0];
             value = operation[1];
 
-            return (prefix, value);;
+            return (prefix, value);
         }
 
         private PageQuery ParsePageQuery(string key, string value)
@@ -147,7 +147,6 @@ namespace JsonApiDotNetCore.Internal.Query
 
             return value
                 .Split(',')
-                .Select(s => s.ToProperCase())
                 .ToList();
         }
 
@@ -158,7 +157,7 @@ namespace JsonApiDotNetCore.Internal.Query
 
             var includedFields = new List<string> { "Id" };
 
-            if(typeName != _jsonApiContext.RequestEntity.EntityName.Dasherize()) 
+            if(typeName != _jsonApiContext.RequestEntity.EntityName) 
                 return includedFields;
 
             var fields = value.Split(',');
