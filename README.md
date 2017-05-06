@@ -10,7 +10,6 @@ JsonApiDotnetCore provides a framework for building [json:api](http://jsonapi.or
 
 # Table Of Contents
 - [Installation](#installation)
-- [Generators](#generators)
 - [Usage](#usage)
 	- [Middleware and Services](#middleware-and-services)
 	- [Defining Models](#defining-models)
@@ -42,14 +41,14 @@ Install-Package JsonApiDotnetCore
 
 - project.json
 ```json
-"JsonApiDotNetCore": "1.3.0"
+"JsonApiDotNetCore": "2.0.0"
 ```
 
 - *.csproj
 ```xml
 <ItemGroup>
     <!-- ... -->
-    <PackageReference Include="JsonApiDotNetCore" Version="1.3.0" />
+    <PackageReference Include="JsonApiDotNetCore" Version="2.0.0" />
 </ItemGroup>
 ```
 
@@ -59,21 +58,13 @@ For pre-releases, add the [MyGet](https://www.myget.org/feed/Details/research-in
 (https://www.myget.org/F/research-institute/api/v3/index.json) 
 to your nuget configuration.
 
-## Generators
-
-You can install the [Yeoman generators](https://github.com/Research-Institute/json-api-dotnet-core-generators) 
-to make building applications much easier.
-
 ## Usage
 
-You need to do 3 things:
+The most basic use case requires 3 things:
 
 - Add Middleware and Services
 - Define Models
 - Define Controllers
-
-I recommend reading the details below, but once you're familiar with the
-setup, you can use the Yeoman generator to generate the required classes.
 
 ### Middleware and Services
 
