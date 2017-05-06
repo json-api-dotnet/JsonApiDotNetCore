@@ -288,7 +288,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddJsonApi(options => {
         options.Namespace = "api/v1";
         options.BuildContextGraph((builder) => {
-            builder.AddResource<MyModel>("my-models");1
+            builder.AddResource<MyModel>("my-models");
         });
     }, mvcBuilder);
     // ...
