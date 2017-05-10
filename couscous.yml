@@ -1,6 +1,6 @@
 template:
     # Name of the directory containing the website template (default is "website")
-    # directory: Template-Dark
+    # directory: docs/Template-Dark
     # Or if you are using a remote template, you can set the Git URL
     url: https://github.com/jaredcnance/Template-Dark.git
     # Name of the index file (default is "README.md")

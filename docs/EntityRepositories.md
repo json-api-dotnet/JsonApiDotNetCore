@@ -9,10 +9,13 @@ If you want to use EF, but need additional data access logic (such as authorizat
 methods defined in [DefaultEntityRepository&lt;TEntity, TId&gt;](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/src/JsonApiDotNetCore/Data/DefaultEntityRepository.cs). 
 
 The repository should then be
-add to the service collection in `Startup.ConfigureServices` like so:
+add to the service collection in `Startup.cs` like so:
 
 ```csharp
-services.AddScoped<IEntityRepository<MyEntity,Guid>, MyAuthorizedEntityRepository>();
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddScoped<IEntityRepository<MyEntity,Guid>, MyAuthorizedEntityRepository>();
+    // ...
+}
 ```
 
 A sample implementation that performs data authorization might look like:

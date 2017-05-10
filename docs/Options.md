@@ -11,11 +11,11 @@ received with a client generated id. However, this can be allowed by setting the
 flag in the options:
 
 ```csharp
-services.AddJsonApi<AppDbContext>(opt =>
-{
-    opt.AllowClientGeneratedIds = true;
-    // ..
-});
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(
+        opt => opt.AllowClientGeneratedIds = true);
+    // ...
+}
 ```
 
 ## Pagination
@@ -24,8 +24,11 @@ If you would like pagination implemented by default, you can specify the page si
 when setting up the services:
 
 ```csharp
- services.AddJsonApi<AppDbContext>(
-     opt => opt.DefaultPageSize = 10);
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(
+        opt => opt.DefaultPageSize = 10);
+    // ...
+}
 ```
 
 ### Total Record Count
@@ -33,9 +36,12 @@ when setting up the services:
 The total number of records can be added to the document meta by setting it in the options:
 
 ```csharp
-services.AddJsonApi<AppDbContext>(opt =>
-{
-    opt.DefaultPageSize = 5;
-    opt.IncludeTotalRecordCount = true;
-});
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(opt =>
+    {
+        opt.DefaultPageSize = 5;
+        opt.IncludeTotalRecordCount = true;
+    });
+    // ...
+}
 ```

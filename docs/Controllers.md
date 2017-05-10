@@ -7,7 +7,6 @@ currentMenu: controllers
 You need to create controllers that inherit from [JsonApiController&lt;TEntity&gt;](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs).
 
 ```csharp
-[Route("api/[controller]")]
 public class ThingsController : JsonApiController<Thing>
 {
     public ThingsController(
@@ -26,7 +25,6 @@ you should explicitly declare it in the controller
 and service generic type definitions:
 
 ```csharp
-[Route("api/[controller]")]
 public class ThingsController : JsonApiController<Thing, Guid>
                                 //---------------------- ^^^^
 {
@@ -44,7 +42,7 @@ public class ThingsController : JsonApiController<Thing, Guid>
 
 If you need to customize things at the controller level, you can override the virtual
 methods. Please be aware that this is not the place for advanced business logic
-which should be performed at the [service](resourceServices.html) or [repository](entityRepositories.html) layers. Here is an example override at the controller layer:
+which should be performed at the [service](resourceservices.html) or [repository](entityrepositories.html) layers. Here is an example override at the controller layer:
 
 ```csharp
 public class TodoItemsController : JsonApiController<TodoItem>
