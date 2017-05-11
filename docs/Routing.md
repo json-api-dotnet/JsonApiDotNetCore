@@ -6,11 +6,11 @@ currentMenu: routing
 
 By default the library will configure routes for each controller. 
 Based on the [recommendations](http://jsonapi.org/recommendations/)
-outlined in the JSONAPI spec, routes are hyphenated. For example:
+outlined in the JSONAPI spec, routes are hyphenated.
 
-```
-/todo-items --> TodoItemsController
-NOT /todoItems
+```http
+GET /api/compound-models HTTP/1.1
+Accept: application/vnd.api+json
 ```
 
 ## Namespacing and Versioning URLs
@@ -18,8 +18,10 @@ NOT /todoItems
 You can add a namespace to the URL by specifying it in `ConfigureServices`:
 
 ```csharp
-services.AddJsonApi<AppDbContext>(
-    opt => opt.Namespace = "api/v1");
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(
+        opt => opt.Namespace = "api/v1");
+}
 ```
 
 ## Disable Convention
@@ -30,8 +32,7 @@ by using the `DisableRoutingConvention` Attribute.
 ```csharp
 [Route("[controller]")]
 [DisableRoutingConvention]
-public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
-{
+public class CamelCasedModelsController : JsonApiController<CamelCasedModel> {
     public CamelCasedModelsController(
         IJsonApiContext jsonApiContext,
         IResourceService<CamelCasedModel> resourceService,
@@ -46,13 +47,19 @@ as the resource name. This is so that we can build accurrate resource links in t
 For example, if you define a resource as `MyModels` the controller route must match:
 
 ```csharp
-// resource definition
-builder.AddResource<TodoItem>("myModels");
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi(options => {
+        options.BuildContextGraph((builder) => {
+            // resource definition
+            builder.AddResource<TodoItem>("myModels");
+        });
+    });
+}
 
 // controller definition
 [Route("api/myModels")]
 [DisableRoutingConvention]
-public class TodoItemsController : JsonApiController<TodoItem>
-{ //...
+public class TodoItemsController : JsonApiController<TodoItem> { 
+    //...
 }
 ```

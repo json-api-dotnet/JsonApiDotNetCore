@@ -43,8 +43,8 @@ public class MyEntityRepository : DefaultEntityRepository<MyEntity>
         // use the base filtering method    
         entities = base.Filter(entities, filterQuery);
 	
-	// implement custom method
-	return ApplyMyCustomFilter(entities, filterQuery);
+        // implement custom method
+        return ApplyMyCustomFilter(entities, filterQuery);
     }
 }
 ```

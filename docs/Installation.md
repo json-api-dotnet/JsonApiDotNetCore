@@ -4,6 +4,11 @@ currentMenu: installation
 
 # Installation
 
+- CLI
+```
+$ dotnet add package jsonapidotnetcore
+```
+
 - Visual Studio
 ```
 Install-Package JsonApiDotnetCore
@@ -15,11 +20,6 @@ Install-Package JsonApiDotnetCore
     <!-- Be sure to check NuGet for the latest version # -->
     <PackageReference Include="JsonApiDotNetCore" Version="2.0.1" />
 </ItemGroup>
-```
-
-- CLI
-```
-$ dotnet add package jsonapidotnetcore
 ```
 
 Click [here](https://www.nuget.org/packages/JsonApiDotnetCore/) for the latest NuGet version.
