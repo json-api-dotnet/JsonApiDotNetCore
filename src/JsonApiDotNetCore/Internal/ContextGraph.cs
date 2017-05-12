@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Internal
                     e.EntityType == entityType)
                 .Relationships
                 .FirstOrDefault(r => 
-                    r.InternalRelationshipName.ToLower() == relationshipName.ToLower())
+                    r.PublicRelationshipName.ToLower() == relationshipName.ToLower())
                 ?.InternalRelationshipName;
         }
     }
