@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Services
         public async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
             relationshipName = _jsonApiContext.ContextGraph
-                    .GetRelationshipName<T>(relationshipName.ToProperCase());
+                    .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
                 throw new JsonApiException("422", "Relationship name not specified.");
