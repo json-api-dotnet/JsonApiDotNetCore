@@ -49,7 +49,10 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TEntity> Get()
         {
-            return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
+            if(_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Any())
+                return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
+
+            return _dbSet;
         }
 
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities,  FilterQuery filterQuery)
@@ -85,11 +88,15 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
+            _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
+
             var result = await Get()
                 .Include(relationshipName)
                 .Where(e => e.Id.Equals(id))
                 .ToListAsync();
-                
+            
+            _logger.LogDebug($"[JADN] Found {result.Count} entity");
+
             return result.SingleOrDefault();
         }
 
