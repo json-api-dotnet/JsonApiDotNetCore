@@ -85,9 +85,12 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
-            return await Get()
+            var result = await Get()
                 .Include(relationshipName)
-                .SingleOrDefaultAsync(e => e.Id.Equals(id));
+                .Where(e => e.Id.Equals(id))
+                .ToListAsync();
+                
+            return result.SingleOrDefault();
         }
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
