@@ -6,6 +6,7 @@ branches:
   only:
   - master
   - develop
+  - unstable
 nuget:
   disable_publish_on_pr: true
 build_script:
@@ -23,6 +24,13 @@ deploy:
   skip_symbols: true
   on:
     branch: develop
+- provider: NuGet
+  server: https://www.myget.org/F/jadnc/api/v2/package
+  api_key:
+    secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
+  skip_symbols: true
+  on:
+    branch: unstable
 - provider: NuGet
   name: production
   api_key:
