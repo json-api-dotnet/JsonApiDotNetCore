@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,17 @@ namespace JsonApiDotNetCore.Controllers
             return new StatusCodeResult(403);
         }
 
+        protected IActionResult Error(Error error)
+        {
+            var errorCollection = new ErrorCollection {
+                Errors = new List<Error> { error }
+            };
+            var result = new ObjectResult(errorCollection);
+            result.StatusCode = error.StatusCode;
+
+            return result;
+        }
+
         protected IActionResult Errors(ErrorCollection errors)
         {
             var result = new ObjectResult(errors);
@@ -27,7 +39,7 @@ namespace JsonApiDotNetCore.Controllers
         private int GetErrorStatusCode(ErrorCollection errors) 
         {
             var statusCodes = errors.Errors
-                .Select(e => (int)e.StatusCode)
+                .Select(e => e.StatusCode)
                 .Distinct()
                 .ToList();
 
