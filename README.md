@@ -21,3 +21,4 @@ There are several blockers to be aware of:
 - Microsoft.AspNetCore.* packages target the runtime (netcoreapp) instead of netstandard. 
 This will be fixed in future versions.
 - EF bug against netcoreapp2.0 runtime ([EntityFramework#8021](https://github.com/aspnet/EntityFramework/issues/8021))
+- Can't run acceptance testing against postgres on preview runtime [pgsql.EntityFrameworkCore.PostgreSQL#171](https://github.com/npgsql/Npgsql.EntityFrameworkCore.PostgreSQL/issues/171#issuecomment-301287257)
