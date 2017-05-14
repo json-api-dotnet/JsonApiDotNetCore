@@ -3,6 +3,7 @@ $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
 dotnet restore
 
+dotnet test ./test/UnitTests/UnitTests.csproj
 dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
 dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj
 
