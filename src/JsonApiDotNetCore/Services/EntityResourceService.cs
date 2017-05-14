@@ -87,11 +87,13 @@ namespace JsonApiDotNetCore.Services
         public async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
             relationshipName = _jsonApiContext.ContextGraph
-                    .GetRelationshipName<T>(relationshipName.ToProperCase());
+                    .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
                 throw new JsonApiException("422", "Relationship name not specified.");
 
+            _logger.LogTrace($"Looking up '{relationshipName}'...");
+                                       
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (entity == null)
                 throw new JsonApiException("404", $"Relationship {relationshipName} not found.");
@@ -116,7 +118,7 @@ namespace JsonApiDotNetCore.Services
         public async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<DocumentData> relationships)
         {
             relationshipName = _jsonApiContext.ContextGraph
-                      .GetRelationshipName<T>(relationshipName.ToProperCase());
+                      .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
                 throw new JsonApiException("422", "Relationship name not specified.");

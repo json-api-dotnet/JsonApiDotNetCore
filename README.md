@@ -11,3 +11,14 @@ A framework for building [json:api](http://jsonapi.org/) compliant web servers. 
 ## Installation And Usage
 
 See the documentation [here](https://research-institute.github.io/json-api-dotnet-core)
+
+
+## .Net Core v2 Notes
+
+Branch `feat/core-2` is where I am working on .Net Core 2 compatibility tests and package upgrades.
+There are several blockers to be aware of:
+
+- Microsoft.AspNetCore.* packages target the runtime (netcoreapp) instead of netstandard. 
+This will be fixed in future versions.
+- EF bug against netcoreapp2.0 runtime ([EntityFramework#8021](https://github.com/aspnet/EntityFramework/issues/8021))
+- Can't run acceptance testing against postgres on preview runtime [pgsql.EntityFrameworkCore.PostgreSQL#171](https://github.com/npgsql/Npgsql.EntityFrameworkCore.PostgreSQL/issues/171#issuecomment-301287257)

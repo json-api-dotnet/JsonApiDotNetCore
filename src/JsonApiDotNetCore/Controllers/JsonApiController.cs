@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Controllers
         [HttpGet("{id}/relationships/{relationshipName}")]
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
-            var relationship = _resourceService.GetRelationshipAsync(id, relationshipName);
+            var relationship = _resourceService.GetRelationshipsAsync(id, relationshipName);
             if(relationship == null) 
                 return NotFound();
             

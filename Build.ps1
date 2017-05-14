@@ -1,7 +1,12 @@
 $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
-dotnet restore .\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj
+dotnet restore
+
+dotnet test ./test/UnitTests/UnitTests.csproj
+dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
+dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj
+
 dotnet build .\src\JsonApiDotNetCore -c Release
 
 echo "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"

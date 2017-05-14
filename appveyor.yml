@@ -1,17 +1,40 @@
 version: '{build}'
 os: Visual Studio 2017
+
+environment:
+  POSTGRES_PORT: tcp://localhost:5432
+  POSTGRES_ENV_POSTGRES_USER: postgres
+  POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
+  POSTGRES_ENV_POSTGRES_DB: JsonApiDotNetCoreExample
+  PGUSER: postgres
+  PGPASSWORD: Password12!
+  Data:DefaultConnection: "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=Password12!"
+
 pull_requests:
   do_not_increment_build_number: true
+
 branches:
   only:
   - master
   - develop
+  - unstable
+
 nuget:
   disable_publish_on_pr: true
+
+init:
+  - SET PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
+
+services:  
+  - postgresql
+
 build_script:
+- ps: createdb JsonApiDotNetCoreExample
 - ps: dotnet --version
 - ps: .\Build.ps1
+
 test: off
+
 artifacts:
 - path: .\**\artifacts\**\*.nupkg
   name: NuGet
@@ -23,6 +46,13 @@ deploy:
   skip_symbols: true
   on:
     branch: develop
+- provider: NuGet
+  server: https://www.myget.org/F/jadnc/api/v2/package
+  api_key:
+    secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
+  skip_symbols: true
+  on:
+    branch: unstable
 - provider: NuGet
   name: production
   api_key:
