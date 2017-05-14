@@ -31,6 +31,11 @@ namespace JsonApiDotNetCore.Serialization
             return entity;
         }
 
+        public object Deserialize<TEntity>(string requestBody)
+        {
+            return (TEntity)Deserialize(requestBody);
+        }
+
         public object DeserializeRelationship(string requestBody)
         {
             var data = JToken.Parse(requestBody)["data"];
