@@ -31,8 +31,8 @@ public override async Task<IActionResult> PostAsync([FromBody] MyEntity entity)
         return Error(new CustomError("507", "Database is full.", "Theres no more room.", "Sorry."));
 
     if(model.Validations.IsValid == false)
-        return Errors(model.Validations.Select(v => v.GetErrors()));
-        
+        return Errors(model.Validations.GetErrors());
+
     // ...
 }
 ```
