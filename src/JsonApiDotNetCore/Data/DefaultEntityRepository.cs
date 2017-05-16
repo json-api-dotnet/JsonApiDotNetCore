@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Data
         {
             if(_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Any())
                 return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
-
+            
             return _dbSet;
         }
 
@@ -92,12 +92,9 @@ namespace JsonApiDotNetCore.Data
 
             var result = await Get()
                 .Include(relationshipName)
-                .Where(e => e.Id.Equals(id))
-                .ToListAsync();
-            
-            _logger.LogDebug($"[JADN] Found {result.Count} entity");
+                .SingleOrDefaultAsync(e => e.Id.Equals(id));
 
-            return result.SingleOrDefault();
+            return result;
         }
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
