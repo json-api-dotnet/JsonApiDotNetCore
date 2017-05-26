@@ -25,7 +25,6 @@ namespace JsonApiDotNetCore.Services
             Options = options;
             MetaBuilder = metaBuilder;
             GenericProcessorFactory = genericProcessorFactory;
-            RelationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
         }
 
         public JsonApiOptions Options { get; set; }
@@ -39,7 +38,8 @@ namespace JsonApiDotNetCore.Services
         public PageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
-        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
+        public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
+        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
 
         public IJsonApiContext ApplyContext<T>()
         {
@@ -47,8 +47,8 @@ namespace JsonApiDotNetCore.Services
             var path = context.Request.Path.Value.Split('/');
 
             RequestEntity = ContextGraph.GetContextEntity(typeof(T));
-            
-            if(context.Request.Query.Any())
+
+            if (context.Request.Query.Any())
             {
                 QuerySet = new QuerySet(this, context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;
@@ -63,12 +63,13 @@ namespace JsonApiDotNetCore.Services
 
         private PageManager GetPageManager()
         {
-            if(Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
+            if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
                 return new PageManager();
-            
-            var query = QuerySet?.PageQuery ?? new PageQuery(); 
 
-            return new PageManager {
+            var query = QuerySet?.PageQuery ?? new PageQuery();
+
+            return new PageManager
+            {
                 DefaultPageSize = Options.DefaultPageSize,
                 CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize

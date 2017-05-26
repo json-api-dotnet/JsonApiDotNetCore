@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization
         public object Deserialize(string requestBody)
         {
             var document = JsonConvert.DeserializeObject<Document>(requestBody);
-            var entity = DataToObject(document.Data);
+            var entity = DocumentToObject(document.Data);
             return entity;
         }
 
@@ -46,7 +46,6 @@ namespace JsonApiDotNetCore.Serialization
             return new List<DocumentData> { data.ToObject<DocumentData>() };
         }
 
-
         public List<TEntity> DeserializeList<TEntity>(string requestBody)
         {
             var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
@@ -54,22 +53,22 @@ namespace JsonApiDotNetCore.Serialization
             var deserializedList = new List<TEntity>();
             foreach (var data in documents.Data)
             {
-                var entity = DataToObject(data);
+                var entity = DocumentToObject(data);
                 deserializedList.Add((TEntity)entity);
             }
 
             return deserializedList;
         }
 
-        private object DataToObject(DocumentData data)
+        private object DocumentToObject(DocumentData data)
         {
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type);
             _jsonApiContext.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
             
-            entity = _setEntityAttributes(entity, contextEntity, data.Attributes);
-            entity = _setRelationships(entity, contextEntity, data.Relationships);
+            entity = SetEntityAttributes(entity, contextEntity, data.Attributes);
+            entity = SetRelationships(entity, contextEntity, data.Relationships);
 
             var identifiableEntity = (IIdentifiable)entity;
 
@@ -79,7 +78,7 @@ namespace JsonApiDotNetCore.Serialization
             return identifiableEntity;
         }
 
-        private object _setEntityAttributes(
+        private object SetEntityAttributes(
             object entity, ContextEntity contextEntity, Dictionary<string, object> attributeValues)
         {
             if (attributeValues == null || attributeValues.Count == 0)
@@ -99,13 +98,14 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
+                    _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
                 }
             }
 
             return entity;
         }
 
-        private object _setRelationships(
+        private object SetRelationships(
             object entity, 
             ContextEntity contextEntity, 
             Dictionary<string, RelationshipData> relationships)
@@ -118,14 +118,14 @@ namespace JsonApiDotNetCore.Serialization
             foreach (var attr in contextEntity.Relationships)
             {
                 entity = attr.IsHasOne 
-                    ? _setHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships) 
-                    : _setHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
+                    ? SetHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships) 
+                    : SetHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
             }
 
             return entity;
         }
 
-        private object _setHasOneRelationship(object entity, 
+        private object SetHasOneRelationship(object entity, 
             PropertyInfo[] entityProperties, 
             RelationshipAttribute attr, 
             ContextEntity contextEntity, 
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Serialization
             return entity;
         }
 
-        private object _setHasManyRelationship(object entity,
+        private object SetHasManyRelationship(object entity,
             PropertyInfo[] entityProperties, 
             RelationshipAttribute attr, 
             ContextEntity contextEntity, 
