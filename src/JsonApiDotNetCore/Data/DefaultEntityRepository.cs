@@ -111,10 +111,8 @@ namespace JsonApiDotNetCore.Data
             if (oldEntity == null)
                 return null;
 
-            _jsonApiContext.RequestEntity.Attributes.ForEach(attr =>
-            {
-                attr.SetValue(oldEntity, attr.GetValue(entity));
-            });
+            foreach(var attr in _jsonApiContext.AttributesToUpdate)
+                attr.Key.SetValue(oldEntity, attr.Value);
 
             foreach(var relationship in _jsonApiContext.RelationshipsToUpdate)
                 relationship.Key.SetValue(oldEntity, relationship.Value);

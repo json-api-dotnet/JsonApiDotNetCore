@@ -22,6 +22,7 @@ namespace JsonApiDotNetCore.Services
         PageManager PageManager { get; set; }
         IMetaBuilder MetaBuilder { get; set; }
         IGenericProcessorFactory GenericProcessorFactory { get; set; }
+        Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
         Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
     }
 }
