@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -13,19 +15,22 @@ namespace JsonApiDotNetCore.Services
     public class JsonApiContext : IJsonApiContext
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IDbContextResolver _contextResolver;
+
         public JsonApiContext(
+            IDbContextResolver contextResolver,
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,
             JsonApiOptions options,
             IMetaBuilder metaBuilder,
             IGenericProcessorFactory genericProcessorFactory)
         {
+            _contextResolver = contextResolver;
             ContextGraph = contextGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
             MetaBuilder = metaBuilder;
             GenericProcessorFactory = genericProcessorFactory;
-            RelationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
         }
 
         public JsonApiOptions Options { get; set; }
@@ -39,7 +44,8 @@ namespace JsonApiDotNetCore.Services
         public PageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
-        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
+        public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
+        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
 
         public IJsonApiContext ApplyContext<T>()
         {
@@ -47,8 +53,8 @@ namespace JsonApiDotNetCore.Services
             var path = context.Request.Path.Value.Split('/');
 
             RequestEntity = ContextGraph.GetContextEntity(typeof(T));
-            
-            if(context.Request.Query.Any())
+
+            if (context.Request.Query.Any())
             {
                 QuerySet = new QuerySet(this, context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;
@@ -61,14 +67,17 @@ namespace JsonApiDotNetCore.Services
             return this;
         }
 
+        public IDbContextResolver GetDbContextResolver() => _contextResolver;
+
         private PageManager GetPageManager()
         {
-            if(Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
+            if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
                 return new PageManager();
-            
-            var query = QuerySet?.PageQuery ?? new PageQuery(); 
 
-            return new PageManager {
+            var query = QuerySet?.PageQuery ?? new PageQuery();
+
+            return new PageManager
+            {
                 DefaultPageSize = Options.DefaultPageSize,
                 CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
