@@ -89,6 +89,7 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);
             }
 
+            services.AddScoped<IDbContextResolver, DbContextResolver>();
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));

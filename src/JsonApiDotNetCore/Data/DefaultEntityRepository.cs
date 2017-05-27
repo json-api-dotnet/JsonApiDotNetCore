@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,11 +18,18 @@ namespace JsonApiDotNetCore.Data
         IEntityRepository<TEntity> 
         where TEntity : class, IIdentifiable<int>
     {
+        [Obsolete("DbContext is no longer directly injected into the ctor. Use JsonApiContext.GetDbContextResolver() instead")]
         public DefaultEntityRepository(
             DbContext context,
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext)
         : base(context, loggerFactory, jsonApiContext)
+        { }
+
+        public DefaultEntityRepository(
+            ILoggerFactory loggerFactory,
+            IJsonApiContext jsonApiContext)
+        : base(loggerFactory, jsonApiContext)
         { }
     }
 
@@ -35,6 +43,7 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
 
+        [Obsolete("DbContext is no longer directly injected into the ctor. Use JsonApiContext.GetDbContextResolver() instead")]
         public DefaultEntityRepository(
             DbContext context,
             ILoggerFactory loggerFactory,
@@ -42,6 +51,18 @@ namespace JsonApiDotNetCore.Data
         {
             _context = context;
             _dbSet = context.GetDbSet<TEntity>();
+            _jsonApiContext = jsonApiContext;
+            _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
+            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+        }
+
+        public DefaultEntityRepository(
+            ILoggerFactory loggerFactory,
+            IJsonApiContext jsonApiContext)
+        {
+            var contextResolver = jsonApiContext.GetDbContextResolver();
+            _context = contextResolver.GetContext();
+            _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;

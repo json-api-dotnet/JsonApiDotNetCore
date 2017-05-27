@@ -24,16 +24,14 @@ A sample implementation that performs data authorization might look like:
 public class MyAuthorizedEntityRepository : DefaultEntityRepository<MyEntity>
 {
     private readonly ILogger _logger;
-    private readonly AppDbContext _context;
     private readonly IAuthenticationService _authenticationService;
 
-    public MyAuthorizedEntityRepository(AppDbContext context,
+    public MyAuthorizedEntityRepository(
         ILoggerFactory loggerFactory,
         IJsonApiContext jsonApiContext,
         IAuthenticationService authenticationService)
-    : base(context, loggerFactory, jsonApiContext)
-    { 
-        _context = context;
+    : base(loggerFactory, jsonApiContext)
+    {
         _logger = loggerFactory.CreateLogger<MyEntityRepository>();
         _authenticationService = authenticationService;
     }
