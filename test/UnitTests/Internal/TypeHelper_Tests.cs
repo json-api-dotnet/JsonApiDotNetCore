@@ -19,5 +19,16 @@ namespace UnitTests.Internal
             // assert
             Assert.Equal(dto, result);
         }
+
+        [Fact]
+        public void Bad_DateTimeOffset_String_Throws()
+        {
+            // arrange
+            var formattedString = "this_is_not_a_valid_dto";
+
+            // act
+            // assert
+            Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset)));
+        }
     }
 }
