@@ -24,12 +24,9 @@ namespace JsonApiDotNetCore.Internal
 
                 return Convert.ChangeType(stringValue, type);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                if (type.GetTypeInfo().IsValueType)
-                    return Activator.CreateInstance(type);
-
-                return null;
+                throw new FormatException($"{ value } cannot be converted to { type.GetTypeInfo().Name }", e);
             }
         }
     }

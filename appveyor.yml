@@ -43,14 +43,14 @@ deploy:
   server: https://www.myget.org/F/research-institute/api/v2/package
   api_key:
     secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
-  skip_symbols: true
+  skip_symbols: false
   on:
     branch: develop
 - provider: NuGet
   server: https://www.myget.org/F/jadnc/api/v2/package
   api_key:
     secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
-  skip_symbols: true
+  skip_symbols: false
   on:
     branch: unstable
 - provider: NuGet
