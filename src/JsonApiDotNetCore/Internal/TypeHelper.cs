@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -6,17 +7,27 @@ namespace JsonApiDotNetCore.Internal
     {
         public static object ConvertType(object value, Type type)
         {
-            if(value == null)
-                return null;
+            try
+            {
+                if (value == null)
+                    return null;
 
-           type = Nullable.GetUnderlyingType(type) ?? type;
+                type = Nullable.GetUnderlyingType(type) ?? type;
 
-            var stringValue = value.ToString();
-            
-            if(type == typeof(Guid))
-                return Guid.Parse(stringValue);
+                var stringValue = value.ToString();
 
-            return Convert.ChangeType(stringValue, type);
+                if (type == typeof(Guid))
+                    return Guid.Parse(stringValue);
+
+                if (type == typeof(DateTimeOffset))
+                    return DateTimeOffset.Parse(stringValue);
+
+                return Convert.ChangeType(stringValue, type);
+            }
+            catch (Exception e)
+            {
+                throw new FormatException($"{ value } cannot be converted to { type.GetTypeInfo().Name }", e);
+            }
         }
     }
 }

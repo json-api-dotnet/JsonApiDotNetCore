@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -48,6 +50,13 @@ namespace JsonApiDotNetCore.Formatters
             {
                 _logger?.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
                 context.HttpContext.Response.StatusCode = 422;
+                return InputFormatterResult.FailureAsync();
+            }
+            catch(JsonApiException jex)
+            {
+                _logger?.LogError(new EventId(), jex, "An error occurred while de-serializing the payload");
+                context.HttpContext.Response.StatusCode = jex.GetStatusCode();
+                context.HttpContext.Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(jex.GetError())));
                 return InputFormatterResult.FailureAsync();
             }
         }
