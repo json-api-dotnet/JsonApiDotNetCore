@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Internal.Query
 
             var attribute = GetAttribute(filterQuery.Key);
 
-            FilteredAttribute = attribute ?? throw new JsonApiException("400", $"{filterQuery.Key} is not a valid property.");
+            FilteredAttribute = attribute ?? throw new JsonApiException(400, $"{filterQuery.Key} is not a valid property.");
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);
         }

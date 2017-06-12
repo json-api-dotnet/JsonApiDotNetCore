@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
+                throw new JsonApiException(400, $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
             }
         }
 
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException("400", $"Could not cast {filterQuery.PropertyValue} to {relatedAttr.PropertyType.Name}");
+                throw new JsonApiException(400, $"Could not cast {filterQuery.PropertyValue} to {relatedAttr.PropertyType.Name}");
             }
         }
 
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Extensions
                     body = Expression.Call(left, "Contains", null, right);
                     break;
                 default:
-                    throw new JsonApiException("500", $"Unknown filter operation {operation}");
+                    throw new JsonApiException(500, $"Unknown filter operation {operation}");
             }
 
             return body;
