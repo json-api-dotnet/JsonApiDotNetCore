@@ -11,6 +11,12 @@ namespace JsonApiDotNetCore.Models
             PublicAttributeName = publicName;
         }
 
+        public AttrAttribute(string publicName, string internalName)
+        {
+            PublicAttributeName = publicName;
+            InternalAttributeName = internalName;
+        }
+
         public string PublicAttributeName { get; set; }
         public string InternalAttributeName { get; set; }
 

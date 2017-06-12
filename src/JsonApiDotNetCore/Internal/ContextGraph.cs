@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Internal
                 .FirstOrDefault(p => p.Name.ToLower() == relationshipName.ToLower());
 
             if(navigationProperty == null)
-                throw new JsonApiException("400", $"{parentEntityType} does not contain a relationship named {relationshipName}");
+                throw new JsonApiException(400, $"{parentEntityType} does not contain a relationship named {relationshipName}");
 
             return navigationProperty.GetValue(entity);
         }
