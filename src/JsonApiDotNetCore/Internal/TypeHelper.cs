@@ -32,5 +32,10 @@ namespace JsonApiDotNetCore.Internal
                 throw new FormatException($"{ value } cannot be converted to { type.GetTypeInfo().Name }", e);
             }
         }
+
+        public static T ConvertType<T>(object value)
+        {
+            return (T)ConvertType(value, typeof(T));
+        }
     }
 }

@@ -14,14 +14,14 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
         private readonly IJsonApiContext _jsonApiContext;
-        private readonly IGenericProcessorFactory _genericProcessorFactor;
+        private readonly IGenericProcessorFactory _genericProcessorFactory;
 
         public JsonApiDeSerializer(
             IJsonApiContext jsonApiContext,
             IGenericProcessorFactory genericProcessorFactory)
         {
             _jsonApiContext = jsonApiContext;
-            _genericProcessorFactor = genericProcessorFactory;
+            _genericProcessorFactory = genericProcessorFactory;
         }
 
         public object Deserialize(string requestBody)
@@ -38,10 +38,8 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        public object Deserialize<TEntity>(string requestBody)
-        {
-            return (TEntity)Deserialize(requestBody);
-        }
+        public TEntity Deserialize<TEntity>(string requestBody)
+            => (TEntity)Deserialize(requestBody);
 
         public object DeserializeRelationship(string requestBody)
         {
@@ -114,16 +112,34 @@ namespace JsonApiDotNetCore.Serialization
                 if (entityProperty == null)
                     throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an attribute named {attr.InternalAttributeName}", nameof(entity));
 
-                object newValue;
-                if (attributeValues.TryGetValue(attr.PublicAttributeName, out newValue))
+                if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+                    var convertedValue = ConvertAttrValue(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
                     _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
                 }
             }
 
             return entity;
+        }
+
+        private object ConvertAttrValue(object newValue, Type targetType)
+        {
+            if (newValue is JContainer jObject)
+                return DeserializeComplexType(jObject, targetType);
+
+            var convertedValue = TypeHelper.ConvertType(newValue, targetType);
+            return convertedValue;
+        }
+
+        private object DeserializeComplexType(JContainer obj, Type targetType)
+        {
+            var serializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = _jsonApiContext.Options.JsonContractResolver
+            };
+
+            return obj.ToObject(targetType, JsonSerializer.Create(serializerSettings));
         }
 
         private object SetRelationships(
@@ -198,7 +214,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var genericProcessor = _genericProcessorFactor.GetProcessor(attr.Type);
+                var genericProcessor = _genericProcessorFactory.GetProcessor(attr.Type);
                 var ids = relationshipData.ManyData.Select(r => r["id"]);
                 genericProcessor.SetRelationships(entity, attr, ids);
             }

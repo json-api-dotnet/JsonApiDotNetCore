@@ -84,7 +84,8 @@ namespace JsonApiDotNetCore.Serialization
         private string _serialize(object obj)
         {
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = _jsonApiContext.Options.JsonContractResolver
             });
         }
     }
