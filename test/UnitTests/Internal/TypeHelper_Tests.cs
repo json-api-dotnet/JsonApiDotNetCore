@@ -30,5 +30,23 @@ namespace UnitTests.Internal
             // assert
             Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset)));
         }
+
+        [Fact]
+        public void Can_Convert_Enums()
+        {
+            // arrange
+            var formattedString = "1";
+
+            // act
+            var result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
+
+            // assert
+            Assert.Equal(TestEnum.Test, result);
+        }
+
+        public enum TestEnum
+        {
+            Test = 1
+        }
     }
 }

@@ -22,6 +22,9 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(DateTimeOffset))
                     return DateTimeOffset.Parse(stringValue);
 
+                if (type.GetTypeInfo().IsEnum)
+                    return Enum.Parse(type, stringValue);
+
                 return Convert.ChangeType(stringValue, type);
             }
             catch (Exception e)

@@ -38,9 +38,31 @@ public class ThingsController : JsonApiController<Thing, Guid>
 }
 ```
 
-### Controller-level customizations
+### Limiting Write Access
 
-If you need to customize things at the controller level, you can override the virtual
+It is possible to limit write resource access on the controller entirely using the following attributes:
+
+- `NoHttpPost`: disallow POST requests
+- `NoHttpPatch`: disallow PATCH requests
+- `NoHttpDelete`: disallow DELETE requests
+- `HttpReadOnly`: all of the above
+
+```csharp
+[HttpReadOnly]
+public class ThingsController : JsonApiController<Thing>
+{
+    public ThingsController(
+        IJsonApiContext jsonApiContext,
+        IResourceService<Thing> resourceService,
+        ILoggerFactory loggerFactory) 
+    : base(jsonApiContext, resourceService, loggerFactory)
+    { }
+}
+```
+
+### Additional customizations
+
+If you need additional customization at the controller level, you can override the virtual
 methods. Please be aware that this is not the place for advanced business logic
 which should be performed at the [service](resourceservices.html) or [repository](entityrepositories.html) layers. Here is an example override at the controller layer:
 
