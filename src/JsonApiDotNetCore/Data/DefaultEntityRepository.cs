@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Data
             if(relationship != null)
                 return entities.Include(relationship.InternalRelationshipName);
             
-            throw new JsonApiException("400", $"Invalid relationship {relationshipName} on {entity.EntityName}",
+            throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
 

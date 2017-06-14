@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Internal.Query
                     continue;
                 }
 
-                throw new JsonApiException("400", $"{pair} is not a valid query.");
+                throw new JsonApiException(400, $"{pair} is not a valid query.");
             }
         }
 
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCore.Internal.Query
         private List<string> ParseIncludedRelationships(string value)
         {
             if(value.Contains("."))
-                throw new JsonApiException("400", "Deeply nested relationships are not supported");
+                throw new JsonApiException(400, "Deeply nested relationships are not supported");
 
             return value
                 .Split(',')

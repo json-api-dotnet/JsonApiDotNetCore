@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException("400", "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e.Message);
             }
         }
 
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException("400", "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e.Message);
             }
         }
 
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException("400", "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e.Message);
             }
         }
 
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
 
             if (entityProperty == null)
-                throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
             var relationshipName = attr.PublicRelationshipName;
 
@@ -188,7 +188,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
 
             if (entityProperty == null)
-                throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
             var relationshipName = attr.PublicRelationshipName;
 
