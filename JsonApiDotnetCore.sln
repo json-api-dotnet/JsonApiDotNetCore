@@ -4,7 +4,7 @@ VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore", "src\JsonApiDotNetCore\JsonApiDotNetCore.csproj", "{C0EC9E70-EB2E-436F-9D94-FA16FA774123}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExample", "src\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj", "{97EE048B-16C0-43F6-BDA9-4E762B2F579F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExample", "src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj", "{97EE048B-16C0-43F6-BDA9-4E762B2F579F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A2B7ADD-ECB5-4D00-AA6A-D45BD11C97CF}"
 EndProject
@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoEntityFrameworkExample", "src\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj", "{570165EC-62B5-4684-A139-8D2A30DD4475}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoEntityFrameworkExample", "src\Examples\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj", "{570165EC-62B5-4684-A139-8D2A30DD4475}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoEntityFrameworkTests", "test\NoEntityFrameworkTests\NoEntityFrameworkTests.csproj", "{73DA578D-A63F-4956-83ED-6D7102E09140}"
 EndProject
