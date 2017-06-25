@@ -18,14 +18,6 @@ namespace JsonApiDotNetCore.Data
         IEntityRepository<TEntity> 
         where TEntity : class, IIdentifiable<int>
     {
-        [Obsolete("DbContext is no longer directly injected into the ctor. Use JsonApiContext.GetDbContextResolver() instead")]
-        public DefaultEntityRepository(
-            DbContext context,
-            ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
-        : base(context, loggerFactory, jsonApiContext)
-        { }
-
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext)
