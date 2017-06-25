@@ -10,5 +10,6 @@ namespace JsonApiDotNetCore.Internal
         public Type EntityType { get; set; }
         public List<AttrAttribute> Attributes { get; set; }
         public List<RelationshipAttribute> Relationships { get; set; }
+        public Link Links { get; set; }
     }
 }
