@@ -4,13 +4,13 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IResourceService<T> 
-        : IResourceService<T, int> 
+    public interface IGetAllService<T> : IGetAllService<T, int>
         where T : class, IIdentifiable<int>
     { }
 
-    public interface IResourceService<T, in TId> 
-        : IResourceCmdService<T, TId>, IResourceQueryService<T, TId>
+    public interface IGetAllService<T, in TId>
         where T : class, IIdentifiable<TId>
-    { }
+    {
+        Task<IEnumerable<T>> GetAsync();
+    }
 }
