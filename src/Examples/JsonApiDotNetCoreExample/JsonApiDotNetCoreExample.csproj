@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
