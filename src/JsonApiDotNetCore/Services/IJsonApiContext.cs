@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -12,7 +14,7 @@ namespace JsonApiDotNetCore.Services
     public interface IJsonApiContext
     {
         JsonApiOptions Options { get; set; }
-        IJsonApiContext ApplyContext<T>();
+        IJsonApiContext ApplyContext<T>(object controller);
         IContextGraph ContextGraph { get; set; }
         ContextEntity RequestEntity { get; set; }
         string BasePath { get; set; }
@@ -25,6 +27,8 @@ namespace JsonApiDotNetCore.Services
         IGenericProcessorFactory GenericProcessorFactory { get; set; }
         Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
         Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
+        Type ControllerType { get; set; }
+        TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
         IDbContextResolver GetDbContextResolver();
     }
 }

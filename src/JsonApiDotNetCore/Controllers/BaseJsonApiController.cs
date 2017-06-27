@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Controllers
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _getAll = resourceService;
             _getById = resourceService;
             _getRelationship = resourceService;
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Controllers
             IResourceQueryService<T, TId> queryService = null,
             IResourceCmdService<T, TId> cmdService = null)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _getAll = queryService;
             _getById = queryService;
             _getRelationship = queryService;
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateRelationshipService<T, TId> updateRelationships = null,
             IDeleteService<T, TId> delete = null)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _getAll = getAll;
             _getById = getById;
             _getRelationship = getRelationship;

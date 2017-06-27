@@ -12,12 +12,12 @@ namespace JsonApiDotNetCore.Builders
     {
         private List<ContextEntity> _entities;
         private bool _usesDbContext;
-        public Link DocumentLinks  { get; set; }  = Link.All;
+        public Link DocumentLinks { get; set; } = Link.All;
 
         public ContextGraphBuilder()
         {
             _entities = new List<ContextEntity>();
-        }        
+        }
 
         public IContextGraph Build()
         {
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Builders
             var attribute = (LinksAttribute)entityType.GetTypeInfo().GetCustomAttribute(typeof(LinksAttribute));
             if (attribute != null)
                 return attribute.Links;
-            
+
             return DocumentLinks;
         }
 
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCore.Builders
         private string GetResourceName(PropertyInfo property)
         {
             var resourceAttribute = property.GetCustomAttribute(typeof(ResourceAttribute));
-            if(resourceAttribute == null)
+            if (resourceAttribute == null)
                 return property.Name.Dasherize();
 
             return ((ResourceAttribute)resourceAttribute).ResourceName;

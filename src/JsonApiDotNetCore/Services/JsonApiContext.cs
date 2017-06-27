@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -46,9 +47,15 @@ namespace JsonApiDotNetCore.Services
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
         public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
+        public Type ControllerType { get; set; }
 
-        public IJsonApiContext ApplyContext<T>()
+        public IJsonApiContext ApplyContext<T>(object controller)
         {
+            if (controller == null)
+                throw new JsonApiException(500, $"Cannot ApplyContext from null controller for type {typeof(T)}");
+
+            ControllerType = controller.GetType();
+
             var context = _httpContextAccessor.HttpContext;
             var path = context.Request.Path.Value.Split('/');
 
@@ -82,6 +89,12 @@ namespace JsonApiDotNetCore.Services
                 CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
             };
+        }
+
+        public TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute
+        {
+            var attribute = ControllerType.GetTypeInfo().GetCustomAttribute(typeof(TAttribute));
+            return attribute == null ? null : (TAttribute)attribute;
         }
     }
 }
