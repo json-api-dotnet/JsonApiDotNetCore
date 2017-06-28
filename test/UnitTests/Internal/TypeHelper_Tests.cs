@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
 using Xunit;
 
@@ -81,6 +82,29 @@ namespace UnitTests.Internal
             // assert
             Assert.Equal(val, baseResult);
             Assert.Equal(val, iResult);
+        }
+
+        [Fact]
+        public void ConvertType_Returns_Default_Value_For_Empty_Strings()
+        {
+            // arrange -- can't use non-constants in [Theory]
+            var data = new Dictionary<Type, object>
+            {
+                { typeof(int), 0 },
+                { typeof(short), (short)0 },
+                { typeof(long), (long)0 },
+                { typeof(string), "" },
+                { typeof(Guid), Guid.Empty },
+            };
+
+            foreach (var t in data)
+            {
+                // act
+                var result = TypeHelper.ConvertType(string.Empty, t.Key);
+
+                // assert
+                Assert.Equal(t.Value, result);
+            }
         }
 
         private enum TestEnum
