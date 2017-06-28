@@ -26,21 +26,24 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions {
-                JsonContractResolver  = new CamelCasePropertyNamesContractResolver()
+            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
+            {
+                JsonContractResolver = new CamelCasePropertyNamesContractResolver()
             });
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document {
-                Data = new DocumentData {
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object> {
-                        { 
-                            "complex-member", new { compoundName = "testName" } 
+                        {
+                            "complex-member", new { compoundName = "testName" }
                         }
                     }
                 }
@@ -66,23 +69,26 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions {
-                JsonContractResolver  = new CamelCasePropertyNamesContractResolver()
+            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
+            {
+                JsonContractResolver = new CamelCasePropertyNamesContractResolver()
             });
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document {
-                Data = new DocumentData {
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object> {
-                        { 
-                            "complex-members", new [] { 
+                        {
+                            "complex-members", new [] {
                                 new { compoundName = "testName" }
-                            } 
+                            }
                         }
                     }
                 }
@@ -110,20 +116,23 @@ namespace UnitTests.Serialization
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
 
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions {
-                JsonContractResolver  = new DasherizedResolver() // <---
+            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
+            {
+                JsonContractResolver = new DasherizedResolver() // <---
             });
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document {
-                Data = new DocumentData {
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object> {
-                        { 
+                        {
                             "complex-member", new Dictionary<string, string> { { "compound-name",  "testName" } }
                         }
                     }
@@ -138,10 +147,65 @@ namespace UnitTests.Serialization
             Assert.Equal("testName", result.ComplexMember.CompoundName);
         }
 
+        [Fact]
+        public void Immutable_Attrs_Are_Not_Included_In_AttributesToUpdate()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<TestResource>("test-resource");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var attributesToUpdate = new Dictionary<AttrAttribute, object>();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(attributesToUpdate);
+
+            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
+            {
+                JsonContractResolver = new DasherizedResolver()
+            });
+
+            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
+                    Type = "test-resource",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object> {
+                        { "complex-member", new Dictionary<string, string> { 
+                            { "compound-name",  "testName" } } 
+                        },
+                        {  "immutable", "value"}
+                    }
+                }
+            };
+
+            var contentString = JsonConvert.SerializeObject(content);
+
+            // act
+            var result = deserializer.Deserialize<TestResource>(contentString);
+
+            // assert
+            Assert.NotNull(result.ComplexMember);
+            Assert.Equal(1, attributesToUpdate.Count);
+            
+            foreach(var attr in attributesToUpdate)
+                Assert.False(attr.Key.IsImmutable);
+        }
+
         private class TestResource : Identifiable
         {
             [Attr("complex-member")]
             public ComplexType ComplexMember { get; set; }
+
+            [Attr("immutable", isImmutable: true)]
+            public string Immutable { get; set; }
         }
 
         private class TestResourceWithList : Identifiable

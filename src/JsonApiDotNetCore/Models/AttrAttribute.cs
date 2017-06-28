@@ -6,19 +6,22 @@ namespace JsonApiDotNetCore.Models
 {
     public class AttrAttribute : Attribute
     {
-        public AttrAttribute(string publicName)
+        public AttrAttribute(string publicName, bool isImmutable = false)
         {
             PublicAttributeName = publicName;
+            IsImmutable = isImmutable;
         }
 
-        public AttrAttribute(string publicName, string internalName)
+        public AttrAttribute(string publicName, string internalName, bool isImmutable = false)
         {
             PublicAttributeName = publicName;
             InternalAttributeName = internalName;
+            IsImmutable = isImmutable;
         }
 
         public string PublicAttributeName { get; set; }
         public string InternalAttributeName { get; set; }
+        public bool IsImmutable { get; set; }
 
         public object GetValue(object entity)
         {
