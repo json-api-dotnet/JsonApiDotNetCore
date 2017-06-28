@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync()
         {
-            if (_getAll == null) throw new JsonApiException(405, "Query requests are not supported");
+            if (_getAll == null) throw new JsonApiException(405, "Get requests are not supported");
 
             var entities = await _getAll.GetAsync();
 
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            if (_getById == null) throw new JsonApiException(405, "Query requests are not supported");
+            if (_getById == null) throw new JsonApiException(405, "Get by Id requests are not supported");
 
             var entity = await _getById.GetAsync(id);
 
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
-            if (_getRelationships == null) throw new JsonApiException(405, "Query requests are not supported");
+            if (_getRelationships == null) throw new JsonApiException(405, "Get Relationships requests are not supported");
 
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            if (_getRelationship == null) throw new JsonApiException(405, "Query requests are not supported");
+            if (_getRelationship == null) throw new JsonApiException(405, "Get Relationship requests are not supported");
 
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
 
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
-            if (_create == null) throw new JsonApiException(405, "Command requests are not supported");
+            if (_create == null) throw new JsonApiException(405, "Post requests are not supported");
 
             if (entity == null)
                 return UnprocessableEntity();
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
-            if (_update == null) throw new JsonApiException(405, "Command requests are not supported");
+            if (_update == null) throw new JsonApiException(405, "Patch requests are not supported");
 
             if (entity == null)
                 return UnprocessableEntity();
@@ -148,7 +148,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
         {
-            if (_updateRelationships == null) throw new JsonApiException(405, "Command requests are not supported");
+            if (_updateRelationships == null) throw new JsonApiException(405, "Relationship Patch requests are not supported");
 
             await _updateRelationships.UpdateRelationshipsAsync(id, relationshipName, relationships);
 
@@ -157,7 +157,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
-            if (_delete == null) throw new JsonApiException(405, "Command requests are not supported");
+            if (_delete == null) throw new JsonApiException(405, "Delete requests are not supported");
 
             var wasDeleted = await _delete.DeleteAsync(id);
 

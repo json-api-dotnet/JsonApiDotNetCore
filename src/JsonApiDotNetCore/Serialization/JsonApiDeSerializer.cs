@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException(400, "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
 
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException(400, "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
 
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException(400, "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
 
