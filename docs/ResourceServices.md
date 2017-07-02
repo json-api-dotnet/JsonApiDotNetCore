@@ -83,30 +83,22 @@ In some cases it may be necessary to only expose a few methods on the resource.
 For this reason, we have created a hierarchy of service interfaces that can be used to get the
 exact implementation you require. Below is a table outlining these interfaces:
 
-| METHOD                                   | IResourceService | IResourceCmdService | IResourceQueryService | IGetAllService | IGetByIdService | IGetRelationshipService | IGetRelationships | ICreateService | IDeleteService | IUpdateService | IUpdateRelationshipService |
-|------------------------------------------|:----------------:|:-------------------:|:---------------------:|:--------------:|:---------------:|:-----------------------:|:-----------------:|:--------------:|:--------------:|:--------------:|:--------------------------:|
-| GET /                                    |         ✓        |                     |           ✓           |        ✓       |                 |                         |                   |                |                |                |                            |
-| GET /{id}                                |         ✓        |                     |           ✓           |                |        ✓        |                         |                   |                |                |                |                            |
-| GET /{id}/{relationship}                 |         ✓        |                     |           ✓           |                |                 |            ✓            |                   |                |                |                |                            |
-| GET /{id}/relationships/{relationship}   |         ✓        |                     |           ✓           |                |                 |                         |         ✓         |                |                |                |                            |
-| POST /                                   |         ✓        |          ✓          |                       |                |                 |                         |                   |        ✓       |                |                |                            |
-| DELETE /{id}                             |         ✓        |          ✓          |                       |                |                 |                         |                   |                |        ✓       |                |                            |
-| PATCH /{id}                              |         ✓        |          ✓          |                       |                |                 |                         |                   |                |                |        ✓       |                            |
-| PATCH /{id}/relationships/{relationship} |         ✓        |          ✓          |                       |                |                 |                         |                   |                |                |                |              ✓             |
+![interfaces](service_table.png)
+
 
  In order to take advantage of these interfaces you first need to inject the service for each implemented interface. 
  Using Autofac, as an example, this is simply:
 
 ```csharp
 public class MyResourceService : ICreateService<MyResource>, IDeleteService<MyResource> {
- //...
+   // ...
 }
+```
 
+```csharp
 public class Startup {
   public IServiceProvider ConfigureServices(IServiceCollection services) {
-    // ...
     builder.RegisterType<MyResourceService>().AsImplementedInterfaces();
-    // ...
   }
 }
 ```
@@ -115,15 +107,13 @@ Then in the controller, you should inherit the base controller and pass the serv
 the named, optional base parameters:
 
 ```csharp
-public class MyResourcesController : BaseJsonApiController<MyResource, int> {
+public class MyResourcesController : BaseJsonApiController<MyResource> {
+
     public MyResourcesController(
         IJsonApiContext jsonApiContext, 
         ICreateService<MyResource> create,
-        IDeleteService<MyResource> delete) 
-    : base(
-        jsonApiContext, 
-        create: create, // <--- pass the services to the base controller using named optional parameters
-        delete: delete) { }
+        IDeleteService<MyResource> delete
+    ) : base(jsonApiContext, create: create, delete: delete) { }
 
     [HttpPost]
     public override async Task<IActionResult> PostAsync([FromBody] MyResource entity) 
