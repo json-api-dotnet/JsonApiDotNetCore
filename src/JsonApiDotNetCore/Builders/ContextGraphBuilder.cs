@@ -15,13 +15,11 @@ namespace JsonApiDotNetCore.Builders
         private bool _usesDbContext;
         public Link DocumentLinks { get; set; } = Link.All;
 
-        public ContextGraphBuilder()
-        {
-            _entities = new List<ContextEntity>();
-        }
-
         public IContextGraph Build()
         {
+            // this must be done at build so that call order doesn't matter
+            _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
+
             var graph = new ContextGraph()
             {
                 Entities = _entities,
@@ -41,8 +39,7 @@ namespace JsonApiDotNetCore.Builders
                 EntityName = pluralizedTypeName,
                 EntityType = entityType,
                 Attributes = GetAttributes(entityType),
-                Relationships = GetRelationships(entityType),
-                Links = GetLinkFlags(entityType)
+                Relationships = GetRelationships(entityType)
             });
         }
 
@@ -112,7 +109,7 @@ namespace JsonApiDotNetCore.Builders
                     && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 {
                     var entityType = dbSetType.GetGenericArguments()[0];
-                    
+
                     VerifyEntityIsNotAlreadyDefined(entityType);
 
                     _entities.Add(new ContextEntity

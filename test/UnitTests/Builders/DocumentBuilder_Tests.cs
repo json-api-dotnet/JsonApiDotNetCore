@@ -80,11 +80,7 @@ namespace UnitTests
             _pageManager.TotalRecords = 1;
             _pageManager.CurrentPage = 1;
 
-            _options.BuildContextGraph(builder =>
-            {
-                builder.DocumentLinks = Link.None;
-                builder.AddResource<Model>("models");
-            });
+            _options.BuildContextGraph(builder => builder.DocumentLinks = Link.None);
 
             _jsonApiContextMock
                 .Setup(m => m.ContextGraph)
