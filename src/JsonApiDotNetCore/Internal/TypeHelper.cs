@@ -7,14 +7,22 @@ namespace JsonApiDotNetCore.Internal
     {
         public static object ConvertType(object value, Type type)
         {
+            if (value == null)
+                return null;
+
+            var valueType = value.GetType();
+
             try
             {
-                if (value == null)
-                    return null;
+                if (valueType == type || type.IsAssignableFrom(valueType))
+                    return value;
 
                 type = Nullable.GetUnderlyingType(type) ?? type;
 
                 var stringValue = value.ToString();
+
+                if (string.IsNullOrEmpty(stringValue))
+                    return GetDefaultType(type);
 
                 if (type == typeof(Guid))
                     return Guid.Parse(stringValue);
@@ -29,8 +37,22 @@ namespace JsonApiDotNetCore.Internal
             }
             catch (Exception e)
             {
-                throw new FormatException($"{ value } cannot be converted to { type.GetTypeInfo().Name }", e);
+                throw new FormatException($"{ valueType } cannot be converted to { type }", e);
             }
+        }
+
+        private static object GetDefaultType(Type type)
+        {
+            if (type.GetTypeInfo().IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
+        }
+
+        public static T ConvertType<T>(object value)
+        {
+            return (T)ConvertType(value, typeof(T));
         }
     }
 }

@@ -19,109 +19,49 @@ namespace JsonApiDotNetCore.Controllers
     }
 
     public class JsonApiController<T, TId>
-    : JsonApiControllerMixin where T : class, IIdentifiable<TId>
+    : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        private readonly ILogger _logger;
-        private readonly IResourceService<T, TId> _resourceService;
-        private readonly IJsonApiContext _jsonApiContext;
-
         public JsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService,
-            ILoggerFactory loggerFactory)
-        {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
-            _resourceService = resourceService;
-            _logger = loggerFactory.CreateLogger<JsonApiController<T, TId>>();
-        }
+            ILoggerFactory loggerFactory) 
+        : base(jsonApiContext, resourceService)
+        { }
 
         public JsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
-        {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
-            _resourceService = resourceService;
-        }
+        : base(jsonApiContext, resourceService)
+        { }
 
         [HttpGet]
-        public virtual async Task<IActionResult> GetAsync()
-        {
-            var entities = await _resourceService.GetAsync();
-            return Ok(entities);
-        }
+        public override async Task<IActionResult> GetAsync() => await base.GetAsync();
 
         [HttpGet("{id}")]
-        public virtual async Task<IActionResult> GetAsync(TId id)
-        {
-            var entity = await _resourceService.GetAsync(id);
-
-            if (entity == null)
-                return NotFound();
-
-            return Ok(entity);
-        }
+        public override async Task<IActionResult> GetAsync(TId id) => await base.GetAsync(id);
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
-        {
-            var relationship = await _resourceService.GetRelationshipsAsync(id, relationshipName);
-            if(relationship == null) 
-                return NotFound();
-            
-            return Ok(relationship);
-        }
+        public override async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
+            => await base.GetRelationshipsAsync(id, relationshipName);
 
         [HttpGet("{id}/{relationshipName}")]
-        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
-        {
-            var relationship = await _resourceService.GetRelationshipAsync(id, relationshipName);                
-            return Ok(relationship);
-        }
+        public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+            => await base.GetRelationshipAsync(id, relationshipName);
 
         [HttpPost]
-        public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
-        {
-            if (entity == null)
-                return UnprocessableEntity();
-
-            if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
-                return Forbidden();
-
-            entity = await _resourceService.CreateAsync(entity);
-
-            return Created($"{HttpContext.Request.Path}/{entity.Id}", entity);
-        }
+        public override async Task<IActionResult> PostAsync([FromBody] T entity)
+            => await base.PostAsync(entity);
 
         [HttpPatch("{id}")]
-        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
-        {
-            if (entity == null)
-                return UnprocessableEntity();
-            
-            var updatedEntity = await _resourceService.UpdateAsync(id, entity);
-            
-            if(updatedEntity == null)
-                return NotFound();
-
-            return Ok(updatedEntity);
-        }
+        public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
+            => await base.PatchAsync(id, entity);
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
-        {
-            await _resourceService.UpdateRelationshipsAsync(id, relationshipName, relationships);
-            return Ok();
-        }
+        public override async Task<IActionResult> PatchRelationshipsAsync(
+            TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
+            => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> DeleteAsync(TId id)
-        {
-            var wasDeleted = await _resourceService.DeleteAsync(id);
-
-            if (!wasDeleted)
-                return NotFound();
-
-            return NoContent();
-        }
+        public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
     }
 }

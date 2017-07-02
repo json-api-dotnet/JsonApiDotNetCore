@@ -1,7 +1,9 @@
 using System;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -11,30 +13,27 @@ namespace JsonApiDotNetCore.Configuration
         public int DefaultPageSize { get; set; }
         public bool IncludeTotalRecordCount { get; set; }
         public bool AllowClientGeneratedIds { get; set; }
-        public IContextGraph ContextGraph  { get; set; }
+        public IContextGraph ContextGraph { get; set; }
+        public IContractResolver JsonContractResolver { get; set; } = new DasherizedResolver();
+        internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
 
         public void BuildContextGraph<TContext>(Action<IContextGraphBuilder> builder)
         where TContext : DbContext
         {
-            var contextGraphBuilder = new ContextGraphBuilder();
-            
-            contextGraphBuilder.AddDbContext<TContext>();
+            BuildContextGraph(builder);
 
-            builder?.Invoke(contextGraphBuilder);
+            ContextGraphBuilder.AddDbContext<TContext>();
 
-            ContextGraph = contextGraphBuilder.Build();
+            ContextGraph = ContextGraphBuilder.Build();
         }
 
         public void BuildContextGraph(Action<IContextGraphBuilder> builder)
         {
-            if(builder == null)
-                throw new ArgumentException("Cannot build non-EF context graph without an IContextGraphBuilder action", nameof(builder));
+            if (builder == null) return;
 
-            var contextGraphBuilder = new ContextGraphBuilder();
+            builder(ContextGraphBuilder);
 
-            builder(contextGraphBuilder);
-
-            ContextGraph = contextGraphBuilder.Build();
+            ContextGraph = ContextGraphBuilder.Build();
         }
     }
 }

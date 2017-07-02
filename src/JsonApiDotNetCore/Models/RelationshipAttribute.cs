@@ -4,9 +4,10 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName)
+        protected RelationshipAttribute(string publicName, Link documentLinks)
         {
             PublicRelationshipName = publicName;
+            DocumentLinks = documentLinks;
         }
 
         public string PublicRelationshipName { get; set; }
@@ -14,6 +15,7 @@ namespace JsonApiDotNetCore.Models
         public Type Type { get; set; }
         public bool IsHasMany => GetType() == typeof(HasManyAttribute);
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
+        public Link DocumentLinks { get; set; } = Link.All;
 
         public abstract void SetValue(object entity, object newValue);
 

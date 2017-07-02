@@ -33,9 +33,11 @@ namespace JsonApiDotNetCore.Builders
             var document = new Document
             {
                 Data = GetData(contextEntity, entity),
-                Meta = GetMeta(entity),
-                Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
+                Meta = GetMeta(entity)
             };
+
+            if(ShouldIncludePageLinks(contextEntity))
+                document.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
 
             document.Included = AppendIncludedObject(document.Included, contextEntity, entity);
 
@@ -54,9 +56,11 @@ namespace JsonApiDotNetCore.Builders
             var documents = new Documents
             {
                 Data = new List<DocumentData>(),
-                Meta = GetMeta(enumeratedEntities.FirstOrDefault()),
-                Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext))
+                Meta = GetMeta(enumeratedEntities.FirstOrDefault())
             };
+
+            if(ShouldIncludePageLinks(contextEntity))
+                documents.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
 
             foreach (var entity in enumeratedEntities)
             {
@@ -86,6 +90,8 @@ namespace JsonApiDotNetCore.Builders
             if(meta.Count > 0) return meta;
             return null;
         }
+
+        private bool ShouldIncludePageLinks(ContextEntity entity) => entity.Links.HasFlag(Link.Paging);
 
         private List<DocumentData> AppendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)
         {
@@ -139,14 +145,17 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Relationships.ForEach(r =>
             {
-                var relationshipData = new RelationshipData
+                var relationshipData = new RelationshipData();
+
+                if(r.DocumentLinks.HasFlag(Link.None) == false)
                 {
-                    Links = new Links
-                    {
-                        Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName),
-                        Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName)
-                    }
-                };
+                    relationshipData.Links = new Links();
+                    if(r.DocumentLinks.HasFlag(Link.Self))
+                        relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
+                    
+                    if(r.DocumentLinks.HasFlag(Link.Related))
+                        relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
+                }
 
                 if (RelationshipIsIncluded(r.PublicRelationshipName))
                 {

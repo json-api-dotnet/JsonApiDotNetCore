@@ -56,6 +56,19 @@ public class Person : Identifiable<int>
 }
 ```
 
+### Immutability
+
+Attributes can be marked as immutable which will prevent `PATCH` requests
+from updating them:
+
+```csharp
+public class Person : Identifiable<int>
+{
+    [Attr("first-name", immutable: true)]
+    public string FirstName { get; set; }
+}
+```
+
 ## Relationships
 
 In order for navigation properties to be identified in the model, 

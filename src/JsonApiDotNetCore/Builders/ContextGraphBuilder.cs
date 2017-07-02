@@ -5,20 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Extensions;
+using System.Linq;
 
 namespace JsonApiDotNetCore.Builders
 {
     public class ContextGraphBuilder : IContextGraphBuilder
     {
-        private List<ContextEntity> _entities;
+        private List<ContextEntity> _entities = new List<ContextEntity>();
         private bool _usesDbContext;
-        public ContextGraphBuilder()
-        {
-            _entities = new List<ContextEntity>();
-        }
+        public Link DocumentLinks { get; set; } = Link.All;
 
         public IContextGraph Build()
         {
+            // this must be done at build so that call order doesn't matter
+            _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
+
             var graph = new ContextGraph()
             {
                 Entities = _entities,
@@ -30,6 +31,9 @@ namespace JsonApiDotNetCore.Builders
         public void AddResource<TResource>(string pluralizedTypeName) where TResource : class
         {
             var entityType = typeof(TResource);
+
+            VerifyEntityIsNotAlreadyDefined(entityType);
+
             _entities.Add(new ContextEntity
             {
                 EntityName = pluralizedTypeName,
@@ -37,6 +41,15 @@ namespace JsonApiDotNetCore.Builders
                 Attributes = GetAttributes(entityType),
                 Relationships = GetRelationships(entityType)
             });
+        }
+
+        private Link GetLinkFlags(Type entityType)
+        {
+            var attribute = (LinksAttribute)entityType.GetTypeInfo().GetCustomAttribute(typeof(LinksAttribute));
+            if (attribute != null)
+                return attribute.Links;
+
+            return DocumentLinks;
         }
 
         protected virtual List<AttrAttribute> GetAttributes(Type entityType)
@@ -86,8 +99,6 @@ namespace JsonApiDotNetCore.Builders
 
             var contextType = typeof(T);
 
-            var entities = new List<ContextEntity>();
-
             var contextProperties = contextType.GetProperties();
 
             foreach (var property in contextProperties)
@@ -98,7 +109,10 @@ namespace JsonApiDotNetCore.Builders
                     && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 {
                     var entityType = dbSetType.GetGenericArguments()[0];
-                    entities.Add(new ContextEntity
+
+                    VerifyEntityIsNotAlreadyDefined(entityType);
+
+                    _entities.Add(new ContextEntity
                     {
                         EntityName = GetResourceName(property),
                         EntityType = entityType,
@@ -107,17 +121,21 @@ namespace JsonApiDotNetCore.Builders
                     });
                 }
             }
-
-            _entities = entities;
         }
 
         private string GetResourceName(PropertyInfo property)
         {
             var resourceAttribute = property.GetCustomAttribute(typeof(ResourceAttribute));
-            if(resourceAttribute == null)
+            if (resourceAttribute == null)
                 return property.Name.Dasherize();
 
             return ((ResourceAttribute)resourceAttribute).ResourceName;
+        }
+
+        private void VerifyEntityIsNotAlreadyDefined(Type entityType)
+        {
+            if (_entities.Any(e => e.EntityType == entityType))
+                throw new InvalidOperationException($"Cannot add entity type {entityType} to context graph, there is already an entity of that type configured.");
         }
     }
 }

@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Controllers
             var method = context.HttpContext.Request.Method;
             
             if(CanExecuteAction(method) == false)
-                throw new JsonApiException("405", $"This resource does not support {method} requests.");
+                throw new JsonApiException(405, $"This resource does not support {method} requests.");
 
             await next();
         }

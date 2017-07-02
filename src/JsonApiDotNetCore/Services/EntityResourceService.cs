@@ -90,13 +90,13 @@ namespace JsonApiDotNetCore.Services
                     .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
-                throw new JsonApiException("422", "Relationship name not specified.");
+                throw new JsonApiException(422, "Relationship name not specified.");
 
             _logger.LogTrace($"Looking up '{relationshipName}'...");
                                        
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (entity == null)
-                throw new JsonApiException("404", $"Relationship {relationshipName} not found.");
+                throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
 
             var relationship = _jsonApiContext.ContextGraph
                     .GetRelationship(entity, relationshipName);
@@ -121,12 +121,12 @@ namespace JsonApiDotNetCore.Services
                       .GetRelationshipName<T>(relationshipName);
 
             if (relationshipName == null)
-                throw new JsonApiException("422", "Relationship name not specified.");
+                throw new JsonApiException(422, "Relationship name not specified.");
 
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
 
             if (entity == null)
-                throw new JsonApiException("404", $"Entity with id {id} could not be found.");
+                throw new JsonApiException(404, $"Entity with id {id} could not be found.");
 
             var relationship = _jsonApiContext.ContextGraph
                 .GetContextEntity(typeof(T))
