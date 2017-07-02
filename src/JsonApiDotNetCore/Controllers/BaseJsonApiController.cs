@@ -8,6 +8,34 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    public class BaseJsonApiController<T> 
+        : BaseJsonApiController<T, int>
+        where T : class, IIdentifiable<int>
+    {
+        public BaseJsonApiController(
+            IJsonApiContext jsonApiContext,
+            IResourceService<T, int> resourceService
+        ) : base(jsonApiContext, resourceService) { }
+
+        public BaseJsonApiController(
+            IJsonApiContext jsonApiContext,
+            IResourceQueryService<T, int> queryService = null,
+            IResourceCmdService<T, int> cmdService = null
+        ) : base(jsonApiContext, queryService, cmdService) { }
+
+        public BaseJsonApiController(
+            IJsonApiContext jsonApiContext,
+            IGetAllService<T, int> getAll = null,
+            IGetByIdService<T, int> getById = null,
+            IGetRelationshipService<T, int> getRelationship = null,
+            IGetRelationshipsService<T, int> getRelationships = null,
+            ICreateService<T, int> create = null,
+            IUpdateService<T, int> update = null,
+            IUpdateRelationshipService<T, int> updateRelationships = null,
+            IDeleteService<T, int> delete = null
+        ) : base(jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+    }
+
     public class BaseJsonApiController<T, TId>
         : JsonApiControllerMixin
         where T : class, IIdentifiable<TId>
@@ -22,7 +50,7 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IDeleteService<T, TId> _delete;        
         private readonly IJsonApiContext _jsonApiContext;
 
-        protected BaseJsonApiController(
+        public BaseJsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         {
@@ -37,7 +65,7 @@ namespace JsonApiDotNetCore.Controllers
             _delete = resourceService;
         }
 
-        protected BaseJsonApiController(
+        public BaseJsonApiController(
             IJsonApiContext jsonApiContext,
             IResourceQueryService<T, TId> queryService = null,
             IResourceCmdService<T, TId> cmdService = null)
@@ -53,7 +81,7 @@ namespace JsonApiDotNetCore.Controllers
             _delete = cmdService;
         }
 
-        protected BaseJsonApiController(
+        public BaseJsonApiController(
             IJsonApiContext jsonApiContext,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
