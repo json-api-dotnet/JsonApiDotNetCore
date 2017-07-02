@@ -4,8 +4,8 @@ namespace JsonApiDotNetCore.Models
 {
     public class HasManyAttribute : RelationshipAttribute
     {
-        public HasManyAttribute(string publicName)
-        : base(publicName)
+        public HasManyAttribute(string publicName, Link documentLinks = Link.All)
+        : base(publicName, documentLinks)
         {
             PublicRelationshipName = publicName;
         }

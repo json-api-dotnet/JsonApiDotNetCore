@@ -11,16 +11,14 @@ namespace JsonApiDotNetCoreExampleTests.Repositories
     public class AuthorizedTodoItemsRepository : DefaultEntityRepository<TodoItem>
     {
         private readonly ILogger _logger;
-        private readonly AppDbContext _context;
         private readonly IAuthorizationService _authService;
 
-        public AuthorizedTodoItemsRepository(AppDbContext context,
+        public AuthorizedTodoItemsRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IAuthorizationService authService)
-        : base(context, loggerFactory, jsonApiContext)
+        : base(loggerFactory, jsonApiContext)
         {
-            _context = context;
             _logger = loggerFactory.CreateLogger<AuthorizedTodoItemsRepository>();
             _authService = authService;
         }

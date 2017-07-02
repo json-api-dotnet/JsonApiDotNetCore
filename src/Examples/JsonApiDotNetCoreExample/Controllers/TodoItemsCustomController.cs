@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExample.Controllers
             IResourceService<T, TId> resourceService,
             ILoggerFactory loggerFactory)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _resourceService = resourceService;
             _logger = loggerFactory.CreateLogger<JsonApiDotNetCore.Controllers.JsonApiController<T, TId>>();
         }
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExample.Controllers
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>();
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _resourceService = resourceService;
         }
 

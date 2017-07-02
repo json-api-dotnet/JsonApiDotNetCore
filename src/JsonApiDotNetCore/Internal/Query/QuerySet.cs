@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Controllers;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
@@ -13,57 +14,61 @@ namespace JsonApiDotNetCore.Internal.Query
         private readonly IJsonApiContext _jsonApiContext;
 
         public QuerySet(
-            IJsonApiContext jsonApiContext, 
+            IJsonApiContext jsonApiContext,
             IQueryCollection query)
         {
             _jsonApiContext = jsonApiContext;
-            PageQuery = new PageQuery();
-            Filters = new List<FilterQuery>();
-            Fields = new List<string>();
             BuildQuerySet(query);
         }
 
-        public List<FilterQuery> Filters { get; set; }
-        public PageQuery PageQuery { get; set; }
-        public List<SortQuery> SortParameters { get; set; }
-        public List<string> IncludedRelationships { get; set; }
-        public List<string> Fields { get; set; }
+        public List<FilterQuery> Filters { get; set; } = new List<FilterQuery>();
+        public PageQuery PageQuery { get; set; } = new PageQuery();
+        public List<SortQuery> SortParameters { get; set; } = new List<SortQuery>();
+        public List<string> IncludedRelationships { get; set; } = new List<string>();
+        public List<string> Fields { get; set; } = new List<string>();
 
         private void BuildQuerySet(IQueryCollection query)
         {
+            var disabledQueries = _jsonApiContext.GetControllerAttribute<DisableQueryAttribute>()?.QueryParams ?? QueryParams.None;
+
             foreach (var pair in query)
             {
                 if (pair.Key.StartsWith("filter"))
                 {
-                    Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
+                    if (disabledQueries.HasFlag(QueryParams.Filter) == false)
+                        Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
                 if (pair.Key.StartsWith("sort"))
                 {
-                    SortParameters = ParseSortParameters(pair.Value);
+                    if (disabledQueries.HasFlag(QueryParams.Sort) == false)
+                        SortParameters = ParseSortParameters(pair.Value);
                     continue;
                 }
 
                 if (pair.Key.StartsWith("include"))
                 {
-                    IncludedRelationships = ParseIncludedRelationships(pair.Value);
+                    if (disabledQueries.HasFlag(QueryParams.Include) == false)
+                        IncludedRelationships = ParseIncludedRelationships(pair.Value);
                     continue;
                 }
 
                 if (pair.Key.StartsWith("page"))
                 {
-                    PageQuery = ParsePageQuery(pair.Key, pair.Value);
+                    if (disabledQueries.HasFlag(QueryParams.Page) == false)
+                        PageQuery = ParsePageQuery(pair.Key, pair.Value);
                     continue;
                 }
 
                 if (pair.Key.StartsWith("fields"))
                 {
-                    Fields = ParseFieldsQuery(pair.Key, pair.Value);
+                    if (disabledQueries.HasFlag(QueryParams.Fields) == false)
+                        Fields = ParseFieldsQuery(pair.Key, pair.Value);
                     continue;
                 }
 
-                throw new JsonApiException("400", $"{pair} is not a valid query.");
+                throw new JsonApiException(400, $"{pair} is not a valid query.");
             }
         }
 
@@ -74,9 +79,9 @@ namespace JsonApiDotNetCore.Internal.Query
             var queries = new List<FilterQuery>();
 
             var propertyName = key.Split('[', ']')[1].ToProperCase();
-            
+
             var values = value.Split(',');
-            foreach(var val in values)
+            foreach (var val in values)
             {
                 (var operation, var filterValue) = ParseFilterOperation(val);
                 queries.Add(new FilterQuery(propertyName, filterValue, operation));
@@ -87,14 +92,14 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private (string operation, string value) ParseFilterOperation(string value)
         {
-            if(value.Length < 3)
+            if (value.Length < 3)
                 return (string.Empty, value);
-             
+
             var operation = value.Split(':');
 
-            if(operation.Length == 1)
+            if (operation.Length == 1)
                 return (string.Empty, value);
-            
+
             // remove prefix from value
             var prefix = operation[0];
             value = operation[1];
@@ -109,7 +114,7 @@ namespace JsonApiDotNetCore.Internal.Query
             PageQuery = PageQuery ?? new PageQuery();
 
             var propertyName = key.Split('[', ']')[1];
-            
+
             if (propertyName == "size")
                 PageQuery.PageSize = Convert.ToInt32(value);
             else if (propertyName == "number")
@@ -142,8 +147,8 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private List<string> ParseIncludedRelationships(string value)
         {
-            if(value.Contains("."))
-                throw new JsonApiException("400", "Deeply nested relationships are not supported");
+            if (value.Contains("."))
+                throw new JsonApiException(400, "Deeply nested relationships are not supported");
 
             return value
                 .Split(',')
@@ -157,11 +162,11 @@ namespace JsonApiDotNetCore.Internal.Query
 
             var includedFields = new List<string> { "Id" };
 
-            if(typeName != _jsonApiContext.RequestEntity.EntityName) 
+            if (typeName != _jsonApiContext.RequestEntity.EntityName)
                 return includedFields;
 
             var fields = value.Split(',');
-            foreach(var field in fields)
+            foreach (var field in fields)
             {
                 var internalAttrName = _jsonApiContext.RequestEntity
                     .Attributes

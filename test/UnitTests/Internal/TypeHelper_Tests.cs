@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
 using Xunit;
 
@@ -44,9 +45,82 @@ namespace UnitTests.Internal
             Assert.Equal(TestEnum.Test, result);
         }
 
-        public enum TestEnum
+        [Fact]
+        public void ConvertType_Returns_Value_If_Type_Is_Same()
+        {
+            // arrange
+            var val = new ComplexType
+            {
+                Property = 1
+            };
+
+            var type = val.GetType();
+
+            // act
+            var result = TypeHelper.ConvertType(val, type);
+
+            // assert
+            Assert.Equal(val, result);
+        }
+
+        [Fact]
+        public void ConvertType_Returns_Value_If_Type_Is_Assignable()
+        {
+            // arrange
+            var val = new ComplexType
+            {
+                Property = 1
+            };
+
+            var baseType = typeof(BaseType);
+            var iType = typeof(IType);
+
+            // act
+            var baseResult = TypeHelper.ConvertType(val, baseType);
+            var iResult = TypeHelper.ConvertType(val, iType);
+
+            // assert
+            Assert.Equal(val, baseResult);
+            Assert.Equal(val, iResult);
+        }
+
+        [Fact]
+        public void ConvertType_Returns_Default_Value_For_Empty_Strings()
+        {
+            // arrange -- can't use non-constants in [Theory]
+            var data = new Dictionary<Type, object>
+            {
+                { typeof(int), 0 },
+                { typeof(short), (short)0 },
+                { typeof(long), (long)0 },
+                { typeof(string), "" },
+                { typeof(Guid), Guid.Empty },
+            };
+
+            foreach (var t in data)
+            {
+                // act
+                var result = TypeHelper.ConvertType(string.Empty, t.Key);
+
+                // assert
+                Assert.Equal(t.Value, result);
+            }
+        }
+
+        private enum TestEnum
         {
             Test = 1
         }
+
+        private class ComplexType : BaseType
+        {
+            public int Property { get; set; }
+        }
+
+        private class BaseType : IType
+        { }
+
+        private interface IType
+        { }
     }
 }

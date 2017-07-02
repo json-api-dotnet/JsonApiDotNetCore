@@ -13,9 +13,9 @@ namespace JsonApiDotNetCore.Internal
                 case "JsonApiException":
                     return (JsonApiException)exception;
                 case "InvalidCastException":
-                    return new JsonApiException("409", exception.Message);
+                    return new JsonApiException(409, exception.Message);
                 default:
-                    return new JsonApiException("500", exception.Message, GetExceptionDetail(exception.InnerException));
+                    return new JsonApiException(500, exception.Message, GetExceptionDetail(exception.InnerException));
             }
         }
 

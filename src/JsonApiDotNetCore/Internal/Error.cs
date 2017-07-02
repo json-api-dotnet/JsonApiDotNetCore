@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Internal
@@ -13,9 +14,22 @@ namespace JsonApiDotNetCore.Internal
             Title = title;
         }
 
+        public Error(int status, string title)
+        {
+            Status = status.ToString();
+            Title = title;
+        }
+
         public Error(string status, string title, string detail)
         {
             Status = status;
+            Title = title;
+            Detail = detail;
+        }
+
+        public Error(int status, string title, string detail)
+        {
+            Status = status.ToString();
             Title = title;
             Detail = detail;
         }

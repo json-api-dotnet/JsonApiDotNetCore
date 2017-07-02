@@ -12,6 +12,8 @@ namespace JsonApiDotNetCore.Builders
     {
         private List<ContextEntity> _entities;
         private bool _usesDbContext;
+        public Link DocumentLinks { get; set; } = Link.All;
+
         public ContextGraphBuilder()
         {
             _entities = new List<ContextEntity>();
@@ -35,8 +37,18 @@ namespace JsonApiDotNetCore.Builders
                 EntityName = pluralizedTypeName,
                 EntityType = entityType,
                 Attributes = GetAttributes(entityType),
-                Relationships = GetRelationships(entityType)
+                Relationships = GetRelationships(entityType),
+                Links = GetLinkFlags(entityType)
             });
+        }
+
+        private Link GetLinkFlags(Type entityType)
+        {
+            var attribute = (LinksAttribute)entityType.GetTypeInfo().GetCustomAttribute(typeof(LinksAttribute));
+            if (attribute != null)
+                return attribute.Links;
+
+            return DocumentLinks;
         }
 
         protected virtual List<AttrAttribute> GetAttributes(Type entityType)
@@ -114,7 +126,7 @@ namespace JsonApiDotNetCore.Builders
         private string GetResourceName(PropertyInfo property)
         {
             var resourceAttribute = property.GetCustomAttribute(typeof(ResourceAttribute));
-            if(resourceAttribute == null)
+            if (resourceAttribute == null)
                 return property.Name.Dasherize();
 
             return ((ResourceAttribute)resourceAttribute).ResourceName;

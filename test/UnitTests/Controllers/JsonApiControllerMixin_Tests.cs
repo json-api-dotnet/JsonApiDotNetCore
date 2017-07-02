@@ -38,7 +38,6 @@ namespace UnitTests
                     new Error("502", "really bad specific"),
                 }
             };
-
             
             // act
             var result422 = this.Errors(errors422);

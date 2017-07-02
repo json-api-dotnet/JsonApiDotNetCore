@@ -18,14 +18,6 @@ namespace JsonApiDotNetCore.Data
         IEntityRepository<TEntity> 
         where TEntity : class, IIdentifiable<int>
     {
-        [Obsolete("DbContext is no longer directly injected into the ctor. Use JsonApiContext.GetDbContextResolver() instead")]
-        public DefaultEntityRepository(
-            DbContext context,
-            ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
-        : base(context, loggerFactory, jsonApiContext)
-        { }
-
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext)
@@ -170,7 +162,7 @@ namespace JsonApiDotNetCore.Data
             if(relationship != null)
                 return entities.Include(relationship.InternalRelationshipName);
             
-            throw new JsonApiException("400", $"Invalid relationship {relationshipName} on {entity.EntityName}",
+            throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
 

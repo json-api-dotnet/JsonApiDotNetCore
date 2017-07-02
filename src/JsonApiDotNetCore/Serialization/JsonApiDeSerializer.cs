@@ -14,14 +14,14 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
         private readonly IJsonApiContext _jsonApiContext;
-        private readonly IGenericProcessorFactory _genericProcessorFactor;
+        private readonly IGenericProcessorFactory _genericProcessorFactory;
 
         public JsonApiDeSerializer(
             IJsonApiContext jsonApiContext,
             IGenericProcessorFactory genericProcessorFactory)
         {
             _jsonApiContext = jsonApiContext;
-            _genericProcessorFactor = genericProcessorFactory;
+            _genericProcessorFactory = genericProcessorFactory;
         }
 
         public object Deserialize(string requestBody)
@@ -34,14 +34,12 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException("400", "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
 
-        public object Deserialize<TEntity>(string requestBody)
-        {
-            return (TEntity)Deserialize(requestBody);
-        }
+        public TEntity Deserialize<TEntity>(string requestBody)
+            => (TEntity)Deserialize(requestBody);
 
         public object DeserializeRelationship(string requestBody)
         {
@@ -56,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException("400", "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
 
@@ -77,7 +75,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException("400", "Failed to deserialize request body", e.Message);
+                throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
 
@@ -114,16 +112,36 @@ namespace JsonApiDotNetCore.Serialization
                 if (entityProperty == null)
                     throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an attribute named {attr.InternalAttributeName}", nameof(entity));
 
-                object newValue;
-                if (attributeValues.TryGetValue(attr.PublicAttributeName, out newValue))
+                if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+                    var convertedValue = ConvertAttrValue(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
-                    _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
+
+                    if(attr.IsImmutable == false)
+                        _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
                 }
             }
 
             return entity;
+        }
+
+        private object ConvertAttrValue(object newValue, Type targetType)
+        {
+            if (newValue is JContainer jObject)
+                return DeserializeComplexType(jObject, targetType);
+
+            var convertedValue = TypeHelper.ConvertType(newValue, targetType);
+            return convertedValue;
+        }
+
+        private object DeserializeComplexType(JContainer obj, Type targetType)
+        {
+            var serializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = _jsonApiContext.Options.JsonContractResolver
+            };
+
+            return obj.ToObject(targetType, JsonSerializer.Create(serializerSettings));
         }
 
         private object SetRelationships(
@@ -155,7 +173,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
 
             if (entityProperty == null)
-                throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
             var relationshipName = attr.PublicRelationshipName;
 
@@ -188,7 +206,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
 
             if (entityProperty == null)
-                throw new JsonApiException("400", $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
+                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
 
             var relationshipName = attr.PublicRelationshipName;
 
@@ -198,7 +216,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var genericProcessor = _genericProcessorFactor.GetProcessor(attr.Type);
+                var genericProcessor = _genericProcessorFactory.GetProcessor(attr.Type);
                 var ids = relationshipData.ManyData.Select(r => r["id"]);
                 genericProcessor.SetRelationships(entity, attr, ids);
             }
