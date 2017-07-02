@@ -40,6 +40,8 @@ namespace JsonApiDotNetCore.Extensions
 
             options(config);
 
+            config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
+
             mvcBuilder
                 .AddMvcOptions(opt =>
                 {
@@ -83,7 +85,7 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-            if(!jsonApiOptions.ContextGraph.UsesDbContext)
+            if (!jsonApiOptions.ContextGraph.UsesDbContext)
             {
                 services.AddScoped<DbContext>();
                 services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);

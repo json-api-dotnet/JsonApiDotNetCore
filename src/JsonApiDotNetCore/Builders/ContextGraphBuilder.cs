@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Extensions;
+using System.Linq;
 
 namespace JsonApiDotNetCore.Builders
 {
     public class ContextGraphBuilder : IContextGraphBuilder
     {
-        private List<ContextEntity> _entities;
+        private List<ContextEntity> _entities = new List<ContextEntity>();
         private bool _usesDbContext;
         public Link DocumentLinks { get; set; } = Link.All;
 
@@ -32,6 +33,9 @@ namespace JsonApiDotNetCore.Builders
         public void AddResource<TResource>(string pluralizedTypeName) where TResource : class
         {
             var entityType = typeof(TResource);
+
+            VerifyEntityIsNotAlreadyDefined(entityType);
+
             _entities.Add(new ContextEntity
             {
                 EntityName = pluralizedTypeName,
@@ -98,8 +102,6 @@ namespace JsonApiDotNetCore.Builders
 
             var contextType = typeof(T);
 
-            var entities = new List<ContextEntity>();
-
             var contextProperties = contextType.GetProperties();
 
             foreach (var property in contextProperties)
@@ -110,7 +112,10 @@ namespace JsonApiDotNetCore.Builders
                     && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 {
                     var entityType = dbSetType.GetGenericArguments()[0];
-                    entities.Add(new ContextEntity
+                    
+                    VerifyEntityIsNotAlreadyDefined(entityType);
+
+                    _entities.Add(new ContextEntity
                     {
                         EntityName = GetResourceName(property),
                         EntityType = entityType,
@@ -119,8 +124,6 @@ namespace JsonApiDotNetCore.Builders
                     });
                 }
             }
-
-            _entities = entities;
         }
 
         private string GetResourceName(PropertyInfo property)
@@ -130,6 +133,12 @@ namespace JsonApiDotNetCore.Builders
                 return property.Name.Dasherize();
 
             return ((ResourceAttribute)resourceAttribute).ResourceName;
+        }
+
+        private void VerifyEntityIsNotAlreadyDefined(Type entityType)
+        {
+            if (_entities.Any(e => e.EntityType == entityType))
+                throw new InvalidOperationException($"Cannot add entity type {entityType} to context graph, there is already an entity of that type configured.");
         }
     }
 }
