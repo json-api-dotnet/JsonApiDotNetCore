@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
@@ -16,7 +15,7 @@ namespace JsonApiDotNetCore.Formatters
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly ILogger<JsonApiReader> _logger;
-        
+
 
         public JsonApiReader(IJsonApiDeSerializer deSerializer, IJsonApiContext jsonApiContext, ILoggerFactory loggerFactory)
         {
@@ -37,11 +36,11 @@ namespace JsonApiDotNetCore.Formatters
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
-                var model = _jsonApiContext.IsRelationshipPath ? 
+                var model = _jsonApiContext.IsRelationshipPath ?
                     _deSerializer.DeserializeRelationship(body) :
                     _deSerializer.Deserialize(body);
 
-                if(model == null)
+                if (model == null)
                     _logger?.LogError("An error occurred while de-serializing the payload");
 
                 return InputFormatterResult.SuccessAsync(model);
@@ -49,14 +48,13 @@ namespace JsonApiDotNetCore.Formatters
             catch (JsonSerializationException ex)
             {
                 _logger?.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
-                context.HttpContext.Response.StatusCode = 422;
+                context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
                 return InputFormatterResult.FailureAsync();
             }
-            catch(JsonApiException jex)
+            catch (JsonApiException jex)
             {
                 _logger?.LogError(new EventId(), jex, "An error occurred while de-serializing the payload");
-                context.HttpContext.Response.StatusCode = jex.GetStatusCode();
-                context.HttpContext.Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(jex.GetError())));
+                context.ModelState.AddModelError(context.ModelName, jex, context.Metadata);
                 return InputFormatterResult.FailureAsync();
             }
         }
