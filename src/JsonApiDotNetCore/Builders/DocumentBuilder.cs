@@ -95,12 +95,10 @@ namespace JsonApiDotNetCore.Builders
 
         private List<DocumentData> AppendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)
         {
-            var includedEntities = GetIncludedEntities(contextEntity, entity);
-            if (includedEntities.Count > 0)
+            var includedEntities = GetIncludedEntities(includedObject, contextEntity, entity);
+            if (includedEntities?.Count > 0)
             {
-                if (includedObject == null)
-                    includedObject = new List<DocumentData>();
-                includedObject.AddRange(includedEntities);
+                includedObject = includedEntities;
             }
 
             return includedObject;
@@ -174,10 +172,8 @@ namespace JsonApiDotNetCore.Builders
             });
         }
 
-        private List<DocumentData> GetIncludedEntities(ContextEntity contextEntity, IIdentifiable entity)
+        private List<DocumentData> GetIncludedEntities(List<DocumentData> included, ContextEntity contextEntity, IIdentifiable entity)
         {
-            var included = new List<DocumentData>();
-
             contextEntity.Relationships.ForEach(r =>
             {
                 if (!RelationshipIsIncluded(r.PublicRelationshipName)) return;
@@ -186,20 +182,25 @@ namespace JsonApiDotNetCore.Builders
 
                 if (navigationEntity is IEnumerable hasManyNavigationEntity)
                     foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
-                        AddIncludedEntity(included, includedEntity);
+                        included = AddIncludedEntity(included, includedEntity);
                 else
-                    AddIncludedEntity(included, (IIdentifiable)navigationEntity);
+                    included = AddIncludedEntity(included, (IIdentifiable)navigationEntity);
             });
 
             return included;
         }
 
-        private void AddIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
+        private List<DocumentData> AddIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
         {
             var includedEntity = GetIncludedEntity(entity);
 
+            if(entities == null)
+                entities = new List<DocumentData>();
+
             if(includedEntity != null && !entities.Any(doc => doc.Id == includedEntity.Id && doc.Type == includedEntity.Type))
                 entities.Add(includedEntity);
+
+            return entities;
         }
 
         private DocumentData GetIncludedEntity(IIdentifiable entity)
