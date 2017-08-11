@@ -176,7 +176,7 @@ namespace JsonApiDotNetCore.Serialization
                 var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
                         .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
 
-                var data = (Dictionary<string, string>)relationshipData.ExposedData;
+                var data = (Dictionary<string, object>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
@@ -206,12 +206,12 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                var data = (List<Dictionary<string, string>>)relationshipData.ExposedData;
+                var data = (List<Dictionary<string, object>>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
                 var genericProcessor = _genericProcessorFactory.GetProcessor(attr.Type);
-                var ids = relationshipData.ManyData.Select(r => r["id"]);
+                var ids = relationshipData.ManyData.Select(r => r["id"].ToString());
                 genericProcessor.SetRelationships(entity, attr, ids);
             }
 
