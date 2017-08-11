@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Models.Pointers
 
         private object GetValueFromRoot(List<Operation> operations)
         {
-            var pathSegments = PointerAddress.Split('/');
+            var pathSegments = PointerAddress.Split(new [] { '/' } , StringSplitOptions.RemoveEmptyEntries);
 
             if(pathSegments.Length < 4)
                 throw BadRequestException("number of segments", pathSegments.Length);
