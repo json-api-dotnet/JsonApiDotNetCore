@@ -49,6 +49,60 @@ namespace UnitTests.Internal
         }
 
         [Fact]
+        public void Filters_Properly_Parses_DateTime_With_Operation()
+        {
+            // arrange
+            const string dt = "2017-08-15T22:43:47.0156350-05:00";
+            var query = new Dictionary<string, StringValues> {
+                { "filter[key]", new StringValues("le:" + dt) }
+            };
+
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            _jsonApiContextMock
+                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
+                .Returns(new DisableQueryAttribute(QueryParams.None));
+
+            // act -- ctor calls BuildQuerySet()
+            var querySet = new QuerySet(
+                _jsonApiContextMock.Object,
+                _queryCollectionMock.Object);
+
+            // assert
+            Assert.Equal(dt, querySet.Filters.Single(f => f.Key == "Key").Value);
+            Assert.Equal("le", querySet.Filters.Single(f => f.Key == "Key").Operation);
+        }
+
+        [Fact]
+        public void Filters_Properly_Parses_DateTime_Without_Operation()
+        {
+            // arrange
+            const string dt = "2017-08-15T22:43:47.0156350-05:00";
+            var query = new Dictionary<string, StringValues> {
+                { "filter[key]", new StringValues(dt) }
+            };
+
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            _jsonApiContextMock
+                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
+                .Returns(new DisableQueryAttribute(QueryParams.None));
+
+            // act -- ctor calls BuildQuerySet()
+            var querySet = new QuerySet(
+                _jsonApiContextMock.Object,
+                _queryCollectionMock.Object);
+
+            // assert
+            Assert.Equal(dt, querySet.Filters.Single(f => f.Key == "Key").Value);
+            Assert.Equal(string.Empty, querySet.Filters.Single(f => f.Key == "Key").Operation);
+        }
+
+        [Fact]
         public void Can_Disable_Filters()
         {
             // arrange

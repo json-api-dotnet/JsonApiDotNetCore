@@ -101,8 +101,11 @@ namespace JsonApiDotNetCore.Internal.Query
                 return (string.Empty, value);
 
             // remove prefix from value
+            if(Enum.TryParse(operation[0], out FilterOperations op) == false)
+                return (string.Empty, value);
+            
             var prefix = operation[0];
-            value = operation[1];
+            value = string.Join(":", operation.Skip(1));
 
             return (prefix, value);
         }
