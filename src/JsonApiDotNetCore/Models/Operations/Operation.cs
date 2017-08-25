@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Controllers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -15,7 +13,7 @@ namespace JsonApiDotNetCore.Models.Operations
         public ResourceReference Ref { get; set; }
 
         [JsonProperty("params")]
-        public QueryParams Params { get; set; }
+        public Params Params { get; set; }
 
         [JsonProperty("data")]
         public object Data
