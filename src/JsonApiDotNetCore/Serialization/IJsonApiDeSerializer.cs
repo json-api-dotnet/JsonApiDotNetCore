@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -7,5 +8,6 @@ namespace JsonApiDotNetCore.Serialization
         object Deserialize(string requestBody);
         object DeserializeRelationship(string requestBody);
         List<TEntity> DeserializeList<TEntity>(string requestBody);
+        object DocumentToObject(DocumentData data);
     }
 }

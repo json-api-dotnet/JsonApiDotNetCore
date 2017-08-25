@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Models.Operations;
 
 namespace JsonApiDotNetCore.Models.Pointers
 {
-    public class OperationsPointer : Pointer
+    public class OperationsPointer : Pointer<Operation>
     {
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="System.ArgumentException"></exception>
