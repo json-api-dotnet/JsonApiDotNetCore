@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Data
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var genericProcessor = _genericProcessorFactory.GetProcessor(relationship.Type);
+            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(relationship.Type);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 

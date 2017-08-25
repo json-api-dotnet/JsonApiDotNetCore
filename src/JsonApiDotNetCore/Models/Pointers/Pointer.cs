@@ -3,9 +3,9 @@ using Newtonsoft.Json.Schema;
 
 namespace JsonApiDotNetCore.Models.Pointers
 {
-    public abstract class Pointer
+    public abstract class Pointer<TPointerBase>
     {
-        private static JSchema JsonSchema { get; } = JSchema.Parse("{ 'pointer': {'type': 'string'} }");
+        public static JSchema JsonSchema { get; } = JSchema.Parse("{ 'pointer': {'type': 'string'} }");
 
         /// <summary>
         /// Location represented by the pointer

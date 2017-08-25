@@ -28,7 +28,10 @@ namespace JsonApiDotNetCore.Builders
             return graph;
         }
 
-        public void AddResource<TResource>(string pluralizedTypeName) where TResource : class
+        public void AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>
+            => AddResource<TResource, int>(pluralizedTypeName);
+
+        public void AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>
         {
             var entityType = typeof(TResource);
 
@@ -38,6 +41,7 @@ namespace JsonApiDotNetCore.Builders
             {
                 EntityName = pluralizedTypeName,
                 EntityType = entityType,
+                IdentityType = typeof(TId),
                 Attributes = GetAttributes(entityType),
                 Relationships = GetRelationships(entityType)
             });
