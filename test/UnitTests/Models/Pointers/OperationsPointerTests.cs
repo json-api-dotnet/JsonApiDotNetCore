@@ -9,6 +9,25 @@ namespace UnitTests.Models.Pointers
     public class OperationsPointerTests
     {
         [Fact]
+        public void GetValue_Can_Get_Value_From_Ref_Id()
+        {
+            // arrange
+            var json = @"[
+                {
+                    ""op"": ""add"",
+                    ""ref"": {
+                        ""type"": ""articles"",
+                        ""id"": ""1""
+                    }
+                }]";
+            var operations = JsonConvert.DeserializeObject<List<Operation>>(json);
+            var pointerJson = @"{ ""pointer"": ""/operations/0/ref/id"" }";
+            var pointer = JsonConvert.DeserializeObject<OperationsPointer>(pointerJson);
+            var value = pointer.GetValue(operations);
+            Assert.Equal("1", value.ToString());
+        }
+
+        [Fact]
         public void GetValue_Can_Get_Value_From_Data_Id()
         {
             // arrange
