@@ -78,9 +78,9 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private object DocumentToObject(DocumentData data)
+        public object DocumentToObject(DocumentData data)
         {
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type);
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type?.ToString());
             _jsonApiContext.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization
             var identifiableEntity = (IIdentifiable)entity;
 
             if (data.Id != null)
-                identifiableEntity.StringId = data.Id;
+                identifiableEntity.StringId = data.Id?.ToString();
 
             return identifiableEntity;
         }
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var genericProcessor = _genericProcessorFactory.GetProcessor(attr.Type);
+                var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(attr.Type);
                 var ids = relationshipData.ManyData.Select(r => r["id"].ToString());
                 genericProcessor.SetRelationships(entity, attr, ids);
             }

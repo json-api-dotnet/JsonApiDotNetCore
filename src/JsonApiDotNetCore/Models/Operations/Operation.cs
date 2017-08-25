@@ -47,5 +47,16 @@ namespace JsonApiDotNetCore.Models.Operations
         public bool DataIsList { get; private set; }
         public List<DocumentData> DataList { get; private set; }
         public DocumentData DataObject { get; private set; }
+
+        public string GetResourceTypeName()
+        {
+            if(Ref != null)
+                return Ref.Type?.ToString();
+
+            if(DataIsList)
+                return DataList[0].Type?.ToString();
+
+            return DataObject.Type?.ToString();
+        }
     }
 }
