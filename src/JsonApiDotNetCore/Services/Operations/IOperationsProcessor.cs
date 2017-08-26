@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             _processorResolver = processorResolver;
         }
+        
         public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
         {
             var outputOps = new List<Operation>();
@@ -31,15 +32,14 @@ namespace JsonApiDotNetCore.Services.Operations
                 var replacer = new DocumentDataPointerReplacement<OperationsPointer, Operation>(op.DataObject);
                 replacer.ReplacePointers(outputOps);
 
-                /// 
                 var processor = _processorResolver.LocateCreateService(op);
                 var resultOp = await processor.ProcessAsync(op);
-                outputOps.Add(resultOp);
-            }
-            for(var i=0; i < inputOps.Count; i++)
-            {
                 
+                if(resultOp != null)
+                    outputOps.Add(resultOp);
             }
+
+            return outputOps;
         }
     }
 }
