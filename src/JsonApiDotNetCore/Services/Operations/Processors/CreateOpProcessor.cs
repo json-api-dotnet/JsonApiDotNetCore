@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Serialization;
 
-namespace JsonApiDotNetCore.Services.Operations
+namespace JsonApiDotNetCore.Services.Operations.Processors
 {
     public class CreateOpProcessor<T, TId> : IOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
