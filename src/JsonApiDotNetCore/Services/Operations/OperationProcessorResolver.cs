@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models.Operations;
 
@@ -33,7 +32,7 @@ namespace JsonApiDotNetCore.Services.Operations
             if (_cachedProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
                 return cachedProcessor;
 
-            var contextEntity = _context.ContextGraph.GetContextEntity();
+            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
             var processor = _processorFactory.GetProcessor<IOpProcessor>(contextEntity.EntityType, contextEntity.IdentityType);
             
             _cachedProcessors[resource] = processor;
