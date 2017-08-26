@@ -1,31 +1,29 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
+using Bogus;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Xunit;
-using JsonApiDotNetCoreExample.Data;
-using Bogus;
-using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCore.Serialization;
-using System.Linq;
-using Person = JsonApiDotNetCoreExample.Models.Person;
 using Newtonsoft.Json;
-using JsonApiDotNetCore.Models;
+using Xunit;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
     public class AttributeFilterTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public AttributeFilterTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public AttributeFilterTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()

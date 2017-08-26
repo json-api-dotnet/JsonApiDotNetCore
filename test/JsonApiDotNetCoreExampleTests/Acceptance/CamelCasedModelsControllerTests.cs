@@ -4,29 +4,27 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Serialization;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.AspNetCore.Hosting;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
     public class CamelCasedModelsControllerTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private IJsonApiContext _jsonApiContext;
         private Faker<CamelCasedModel> _faker;
 
-        public CamelCasedModelsControllerTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public CamelCasedModelsControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -37,6 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         [Fact]
         public async Task Can_Get_CamelCasedModels()
+
         {
             // Arrange
             var model = _faker.Generate();

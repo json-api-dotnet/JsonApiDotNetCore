@@ -20,8 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Startups
         {
             var loggerFactory = new LoggerFactory();
 
-            loggerFactory
-              .AddConsole(LogLevel.Trace);
+            loggerFactory.AddConsole();
 
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 

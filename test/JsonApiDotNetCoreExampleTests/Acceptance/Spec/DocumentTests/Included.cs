@@ -1,32 +1,30 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
+using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCoreExample.Data;
-using Bogus;
-using JsonApiDotNetCoreExample.Models;
-using System.Linq;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
     public class Included
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
-        private Faker<Person> _personFaker;
+        private Bogus.Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<TodoItemCollection> _todoItemCollectionFaker;
 
-        public Included(DocsFixture<Startup, JsonDocWriter> fixture)
+        public Included(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

@@ -1,33 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
 using DotNetCoreDocs.Models;
-using DotNetCoreDocs.Writers;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Person = JsonApiDotNetCoreExample.Models.Person;
 using Newtonsoft.Json;
 using Xunit;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Serialization;
-using System.Linq;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
     public class TodoItemControllerTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
 
-        public TodoItemControllerTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public TodoItemControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -51,11 +49,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todo-items";
-
-            var description = new RequestProperties("Get TodoItems");
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
@@ -78,13 +75,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?page[size]={expectedEntitiesPerPage}";
-
-            var description = new RequestProperties("Paginate TodoItems", new Dictionary<string, string> {
-                { "?page[size]=", "Number of entities per page" }
-            });
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
@@ -107,13 +101,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?filter[ordinal]={todoItem.Ordinal}";
-
-            var description = new RequestProperties("Filter TodoItems By Attribute", new Dictionary<string, string> {
-                { "?filter[...]=", "Filter on attribute" }
-            });
-
+            var request = new HttpRequestMessage(httpMethod, route);
+            
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
@@ -137,13 +128,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?filter[description]=like:{substring}";
-
-            var description = new RequestProperties("Filter TodoItems Where Attribute Like", new Dictionary<string, string> {
-                { "?filter[...]=", "Filter on attribute" }
-            });
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
@@ -175,13 +163,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?sort=ordinal";
-
-            var description = new RequestProperties("Sort TodoItems Ascending", new Dictionary<string, string> {
-                { "?sort=attr", "Sort on attribute" }
-            });
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
@@ -217,13 +202,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?sort=-ordinal";
-
-            var description = new RequestProperties("Sort TodoItems Descending", new Dictionary<string, string> {
-                { "?sort=-attr", "Sort on attribute" }
-            });
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
@@ -251,13 +233,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items/{todoItem.Id}";
-
-            var description = new RequestProperties("Get TodoItem By Id", new Dictionary<string, string> {
-                { "/todo-items/{id}", "TodoItem Id" }
-            });
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
@@ -282,14 +261,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner";
-
-            var description = new RequestProperties("Get TodoItem By Id", new Dictionary<string, string> {
-                { "/todo-items/{id}", "TodoItem Id" },
-                { "?include={relationship}", "Included Relationship" }
-            });
+            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, httpMethod, route);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
@@ -344,10 +319,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-            var description = new RequestProperties("Post TodoItem");
-
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
@@ -393,11 +366,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-
-            var description = new RequestProperties("Patch TodoItem");
-
+            
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
@@ -448,10 +419,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-            var description = new RequestProperties("Patch TodoItem");
-
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
@@ -501,10 +470,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-            var description = new RequestProperties("Patch TodoItem");
-
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
@@ -539,7 +506,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var description = new RequestProperties("Delete TodoItem");
 
             // Act
-            var response = await _fixture.MakeRequest<TodoItem>(description, request);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
