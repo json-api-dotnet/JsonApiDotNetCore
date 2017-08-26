@@ -10,7 +10,6 @@ namespace JsonApiDotNetCore.Internal.Generics
     /// </summary>
     public interface IGenericProcessorFactory
     {
-
         TInterface GetProcessor<TInterface>(params Type[] types);
     }
 }
