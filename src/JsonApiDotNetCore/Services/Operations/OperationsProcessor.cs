@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Models.Pointers;
 
