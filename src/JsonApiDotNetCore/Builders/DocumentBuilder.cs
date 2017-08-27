@@ -104,7 +104,7 @@ namespace JsonApiDotNetCore.Builders
             return includedObject;
         }
 
-        private DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
+        public DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
         {
             var data = new DocumentData
             {
