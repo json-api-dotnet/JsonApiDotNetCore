@@ -1,11 +1,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Models.Operations;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
@@ -17,18 +14,18 @@ namespace JsonApiDotNetCore.Formatters
 
     public class JsonApiOperationsReader : IJsonApiOperationsReader
     {
-        public JsonApiOperationsReader()
-        {
-        }
-
         public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
             var request = context.HttpContext.Request;
-            if (request.ContentLength == 0)
+            if (request.ContentLength == null || request.ContentLength == 0)
                 return InputFormatterResult.FailureAsync();
+
+            var body = GetRequestBody(request.Body);
+
+            var operations = JsonConvert.DeserializeObject<OperationsDocument>(body);
 
             return InputFormatterResult.SuccessAsync(null);
         }
@@ -36,9 +33,7 @@ namespace JsonApiDotNetCore.Formatters
         private string GetRequestBody(Stream body)
         {
             using (var reader = new StreamReader(body))
-            {
                 return reader.ReadToEnd();
-            }
         }
     }
 }
