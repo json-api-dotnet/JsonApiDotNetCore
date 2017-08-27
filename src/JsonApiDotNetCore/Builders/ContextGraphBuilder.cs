@@ -28,10 +28,10 @@ namespace JsonApiDotNetCore.Builders
             return graph;
         }
 
-        public void AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>
+        public IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>
             => AddResource<TResource, int>(pluralizedTypeName);
 
-        public void AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>
+        public IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>
         {
             var entityType = typeof(TResource);
 
@@ -45,6 +45,8 @@ namespace JsonApiDotNetCore.Builders
                 Attributes = GetAttributes(entityType),
                 Relationships = GetRelationships(entityType)
             });
+
+            return this;
         }
 
         private Link GetLinkFlags(Type entityType)
@@ -97,7 +99,7 @@ namespace JsonApiDotNetCore.Builders
                 return prop.PropertyType;
         }
 
-        public void AddDbContext<T>() where T : DbContext
+        public IContextGraphBuilder AddDbContext<T>() where T : DbContext
         {
             _usesDbContext = true;
 
@@ -125,6 +127,8 @@ namespace JsonApiDotNetCore.Builders
                     });
                 }
             }
+
+            return this;
         }
 
         private string GetResourceName(PropertyInfo property)

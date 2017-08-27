@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Models.Pointers;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models

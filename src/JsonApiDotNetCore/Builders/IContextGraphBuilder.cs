@@ -8,8 +8,8 @@ namespace JsonApiDotNetCore.Builders
     {
         Link DocumentLinks  { get; set; }
         IContextGraph Build();
-        void AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>;
-        void AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>;
-        void AddDbContext<T>() where T : DbContext;
+        IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>;
+        IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>;
+        IContextGraphBuilder AddDbContext<T>() where T : DbContext;
     }
 }
