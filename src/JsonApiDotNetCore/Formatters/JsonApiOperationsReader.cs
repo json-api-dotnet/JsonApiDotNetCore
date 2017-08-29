@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Operations;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
@@ -27,7 +28,10 @@ namespace JsonApiDotNetCore.Formatters
 
             var operations = JsonConvert.DeserializeObject<OperationsDocument>(body);
 
-            return InputFormatterResult.SuccessAsync(null);
+            if(operations == null)
+                throw new JsonApiException(400, "Failed to deserialize operations request.");
+
+            return InputFormatterResult.SuccessAsync(operations);
         }
 
         private string GetRequestBody(Stream body)
