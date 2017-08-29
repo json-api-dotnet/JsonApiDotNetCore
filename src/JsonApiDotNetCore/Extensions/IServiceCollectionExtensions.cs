@@ -6,8 +6,10 @@ using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Services.Operations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -91,6 +93,9 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);
             }
 
+            if (jsonApiOptions.EnabledExtensions.Contains(JsonApiExtension.Operations))
+                AddOperationServices(services);
+
             services.AddScoped<IDbContextResolver, DbContextResolver>();
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
@@ -112,8 +117,18 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IQueryAccessor, QueryAccessor>();
         }
 
+        private static void AddOperationServices(IServiceCollection services)
+        {
+            services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+            services.AddSingleton<IOperationProcessorResolver, OperationProcessorResolver>();
+            services.AddSingleton<IGenericProcessorFactory, GenericProcessorFactory>();
+        }
+
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
         {
+            if (jsonApiOptions.EnabledExtensions.Contains(JsonApiExtension.Operations))
+                options.InputFormatters.Insert(0, new JsonApiOperationsInputFormatter());
+
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
 
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());

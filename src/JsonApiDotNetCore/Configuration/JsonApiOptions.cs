@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
@@ -17,6 +19,7 @@ namespace JsonApiDotNetCore.Configuration
         public bool RelativeLinks { get; set; }
         public IContractResolver JsonContractResolver { get; set; } = new DasherizedResolver();
         internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
+        internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
 
         public void BuildContextGraph<TContext>(Action<IContextGraphBuilder> builder)
         where TContext : DbContext
@@ -35,6 +38,11 @@ namespace JsonApiDotNetCore.Configuration
             builder(ContextGraphBuilder);
 
             ContextGraph = ContextGraphBuilder.Build();
+        }
+
+        public void EnableExtension(JsonApiExtension extension)
+        {
+            EnabledExtensions.Add(extension);
         }
     }
 }
