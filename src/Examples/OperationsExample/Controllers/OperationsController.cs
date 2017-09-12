@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OperationsExample.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/bulk")]
     public class OperationsController : JsonApiOperationsController
     {
         public OperationsController(IOperationsProcessor processor)

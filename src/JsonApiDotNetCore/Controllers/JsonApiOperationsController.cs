@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Controllers
             _operationsProcessor = operationsProcessor;
         }
 
-        [HttpPost("bulk")]
+        [HttpPatch]
         public async Task<IActionResult> PatchAsync(OperationsDocument doc)
         {
             var results = await _operationsProcessor.ProcessAsync(doc.Operations);
