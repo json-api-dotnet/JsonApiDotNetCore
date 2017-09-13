@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> PatchAsync(OperationsDocument doc)
+        public async Task<IActionResult> PatchAsync([FromBody] OperationsDocument doc)
         {
             var results = await _operationsProcessor.ProcessAsync(doc.Operations);
             return Ok(results);
