@@ -112,6 +112,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             services.AddScoped<IJsonApiDeSerializer, JsonApiDeSerializer>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
+            services.AddScoped<IJsonApiOperationsReader, JsonApiOperationsReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
@@ -126,10 +127,10 @@ namespace JsonApiDotNetCore.Extensions
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
         {
+            options.InputFormatters.Insert(0, new JsonApiInputFormatter());
+
             if (jsonApiOptions.EnabledExtensions.Contains(JsonApiExtension.Operations))
                 options.InputFormatters.Insert(0, new JsonApiOperationsInputFormatter());
-
-            options.InputFormatters.Insert(0, new JsonApiInputFormatter());
 
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
 
