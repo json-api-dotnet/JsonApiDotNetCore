@@ -1,5 +1,5 @@
 ---
-currentMenu: includingRelationships
+currentMenu: includingrelationships
 ---
 
 # Including Relationships
