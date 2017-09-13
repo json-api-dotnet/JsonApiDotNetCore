@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Extensions;
 using System;
 using OperationsExample.Data;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Formatters;
 
 namespace OperationsExample
 {
@@ -36,14 +35,9 @@ namespace OperationsExample
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql(GetDbConnectionString());
-            }, ServiceLifetime  .Transient);
+            }, ServiceLifetime.Transient);
 
             services.AddJsonApi<AppDbContext>(opt => opt.EnableExtension(JsonApiExtension.Operations));
-
-            services.AddMvc().AddMvcOptions(options => {
-                    options.InputFormatters.Clear();
-                    options.InputFormatters.Insert(0, new JsonApiOperationsInputFormatter());
-                });
 
             return services.BuildServiceProvider();
         }
