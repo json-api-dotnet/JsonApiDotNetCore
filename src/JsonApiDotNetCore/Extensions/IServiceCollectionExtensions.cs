@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
+using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -99,6 +100,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IDbContextResolver, DbContextResolver>();
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
+            services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
             services.AddSingleton<JsonApiOptions>(jsonApiOptions);
@@ -115,6 +118,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiOperationsReader, JsonApiOperationsReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
+            services.AddScoped(typeof(GenericProcessor<,>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IControllerContext, Services.ControllerContext>();
@@ -123,6 +127,8 @@ namespace JsonApiDotNetCore.Extensions
         private static void AddOperationServices(IServiceCollection services)
         {
             services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+            services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
+            services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
             services.AddSingleton<IOperationProcessorResolver, OperationProcessorResolver>();
             services.AddSingleton<IGenericProcessorFactory, GenericProcessorFactory>();
         }

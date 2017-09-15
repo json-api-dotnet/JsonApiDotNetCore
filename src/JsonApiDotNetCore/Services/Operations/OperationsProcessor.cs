@@ -18,12 +18,12 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             _processorResolver = processorResolver;
         }
-        
+
         public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
         {
             var outputOps = new List<Operation>();
 
-            foreach(var op in inputOps)
+            foreach (var op in inputOps)
             {
                 // TODO: parse pointers:
                 // locate all objects within the document and replace them
@@ -33,8 +33,8 @@ namespace JsonApiDotNetCore.Services.Operations
 
                 var processor = _processorResolver.LocateCreateService(op);
                 var resultOp = await processor.ProcessAsync(op);
-                
-                if(resultOp != null)
+
+                if (resultOp != null)
                     outputOps.Add(resultOp);
             }
 
