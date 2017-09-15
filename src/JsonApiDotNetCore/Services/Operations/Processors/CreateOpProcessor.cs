@@ -7,6 +7,14 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
+    public interface ICreateOpProcessor<T> : IOpProcessor
+        where T : class, IIdentifiable<int>
+    { }
+
+    public interface ICreateOpProcessor<T, TId> : IOpProcessor
+        where T : class, IIdentifiable<TId>
+    { }
+
     public class CreateOpProcessor<T> : CreateOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     {
@@ -19,7 +27,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         { }
     }
 
-    public class CreateOpProcessor<T, TId> : IOpProcessor<T, TId>
+    public class CreateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly ICreateService<T, TId> _service;
@@ -44,12 +52,13 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
             var result = await _service.CreateAsync(model);
 
-            var operationResult = new Operation {
+            var operationResult = new Operation
+            {
                 Op = OperationCode.add
             };
-            
+
             operationResult.Data = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()), 
+                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
                 result);
 
             return operationResult;
