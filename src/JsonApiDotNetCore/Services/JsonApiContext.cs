@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Services
 
             RequestEntity = ContextGraph.GetContextEntity(typeof(T));
 
-            if (context.Request.Query.Any())
+            if (context.Request.Query.Count > 0)
             {
                 QuerySet = new QuerySet(this, context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;
