@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Builders
                 Meta = GetMeta(entity)
             };
 
-            if(ShouldIncludePageLinks(contextEntity))
+            if (ShouldIncludePageLinks(contextEntity))
                 document.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
 
             document.Included = AppendIncludedObject(document.Included, contextEntity, entity);
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Builders
                 Meta = GetMeta(enumeratedEntities.FirstOrDefault())
             };
 
-            if(ShouldIncludePageLinks(contextEntity))
+            if (ShouldIncludePageLinks(contextEntity))
                 documents.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
 
             foreach (var entity in enumeratedEntities)
@@ -74,20 +74,20 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<string, object> GetMeta(IIdentifiable entity)
         {
             if (entity == null) return null;
-            
+
             var builder = _jsonApiContext.MetaBuilder;
 
-            if(entity is IHasMeta metaEntity)
+            if (entity is IHasMeta metaEntity)
                 builder.Add(metaEntity.GetMeta(_jsonApiContext));
 
-            if(_jsonApiContext.Options.IncludeTotalRecordCount)
+            if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
-            
-            if(_requestMeta != null)
+
+            if (_requestMeta != null)
                 builder.Add(_requestMeta.GetMeta());
 
             var meta = builder.Build();
-            if(meta.Count > 0) return meta;
+            if (meta.Count > 0) return meta;
             return null;
         }
 
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Attributes.ForEach(attr =>
             {
-                if(ShouldIncludeAttribute(attr))
+                if (ShouldIncludeAttribute(attr))
                     data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
             });
 
@@ -131,8 +131,8 @@ namespace JsonApiDotNetCore.Builders
 
         private bool ShouldIncludeAttribute(AttrAttribute attr)
         {
-            return (_jsonApiContext.QuerySet == null 
-                || _jsonApiContext.QuerySet.Fields.Count == 0 
+            return (_jsonApiContext.QuerySet == null
+                || _jsonApiContext.QuerySet.Fields.Count == 0
                 || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
         }
 
@@ -145,13 +145,13 @@ namespace JsonApiDotNetCore.Builders
             {
                 var relationshipData = new RelationshipData();
 
-                if(r.DocumentLinks.HasFlag(Link.None) == false)
+                if (r.DocumentLinks.HasFlag(Link.None) == false)
                 {
                     relationshipData.Links = new Links();
-                    if(r.DocumentLinks.HasFlag(Link.Self))
+                    if (r.DocumentLinks.HasFlag(Link.Self))
                         relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
-                    
-                    if(r.DocumentLinks.HasFlag(Link.Related))
+
+                    if (r.DocumentLinks.HasFlag(Link.Related))
                         relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
                 }
 
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Builders
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.InternalRelationshipName);
 
-                    if(navigationEntity == null)
+                    if (navigationEntity == null)
                         relationshipData.SingleData = null;
                     else if (navigationEntity is IEnumerable)
                         relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
@@ -194,19 +194,22 @@ namespace JsonApiDotNetCore.Builders
         {
             var includedEntity = GetIncludedEntity(entity);
 
-            if(entities == null)
+            if (entities == null)
                 entities = new List<DocumentData>();
 
-            if(includedEntity != null && !entities.Any(doc => doc.Id == includedEntity.Id && doc.Type == includedEntity.Type))
+            if (includedEntity != null && entities.Any(doc =>
+                string.Equals(doc.Id, includedEntity.Id) && string.Equals(doc.Type, includedEntity.Type)) == false)
+            {
                 entities.Add(includedEntity);
+            }
 
             return entities;
         }
 
         private DocumentData GetIncludedEntity(IIdentifiable entity)
         {
-            if(entity == null) return null;
-            
+            if (entity == null) return null;
+
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
             var data = GetData(contextEntity, entity);
