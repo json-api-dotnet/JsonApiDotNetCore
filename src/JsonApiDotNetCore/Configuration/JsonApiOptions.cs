@@ -14,6 +14,7 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeTotalRecordCount { get; set; }
         public bool AllowClientGeneratedIds { get; set; }
         public IContextGraph ContextGraph { get; set; }
+        public bool RelativeLinks { get; set; }
         public IContractResolver JsonContractResolver { get; set; } = new DasherizedResolver();
         internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
 
