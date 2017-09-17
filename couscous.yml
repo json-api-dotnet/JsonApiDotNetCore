@@ -78,6 +78,9 @@ menu:
                 filtering:
                     text: Filtering
                     relativeUrl: filtering.html
+                includingrelationships:
+                    text: Including Relationships
+                    relativeUrl: includingrelationships.html
                 pagination:
                     text: Pagination
                     relativeUrl: pagination.html
