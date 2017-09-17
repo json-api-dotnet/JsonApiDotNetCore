@@ -9,28 +9,30 @@ namespace JsonApiDotNetCore.Builders
 
         public LinkBuilder(IJsonApiContext context)
         {
-            _context = context;   
+            _context = context;
         }
 
         public string GetBasePath(HttpContext context, string entityName)
         {
             var r = context.Request;
-            return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
+            return (_context.Options.RelativeLinks)
+                ? $"{GetNamespaceFromPath(r.Path, entityName)}"
+                : $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
 
         private string GetNamespaceFromPath(string path, string entityName)
         {
             var nSpace = string.Empty;
             var segments = path.Split('/');
-            
-            for(var i = 1; i < segments.Length; i++)
+
+            for (var i = 1; i < segments.Length; i++)
             {
-                if(segments[i].ToLower() == entityName) 
+                if (segments[i].ToLower() == entityName)
                     break;
 
                 nSpace += $"/{segments[i]}";
             }
-                
+
             return nSpace;
         }
 
