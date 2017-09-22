@@ -1,3 +1,5 @@
+![alt text](https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png)
+
 # JSON API .Net Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/9fvgeoxdikwkom10?svg=true)](https://ci.appveyor.com/project/jaredcnance/json-api-dotnet-core)
