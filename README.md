@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<p align="center">
 <img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
-</div>
+</p>
 
 # JSON API .Net Core
 
@@ -56,10 +56,13 @@ public class Startup
 }
 ```
 
-## .Net Core v2 Notes
+## Development Priorities
 
-Branch `feat/core-2` is where I am working on .Net Core 2 compatibility tests and package upgrades.
-There are several blockers to be aware of:
+The current priorities for future development (in order): 
+1. Operations Support (#150)
+2. ASP.Net Core 2.0 Support (#161)
+3. Minor features (#105, #144, #162)
+4. Resource to Entity Mapping (#112)
 
-- Microsoft.AspNetCore.* packages target the runtime (netcoreapp) instead of netstandard. [This will be changed in future versions.](https://blogs.msdn.microsoft.com/webdev/2017/05/10/aspnet-2-preview-1/).
-- Can't run acceptance testing against postgres on preview runtime [pgsql.EntityFrameworkCore.PostgreSQL#171](https://github.com/npgsql/Npgsql.EntityFrameworkCore.PostgreSQL/issues/171#issuecomment-301287257)
+If you're interested in working on any of the above features, take a look at the [Contributing Guide](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/CONTRIBUTING.MD)
+or hop on the project Gitter for more direct communication.
