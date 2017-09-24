@@ -1,9 +1,11 @@
-![alt text](https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png)
+<div style="text-align:center">
+<img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
+</div>
 
 # JSON API .Net Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/9fvgeoxdikwkom10?svg=true)](https://ci.appveyor.com/project/jaredcnance/json-api-dotnet-core)
-[![Travis](https://img.shields.io/travis/Research-Institute/json-api-dotnet-core.svg?maxAge=3600&label=travis)](https://travis-ci.org/Research-Institute/json-api-dotnet-core)
+[![Travis](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore.svg?branch=master)](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore)
 [![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
 [![MyGet CI](https://img.shields.io/myget/research-institute/vpre/JsonApiDotNetCore.svg)](https://www.myget.org/feed/research-institute/package/nuget/JsonApiDotNetCore)
 [![Join the chat at https://gitter.im/json-api-dotnet-core/Lobby](https://badges.gitter.im/json-api-dotnet-core/Lobby.svg)](https://gitter.im/json-api-dotnet-core/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -13,8 +15,46 @@ A framework for building [json:api](http://jsonapi.org/) compliant web APIs. The
 
 ## Installation And Usage
 
-See the documentation [here](https://research-institute.github.io/json-api-dotnet-core)
+See [the documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) for detailed usage. 
 
+### Models
+
+```csharp
+public class Article : Identifiable
+{ 
+    [Attr("name")]
+    public string Name { get; set; }
+}
+```
+
+### Controllers
+
+```csharp
+public class ArticlesController : JsonApiController<Article>
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext,
+        IResourceService<Article> resourceService) 
+    : base(jsonApiContext, resourceService) { }
+}
+```
+
+### Middleware
+
+```csharp
+public class Startup 
+{
+    public IServiceProvider ConfigureServices(IServiceCollection services) {
+        services.AddJsonApi<AppDbContext>();
+        // ...
+    }
+
+    public void Configure(IApplicationBuilder app)  {
+        app.UseJsonApi()
+        // ...
+    }
+}
+```
 
 ## .Net Core v2 Notes
 
