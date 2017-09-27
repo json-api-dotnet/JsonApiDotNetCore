@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using OperationsExample;
@@ -37,6 +38,14 @@ namespace OperationsExampleTests
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
             request.Content.Headers.Add("Link", JsonApiOperationsInputFormatter.PROFILE_EXTENSION);
             return await Client.SendAsync(request);
+        }
+
+        public async Task<(HttpResponseMessage response, T data)> PatchAsync<T>(string route, object data)
+        {
+            var response = await PatchAsync(route, data);
+            var json = await response.Content.ReadAsStringAsync();
+            var obj = JsonConvert.DeserializeObject<T>(json);
+            return (response, obj);
         }
     }
 }

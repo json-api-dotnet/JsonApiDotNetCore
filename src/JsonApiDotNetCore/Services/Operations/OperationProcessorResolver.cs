@@ -8,13 +8,15 @@ namespace JsonApiDotNetCore.Services.Operations
     public interface IOperationProcessorResolver
     {
         IOpProcessor LocateCreateService(Operation operation);
+        IOpProcessor LocateGeteService(Operation operation);
     }
 
     public class OperationProcessorResolver : IOperationProcessorResolver
     {
         private readonly IGenericProcessorFactory _processorFactory;
         private readonly IJsonApiContext _context;
-        private ConcurrentDictionary<string, IOpProcessor> _cachedProcessors = new ConcurrentDictionary<string, IOpProcessor>();
+        private ConcurrentDictionary<string, IOpProcessor> _createOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
+        private ConcurrentDictionary<string, IOpProcessor> _getOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
 
         public OperationProcessorResolver(
             IGenericProcessorFactory processorFactory,
@@ -30,7 +32,7 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var resource = operation.GetResourceTypeName();
 
-            if (_cachedProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
+            if (_createOpProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
                 return cachedProcessor;
 
             var contextEntity = _context.ContextGraph.GetContextEntity(resource);
@@ -38,7 +40,24 @@ namespace JsonApiDotNetCore.Services.Operations
                 typeof(ICreateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
             );
 
-            _cachedProcessors[resource] = processor;
+            _createOpProcessors[resource] = processor;
+
+            return processor;
+        }
+
+        public IOpProcessor LocateGeteService(Operation operation)
+        {
+            var resource = operation.GetResourceTypeName();
+
+            if (_getOpProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
+                return cachedProcessor;
+
+            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var processor = _processorFactory.GetProcessor<IOpProcessor>(
+                typeof(IGetOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            );
+
+            _getOpProcessors[resource] = processor;
 
             return processor;
         }
