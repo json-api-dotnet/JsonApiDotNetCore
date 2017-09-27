@@ -81,6 +81,8 @@ namespace JsonApiDotNetCore.Serialization
 
         public object DocumentToObject(DocumentData data)
         {
+            if (data == null) throw new JsonApiException(422, "Failed to deserialize document as json:api.");
+
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type?.ToString());
             _jsonApiContext.RequestEntity = contextEntity;
 
