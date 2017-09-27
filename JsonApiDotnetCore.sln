@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportsExample", "src\Examp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationsExample", "src\Examples\OperationsExample\OperationsExample.csproj", "{CF2C1EB6-8449-4B35-B8C7-F43D6D90632D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationsExampleTests", "test\OperationsExampleTests\OperationsExampleTests.csproj", "{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,18 @@ Global
 		{CF2C1EB6-8449-4B35-B8C7-F43D6D90632D}.Release|x64.Build.0 = Release|x64
 		{CF2C1EB6-8449-4B35-B8C7-F43D6D90632D}.Release|x86.ActiveCfg = Release|x86
 		{CF2C1EB6-8449-4B35-B8C7-F43D6D90632D}.Release|x86.Build.0 = Release|x86
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Debug|x64.ActiveCfg = Debug|x64
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Debug|x64.Build.0 = Debug|x64
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Debug|x86.ActiveCfg = Debug|x86
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Debug|x86.Build.0 = Debug|x86
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Release|x64.ActiveCfg = Release|x64
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Release|x64.Build.0 = Release|x64
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Release|x86.ActiveCfg = Release|x86
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,5 +152,6 @@ Global
 		{026FBC6C-AF76-4568-9B87-EC73457899FD} = {7A2B7ADD-ECB5-4D00-AA6A-D45BD11C97CF}
 		{FBFB0B0B-EA86-4B41-AB2A-E0249F70C86D} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
 		{CF2C1EB6-8449-4B35-B8C7-F43D6D90632D} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
+		{9CD2C116-D133-4FE4-97DA-A9FEAFF045F1} = {24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}
 	EndGlobalSection
 EndGlobal

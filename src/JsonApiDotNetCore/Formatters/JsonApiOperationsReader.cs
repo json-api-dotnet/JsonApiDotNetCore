@@ -22,13 +22,13 @@ namespace JsonApiDotNetCore.Formatters
 
             var request = context.HttpContext.Request;
             if (request.ContentLength == null || request.ContentLength == 0)
-                return InputFormatterResult.FailureAsync();
+                throw new JsonApiException(400, "Content-Length cannot be empty.");
 
             var body = GetRequestBody(request.Body);
 
             var operations = JsonConvert.DeserializeObject<OperationsDocument>(body);
 
-            if(operations == null)
+            if (operations == null)
                 throw new JsonApiException(400, "Failed to deserialize operations request.");
 
             return InputFormatterResult.SuccessAsync(operations);

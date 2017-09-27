@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Formatters
 {
     public class JsonApiOperationsInputFormatter : IInputFormatter
     {
-        const string PROFILE_EXTENSION = "<http://example.org/profiles/myjsonstuff>; rel=\"profile\"";
+        internal const string PROFILE_EXTENSION = "<http://example.org/profiles/myjsonstuff>; rel=\"profile\"";
 
         public bool CanRead(InputFormatterContext context)
         {
