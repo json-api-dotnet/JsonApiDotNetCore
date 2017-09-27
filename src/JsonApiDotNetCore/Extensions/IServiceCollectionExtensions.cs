@@ -100,8 +100,13 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IDbContextResolver, DbContextResolver>();
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
+            
             services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
+
+            services.AddScoped(typeof(IGetAllService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IGetAllService<,>), typeof(EntityResourceService<,>));
+
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
             services.AddSingleton<JsonApiOptions>(jsonApiOptions);
@@ -125,8 +130,13 @@ namespace JsonApiDotNetCore.Extensions
         private static void AddOperationServices(IServiceCollection services)
         {
             services.AddScoped<IOperationsProcessor, OperationsProcessor>();
+
             services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
             services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
+
+            services.AddScoped(typeof(IGetOpProcessor<>), typeof(GetOpProcessor<>));
+            services.AddScoped(typeof(IGetOpProcessor<,>), typeof(GetOpProcessor<,>));
+
             services.AddSingleton<IOperationProcessorResolver, OperationProcessorResolver>();
             services.AddSingleton<IGenericProcessorFactory, GenericProcessorFactory>();
         }
