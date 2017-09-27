@@ -100,12 +100,15 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IDbContextResolver, DbContextResolver>();
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
-            
+
             services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
 
             services.AddScoped(typeof(IGetAllService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IGetAllService<,>), typeof(EntityResourceService<,>));
+
+            services.AddScoped(typeof(IGetByIdService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IGetByIdService<,>), typeof(EntityResourceService<,>));
 
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
