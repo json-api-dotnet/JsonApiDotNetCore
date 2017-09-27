@@ -1,7 +1,11 @@
+<p align="center">
+<img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
+</p>
+
 # JSON API .Net Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/9fvgeoxdikwkom10?svg=true)](https://ci.appveyor.com/project/jaredcnance/json-api-dotnet-core)
-[![Travis](https://img.shields.io/travis/Research-Institute/json-api-dotnet-core.svg?maxAge=3600&label=travis)](https://travis-ci.org/Research-Institute/json-api-dotnet-core)
+[![Travis](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore.svg?branch=master)](https://travis-ci.org/json-api-dotnet/JsonApiDotNetCore)
 [![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
 [![MyGet CI](https://img.shields.io/myget/research-institute/vpre/JsonApiDotNetCore.svg)](https://www.myget.org/feed/research-institute/package/nuget/JsonApiDotNetCore)
 [![Join the chat at https://gitter.im/json-api-dotnet-core/Lobby](https://badges.gitter.im/json-api-dotnet-core/Lobby.svg)](https://gitter.im/json-api-dotnet-core/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -11,13 +15,54 @@ A framework for building [json:api](http://jsonapi.org/) compliant web APIs. The
 
 ## Installation And Usage
 
-See the documentation [here](https://research-institute.github.io/json-api-dotnet-core)
+See [the documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) for detailed usage. 
 
+### Models
 
-## .Net Core v2 Notes
+```csharp
+public class Article : Identifiable
+{ 
+    [Attr("name")]
+    public string Name { get; set; }
+}
+```
 
-Branch `feat/core-2` is where I am working on .Net Core 2 compatibility tests and package upgrades.
-There are several blockers to be aware of:
+### Controllers
 
-- Microsoft.AspNetCore.* packages target the runtime (netcoreapp) instead of netstandard. [This will be changed in future versions.](https://blogs.msdn.microsoft.com/webdev/2017/05/10/aspnet-2-preview-1/).
-- Can't run acceptance testing against postgres on preview runtime [pgsql.EntityFrameworkCore.PostgreSQL#171](https://github.com/npgsql/Npgsql.EntityFrameworkCore.PostgreSQL/issues/171#issuecomment-301287257)
+```csharp
+public class ArticlesController : JsonApiController<Article>
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext,
+        IResourceService<Article> resourceService) 
+    : base(jsonApiContext, resourceService) { }
+}
+```
+
+### Middleware
+
+```csharp
+public class Startup 
+{
+    public IServiceProvider ConfigureServices(IServiceCollection services) {
+        services.AddJsonApi<AppDbContext>();
+        // ...
+    }
+
+    public void Configure(IApplicationBuilder app)  {
+        app.UseJsonApi()
+        // ...
+    }
+}
+```
+
+## Development Priorities
+
+The current priorities for future development (in order): 
+1. Operations Support ([#150](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/150))
+2. ASP.Net Core 2.0 Support ([#161](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/161))
+3. Minor features ([#105](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/105), [#144](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/144), [#162](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/162))
+4. Resource to Entity Mapping ([#112](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/112))
+
+If you're interested in working on any of the above features, take a look at the [Contributing Guide](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/CONTRIBUTING.MD)
+or hop on the project Gitter for more direct communication.
