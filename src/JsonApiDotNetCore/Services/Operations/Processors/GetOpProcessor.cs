@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -21,32 +20,36 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         where T : class, IIdentifiable<int>
     {
         public GetOpProcessor(
-            IGetAllService<T, int> service,
+            IGetAllService<T, int> getAll,
+            IGetByIdService<T, int> getById,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph,
             IJsonApiContext jsonApiContext
-        ) : base(service, deSerializer, documentBuilder, contextGraph, jsonApiContext)
+        ) : base(getAll, getById, deSerializer, documentBuilder, contextGraph, jsonApiContext)
         { }
     }
 
     public class GetOpProcessor<T, TId> : IGetOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
-        private readonly IGetAllService<T, TId> _service;
+        private readonly IGetAllService<T, TId> _getAll;
+        private readonly IGetByIdService<T, TId> _getById;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IContextGraph _contextGraph;
         private readonly IJsonApiContext _jsonApiContext;
 
         public GetOpProcessor(
-            IGetAllService<T, TId> service,
+            IGetAllService<T, TId> getAll,
+            IGetByIdService<T, TId> getById,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph,
             IJsonApiContext jsonApiContext)
         {
-            _service = service;
+            _getAll = getAll;
+            _getById = getById;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
             _contextGraph = contextGraph;
@@ -55,25 +58,43 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
 
         public async Task<Operation> ProcessAsync(Operation operation)
         {
-            var result = await _service.GetAsync();
-
             var operationResult = new Operation
             {
-                Op = OperationCode.add
+                Op = OperationCode.get
             };
+
+            operationResult.Data = string.IsNullOrWhiteSpace(operation.Ref.Id?.ToString())
+            ? await GetAllAsync(operation)
+            : await GetByIdAsync(operation);
+
+            return operationResult;
+        }
+
+        private async Task<object> GetAllAsync(Operation operation)
+        {
+            var result = await _getAll.GetAsync();
 
             var operations = new List<DocumentData>();
             foreach (var resource in result)
             {
                 var doc = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
-                resource);
+                    _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
+                    resource);
                 operations.Add(doc);
             }
 
-            operationResult.Data = operations;
+            return operations;
+        }
 
-            return operationResult;
+        private async Task<object> GetByIdAsync(Operation operation)
+        {
+            var id = TypeHelper.ConvertType<TId>(operation.Ref.Id);
+            var result = await _getById.GetAsync(id);
+            var doc = _documentBuilder.GetData(
+                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
+                result);
+
+            return doc;
         }
     }
 }
