@@ -9,7 +9,8 @@ namespace JsonApiDotNetCore.Controllers
     {
         private readonly IOperationsProcessor _operationsProcessor;
 
-        public JsonApiOperationsController(IOperationsProcessor operationsProcessor)
+        public JsonApiOperationsController(
+            IOperationsProcessor operationsProcessor)
         {
             _operationsProcessor = operationsProcessor;
         }
@@ -18,7 +19,8 @@ namespace JsonApiDotNetCore.Controllers
         public async Task<IActionResult> PatchAsync([FromBody] OperationsDocument doc)
         {
             var results = await _operationsProcessor.ProcessAsync(doc.Operations);
-            return Ok(results);
+
+            return Ok(new OperationsDocument(results));
         }
     }
 }
