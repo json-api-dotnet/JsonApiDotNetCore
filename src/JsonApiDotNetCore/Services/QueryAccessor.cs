@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Services
 
         private string GetFilterValue(string key) => _jsonApiContext.QuerySet
             .Filters
-            .FirstOrDefault(f => f.Key == key)
+            .FirstOrDefault(f => string.Equals(f.Key, key, StringComparison.OrdinalIgnoreCase))
             ?.Value;
     }
 }
