@@ -68,7 +68,8 @@ namespace JsonApiDotNetCore.Internal.Query
                     continue;
                 }
 
-                throw new JsonApiException(400, $"{pair} is not a valid query.");
+                if (_jsonApiContext.Options.AllowCustomQueryParameters == false)
+                    throw new JsonApiException(400, $"{pair} is not a valid query.");
             }
         }
 
@@ -101,9 +102,9 @@ namespace JsonApiDotNetCore.Internal.Query
                 return (string.Empty, value);
 
             // remove prefix from value
-            if(Enum.TryParse(operation[0], out FilterOperations op) == false)
+            if (Enum.TryParse(operation[0], out FilterOperations op) == false)
                 return (string.Empty, value);
-            
+
             var prefix = operation[0];
             value = string.Join(":", operation.Skip(1));
 
