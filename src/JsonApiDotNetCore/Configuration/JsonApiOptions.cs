@@ -15,6 +15,15 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowClientGeneratedIds { get; set; }
         public IContextGraph ContextGraph { get; set; }
         public bool RelativeLinks { get; set; }
+
+        /// <summary>
+        /// This flag is experimental and could be perceived as a violation
+        /// of the v1 spec. However, we have decided that this is a real
+        /// requirement for users of this library and a gap in the specification.
+        /// It will likely be removed when the spec is updated to support this
+        /// requirement. 
+        /// </summary>
+        public bool AllowCustomQueryParameters { get; set; }
         public IContractResolver JsonContractResolver { get; set; } = new DasherizedResolver();
         internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
 
