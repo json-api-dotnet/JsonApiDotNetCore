@@ -68,7 +68,9 @@ namespace JsonApiDotNetCore.Services.Operations
                 case OperationCode.add:
                     return _processorResolver.LocateCreateService(op);
                 case OperationCode.get:
-                    return _processorResolver.LocateGeteService(op);
+                    return _processorResolver.LocateGetService(op);
+                case OperationCode.replace:
+                    return _processorResolver.LocateReplaceService(op);
                 default:
                     throw new JsonApiException(400, $"'{op.Op}' is not a valid operation code");
             }

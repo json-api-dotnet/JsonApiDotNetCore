@@ -12,8 +12,7 @@ using JsonApiDotNetCore.Formatters;
 namespace OperationsExampleTests
 {
     [CollectionDefinition("WebHostCollection")]
-    public class WebHostCollection
-        : ICollectionFixture<Fixture>
+    public class WebHostCollection : ICollectionFixture<Fixture>
     { }
 
     public class Fixture
