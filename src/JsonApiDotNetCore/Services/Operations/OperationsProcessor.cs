@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Models.Pointers;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services.Operations
 {
@@ -16,33 +17,58 @@ namespace JsonApiDotNetCore.Services.Operations
     public class OperationsProcessor : IOperationsProcessor
     {
         private readonly IOperationProcessorResolver _processorResolver;
+        private readonly DbContext _dbContext;
 
-        public OperationsProcessor(IOperationProcessorResolver processorResolver)
+        public OperationsProcessor(
+            IOperationProcessorResolver processorResolver,
+            DbContext dbContext)
         {
             _processorResolver = processorResolver;
+            _dbContext = dbContext;
         }
 
         public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
         {
             var outputOps = new List<Operation>();
-
-            foreach (var op in inputOps)
+            var opIndex = 0;
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
-                // TODO: parse pointers:
-                // locate all objects within the document and replace them
-                var operationsPointer = new OperationsPointer();
+                try
+                {
+                    foreach (var op in inputOps)
+                    {
+                        await ProcessOperation(op, outputOps);
+                        opIndex++;
+                    }
 
-                ReplaceDataPointers(op.DataObject, outputOps);
-                ReplaceRefPointers(op.Ref, outputOps);
-
-                var processor = GetOperationsProcessor(op);
-                var resultOp = await processor.ProcessAsync(op);
-
-                if (resultOp != null)
-                    outputOps.Add(resultOp);
+                    transaction.Commit();
+                }
+                catch (JsonApiException e)
+                {
+                    outputOps = new List<Operation>();
+                    throw new JsonApiException(e.GetStatusCode(), $"Transaction failed on operation[{opIndex}].", e);
+                }
+                catch (Exception e)
+                {
+                    throw new JsonApiException(500, $"Transaction failed on operation[{opIndex}] for an unexpected reason.", e);
+                }
             }
 
             return outputOps;
+        }
+
+        private async Task ProcessOperation(Operation op, List<Operation> outputOps)
+        {
+            var operationsPointer = new OperationsPointer();
+
+            ReplaceDataPointers(op.DataObject, outputOps);
+            ReplaceRefPointers(op.Ref, outputOps);
+
+            var processor = GetOperationsProcessor(op);
+            var resultOp = await processor.ProcessAsync(op);
+
+            if (resultOp != null)
+                outputOps.Add(resultOp);
         }
 
         private void ReplaceDataPointers(DocumentData dataObject, List<Operation> outputOps)
