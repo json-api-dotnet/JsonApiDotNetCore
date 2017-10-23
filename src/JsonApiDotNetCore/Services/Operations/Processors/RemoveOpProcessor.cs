@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
@@ -7,19 +8,19 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
-    public interface IReplaceOpProcessor<T> : IOpProcessor
+    public interface IRemoveOpProcessor<T> : IOpProcessor
         where T : class, IIdentifiable<int>
     { }
 
-    public interface IReplaceOpProcessor<T, TId> : IOpProcessor
+    public interface IRemoveOpProcessor<T, TId> : IOpProcessor
         where T : class, IIdentifiable<TId>
     { }
 
-    public class ReplaceOpProcessor<T> : ReplaceOpProcessor<T, int>
+    public class RemoveOpProcessor<T> : RemoveOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     {
-        public ReplaceOpProcessor(
-            IUpdateService<T, int> service,
+        public RemoveOpProcessor(
+            IDeleteService<T, int> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph
@@ -27,16 +28,16 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         { }
     }
 
-    public class ReplaceOpProcessor<T, TId> : IReplaceOpProcessor<T, TId>
+    public class RemoveOpProcessor<T, TId> : IRemoveOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
-        private readonly IUpdateService<T, TId> _service;
+        private readonly IDeleteService<T, TId> _service;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IContextGraph _contextGraph;
 
-        public ReplaceOpProcessor(
-            IUpdateService<T, TId> service,
+        public RemoveOpProcessor(
+            IDeleteService<T, TId> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph)
@@ -49,22 +50,14 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
 
         public async Task<Operation> ProcessAsync(Operation operation)
         {
-            var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
+            var stringId = operation.Ref?.Id?.ToString();
+            if (string.IsNullOrWhiteSpace(stringId))
+                throw new JsonApiException(400, "The data.id parameter is required for delete operations");
 
-            if (string.IsNullOrWhiteSpace(operation?.DataObject?.Id?.ToString()))
-                throw new JsonApiException(400, "The data.id parameter is required for replace operations");
+            var id = TypeHelper.ConvertType<TId>(stringId);
+            var result = await _service.DeleteAsync(id);
 
-            var id = TypeHelper.ConvertType<TId>(operation.DataObject.Id);
-            var result = await _service.UpdateAsync(id, model);
-
-            var operationResult = new Operation
-            {
-                Op = OperationCode.replace
-            };
-
-            operationResult.Data = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
-                result);
+            var operationResult = new Operation { };
 
             return operationResult;
         }

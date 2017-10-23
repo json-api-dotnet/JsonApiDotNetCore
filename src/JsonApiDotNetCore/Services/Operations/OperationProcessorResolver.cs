@@ -10,15 +10,20 @@ namespace JsonApiDotNetCore.Services.Operations
         IOpProcessor LocateCreateService(Operation operation);
         IOpProcessor LocateGetService(Operation operation);
         IOpProcessor LocateReplaceService(Operation operation);
+        IOpProcessor LocateRemoveService(Operation operation);
     }
 
     public class OperationProcessorResolver : IOperationProcessorResolver
     {
         private readonly IGenericProcessorFactory _processorFactory;
         private readonly IJsonApiContext _context;
+
+        // processor caches -- since there is some associated cost with creating the processors, we store them in memory
+        // to reduce the cost of subsequent requests. in the future, this may be moved into setup code run at startup
         private ConcurrentDictionary<string, IOpProcessor> _createOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
         private ConcurrentDictionary<string, IOpProcessor> _getOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
         private ConcurrentDictionary<string, IOpProcessor> _replaceOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
+        private ConcurrentDictionary<string, IOpProcessor> _removeOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
 
         public OperationProcessorResolver(
             IGenericProcessorFactory processorFactory,
@@ -77,6 +82,23 @@ namespace JsonApiDotNetCore.Services.Operations
             );
 
             _replaceOpProcessors[resource] = processor;
+
+            return processor;
+        }
+
+        public IOpProcessor LocateRemoveService(Operation operation)
+        {
+            var resource = operation.GetResourceTypeName();
+
+            if (_removeOpProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
+                return cachedProcessor;
+
+            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var processor = _processorFactory.GetProcessor<IOpProcessor>(
+                typeof(IRemoveOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            );
+
+            _removeOpProcessors[resource] = processor;
 
             return processor;
         }
