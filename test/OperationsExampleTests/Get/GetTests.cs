@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Bogus;
 using JsonApiDotNetCore.Models.Operations;
-using Microsoft.EntityFrameworkCore;
 using OperationsExample.Data;
+using OperationsExampleTests.Factories;
 using Xunit;
 
 namespace OperationsExampleTests
@@ -13,6 +14,7 @@ namespace OperationsExampleTests
     public class GetTests
     {
         private readonly Fixture _fixture;
+        private readonly Faker _faker = new Faker();
 
         public GetTests(Fixture fixture)
         {
@@ -23,8 +25,12 @@ namespace OperationsExampleTests
         public async Task Can_Get_Articles()
         {
             // arrange
+            var expectedCount = _faker.Random.Int(1, 10);
             var context = _fixture.GetService<AppDbContext>();
-            var articles = await context.Articles.ToListAsync();
+            context.Articles.RemoveRange(context.Articles);
+            var articles = ArticleFactory.Get(expectedCount);
+            context.AddRange(articles);
+            context.SaveChanges();
 
             var content = new
             {
@@ -44,7 +50,7 @@ namespace OperationsExampleTests
             Assert.NotNull(result.data);
             Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
             Assert.Equal(1, result.data.Operations.Count);
-            Assert.Equal(articles.Count, result.data.Operations.Single().DataList.Count);
+            Assert.Equal(expectedCount, result.data.Operations.Single().DataList.Count);
         }
 
         [Fact]
@@ -52,7 +58,9 @@ namespace OperationsExampleTests
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
-            var article = await context.Articles.LastAsync();
+            var article = ArticleFactory.Get();
+            context.Articles.Add(article);
+            context.SaveChanges();
 
             var content = new
             {
