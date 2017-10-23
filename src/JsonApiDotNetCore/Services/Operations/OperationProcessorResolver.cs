@@ -8,7 +8,8 @@ namespace JsonApiDotNetCore.Services.Operations
     public interface IOperationProcessorResolver
     {
         IOpProcessor LocateCreateService(Operation operation);
-        IOpProcessor LocateGeteService(Operation operation);
+        IOpProcessor LocateGetService(Operation operation);
+        IOpProcessor LocateReplaceService(Operation operation);
     }
 
     public class OperationProcessorResolver : IOperationProcessorResolver
@@ -17,6 +18,7 @@ namespace JsonApiDotNetCore.Services.Operations
         private readonly IJsonApiContext _context;
         private ConcurrentDictionary<string, IOpProcessor> _createOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
         private ConcurrentDictionary<string, IOpProcessor> _getOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
+        private ConcurrentDictionary<string, IOpProcessor> _replaceOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
 
         public OperationProcessorResolver(
             IGenericProcessorFactory processorFactory,
@@ -45,7 +47,7 @@ namespace JsonApiDotNetCore.Services.Operations
             return processor;
         }
 
-        public IOpProcessor LocateGeteService(Operation operation)
+        public IOpProcessor LocateGetService(Operation operation)
         {
             var resource = operation.GetResourceTypeName();
 
@@ -58,6 +60,23 @@ namespace JsonApiDotNetCore.Services.Operations
             );
 
             _getOpProcessors[resource] = processor;
+
+            return processor;
+        }
+
+        public IOpProcessor LocateReplaceService(Operation operation)
+        {
+            var resource = operation.GetResourceTypeName();
+
+            if (_replaceOpProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
+                return cachedProcessor;
+
+            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var processor = _processorFactory.GetProcessor<IOpProcessor>(
+                typeof(IReplaceOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            );
+
+            _replaceOpProcessors[resource] = processor;
 
             return processor;
         }
