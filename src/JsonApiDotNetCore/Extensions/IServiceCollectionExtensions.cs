@@ -113,6 +113,9 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IUpdateService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IUpdateService<,>), typeof(EntityResourceService<,>));
 
+            services.AddScoped(typeof(IDeleteService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IDeleteService<,>), typeof(EntityResourceService<,>));
+
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
             services.AddSingleton<JsonApiOptions>(jsonApiOptions);
@@ -145,6 +148,9 @@ namespace JsonApiDotNetCore.Extensions
 
             services.AddScoped(typeof(IReplaceOpProcessor<>), typeof(ReplaceOpProcessor<>));
             services.AddScoped(typeof(IReplaceOpProcessor<,>), typeof(ReplaceOpProcessor<,>));
+
+            services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
+            services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
 
             services.AddSingleton<IOperationProcessorResolver, OperationProcessorResolver>();
             services.AddSingleton<IGenericProcessorFactory, GenericProcessorFactory>();
