@@ -111,3 +111,9 @@ menu:
                 middleware:
                     text: Middleware
                     relativeUrl: middleware.html
+        extensions:
+            name: Spec Extensions
+            items:
+                operations:
+                    text: Operations
+                    relativeUrl: operations.html
