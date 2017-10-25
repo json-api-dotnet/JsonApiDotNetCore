@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
-    <PackageProjectUrl>https://https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
