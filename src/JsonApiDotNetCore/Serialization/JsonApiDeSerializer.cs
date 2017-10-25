@@ -38,8 +38,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        public TEntity Deserialize<TEntity>(string requestBody)
-            => (TEntity)Deserialize(requestBody);
+        public TEntity Deserialize<TEntity>(string requestBody) => (TEntity)Deserialize(requestBody);
 
         public object DeserializeRelationship(string requestBody)
         {
@@ -117,7 +116,7 @@ namespace JsonApiDotNetCore.Serialization
                     var convertedValue = ConvertAttrValue(newValue, entityProperty.PropertyType);
                     entityProperty.SetValue(entity, convertedValue);
 
-                    if(attr.IsImmutable == false)
+                    if (attr.IsImmutable == false)
                         _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
                 }
             }
