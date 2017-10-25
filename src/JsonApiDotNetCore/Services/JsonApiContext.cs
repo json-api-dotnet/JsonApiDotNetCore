@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Services
             return new PageManager
             {
                 DefaultPageSize = Options.DefaultPageSize,
-                CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
+                CurrentPage = query.PageOffset,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
             };
         }

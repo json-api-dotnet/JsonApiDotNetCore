@@ -13,9 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
 {
-    public class DefaultEntityRepository<TEntity> 
+    public class DefaultEntityRepository<TEntity>
         : DefaultEntityRepository<TEntity, int>,
-        IEntityRepository<TEntity> 
+        IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
         public DefaultEntityRepository(
@@ -25,8 +25,8 @@ namespace JsonApiDotNetCore.Data
         { }
     }
 
-    public class DefaultEntityRepository<TEntity, TId> 
-        : IEntityRepository<TEntity, TId> 
+    public class DefaultEntityRepository<TEntity, TId>
+        : IEntityRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly DbContext _context;
@@ -62,33 +62,33 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TEntity> Get()
         {
-            if(_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Any())
+            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Any())
                 return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
-            
+
             return _dbSet;
         }
 
-        public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities,  FilterQuery filterQuery)
+        public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
-            if(filterQuery == null)
+            if (filterQuery == null)
                 return entities;
 
-            if(filterQuery.IsAttributeOfRelationship)
+            if (filterQuery.IsAttributeOfRelationship)
                 return entities.Filter(new RelatedAttrFilterQuery(_jsonApiContext, filterQuery));
-            
+
             return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
         }
 
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
-            if(sortQueries == null || sortQueries.Count == 0)
+            if (sortQueries == null || sortQueries.Count == 0)
                 return entities;
 
             var orderedEntities = entities.Sort(sortQueries[0]);
 
             if (sortQueries.Count <= 1) return orderedEntities;
 
-            for(var i=1; i < sortQueries.Count; i++)
+            for (var i = 1; i < sortQueries.Count; i++)
                 orderedEntities = orderedEntities.Sort(sortQueries[i]);
 
             return orderedEntities;
@@ -124,10 +124,10 @@ namespace JsonApiDotNetCore.Data
             if (oldEntity == null)
                 return null;
 
-            foreach(var attr in _jsonApiContext.AttributesToUpdate)
+            foreach (var attr in _jsonApiContext.AttributesToUpdate)
                 attr.Key.SetValue(oldEntity, attr.Value);
 
-            foreach(var relationship in _jsonApiContext.RelationshipsToUpdate)
+            foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 relationship.Key.SetValue(oldEntity, relationship.Value);
 
             await _context.SaveChangesAsync();
@@ -159,20 +159,34 @@ namespace JsonApiDotNetCore.Data
         {
             var entity = _jsonApiContext.RequestEntity;
             var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
-            if(relationship != null)
+            if (relationship != null)
                 return entities.Include(relationship.InternalRelationshipName);
-            
+
             throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
                 $"{entity.EntityName} does not have a relationship named {relationshipName}");
         }
 
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
-            if(pageSize > 0)
-                return await entities
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+            if (pageSize > 0)
+            {
+                if (pageNumber == 0)
+                    pageNumber = 1;
+
+                if (pageNumber > 0)
+                    return await entities
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToListAsync();
+                else // page from the end of the set                   
+                    return (await entities
+                        .OrderByDescending(t => t.Id)
+                        .Skip((Math.Abs(pageNumber) - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToListAsync())
+                        .OrderBy(t => t.Id)
+                        .ToList();
+            }
 
             return await entities.ToListAsync();
         }
