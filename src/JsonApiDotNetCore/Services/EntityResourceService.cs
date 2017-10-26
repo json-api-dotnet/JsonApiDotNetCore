@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Services
             _logger = loggerFactory.CreateLogger<EntityResourceService<T, TId>>();
         }
 
-        public async Task<IEnumerable<T>> GetAsync()
+        public virtual async Task<IEnumerable<T>> GetAsync()
         {
             var entities = _entities.Get();
 
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Services
             return pagedEntities;
         }
 
-        public async Task<T> GetAsync(TId id)
+        public virtual async Task<T> GetAsync(TId id)
         {
             T entity;
             if (_jsonApiContext.QuerySet?.IncludedRelationships != null)
@@ -78,13 +78,13 @@ namespace JsonApiDotNetCore.Services
             return await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
         }
 
-        public async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
+        public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
         {
             _jsonApiContext.IsRelationshipData = true;
             return await GetRelationshipAsync(id, relationshipName);
         }
 
-        public async Task<object> GetRelationshipAsync(TId id, string relationshipName)
+        public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
             relationshipName = _jsonApiContext.ContextGraph
                     .GetRelationshipName<T>(relationshipName);
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(422, "Relationship name not specified.");
 
             _logger.LogTrace($"Looking up '{relationshipName}'...");
-                                       
+
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (entity == null)
                 throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
@@ -104,18 +104,18 @@ namespace JsonApiDotNetCore.Services
             return relationship;
         }
 
-        public async Task<T> CreateAsync(T entity)
+        public virtual async Task<T> CreateAsync(T entity)
         {
             return await _entities.CreateAsync(entity);
         }
 
-        public async Task<T> UpdateAsync(TId id, T entity)
+        public virtual async Task<T> UpdateAsync(TId id, T entity)
         {
             var updatedEntity = await _entities.UpdateAsync(id, entity);
             return updatedEntity;
         }
 
-        public async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<DocumentData> relationships)
+        public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<DocumentData> relationships)
         {
             relationshipName = _jsonApiContext.ContextGraph
                       .GetRelationshipName<T>(relationshipName);
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Services
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
         }
 
-        public async Task<bool> DeleteAsync(TId id)
+        public virtual async Task<bool> DeleteAsync(TId id)
         {
             return await _entities.DeleteAsync(id);
         }
