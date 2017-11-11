@@ -208,7 +208,7 @@ namespace JsonApiDotNetCore.Serialization
 			{
 				var data = (List<Dictionary<string, string>>)relationshipData.ExposedData;
 
-				if (data == null) return entity;
+                if (data == null) return entity;
 
 				var genericProcessor = _genericProcessorFactory.GetProcessor(attr.Type);
 				var ids = relationshipData.ManyData.Select(r => r["id"]);
