@@ -26,10 +26,10 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
-            {
-                JsonContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
@@ -69,10 +69,9 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
-            {
-                JsonContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
@@ -116,10 +115,9 @@ namespace UnitTests.Serialization
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
 
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
-            {
-                JsonContractResolver = new DasherizedResolver() // <---
-            });
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver(); // <--
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
@@ -162,10 +160,9 @@ namespace UnitTests.Serialization
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(attributesToUpdate);
 
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
-            {
-                JsonContractResolver = new DasherizedResolver()
-            });
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
             var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
@@ -178,8 +175,8 @@ namespace UnitTests.Serialization
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object> {
-                        { "complex-member", new Dictionary<string, string> { 
-                            { "compound-name",  "testName" } } 
+                        { "complex-member", new Dictionary<string, string> {
+                            { "compound-name",  "testName" } }
                         },
                         {  "immutable", "value"}
                     }
@@ -194,8 +191,8 @@ namespace UnitTests.Serialization
             // assert
             Assert.NotNull(result.ComplexMember);
             Assert.Equal(1, attributesToUpdate.Count);
-            
-            foreach(var attr in attributesToUpdate)
+
+            foreach (var attr in attributesToUpdate)
                 Assert.False(attr.Key.IsImmutable);
         }
 
