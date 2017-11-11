@@ -135,12 +135,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object DeserializeComplexType(JContainer obj, Type targetType)
         {
-            var serializerSettings = new JsonSerializerSettings
-            {
-                ContractResolver = _jsonApiContext.Options.JsonContractResolver
-            };
-
-            return obj.ToObject(targetType, JsonSerializer.Create(serializerSettings));
+            return obj.ToObject(targetType, JsonSerializer.Create(_jsonApiContext.Options.SerializerSettings));
         }
 
         private object SetRelationships(
