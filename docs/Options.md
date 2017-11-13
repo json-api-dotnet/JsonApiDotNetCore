@@ -81,3 +81,31 @@ Accept: application/vnd.api+json
     }
 }
 ```
+
+## Custom Query Parameters
+
+If you would like to use custom query params (parameters not reserved by the json:api specification), you can set `AllowCustomQueryParameters = true`. The default behavior is to return an `HTTP 400 Bad Request` for unknown query parameters.
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(
+        opt => opt.AllowCustomQueryParameters = true);
+    // ...
+}
+```
+
+## Custom Serializer Settings
+
+We use Json.Net for all serialization needs. If you want to change the default serializer settings, you can:
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(
+        opt => opt.SerializerSettings = new JsonSerializerSettings()
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new DasherizedResolver()
+        });
+    // ...
+}
+```
