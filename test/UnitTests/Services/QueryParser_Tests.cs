@@ -1,25 +1,23 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
-namespace UnitTests.Internal
+namespace UnitTests.Services
 {
-    public class QuerySet_Tests
+    public class QueryParser_Tests
     {
-        private readonly Mock<IJsonApiContext> _jsonApiContextMock;
+        private readonly Mock<IControllerContext> _controllerContextMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
 
-        public QuerySet_Tests()
+        public QueryParser_Tests()
         {
-            _jsonApiContextMock = new Mock<IJsonApiContext>();
+            _controllerContextMock = new Mock<IControllerContext>();
             _queryCollectionMock = new Mock<IQueryCollection>();
         }
 
@@ -35,14 +33,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.None));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Equal("value", querySet.Filters.Single(f => f.Key == "Key").Value);
@@ -61,14 +59,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.None));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Equal(dt, querySet.Filters.Single(f => f.Key == "Key").Value);
@@ -88,14 +86,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.None));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Equal(dt, querySet.Filters.Single(f => f.Key == "Key").Value);
@@ -114,14 +112,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.Filter));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Empty(querySet.Filters);
@@ -139,14 +137,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.Sort));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Empty(querySet.SortParameters);
@@ -164,14 +162,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.Include));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Empty(querySet.IncludedRelationships);
@@ -189,14 +187,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.Page));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Equal(0, querySet.PageQuery.PageSize);
@@ -214,14 +212,14 @@ namespace UnitTests.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _jsonApiContextMock
+            _controllerContextMock
                 .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
                 .Returns(new DisableQueryAttribute(QueryParams.Fields));
 
-            // act -- ctor calls BuildQuerySet()
-            var querySet = new QuerySet(
-                _jsonApiContextMock.Object,
-                _queryCollectionMock.Object);
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
             Assert.Empty(querySet.Fields);
