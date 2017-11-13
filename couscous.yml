@@ -111,3 +111,6 @@ menu:
                 middleware:
                     text: Middleware
                     relativeUrl: middleware.html
+                customqueryformat:
+                    text: Custom Query Formats
+                    relativeUrl: customqueryformat.html
