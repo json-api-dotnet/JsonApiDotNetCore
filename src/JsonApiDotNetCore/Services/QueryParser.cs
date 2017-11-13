@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Services
             _options = options;
         }
 
-        public QuerySet Parse(IQueryCollection query)
+        public virtual QuerySet Parse(IQueryCollection query)
         {
             var querySet = new QuerySet();
             var disabledQueries = _controllerContext.GetControllerAttribute<DisableQueryAttribute>()?.QueryParams ?? QueryParams.None;
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Services
             return querySet;
         }
 
-        private List<FilterQuery> ParseFilterQuery(string key, string value)
+        protected virtual List<FilterQuery> ParseFilterQuery(string key, string value)
         {
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Services
             return queries;
         }
 
-        private (string operation, string value) ParseFilterOperation(string value)
+        protected virtual (string operation, string value) ParseFilterOperation(string value)
         {
             if (value.Length < 3)
                 return (string.Empty, value);
@@ -116,7 +116,7 @@ namespace JsonApiDotNetCore.Services
             return (prefix, value);
         }
 
-        private PageQuery ParsePageQuery(PageQuery pageQuery, string key, string value)
+        protected virtual PageQuery ParsePageQuery(PageQuery pageQuery, string key, string value)
         {
             // expected input = page[size]=10
             //                  page[number]=1
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCore.Services
 
         // sort=id,name
         // sort=-id
-        private List<SortQuery> ParseSortParameters(string value)
+        protected virtual List<SortQuery> ParseSortParameters(string value)
         {
             var sortParameters = new List<SortQuery>();
             value.Split(',').ToList().ForEach(p =>
@@ -154,7 +154,7 @@ namespace JsonApiDotNetCore.Services
             return sortParameters;
         }
 
-        private List<string> ParseIncludedRelationships(string value)
+        protected virtual List<string> ParseIncludedRelationships(string value)
         {
             if (value.Contains("."))
                 throw new JsonApiException(400, "Deeply nested relationships are not supported");
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCore.Services
                 .ToList();
         }
 
-        private List<string> ParseFieldsQuery(string key, string value)
+        protected virtual List<string> ParseFieldsQuery(string key, string value)
         {
             // expected: fields[TYPE]=prop1,prop2
             var typeName = key.Split('[', ']')[1];
@@ -187,7 +187,7 @@ namespace JsonApiDotNetCore.Services
             return includedFields;
         }
 
-        private AttrAttribute GetAttribute(string propertyName)
+        protected virtual AttrAttribute GetAttribute(string propertyName)
             => _controllerContext
                 .RequestEntity
                 .Attributes
