@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
@@ -28,19 +27,16 @@ namespace UnitTests.Services
         public void Can_Get_Guid_QueryValue()
         {
             // arrange
-            const string key = "some-id";
-            var filterQuery = $"filter[{key}]";
+            const string key = "SomeId";
             var value = Guid.NewGuid();
-
-            var query = new Dictionary<string, StringValues> {
-                { filterQuery, value.ToString() }
+            var querySet = new QuerySet
+            {
+                Filters = new List<FilterQuery> {
+                    new FilterQuery(key, value.ToString(), "eq")
+                }
             };
 
-            _queryMock.Setup(q => q.GetEnumerator()).Returns(query.GetEnumerator());
-
-            var querySet = new QuerySet(_contextMock.Object, _queryMock.Object);
-            _contextMock.Setup(c => c.QuerySet)
-                .Returns(querySet);
+            _contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
             var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
 
@@ -56,19 +52,17 @@ namespace UnitTests.Services
         public void GetRequired_Throws_If_Not_Present()
         {
             // arrange
-            const string key = "some-id";
-            var filterQuery = $"filter[{key}]";
+            const string key = "SomeId";
             var value = Guid.NewGuid();
 
-            var query = new Dictionary<string, StringValues> {
-                { filterQuery, value.ToString() }
+            var querySet = new QuerySet
+            {
+                Filters = new List<FilterQuery> {
+                    new FilterQuery(key, value.ToString(), "eq")
+                }
             };
 
-            _queryMock.Setup(q => q.GetEnumerator()).Returns(query.GetEnumerator());
-
-            var querySet = new QuerySet(_contextMock.Object, _queryMock.Object);
-            _contextMock.Setup(c => c.QuerySet)
-                .Returns(querySet);
+            _contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
             var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
 
@@ -83,19 +77,17 @@ namespace UnitTests.Services
         public void GetRequired_Does_Not_Throw_If_Present()
         {
             // arrange
-            const string key = "some-id";
-            var filterQuery = $"filter[{key}]";
+            const string key = "SomeId";
             var value = Guid.NewGuid();
 
-            var query = new Dictionary<string, StringValues> {
-                { filterQuery, value.ToString() }
+            var querySet = new QuerySet
+            {
+                Filters = new List<FilterQuery> {
+                    new FilterQuery(key, value.ToString(), "eq")
+                }
             };
 
-            _queryMock.Setup(q => q.GetEnumerator()).Returns(query.GetEnumerator());
-
-            var querySet = new QuerySet(_contextMock.Object, _queryMock.Object);
-            _contextMock.Setup(c => c.QuerySet)
-                .Returns(querySet);
+            _contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
             var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
 
