@@ -4,7 +4,8 @@ using Benchmarks.Serialization;
 namespace Benchmarks {
     class Program {
         static void Main(string[] args) {
-            var summary = BenchmarkRunner.Run<JsonApiDeserializer_Benchmarks>();
+            BenchmarkRunner.Run<JsonApiDeserializer_Benchmarks>();
+            BenchmarkRunner.Run<JsonApiSerializer_Benchmarks>();
         }
     }
 }
