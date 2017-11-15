@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\build\dependencies.props" />
+  <Import Project="..\build\dependencies.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
@@ -10,6 +10,6 @@
     <PackageReference Include="xunit" Version="$(xUnitVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
 </Project>
