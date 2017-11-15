@@ -11,13 +11,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace UnitTests.Serialization
-{
-    public class JsonApiDeSerializerTests
-    {
+namespace UnitTests.Serialization {
+    public class JsonApiDeSerializerTests {
         [Fact]
-        public void Can_Deserialize_Complex_Types()
-        {
+        public void Can_Deserialize_Complex_Types() {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResource>("test-resource");
@@ -36,17 +33,16 @@ namespace UnitTests.Serialization
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document
-            {
-                Data = new DocumentData
+            var content = new Document {
+                Data = new DocumentData {
+                Type = "test-resource",
+                Id = "1",
+                Attributes = new Dictionary<string, object> {
                 {
-                    Type = "test-resource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object> {
-                        {
-                            "complex-member", new { compoundName = "testName" }
-                        }
-                    }
+                "complex-member",
+                new { compoundName = "testName" }
+                }
+                }
                 }
             };
 
@@ -59,8 +55,7 @@ namespace UnitTests.Serialization
         }
 
         [Fact]
-        public void Can_Deserialize_Complex_List_Types()
-        {
+        public void Can_Deserialize_Complex_List_Types() {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResourceWithList>("test-resource");
@@ -78,19 +73,18 @@ namespace UnitTests.Serialization
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document
-            {
-                Data = new DocumentData
+            var content = new Document {
+                Data = new DocumentData {
+                Type = "test-resource",
+                Id = "1",
+                Attributes = new Dictionary<string, object> {
                 {
-                    Type = "test-resource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object> {
-                        {
-                            "complex-members", new [] {
-                                new { compoundName = "testName" }
-                            }
-                        }
-                    }
+                "complex-members",
+                new [] {
+                new { compoundName = "testName" }
+                }
+                }
+                }
                 }
             };
 
@@ -104,8 +98,7 @@ namespace UnitTests.Serialization
         }
 
         [Fact]
-        public void Can_Deserialize_Complex_Types_With_Dasherized_Attrs()
-        {
+        public void Can_Deserialize_Complex_Types_With_Dasherized_Attrs() {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResource>("test-resource");
@@ -124,17 +117,16 @@ namespace UnitTests.Serialization
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document
-            {
-                Data = new DocumentData
+            var content = new Document {
+                Data = new DocumentData {
+                Type = "test-resource",
+                Id = "1",
+                Attributes = new Dictionary<string, object> {
                 {
-                    Type = "test-resource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object> {
-                        {
-                            "complex-member", new Dictionary<string, string> { { "compound-name",  "testName" } }
-                        }
-                    }
+                "complex-member",
+                new Dictionary<string, string> { { "compound-name", "testName" } }
+                }
+                }
                 }
             };
 
@@ -147,8 +139,7 @@ namespace UnitTests.Serialization
         }
 
         [Fact]
-        public void Immutable_Attrs_Are_Not_Included_In_AttributesToUpdate()
-        {
+        public void Immutable_Attrs_Are_Not_Included_In_AttributesToUpdate() {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResource>("test-resource");
@@ -169,18 +160,18 @@ namespace UnitTests.Serialization
 
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
-            var content = new Document
-            {
-                Data = new DocumentData
+            var content = new Document {
+                Data = new DocumentData {
+                Type = "test-resource",
+                Id = "1",
+                Attributes = new Dictionary<string, object> {
                 {
-                    Type = "test-resource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object> {
-                        { "complex-member", new Dictionary<string, string> {
-                            { "compound-name",  "testName" } }
-                        },
-                        {  "immutable", "value"}
-                    }
+                "complex-member",
+                new Dictionary<string, string> { { "compound-name", "testName" }
+                }
+                },
+                { "immutable", "value" }
+                }
                 }
             };
 
@@ -198,8 +189,7 @@ namespace UnitTests.Serialization
         }
 
         [Fact]
-        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship()
-        {
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship() {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<Independent>("independents");
@@ -219,15 +209,12 @@ namespace UnitTests.Serialization
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
             var property = Guid.NewGuid().ToString();
-            var content = new Document
-            {
-                Data = new DocumentData
-                {
-                    Type = "independents",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object> {
-                        {  "property", property }
-                    }
+            var content = new Document {
+                Data = new DocumentData {
+                Type = "independents",
+                Id = "1",
+                Attributes = new Dictionary<string, object> { { "property", property }
+                }
                 }
             };
 
@@ -242,8 +229,7 @@ namespace UnitTests.Serialization
         }
 
         [Fact]
-        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_Relationship_Body()
-        {
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_Relationship_Body() {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<Independent>("independents");
@@ -263,19 +249,15 @@ namespace UnitTests.Serialization
             var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
 
             var property = Guid.NewGuid().ToString();
-            var content = new Document
-            {
-                Data = new DocumentData
-                {
-                    Type = "independents",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object> {
-                        {  "property", property }
-                    },
-                    // a common case for this is deserialization in unit tests
-                    Relationships = new Dictionary<string, RelationshipData> {
-                        { "dependent", new RelationshipData { } }
-                    }
+            var content = new Document {
+                Data = new DocumentData {
+                Type = "independents",
+                Id = "1",
+                Attributes = new Dictionary<string, object> { { "property", property }
+                },
+                // a common case for this is deserialization in unit tests
+                Relationships = new Dictionary<string, RelationshipData> { { "dependent", new RelationshipData { } }
+                }
                 }
             };
 
@@ -289,34 +271,29 @@ namespace UnitTests.Serialization
             Assert.Equal(property, result.Property);
         }
 
-        private class TestResource : Identifiable
-        {
+        private class TestResource : Identifiable {
             [Attr("complex-member")]
             public ComplexType ComplexMember { get; set; }
 
-            [Attr("immutable", isImmutable: true)]
+            [Attr("immutable", isImmutable : true)]
             public string Immutable { get; set; }
         }
 
-        private class TestResourceWithList : Identifiable
-        {
+        private class TestResourceWithList : Identifiable {
             [Attr("complex-members")]
             public List<ComplexType> ComplexMembers { get; set; }
         }
 
-        private class ComplexType
-        {
+        private class ComplexType {
             public string CompoundName { get; set; }
         }
 
-        private class Independent : Identifiable
-        {
+        private class Independent : Identifiable {
             [Attr("property")] public string Property { get; set; }
             [HasOne("dependent")] public Dependent Dependent { get; set; }
         }
 
-        private class Dependent : Identifiable
-        {
+        private class Dependent : Identifiable {
             [HasOne("independent")] public Independent Independent { get; set; }
             public int IndependentId { get; set; }
         }
