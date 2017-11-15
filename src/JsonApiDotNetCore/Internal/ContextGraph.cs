@@ -8,21 +8,13 @@ namespace JsonApiDotNetCore.Internal
     public class ContextGraph : IContextGraph
     {
         public List<ContextEntity> Entities { get; set; }
-        public bool UsesDbContext  { get; set; }
+        public bool UsesDbContext { get; set; }
 
         public ContextEntity GetContextEntity(string entityName)
-        {
-            return Entities
-                .FirstOrDefault(e => 
-                    e.EntityName.ToLower() == entityName.ToLower());
-        }
+            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
 
         public ContextEntity GetContextEntity(Type entityType)
-        {
-            return Entities
-                .FirstOrDefault(e => 
-                    e.EntityType == entityType);
-        }
+            => Entities.SingleOrDefault(e => e.EntityType == entityType);
 
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
@@ -30,9 +22,9 @@ namespace JsonApiDotNetCore.Internal
 
             var navigationProperty = parentEntityType
                 .GetProperties()
-                .FirstOrDefault(p => p.Name.ToLower() == relationshipName.ToLower());
+                .SingleOrDefault(p => string.Equals(p.Name, relationshipName, StringComparison.OrdinalIgnoreCase));
 
-            if(navigationProperty == null)
+            if (navigationProperty == null)
                 throw new JsonApiException(400, $"{parentEntityType} does not contain a relationship named {relationshipName}");
 
             return navigationProperty.GetValue(entity);
@@ -42,11 +34,9 @@ namespace JsonApiDotNetCore.Internal
         {
             var entityType = typeof(TParent);
             return Entities
-                .FirstOrDefault(e => 
-                    e.EntityType == entityType)
+                .SingleOrDefault(e => e.EntityType == entityType)
                 .Relationships
-                .FirstOrDefault(r => 
-                    r.PublicRelationshipName.ToLower() == relationshipName.ToLower())
+                .SingleOrDefault(r => string.Equals(r.PublicRelationshipName, relationshipName, StringComparison.OrdinalIgnoreCase))
                 ?.InternalRelationshipName;
         }
     }

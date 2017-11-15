@@ -62,6 +62,8 @@ namespace JsonApiDotNetCore.Services
 
             _controllerContext.ControllerType = controller.GetType();
             _controllerContext.RequestEntity = ContextGraph.GetContextEntity(typeof(T));
+            if (_controllerContext.RequestEntity == null)
+                throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ContextGraph.");
 
             var context = _httpContextAccessor.HttpContext;
             var path = context.Request.Path.Value.Split('/');
