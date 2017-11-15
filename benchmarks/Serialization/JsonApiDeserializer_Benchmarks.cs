@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes.Exporters;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Generics;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Benchmarks.Serialization {
+    [MarkdownExporter]
     public class JsonApiDeserializer_Benchmarks {
         private const string TYPE_NAME = "simple-types";
         private static readonly string Content = JsonConvert.SerializeObject(new Document {
