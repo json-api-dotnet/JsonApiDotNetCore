@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportsExample", "src\Examp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{076E1AE4-FD25-4684-B826-CAAE37FEA0AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "benchmarks\Benchmarks\Benchmarks.csproj", "{1F604666-BB0F-413E-922D-9D37C6073285}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "benchmarks\Benchmarks.csproj", "{1F604666-BB0F-413E-922D-9D37C6073285}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
