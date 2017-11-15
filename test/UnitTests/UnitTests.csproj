@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\build\dependencies.props" />
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <IsPackable>false</IsPackable>

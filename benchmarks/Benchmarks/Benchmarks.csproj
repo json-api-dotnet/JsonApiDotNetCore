@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\build\dependencies.props" />
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.10" />
+    <PackageReference Include="moq" Version="$(MoqVersion)" />
+    <PackageReference Include="xunit" Version="$(xUnitVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <NetCoreAppVersion>netcoreapp1.1</NetCoreAppVersion>
+    <NetStandardVersion>netstandard1.6</NetStandardVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MoqVersion>4.7.10</MoqVersion>
+    <xUnitVersion>2.2.0</xUnitVersion>
+    <BogusVersion>8.0.1-beta-1</BogusVersion>
+  </PropertyGroup>
+</Project>
