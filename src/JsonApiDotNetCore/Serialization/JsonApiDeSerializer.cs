@@ -164,11 +164,6 @@ namespace JsonApiDotNetCore.Serialization
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships)
         {
-            var entityProperty = entityProperties.FirstOrDefault(p => p.Name == $"{attr.InternalRelationshipName}Id");
-
-            if (entityProperty == null)
-                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
-
             var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
@@ -181,6 +176,12 @@ namespace JsonApiDotNetCore.Serialization
                 if (data == null) return entity;
 
                 var newValue = data["id"];
+
+                var foreignKey = attr.InternalRelationshipName + "Id";
+                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
+                if (entityProperty == null)
+                    throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
+
                 var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
 
                 _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
