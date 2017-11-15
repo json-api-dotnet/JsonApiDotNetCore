@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes.Exporters;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Generics;
@@ -8,10 +8,10 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Moq;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Benchmarks.Serialization {
+    [MarkdownExporter]
     public class JsonApiSerializer_Benchmarks {
         private const string TYPE_NAME = "simple-types";
         private static readonly SimpleType Content = new SimpleType();
