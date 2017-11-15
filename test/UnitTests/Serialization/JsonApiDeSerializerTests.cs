@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Generics;
@@ -196,6 +197,98 @@ namespace UnitTests.Serialization
                 Assert.False(attr.Key.IsImmutable);
         }
 
+        [Fact]
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<Independent>("independents");
+            contextGraphBuilder.AddResource<Dependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+
+            var property = Guid.NewGuid().ToString();
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
+                    Type = "independents",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object> {
+                        {  "property", property }
+                    }
+                }
+            };
+
+            var contentString = JsonConvert.SerializeObject(content);
+
+            // act
+            var result = deserializer.Deserialize<Independent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(property, result.Property);
+        }
+
+        [Fact]
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_Relationship_Body()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<Independent>("independents");
+            contextGraphBuilder.AddResource<Dependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+
+            var property = Guid.NewGuid().ToString();
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
+                    Type = "independents",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object> {
+                        {  "property", property }
+                    },
+                    // a common case for this is deserialization in unit tests
+                    Relationships = new Dictionary<string, RelationshipData> {
+                        { "dependent", new RelationshipData { } }
+                    }
+                }
+            };
+
+            var contentString = JsonConvert.SerializeObject(content);
+
+            // act
+            var result = deserializer.Deserialize<Independent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(property, result.Property);
+        }
+
         private class TestResource : Identifiable
         {
             [Attr("complex-member")]
@@ -214,6 +307,18 @@ namespace UnitTests.Serialization
         private class ComplexType
         {
             public string CompoundName { get; set; }
+        }
+
+        private class Independent : Identifiable
+        {
+            [Attr("property")] public string Property { get; set; }
+            [HasOne("dependent")] public Dependent Dependent { get; set; }
+        }
+
+        private class Dependent : Identifiable
+        {
+            [HasOne("independent")] public Independent Independent { get; set; }
+            public int IndependentId { get; set; }
         }
     }
 }
