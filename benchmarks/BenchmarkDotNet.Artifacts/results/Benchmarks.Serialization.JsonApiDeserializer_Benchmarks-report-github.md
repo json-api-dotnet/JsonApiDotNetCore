@@ -10,4 +10,4 @@ Processor=Intel Core i5-5257U CPU 2.70GHz (Broadwell), ProcessorCount=4
 ```
 |                  Method |     Mean |     Error |    StdDev |
 |------------------------ |---------:|----------:|----------:|
-| DeserializeSimpleObject | 26.37 us | 0.4458 us | 0.4170 us |
+| DeserializeSimpleObject | 27.05 us | 0.5353 us | 0.5950 us |
