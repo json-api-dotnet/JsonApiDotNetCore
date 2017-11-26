@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -9,14 +10,14 @@ namespace JsonApiDotNetCore.Internal.Query
         private readonly IJsonApiContext _jsonApiContext;
 
         public AttrFilterQuery(
-            IJsonApiContext jsonApiCopntext,
+            IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
         {
-            _jsonApiContext = jsonApiCopntext;
+            _jsonApiContext = jsonApiContext;
 
-            var attribute = GetAttribute(filterQuery.Key);
+            var attribute = GetAttribute(filterQuery.Attribute);
 
-            FilteredAttribute = attribute ?? throw new JsonApiException(400, $"{filterQuery.Key} is not a valid property.");
+            FilteredAttribute = attribute ?? throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);
         }
@@ -25,12 +26,9 @@ namespace JsonApiDotNetCore.Internal.Query
         public string PropertyValue { get; set; }
         public FilterOperations FilterOperation { get; set; }
 
-        private AttrAttribute GetAttribute(string propertyName)
-        {
-            return _jsonApiContext.RequestEntity.Attributes
-                .FirstOrDefault(attr =>
-                    attr.InternalAttributeName.ToLower() == propertyName.ToLower()
+        private AttrAttribute GetAttribute(string attribute) =>  
+            _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(
+                attr => string.Equals(attr.PublicAttributeName, attribute, StringComparison.OrdinalIgnoreCase)
             );
-        }
     }
 }

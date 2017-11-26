@@ -61,9 +61,22 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private string GetFilterValue(string key) => _jsonApiContext.QuerySet
-            .Filters
-            .FirstOrDefault(f => string.Equals(f.Key, key, StringComparison.OrdinalIgnoreCase))
-            ?.Value;
+        private string GetFilterValue(string key) {
+            var publicValue = _jsonApiContext.QuerySet.Filters
+                .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
+            
+            if(publicValue != null) 
+                return publicValue;
+            
+            var internalValue = _jsonApiContext.QuerySet.Filters
+                .FirstOrDefault(f => string.Equals(f.Key, key, StringComparison.OrdinalIgnoreCase))?.Value;
+            
+            if(internalValue != null) {
+                _logger.LogWarning("Locating filters by the internal propterty name is deprecated. You should use the public attribute name instead.");
+                return publicValue;
+            }
+
+            return null;
+        }
     }
 }
