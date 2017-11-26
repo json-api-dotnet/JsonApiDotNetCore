@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Exporters;
@@ -6,6 +7,8 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Primitives;
 using Moq;
 
 namespace Benchmarks.Query {
@@ -35,6 +38,24 @@ namespace Benchmarks.Query {
 
         [Benchmark]
         public void DescendingSort() => _queryParser._ParseSortParameters(DESCENDING_SORT);
+
+        [Benchmark]
+        public void ComplexQuery() => Run(100, () => _queryParser.Parse(
+            new QueryCollection(
+                new Dictionary<string, StringValues> { 
+                    { $"filter[{ATTRIBUTE}]", new StringValues(new [] { "abc", "eq:abc" }) },
+                    { $"sort", $"-{ATTRIBUTE}" },
+                    { $"include", "relationship" },
+                    { $"page[size]", "1" },
+                    { $"fields[resource]", ATTRIBUTE },
+                }
+            )
+        ));
+
+        private void Run(int iterations, Action action) { 
+            for (int i = 0; i < iterations; i++)
+                action();
+        }
 
         // this facade allows us to expose and micro-benchmark protected methods
         private class BenchmarkFacade : QueryParser {
