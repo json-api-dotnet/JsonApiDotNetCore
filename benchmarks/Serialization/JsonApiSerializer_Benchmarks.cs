@@ -39,7 +39,7 @@ namespace Benchmarks.Serialization {
         }
 
         [Benchmark]
-        public object DeserializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
+        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
 
         private class SimpleType : Identifiable {
             [Attr("name")]
