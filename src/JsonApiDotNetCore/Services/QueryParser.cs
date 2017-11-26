@@ -18,6 +18,8 @@ namespace JsonApiDotNetCore.Services {
         private readonly IControllerContext _controllerContext;
         private readonly JsonApiOptions _options;
 
+        private const char OPEN_BRACKET = '[';
+        private const char CLOSE_BRACKET = ']';
         public QueryParser(
             IControllerContext controllerContext,
             JsonApiOptions options) {
@@ -72,7 +74,7 @@ namespace JsonApiDotNetCore.Services {
             // expected input = filter[id]=eq:1
             var queries = new List<FilterQuery>();
 
-            var propertyName = key.Split('[', ']') [1].ToProperCase();
+            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET) [1];
 
             var values = value.Split(',');
             foreach (var val in values) {
