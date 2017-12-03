@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Services {
                         string.Equals(attr.PublicAttributeName, propertyName, StringComparison.OrdinalIgnoreCase)
                     );
             } catch (InvalidOperationException e) {
-                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'");
+                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
             }
         }
     }
