@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -14,7 +15,7 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             _jsonApiContext = jsonApiCopntext;
 
-            var relationshipArray = filterQuery.Key.Split('.');
+            var relationshipArray = filterQuery.Attribute.Split('.');
 
             var relationship = GetRelationship(relationshipArray[0]);
             if (relationship == null)
@@ -36,14 +37,14 @@ namespace JsonApiDotNetCore.Internal.Query
         private RelationshipAttribute GetRelationship(string propertyName)
         {
             return _jsonApiContext.RequestEntity.Relationships
-              .FirstOrDefault(r => r.InternalRelationshipName.ToLower() == propertyName.ToLower());
+              .FirstOrDefault(r => string.Equals(r.PublicRelationshipName, propertyName, StringComparison.OrdinalIgnoreCase));
         }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
             var relatedContextExntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
             return relatedContextExntity.Attributes
-              .FirstOrDefault(a => a.InternalAttributeName.ToLower() == attribute.ToLower());
+              .FirstOrDefault(a => string.Equals(a.PublicAttributeName, attribute, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

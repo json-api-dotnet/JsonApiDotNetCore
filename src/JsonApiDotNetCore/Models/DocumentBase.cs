@@ -15,19 +15,8 @@ namespace JsonApiDotNetCore.Models
         public Dictionary<string, object> Meta { get; set; }
 
         // http://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
-        public bool ShouldSerializeIncluded()
-        {
-            return (Included != null);
-        }
-
-        public bool ShouldSerializeMeta()
-        {
-            return (Meta != null);
-        }
-
-        public bool ShouldSerializeLinks()
-        {
-            return (Links != null);
-        }
+        public bool ShouldSerializeIncluded() => (Included != null);
+        public bool ShouldSerializeMeta() => (Meta != null);
+        public bool ShouldSerializeLinks() => (Links != null);
     }
 }

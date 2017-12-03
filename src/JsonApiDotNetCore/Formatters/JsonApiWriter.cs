@@ -13,7 +13,8 @@ namespace JsonApiDotNetCore.Formatters
         private readonly ILogger<JsonApiWriter> _logger;
         private readonly IJsonApiSerializer _serializer;
 
-        public JsonApiWriter(IJsonApiSerializer serializer, 
+        public JsonApiWriter(
+            IJsonApiSerializer serializer, 
             ILoggerFactory loggerFactory)
         {
             _serializer = serializer;
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Formatters
             var response = context.HttpContext.Response;
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
-                response.ContentType = "application/vnd.api+json";
+                response.ContentType = Constants.ContentType;
                 string responseContent;
                 try
                 {

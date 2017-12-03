@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +15,7 @@ namespace JsonApiDotNetCore.Formatters
 
             var contentTypeString = context.HttpContext.Request.ContentType;
 
-            return contentTypeString == "application/vnd.api+json";
+            return contentTypeString == Constants.ContentType;
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)

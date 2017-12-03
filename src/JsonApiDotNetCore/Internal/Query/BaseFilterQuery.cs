@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             if (prefix.Length == 0) return FilterOperations.eq;
 
-            if (!Enum.TryParse(prefix, out FilterOperations opertion))
+            if (Enum.TryParse(prefix, out FilterOperations opertion) == false)
                 throw new JsonApiException(400, $"Invalid filter prefix '{prefix}'");
 
             return opertion;
