@@ -43,7 +43,7 @@ namespace UnitTests.Services
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
-            Assert.Equal("value", querySet.Filters.Single(f => f.Key == "Key").Value);
+            Assert.Equal("value", querySet.Filters.Single(f => f.Attribute == "key").Value);
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace UnitTests.Services
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
-            Assert.Equal(dt, querySet.Filters.Single(f => f.Key == "Key").Value);
-            Assert.Equal("le", querySet.Filters.Single(f => f.Key == "Key").Operation);
+            Assert.Equal(dt, querySet.Filters.Single(f => f.Attribute == "key").Value);
+            Assert.Equal("le", querySet.Filters.Single(f => f.Attribute == "key").Operation);
         }
 
         [Fact]
@@ -96,8 +96,8 @@ namespace UnitTests.Services
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
-            Assert.Equal(dt, querySet.Filters.Single(f => f.Key == "Key").Value);
-            Assert.Equal(string.Empty, querySet.Filters.Single(f => f.Key == "Key").Operation);
+            Assert.Equal(dt, querySet.Filters.Single(f => f.Attribute == "key").Value);
+            Assert.Equal(string.Empty, querySet.Filters.Single(f => f.Attribute == "key").Operation);
         }
 
         [Fact]
