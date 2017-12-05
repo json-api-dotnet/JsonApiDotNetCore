@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
@@ -14,11 +15,23 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeTotalRecordCount { get; set; }
         public bool AllowClientGeneratedIds { get; set; }
         public IContextGraph ContextGraph { get; set; }
-        public IContractResolver JsonContractResolver { get; set; } = new DasherizedResolver();
+        public bool RelativeLinks { get; set; }
+        public bool AllowCustomQueryParameters { get; set; }
+
+        [Obsolete("JsonContract resolver can now be set on SerializerSettings.")]
+        public IContractResolver JsonContractResolver
+        {
+            get => SerializerSettings.ContractResolver;
+            set => SerializerSettings.ContractResolver = value;
+        }
+        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new DasherizedResolver()
+        };
         internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
 
-        public void BuildContextGraph<TContext>(Action<IContextGraphBuilder> builder)
-        where TContext : DbContext
+        public void BuildContextGraph<TContext>(Action<IContextGraphBuilder> builder) where TContext : DbContext
         {
             BuildContextGraph(builder);
 

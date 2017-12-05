@@ -19,12 +19,12 @@ namespace JsonApiDotNetCore.Serialization
             IDocumentBuilder documentBuilder)
         {
             _jsonApiContext = jsonApiContext;
-            _documentBuilder = documentBuilder;            
+            _documentBuilder = documentBuilder;
         }
 
         public JsonApiSerializer(
             IJsonApiContext jsonApiContext,
-            IDocumentBuilder documentBuilder, 
+            IDocumentBuilder documentBuilder,
             ILoggerFactory loggerFactory)
         {
             _jsonApiContext = jsonApiContext;
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entity is IEnumerable<IIdentifiable>)
                 return SerializeDocuments(entity);
 
-            return SerializeDocument(entity);           
+            return SerializeDocument(entity);
         }
 
         private string GetNullDataResponse()
@@ -83,10 +83,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private string _serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = _jsonApiContext.Options.JsonContractResolver
-            });
+            return JsonConvert.SerializeObject(obj, _jsonApiContext.Options.SerializerSettings);
         }
     }
 }
