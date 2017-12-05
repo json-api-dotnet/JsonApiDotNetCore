@@ -272,6 +272,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItemCollection)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
             var newId = deserializedBody.Id;
+
+            context = _fixture.GetService<AppDbContext>();
             var contextCollection = context.TodoItemCollections
                 .Include(c => c.Owner)
                 .Include(c => c.TodoItems)

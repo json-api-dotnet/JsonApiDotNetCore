@@ -5,11 +5,10 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using JsonApiDotNetCore.Services;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
-    public class TestFixture<TStartup> where TStartup : class
+    public class TestFixture<TStartup> : IDisposable where TStartup : class
     {
         private readonly TestServer _server;
         private IServiceProvider _services;
@@ -33,5 +32,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public IJsonApiDeSerializer DeSerializer { get; private set; }
         public IJsonApiContext JsonApiContext { get; private set; }
         public T GetService<T>() => (T)_services.GetService(typeof(T));
+
+        private bool disposedValue = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Client.Dispose();
+                    _server.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
     }
 }
