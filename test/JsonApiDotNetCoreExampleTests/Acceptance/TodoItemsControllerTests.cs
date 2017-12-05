@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
@@ -502,8 +501,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(string.Empty);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-
-            var description = new RequestProperties("Delete TodoItem");
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
