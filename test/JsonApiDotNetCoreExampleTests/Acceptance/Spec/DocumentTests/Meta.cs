@@ -1,27 +1,25 @@
+using System.Collections;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExampleTests.Startups;
-using JsonApiDotNetCoreExample.Models;
-using System.Collections;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
     public class Meta
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
-        public Meta(DocsFixture<Startup, JsonDocWriter> fixture)
+        public Meta(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

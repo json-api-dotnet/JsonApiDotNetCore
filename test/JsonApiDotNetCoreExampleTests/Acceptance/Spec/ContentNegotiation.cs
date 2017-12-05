@@ -2,9 +2,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Models;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -15,8 +12,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class ContentNegotiation
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
-        public ContentNegotiation(DocsFixture<Startup, JsonDocWriter> fixture)
+        private TestFixture<Startup> _fixture;
+        public ContentNegotiation(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }
@@ -29,7 +26,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todo-items";
-            var description = new RequestProperties("Server Sends Correct Content Type Header");
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -50,7 +46,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todo-items";
-            var description = new RequestProperties("Server responds with 415 if request contains media type parameters");
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -73,7 +68,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todo-items";
-            var description = new RequestProperties("Server responds with 406...");
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var acceptHeader = new MediaTypeWithQualityHeaderValue("application/vnd.api+json");

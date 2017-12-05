@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 using JsonApiDotNetCoreExample.Models;
-using DotNetCoreDocs;
 using JsonApiDotNetCoreExample;
-using DotNetCoreDocs.Writers;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using System.Collections;
@@ -18,9 +16,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class RequestMetaTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public RequestMetaTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public RequestMetaTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

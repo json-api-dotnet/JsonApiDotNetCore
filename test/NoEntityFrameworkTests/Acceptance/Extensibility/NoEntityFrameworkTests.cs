@@ -1,17 +1,17 @@
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
-using Xunit;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using NoEntityFrameworkExample;
-using System.Net.Http;
-using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
-using System.Threading.Tasks;
-using System.Net;
-using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample.Data;
-using System;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
+using NoEntityFrameworkExample;
+using Xunit;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {

@@ -1,27 +1,25 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Services;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExampleTests.Startups;
-using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Services;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
-using DotNetCoreDocs;
-using JsonApiDotNetCoreExample;
-using DotNetCoreDocs.Writers;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
     public class RepositoryOverrideTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public RepositoryOverrideTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public RepositoryOverrideTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

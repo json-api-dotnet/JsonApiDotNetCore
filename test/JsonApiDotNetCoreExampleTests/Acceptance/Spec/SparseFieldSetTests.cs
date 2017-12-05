@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
-using JsonApiDotNetCoreExample;
-using Xunit;
-using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCoreExample.Models;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
 using System.Net.Http;
-using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Xunit;
 using StringExtensions = JsonApiDotNetCoreExampleTests.Helpers.Extensions.StringExtensions;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -23,10 +21,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class SparseFieldSetTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private readonly AppDbContext _dbContext;
 
-        public SparseFieldSetTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public SparseFieldSetTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
