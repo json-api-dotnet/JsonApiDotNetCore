@@ -35,7 +35,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         [Fact]
         public async Task Can_Get_CamelCasedModels()
-
         {
             // Arrange
             var model = _faker.Generate();
