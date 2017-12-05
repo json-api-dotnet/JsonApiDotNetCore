@@ -62,32 +62,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Can_Paginate_TodoItems()
-        {
-            // Arrange
-            const int expectedEntitiesPerPage = 2;
-            var person = new Person();
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
-            _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
-
-            var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?page[size]={expectedEntitiesPerPage}";
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            // Act
-            var response = await _fixture.Client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotEmpty(deserializedBody);
-            Assert.True(deserializedBody.Count <= expectedEntitiesPerPage);
-        }
-
-        [Fact]
         public async Task Can_Filter_TodoItems()
         {
             // Arrange
@@ -178,7 +152,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Assert.True(todoItemResult.Ordinal > priorOrdinal);
                 priorOrdinal = todoItemResult.Ordinal;
-            }                
+            }
         }
 
         [Fact]
@@ -217,7 +191,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Assert.True(todoItemResult.Ordinal < priorOrdinal);
                 priorOrdinal = todoItemResult.Ordinal;
-            }                
+            }
         }
 
         [Fact]
@@ -334,7 +308,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Patch_TodoItem()
         {
             // Arrange
-             var person = new Person();
+            var person = new Person();
             _context.People.Add(person);
             _context.SaveChanges();
 
@@ -486,7 +460,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Delete_TodoItem()
         {
             // Arrange
-             var person = new Person();
+            var person = new Person();
             _context.People.Add(person);
             _context.SaveChanges();
 

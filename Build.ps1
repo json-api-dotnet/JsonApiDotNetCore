@@ -22,12 +22,18 @@ dotnet build .\src\JsonApiDotNetCore -c Release
 
 echo "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
 
-
 If($env:APPVEYOR_REPO_TAG -eq $true) {
     $revision = Get-Version-Suffix-From-Tag
     echo "VERSION-SUFFIX: $revision"
-    echo "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
-    dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision 
+
+    IF ([string]::IsNullOrWhitespace($revision)){
+        echo "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"
+        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
+    }
+    Else {
+        echo "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
+        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision 
+    }
 }
 Else { 
     echo "VERSION-SUFFIX: alpha1-$revision"

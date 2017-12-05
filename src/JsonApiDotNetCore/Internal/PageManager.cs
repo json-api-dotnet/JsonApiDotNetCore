@@ -11,28 +11,30 @@ namespace JsonApiDotNetCore.Internal
         public int DefaultPageSize { get; set; }
         public int CurrentPage { get; set; }
         public bool IsPaginated => PageSize > 0;
-        public int TotalPages => (TotalRecords == 0) ? -1: (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize));
+        public int TotalPages => (TotalRecords == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize));
 
         public RootLinks GetPageLinks(LinkBuilder linkBuilder)
-        {            
-            if(!IsPaginated || (CurrentPage == 1 && TotalPages <= 0))
+        {
+            if (ShouldIncludeLinksObject())
                 return null;
-            
+
             var rootLinks = new RootLinks();
 
-            if(CurrentPage > 1)
+            if (CurrentPage > 1)
                 rootLinks.First = linkBuilder.GetPageLink(1, PageSize);
 
-            if(CurrentPage > 1)
+            if (CurrentPage > 1)
                 rootLinks.Prev = linkBuilder.GetPageLink(CurrentPage - 1, PageSize);
-            
-            if(CurrentPage < TotalPages)
+
+            if (CurrentPage < TotalPages)
                 rootLinks.Next = linkBuilder.GetPageLink(CurrentPage + 1, PageSize);
-            
-            if(TotalPages > 0)
+
+            if (TotalPages > 0)
                 rootLinks.Last = linkBuilder.GetPageLink(TotalPages, PageSize);
 
             return rootLinks;
         }
+
+        private bool ShouldIncludeLinksObject() => (!IsPaginated || ((CurrentPage == 1 || CurrentPage == 0) && TotalPages <= 0));
     }
 }

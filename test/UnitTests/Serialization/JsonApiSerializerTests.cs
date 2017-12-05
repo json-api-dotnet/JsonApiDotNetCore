@@ -26,9 +26,7 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions {
-                JsonContractResolver = new DasherizedResolver()
-            });
+            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions());
             jsonApiContextMock.Setup(m => m.RequestEntity)
                 .Returns(contextGraph.GetContextEntity("test-resource"));
             jsonApiContextMock.Setup(m => m.MetaBuilder).Returns(new MetaBuilder());
@@ -36,8 +34,10 @@ namespace UnitTests.Serialization
 
             var documentBuilder = new DocumentBuilder(jsonApiContextMock.Object);
             var serializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);
-            var resource = new TestResource {
-                ComplexMember = new ComplexType {
+            var resource = new TestResource
+            {
+                ComplexMember = new ComplexType
+                {
                     CompoundName = "testname"
                 }
             };

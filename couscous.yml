@@ -34,7 +34,7 @@ branch: gh-pages
 
 # Base URL of the published website (no "/" at the end!)
 # You are advised to set and use this variable to write your links in the HTML layouts
-baseUrl: https://research-institute.github.io/json-api-dotnet-core
+baseUrl: https://json-api-dotnet.github.io/JsonApiDotNetCore/
 github:
     user: research-institute
     repo: json-api-dotnet-core
@@ -78,6 +78,9 @@ menu:
                 filtering:
                     text: Filtering
                     relativeUrl: filtering.html
+                includingrelationships:
+                    text: Including Relationships
+                    relativeUrl: includingrelationships.html
                 pagination:
                     text: Pagination
                     relativeUrl: pagination.html
@@ -108,3 +111,6 @@ menu:
                 middleware:
                     text: Middleware
                     relativeUrl: middleware.html
+                customqueryformat:
+                    text: Custom Query Formats
+                    relativeUrl: customqueryformat.html

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -17,6 +16,8 @@ namespace JsonApiDotNetCore.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDbContextResolver _contextResolver;
+        private readonly IQueryParser _queryParser;
+        private readonly IControllerContext _controllerContext;
 
         public JsonApiContext(
             IDbContextResolver contextResolver,
@@ -24,7 +25,9 @@ namespace JsonApiDotNetCore.Services
             IHttpContextAccessor httpContextAccessor,
             JsonApiOptions options,
             IMetaBuilder metaBuilder,
-            IGenericProcessorFactory genericProcessorFactory)
+            IGenericProcessorFactory genericProcessorFactory,
+            IQueryParser queryParser,
+            IControllerContext controllerContext)
         {
             _contextResolver = contextResolver;
             ContextGraph = contextGraph;
@@ -32,11 +35,14 @@ namespace JsonApiDotNetCore.Services
             Options = options;
             MetaBuilder = metaBuilder;
             GenericProcessorFactory = genericProcessorFactory;
+            _queryParser = queryParser;
+            _controllerContext = controllerContext;
         }
 
         public JsonApiOptions Options { get; set; }
         public IContextGraph ContextGraph { get; set; }
-        public ContextEntity RequestEntity { get; set; }
+        [Obsolete("Use the proxied member IControllerContext.RequestEntity instead.")]
+        public ContextEntity RequestEntity { get => _controllerContext.RequestEntity; set => _controllerContext.RequestEntity = value; }
         public string BasePath { get; set; }
         public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
@@ -54,21 +60,22 @@ namespace JsonApiDotNetCore.Services
             if (controller == null)
                 throw new JsonApiException(500, $"Cannot ApplyContext from null controller for type {typeof(T)}");
 
-            ControllerType = controller.GetType();
+            _controllerContext.ControllerType = controller.GetType();
+            _controllerContext.RequestEntity = ContextGraph.GetContextEntity(typeof(T));
+            if (_controllerContext.RequestEntity == null)
+                throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ContextGraph.");
 
             var context = _httpContextAccessor.HttpContext;
             var path = context.Request.Path.Value.Split('/');
 
-            RequestEntity = ContextGraph.GetContextEntity(typeof(T));
-
             if (context.Request.Query.Any())
             {
-                QuerySet = new QuerySet(this, context.Request.Query);
+                QuerySet = _queryParser.Parse(context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;
             }
 
             var linkBuilder = new LinkBuilder(this);
-            BasePath = linkBuilder.GetBasePath(context, RequestEntity.EntityName);
+            BasePath = linkBuilder.GetBasePath(context, _controllerContext.RequestEntity.EntityName);
             PageManager = GetPageManager();
             IsRelationshipPath = path[path.Length - 2] == "relationships";
             return this;
@@ -86,15 +93,13 @@ namespace JsonApiDotNetCore.Services
             return new PageManager
             {
                 DefaultPageSize = Options.DefaultPageSize,
-                CurrentPage = query.PageOffset > 0 ? query.PageOffset : 1,
+                CurrentPage = query.PageOffset,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
             };
         }
 
+        [Obsolete("Use the proxied method IControllerContext.GetControllerAttribute instead.")]
         public TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute
-        {
-            var attribute = ControllerType.GetTypeInfo().GetCustomAttribute(typeof(TAttribute));
-            return attribute == null ? null : (TAttribute)attribute;
-        }
+            => _controllerContext.GetControllerAttribute<TAttribute>();
     }
 }
