@@ -1,12 +1,11 @@
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExampleTests.Acceptance;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests
 {
     [CollectionDefinition("WebHostCollection")]
-    public class WebHostCollection 
-        : ICollectionFixture<DocsFixture<Startup, JsonDocWriter>>
+    public class WebHostCollection
+        : ICollectionFixture<TestFixture<Startup>>
     { }
 }

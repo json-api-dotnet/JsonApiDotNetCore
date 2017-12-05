@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
-using DotNetCoreDocs.Configuration;
 using System;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCore.Services;
@@ -39,7 +38,6 @@ namespace JsonApiDotNetCoreExampleTests.Startups
                 opt.IncludeTotalRecordCount = true;
             });
 
-            services.AddDocumentationConfiguration(Config);
             services.AddScoped<IRequestMeta, MetaService>();
 
             return services.BuildServiceProvider();

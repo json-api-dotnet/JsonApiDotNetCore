@@ -1,8 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -19,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Relationships
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
 
-        public Relationships(DocsFixture<Startup, JsonDocWriter> fixture)
+        public Relationships(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

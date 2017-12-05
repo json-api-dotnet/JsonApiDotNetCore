@@ -5,8 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -22,12 +20,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class UpdatingRelationshipsTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
-        private Faker<Person> _personFaker;
+        private Bogus.Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
 
-        public UpdatingRelationshipsTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public UpdatingRelationshipsTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -79,6 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
+            _context = _fixture.GetService<AppDbContext>();
             var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
 
             // Assert
