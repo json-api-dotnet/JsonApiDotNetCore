@@ -66,7 +66,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
-            var todoItem = context.TodoItems.First();
+
+            var todoItem = _todoItemFaker.Generate();
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
             var todoItemId = todoItem.Id;
             context.TodoItems.Remove(todoItem);
             await context.SaveChangesAsync();

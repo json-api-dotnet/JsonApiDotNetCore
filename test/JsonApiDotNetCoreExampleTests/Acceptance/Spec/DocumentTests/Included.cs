@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -45,8 +46,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task GET_Included_Contains_SideloadedData_ForManyToOne()
         {
             // arrange
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?include=owner";
@@ -57,13 +64,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data[0];
 
             // assert
+            var json = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Documents>(json);
+            // we only care about counting the todo-items that have owners
+            var expectedCount = documents.Data.Count(d => d.Relationships["owner"].SingleData != null);
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
-            Assert.Equal(documents.Data.Count, documents.Included.Count);
+            Assert.Equal(expectedCount, documents.Included.Count);
         }
 
         [Fact]
