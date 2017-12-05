@@ -219,7 +219,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Null(deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -248,7 +248,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Null(deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Null(deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -350,7 +350,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(newTodoItem.Description, deserializedBody.Description);
             Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
             Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Null(deserializedBody.AchievedDate);
         }
 
         [Fact]
@@ -453,7 +453,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(newTodoItem.Description, deserializedBody.Description);
             Assert.Equal(newTodoItem.Ordinal, deserializedBody.Ordinal);
             Assert.Equal(newTodoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
-            Assert.Equal(null, deserializedBody.AchievedDate);
+            Assert.Null(deserializedBody.AchievedDate);
         }
 
         [Fact]
