@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -46,9 +47,7 @@ namespace JsonApiDotNetCore.Builders
 
         public Documents Build(IEnumerable<IIdentifiable> entities)
         {
-            var entityType = entities
-                .GetType()
-                .GenericTypeArguments[0];
+            var entityType = entities.GetElementType();
 
             var contextEntity = _contextGraph.GetContextEntity(entityType);
 
@@ -229,7 +228,7 @@ namespace JsonApiDotNetCore.Builders
 
         private List<Dictionary<string, string>> GetRelationships(IEnumerable<object> entities)
         {
-            var objType = entities.GetType().GenericTypeArguments[0];
+            var objType = entities.GetElementType();
 
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
