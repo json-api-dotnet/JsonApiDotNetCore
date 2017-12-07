@@ -64,9 +64,8 @@ public class Startup
 
 The current priorities for future development (in order): 
 1. Operations Support ([#150](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/150))
-2. ASP.Net Core 2.0 Support ([#161](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/161))
-3. Minor features ([#105](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/105), [#144](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/144), [#162](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/162))
-4. Resource to Entity Mapping ([#112](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/112))
+2. Minor features ([#105](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/105), [#144](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/144), [#162](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/162))
+3. Resource to Entity Mapping ([#112](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/112))
 
 If you're interested in working on any of the above features, take a look at the [Contributing Guide](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/CONTRIBUTING.MD)
 or hop on the project Gitter for more direct communication.
