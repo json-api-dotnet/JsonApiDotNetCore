@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
@@ -118,6 +119,28 @@ namespace UnitTests
             Assert.Null(document.Data.Relationships["related-model"].Links);
         }
 
+        [Fact]
+        public void Build_Can_Build_Arrays()
+        {
+            var entities = new[] { new Model() };
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+
+            var documents = documentBuilder.Build(entities);
+
+            Assert.Equal(1, documents.Data.Count);
+        }
+
+        [Fact]
+        public void Build_Can_Build_CustomIEnumerables()
+        {
+            var entities = new Models(new[] { new Model() });
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+
+            var documents = documentBuilder.Build(entities);
+
+            Assert.Equal(1, documents.Data.Count);
+        }
+
         private class Model : Identifiable
         {
             [HasOne("related-model", Link.None)]
@@ -129,6 +152,26 @@ namespace UnitTests
         {
             [HasMany("models")]
             public List<Model> Models { get; set; }
+        }
+
+        private class Models : IEnumerable<Model>
+        {
+            private readonly IEnumerable<Model> models;
+
+            public Models(IEnumerable<Model> models)
+            {
+                this.models = models;
+            }
+
+            public IEnumerator<Model> GetEnumerator()
+            {
+                return models.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return models.GetEnumerator();
+            }
         }
     }
 }
