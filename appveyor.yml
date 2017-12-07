@@ -18,6 +18,7 @@ branches:
   - master
   - develop
   - unstable
+  - v2.1
 
 nuget:
   disable_publish_on_pr: true
@@ -38,6 +39,7 @@ test: off
 artifacts:
 - path: .\**\artifacts\**\*.nupkg
   name: NuGet
+
 deploy:
 - provider: NuGet
   server: https://www.myget.org/F/research-institute/api/v2/package
@@ -46,6 +48,7 @@ deploy:
   skip_symbols: false
   on:
     branch: develop
+
 - provider: NuGet
   server: https://www.myget.org/F/jadnc/api/v2/package
   api_key:
@@ -53,10 +56,19 @@ deploy:
   skip_symbols: false
   on:
     branch: unstable
+
 - provider: NuGet
   name: production
   api_key:
     secure: /fsEOgG4EdtNd6DPmko9h3NxQwx1IGDcFreGTKd2KA56U2KEkpX/L/pCGpCIEf2s
   on:
     branch: master
+    appveyor_repo_tag: true
+
+- provider: NuGet
+  name: v2.1
+  api_key:
+    secure: /fsEOgG4EdtNd6DPmko9h3NxQwx1IGDcFreGTKd2KA56U2KEkpX/L/pCGpCIEf2s
+  on:
+    branch: v2.1
     appveyor_repo_tag: true
