@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -10,8 +11,9 @@ namespace JsonApiDotNetCore.Extensions
         public static Type GetElementType(this IEnumerable enumerable)
         {
             var enumerableTypes = enumerable.GetType()
+                .GetTypeInfo()
                 .GetInterfaces()
-                .Where(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                .Where(t => t.GetTypeInfo().IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                 .ToList();
 
             var numberOfEnumerableTypes = enumerableTypes.Count;
