@@ -16,6 +16,18 @@ namespace JsonApiDotNetCore.Controllers
             ILoggerFactory loggerFactory)
             : base(jsonApiContext, resourceService, loggerFactory)
         { }
+
+        public JsonApiController(
+            IJsonApiContext jsonApiContext,
+            IGetAllService<T, int> getAll = null,
+            IGetByIdService<T, int> getById = null,
+            IGetRelationshipService<T, int> getRelationship = null,
+            IGetRelationshipsService<T, int> getRelationships = null,
+            ICreateService<T, int> create = null,
+            IUpdateService<T, int> update = null,
+            IUpdateRelationshipService<T, int> updateRelationships = null,
+            IDeleteService<T, int> delete = null
+        ) : base(jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
     }
 
     public class JsonApiController<T, TId>
@@ -33,6 +45,18 @@ namespace JsonApiDotNetCore.Controllers
             IResourceService<T, TId> resourceService)
         : base(jsonApiContext, resourceService)
         { }
+
+        public JsonApiController(
+           IJsonApiContext jsonApiContext,
+            IGetAllService<T, TId> getAll = null,
+            IGetByIdService<T, TId> getById = null,
+            IGetRelationshipService<T, TId> getRelationship = null,
+            IGetRelationshipsService<T, TId> getRelationships = null,
+            ICreateService<T, TId> create = null,
+            IUpdateService<T, TId> update = null,
+            IUpdateRelationshipService<T, TId> updateRelationships = null,
+            IDeleteService<T, TId> delete = null
+        ) : base(jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();
