@@ -11,20 +11,23 @@ namespace JsonApiDotNetCore.Extensions
         {
             var enumerableTypes = enumerable.GetType()
                 .GetInterfaces()
-                .Where(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                .Where(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                .ToList();
 
-            if (!enumerableTypes.Any())
+            var numberOfEnumerableTypes = enumerableTypes.Count;
+
+            if (numberOfEnumerableTypes == 0)
             {
                 throw new ArgumentException($"{nameof(enumerable)} of type {enumerable.GetType().FullName} does not implement a generic variant of {nameof(IEnumerable)}");
             }
 
-            if (enumerableTypes.Count() > 1)
+            if (numberOfEnumerableTypes > 1)
             {
-                throw new ArgumentException($"{nameof(enumerable)} of type {enumerable.GetType().FullName} implements more than one generic variant of {nameof(IEnumerable)}:\n + " +
+                throw new ArgumentException($"{nameof(enumerable)} of type {enumerable.GetType().FullName} implements more than one generic variant of {nameof(IEnumerable)}:\n" +
                     $"{string.Join("\n", enumerableTypes.Select(t => t.FullName))}");
             }
 
-            var elementType = enumerableTypes.Single().GenericTypeArguments[0];
+            var elementType = enumerableTypes[0].GenericTypeArguments[0];
 
             return elementType;
         }
