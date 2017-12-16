@@ -1,7 +1,7 @@
-using System.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -34,9 +34,9 @@ namespace JsonApiDotNetCore.Internal
         {
             var entityType = typeof(TParent);
             return Entities
-                .SingleOrDefault(e => e.EntityType == entityType)
-                .Relationships
-                .SingleOrDefault(r => string.Equals(r.PublicRelationshipName, relationshipName, StringComparison.OrdinalIgnoreCase))
+                .SingleOrDefault(e => e.EntityType == entityType) 
+                ?.Relationships
+                .SingleOrDefault(r => string.Equals(r.PublicRelationshipName, relationshipName, StringComparison.OrdinalIgnoreCase)) 
                 ?.InternalRelationshipName;
         }
     }
