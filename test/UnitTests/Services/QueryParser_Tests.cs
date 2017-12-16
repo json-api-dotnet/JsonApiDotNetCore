@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
