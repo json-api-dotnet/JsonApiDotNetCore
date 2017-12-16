@@ -224,5 +224,133 @@ namespace UnitTests.Services
             // assert
             Assert.Empty(querySet.Fields);
         }
+
+        [Fact]
+        public void Can_Parse_Fields_Query()
+        {
+            // arrange
+            const string type = "articles";
+            const string attrName = "some-field";
+            const string internalAttrName = "SomeField";
+
+            var query = new Dictionary<string, StringValues> { { $"fields[{type}]", new StringValues(attrName) } };
+
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            _controllerContextMock
+                .Setup(m => m.RequestEntity)
+                .Returns(new ContextEntity
+                {
+                    EntityName = type,
+                        Attributes = new List<AttrAttribute>
+                        {
+                            new AttrAttribute(attrName)
+                            {
+                                InternalAttributeName = internalAttrName
+                            }
+                        }
+                });
+
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            var querySet = queryParser.Parse(_queryCollectionMock.Object);
+
+            // assert
+            Assert.NotEmpty(querySet.Fields);
+            Assert.Equal(2, querySet.Fields.Count);
+            Assert.Equal("Id", querySet.Fields[0]);
+            Assert.Equal(internalAttrName, querySet.Fields[1]);
+        }
+
+        [Fact]
+        public void Throws_JsonApiException_If_Field_DoesNotExist()
+        {
+            // arrange
+            const string type = "articles";
+            const string attrName = "dne";
+
+            var query = new Dictionary<string, StringValues> { { $"fields[{type}]", new StringValues(attrName) } };
+
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            _controllerContextMock
+                .Setup(m => m.RequestEntity)
+                .Returns(new ContextEntity
+                {
+                    EntityName = type,
+                        Attributes = new List<AttrAttribute>()
+                });
+
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act , assert
+            var ex = Assert.Throws<JsonApiException>(() => queryParser.Parse(_queryCollectionMock.Object));
+            Assert.Equal(400, ex.GetStatusCode());
+        }
+
+        [Theory]
+        [InlineData("1", 1, false)]
+        [InlineData("abcde", 0, true)]
+        [InlineData("", 0, true)]
+        public void Can_Parse_Page_Size_Query(string value, int expectedValue, bool shouldThrow)
+        {
+            // arrange
+            var query = new Dictionary<string, StringValues>
+                { { "page[size]", new StringValues(value) }
+                };
+
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            if (shouldThrow)
+            {
+                var ex = Assert.Throws<JsonApiException>(() => queryParser.Parse(_queryCollectionMock.Object));
+                Assert.Equal(400, ex.GetStatusCode());
+            }
+            else
+            {
+                var querySet = queryParser.Parse(_queryCollectionMock.Object);
+                Assert.Equal(expectedValue, querySet.PageQuery.PageSize);
+            }
+        }
+
+        [Theory]
+        [InlineData("1", 1, false)]
+        [InlineData("abcde", 0, true)]
+        [InlineData("", 0, true)]
+        public void Can_Parse_Page_Number_Query(string value, int expectedValue, bool shouldThrow)
+        {
+            // arrange
+            var query = new Dictionary<string, StringValues>
+                { { "page[number]", new StringValues(value) }
+                };
+
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // act
+            if (shouldThrow)
+            {
+                var ex = Assert.Throws<JsonApiException>(() => queryParser.Parse(_queryCollectionMock.Object));
+                Assert.Equal(400, ex.GetStatusCode());
+            }
+            else
+            {
+                var querySet = queryParser.Parse(_queryCollectionMock.Object);
+                Assert.Equal(expectedValue, querySet.PageQuery.PageOffset);
+            }
+        }
     }
 }
