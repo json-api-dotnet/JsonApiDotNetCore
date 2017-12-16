@@ -169,9 +169,12 @@ namespace JsonApiDotNetCore.Serialization
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
                 var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
-                        .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
+                    .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
 
-                var data = (Dictionary<string, string>)relationshipData.ExposedData;
+                if (relationshipAttr == null)
+                    throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
+
+                var data = (Dictionary<string, string>) relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
