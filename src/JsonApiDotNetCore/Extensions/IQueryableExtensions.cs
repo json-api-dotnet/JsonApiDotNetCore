@@ -163,11 +163,10 @@ namespace JsonApiDotNetCore.Extensions
                     body = Expression.LessThanOrEqual(left, right);
                     break;
                 case FilterOperations.ge:
-                    // {model.Id <= 1}
+                    // {model.Id >= 1}
                     body = Expression.GreaterThanOrEqual(left, right);
                     break;
                 case FilterOperations.like:
-                    // {model.Id <= 1}
                     body = Expression.Call(left, "Contains", null, right);
                     break;
                 default:
