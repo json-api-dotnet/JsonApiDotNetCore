@@ -1,19 +1,13 @@
 using System;
-using JsonApiDotNetCore.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal.Generics
 {
     public class GenericProcessorFactory : IGenericProcessorFactory
     {
-        private readonly DbContext _dbContext;
         private readonly IServiceProvider _serviceProvider;
 
-        public GenericProcessorFactory(
-            IDbContextResolver dbContextResolver, 
-            IServiceProvider serviceProvider)
+        public GenericProcessorFactory(IServiceProvider serviceProvider)
         {
-            _dbContext = dbContextResolver.GetContext();
             _serviceProvider = serviceProvider;
         }
 
