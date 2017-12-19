@@ -30,5 +30,9 @@
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
+  </ItemGroup>
 </Project>
