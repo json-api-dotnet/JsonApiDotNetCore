@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Extensions;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -20,11 +20,8 @@ namespace JsonApiDotNetCore.Builders
             // this must be done at build so that call order doesn't matter
             _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
 
-            var graph = new ContextGraph()
-            {
-                Entities = _entities,
-                UsesDbContext = _usesDbContext
-            };
+            var graph = new ContextGraph(_entities, _usesDbContext);
+
             return graph;
         }
 
