@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal.Generics
@@ -8,10 +9,11 @@ namespace JsonApiDotNetCore.Internal.Generics
         private readonly DbContext _dbContext;
         private readonly IServiceProvider _serviceProvider;
 
-        public GenericProcessorFactory(DbContext dbContext, 
+        public GenericProcessorFactory(
+            IDbContextResolver dbContextResolver, 
             IServiceProvider serviceProvider)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContextResolver.GetContext();
             _serviceProvider = serviceProvider;
         }
 
