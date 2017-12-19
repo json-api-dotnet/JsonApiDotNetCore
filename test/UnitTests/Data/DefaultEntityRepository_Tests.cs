@@ -89,13 +89,10 @@ namespace UnitTests.Data
                 .Setup(m => m.RelationshipsToUpdate)
                 .Returns(_relationshipsToUpdate);
 
-            _jsonApiContextMock
-                .Setup(m => m.GetDbContextResolver())
-                .Returns(_contextResolverMock.Object);
-
             return new DefaultEntityRepository<TodoItem>(
                 _loggFactoryMock.Object,
-                _jsonApiContextMock.Object);
+                _jsonApiContextMock.Object,
+                _contextResolverMock.Object);
         }
     }
 }
