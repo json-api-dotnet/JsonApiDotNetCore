@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -15,12 +14,10 @@ namespace JsonApiDotNetCore.Services
     public class JsonApiContext : IJsonApiContext
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IDbContextResolver _contextResolver;
         private readonly IQueryParser _queryParser;
         private readonly IControllerContext _controllerContext;
 
         public JsonApiContext(
-            IDbContextResolver contextResolver,
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,
             JsonApiOptions options,
@@ -29,7 +26,6 @@ namespace JsonApiDotNetCore.Services
             IQueryParser queryParser,
             IControllerContext controllerContext)
         {
-            _contextResolver = contextResolver;
             ContextGraph = contextGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
@@ -80,8 +76,6 @@ namespace JsonApiDotNetCore.Services
             IsRelationshipPath = path[path.Length - 2] == "relationships";
             return this;
         }
-
-        public IDbContextResolver GetDbContextResolver() => _contextResolver;
 
         private PageManager GetPageManager()
         {
