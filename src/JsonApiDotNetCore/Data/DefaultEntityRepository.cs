@@ -20,8 +20,9 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
-        : base(loggerFactory, jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver)
+        : base(loggerFactory, jsonApiContext, contextResolver)
         { }
     }
 
@@ -50,9 +51,9 @@ namespace JsonApiDotNetCore.Data
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver)
         {
-            var contextResolver = jsonApiContext.GetDbContextResolver();
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
