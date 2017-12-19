@@ -1,20 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace JsonApiDotNetCore.Internal
 {
     public class ContextGraph : IContextGraph
     {
-        public List<ContextEntity> Entities { get; set; }
-        public bool UsesDbContext { get; set; }
+        private List<ContextEntity> _entities;
+
+        public ContextGraph() { }
+        
+        public ContextGraph(List<ContextEntity> entities, bool usesDbContext) 
+        {
+            _entities = entities;
+            UsesDbContext = usesDbContext;
+        }
+
+        public bool UsesDbContext { get; }
 
         public ContextEntity GetContextEntity(string entityName)
-            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
+            => _entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
 
         public ContextEntity GetContextEntity(Type entityType)
-            => Entities.SingleOrDefault(e => e.EntityType == entityType);
+            => _entities.SingleOrDefault(e => e.EntityType == entityType);
 
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
@@ -33,7 +41,7 @@ namespace JsonApiDotNetCore.Internal
         public string GetRelationshipName<TParent>(string relationshipName)
         {
             var entityType = typeof(TParent);
-            return Entities
+            return _entities
                 .SingleOrDefault(e => e.EntityType == entityType) 
                 ?.Relationships
                 .SingleOrDefault(r => string.Equals(r.PublicRelationshipName, relationshipName, StringComparison.OrdinalIgnoreCase)) 
