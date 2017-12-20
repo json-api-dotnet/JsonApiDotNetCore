@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         public string PublicAttributeName { get; }
-        public string InternalAttributeName { get; }
+        public string InternalAttributeName { get; internal set; }
         public bool IsImmutable { get; }
         public bool IsFilterable { get; }
         public bool IsSortable { get; }
