@@ -1,14 +1,10 @@
-using System.Reflection;
-
 namespace JsonApiDotNetCore.Models
 {
     public class HasOneAttribute : RelationshipAttribute
     {
         public HasOneAttribute(string publicName, Link documentLinks = Link.All)
         : base(publicName, documentLinks)
-        {
-            PublicRelationshipName = publicName;
-        }
+        { }
 
         public override void SetValue(object entity, object newValue)
         {

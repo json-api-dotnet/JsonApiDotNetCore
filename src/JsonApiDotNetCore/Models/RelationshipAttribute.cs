@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.Models
         }
 
         public string PublicRelationshipName { get; }
-        public string InternalRelationshipName { get; }
-        public Type Type { get; }
+        public string InternalRelationshipName { get; internal set; }
+        public Type Type { get; internal set; }
         public bool IsHasMany => GetType() == typeof(HasManyAttribute);
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
