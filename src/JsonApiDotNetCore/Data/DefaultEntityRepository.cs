@@ -146,27 +146,7 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
-            if (pageSize > 0)
-            {
-                if (pageNumber == 0)
-                    pageNumber = 1;
-
-                if (pageNumber > 0)
-                    return await entities
-                        .Skip((pageNumber - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync();
-                else // page from the end of the set                   
-                    return (await entities
-                        .OrderByDescending(t => t.Id)
-                        .Skip((Math.Abs(pageNumber) - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync())
-                        .OrderBy(t => t.Id)
-                        .ToList();
-            }
-
-            return await entities.ToListAsync();
+            return await entities.Page(pageSize, pageNumber).ToListAsync();
         }
     }
 }

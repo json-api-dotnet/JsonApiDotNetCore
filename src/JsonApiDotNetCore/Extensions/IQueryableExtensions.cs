@@ -216,5 +216,25 @@ namespace JsonApiDotNetCore.Extensions
                 Expression.Call(typeof(Queryable), "Select", new[] { sourceType, resultType },
                 source.Expression, Expression.Quote(selector)));
         }
+
+        public static IQueryable<T> Page<T>(this IQueryable<T> source, int pageSize, int pageNumber)
+        {
+            if (pageSize > 0)
+            {
+                if (pageNumber == 0)
+                    pageNumber = 1;
+
+                if (pageNumber > 0)
+                    return source
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize);
+                else // page from the end of the set
+                    return source
+                        .Skip((Math.Abs(pageNumber) - 1) * pageSize)
+                        .Take(pageSize);
+            }
+
+            return source;
+        }
     }
 }
