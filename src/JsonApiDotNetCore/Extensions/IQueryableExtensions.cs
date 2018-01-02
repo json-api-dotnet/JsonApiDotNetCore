@@ -2,15 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IQueryableExtensions
     {
+        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries)
+        {
+            if (sortQueries == null || sortQueries.Count == 0)
+                return source;
+
+            var orderedEntities = source.Sort(sortQueries[0]);
+
+            if (sortQueries.Count <= 1) return orderedEntities;
+
+            for (var i = 1; i < sortQueries.Count; i++)
+                orderedEntities = orderedEntities.Sort(sortQueries[i]);
+
+            return orderedEntities;
+        }
+
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery)
         {
             return sortQuery.Direction == SortDirection.Descending 
