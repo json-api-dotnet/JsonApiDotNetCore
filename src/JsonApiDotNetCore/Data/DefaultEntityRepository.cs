@@ -69,17 +69,7 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
-            if (sortQueries == null || sortQueries.Count == 0)
-                return entities;
-
-            var orderedEntities = entities.Sort(sortQueries[0]);
-
-            if (sortQueries.Count <= 1) return orderedEntities;
-
-            for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(sortQueries[i]);
-
-            return orderedEntities;
+            return entities.Sort(sortQueries);
         }
 
         public virtual async Task<TEntity> GetAsync(TId id)
