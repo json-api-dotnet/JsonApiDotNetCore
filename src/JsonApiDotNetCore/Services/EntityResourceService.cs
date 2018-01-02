@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -50,7 +49,7 @@ namespace JsonApiDotNetCore.Services
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
-                _jsonApiContext.PageManager.TotalRecords = await entities.CountAsync();
+                _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -72,12 +71,12 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<T> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.Get();
+            var query = _entities.Get().Where(e => e.Id.Equals(id));
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
                 query = _entities.Include(query, r);
             });
-            return await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return await _entities.FirstOrDefaultAsync(query);
         }
 
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
