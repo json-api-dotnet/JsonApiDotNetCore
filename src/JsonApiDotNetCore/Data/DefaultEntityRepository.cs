@@ -146,27 +146,22 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
-            if (pageSize > 0)
+            if (pageNumber >= 0)
             {
-                if (pageNumber == 0)
-                    pageNumber = 1;
-
-                if (pageNumber > 0)
-                    return await entities
-                        .Skip((pageNumber - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync();
-                else // page from the end of the set                   
-                    return (await entities
-                        .OrderByDescending(t => t.Id)
-                        .Skip((Math.Abs(pageNumber) - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync())
-                        .OrderBy(t => t.Id)
-                        .ToList();
+                return await entities.PageForward(pageSize, pageNumber).ToListAsync();
             }
 
-            return await entities.ToListAsync();
+            // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
+            int numberOfEntities = await this.CountAsync(entities);
+
+            // may be negative
+            int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
+            int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
+
+            return await entities
+                    .Skip(virtualFirstIndex)
+                    .Take(numberOfElementsInPage)
+                    .ToListAsync();
         }
     }
 }
