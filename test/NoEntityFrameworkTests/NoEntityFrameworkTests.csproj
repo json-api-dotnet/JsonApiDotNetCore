@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\..\build\dependencies.props" />
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
