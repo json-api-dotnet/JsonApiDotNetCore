@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
@@ -50,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(totalCount);
+            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
 
             foreach (var todoItem in todoItems)
                 todoItem.Owner = person;
@@ -70,12 +72,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
-            Assert.NotEmpty(deserializedBody);
-            Assert.Equal(expectedEntitiesPerPage, deserializedBody.Count);
-
-            var expectedTodoItems = Context.TodoItems.Take(2);
-            foreach (var todoItem in expectedTodoItems)
-                Assert.NotNull(deserializedBody.SingleOrDefault(t => t.Id == todoItem.Id));
+            var expectedTodoItems = new[] { todoItems[0], todoItems[1] };
+            Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
         }
 
         [Fact]
@@ -84,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(totalCount);
+            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
 
             foreach (var todoItem in todoItems)
                 todoItem.Owner = person;
@@ -104,18 +102,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
-            Assert.NotEmpty(deserializedBody);
-            Assert.Equal(expectedEntitiesPerPage, deserializedBody.Count);
+            var expectedTodoItems = new[] { todoItems[totalCount - 2], todoItems[totalCount - 1] };
+            Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
+        }
 
-            var expectedTodoItems = Context.TodoItems
-                .OrderByDescending(t => t.Id)
-                .Take(2)
-                .ToList()
-                .OrderBy(t => t.Id)
-                .ToList();
+        private class IdComparer<T> : IEqualityComparer<T>
+            where T : IIdentifiable
+        {
+            public bool Equals(T x, T y) => x?.StringId == y?.StringId;
 
-            for (int i = 0; i < expectedEntitiesPerPage; i++)
-                Assert.Equal(expectedTodoItems[i].Id, deserializedBody[i].Id);
+            public int GetHashCode(T obj) => obj?.StringId?.GetHashCode() ?? 0;
         }
     }
 }
