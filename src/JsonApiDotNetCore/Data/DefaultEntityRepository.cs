@@ -142,5 +142,20 @@ namespace JsonApiDotNetCore.Data
         {
             return await entities.Page(pageSize, pageNumber).ToListAsync();
         }
+
+        public async Task<long> CountAsync(IQueryable<TEntity> entities)
+        {
+            return await entities.CountAsync();
+        }
+
+        public Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
+        {
+            return entities.FirstOrDefaultAsync();
+        }
+
+        public async Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities)
+        {
+            return await entities.ToListAsync();
+        }
     }
 }
