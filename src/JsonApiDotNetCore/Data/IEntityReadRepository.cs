@@ -27,5 +27,11 @@ namespace JsonApiDotNetCore.Data
         Task<TEntity> GetAsync(TId id);
 
         Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName);
+
+        Task<int> CountAsync(IQueryable<TEntity> entities);
+
+        Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities);
+
+        Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities);
     }
 }
