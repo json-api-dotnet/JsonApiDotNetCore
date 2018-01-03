@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Internal
 {
     public class PageManager
     {
-        public int TotalRecords { get; set; }
+        public long TotalRecords { get; set; }
         public int PageSize { get; set; }
         public int DefaultPageSize { get; set; }
         public int CurrentPage { get; set; }
