@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Services
         {
             var pageManager = _jsonApiContext.PageManager;
             if (!pageManager.IsPaginated)
-                return entities;
+                return await _entities.ToListAsync(entities);
 
             _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
 
