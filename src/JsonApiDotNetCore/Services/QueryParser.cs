@@ -159,6 +159,9 @@ namespace JsonApiDotNetCore.Services {
 
                 var attribute = GetAttribute(propertyName);
 
+                if(attribute.IsSortable == false)
+                    throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
+
                 sortParameters.Add(new SortQuery(direction, attribute));
             };
 

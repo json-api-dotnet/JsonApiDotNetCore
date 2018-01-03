@@ -24,9 +24,7 @@ namespace Benchmarks.Query {
             var controllerContextMock = new Mock<IControllerContext>();
             controllerContextMock.Setup(m => m.RequestEntity).Returns(new ContextEntity {
                 Attributes = new List<AttrAttribute> {
-                    new AttrAttribute(ATTRIBUTE) {
-                        InternalAttributeName = ATTRIBUTE
-                    }
+                    new AttrAttribute(ATTRIBUTE, ATTRIBUTE)
                 }
             });
             var options = new JsonApiOptions();

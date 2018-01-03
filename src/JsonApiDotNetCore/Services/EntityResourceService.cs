@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -47,7 +46,7 @@ namespace JsonApiDotNetCore.Services
 
             entities = ApplySortAndFilterQuery(entities);
 
-            if (_jsonApiContext.QuerySet?.IncludedRelationships != null && _jsonApiContext.QuerySet.IncludedRelationships.Count > 0)
+            if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
@@ -61,12 +60,15 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<T> GetAsync(TId id)
         {
             T entity;
-            if (_jsonApiContext.QuerySet?.IncludedRelationships != null)
+            if (ShouldIncludeRelationships())
                 entity = await GetWithRelationshipsAsync(id);
             else
                 entity = await _entities.GetAsync(id);
             return entity;
         }
+
+        private bool ShouldIncludeRelationships()
+            => (_jsonApiContext.QuerySet?.IncludedRelationships != null && _jsonApiContext.QuerySet.IncludedRelationships.Count > 0);
 
         private async Task<T> GetWithRelationshipsAsync(TId id)
         {
@@ -165,8 +167,6 @@ namespace JsonApiDotNetCore.Services
             var pageManager = _jsonApiContext.PageManager;
             if (!pageManager.IsPaginated)
                 return entities;
-
-            var query = _jsonApiContext.QuerySet?.PageQuery ?? new PageQuery();
 
             _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
 

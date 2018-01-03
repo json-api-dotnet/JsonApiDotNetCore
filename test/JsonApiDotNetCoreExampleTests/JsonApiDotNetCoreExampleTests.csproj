@@ -2,12 +2,7 @@
   <Import Project="..\..\build\dependencies.props" />
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>JsonApiDotNetCoreExampleTests</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <PackageId>JsonApiDotNetCoreExampleTests</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,5 +25,9 @@
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
+  </ItemGroup>
 </Project>

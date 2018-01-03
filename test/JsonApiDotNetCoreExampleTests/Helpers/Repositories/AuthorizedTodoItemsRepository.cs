@@ -16,8 +16,9 @@ namespace JsonApiDotNetCoreExampleTests.Repositories
         public AuthorizedTodoItemsRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
             IAuthorizationService authService)
-        : base(loggerFactory, jsonApiContext)
+        : base(loggerFactory, jsonApiContext, contextResolver)
         {
             _logger = loggerFactory.CreateLogger<AuthorizedTodoItemsRepository>();
             _authService = authService;
