@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -15,12 +14,19 @@ namespace JsonApiDotNetCore.Services
         IResourceService<T>
         where T : class, IIdentifiable<int>
     {
+        private readonly IEntityRepository<T> _entities;
+
         public EntityResourceService(
           IJsonApiContext jsonApiContext,
           IEntityRepository<T> entityRepository,
           ILoggerFactory loggerFactory)
           : base(jsonApiContext, entityRepository, loggerFactory)
-        { }
+        {
+            _entities = entityRepository;
+        }
+
+        protected override bool IsUsingDefaultRepositoryImplementation() 
+            => _entities.GetType().IsAssignableFrom(typeof(DefaultEntityRepository<T>));
     }
 
     public class EntityResourceService<T, TId> : IResourceService<T, TId>
@@ -113,7 +119,7 @@ namespace JsonApiDotNetCore.Services
         /// It is expected that this method will be removed in the next major release.
         /// </summary>
         private IQueryable<T> GetReadonly() => 
-            (_entities is DefaultEntityRepository<T, TId>) 
+            (IsUsingDefaultRepositoryImplementation()) 
                 ? ((DefaultEntityRepository<T, TId>)_entities).Get(isReadonly: true)
                 : _entities.Get();
 
@@ -123,7 +129,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         private async Task<T> GetByIdReadonlyAsync(TId id) => 
             await (
-                (_entities is DefaultEntityRepository<T, TId>) 
+                (IsUsingDefaultRepositoryImplementation()) 
                     ? ((DefaultEntityRepository<T, TId>)_entities).GetAsync(id, isReadonly: true)
                     : _entities.GetAsync(id)
             );
@@ -134,10 +140,13 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         private async Task<T> GetAndIncludeReadonlyAsync(TId id, string relationshipName) => 
             await (
-                (_entities is DefaultEntityRepository<T, TId>) 
+                (IsUsingDefaultRepositoryImplementation())
                     ? ((DefaultEntityRepository<T, TId>)_entities).GetAndIncludeAsync(id, relationshipName, isReadonly: true)
                     : _entities.GetAndIncludeAsync(id, relationshipName)
             );
+        
+        protected virtual bool IsUsingDefaultRepositoryImplementation() 
+            => _entities.GetType().IsAssignableFrom(typeof(DefaultEntityRepository<T, TId>));
 
         public virtual async Task<T> CreateAsync(T entity)
         {
