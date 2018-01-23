@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -41,7 +42,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<IEnumerable<T>> GetAsync()
         {
-            var entities = _entities.Get();
+            var entities = GetReadonly();
 
             entities = ApplySortAndFilterQuery(entities);
 
@@ -62,7 +63,8 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entity = await GetWithRelationshipsAsync(id);
             else
-                entity = await _entities.GetAsync(id);
+                entity = await GetByIdReadonlyAsync(id);
+
             return entity;
         }
 
@@ -71,11 +73,12 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<T> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.Get().Where(e => e.Id.Equals(id));
+            var query = GetReadonly().Where(e => e.Id.Equals(id));
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
                 query = _entities.Include(query, r);
             });
+
             return await _entities.FirstOrDefaultAsync(query);
         }
 
@@ -95,7 +98,7 @@ namespace JsonApiDotNetCore.Services
 
             _logger.LogTrace($"Looking up '{relationshipName}'...");
 
-            var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+            var entity = await GetAndIncludeReadonlyAsync(id, relationshipName);
             if (entity == null)
                 throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
 
@@ -104,6 +107,37 @@ namespace JsonApiDotNetCore.Services
 
             return relationship;
         }
+
+        /// <summary>
+        /// This is a temporary measure to maintain backwards API compatibility. 
+        /// It is expected that this method will be removed in the next major release.
+        /// </summary>
+        private IQueryable<T> GetReadonly() => 
+            (_entities is DefaultEntityRepository<T, TId>) 
+                ? ((DefaultEntityRepository<T, TId>)_entities).Get(isReadonly: true)
+                : _entities.Get();
+
+        /// <summary>
+        /// This is a temporary measure to maintain backwards API compatibility. 
+        /// It is expected that this method will be removed in the next major release.
+        /// </summary>
+        private async Task<T> GetByIdReadonlyAsync(TId id) => 
+            await (
+                (_entities is DefaultEntityRepository<T, TId>) 
+                    ? ((DefaultEntityRepository<T, TId>)_entities).GetAsync(id, isReadonly: true)
+                    : _entities.GetAsync(id)
+            );
+
+        /// <summary>
+        /// This is a temporary measure to maintain backwards API compatibility. 
+        /// It is expected that this method will be removed in the next major release.
+        /// </summary>
+        private async Task<T> GetAndIncludeReadonlyAsync(TId id, string relationshipName) => 
+            await (
+                (_entities is DefaultEntityRepository<T, TId>) 
+                    ? ((DefaultEntityRepository<T, TId>)_entities).GetAndIncludeAsync(id, relationshipName, isReadonly: true)
+                    : _entities.GetAndIncludeAsync(id, relationshipName)
+            );
 
         public virtual async Task<T> CreateAsync(T entity)
         {
