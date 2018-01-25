@@ -13,18 +13,14 @@ namespace JsonApiDotNetCore.Builders
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IContextGraph _contextGraph;
         private readonly IRequestMeta _requestMeta;
+        private readonly DocumentBuilderOptions _documentBuilderOptions; 
 
-        public DocumentBuilder(IJsonApiContext jsonApiContext)
-        {
-            _jsonApiContext = jsonApiContext;
-            _contextGraph = jsonApiContext.ContextGraph;
-        }
-
-        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta)
+        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta=null, IDocumentBuilderOptionsProvider documentBuilderOptionsProvider=null)
         {
             _jsonApiContext = jsonApiContext;
             _contextGraph = jsonApiContext.ContextGraph;
             _requestMeta = requestMeta;
+            _documentBuilderOptions = documentBuilderOptionsProvider?.GetDocumentBuilderOptions() ?? new DocumentBuilderOptions(); ;
         }
 
         public Document Build(IIdentifiable entity)
@@ -118,8 +114,11 @@ namespace JsonApiDotNetCore.Builders
 
             contextEntity.Attributes.ForEach(attr =>
             {
-                if(ShouldIncludeAttribute(attr))
-                    data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
+                var attributeValue = attr.GetValue(entity);
+                if (ShouldIncludeAttribute(attr, attributeValue))
+                {
+                    data.Attributes.Add(attr.PublicAttributeName, attributeValue);
+                }
             });
 
             if (contextEntity.Relationships.Count > 0)
@@ -128,11 +127,17 @@ namespace JsonApiDotNetCore.Builders
             return data;
         }
 
-        private bool ShouldIncludeAttribute(AttrAttribute attr)
+        private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue)
         {
-            return (_jsonApiContext.QuerySet == null 
-                || _jsonApiContext.QuerySet.Fields.Count == 0 
-                || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
+            return !OmitNullValuedAttribute(attr, attributeValue)
+                   && ((_jsonApiContext.QuerySet == null
+                       || _jsonApiContext.QuerySet.Fields.Count == 0)
+                       || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
+        }
+
+        private bool OmitNullValuedAttribute(AttrAttribute attr, object attributeValue)
+        {
+            return attributeValue == null && _documentBuilderOptions.OmitNullValuedAttributes;
         }
 
         private void AddRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)

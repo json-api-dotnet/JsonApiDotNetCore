@@ -26,6 +26,8 @@ namespace JsonApiDotNetCore.Services
         Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
         Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
         Type ControllerType { get; set; }
+        Dictionary<string, object> DocumentMeta { get; set; }
+
         TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
     }
 }

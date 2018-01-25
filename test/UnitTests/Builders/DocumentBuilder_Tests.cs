@@ -16,10 +16,12 @@ namespace UnitTests
         private readonly Mock<IJsonApiContext> _jsonApiContextMock;
         private readonly PageManager _pageManager;
         private readonly JsonApiOptions _options;
+        private readonly Mock<IRequestMeta> _requestMetaMock;
 
         public DocumentBuilder_Tests()
         {
             _jsonApiContextMock = new Mock<IJsonApiContext>();
+            _requestMetaMock = new Mock<IRequestMeta>();
 
             _options = new JsonApiOptions();
 
@@ -141,11 +143,38 @@ namespace UnitTests
             Assert.Equal(1, documents.Data.Count);
         }
 
+
+        [Theory]
+        [InlineData(null,null,true)]
+        [InlineData(false,null,true)]
+        [InlineData(true,null,false)]
+        [InlineData(null,"foo",true)]
+        [InlineData(false,"foo",true)]
+        [InlineData(true,"foo",true)]
+        public void DocumentBuilderOptions(bool? omitNullValuedAttributes,
+            string attributeValue,
+            bool resultContainsAttribute)
+        {
+            var documentBuilderBehaviourMock = new Mock<IDocumentBuilderOptionsProvider>();
+            if (omitNullValuedAttributes.HasValue)
+            {
+                documentBuilderBehaviourMock.Setup(m => m.GetDocumentBuilderOptions())
+                    .Returns(new DocumentBuilderOptions(omitNullValuedAttributes.Value));
+            }
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, null, omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
+            var document = documentBuilder.Build(new Model(){StringProperty = attributeValue});
+
+            Assert.Equal(resultContainsAttribute, document.Data.Attributes.ContainsKey("StringProperty"));
+        }
+
         private class Model : Identifiable
         {
             [HasOne("related-model", Link.None)]
             public RelatedModel RelatedModel { get; set; }
             public int RelatedModelId { get; set; }
+            [Attr("StringProperty")]
+            public string StringProperty { get; set; }
+
         }
 
         private class RelatedModel : Identifiable
