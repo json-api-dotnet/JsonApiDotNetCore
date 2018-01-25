@@ -112,6 +112,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IControllerContext, Services.ControllerContext>();
+            services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)

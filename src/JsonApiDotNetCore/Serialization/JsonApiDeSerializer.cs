@@ -29,6 +29,7 @@ namespace JsonApiDotNetCore.Serialization
             try
             {
                 var document = JsonConvert.DeserializeObject<Document>(requestBody);
+                _jsonApiContext.DocumentMeta = document.Meta;
                 var entity = DocumentToObject(document.Data);
                 return entity;
             }
