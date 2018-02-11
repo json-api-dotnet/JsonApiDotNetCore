@@ -4,7 +4,7 @@ currentMenu: services
 
 # Resource Services
 
-The [IResourceService](https://github.com/Research-Institute/json-api-dotnet-core/blob/master/src/JsonApiDotNetCore/Services/IResourceService.cs) acts as a service layer between the controller and the data access
+The [IResourceService](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/Contract/IResourceService.cs) acts as a service layer between the controller and the data access
 layer. This allows you to customize it however you want and not be dependent upon Entity
 Framework. This is also a good place to implement custom business logic.
 
