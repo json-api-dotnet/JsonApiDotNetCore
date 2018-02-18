@@ -177,11 +177,11 @@ namespace JsonApiDotNetCore.Serialization
                 if (relationshipAttr == null)
                     throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
 
-                var data = (Dictionary<string, object>) relationshipData.ExposedData;
+                var rio = (ResourceIdentifierObject) relationshipData.ExposedData;
 
-                if (data == null) return entity;
+                if (rio == null) return entity;
 
-                var newValue = data["id"];
+                var newValue = rio.Id;
 
                 var foreignKey = attr.InternalRelationshipName + "Id";
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
@@ -213,7 +213,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                var data = (List<Dictionary<string, object>>)relationshipData.ExposedData;
+                var data = (List<ResourceIdentifierObject>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
