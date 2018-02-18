@@ -177,7 +177,7 @@ namespace JsonApiDotNetCore.Serialization
                 if (relationshipAttr == null)
                     throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
 
-                var data = (Dictionary<string, string>) relationshipData.ExposedData;
+                var data = (Dictionary<string, object>) relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
