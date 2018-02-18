@@ -98,7 +98,7 @@ namespace UnitTests.Services
                 m => m.ProcessAsync(
                     It.Is<Operation>(o =>
                         o.DataObject.Type.ToString() == "articles"
-                        && o.DataObject.Relationships["author"].SingleData["id"].ToString() == "9"
+                        && o.DataObject.Relationships["author"].SingleData.Id == "9"
                     )
                 )
             );

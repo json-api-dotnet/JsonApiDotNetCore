@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,9 +21,9 @@ namespace JsonApiDotNetCore.Models
             set
             {
                 if (value is JObject jObject)
-                    SingleData = jObject.ToObject<Dictionary<string, object>>();
-                else if (value is Dictionary<string, object> dict)
-                    SingleData = (Dictionary<string, object>)value;
+                    SingleData = jObject.ToObject<ResourceIdentifierObject>();
+                else if (value is ResourceIdentifierObject dict)
+                    SingleData = (ResourceIdentifierObject)value;
                 else
                     SetManyData(value);
             }
@@ -34,16 +33,16 @@ namespace JsonApiDotNetCore.Models
         {
             IsHasMany = true;
             if (value is JArray jArray)
-                ManyData = jArray.ToObject<List<Dictionary<string, object>>>();
+                ManyData = jArray.ToObject<List<ResourceIdentifierObject>>();
             else
-                ManyData = (List<Dictionary<string, object>>)value;
+                ManyData = (List<ResourceIdentifierObject>)value;
         }
 
         [JsonIgnore]
-        public List<Dictionary<string, object>> ManyData { get; set; }
+        public List<ResourceIdentifierObject> ManyData { get; set; }
 
         [JsonIgnore]
-        public Dictionary<string, object> SingleData { get; set; }
+        public ResourceIdentifierObject SingleData { get; set; }
 
         [JsonIgnore]
         public bool IsHasMany { get; private set; }

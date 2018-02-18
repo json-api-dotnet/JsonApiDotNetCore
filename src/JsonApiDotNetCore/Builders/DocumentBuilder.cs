@@ -234,32 +234,32 @@ namespace JsonApiDotNetCore.Builders
                 _jsonApiContext.IncludedRelationships.Contains(relationshipName);
         }
 
-        private List<Dictionary<string, object>> GetRelationships(IEnumerable<object> entities)
+        private List<ResourceIdentifierObject> GetRelationships(IEnumerable<object> entities)
         {
             var objType = entities.GetElementType();
 
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            var relationships = new List<Dictionary<string, object>>();
+            var relationships = new List<ResourceIdentifierObject>();
             foreach (var entity in entities)
             {
-                relationships.Add(new Dictionary<string, object> {
-                    {"type", typeName.EntityName },
-                    {"id", ((IIdentifiable)entity).StringId }
+                relationships.Add(new ResourceIdentifierObject {
+                    Type = typeName.EntityName,
+                    Id = ((IIdentifiable)entity).StringId
                 });
             }
             return relationships;
         }
-        private Dictionary<string, object> GetRelationship(object entity)
+        private ResourceIdentifierObject GetRelationship(object entity)
         {
             var objType = entity.GetType();
 
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            return new Dictionary<string, object> {
-                    {"type", typeName.EntityName },
-                    {"id", ((IIdentifiable)entity).StringId }
-                };
+            return new ResourceIdentifierObject {
+                Type = typeName.EntityName,
+                Id = ((IIdentifiable)entity).StringId
+            };
         }
     }
 }
