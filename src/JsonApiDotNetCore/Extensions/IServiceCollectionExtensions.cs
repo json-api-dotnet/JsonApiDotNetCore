@@ -98,8 +98,6 @@ namespace JsonApiDotNetCore.Extensions
             if (jsonApiOptions.EnabledExtensions.Contains(JsonApiExtension.Operations))
                 AddOperationServices(services);
 
-            services.AddScoped<IDbContextResolver, DbContextResolver>();
-
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 

@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Internal.Generics
 
     public class GenericProcessor<T> : GenericProcessor<T, int> where T : class, IIdentifiable<int>
     {
-        public GenericProcessor(DbContext context) : base(context) { }
+        public GenericProcessor(IDbContextResolver contextResolver) : base(contextResolver) { }
     }
 
     public class GenericProcessor<T, TId> : IGenericProcessor where T : class, IIdentifiable<TId>

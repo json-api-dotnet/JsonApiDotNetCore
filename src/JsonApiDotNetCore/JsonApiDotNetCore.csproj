@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\build\dependencies.props" />
   <PropertyGroup>
     <VersionPrefix>2.2.0</VersionPrefix>
     <TargetFrameworks>$(NetStandardVersion)</TargetFrameworks>
