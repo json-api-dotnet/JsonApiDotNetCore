@@ -1,7 +1,7 @@
-﻿using JsonApiDotNetCore.Models;
-using System.Collections.Generic;
-using Xunit;
+﻿using System.Collections.Generic;
+using JsonApiDotNetCore.Models;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace UnitTests.Models
 {
@@ -12,9 +12,10 @@ namespace UnitTests.Models
         {
             // arrange
             var relationshipData = new RelationshipData();
-            var relationships = new List<Dictionary<string, object>> {
-                new Dictionary<string, object> {
-                    { "authors", new { } }
+            var relationships = new List<ResourceIdentifierObject> {
+                new ResourceIdentifierObject {
+                    Id = "9",
+                    Type = "authors"
                 }
             };
 
@@ -23,7 +24,8 @@ namespace UnitTests.Models
 
             // assert
             Assert.NotEmpty(relationshipData.ManyData);
-            Assert.True(relationshipData.ManyData[0].ContainsKey("authors"));
+            Assert.Equal("authors", relationshipData.ManyData[0].Type);
+            Assert.Equal("9", relationshipData.ManyData[0].Id);
             Assert.True(relationshipData.IsHasMany);
         }
 
@@ -34,7 +36,8 @@ namespace UnitTests.Models
             var relationshipData = new RelationshipData();
             var relationshipsJson = @"[
                 {
-                    ""authors"": {}
+                    ""type"": ""authors"",
+                    ""id"": ""9""
                 }
             ]";
 
@@ -45,17 +48,19 @@ namespace UnitTests.Models
 
             // assert
             Assert.NotEmpty(relationshipData.ManyData);
-            Assert.True(relationshipData.ManyData[0].ContainsKey("authors"));
+            Assert.Equal("authors", relationshipData.ManyData[0].Type);
+            Assert.Equal("9", relationshipData.ManyData[0].Id);
             Assert.True(relationshipData.IsHasMany);
         }
 
         [Fact]
-        public void Setting_ExposedData_To_Dictionary_Sets_SingleData()
+        public void Setting_ExposedData_To_RIO_Sets_SingleData()
         {
             // arrange
             var relationshipData = new RelationshipData();
-            var relationship = new Dictionary<string, object> {
-                { "authors", new { } }
+            var relationship = new ResourceIdentifierObject {
+                Id = "9",
+                Type = "authors"
             };
 
             // act 
@@ -63,7 +68,8 @@ namespace UnitTests.Models
 
             // assert
             Assert.NotNull(relationshipData.SingleData);
-            Assert.True(relationshipData.SingleData.ContainsKey("authors"));
+            Assert.Equal("authors", relationshipData.SingleData.Type);
+            Assert.Equal("9", relationshipData.SingleData.Id);
             Assert.False(relationshipData.IsHasMany);
         }
 
@@ -73,7 +79,8 @@ namespace UnitTests.Models
             // arrange
             var relationshipData = new RelationshipData();
             var relationshipJson = @"{
-                    ""authors"": {}
+                    ""id"": ""9"",
+                    ""type"": ""authors""
                 }";
 
             var relationship = JObject.Parse(relationshipJson);
@@ -83,7 +90,8 @@ namespace UnitTests.Models
 
             // assert
             Assert.NotNull(relationshipData.SingleData);
-            Assert.True(relationshipData.SingleData.ContainsKey("authors"));
+            Assert.Equal("authors", relationshipData.SingleData.Type);
+            Assert.Equal("9", relationshipData.SingleData.Id);
             Assert.False(relationshipData.IsHasMany);
         }
     }
