@@ -1,28 +1,28 @@
-using System.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace JsonApiDotNetCore.Internal
 {
     public class ContextGraph : IContextGraph
     {
-        public List<ContextEntity> Entities { get; set; }
-        public bool UsesDbContext  { get; set; }
+        private List<ContextEntity> _entities;
+
+        public ContextGraph() { }
+        
+        public ContextGraph(List<ContextEntity> entities, bool usesDbContext) 
+        {
+            _entities = entities;
+            UsesDbContext = usesDbContext;
+        }
+
+        public bool UsesDbContext { get; }
 
         public ContextEntity GetContextEntity(string entityName)
-        {
-            return Entities
-                .FirstOrDefault(e => 
-                    e.EntityName.ToLower() == entityName.ToLower());
-        }
+            => _entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
 
         public ContextEntity GetContextEntity(Type entityType)
-        {
-            return Entities
-                .FirstOrDefault(e => 
-                    e.EntityType == entityType);
-        }
+            => _entities.SingleOrDefault(e => e.EntityType == entityType);
 
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
@@ -30,9 +30,9 @@ namespace JsonApiDotNetCore.Internal
 
             var navigationProperty = parentEntityType
                 .GetProperties()
-                .FirstOrDefault(p => p.Name.ToLower() == relationshipName.ToLower());
+                .SingleOrDefault(p => string.Equals(p.Name, relationshipName, StringComparison.OrdinalIgnoreCase));
 
-            if(navigationProperty == null)
+            if (navigationProperty == null)
                 throw new JsonApiException(400, $"{parentEntityType} does not contain a relationship named {relationshipName}");
 
             return navigationProperty.GetValue(entity);
@@ -41,12 +41,10 @@ namespace JsonApiDotNetCore.Internal
         public string GetRelationshipName<TParent>(string relationshipName)
         {
             var entityType = typeof(TParent);
-            return Entities
-                .FirstOrDefault(e => 
-                    e.EntityType == entityType)
-                .Relationships
-                .FirstOrDefault(r => 
-                    r.PublicRelationshipName.ToLower() == relationshipName.ToLower())
+            return _entities
+                .SingleOrDefault(e => e.EntityType == entityType) 
+                ?.Relationships
+                .SingleOrDefault(r => string.Equals(r.PublicRelationshipName, relationshipName, StringComparison.OrdinalIgnoreCase)) 
                 ?.InternalRelationshipName;
         }
     }

@@ -1,35 +1,33 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCoreExampleTests.Startups;
-using System;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
     public class CreatingDataTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
 
-        public CreatingDataTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public CreatingDataTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _jsonApiContext = fixture.GetService<IJsonApiContext>();
@@ -274,6 +272,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = (TodoItemCollection)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
             var newId = deserializedBody.Id;
+
+            context = _fixture.GetService<AppDbContext>();
             var contextCollection = context.TodoItemCollections
                 .Include(c => c.Owner)
                 .Include(c => c.TodoItems)

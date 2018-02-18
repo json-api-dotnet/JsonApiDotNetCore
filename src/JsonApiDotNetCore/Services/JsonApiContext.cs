@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -15,12 +14,10 @@ namespace JsonApiDotNetCore.Services
     public class JsonApiContext : IJsonApiContext
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IDbContextResolver _contextResolver;
         private readonly IQueryParser _queryParser;
         private readonly IControllerContext _controllerContext;
 
         public JsonApiContext(
-            IDbContextResolver contextResolver,
             IContextGraph contextGraph,
             IHttpContextAccessor httpContextAccessor,
             JsonApiOptions options,
@@ -29,7 +26,6 @@ namespace JsonApiDotNetCore.Services
             IQueryParser queryParser,
             IControllerContext controllerContext)
         {
-            _contextResolver = contextResolver;
             ContextGraph = contextGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
@@ -54,6 +50,7 @@ namespace JsonApiDotNetCore.Services
         public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
         public Type ControllerType { get; set; }
+        public Dictionary<string, object> DocumentMeta { get; set; }
 
         public IJsonApiContext ApplyContext<T>(object controller)
         {
@@ -62,6 +59,8 @@ namespace JsonApiDotNetCore.Services
 
             _controllerContext.ControllerType = controller.GetType();
             _controllerContext.RequestEntity = ContextGraph.GetContextEntity(typeof(T));
+            if (_controllerContext.RequestEntity == null)
+                throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ContextGraph.");
 
             var context = _httpContextAccessor.HttpContext;
             var path = context.Request.Path.Value.Split('/');
@@ -78,8 +77,6 @@ namespace JsonApiDotNetCore.Services
             IsRelationshipPath = path[path.Length - 2] == "relationships";
             return this;
         }
-
-        public IDbContextResolver GetDbContextResolver() => _contextResolver;
 
         private PageManager GetPageManager()
         {

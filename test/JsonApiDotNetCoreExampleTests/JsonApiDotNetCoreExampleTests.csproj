@@ -1,15 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\..\build\dependencies.props" />
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>JsonApiDotNetCoreExampleTests</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <PackageId>JsonApiDotNetCoreExampleTests</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,12 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-beta5-build1225" />
-    <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
-    <PackageReference Include="Bogus" Version="8.0.1-beta-1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="$(XUnitVersion)" />
+    <PackageReference Include="Bogus" Version="$(BogusVersion)" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
-    <PackageReference Include="Moq" Version="4.7.1" />
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
+  </ItemGroup>
 </Project>

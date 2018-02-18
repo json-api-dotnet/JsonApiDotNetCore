@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
-using DotNetCoreDocs.Configuration;
 using System;
 using JsonApiDotNetCoreExample;
 using Moq;
@@ -25,8 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Startups
         {
             var loggerFactory = new LoggerFactory();
 
-            loggerFactory
-              .AddConsole(LogLevel.Trace);
+            loggerFactory.AddConsole();
 
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 
@@ -47,8 +45,6 @@ namespace JsonApiDotNetCoreExampleTests.Startups
             authServicMock.SetupAllProperties();
             services.AddSingleton<IAuthorizationService>(authServicMock.Object);
             services.AddScoped<IEntityRepository<TodoItem>, AuthorizedTodoItemsRepository>();
-
-            services.AddDocumentationConfiguration(Config);
 
             return services.BuildServiceProvider();
         }

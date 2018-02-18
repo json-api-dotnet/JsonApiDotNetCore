@@ -3,8 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -17,11 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeletingDataTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
 
-        public DeletingDataTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public DeletingDataTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

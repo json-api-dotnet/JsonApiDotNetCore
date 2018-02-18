@@ -6,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
-using DotNetCoreDocs.Configuration;
-using DotNetCoreDocs.Middleware;
 using System;
 
 namespace JsonApiDotNetCoreExample
@@ -20,7 +18,7 @@ namespace JsonApiDotNetCoreExample
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
@@ -30,8 +28,7 @@ namespace JsonApiDotNetCoreExample
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory
-              .AddConsole(LogLevel.Trace);
+            loggerFactory.AddConsole(LogLevel.Trace);
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 
             services.AddDbContext<AppDbContext>(options =>
@@ -45,8 +42,6 @@ namespace JsonApiDotNetCoreExample
                 opt.DefaultPageSize = 5;
                 opt.IncludeTotalRecordCount = true;
             });
-
-            services.AddDocumentationConfiguration(Config);
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();
@@ -67,14 +62,9 @@ namespace JsonApiDotNetCoreExample
             loggerFactory.AddConsole(Config.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseDocs();
-
             app.UseJsonApi();
         }
 
-        public string GetDbConnectionString()
-        {
-            return Config["Data:DefaultConnection"];
-        }
+        public string GetDbConnectionString() => Config["Data:DefaultConnection"];
     }
 }

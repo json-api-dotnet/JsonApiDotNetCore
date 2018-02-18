@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -47,11 +45,11 @@ namespace JsonApiDotNetCore.Services
 
             entities = ApplySortAndFilterQuery(entities);
 
-            if (_jsonApiContext.QuerySet?.IncludedRelationships != null && _jsonApiContext.QuerySet.IncludedRelationships.Count > 0)
+            if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
-                _jsonApiContext.PageManager.TotalRecords = await entities.CountAsync();
+                _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -61,21 +59,24 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<T> GetAsync(TId id)
         {
             T entity;
-            if (_jsonApiContext.QuerySet?.IncludedRelationships != null)
+            if (ShouldIncludeRelationships())
                 entity = await GetWithRelationshipsAsync(id);
             else
                 entity = await _entities.GetAsync(id);
             return entity;
         }
 
+        private bool ShouldIncludeRelationships()
+            => (_jsonApiContext.QuerySet?.IncludedRelationships != null && _jsonApiContext.QuerySet.IncludedRelationships.Count > 0);
+
         private async Task<T> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.Get();
+            var query = _entities.Get().Where(e => e.Id.Equals(id));
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
                 query = _entities.Include(query, r);
             });
-            return await query.FirstOrDefaultAsync(e => e.Id.Equals(id));
+            return await _entities.FirstOrDefaultAsync(query);
         }
 
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
@@ -164,9 +165,7 @@ namespace JsonApiDotNetCore.Services
         {
             var pageManager = _jsonApiContext.PageManager;
             if (!pageManager.IsPaginated)
-                return entities;
-
-            var query = _jsonApiContext.QuerySet?.PageQuery ?? new PageQuery();
+                return await _entities.ToListAsync(entities);
 
             _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
 

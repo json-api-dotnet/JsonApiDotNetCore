@@ -51,13 +51,13 @@ namespace JsonApiDotNetCore.Internal
             var candidates = _actionSelector.SelectCandidates(context);
             if (candidates == null || candidates.Count == 0)
             {
-                return TaskCache.CompletedTask;
+                return Task.CompletedTask;
             }
 
             var actionDescriptor = _actionSelector.SelectBestCandidate(context, candidates);
             if (actionDescriptor == null)
             {
-                return TaskCache.CompletedTask;
+                return Task.CompletedTask;
             }
 
             context.Handler = (c) =>
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Internal
                 return invoker.InvokeAsync();
             };
 
-            return TaskCache.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

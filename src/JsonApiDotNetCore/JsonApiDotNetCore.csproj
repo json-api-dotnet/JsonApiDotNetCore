@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\build\dependencies.props" />
   <PropertyGroup>
     <VersionPrefix>2.2.0</VersionPrefix>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>$(NetStandardVersion)</TargetFrameworks>
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup>
     <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
@@ -15,11 +15,12 @@
     <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="$(MicrosoftLoggingVersion)" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.2" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="$(TuplesVersion)" />
   </ItemGroup>
+
 </Project>

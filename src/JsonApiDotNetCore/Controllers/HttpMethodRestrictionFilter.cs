@@ -1,8 +1,5 @@
-using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -17,15 +14,15 @@ namespace JsonApiDotNetCore.Controllers
             ActionExecutionDelegate next)
         {
             var method = context.HttpContext.Request.Method;
-            
-            if(CanExecuteAction(method) == false)
+
+            if (CanExecuteAction(method) == false)
                 throw new JsonApiException(405, $"This resource does not support {method} requests.");
 
             await next();
         }
 
         private bool CanExecuteAction(string requestMethod)
-        {            
+        {
             return Methods.Contains(requestMethod) == false;
         }
     }

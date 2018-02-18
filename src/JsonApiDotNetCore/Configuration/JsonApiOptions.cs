@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Configuration
         public IContextGraph ContextGraph { get; set; }
         public bool RelativeLinks { get; set; }
         public bool AllowCustomQueryParameters { get; set; }
+        public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
 
         [Obsolete("JsonContract resolver can now be set on SerializerSettings.")]
         public IContractResolver JsonContractResolver
@@ -31,6 +32,7 @@ namespace JsonApiDotNetCore.Configuration
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new DasherizedResolver()
         };
+
         internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
         internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
 
@@ -57,4 +59,6 @@ namespace JsonApiDotNetCore.Configuration
             EnabledExtensions.Add(extension);
         }
     }
+
+    
 }
