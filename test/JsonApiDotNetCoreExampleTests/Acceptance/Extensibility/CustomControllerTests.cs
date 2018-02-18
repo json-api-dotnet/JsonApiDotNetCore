@@ -2,16 +2,14 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Xunit;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
@@ -19,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class CustomControllerTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
-        public CustomControllerTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public CustomControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()

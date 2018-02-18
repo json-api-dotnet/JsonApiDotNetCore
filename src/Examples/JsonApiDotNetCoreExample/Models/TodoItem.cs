@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("created-date")]
         public DateTime CreatedDate { get; set; }
 
-        [Attr("achieved-date")]
+        [Attr("achieved-date", isFilterable: false, isSortable: false)]
         public DateTime? AchievedDate { get; set; }
         
         public int? OwnerId { get; set; }

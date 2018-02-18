@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +22,9 @@ namespace JsonApiDotNetCore.Internal.Generics
     public class GenericProcessor<T, TId> : IGenericProcessor where T : class, IIdentifiable<TId>
     {
         private readonly DbContext _context;
-        public GenericProcessor(DbContext context)
+        public GenericProcessor(IDbContextResolver contextResolver)
         {
-            _context = context;
+            _context = contextResolver.GetContext();
         }
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)

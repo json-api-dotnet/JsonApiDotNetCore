@@ -13,3 +13,11 @@ The following query would set the page size to 10 and get page 2.
 
 If you would like pagination implemented by default, you can specify the page size
 when setting up the services:
+
+```C#
+public IServiceProvider ConfigureServices(IServiceCollection services) {
+    services.AddJsonApi<AppDbContext>(
+        opt => opt.DefaultPageSize = 10);
+    // ...
+}
+```

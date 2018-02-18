@@ -1,14 +1,14 @@
-using System;
 using JsonApiDotNetCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data
 {
-    public class DbContextResolver : IDbContextResolver
+    public class DbContextResolver<TContext>  : IDbContextResolver
+        where TContext : DbContext
     {
-        private readonly DbContext _context;
+        private readonly TContext _context;
 
-        public DbContextResolver(DbContext context)
+        public DbContextResolver(TContext context)
         {
             _context = context;
         }

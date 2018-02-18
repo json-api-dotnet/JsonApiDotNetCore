@@ -80,7 +80,8 @@ namespace JsonApiDotNetCore.Extensions
             if (jsonApiOptions.ContextGraph == null)
                 jsonApiOptions.BuildContextGraph<TContext>(null);
 
-            services.AddScoped(typeof(DbContext), typeof(TContext));
+            services.AddScoped<IDbContextResolver, DbContextResolver<TContext>>();
+
             AddJsonApiInternals(services, jsonApiOptions);
         }
 
@@ -98,6 +99,7 @@ namespace JsonApiDotNetCore.Extensions
                 AddOperationServices(services);
 
             services.AddScoped<IDbContextResolver, DbContextResolver>();
+
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
@@ -136,6 +138,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IControllerContext, Services.ControllerContext>();
+            services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
         }
 
         private static void AddOperationServices(IServiceCollection services)

@@ -3,8 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Writers;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -12,16 +10,17 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
+
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
     public class FetchingRelationshipsTests
     {
-        private DocsFixture<Startup, JsonDocWriter> _fixture;
+        private TestFixture<Startup> _fixture;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
 
-        public FetchingRelationshipsTests(DocsFixture<Startup, JsonDocWriter> fixture)
+        public FetchingRelationshipsTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _jsonApiContext = fixture.GetService<IJsonApiContext>();
@@ -67,7 +66,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
-            var todoItem = context.TodoItems.First();
+
+            var todoItem = _todoItemFaker.Generate();
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
             var todoItemId = todoItem.Id;
             context.TodoItems.Remove(todoItem);
             await context.SaveChangesAsync();

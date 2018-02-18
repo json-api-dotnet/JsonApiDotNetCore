@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
@@ -37,7 +38,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private static bool IsValidAcceptHeader(HttpContext context)
         {
-            if (context.Request.Headers.TryGetValue("Accept", out StringValues acceptHeaders) == false)
+            if (context.Request.Headers.TryGetValue(Constants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
 
             foreach (var acceptHeader in acceptHeaders)
@@ -54,7 +55,7 @@ namespace JsonApiDotNetCore.Middleware
         private static bool ContainsMediaTypeParameters(string mediaType)
         {
             var mediaTypeArr = mediaType.Split(';');
-            return (mediaTypeArr[0] == "application/vnd.api+json" && mediaTypeArr.Length == 2);
+            return (mediaTypeArr[0] ==  Constants.ContentType && mediaTypeArr.Length == 2);
         }
 
         private static void FlushResponse(HttpContext context, int statusCode)

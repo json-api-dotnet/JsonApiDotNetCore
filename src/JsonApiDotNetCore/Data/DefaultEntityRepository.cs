@@ -20,8 +20,9 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
-        : base(loggerFactory, jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver)
+        : base(loggerFactory, jsonApiContext, contextResolver)
         { }
     }
 
@@ -35,24 +36,11 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
 
-        [Obsolete("DbContext is no longer directly injected into the ctor. Use JsonApiContext.GetDbContextResolver() instead")]
-        public DefaultEntityRepository(
-            DbContext context,
-            ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
-        {
-            _context = context;
-            _dbSet = context.GetDbSet<TEntity>();
-            _jsonApiContext = jsonApiContext;
-            _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
-            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-        }
-
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver)
         {
-            var contextResolver = jsonApiContext.GetDbContextResolver();
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
@@ -70,28 +58,12 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
-            if (filterQuery == null)
-                return entities;
-
-            if (filterQuery.IsAttributeOfRelationship)
-                return entities.Filter(new RelatedAttrFilterQuery(_jsonApiContext, filterQuery));
-
-            return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
+            return entities.Filter(_jsonApiContext, filterQuery);
         }
 
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
-            if (sortQueries == null || sortQueries.Count == 0)
-                return entities;
-
-            var orderedEntities = entities.Sort(sortQueries[0]);
-
-            if (sortQueries.Count <= 1) return orderedEntities;
-
-            for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(sortQueries[i]);
-
-            return orderedEntities;
+            return entities.Sort(sortQueries);
         }
 
         public virtual async Task<TEntity> GetAsync(TId id)
@@ -168,26 +140,36 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
-            if (pageSize > 0)
+            if (pageNumber >= 0)
             {
-                if (pageNumber == 0)
-                    pageNumber = 1;
-
-                if (pageNumber > 0)
-                    return await entities
-                        .Skip((pageNumber - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync();
-                else // page from the end of the set                   
-                    return (await entities
-                        .OrderByDescending(t => t.Id)
-                        .Skip((Math.Abs(pageNumber) - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync())
-                        .OrderBy(t => t.Id)
-                        .ToList();
+                return await entities.PageForward(pageSize, pageNumber).ToListAsync();
             }
 
+            // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
+            int numberOfEntities = await this.CountAsync(entities);
+
+            // may be negative
+            int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
+            int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
+
+            return await entities
+                    .Skip(virtualFirstIndex)
+                    .Take(numberOfElementsInPage)
+                    .ToListAsync();
+        }
+
+        public async Task<int> CountAsync(IQueryable<TEntity> entities)
+        {
+            return await entities.CountAsync();
+        }
+
+        public Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
+        {
+            return entities.FirstOrDefaultAsync();
+        }
+
+        public async Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities)
+        {
             return await entities.ToListAsync();
         }
     }

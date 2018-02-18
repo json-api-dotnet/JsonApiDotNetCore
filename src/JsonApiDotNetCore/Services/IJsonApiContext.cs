@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -27,7 +26,8 @@ namespace JsonApiDotNetCore.Services
         Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
         Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
         Type ControllerType { get; set; }
+        Dictionary<string, object> DocumentMeta { get; set; }
+
         TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
-        IDbContextResolver GetDbContextResolver();
     }
 }

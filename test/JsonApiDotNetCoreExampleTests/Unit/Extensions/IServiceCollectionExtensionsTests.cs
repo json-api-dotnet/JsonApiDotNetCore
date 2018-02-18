@@ -1,19 +1,19 @@
-using Xunit;
 using JsonApiDotNetCore.Builders;
-using Microsoft.Extensions.DependencyInjection;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
-using Microsoft.AspNetCore.Http;
+using JsonApiDotNetCore.Internal.Generics;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
-using Microsoft.Extensions.Caching.Memory;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Formatters;
-using JsonApiDotNetCore.Internal.Generics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
 {
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
             var provider = services.BuildServiceProvider();
 
             // assert
-            Assert.NotNull(provider.GetService<DbContext>());
+            Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<JsonApiOptions>());
             Assert.NotNull(provider.GetService<IContextGraph>());
@@ -49,6 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
             Assert.NotNull(provider.GetService<IJsonApiReader>());
             Assert.NotNull(provider.GetService<IJsonApiDeSerializer>());
             Assert.NotNull(provider.GetService<IGenericProcessorFactory>());
+            Assert.NotNull(provider.GetService<IDocumentBuilderOptionsProvider>());
             Assert.NotNull(provider.GetService(typeof(GenericProcessor<TodoItem>)));
         }
     }

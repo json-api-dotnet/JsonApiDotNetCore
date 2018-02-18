@@ -1,33 +1,24 @@
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using DotNetCoreDocs;
-using DotNetCoreDocs.Models;
-using DotNetCoreDocs.Writers;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
-namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
-{
-    public class PagingTests : TestFixture<Startup>
-    {
+namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
+    public class PagingTests : TestFixture<Startup> {
         private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
-                .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number())
-                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+            .RuleFor(t => t.Description, f => f.Lorem.Sentence())
+            .RuleFor(t => t.Ordinal, f => f.Random.Number())
+            .RuleFor(t => t.CreatedDate, f => f.Date.Past());
 
         [Fact]
-        public async Task Can_Paginate_TodoItems()
-        {
+        public async Task Can_Paginate_TodoItems() {
             // Arrange
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
@@ -56,13 +47,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Paginate_TodoItems_From_Start()
-        {
+        public async Task Can_Paginate_TodoItems_From_Start() {
             // Arrange
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(totalCount);
+            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
 
             foreach (var todoItem in todoItems)
                 todoItem.Owner = person;
@@ -82,22 +72,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
-            Assert.NotEmpty(deserializedBody);
-            Assert.Equal(expectedEntitiesPerPage, deserializedBody.Count);
-
-            var expectedTodoItems = Context.TodoItems.Take(2);
-            foreach (var todoItem in expectedTodoItems)
-                Assert.NotNull(deserializedBody.SingleOrDefault(t => t.Id == todoItem.Id));
+            var expectedTodoItems = new[] { todoItems[0], todoItems[1] };
+            Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
         }
 
         [Fact]
-        public async Task Can_Paginate_TodoItems_From_End()
-        {
+        public async Task Can_Paginate_TodoItems_From_End() {
             // Arrange
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
-            var todoItems = _todoItemFaker.Generate(totalCount);
+            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
 
             foreach (var todoItem in todoItems)
                 todoItem.Owner = person;
@@ -117,18 +102,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
-            Assert.NotEmpty(deserializedBody);
-            Assert.Equal(expectedEntitiesPerPage, deserializedBody.Count);
+            var expectedTodoItems = new[] { todoItems[totalCount - 2], todoItems[totalCount - 1] };
+            Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
+        }
 
-            var expectedTodoItems = Context.TodoItems
-                .OrderByDescending(t => t.Id)
-                .Take(2)
-                .ToList()
-                .OrderBy(t => t.Id)
-                .ToList();
+        private class IdComparer<T> : IEqualityComparer<T>
+            where T : IIdentifiable
+        {
+            public bool Equals(T x, T y) => x?.StringId == y?.StringId;
 
-            for (int i = 0; i < expectedEntitiesPerPage; i++)
-                Assert.Equal(expectedTodoItems[i].Id, deserializedBody[i].Id);
+            public int GetHashCode(T obj) => obj?.StringId?.GetHashCode() ?? 0;
         }
     }
 }

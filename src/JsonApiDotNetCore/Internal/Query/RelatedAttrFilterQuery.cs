@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -14,16 +15,22 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             _jsonApiContext = jsonApiCopntext;
 
-            var relationshipArray = filterQuery.Key.Split('.');
+            var relationshipArray = filterQuery.Attribute.Split('.');
 
             var relationship = GetRelationship(relationshipArray[0]);
             if (relationship == null)
-                throw new JsonApiException(400, $"{relationshipArray[0]} is not a valid relationship.");
+                throw new JsonApiException(400, $"{relationshipArray[1]} is not a valid relationship on {relationshipArray[0]}.");
 
             var attribute = GetAttribute(relationship, relationshipArray[1]);
+            
+            if(attribute == null)
+                throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
+
+            if(attribute.IsFilterable == false)
+                throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
 
             FilteredRelationship = relationship;
-            FilteredAttribute = attribute ?? throw new JsonApiException(400, $"{relationshipArray[1]} is not a valid attribute on {relationshipArray[0]}.");
+            FilteredAttribute = attribute;
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);
         }
@@ -36,14 +43,14 @@ namespace JsonApiDotNetCore.Internal.Query
         private RelationshipAttribute GetRelationship(string propertyName)
         {
             return _jsonApiContext.RequestEntity.Relationships
-              .FirstOrDefault(r => r.InternalRelationshipName.ToLower() == propertyName.ToLower());
+              .FirstOrDefault(r => string.Equals(r.PublicRelationshipName, propertyName, StringComparison.OrdinalIgnoreCase));
         }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
             var relatedContextExntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
             return relatedContextExntity.Attributes
-              .FirstOrDefault(a => a.InternalAttributeName.ToLower() == attribute.ToLower());
+              .FirstOrDefault(a => string.Equals(a.PublicAttributeName, attribute, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
