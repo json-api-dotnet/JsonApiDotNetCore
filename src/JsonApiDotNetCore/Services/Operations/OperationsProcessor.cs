@@ -61,30 +61,14 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var operationsPointer = new OperationsPointer();
 
-            ReplaceDataPointers(op.DataObject, outputOps);
-            ReplaceRefPointers(op.Ref, outputOps);
+            // ReplaceDataPointers(op.DataObject, outputOps);
+            // ReplaceRefPointers(op.Ref, outputOps);
 
             var processor = GetOperationsProcessor(op);
             var resultOp = await processor.ProcessAsync(op);
 
             if (resultOp != null)
                 outputOps.Add(resultOp);
-        }
-
-        private void ReplaceDataPointers(DocumentData dataObject, List<Operation> outputOps)
-        {
-            if (dataObject == null) return;
-
-            var replacer = new DocumentDataPointerReplacement<OperationsPointer, Operation>(dataObject);
-            replacer.ReplacePointers(outputOps);
-        }
-
-        private void ReplaceRefPointers(ResourceReference resourceRef, List<Operation> outputOps)
-        {
-            if (resourceRef == null) return;
-
-            var replacer = new ResourceRefPointerReplacement<OperationsPointer, Operation>(resourceRef);
-            replacer.ReplacePointers(outputOps);
         }
 
         private IOpProcessor GetOperationsProcessor(Operation op)

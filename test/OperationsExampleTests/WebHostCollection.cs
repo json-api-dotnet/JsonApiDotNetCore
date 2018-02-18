@@ -1,13 +1,11 @@
-using System;
 using System.Net.Http;
-using Microsoft.AspNetCore.Hosting;
-using OperationsExample;
-using Xunit;
-using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Formatters;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
+using OperationsExample;
+using Xunit;
 
 namespace OperationsExampleTests
 {
@@ -35,7 +33,6 @@ namespace OperationsExampleTests
             request.Content = new StringContent(JsonConvert.SerializeObject(data));
             request.Content.Headers.ContentLength = 1;
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-            request.Content.Headers.Add("Link", JsonApiOperationsInputFormatter.PROFILE_EXTENSION);
             return await Client.SendAsync(request);
         }
 

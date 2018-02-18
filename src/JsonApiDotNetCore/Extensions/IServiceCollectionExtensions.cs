@@ -163,9 +163,6 @@ namespace JsonApiDotNetCore.Extensions
         {
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
 
-            if (jsonApiOptions.EnabledExtensions.Contains(JsonApiExtension.Operations))
-                options.InputFormatters.Insert(0, new JsonApiOperationsInputFormatter());
-
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
 
             options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
