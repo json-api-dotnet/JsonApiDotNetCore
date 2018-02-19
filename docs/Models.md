@@ -103,4 +103,4 @@ public class TodoItem : Identifiable<int>
 
 ## Resource Names
 
-See [ContextGraph](contextGraph.html) for details on how the resource names are determined.
+See [ContextGraph](contextgraph.html) for details on how the resource names are determined.
