@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services.Operations;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,15 @@ namespace UnitTests.Services
     public class OperationsProcessorTests
     {
         private readonly Mock<IOperationProcessorResolver> _resolverMock;
-
         public readonly Mock<DbContext> _dbContextMock;
+        public readonly Mock<IDbContextResolver> _dbContextResolverMock;
 
         public OperationsProcessorTests()
         {
             _resolverMock = new Mock<IOperationProcessorResolver>();
             _dbContextMock = new Mock<DbContext>();
+            _dbContextResolverMock = new Mock<IDbContextResolver>();
+            _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
         }
 
         [Fact]
@@ -88,7 +91,7 @@ namespace UnitTests.Services
             _resolverMock.Setup(m => m.LocateCreateService((It.IsAny<Operation>())))
                 .Returns(opProcessorMock.Object);
 
-            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextMock.Object);
+            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object);
 
             // act
             var results = await operationsProcessor.ProcessAsync(operations);
