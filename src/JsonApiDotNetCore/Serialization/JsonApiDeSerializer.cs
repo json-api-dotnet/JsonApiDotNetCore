@@ -5,6 +5,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,7 +29,20 @@ namespace JsonApiDotNetCore.Serialization
         {
             try
             {
-                var document = JsonConvert.DeserializeObject<Document>(requestBody);
+                // TODO: determine whether or not the token should be re-used rather than performing full
+                // deserialization again from the string
+                var bodyJToken = JToken.Parse(requestBody);
+                if(bodyJToken.SelectToken("operations") != null)
+                {
+                    var operations = JsonConvert.DeserializeObject<OperationsDocument>(requestBody);
+                    if (operations == null)
+                        throw new JsonApiException(400, "Failed to deserialize operations request.");
+
+                    return operations;
+                }
+
+                var document = bodyJToken.ToObject<Document>();
+
                 _jsonApiContext.DocumentMeta = document.Meta;
                 var entity = DocumentToObject(document.Data);
                 return entity;
@@ -63,7 +77,7 @@ namespace JsonApiDotNetCore.Serialization
             try
             {
                 var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
-
+                
                 var deserializedList = new List<TEntity>();
                 foreach (var data in documents.Data)
                 {
