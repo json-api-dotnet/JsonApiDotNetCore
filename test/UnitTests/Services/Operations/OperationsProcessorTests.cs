@@ -24,7 +24,6 @@ namespace UnitTests.Services
             _resolverMock = new Mock<IOperationProcessorResolver>();
             _dbContextMock = new Mock<DbContext>();
             _dbContextResolverMock = new Mock<IDbContextResolver>();
-            _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
         }
 
         [Fact]
@@ -36,6 +35,7 @@ namespace UnitTests.Services
                     ""op"": ""add"",
                     ""data"": {
                         ""type"": ""authors"",
+                        ""lid"": ""a"",
                         ""attributes"": {
                             ""name"": ""dgeb""
                         }
@@ -51,7 +51,7 @@ namespace UnitTests.Services
                             ""author"": {
                                 ""data"": {
                                     ""type"": ""authors"",
-                                    ""id"": { ""pointer"": ""/operations/0/data/id"" }
+                                    ""lid"": ""a""
                                 }
                             }
                         }
@@ -66,6 +66,7 @@ namespace UnitTests.Services
                 ""data"": {
                     ""type"": ""authors"",
                     ""id"": ""9"",
+                    ""lid"": ""a"",
                     ""attributes"": {
                         ""name"": ""dgeb""
                     }
@@ -91,6 +92,7 @@ namespace UnitTests.Services
             _resolverMock.Setup(m => m.LocateCreateService((It.IsAny<Operation>())))
                 .Returns(opProcessorMock.Object);
 
+            _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
             var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object);
 
             // act

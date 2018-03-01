@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Models.Pointers;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +63,7 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var operationsPointer = new OperationsPointer();
 
-            // ReplaceDataPointers(op.DataObject, outputOps);
+            ReplaceDataPointers(op.DataObject, outputOps);
             // ReplaceRefPointers(op.Ref, outputOps);
 
             var processor = GetOperationsProcessor(op);
@@ -69,6 +71,43 @@ namespace JsonApiDotNetCore.Services.Operations
 
             if (resultOp != null)
                 outputOps.Add(resultOp);
+        }
+
+        private void ReplaceDataPointers(DocumentData data, List<Operation> outputOps)
+        {
+            if (data == null) return;
+
+            bool HasLocalId(ResourceIdentifierObject rio) => string.IsNullOrEmpty(rio.LocalId) == false;
+            string GetIdFromLocalId(string localId)  {
+                var referencedOp = outputOps.FirstOrDefault(o => o.DataObject.LocalId == localId);
+                if(referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
+                return referencedOp.DataObject.Id;
+            };
+
+            // are there any circumstances where the primary data would contain an lid?
+            // if(HasLocalId(data))
+            // {
+            //     data.Id = GetIdFromLocalId(data.LocalId);
+            // }
+
+            if (data.Relationships != null) 
+            { 
+                foreach (var relationshipDictionary in data.Relationships) 
+                { 
+                    if (relationshipDictionary.Value.IsHasMany) 
+                    { 
+                        foreach (var relationship in relationshipDictionary.Value.ManyData) 
+                            if(HasLocalId(relationship))
+                                relationship.Id = GetIdFromLocalId(relationship.LocalId);
+                    } 
+                    else
+                    {
+                        var relationship = relationshipDictionary.Value.SingleData;
+                        if(HasLocalId(relationship))
+                            relationship.Id = GetIdFromLocalId(relationship.LocalId);
+                    }
+                } 
+            }
         }
 
         private IOpProcessor GetOperationsProcessor(Operation op)
