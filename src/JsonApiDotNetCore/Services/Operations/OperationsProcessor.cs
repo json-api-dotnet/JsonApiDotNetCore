@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Models.Pointers;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +21,10 @@ namespace JsonApiDotNetCore.Services.Operations
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
-            DbContext dbContext)
+            IDbContextResolver dbContextResolver)
         {
             _processorResolver = processorResolver;
-            _dbContext = dbContext;
+            _dbContext = dbContextResolver.GetContext();
         }
 
         public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
