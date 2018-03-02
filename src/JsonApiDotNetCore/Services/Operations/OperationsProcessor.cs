@@ -33,6 +33,7 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var outputOps = new List<Operation>();
             var opIndex = 0;
+
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
@@ -63,8 +64,8 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var operationsPointer = new OperationsPointer();
 
-            ReplaceDataPointers(op.DataObject, outputOps);
-            // ReplaceRefPointers(op.Ref, outputOps);
+            ReplaceLocalIdsInResourceObject(op.DataObject, outputOps);
+            ReplaceLocalIdsInRef(op.Ref, outputOps);
 
             var processor = GetOperationsProcessor(op);
             var resultOp = await processor.ProcessAsync(op);
@@ -73,41 +74,54 @@ namespace JsonApiDotNetCore.Services.Operations
                 outputOps.Add(resultOp);
         }
 
-        private void ReplaceDataPointers(DocumentData data, List<Operation> outputOps)
+        private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, List<Operation> outputOps)
         {
-            if (data == null) return;
+            if (resourceObject == null) return;
 
-            bool HasLocalId(ResourceIdentifierObject rio) => string.IsNullOrEmpty(rio.LocalId) == false;
-            string GetIdFromLocalId(string localId)  {
-                var referencedOp = outputOps.FirstOrDefault(o => o.DataObject.LocalId == localId);
-                if(referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
-                return referencedOp.DataObject.Id;
-            };
+            // it is strange to me that a top level resource object might use a lid.
+            // by not replacing it, we avoid a case where the first operation is an 'add' with an 'lid'
+            // and we would be unable to locate the matching 'lid' in 'outputOps'
+            //
+            // we also create a scenario where I might try to update a resource I just created
+            // in this case, the 'data.id' will be null, but the 'ref.id' will be replaced by the correct 'id' from 'outputOps'
+            // 
+            // if(HasLocalId(resourceObject))
+            //     resourceObject.Id = GetIdFromLocalId(outputOps, resourceObject.LocalId);
 
-            // are there any circumstances where the primary data would contain an lid?
-            // if(HasLocalId(data))
-            // {
-            //     data.Id = GetIdFromLocalId(data.LocalId);
-            // }
-
-            if (data.Relationships != null) 
+            if (resourceObject.Relationships != null) 
             { 
-                foreach (var relationshipDictionary in data.Relationships) 
+                foreach (var relationshipDictionary in resourceObject.Relationships) 
                 { 
                     if (relationshipDictionary.Value.IsHasMany) 
                     { 
                         foreach (var relationship in relationshipDictionary.Value.ManyData) 
                             if(HasLocalId(relationship))
-                                relationship.Id = GetIdFromLocalId(relationship.LocalId);
+                                relationship.Id = GetIdFromLocalId(outputOps, relationship.LocalId);
                     } 
                     else
                     {
                         var relationship = relationshipDictionary.Value.SingleData;
                         if(HasLocalId(relationship))
-                            relationship.Id = GetIdFromLocalId(relationship.LocalId);
+                            relationship.Id = GetIdFromLocalId(outputOps, relationship.LocalId);
                     }
                 } 
             }
+        }
+
+        private void ReplaceLocalIdsInRef(ResourceReference resourceRef, List<Operation> outputOps) 
+        { 
+            if (resourceRef == null) return;
+            if(HasLocalId(resourceRef))
+                resourceRef.Id = GetIdFromLocalId(outputOps, resourceRef.LocalId);
+        }
+
+        private bool HasLocalId(ResourceIdentifierObject rio) => string.IsNullOrEmpty(rio.LocalId) == false;
+
+        private string GetIdFromLocalId(List<Operation> outputOps, string localId)  
+        {
+            var referencedOp = outputOps.FirstOrDefault(o => o.DataObject.LocalId == localId);
+            if(referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
+            return referencedOp.DataObject.Id;
         }
 
         private IOpProcessor GetOperationsProcessor(Operation op)
