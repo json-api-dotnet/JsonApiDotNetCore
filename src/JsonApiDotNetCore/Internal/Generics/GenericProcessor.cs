@@ -8,7 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal.Generics
 {
-    public class GenericProcessor<T> : IGenericProcessor where T : class, IIdentifiable
+    public interface IGenericProcessor
+    {
+        Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
+        void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
+    }
+
+    public class GenericProcessor<T> : GenericProcessor<T, int> where T : class, IIdentifiable<int>
+    {
+        public GenericProcessor(IDbContextResolver contextResolver) : base(contextResolver) { }
+    }
+
+    public class GenericProcessor<T, TId> : IGenericProcessor where T : class, IIdentifiable<TId>
     {
         private readonly DbContext _context;
         public GenericProcessor(IDbContextResolver contextResolver)

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Internal
         private readonly ErrorCollection _errors = new ErrorCollection();
 
         public JsonApiException(ErrorCollection errorCollection)
-        { 
+        {
             _errors = errorCollection;
         }
 
@@ -42,15 +42,15 @@ namespace JsonApiDotNetCore.Internal
 
         public int GetStatusCode()
         {
-            if(_errors.Errors.Count == 1)
+            if (_errors.Errors.Count == 1)
                 return _errors.Errors[0].StatusCode;
 
-            if(_errors.Errors.FirstOrDefault(e => e.StatusCode >= 500) != null)
+            if (_errors.Errors.FirstOrDefault(e => e.StatusCode >= 500) != null)
                 return 500;
-                
-            if(_errors.Errors.FirstOrDefault(e => e.StatusCode >= 400) != null)
+
+            if (_errors.Errors.FirstOrDefault(e => e.StatusCode >= 400) != null)
                 return 400;
-            
+
             return 500;
         }
     }

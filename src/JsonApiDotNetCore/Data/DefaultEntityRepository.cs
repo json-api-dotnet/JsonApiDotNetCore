@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TEntity> Get()
         {
-            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Any())
+            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
                 return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
 
             return _dbSet;
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Data
 
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var genericProcessor = _genericProcessorFactory.GetProcessor(relationship.Type);
+            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), relationship.Type);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 

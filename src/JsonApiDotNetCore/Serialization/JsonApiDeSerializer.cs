@@ -5,6 +5,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,7 +29,20 @@ namespace JsonApiDotNetCore.Serialization
         {
             try
             {
-                var document = JsonConvert.DeserializeObject<Document>(requestBody);
+                // TODO: determine whether or not the token should be re-used rather than performing full
+                // deserialization again from the string
+                var bodyJToken = JToken.Parse(requestBody);
+                if(bodyJToken.SelectToken("operations") != null)
+                {
+                    var operations = JsonConvert.DeserializeObject<OperationsDocument>(requestBody);
+                    if (operations == null)
+                        throw new JsonApiException(400, "Failed to deserialize operations request.");
+
+                    return operations;
+                }
+
+                var document = bodyJToken.ToObject<Document>();
+
                 _jsonApiContext.DocumentMeta = document.Meta;
                 var entity = DocumentToObject(document.Data);
                 return entity;
@@ -63,7 +77,7 @@ namespace JsonApiDotNetCore.Serialization
             try
             {
                 var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
-
+                
                 var deserializedList = new List<TEntity>();
                 foreach (var data in documents.Data)
                 {
@@ -79,9 +93,11 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private object DocumentToObject(DocumentData data)
+        public object DocumentToObject(DocumentData data)
         {
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type);
+            if (data == null) throw new JsonApiException(422, "Failed to deserialize document as json:api.");
+
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type?.ToString());
             _jsonApiContext.RequestEntity = contextEntity;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
@@ -92,7 +108,7 @@ namespace JsonApiDotNetCore.Serialization
             var identifiableEntity = (IIdentifiable)entity;
 
             if (data.Id != null)
-                identifiableEntity.StringId = data.Id;
+                identifiableEntity.StringId = data.Id?.ToString();
 
             return identifiableEntity;
         }
@@ -175,11 +191,11 @@ namespace JsonApiDotNetCore.Serialization
                 if (relationshipAttr == null)
                     throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
 
-                var data = (Dictionary<string, string>) relationshipData.ExposedData;
+                var rio = (ResourceIdentifierObject) relationshipData.ExposedData;
 
-                if (data == null) return entity;
+                if (rio == null) return entity;
 
-                var newValue = data["id"];
+                var newValue = rio.Id;
 
                 var foreignKey = attr.InternalRelationshipName + "Id";
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
@@ -211,12 +227,14 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                var data = (List<Dictionary<string, string>>)relationshipData.ExposedData;
+                var data = (List<ResourceIdentifierObject>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
 
-                var genericProcessor = _genericProcessorFactory.GetProcessor(attr.Type);
-                var ids = relationshipData.ManyData.Select(r => r["id"]);
+                var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), attr.Type);
+
+                var ids = relationshipData.ManyData.Select(r => r.Id);
+
                 genericProcessor.SetRelationships(entity, attr, ids);
             }
 

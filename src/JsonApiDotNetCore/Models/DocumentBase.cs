@@ -5,18 +5,13 @@ namespace JsonApiDotNetCore.Models
 {
     public class DocumentBase
     {
-        [JsonProperty("links")]
+        [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public RootLinks Links { get; set; }
 
-        [JsonProperty("included")]
+        [JsonProperty("included", NullValueHandling = NullValueHandling.Ignore)]
         public List<DocumentData> Included { get; set; }
 
-        [JsonProperty("meta")]
+        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }
-
-        // http://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
-        public bool ShouldSerializeIncluded() => (Included != null);
-        public bool ShouldSerializeMeta() => (Meta != null);
-        public bool ShouldSerializeLinks() => (Links != null);
     }
 }

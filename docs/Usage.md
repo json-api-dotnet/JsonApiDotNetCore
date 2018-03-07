@@ -117,7 +117,7 @@ public void Configure(
             AppDbContext context)
 {
     context.Database.EnsureCreated();
-    if(context.People.Any() == false) 
+    if(context.People.Count == 0) 
     {
         context.People.Add(new Person {
             Name = "John Doe"

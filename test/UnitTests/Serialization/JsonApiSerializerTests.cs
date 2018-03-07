@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using JsonApiDotNetCore.Builders;
+﻿using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Xunit;
 
 namespace UnitTests.Serialization
@@ -47,7 +43,7 @@ namespace UnitTests.Serialization
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal("{\"data\":{\"type\":\"test-resource\",\"id\":\"\",\"attributes\":{\"complex-member\":{\"compound-name\":\"testname\"}}}}", result);
+            Assert.Equal("{\"data\":{\"attributes\":{\"complex-member\":{\"compound-name\":\"testname\"}},\"type\":\"test-resource\",\"id\":\"\"}}", result);
         }
 
         private class TestResource : Identifiable
