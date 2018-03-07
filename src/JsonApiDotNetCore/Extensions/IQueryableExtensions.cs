@@ -28,15 +28,15 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery)
         {
-            return sortQuery.Direction == SortDirection.Descending 
-                ? source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName) 
+            return sortQuery.Direction == SortDirection.Descending
+                ? source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName)
                 : source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery)
         {
-            return sortQuery.Direction == SortDirection.Descending 
-                ? source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName) 
+            return sortQuery.Direction == SortDirection.Descending
+                ? source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName)
                 : source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)
         {
-            if (columns == null || columns.Any() == false)
+            if (columns == null || columns.Count == 0)
                 return source;
 
             var sourceType = source.ElementType;

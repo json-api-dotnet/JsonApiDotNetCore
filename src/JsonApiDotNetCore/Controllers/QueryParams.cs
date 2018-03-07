@@ -1,5 +1,3 @@
-using System;
-
 namespace JsonApiDotNetCore.Controllers
 {
     public enum QueryParams

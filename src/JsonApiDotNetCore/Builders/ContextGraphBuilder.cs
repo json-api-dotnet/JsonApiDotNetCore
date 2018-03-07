@@ -25,20 +25,28 @@ namespace JsonApiDotNetCore.Builders
             return graph;
         }
 
-        public void AddResource<TResource>(string pluralizedTypeName) where TResource : class
+        public IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>
+            => AddResource<TResource, int>(pluralizedTypeName);
+
+        public IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>
         {
             var entityType = typeof(TResource);
 
-            VerifyEntityIsNotAlreadyDefined(entityType);
+            AssertEntityIsNotAlreadyDefined(entityType);
 
-            _entities.Add(new ContextEntity
-            {
-                EntityName = pluralizedTypeName,
-                EntityType = entityType,
-                Attributes = GetAttributes(entityType),
-                Relationships = GetRelationships(entityType)
-            });
+            _entities.Add(GetEntity(pluralizedTypeName, entityType, typeof(TId)));
+
+            return this;
         }
+
+        private ContextEntity GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ContextEntity
+        {
+            EntityName = pluralizedTypeName,
+            EntityType = entityType,
+            IdentityType = idType,
+            Attributes = GetAttributes(entityType),
+            Relationships = GetRelationships(entityType)
+        };
 
         private Link GetLinkFlags(Type entityType)
         {
@@ -90,7 +98,7 @@ namespace JsonApiDotNetCore.Builders
                 return prop.PropertyType;
         }
 
-        public void AddDbContext<T>() where T : DbContext
+        public IContextGraphBuilder AddDbContext<T>() where T : DbContext
         {
             _usesDbContext = true;
 
@@ -107,17 +115,13 @@ namespace JsonApiDotNetCore.Builders
                 {
                     var entityType = dbSetType.GetGenericArguments()[0];
 
-                    VerifyEntityIsNotAlreadyDefined(entityType);
+                    AssertEntityIsNotAlreadyDefined(entityType);
 
-                    _entities.Add(new ContextEntity
-                    {
-                        EntityName = GetResourceName(property),
-                        EntityType = entityType,
-                        Attributes = GetAttributes(entityType),
-                        Relationships = GetRelationships(entityType)
-                    });
+                    _entities.Add(GetEntity(GetResourceName(property), entityType, GetIdType(entityType)));
                 }
             }
+
+            return this;
         }
 
         private string GetResourceName(PropertyInfo property)
@@ -129,7 +133,19 @@ namespace JsonApiDotNetCore.Builders
             return ((ResourceAttribute)resourceAttribute).ResourceName;
         }
 
-        private void VerifyEntityIsNotAlreadyDefined(Type entityType)
+        private Type GetIdType(Type resourceType)
+        {
+            var interfaces = resourceType.GetInterfaces();
+            foreach (var type in interfaces)
+            {
+                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(IIdentifiable<>))
+                    return type.GetGenericArguments()[0];
+            }
+
+            throw new ArgumentException("Type does not implement 'IIdentifiable<TId>'", nameof(resourceType));
+        }
+
+        private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
             if (_entities.Any(e => e.EntityType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context graph, there is already an entity of that type configured.");

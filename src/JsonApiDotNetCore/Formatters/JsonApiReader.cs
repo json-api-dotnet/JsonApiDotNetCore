@@ -36,6 +36,7 @@ namespace JsonApiDotNetCore.Formatters
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
+
                 var model = _jsonApiContext.IsRelationshipPath ?
                     _deSerializer.DeserializeRelationship(body) :
                     _deSerializer.Deserialize(body);

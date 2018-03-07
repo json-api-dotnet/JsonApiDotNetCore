@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Services
             var context = _httpContextAccessor.HttpContext;
             var path = context.Request.Path.Value.Split('/');
 
-            if (context.Request.Query.Any())
+            if (context.Request.Query.Count > 0)
             {
                 QuerySet = _queryParser.Parse(context.Request.Query);
                 IncludedRelationships = QuerySet.IncludedRelationships;

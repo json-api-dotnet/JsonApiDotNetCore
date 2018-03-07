@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Builders
                 Meta = GetMeta(entity)
             };
 
-            if(ShouldIncludePageLinks(contextEntity))
+            if (ShouldIncludePageLinks(contextEntity))
                 document.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
 
             document.Included = AppendIncludedObject(document.Included, contextEntity, entity);
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Builders
                 Meta = GetMeta(enumeratedEntities.FirstOrDefault())
             };
 
-            if(ShouldIncludePageLinks(contextEntity))
+            if (ShouldIncludePageLinks(contextEntity))
                 documents.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
 
             foreach (var entity in enumeratedEntities)
@@ -69,20 +69,20 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<string, object> GetMeta(IIdentifiable entity)
         {
             if (entity == null) return null;
-            
+
             var builder = _jsonApiContext.MetaBuilder;
 
-            if(entity is IHasMeta metaEntity)
+            if (entity is IHasMeta metaEntity)
                 builder.Add(metaEntity.GetMeta(_jsonApiContext));
 
-            if(_jsonApiContext.Options.IncludeTotalRecordCount)
+            if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
-            
-            if(_requestMeta != null)
+
+            if (_requestMeta != null)
                 builder.Add(_requestMeta.GetMeta());
 
             var meta = builder.Build();
-            if(meta.Count > 0) return meta;
+            if (meta.Count > 0) return meta;
             return null;
         }
 
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Builders
             return includedObject;
         }
 
-        private DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
+        public DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
         {
             var data = new DocumentData
             {
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Builders
 
         private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue)
         {
-            return !OmitNullValuedAttribute(attr, attributeValue)
+            return OmitNullValuedAttribute(attr, attributeValue) == false
                    && ((_jsonApiContext.QuerySet == null
                        || _jsonApiContext.QuerySet.Fields.Count == 0)
                        || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
@@ -149,13 +149,13 @@ namespace JsonApiDotNetCore.Builders
             {
                 var relationshipData = new RelationshipData();
 
-                if(r.DocumentLinks.HasFlag(Link.None) == false)
+                if (r.DocumentLinks.HasFlag(Link.None) == false)
                 {
                     relationshipData.Links = new Links();
-                    if(r.DocumentLinks.HasFlag(Link.Self))
+                    if (r.DocumentLinks.HasFlag(Link.Self))
                         relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
-                    
-                    if(r.DocumentLinks.HasFlag(Link.Related))
+
+                    if (r.DocumentLinks.HasFlag(Link.Related))
                         relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
                 }
 
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCore.Builders
                     var navigationEntity = _jsonApiContext.ContextGraph
                         .GetRelationship(entity, r.InternalRelationshipName);
 
-                    if(navigationEntity == null)
+                    if (navigationEntity == null)
                         relationshipData.SingleData = null;
                     else if (navigationEntity is IEnumerable)
                         relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
@@ -198,19 +198,22 @@ namespace JsonApiDotNetCore.Builders
         {
             var includedEntity = GetIncludedEntity(entity);
 
-            if(entities == null)
+            if (entities == null)
                 entities = new List<DocumentData>();
 
-            if(includedEntity != null && !entities.Any(doc => doc.Id == includedEntity.Id && doc.Type == includedEntity.Type))
+            if (includedEntity != null && entities.Any(doc =>
+                string.Equals(doc.Id, includedEntity.Id) && string.Equals(doc.Type, includedEntity.Type)) == false)
+            {
                 entities.Add(includedEntity);
+            }
 
             return entities;
         }
 
         private DocumentData GetIncludedEntity(IIdentifiable entity)
         {
-            if(entity == null) return null;
-            
+            if (entity == null) return null;
+
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
 
             var data = GetData(contextEntity, entity);
@@ -231,32 +234,32 @@ namespace JsonApiDotNetCore.Builders
                 _jsonApiContext.IncludedRelationships.Contains(relationshipName);
         }
 
-        private List<Dictionary<string, string>> GetRelationships(IEnumerable<object> entities)
+        private List<ResourceIdentifierObject> GetRelationships(IEnumerable<object> entities)
         {
             var objType = entities.GetElementType();
 
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            var relationships = new List<Dictionary<string, string>>();
+            var relationships = new List<ResourceIdentifierObject>();
             foreach (var entity in entities)
             {
-                relationships.Add(new Dictionary<string, string> {
-                    {"type", typeName.EntityName },
-                    {"id", ((IIdentifiable)entity).StringId }
+                relationships.Add(new ResourceIdentifierObject {
+                    Type = typeName.EntityName,
+                    Id = ((IIdentifiable)entity).StringId
                 });
             }
             return relationships;
         }
-        private Dictionary<string, string> GetRelationship(object entity)
+        private ResourceIdentifierObject GetRelationship(object entity)
         {
             var objType = entity.GetType();
 
             var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            return new Dictionary<string, string> {
-                    {"type", typeName.EntityName },
-                    {"id", ((IIdentifiable)entity).StringId }
-                };
+            return new ResourceIdentifierObject {
+                Type = typeName.EntityName,
+                Id = ((IIdentifiable)entity).StringId
+            };
         }
     }
 }
