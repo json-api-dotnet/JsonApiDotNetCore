@@ -95,7 +95,7 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);
             }
 
-            if (jsonApiOptions.EnabledExtensions.Contains(JsonApiExtension.Operations))
+            if (jsonApiOptions.EnableOperations)
                 AddOperationServices(services);
 
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
