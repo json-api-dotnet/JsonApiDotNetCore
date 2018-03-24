@@ -29,11 +29,12 @@ namespace JsonApiDotNetCore.Serialization
         {
             try
             {
-                // TODO: determine whether or not the token should be re-used rather than performing full
-                // deserialization again from the string
                 var bodyJToken = JToken.Parse(requestBody);
-                if(bodyJToken.SelectToken("operations") != null)
+
+                if(RequestIsOperation(bodyJToken))
                 {
+                    // TODO: determine whether or not the token should be re-used rather than performing full
+                    // deserialization again from the string
                     var operations = JsonConvert.DeserializeObject<OperationsDocument>(requestBody);
                     if (operations == null)
                         throw new JsonApiException(400, "Failed to deserialize operations request.");
@@ -52,6 +53,10 @@ namespace JsonApiDotNetCore.Serialization
                 throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
+
+        private bool RequestIsOperation(JToken bodyJToken) 
+            => _jsonApiContext.Options.EnableOperations 
+                && (bodyJToken.SelectToken("operations") != null);
 
         public TEntity Deserialize<TEntity>(string requestBody) => (TEntity)Deserialize(requestBody);
 
