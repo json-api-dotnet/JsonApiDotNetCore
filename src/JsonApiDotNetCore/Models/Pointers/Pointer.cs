@@ -3,7 +3,7 @@ using Newtonsoft.Json.Schema;
 
 namespace JsonApiDotNetCore.Models.Pointers
 {
-    public abstract class Pointer<TPointerBase>
+    internal abstract class Pointer<TPointerBase>
     {
         public static JSchema JsonSchema { get; } = JSchema.Parse("{ 'pointer': {'type': 'string'} }");
 

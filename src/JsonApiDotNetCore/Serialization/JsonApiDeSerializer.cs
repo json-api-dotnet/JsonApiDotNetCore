@@ -31,8 +31,10 @@ namespace JsonApiDotNetCore.Serialization
             {
                 var bodyJToken = JToken.Parse(requestBody);
 
-                if(RequestIsOperation(bodyJToken))
+                if (RequestIsOperation(bodyJToken))
                 {
+                    _jsonApiContext.IsBulkOperationRequest = true;
+
                     // TODO: determine whether or not the token should be re-used rather than performing full
                     // deserialization again from the string
                     var operations = JsonConvert.DeserializeObject<OperationsDocument>(requestBody);
@@ -54,8 +56,8 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private bool RequestIsOperation(JToken bodyJToken) 
-            => _jsonApiContext.Options.EnableOperations 
+        private bool RequestIsOperation(JToken bodyJToken)
+            => _jsonApiContext.Options.EnableOperations
                 && (bodyJToken.SelectToken("operations") != null);
 
         public TEntity Deserialize<TEntity>(string requestBody) => (TEntity)Deserialize(requestBody);
@@ -82,7 +84,7 @@ namespace JsonApiDotNetCore.Serialization
             try
             {
                 var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
-                
+
                 var deserializedList = new List<TEntity>();
                 foreach (var data in documents.Data)
                 {
@@ -196,7 +198,7 @@ namespace JsonApiDotNetCore.Serialization
                 if (relationshipAttr == null)
                     throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
 
-                var rio = (ResourceIdentifierObject) relationshipData.ExposedData;
+                var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
 
                 if (rio == null) return entity;
 

@@ -1,5 +1,5 @@
 <Project>
- 
+
   <PropertyGroup>
     <NetCoreAppVersion>netcoreapp2.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.0</NetStandardVersion>
@@ -10,7 +10,6 @@
     <MicrosoftConfigurationVersion>2.0.0</MicrosoftConfigurationVersion>
     <MicrosoftOptionsVersion>2.0.0</MicrosoftOptionsVersion>
 
-
     <EFCoreVersion>2.0.1</EFCoreVersion>
     <EFCoreToolsVersion>2.0.1</EFCoreToolsVersion>
 
@@ -19,8 +18,8 @@
 
     <TuplesVersion>4.4.0</TuplesVersion>
   </PropertyGroup>
- 
- <!-- Test Project Dependencies -->
+
+  <!-- Test Project Dependencies -->
   <PropertyGroup>
     <TestSdkVersion>15.3.0-preview-20170427-09</TestSdkVersion>
     <TestHostVersion>1.1.2</TestHostVersion>
@@ -28,5 +27,5 @@
     <BogusVersion>15.0.3</BogusVersion>
     <MoqVersion>4.7.99</MoqVersion>
   </PropertyGroup>
- 
+
 </Project>

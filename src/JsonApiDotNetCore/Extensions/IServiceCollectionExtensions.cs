@@ -148,11 +148,11 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IGetOpProcessor<>), typeof(GetOpProcessor<>));
             services.AddScoped(typeof(IGetOpProcessor<,>), typeof(GetOpProcessor<,>));
 
-            services.AddScoped(typeof(IReplaceOpProcessor<>), typeof(ReplaceOpProcessor<>));
-            services.AddScoped(typeof(IReplaceOpProcessor<,>), typeof(ReplaceOpProcessor<,>));
-
             services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
             services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
+
+            services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
+            services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
 
             services.AddSingleton<IOperationProcessorResolver, OperationProcessorResolver>();
             services.AddSingleton<IGenericProcessorFactory, GenericProcessorFactory>();

@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models;
 
 namespace OperationsExample.Models
 {
@@ -6,5 +6,9 @@ namespace OperationsExample.Models
     {
         [Attr("name")]
         public string Name { get; set; }
+
+        [HasOne("author")]
+        public Author Author { get; set; }
+        public int AuthorId { get; set; }
     }
 }
