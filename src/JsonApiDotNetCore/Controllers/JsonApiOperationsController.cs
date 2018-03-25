@@ -18,6 +18,8 @@ namespace JsonApiDotNetCore.Controllers
         [HttpPatch]
         public async Task<IActionResult> PatchAsync([FromBody] OperationsDocument doc)
         {
+            if (doc == null) return new StatusCodeResult(422);
+
             var results = await _operationsProcessor.ProcessAsync(doc.Operations);
 
             return Ok(new OperationsDocument(results));

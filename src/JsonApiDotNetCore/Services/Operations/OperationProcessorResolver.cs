@@ -9,8 +9,8 @@ namespace JsonApiDotNetCore.Services.Operations
     {
         IOpProcessor LocateCreateService(Operation operation);
         IOpProcessor LocateGetService(Operation operation);
-        IOpProcessor LocateReplaceService(Operation operation);
         IOpProcessor LocateRemoveService(Operation operation);
+        IOpProcessor LocateUpdateService(Operation operation);
     }
 
     public class OperationProcessorResolver : IOperationProcessorResolver
@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Services.Operations
         // to reduce the cost of subsequent requests. in the future, this may be moved into setup code run at startup
         private ConcurrentDictionary<string, IOpProcessor> _createOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
         private ConcurrentDictionary<string, IOpProcessor> _getOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
-        private ConcurrentDictionary<string, IOpProcessor> _replaceOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
         private ConcurrentDictionary<string, IOpProcessor> _removeOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
+        private ConcurrentDictionary<string, IOpProcessor> _updateOpProcessors = new ConcurrentDictionary<string, IOpProcessor>();
 
         public OperationProcessorResolver(
             IGenericProcessorFactory processorFactory,
@@ -69,23 +69,6 @@ namespace JsonApiDotNetCore.Services.Operations
             return processor;
         }
 
-        public IOpProcessor LocateReplaceService(Operation operation)
-        {
-            var resource = operation.GetResourceTypeName();
-
-            if (_replaceOpProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
-                return cachedProcessor;
-
-            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
-            var processor = _processorFactory.GetProcessor<IOpProcessor>(
-                typeof(IReplaceOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
-            );
-
-            _replaceOpProcessors[resource] = processor;
-
-            return processor;
-        }
-
         public IOpProcessor LocateRemoveService(Operation operation)
         {
             var resource = operation.GetResourceTypeName();
@@ -99,6 +82,23 @@ namespace JsonApiDotNetCore.Services.Operations
             );
 
             _removeOpProcessors[resource] = processor;
+
+            return processor;
+        }
+
+        public IOpProcessor LocateUpdateService(Operation operation)
+        {
+            var resource = operation.GetResourceTypeName();
+
+            if (_updateOpProcessors.TryGetValue(resource, out IOpProcessor cachedProcessor))
+                return cachedProcessor;
+
+            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var processor = _processorFactory.GetProcessor<IOpProcessor>(
+                typeof(IUpdateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
+            );
+
+            _updateOpProcessors[resource] = processor;
 
             return processor;
         }

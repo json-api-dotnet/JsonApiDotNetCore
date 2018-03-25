@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
@@ -52,14 +51,12 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         {
             var stringId = operation.Ref?.Id?.ToString();
             if (string.IsNullOrWhiteSpace(stringId))
-                throw new JsonApiException(400, "The data.id parameter is required for delete operations");
+                throw new JsonApiException(400, "The ref.id parameter is required for remove operations");
 
             var id = TypeHelper.ConvertType<TId>(stringId);
             var result = await _service.DeleteAsync(id);
 
-            var operationResult = new Operation { };
-
-            return operationResult;
+            return null;
         }
     }
 }

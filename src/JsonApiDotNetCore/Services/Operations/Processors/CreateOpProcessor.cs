@@ -61,6 +61,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
                 result);
 
+            // we need to persist the original request localId so that subsequent operations
+            // can locate the result of this operation by its localId
+            operationResult.DataObject.LocalId = operation.DataObject.LocalId;
+
             return operationResult;
         }
     }

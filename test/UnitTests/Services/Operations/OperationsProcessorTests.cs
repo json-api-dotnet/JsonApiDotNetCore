@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
@@ -169,7 +169,7 @@ namespace UnitTests.Services
             var updateOpProcessorMock = new Mock<IOpProcessor>();
             updateOpProcessorMock.Setup(m => m.ProcessAsync(It.Is<Operation>(op => op.DataObject.Type.ToString() == "authors")))
                 .ReturnsAsync((Operation)null);
-            _resolverMock.Setup(m => m.LocateReplaceService(It.IsAny<Operation>()))
+            _resolverMock.Setup(m => m.LocateUpdateService(It.IsAny<Operation>()))
                 .Returns(updateOpProcessorMock.Object);
 
             _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);

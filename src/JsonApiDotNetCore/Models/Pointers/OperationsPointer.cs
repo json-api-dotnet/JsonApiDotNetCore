@@ -5,12 +5,12 @@ using JsonApiDotNetCore.Models.Operations;
 
 namespace JsonApiDotNetCore.Models.Pointers
 {
-    public class OperationsPointer : Pointer<Operation>
+    internal class OperationsPointer : Pointer<Operation>
     {
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentException"></exception>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        /// <exception cref="JsonApiDotNetCore.Internal.JsonApiException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="JsonApiException"></exception>
         public override object GetValue(object root)
         {
             if (root == null) throw new ArgumentNullException(nameof(root));
