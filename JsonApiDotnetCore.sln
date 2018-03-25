@@ -15,6 +15,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B4D998-CECB-454D-9F32-085A897577BE}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
+		Build.ps1 = Build.ps1
+		build.sh = build.sh
 		Directory.Build.props = Directory.Build.props
 		README.md = README.md
 	EndProjectSection
