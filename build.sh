@@ -8,3 +8,4 @@ dotnet restore
 dotnet test ./test/UnitTests/UnitTests.csproj
 dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
 dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj
+dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj
