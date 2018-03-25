@@ -283,7 +283,7 @@
   "JsonApiDotNetCore.Internal.Generics.GenericProcessor`2.SetRelationships(System.Object,JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.IEnumerable{System.String})": "JsonApiDotNetCore.Internal.Generics.GenericProcessor-2.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessor`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.IEnumerable{System.String})": "JsonApiDotNetCore.Internal.Generics.GenericProcessor-2.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
-  "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.#ctor(System.IServiceProvider)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
+  "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.GetProcessor``1(System.Type,System.Type)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.GetProcessor``1(System.Type,System.Type,System.Type)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
   "JsonApiDotNetCore.Internal.Generics.IGenericProcessor": "JsonApiDotNetCore.Internal.Generics.IGenericProcessor.yml",
