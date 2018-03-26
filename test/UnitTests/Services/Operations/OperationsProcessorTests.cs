@@ -121,7 +121,7 @@ namespace UnitTests.Services
                         }
                     }
                 }, {
-                    ""op"": ""replace"",
+                    ""op"": ""update"",
                     ""ref"": {
                         ""type"": ""authors"",
                         ""lid"": ""a""
