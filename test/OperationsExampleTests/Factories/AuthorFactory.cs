@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Bogus;
-using OperationsExample.Models;
+using JsonApiDotNetCoreExample.Models;
 
 namespace OperationsExampleTests.Factories
 {

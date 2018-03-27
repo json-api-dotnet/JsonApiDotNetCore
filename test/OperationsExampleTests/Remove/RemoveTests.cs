@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models.Operations;
-using OperationsExample.Data;
+using JsonApiDotNetCoreExample.Data;
 using OperationsExampleTests.Factories;
 using Xunit;
 

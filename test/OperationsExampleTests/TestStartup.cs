@@ -1,9 +1,9 @@
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using OperationsExample;
-using OperationsExample.Data;
 using System;
 using UnitTests;
 
