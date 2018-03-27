@@ -5,6 +5,7 @@
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
   </PropertyGroup>
+
   <PropertyGroup>
     <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
     <PackageProjectUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
@@ -19,7 +20,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(MicrosoftLoggingVersion)" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.2" />
     <PackageReference Include="System.ValueTuple" Version="$(TuplesVersion)" />
   </ItemGroup>
 
