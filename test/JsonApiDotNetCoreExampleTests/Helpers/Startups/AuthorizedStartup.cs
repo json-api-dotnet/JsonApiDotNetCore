@@ -11,14 +11,16 @@ using JsonApiDotNetCoreExampleTests.Services;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Repositories;
+using UnitTests;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExampleTests.Startups
 {
     public class AuthorizedStartup : Startup
     {
         public AuthorizedStartup(IHostingEnvironment env)
-        : base (env)
-        {  }        
+        : base(env)
+        { }
 
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -45,6 +47,8 @@ namespace JsonApiDotNetCoreExampleTests.Startups
             authServicMock.SetupAllProperties();
             services.AddSingleton<IAuthorizationService>(authServicMock.Object);
             services.AddScoped<IEntityRepository<TodoItem>, AuthorizedTodoItemsRepository>();
+
+            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
 
             return services.BuildServiceProvider();
         }

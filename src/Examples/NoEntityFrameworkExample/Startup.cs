@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoEntityFrameworkExample.Services;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace NoEntityFrameworkExample
 {
@@ -27,7 +28,7 @@ namespace NoEntityFrameworkExample
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             var mvcBuilder = services.AddMvc();
@@ -46,6 +47,8 @@ namespace NoEntityFrameworkExample
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<DbContextOptions<AppDbContext>>(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
+
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

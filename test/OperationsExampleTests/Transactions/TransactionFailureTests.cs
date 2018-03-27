@@ -1,8 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Internal;
@@ -13,22 +11,15 @@ using Xunit;
 
 namespace OperationsExampleTests
 {
-    [Collection("WebHostCollection")]
-    public class TransactionFailureTests
+    public class TransactionFailureTests : Fixture
     {
-        private readonly Fixture _fixture;
         private readonly Faker _faker = new Faker();
-
-        public TransactionFailureTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
 
         [Fact]
         public async Task Cannot_Create_Author_If_Article_Creation_Fails()
         {
             // arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
             var author = AuthorFactory.Get();
             var article = ArticleFactory.Get();
 
@@ -70,7 +61,7 @@ namespace OperationsExampleTests
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<ErrorCollection>("api/bulk", content);
+            var (response, data) = await PatchAsync<ErrorCollection>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);

@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using System;
 
@@ -35,9 +36,9 @@ namespace JsonApiDotNetCore.Internal.Generics
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public GenericProcessorFactory(IHttpContextAccessor httpContextAccessor)
+        public GenericProcessorFactory(IScopedServiceProvider serviceProvider)
         {
-            _serviceProvider = httpContextAccessor.HttpContext.RequestServices;
+            _serviceProvider = serviceProvider;
         }
 
         public TInterface GetProcessor<TInterface>(Type openGenericType, Type resourceType)

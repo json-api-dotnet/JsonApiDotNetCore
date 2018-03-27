@@ -283,7 +283,7 @@
   "JsonApiDotNetCore.Internal.Generics.GenericProcessor`2.SetRelationships(System.Object,JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.IEnumerable{System.String})": "JsonApiDotNetCore.Internal.Generics.GenericProcessor-2.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessor`2.UpdateRelationshipsAsync(System.Object,JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.IEnumerable{System.String})": "JsonApiDotNetCore.Internal.Generics.GenericProcessor-2.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
-  "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
+  "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.#ctor(JsonApiDotNetCore.Services.IScopedServiceProvider)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.GetProcessor``1(System.Type,System.Type)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
   "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.GetProcessor``1(System.Type,System.Type,System.Type)": "JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
   "JsonApiDotNetCore.Internal.Generics.IGenericProcessor": "JsonApiDotNetCore.Internal.Generics.IGenericProcessor.yml",
@@ -586,6 +586,7 @@
   "JsonApiDotNetCore.Services.IResourceQueryService`2": "JsonApiDotNetCore.Services.IResourceQueryService-2.yml",
   "JsonApiDotNetCore.Services.IResourceService`1": "JsonApiDotNetCore.Services.IResourceService-1.yml",
   "JsonApiDotNetCore.Services.IResourceService`2": "JsonApiDotNetCore.Services.IResourceService-2.yml",
+  "JsonApiDotNetCore.Services.IScopedServiceProvider": "JsonApiDotNetCore.Services.IScopedServiceProvider.yml",
   "JsonApiDotNetCore.Services.IUpdateRelationshipService`1": "JsonApiDotNetCore.Services.IUpdateRelationshipService-1.yml",
   "JsonApiDotNetCore.Services.IUpdateRelationshipService`2": "JsonApiDotNetCore.Services.IUpdateRelationshipService-2.yml",
   "JsonApiDotNetCore.Services.IUpdateRelationshipService`2.UpdateRelationshipsAsync(`1,System.String,System.Collections.Generic.List{JsonApiDotNetCore.Models.DocumentData})": "JsonApiDotNetCore.Services.IUpdateRelationshipService-2.yml",
@@ -673,5 +674,8 @@
   "JsonApiDotNetCore.Services.QueryParser.ParseFilterQuery(System.String,System.String)": "JsonApiDotNetCore.Services.QueryParser.yml",
   "JsonApiDotNetCore.Services.QueryParser.ParseIncludedRelationships(System.String)": "JsonApiDotNetCore.Services.QueryParser.yml",
   "JsonApiDotNetCore.Services.QueryParser.ParsePageQuery(JsonApiDotNetCore.Internal.Query.PageQuery,System.String,System.String)": "JsonApiDotNetCore.Services.QueryParser.yml",
-  "JsonApiDotNetCore.Services.QueryParser.ParseSortParameters(System.String)": "JsonApiDotNetCore.Services.QueryParser.yml"
+  "JsonApiDotNetCore.Services.QueryParser.ParseSortParameters(System.String)": "JsonApiDotNetCore.Services.QueryParser.yml",
+  "JsonApiDotNetCore.Services.RequestScopedServiceProvider": "JsonApiDotNetCore.Services.RequestScopedServiceProvider.yml",
+  "JsonApiDotNetCore.Services.RequestScopedServiceProvider.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)": "JsonApiDotNetCore.Services.RequestScopedServiceProvider.yml",
+  "JsonApiDotNetCore.Services.RequestScopedServiceProvider.GetService(System.Type)": "JsonApiDotNetCore.Services.RequestScopedServiceProvider.yml"
 }

@@ -20,12 +20,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class UpdatingRelationshipsTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private Bogus.Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
 
-        public UpdatingRelationshipsTests(TestFixture<Startup> fixture)
+        public UpdatingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

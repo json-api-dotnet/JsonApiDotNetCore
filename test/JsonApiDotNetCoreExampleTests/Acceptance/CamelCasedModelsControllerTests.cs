@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,12 +19,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class CamelCasedModelsControllerTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private IJsonApiContext _jsonApiContext;
         private Faker<CamelCasedModel> _faker;
 
-        public CamelCasedModelsControllerTests(TestFixture<Startup> fixture)
+        public CamelCasedModelsControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
-            Assert.True(deserializedBody.Count >  0);
+            Assert.True(deserializedBody.Count > 0);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-            
+
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-            
+
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();

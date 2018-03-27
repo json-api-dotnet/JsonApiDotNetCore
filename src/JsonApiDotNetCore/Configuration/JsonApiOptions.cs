@@ -105,9 +105,13 @@ namespace JsonApiDotNetCore.Configuration
         public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
 
         /// <summary>
-        /// Whether or not to allow json:api v1.1 operation requests
-        /// This will be enabled by default in JsonApiDotNetCore v2.2.1
+        /// Whether or not to allow json:api v1.1 operation requests.
+        /// This is a beta feature and there may be breaking changes
+        /// in subsequent releases.
         /// </summary>
+        /// <remarks>
+        /// This will be enabled by default in JsonApiDotNetCore v2.2.1
+        /// </remarks>
         public bool EnableOperations { get; set; }
 
         [Obsolete("JsonContract resolver can now be set on SerializerSettings.")]
