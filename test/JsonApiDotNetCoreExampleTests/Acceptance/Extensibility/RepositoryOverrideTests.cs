@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,11 +26,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         }
 
         [Fact]
-        public async Task Total_Record_Count_Included()
+        public async Task Can_Override_Repository()
         {
             // arrange
             var builder = new WebHostBuilder()
                 .UseStartup<AuthorizedStartup>();
+
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var context = (AppDbContext)server.Host.Services.GetService(typeof(AppDbContext));
@@ -43,8 +45,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             context.TodoItems.Add(ownedTodoItem);
             context.TodoItems.Add(unOwnedTodoItem);
             context.SaveChanges(); 
+            
+            const int expectedCount = 1;
 
-            var authService =  (IAuthorizationService)server.Host.Services.GetService(typeof(IAuthorizationService));        
+            var authService =  (IAuthorizationService)server.Host.Services.GetService(typeof(IAuthorizationService));
             authService.CurrentUserId = person.Id;
 
             var httpMethod = new HttpMethod("GET");
@@ -59,6 +63,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedCount, deserializedBody.Count);
+
             foreach(var item in deserializedBody)
                 Assert.Equal(person.Id, item.OwnerId);
         }

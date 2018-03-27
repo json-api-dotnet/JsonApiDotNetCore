@@ -48,34 +48,52 @@ namespace JsonApiDotNetCore.Data
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
         }
 
-        public virtual IQueryable<TEntity> Get()
+        /// <summary>
+        /// Get resource by id. This method will be removed in the next major release
+        /// and replaced by the following signature: Get(bool isReadonly = false)
+        /// </summary>
+        public virtual IQueryable<TEntity> Get() => Get(isReadonly: false);
+
+        public virtual IQueryable<TEntity> Get(bool isReadonly = false)
         {
             if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
                 return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
+
+            if(isReadonly)
+                return _dbSet.AsNoTracking();
 
             return _dbSet;
         }
 
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
-        {
-            return entities.Filter(_jsonApiContext, filterQuery);
-        }
+            => entities.Filter(_jsonApiContext, filterQuery);
 
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
-        {
-            return entities.Sort(sortQueries);
-        }
+            => entities.Sort(sortQueries);
 
-        public virtual async Task<TEntity> GetAsync(TId id)
-        {
-            return await Get().SingleOrDefaultAsync(e => e.Id.Equals(id));
-        }
+        /// <summary>
+        /// Get resource by id. This method will be removed in the next major release
+        /// and replaced by the following signature: GetAsync(TId id, bool isReadonly = false)
+        /// </summary>
+        public virtual async Task<TEntity> GetAsync(TId id) 
+            => await Get().SingleOrDefaultAsync(e => e.Id.Equals(id));
 
+        public virtual async Task<TEntity> GetAsync(TId id, bool isReadonly = false)
+            => await Get(isReadonly).SingleOrDefaultAsync(e => e.Id.Equals(id));
+
+        /// <summary>
+        /// Get resource by id with relationship sideloaded. 
+        /// This method will be removed in the next major release and replaced by 
+        /// the following signature: GetAndIncludeAsync(TId id, string relationshipName, bool isReadonly)
+        /// </summary>
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
+            => await GetAndIncludeAsync(id, relationshipName, isReadonly: false);
+
+        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName, bool isReadonly)
         {
             _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var result = await Get()
+            var result = await Get(isReadonly)
                 .Include(relationshipName)
                 .SingleOrDefaultAsync(e => e.Id.Equals(id));
 
