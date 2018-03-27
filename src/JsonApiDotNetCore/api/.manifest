@@ -217,7 +217,6 @@
   "JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApiInternals(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.JsonApiOptions)": "JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.yml",
   "JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApiInternals``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.JsonApiOptions)": "JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.yml",
   "JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.SerializeAsJsonApi(Microsoft.AspNetCore.Mvc.MvcOptions,JsonApiDotNetCore.Configuration.JsonApiOptions)": "JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.yml",
-  "JsonApiDotNetCore.Extensions.JObjectExtensions": "JsonApiDotNetCore.Extensions.JObjectExtensions.yml",
   "JsonApiDotNetCore.Extensions.StringExtensions": "JsonApiDotNetCore.Extensions.StringExtensions.yml",
   "JsonApiDotNetCore.Extensions.StringExtensions.Dasherize(System.String)": "JsonApiDotNetCore.Extensions.StringExtensions.yml",
   "JsonApiDotNetCore.Extensions.StringExtensions.ToProperCase(System.String)": "JsonApiDotNetCore.Extensions.StringExtensions.yml",
