@@ -10,15 +10,18 @@ using JsonApiDotNetCoreExample.Models;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
-namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
-    public class PagingTests : TestFixture<Startup> {
+namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
+{
+    public class PagingTests : TestFixture<TestStartup>
+    {
         private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
             .RuleFor(t => t.Description, f => f.Lorem.Sentence())
             .RuleFor(t => t.Ordinal, f => f.Random.Number())
             .RuleFor(t => t.CreatedDate, f => f.Date.Past());
 
         [Fact]
-        public async Task Can_Paginate_TodoItems() {
+        public async Task Can_Paginate_TodoItems()
+        {
             // Arrange
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
@@ -47,7 +50,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
         }
 
         [Fact]
-        public async Task Can_Paginate_TodoItems_From_Start() {
+        public async Task Can_Paginate_TodoItems_From_Start()
+        {
             // Arrange
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;
@@ -77,7 +81,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec {
         }
 
         [Fact]
-        public async Task Can_Paginate_TodoItems_From_End() {
+        public async Task Can_Paginate_TodoItems_From_End()
+        {
             // Arrange
             const int expectedEntitiesPerPage = 2;
             var totalCount = expectedEntitiesPerPage * 2;

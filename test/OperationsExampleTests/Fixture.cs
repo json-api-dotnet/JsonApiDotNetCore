@@ -1,29 +1,42 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
-using OperationsExample;
+using OperationsExample.Data;
 using Xunit;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace OperationsExampleTests
 {
-    [CollectionDefinition("WebHostCollection")]
-    public class WebHostCollection : ICollectionFixture<Fixture>
-    { }
-
-    public class Fixture
+    public class Fixture : IDisposable
     {
         public Fixture()
         {
-            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<TestStartup>();
             Server = new TestServer(builder);
             Client = Server.CreateClient();
         }
 
         public TestServer Server { get; private set; }
         public HttpClient Client { get; }
+
+        public void Dispose()
+        {
+            try
+            {
+                var context = GetService<AppDbContext>();
+                context.Articles.RemoveRange(context.Articles);
+                context.Authors.RemoveRange(context.Authors);
+                context.SaveChanges();
+            } // it is possible the test may try to do something that is an invalid db operation
+              // validation should be left up to the test, so we should not bomb the run in the
+              // disposal of that context
+            catch (Exception) { }
+        }
+
         public T GetService<T>() => (T)Server.Host.Services.GetService(typeof(T));
 
         public async Task<HttpResponseMessage> PatchAsync(string route, object data)

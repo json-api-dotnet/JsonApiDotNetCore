@@ -6,6 +6,6 @@ namespace JsonApiDotNetCoreExampleTests
 {
     [CollectionDefinition("WebHostCollection")]
     public class WebHostCollection
-        : ICollectionFixture<TestFixture<Startup>>
+        : ICollectionFixture<TestFixture<TestStartup>>
     { }
 }

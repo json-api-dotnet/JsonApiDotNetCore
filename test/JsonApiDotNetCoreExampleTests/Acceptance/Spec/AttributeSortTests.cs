@@ -9,9 +9,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class AttributeSortTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
 
-        public AttributeSortTests(TestFixture<Startup> fixture)
+        public AttributeSortTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }

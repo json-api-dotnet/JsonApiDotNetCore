@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,12 +19,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class TodoItemControllerTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
 
-        public TodoItemControllerTests(TestFixture<Startup> fixture)
+        public TodoItemControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?filter[ordinal]={todoItem.Ordinal}";
             var request = new HttpRequestMessage(httpMethod, route);
-            
+
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
@@ -339,7 +339,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-            
+
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();

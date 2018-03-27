@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
@@ -89,7 +88,7 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-            if (!jsonApiOptions.ContextGraph.UsesDbContext)
+            if (jsonApiOptions.ContextGraph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
                 services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);
@@ -122,6 +121,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IContextGraph>(jsonApiOptions.ContextGraph);
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IMetaBuilder, MetaBuilder>();
             services.AddScoped<IDocumentBuilder, DocumentBuilder>();

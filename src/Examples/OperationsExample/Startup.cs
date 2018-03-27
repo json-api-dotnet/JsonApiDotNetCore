@@ -32,10 +32,7 @@ namespace OperationsExample
 
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(GetDbConnectionString());
-            }, ServiceLifetime.Transient);
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Scoped);
 
             services.AddJsonApi<AppDbContext>(opt => opt.EnableOperations = true);
 

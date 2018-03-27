@@ -11,22 +11,15 @@ using Xunit;
 
 namespace OperationsExampleTests
 {
-    [Collection("WebHostCollection")]
-    public class AddTests
+    public class AddTests : Fixture
     {
-        private readonly Fixture _fixture;
         private readonly Faker _faker = new Faker();
-
-        public AddTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
 
         [Fact]
         public async Task Can_Create_Author()
         {
             // arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
             var author = AuthorFactory.Get();
             var content = new
             {
@@ -44,13 +37,13 @@ namespace OperationsExampleTests
             };
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
-            Assert.NotNull(result.response);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var id = result.data.Operations.Single().DataObject.Id;
+            var id = data.Operations.Single().DataObject.Id;
             var lastAuthor = await context.Authors.SingleAsync(a => a.StringId == id);
             Assert.Equal(author.Name, lastAuthor.Name);
         }
@@ -60,7 +53,7 @@ namespace OperationsExampleTests
         {
             // arrange
             var expectedCount = _faker.Random.Int(1, 10);
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
             var authors = AuthorFactory.Get(expectedCount);
             var content = new
             {
@@ -86,7 +79,7 @@ namespace OperationsExampleTests
             }
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);
@@ -96,7 +89,7 @@ namespace OperationsExampleTests
             for (int i = 0; i < expectedCount; i++)
             {
                 var dataObject = data.Operations[i].DataObject;
-                var author = context.Authors.Single(a => a.StringId == dataObject.ToString());
+                var author = context.Authors.Single(a => a.StringId == dataObject.Id);
                 Assert.Equal(authors[i].Name, author.Name);
             }
         }
@@ -105,7 +98,7 @@ namespace OperationsExampleTests
         public async Task Can_Create_Author_With_Article()
         {
             // arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
             var author = AuthorFactory.Get();
             var article = ArticleFactory.Get();
             const string authorLocalId = "author-1";
@@ -144,7 +137,7 @@ namespace OperationsExampleTests
             };
 
             // act
-            var (response, data) = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(response);

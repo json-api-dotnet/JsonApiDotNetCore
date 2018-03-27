@@ -10,67 +10,65 @@ using Xunit;
 
 namespace OperationsExampleTests.Update
 {
-    [Collection("WebHostCollection")]
-    public class UpdateTests
+    public class UpdateTests : Fixture
     {
-        private readonly Fixture _fixture;
         private readonly Faker _faker = new Faker();
 
-        public UpdateTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
-        public async Task Can_Update_Article()
+        public async Task Can_Update_Author()
         {
             // arrange
-            var context = _fixture.GetService<AppDbContext>();
-            var article = ArticleFactory.Get();
-            var updates = ArticleFactory.Get();
-            context.Articles.Add(article);
+            var context = GetService<AppDbContext>();
+            var author = AuthorFactory.Get();
+            var updates = AuthorFactory.Get();
+            context.Authors.Add(author);
             context.SaveChanges();
 
             var content = new
             {
                 operations = new[] {
-                    new {
-                        op = "replace",
-                        data = new {
-                            type = "articles",
-                            id = article.Id,
-                            attributes = new {
+                    new Dictionary<string, object> {
+                        { "op", "update" },
+                        { "ref", new {
+                            type = "authors",
+                            id = author.Id,
+                        } },
+                        { "data", new {
+                            type = "authors",
+                            id = author.Id,
+                            attributes = new
+                            {
                                 name = updates.Name
                             }
-                        }
-                    },
+                        } },
+                    }
                 }
             };
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
-            Assert.NotNull(result.response);
-            Assert.NotNull(result.data);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(1, result.data.Operations.Count);
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(data);
+            Assert.Equal(1, data.Operations.Count);
 
-            var attrs = result.data.Operations.Single().DataObject.Attributes;
+            var attrs = data.Operations.Single().DataObject.Attributes;
             Assert.Equal(updates.Name, attrs["name"]);
         }
 
         [Fact]
-        public async Task Can_Update_Articles()
+        public async Task Can_Update_Authors()
         {
             // arrange
             var count = _faker.Random.Int(1, 10);
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
 
-            var articles = ArticleFactory.Get(count);
-            var updates = ArticleFactory.Get(count);
+            var authors = AuthorFactory.Get(count);
+            var updates = AuthorFactory.Get(count);
 
-            context.Articles.AddRange(articles);
+            context.Authors.AddRange(authors);
             context.SaveChanges();
 
             var content = new
@@ -79,32 +77,34 @@ namespace OperationsExampleTests.Update
             };
 
             for (int i = 0; i < count; i++)
-                content.operations.Add(new
-                {
-                    op = "replace",
-                    data = new
-                    {
-                        type = "articles",
-                        id = articles[i].Id,
+                content.operations.Add(new Dictionary<string, object> {
+                    { "op", "update" },
+                    { "ref", new {
+                        type = "authors",
+                        id = authors[i].Id,
+                    } },
+                    { "data", new {
+                        type = "authors",
+                        id = authors[i].Id,
                         attributes = new
                         {
                             name = updates[i].Name
                         }
-                    }
+                    } },
                 });
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
-            Assert.NotNull(result.response);
-            Assert.NotNull(result.data);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(count, result.data.Operations.Count);
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(data);
+            Assert.Equal(count, data.Operations.Count);
 
             for (int i = 0; i < count; i++)
             {
-                var attrs = result.data.Operations[i].DataObject.Attributes;
+                var attrs = data.Operations[i].DataObject.Attributes;
                 Assert.Equal(updates[i].Name, attrs["name"]);
             }
         }

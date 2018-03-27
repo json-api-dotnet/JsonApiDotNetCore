@@ -21,10 +21,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class SparseFieldSetTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _dbContext;
 
-        public SparseFieldSetTests(TestFixture<Startup> fixture)
+        public SparseFieldSetTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,26 +11,20 @@ using Xunit;
 
 namespace OperationsExampleTests
 {
-    [Collection("WebHostCollection")]
-    public class GetTests
+    public class GetTests : Fixture, IDisposable
     {
-        private readonly Fixture _fixture;
         private readonly Faker _faker = new Faker();
 
-        public GetTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
-        public async Task Can_Get_Articles()
+        public async Task Can_Get_Authors()
         {
             // arrange
             var expectedCount = _faker.Random.Int(1, 10);
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
             context.Articles.RemoveRange(context.Articles);
-            var articles = ArticleFactory.Get(expectedCount);
-            context.AddRange(articles);
+            context.Authors.RemoveRange(context.Authors);
+            var authors = AuthorFactory.Get(expectedCount);
+            context.AddRange(authors);
             context.SaveChanges();
 
             var content = new
@@ -37,13 +32,13 @@ namespace OperationsExampleTests
                 operations = new[] {
                     new Dictionary<string, object> {
                         { "op", "get"},
-                        { "ref",  new { type = "articles" } }
+                        { "ref",  new { type = "authors" } }
                     }
                 }
             };
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var result = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(result.response);
@@ -54,12 +49,12 @@ namespace OperationsExampleTests
         }
 
         [Fact]
-        public async Task Can_Get_Article_By_Id()
+        public async Task Can_Get_Author_By_Id()
         {
             // arrange
-            var context = _fixture.GetService<AppDbContext>();
-            var article = ArticleFactory.Get();
-            context.Articles.Add(article);
+            var context = GetService<AppDbContext>();
+            var author = AuthorFactory.Get();
+            context.Authors.Add(author);
             context.SaveChanges();
 
             var content = new
@@ -67,20 +62,20 @@ namespace OperationsExampleTests
                 operations = new[] {
                     new Dictionary<string, object> {
                         { "op", "get"},
-                        { "ref",  new { type = "articles", id = article.StringId } }
+                        { "ref",  new { type = "authors", id = author.StringId } }
                     }
                 }
             };
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var result = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
             Assert.NotNull(result.response);
             Assert.NotNull(result.data);
             Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
             Assert.Equal(1, result.data.Operations.Count);
-            Assert.Equal(article.Id.ToString(), result.data.Operations.Single().DataObject.Id);
+            Assert.Equal(author.Id.ToString(), result.data.Operations.Single().DataObject.Id);
         }
     }
 }
