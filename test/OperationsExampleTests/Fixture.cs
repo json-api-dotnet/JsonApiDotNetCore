@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
-using OperationsExample.Data;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]

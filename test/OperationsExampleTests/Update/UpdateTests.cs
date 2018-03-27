@@ -1,6 +1,6 @@
 using Bogus;
 using JsonApiDotNetCore.Models.Operations;
-using OperationsExample.Data;
+using JsonApiDotNetCoreExample.Data;
 using OperationsExampleTests.Factories;
 using System.Collections.Generic;
 using System.Linq;

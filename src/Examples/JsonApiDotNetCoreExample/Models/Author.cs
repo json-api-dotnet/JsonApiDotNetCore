@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
 
-namespace OperationsExample.Models
+namespace JsonApiDotNetCoreExample.Models
 {
     public class Author : Identifiable
     {

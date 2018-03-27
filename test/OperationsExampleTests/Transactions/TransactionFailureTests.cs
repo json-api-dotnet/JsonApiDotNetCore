@@ -4,8 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
-using OperationsExample.Data;
 using OperationsExampleTests.Factories;
 using Xunit;
 
