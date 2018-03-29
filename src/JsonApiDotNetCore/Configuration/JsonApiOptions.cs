@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <code>options.AllowClientGeneratedIds = true;</code>
         /// </example>
         public bool AllowClientGeneratedIds { get; set; }
-        
+
         /// <summary>
         /// The graph of all resources exposed by this application.
         /// </summary>
@@ -107,10 +107,11 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Whether or not to allow json:api v1.1 operation requests.
         /// This is a beta feature and there may be breaking changes
-        /// in subsequent releases.
+        /// in subsequent releases. For now, it should be considered
+        /// experimental.
         /// </summary>
         /// <remarks>
-        /// This will be enabled by default in JsonApiDotNetCore v2.2.1
+        /// This will be enabled by default in a subsequent patch JsonApiDotNetCore v2.2.x
         /// </remarks>
         public bool EnableOperations { get; set; }
 
@@ -144,7 +145,7 @@ namespace JsonApiDotNetCore.Configuration
             ContextGraph = ContextGraphBuilder.Build();
         }
 
-        public void EnableExtension(JsonApiExtension extension) 
+        public void EnableExtension(JsonApiExtension extension)
             => EnabledExtensions.Add(extension);
 
         internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
