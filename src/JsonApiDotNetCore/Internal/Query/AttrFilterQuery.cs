@@ -17,10 +17,10 @@ namespace JsonApiDotNetCore.Internal.Query
 
             var attribute = GetAttribute(filterQuery.Attribute);
 
-            if(attribute == null)
+            if (attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
 
-            if(attribute.IsFilterable == false)
+            if (attribute.IsFilterable == false)
                 throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
 
             FilteredAttribute = attribute;
@@ -32,9 +32,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public string PropertyValue { get; }
         public FilterOperations FilterOperation { get; }
 
-        private AttrAttribute GetAttribute(string attribute) =>  
-            _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(
-                attr => string.Equals(attr.PublicAttributeName, attribute, StringComparison.OrdinalIgnoreCase)
-            );
+        private AttrAttribute GetAttribute(string attribute) =>
+            _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(attr => attr.Is(attribute));
     }
 }

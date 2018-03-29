@@ -47,5 +47,11 @@ namespace JsonApiDotNetCore.Models
                 propertyInfo.SetValue(entity, convertedValue);
             }
         }
+
+        /// <summary>
+        /// Whether or not the provided exposed name is equivalent to the one defined in on the model
+        /// </summary>
+        public virtual bool Is(string publicRelationshipName)
+            => string.Equals(publicRelationshipName, PublicAttributeName, StringComparison.OrdinalIgnoreCase);
     }
 }

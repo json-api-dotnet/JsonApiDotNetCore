@@ -22,11 +22,11 @@ namespace JsonApiDotNetCore.Internal.Query
                 throw new JsonApiException(400, $"{relationshipArray[1]} is not a valid relationship on {relationshipArray[0]}.");
 
             var attribute = GetAttribute(relationship, relationshipArray[1]);
-            
-            if(attribute == null)
+
+            if (attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
 
-            if(attribute.IsFilterable == false)
+            if (attribute.IsFilterable == false)
                 throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
 
             FilteredRelationship = relationship;
@@ -41,16 +41,13 @@ namespace JsonApiDotNetCore.Internal.Query
         public RelationshipAttribute FilteredRelationship { get; }
 
         private RelationshipAttribute GetRelationship(string propertyName)
-        {
-            return _jsonApiContext.RequestEntity.Relationships
-              .FirstOrDefault(r => string.Equals(r.PublicRelationshipName, propertyName, StringComparison.OrdinalIgnoreCase));
-        }
+            => _jsonApiContext.RequestEntity.Relationships.FirstOrDefault(r => r.Is(propertyName));
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
             var relatedContextExntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
             return relatedContextExntity.Attributes
-              .FirstOrDefault(a => string.Equals(a.PublicAttributeName, attribute, StringComparison.OrdinalIgnoreCase));
+              .FirstOrDefault(a => a.Is(attribute));
         }
     }
 }

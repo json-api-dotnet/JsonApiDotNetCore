@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -33,5 +33,11 @@ namespace JsonApiDotNetCore.Models
             }
             return IsHasMany == attr.IsHasMany && PublicRelationshipName.Equals(attr.PublicRelationshipName);
         }
+
+        /// <summary>
+        /// Whether or not the provided exposed name is equivalent to the one defined in on the model
+        /// </summary>
+        public virtual bool Is(string publicRelationshipName)
+            => string.Equals(publicRelationshipName, PublicRelationshipName, StringComparison.OrdinalIgnoreCase);
     }
 }

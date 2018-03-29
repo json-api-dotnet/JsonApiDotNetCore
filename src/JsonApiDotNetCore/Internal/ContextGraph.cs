@@ -9,8 +9,8 @@ namespace JsonApiDotNetCore.Internal
         private List<ContextEntity> _entities;
 
         public ContextGraph() { }
-        
-        public ContextGraph(List<ContextEntity> entities, bool usesDbContext) 
+
+        public ContextGraph(List<ContextEntity> entities, bool usesDbContext)
         {
             _entities = entities;
             UsesDbContext = usesDbContext;
@@ -42,9 +42,9 @@ namespace JsonApiDotNetCore.Internal
         {
             var entityType = typeof(TParent);
             return _entities
-                .SingleOrDefault(e => e.EntityType == entityType) 
+                .SingleOrDefault(e => e.EntityType == entityType)
                 ?.Relationships
-                .SingleOrDefault(r => string.Equals(r.PublicRelationshipName, relationshipName, StringComparison.OrdinalIgnoreCase)) 
+                .SingleOrDefault(r => r.Is(relationshipName))
                 ?.InternalRelationshipName;
         }
     }
