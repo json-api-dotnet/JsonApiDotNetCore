@@ -90,6 +90,14 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         {
             var id = TypeHelper.ConvertType<TId>(operation.Ref.Id);
             var result = await _getById.GetAsync(id);
+
+            // this is a bit ugly but we need to bomb the entire transaction if the entity cannot be found
+            // in the future it would probably be better to return a result status along with the doc to 
+            // avoid throwing exceptions on 4xx errors.
+            // consider response type (status, document)
+            if (result == null)
+                throw new JsonApiException(404, $"Could not find '{operation.Ref.Type}' record with id '{operation.Ref.Id}'");
+
             var doc = _documentBuilder.GetData(
                 _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
                 result);
