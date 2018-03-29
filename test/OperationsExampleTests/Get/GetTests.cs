@@ -11,7 +11,7 @@ using Xunit;
 
 namespace OperationsExampleTests
 {
-    public class GetTests : Fixture, IDisposable
+    public class GetByIdTests : Fixture, IDisposable
     {
         private readonly Faker _faker = new Faker();
 
@@ -46,36 +46,6 @@ namespace OperationsExampleTests
             Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
             Assert.Equal(1, result.data.Operations.Count);
             Assert.Equal(expectedCount, result.data.Operations.Single().DataList.Count);
-        }
-
-        [Fact]
-        public async Task Can_Get_Author_By_Id()
-        {
-            // arrange
-            var context = GetService<AppDbContext>();
-            var author = AuthorFactory.Get();
-            context.Authors.Add(author);
-            context.SaveChanges();
-
-            var content = new
-            {
-                operations = new[] {
-                    new Dictionary<string, object> {
-                        { "op", "get"},
-                        { "ref",  new { type = "authors", id = author.StringId } }
-                    }
-                }
-            };
-
-            // act
-            var result = await PatchAsync<OperationsDocument>("api/bulk", content);
-
-            // assert
-            Assert.NotNull(result.response);
-            Assert.NotNull(result.data);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(1, result.data.Operations.Count);
-            Assert.Equal(author.Id.ToString(), result.data.Operations.Single().DataObject.Id);
         }
     }
 }
