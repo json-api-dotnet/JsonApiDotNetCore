@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data
 {
-    public class DbContextResolver<TContext>  : IDbContextResolver
+    public class DbContextResolver<TContext> : IDbContextResolver
         where TContext : DbContext
     {
         private readonly TContext _context;

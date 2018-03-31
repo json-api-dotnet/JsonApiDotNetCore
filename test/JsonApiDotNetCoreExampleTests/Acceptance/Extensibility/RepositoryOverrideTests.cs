@@ -17,9 +17,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class RepositoryOverrideTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
 
-        public RepositoryOverrideTests(TestFixture<Startup> fixture)
+        public RepositoryOverrideTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }

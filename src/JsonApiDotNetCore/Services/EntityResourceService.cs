@@ -96,6 +96,8 @@ namespace JsonApiDotNetCore.Services
             _logger.LogTrace($"Looking up '{relationshipName}'...");
 
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+            // TODO: it would be better if we could distinguish whether or not the relationship was not found,
+            // vs the relationship not being set on the instance of T
             if (entity == null)
                 throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
 

@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+using System;
+using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCoreExample.Data;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Extensions;
-using System;
-using OperationsExample.Data;
-using JsonApiDotNetCore.Models;
 
 namespace OperationsExample
 {
@@ -28,16 +27,13 @@ namespace OperationsExample
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory
-              .AddConsole(LogLevel.Trace);
+            loggerFactory.AddConsole(LogLevel.Trace);
+
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(GetDbConnectionString());
-            }, ServiceLifetime.Transient);
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Scoped);
 
-            services.AddJsonApi<AppDbContext>(opt => opt.EnableExtension(JsonApiExtension.Operations));
+            services.AddJsonApi<AppDbContext>(opt => opt.EnableOperations = true);
 
             return services.BuildServiceProvider();
         }

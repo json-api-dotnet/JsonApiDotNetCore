@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
@@ -8,41 +10,57 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
+    /// <summary>
+    /// Handles all "<see cref="OperationCode.get"/>" operations 
+    /// </summary>
+    /// <typeparam name="T">The resource type</typeparam>
     public interface IGetOpProcessor<T> : IOpProcessor
         where T : class, IIdentifiable<int>
     { }
 
+    /// <summary>
+    ///  Handles all "<see cref="OperationCode.get"/>" operations 
+    /// </summary>
+    /// <typeparam name="T">The resource type</typeparam>
+    /// <typeparam name="TId">The resource identifier type</typeparam>
     public interface IGetOpProcessor<T, TId> : IOpProcessor
         where T : class, IIdentifiable<TId>
     { }
 
+    /// <inheritdoc />
     public class GetOpProcessor<T> : GetOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     {
+        /// <inheritdoc />
         public GetOpProcessor(
             IGetAllService<T, int> getAll,
             IGetByIdService<T, int> getById,
+            IGetRelationshipService<T, int> getRelationship,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph,
             IJsonApiContext jsonApiContext
-        ) : base(getAll, getById, deSerializer, documentBuilder, contextGraph, jsonApiContext)
+        ) : base(getAll, getById, getRelationship, deSerializer, documentBuilder, contextGraph, jsonApiContext)
         { }
     }
 
+    /// <inheritdoc />
     public class GetOpProcessor<T, TId> : IGetOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly IGetAllService<T, TId> _getAll;
         private readonly IGetByIdService<T, TId> _getById;
+        private readonly IGetRelationshipService<T, TId> _getRelationship;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IContextGraph _contextGraph;
         private readonly IJsonApiContext _jsonApiContext;
 
+        /// <inheritdoc />
         public GetOpProcessor(
             IGetAllService<T, TId> getAll,
             IGetByIdService<T, TId> getById,
+            IGetRelationshipService<T, TId> getRelationship,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph,
@@ -50,12 +68,14 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         {
             _getAll = getAll;
             _getById = getById;
+            _getRelationship = getRelationship;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
             _contextGraph = contextGraph;
             _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
         }
 
+        /// <inheritdoc />
         public async Task<Operation> ProcessAsync(Operation operation)
         {
             var operationResult = new Operation
@@ -63,9 +83,11 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 Op = OperationCode.get
             };
 
-            operationResult.Data = string.IsNullOrWhiteSpace(operation.Ref.Id?.ToString())
+            operationResult.Data = string.IsNullOrWhiteSpace(operation.Ref.Id)
             ? await GetAllAsync(operation)
-            : await GetByIdAsync(operation);
+            : string.IsNullOrWhiteSpace(operation.Ref.Relationship)
+                ? await GetByIdAsync(operation)
+                : await GetRelationshipAsync(operation);
 
             return operationResult;
         }
@@ -88,13 +110,39 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
 
         private async Task<object> GetByIdAsync(Operation operation)
         {
-            var id = TypeHelper.ConvertType<TId>(operation.Ref.Id);
+            var id = GetReferenceId(operation);
             var result = await _getById.GetAsync(id);
+
+            // this is a bit ugly but we need to bomb the entire transaction if the entity cannot be found
+            // in the future it would probably be better to return a result status along with the doc to 
+            // avoid throwing exceptions on 4xx errors.
+            // consider response type (status, document)
+            if (result == null)
+                throw new JsonApiException(404, $"Could not find '{operation.Ref.Type}' record with id '{operation.Ref.Id}'");
+
             var doc = _documentBuilder.GetData(
                 _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
                 result);
 
             return doc;
         }
+
+        private async Task<object> GetRelationshipAsync(Operation operation)
+        {
+            var id = GetReferenceId(operation);
+            var result = await _getRelationship.GetRelationshipAsync(id, operation.Ref.Relationship);
+
+            // TODO: need a better way to get the ContextEntity from a relationship name
+            // when no generic parameter is available
+            var relationshipType = _contextGraph.GetContextEntity(operation.GetResourceTypeName())
+                .Relationships.Single(r => r.Is(operation.Ref.Relationship)).Type;
+            var relatedContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationshipType);
+
+            var doc = _documentBuilder.GetData(relatedContextEntity, result as IIdentifiable); // TODO: if this is safe, then it should be cast in the GetRelationshipAsync call
+
+            return doc;
+        }
+
+        private TId GetReferenceId(Operation operation) => TypeHelper.ConvertType<TId>(operation.Ref.Id);
     }
 }

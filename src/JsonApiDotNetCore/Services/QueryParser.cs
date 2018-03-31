@@ -8,12 +8,15 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace JsonApiDotNetCore.Services {
-    public interface IQueryParser {
+namespace JsonApiDotNetCore.Services
+{
+    public interface IQueryParser
+    {
         QuerySet Parse(IQueryCollection query);
     }
 
-    public class QueryParser : IQueryParser {
+    public class QueryParser : IQueryParser
+    {
         private readonly IControllerContext _controllerContext;
         private readonly JsonApiOptions _options;
 
@@ -30,41 +33,49 @@ namespace JsonApiDotNetCore.Services {
 
         public QueryParser(
             IControllerContext controllerContext,
-            JsonApiOptions options) {
+            JsonApiOptions options)
+        {
             _controllerContext = controllerContext;
             _options = options;
         }
 
-        public virtual QuerySet Parse(IQueryCollection query) {
+        public virtual QuerySet Parse(IQueryCollection query)
+        {
             var querySet = new QuerySet();
-            var disabledQueries = _controllerContext.GetControllerAttribute<DisableQueryAttribute>() ? .QueryParams ?? QueryParams.None;
+            var disabledQueries = _controllerContext.GetControllerAttribute<DisableQueryAttribute>()?.QueryParams ?? QueryParams.None;
 
-            foreach (var pair in query) {
-                if (pair.Key.StartsWith(FILTER)) {
+            foreach (var pair in query)
+            {
+                if (pair.Key.StartsWith(FILTER))
+                {
                     if (disabledQueries.HasFlag(QueryParams.Filter) == false)
                         querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
-                if (pair.Key.StartsWith(SORT)) {
+                if (pair.Key.StartsWith(SORT))
+                {
                     if (disabledQueries.HasFlag(QueryParams.Sort) == false)
                         querySet.SortParameters = ParseSortParameters(pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(INCLUDE)) {
+                if (pair.Key.StartsWith(INCLUDE))
+                {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
                         querySet.IncludedRelationships = ParseIncludedRelationships(pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(PAGE)) {
+                if (pair.Key.StartsWith(PAGE))
+                {
                     if (disabledQueries.HasFlag(QueryParams.Page) == false)
                         querySet.PageQuery = ParsePageQuery(querySet.PageQuery, pair.Key, pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(FIELDS)) {
+                if (pair.Key.StartsWith(FIELDS))
+                {
                     if (disabledQueries.HasFlag(QueryParams.Fields) == false)
                         querySet.Fields = ParseFieldsQuery(pair.Key, pair.Value);
                     continue;
@@ -77,15 +88,17 @@ namespace JsonApiDotNetCore.Services {
             return querySet;
         }
 
-        protected virtual List<FilterQuery> ParseFilterQuery(string key, string value) {
+        protected virtual List<FilterQuery> ParseFilterQuery(string key, string value)
+        {
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
             var queries = new List<FilterQuery>();
 
-            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET) [1];
+            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET)[1];
 
             var values = value.Split(COMMA);
-            foreach (var val in values) {
+            foreach (var val in values)
+            {
                 (var operation, var filterValue) = ParseFilterOperation(val);
                 queries.Add(new FilterQuery(propertyName, filterValue, operation));
             }
@@ -93,7 +106,8 @@ namespace JsonApiDotNetCore.Services {
             return queries;
         }
 
-        protected virtual(string operation, string value) ParseFilterOperation(string value) {
+        protected virtual (string operation, string value) ParseFilterOperation(string value)
+        {
             if (value.Length < 3)
                 return (string.Empty, value);
 
@@ -159,7 +173,7 @@ namespace JsonApiDotNetCore.Services {
 
                 var attribute = GetAttribute(propertyName);
 
-                if(attribute.IsSortable == false)
+                if (attribute.IsSortable == false)
                     throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
 
                 sortParameters.Add(new SortQuery(direction, attribute));
@@ -168,7 +182,8 @@ namespace JsonApiDotNetCore.Services {
             return sortParameters;
         }
 
-        protected virtual List<string> ParseIncludedRelationships(string value) {
+        protected virtual List<string> ParseIncludedRelationships(string value)
+        {
             const string NESTED_DELIMITER = ".";
             if (value.Contains(NESTED_DELIMITER))
                 throw new JsonApiException(400, "Deeply nested relationships are not supported");
@@ -195,7 +210,7 @@ namespace JsonApiDotNetCore.Services {
             {
                 var attr = _controllerContext.RequestEntity
                     .Attributes
-                    .SingleOrDefault(a => string.Equals(a.PublicAttributeName, field, StringComparison.OrdinalIgnoreCase));
+                    .SingleOrDefault(a => a.Is(field));
 
                 if (attr == null) throw new JsonApiException(400, $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'.");
 
@@ -213,9 +228,7 @@ namespace JsonApiDotNetCore.Services {
                 return _controllerContext
                     .RequestEntity
                     .Attributes
-                    .Single(attr =>
-                        string.Equals(attr.PublicAttributeName, propertyName, StringComparison.OrdinalIgnoreCase)
-                    );
+                    .Single(attr => attr.Is(propertyName));
             }
             catch (InvalidOperationException e)
             {

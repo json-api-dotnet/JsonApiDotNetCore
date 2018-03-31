@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace ReportsExample
 {
@@ -28,12 +23,13 @@ namespace ReportsExample
             Config = builder.Build();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddMvc();
             services.AddJsonApi(opt =>
             {
-                opt.BuildContextGraph(builder => {
+                opt.BuildContextGraph(builder =>
+                {
                     builder.AddResource<Report>("reports");
                 });
                 opt.Namespace = "api";

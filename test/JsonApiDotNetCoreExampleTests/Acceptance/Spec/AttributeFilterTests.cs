@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
@@ -18,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class AttributeFilterTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public AttributeFilterTests(TestFixture<Startup> fixture)
+        public AttributeFilterTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -88,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(included);
             Assert.NotEmpty(included);
-            foreach(var item in included)
+            foreach (var item in included)
                 Assert.Equal(person.FirstName, item.Attributes["first-name"]);
         }
 

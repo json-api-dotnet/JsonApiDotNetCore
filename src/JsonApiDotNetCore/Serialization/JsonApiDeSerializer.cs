@@ -29,11 +29,14 @@ namespace JsonApiDotNetCore.Serialization
         {
             try
             {
-                // TODO: determine whether or not the token should be re-used rather than performing full
-                // deserialization again from the string
                 var bodyJToken = JToken.Parse(requestBody);
-                if(bodyJToken.SelectToken("operations") != null)
+
+                if (RequestIsOperation(bodyJToken))
                 {
+                    _jsonApiContext.IsBulkOperationRequest = true;
+
+                    // TODO: determine whether or not the token should be re-used rather than performing full
+                    // deserialization again from the string
                     var operations = JsonConvert.DeserializeObject<OperationsDocument>(requestBody);
                     if (operations == null)
                         throw new JsonApiException(400, "Failed to deserialize operations request.");
@@ -52,6 +55,10 @@ namespace JsonApiDotNetCore.Serialization
                 throw new JsonApiException(400, "Failed to deserialize request body", e);
             }
         }
+
+        private bool RequestIsOperation(JToken bodyJToken)
+            => _jsonApiContext.Options.EnableOperations
+                && (bodyJToken.SelectToken("operations") != null);
 
         public TEntity Deserialize<TEntity>(string requestBody) => (TEntity)Deserialize(requestBody);
 
@@ -77,7 +84,7 @@ namespace JsonApiDotNetCore.Serialization
             try
             {
                 var documents = JsonConvert.DeserializeObject<Documents>(requestBody);
-                
+
                 var deserializedList = new List<TEntity>();
                 foreach (var data in documents.Data)
                 {
@@ -191,7 +198,7 @@ namespace JsonApiDotNetCore.Serialization
                 if (relationshipAttr == null)
                     throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
 
-                var rio = (ResourceIdentifierObject) relationshipData.ExposedData;
+                var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
 
                 if (rio == null) return entity;
 

@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Models.Pointers;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services.Operations
@@ -33,6 +32,7 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var outputOps = new List<Operation>();
             var opIndex = 0;
+            OperationCode? lastAttemptedOperation = null; // used for error messages only
 
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -40,30 +40,29 @@ namespace JsonApiDotNetCore.Services.Operations
                 {
                     foreach (var op in inputOps)
                     {
+                        lastAttemptedOperation = op.Op;
                         await ProcessOperation(op, outputOps);
                         opIndex++;
                     }
 
                     transaction.Commit();
+                    return outputOps;
                 }
                 catch (JsonApiException e)
                 {
-                    outputOps = new List<Operation>();
-                    throw new JsonApiException(e.GetStatusCode(), $"Transaction failed on operation[{opIndex}].", e);
+                    transaction.Rollback();
+                    throw new JsonApiException(e.GetStatusCode(), $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}).", e);
                 }
                 catch (Exception e)
                 {
-                    throw new JsonApiException(500, $"Transaction failed on operation[{opIndex}] for an unexpected reason.", e);
+                    transaction.Rollback();
+                    throw new JsonApiException(500, $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}) for an unexpected reason.", e);
                 }
             }
-
-            return outputOps;
         }
 
         private async Task ProcessOperation(Operation op, List<Operation> outputOps)
         {
-            var operationsPointer = new OperationsPointer();
-
             ReplaceLocalIdsInResourceObject(op.DataObject, outputOps);
             ReplaceLocalIdsInRef(op.Ref, outputOps);
 
@@ -88,39 +87,39 @@ namespace JsonApiDotNetCore.Services.Operations
             // if(HasLocalId(resourceObject))
             //     resourceObject.Id = GetIdFromLocalId(outputOps, resourceObject.LocalId);
 
-            if (resourceObject.Relationships != null) 
-            { 
-                foreach (var relationshipDictionary in resourceObject.Relationships) 
-                { 
-                    if (relationshipDictionary.Value.IsHasMany) 
-                    { 
-                        foreach (var relationship in relationshipDictionary.Value.ManyData) 
-                            if(HasLocalId(relationship))
+            if (resourceObject.Relationships != null)
+            {
+                foreach (var relationshipDictionary in resourceObject.Relationships)
+                {
+                    if (relationshipDictionary.Value.IsHasMany)
+                    {
+                        foreach (var relationship in relationshipDictionary.Value.ManyData)
+                            if (HasLocalId(relationship))
                                 relationship.Id = GetIdFromLocalId(outputOps, relationship.LocalId);
-                    } 
+                    }
                     else
                     {
                         var relationship = relationshipDictionary.Value.SingleData;
-                        if(HasLocalId(relationship))
+                        if (HasLocalId(relationship))
                             relationship.Id = GetIdFromLocalId(outputOps, relationship.LocalId);
                     }
-                } 
+                }
             }
         }
 
-        private void ReplaceLocalIdsInRef(ResourceReference resourceRef, List<Operation> outputOps) 
-        { 
+        private void ReplaceLocalIdsInRef(ResourceReference resourceRef, List<Operation> outputOps)
+        {
             if (resourceRef == null) return;
-            if(HasLocalId(resourceRef))
+            if (HasLocalId(resourceRef))
                 resourceRef.Id = GetIdFromLocalId(outputOps, resourceRef.LocalId);
         }
 
         private bool HasLocalId(ResourceIdentifierObject rio) => string.IsNullOrEmpty(rio.LocalId) == false;
 
-        private string GetIdFromLocalId(List<Operation> outputOps, string localId)  
+        private string GetIdFromLocalId(List<Operation> outputOps, string localId)
         {
             var referencedOp = outputOps.FirstOrDefault(o => o.DataObject.LocalId == localId);
-            if(referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
+            if (referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
             return referencedOp.DataObject.Id;
         }
 
@@ -132,10 +131,10 @@ namespace JsonApiDotNetCore.Services.Operations
                     return _processorResolver.LocateCreateService(op);
                 case OperationCode.get:
                     return _processorResolver.LocateGetService(op);
-                case OperationCode.replace:
-                    return _processorResolver.LocateReplaceService(op);
                 case OperationCode.remove:
                     return _processorResolver.LocateRemoveService(op);
+                case OperationCode.update:
+                    return _processorResolver.LocateUpdateService(op);
                 default:
                     throw new JsonApiException(400, $"'{op.Op}' is not a valid operation code");
             }
