@@ -17,6 +17,16 @@ namespace JsonApiDotNetCore.Configuration
     public class JsonApiOptions
     {
         /// <summary>
+        /// Whether or not stack traces should be serialized in Error objects
+        /// </summary>
+        public static bool DisableErrorStackTraces { get; set; }
+        
+        /// <summary>
+        /// Whether or not source URLs should be serialized in Error objects
+        /// </summary>
+        public static bool DisableErrorSource { get; set; }
+
+        /// <summary>
         /// The base URL Namespace
         /// </summary>
         /// <example>

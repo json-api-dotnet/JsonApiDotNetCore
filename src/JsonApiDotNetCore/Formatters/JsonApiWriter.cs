@@ -26,8 +26,6 @@ namespace JsonApiDotNetCore.Formatters
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            _logger?.LogInformation("Formatting response as JSONAPI");
-
             var response = context.HttpContext.Response;
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
@@ -40,9 +38,7 @@ namespace JsonApiDotNetCore.Formatters
                 catch (Exception e)
                 {
                     _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
-                    var errors = new ErrorCollection();
-                    errors.Add(new Error("400", e.Message));
-                    responseContent = errors.GetJson();
+                    responseContent = GetErrorResponse(e);
                     response.StatusCode = 400;
                 }
 
@@ -51,9 +47,12 @@ namespace JsonApiDotNetCore.Formatters
             }
         }
 
-        private string GetResponseBody(object responseObject)
+        private string GetResponseBody(object responseObject) => _serializer.Serialize(responseObject);
+        private string GetErrorResponse(Exception e)
         {
-            return _serializer.Serialize(responseObject);
-        }        
+            var errors = new ErrorCollection();
+            errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
+            return errors.GetJson();
+        }
     }
 }
