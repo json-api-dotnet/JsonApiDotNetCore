@@ -7,18 +7,18 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
-    public interface IReplaceOpProcessor<T> : IOpProcessor
+    public interface IUpdateOpProcessor<T> : IOpProcessor
         where T : class, IIdentifiable<int>
     { }
 
-    public interface IReplaceOpProcessor<T, TId> : IOpProcessor
+    public interface IUpdateOpProcessor<T, TId> : IOpProcessor
         where T : class, IIdentifiable<TId>
     { }
 
-    public class ReplaceOpProcessor<T> : ReplaceOpProcessor<T, int>
+    public class UpdateOpProcessor<T> : UpdateOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     {
-        public ReplaceOpProcessor(
+        public UpdateOpProcessor(
             IUpdateService<T, int> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         { }
     }
 
-    public class ReplaceOpProcessor<T, TId> : IReplaceOpProcessor<T, TId>
+    public class UpdateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<T, TId> _service;
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IContextGraph _contextGraph;
 
-        public ReplaceOpProcessor(
+        public UpdateOpProcessor(
             IUpdateService<T, TId> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
@@ -49,17 +49,15 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
 
         public async Task<Operation> ProcessAsync(Operation operation)
         {
-            var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
-
             if (string.IsNullOrWhiteSpace(operation?.DataObject?.Id?.ToString()))
                 throw new JsonApiException(400, "The data.id parameter is required for replace operations");
 
-            var id = TypeHelper.ConvertType<TId>(operation.DataObject.Id);
-            var result = await _service.UpdateAsync(id, model);
+            var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
+            var result = await _service.UpdateAsync(model.Id, model);
 
             var operationResult = new Operation
             {
-                Op = OperationCode.replace
+                Op = OperationCode.update
             };
 
             operationResult.Data = _documentBuilder.GetData(

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,11 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeletingDataTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
 
-        public DeletingDataTests(TestFixture<Startup> fixture)
+        public DeletingDataTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-    
+
             var httpMethod = new HttpMethod("DELETE");
             var route = $"/api/v1/todo-items/{maxPersonId + 100}";
             var request = new HttpRequestMessage(httpMethod, route);

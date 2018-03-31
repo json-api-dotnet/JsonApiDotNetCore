@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using JsonApiDotNetCore.Configuration;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Internal
@@ -8,30 +10,40 @@ namespace JsonApiDotNetCore.Internal
         public Error()
         { }
         
-        public Error(string status, string title)
+        [Obsolete("Use Error constructors with int typed status")]
+        public Error(string status, string title, ErrorMeta meta = null, string source = null)
         {
             Status = status;
             Title = title;
+            Meta = meta;
+            Source = source;
         }
 
-        public Error(int status, string title)
+        public Error(int status, string title, ErrorMeta meta = null, string source = null)
         {
             Status = status.ToString();
             Title = title;
+            Meta = meta;
+            Source = source;
         }
 
-        public Error(string status, string title, string detail)
+        [Obsolete("Use Error constructors with int typed status")]
+        public Error(string status, string title, string detail, ErrorMeta meta = null, string source = null)
         {
             Status = status;
             Title = title;
             Detail = detail;
+            Meta = meta;
+            Source = source;
         }
 
-        public Error(int status, string title, string detail)
+        public Error(int status, string title, string detail, ErrorMeta meta = null, string source = null)
         {
             Status = status.ToString();
             Title = title;
             Detail = detail;
+            Meta = meta;
+            Source = source;
         }
         
         [JsonProperty("title")]
@@ -45,5 +57,25 @@ namespace JsonApiDotNetCore.Internal
 
         [JsonIgnore]
         public int StatusCode => int.Parse(Status);
+
+        [JsonProperty("source")]
+        public string Source { get; set; }
+
+        [JsonProperty("meta")]
+        public ErrorMeta Meta { get; set; }
+
+        public bool ShouldSerializeMeta() => (JsonApiOptions.DisableErrorStackTraces == false);
+        public bool ShouldSerializeSource() => (JsonApiOptions.DisableErrorSource == false);
+    }
+
+    public class ErrorMeta
+    {
+        [JsonProperty("stackTrace")]
+        public string[] StackTrace { get; set; }
+
+        public static ErrorMeta FromException(Exception e) 
+            => new ErrorMeta { 
+                StackTrace = e.Demystify().ToString().Split(new[] { "\n"}, int.MaxValue, StringSplitOptions.RemoveEmptyEntries)
+            };
     }
 }

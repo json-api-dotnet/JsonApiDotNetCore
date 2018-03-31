@@ -14,11 +14,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class NullValuedAttributeHandlingTests : IAsyncLifetime
     {
-        private readonly TestFixture<Startup> _fixture;
+        private readonly TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _dbContext;
         private readonly TodoItem _todoItem;
 
-        public NullValuedAttributeHandlingTests(TestFixture<Startup> fixture)
+        public NullValuedAttributeHandlingTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();

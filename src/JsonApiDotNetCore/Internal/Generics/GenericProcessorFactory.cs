@@ -1,3 +1,5 @@
+using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace JsonApiDotNetCore.Internal.Generics
@@ -13,7 +15,9 @@ namespace JsonApiDotNetCore.Internal.Generics
         /// Constructs the generic type and locates the service, then casts to TInterface
         /// </summary>
         /// <example>
+        /// <code>
         ///     GetProcessor&lt;IGenericProcessor&gt;(typeof(GenericProcessor&lt;&gt;), typeof(TResource));
+        /// </code>
         /// </example>
         TInterface GetProcessor<TInterface>(Type openGenericType, Type resourceType);
 
@@ -21,7 +25,9 @@ namespace JsonApiDotNetCore.Internal.Generics
         /// Constructs the generic type and locates the service, then casts to TInterface
         /// </summary>
         /// <example>
+        /// <code>
         ///     GetProcessor&lt;IGenericProcessor&gt;(typeof(GenericProcessor&lt;,&gt;), typeof(TResource), typeof(TId));
+        /// </code>
         /// </example>
         TInterface GetProcessor<TInterface>(Type openGenericType, Type resourceType, Type keyType);
     }
@@ -30,7 +36,7 @@ namespace JsonApiDotNetCore.Internal.Generics
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public GenericProcessorFactory(IServiceProvider serviceProvider)
+        public GenericProcessorFactory(IScopedServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

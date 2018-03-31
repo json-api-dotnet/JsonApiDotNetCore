@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class CustomControllerTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
-        public CustomControllerTests(TestFixture<Startup> fixture)
+        public CustomControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()

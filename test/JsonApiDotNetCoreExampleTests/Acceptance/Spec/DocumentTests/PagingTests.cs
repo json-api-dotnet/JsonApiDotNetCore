@@ -18,13 +18,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class PagingTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<TodoItemCollection> _todoItemCollectionFaker;
 
-        public PagingTests(TestFixture<Startup> fixture)
+        public PagingTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

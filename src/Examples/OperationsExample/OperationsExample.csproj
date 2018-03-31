@@ -8,9 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(MicrosoftConfigurationVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="$(MicrosoftConfigurationVersion)" />

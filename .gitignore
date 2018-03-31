@@ -4,3 +4,5 @@
 .couscous/
 docs/Template-Dark/
 .idea/
+**/_site/
+log.txt

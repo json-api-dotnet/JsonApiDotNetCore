@@ -5,6 +5,7 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Data;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _services = _server.Host.Services;
 
             Client = _server.CreateClient();
-            Context = GetService<AppDbContext>();
+            Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
             DeSerializer = GetService<IJsonApiDeSerializer>();
             JsonApiContext = GetService<IJsonApiContext>();
         }

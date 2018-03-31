@@ -4,30 +4,23 @@ using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models.Operations;
-using OperationsExample.Data;
+using JsonApiDotNetCoreExample.Data;
 using OperationsExampleTests.Factories;
 using Xunit;
 
 namespace OperationsExampleTests
 {
-    [Collection("WebHostCollection")]
-    public class RemoveTests
+    public class RemoveTests : Fixture
     {
-        private readonly Fixture _fixture;
         private readonly Faker _faker = new Faker();
 
-        public RemoveTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
-        public async Task Can_Remove_Article()
+        public async Task Can_Remove_Author()
         {
             // arrange
-            var context = _fixture.GetService<AppDbContext>();
-            var article = ArticleFactory.Get();
-            context.Articles.Add(article);
+            var context = GetService<AppDbContext>();
+            var author = AuthorFactory.Get();
+            context.Authors.Add(author);
             context.SaveChanges();
 
             var content = new
@@ -35,32 +28,32 @@ namespace OperationsExampleTests
                 operations = new[] {
                     new Dictionary<string, object> {
                         { "op", "remove"},
-                        { "ref",  new { type = "articles", id = article.StringId } }
+                        { "ref",  new { type = "authors", id = author.StringId } }
                     }
                 }
             };
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
-            Assert.NotNull(result.response);
-            Assert.NotNull(result.data);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(1, result.data.Operations.Count);
-            Assert.Null(context.Articles.SingleOrDefault(a => a.Id == article.Id));
+            Assert.NotNull(response);
+            Assert.NotNull(data);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Empty(data.Operations);
+            Assert.Null(context.Authors.SingleOrDefault(a => a.Id == author.Id));
         }
 
         [Fact]
-        public async Task Can_Remove_Articles()
+        public async Task Can_Remove_Authors()
         {
             // arrange
             var count = _faker.Random.Int(1, 10);
-            var context = _fixture.GetService<AppDbContext>();
+            var context = GetService<AppDbContext>();
 
-            var articles = ArticleFactory.Get(count);
+            var authors = AuthorFactory.Get(count);
 
-            context.Articles.AddRange(articles);
+            context.Authors.AddRange(authors);
             context.SaveChanges();
 
             var content = new
@@ -72,21 +65,21 @@ namespace OperationsExampleTests
                 content.operations.Add(
                     new Dictionary<string, object> {
                         { "op", "remove"},
-                        { "ref",  new { type = "articles", id = articles[i].StringId } }
+                        { "ref",  new { type = "authors", id = authors[i].StringId } }
                     }
                 );
 
             // act
-            var result = await _fixture.PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
-            Assert.NotNull(result.response);
-            Assert.NotNull(result.data);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(count, result.data.Operations.Count);
+            Assert.NotNull(response);
+            Assert.NotNull(data);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Empty(data.Operations);
 
             for (int i = 0; i < count; i++)
-                Assert.Null(context.Articles.SingleOrDefault(a => a.Id == articles[i].Id));
+                Assert.Null(context.Authors.SingleOrDefault(a => a.Id == authors[i].Id));
         }
     }
 }

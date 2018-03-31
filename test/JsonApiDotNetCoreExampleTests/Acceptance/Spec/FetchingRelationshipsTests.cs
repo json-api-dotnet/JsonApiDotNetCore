@@ -16,11 +16,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class FetchingRelationshipsTests
     {
-        private TestFixture<Startup> _fixture;
+        private TestFixture<TestStartup> _fixture;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
 
-        public FetchingRelationshipsTests(TestFixture<Startup> fixture)
+        public FetchingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _jsonApiContext = fixture.GetService<IJsonApiContext>();

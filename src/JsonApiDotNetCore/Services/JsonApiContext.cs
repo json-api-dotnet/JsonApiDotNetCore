@@ -51,6 +51,7 @@ namespace JsonApiDotNetCore.Services
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
         public Type ControllerType { get; set; }
         public Dictionary<string, object> DocumentMeta { get; set; }
+        public bool IsBulkOperationRequest { get; set; }
 
         public IJsonApiContext ApplyContext<T>(object controller)
         {

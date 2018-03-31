@@ -19,7 +19,8 @@ namespace JsonApiDotNetCore.Controllers
 
         protected IActionResult Error(Error error)
         {
-            var errorCollection = new ErrorCollection {
+            var errorCollection = new ErrorCollection
+            {
                 Errors = new List<Error> { error }
             };
             var result = new ObjectResult(errorCollection);
@@ -36,16 +37,16 @@ namespace JsonApiDotNetCore.Controllers
             return result;
         }
 
-        private int GetErrorStatusCode(ErrorCollection errors) 
+        private int GetErrorStatusCode(ErrorCollection errors)
         {
             var statusCodes = errors.Errors
                 .Select(e => e.StatusCode)
                 .Distinct()
                 .ToList();
 
-            if(statusCodes.Count == 1)
+            if (statusCodes.Count == 1)
                 return statusCodes[0];
-            
+
             return int.Parse(statusCodes.Max().ToString()[0] + "00");
         }
     }

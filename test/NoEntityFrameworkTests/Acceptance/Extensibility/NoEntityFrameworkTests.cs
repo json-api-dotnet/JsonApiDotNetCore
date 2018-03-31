@@ -10,7 +10,6 @@ using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
-using NoEntityFrameworkExample;
 using Xunit;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
@@ -23,7 +22,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         public NoEntityFrameworkTests()
         {
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<TestStartup>();
             _server = new TestServer(builder);
             _context = _server.GetService<AppDbContext>();
             _context.Database.EnsureCreated();
@@ -97,7 +96,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
                     type = "custom-todo-items",
                     attributes = new
                     {
-                        description = description,
+                        description,
                         ordinal = 1
                     }
                 }

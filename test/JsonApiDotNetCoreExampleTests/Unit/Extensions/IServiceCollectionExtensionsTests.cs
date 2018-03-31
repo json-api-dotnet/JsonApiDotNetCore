@@ -10,9 +10,9 @@ using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using UnitTests;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
             // arrange
             var services = new ServiceCollection();
             var jsonApiOptions = new JsonApiOptions();
-            
+
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseMemoryCache(new MemoryCache(new MemoryCacheOptions()));
@@ -33,6 +33,9 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
 
             // act
             services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);
+            // this is required because the DbContextResolver requires access to the current HttpContext
+            // to get the request scoped DbContext instance
+            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
             var provider = services.BuildServiceProvider();
 
             // assert

@@ -37,8 +37,11 @@ namespace JsonApiDotNetCore.Serialization
             if (entity == null)
                 return GetNullDataResponse();
 
-            if (entity.GetType() == typeof(ErrorCollection) || _jsonApiContext.RequestEntity == null)
+            if (entity.GetType() == typeof(ErrorCollection) || (_jsonApiContext.RequestEntity == null && _jsonApiContext.IsBulkOperationRequest == false))
                 return GetErrorJson(entity, _logger);
+
+            if (_jsonApiContext.IsBulkOperationRequest)
+                return _serialize(entity);
 
             if (entity is IEnumerable<IIdentifiable>)
                 return SerializeDocuments(entity);
