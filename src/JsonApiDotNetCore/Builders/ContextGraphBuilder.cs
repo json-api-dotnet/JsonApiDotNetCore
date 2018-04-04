@@ -6,12 +6,50 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Builders
 {
+    public interface IContextGraphBuilder
+    {
+        /// <summary>
+        /// Construct the <see cref="ContextGraph"/>
+        /// </summary>
+        IContextGraph Build();
+
+        /// <summary>
+        /// Add a json:api resource
+        /// </summary>
+        /// <typeparam name="TResource">The resource model type</typeparam>
+        /// <param name="pluralizedTypeName">The pluralized name that should be exposed by the API</param>
+        IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>;
+
+        /// <summary>
+        /// Add a json:api resource
+        /// </summary>
+        /// <typeparam name="TResource">The resource model type</typeparam>
+        /// <typeparam name="TId">The resource model identifier type</typeparam>
+        /// <param name="pluralizedTypeName">The pluralized name that should be exposed by the API</param>
+        IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>;
+
+        /// <summary>
+        /// Add all the models that are part of the provided <see cref="DbContext" /> 
+        /// that also implement <see cref="IIdentifiable"/>
+        /// </summary>
+        /// <typeparam name="T">The <see cref="DbContext"/> implementation type.</typeparam>
+        IContextGraphBuilder AddDbContext<T>() where T : DbContext;
+
+        /// <summary>
+        /// Which links to include. Defaults to <see cref="Link.All"/>.
+        /// </summary>
+        Link DocumentLinks { get; set; }
+    }
+
     public class ContextGraphBuilder : IContextGraphBuilder
     {
         private List<ContextEntity> _entities = new List<ContextEntity>();
+        private List<ValidationResult> _validationResults = new List<ValidationResult>();
+
         private bool _usesDbContext;
         public Link DocumentLinks { get; set; } = Link.All;
 
@@ -20,7 +58,7 @@ namespace JsonApiDotNetCore.Builders
             // this must be done at build so that call order doesn't matter
             _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
 
-            var graph = new ContextGraph(_entities, _usesDbContext);
+            var graph = new ContextGraph(_entities, _usesDbContext, _validationResults);
 
             return graph;
         }
@@ -117,7 +155,10 @@ namespace JsonApiDotNetCore.Builders
 
                     AssertEntityIsNotAlreadyDefined(entityType);
 
-                    _entities.Add(GetEntity(GetResourceName(property), entityType, GetIdType(entityType)));
+                    var (isJsonApiResource, idType) = GetIdType(entityType);
+
+                    if (isJsonApiResource)
+                        _entities.Add(GetEntity(GetResourceName(property), entityType, idType));
                 }
             }
 
@@ -133,16 +174,18 @@ namespace JsonApiDotNetCore.Builders
             return ((ResourceAttribute)resourceAttribute).ResourceName;
         }
 
-        private Type GetIdType(Type resourceType)
+        private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
         {
             var interfaces = resourceType.GetInterfaces();
             foreach (var type in interfaces)
             {
                 if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(IIdentifiable<>))
-                    return type.GetGenericArguments()[0];
+                    return (true, type.GetGenericArguments()[0]);
             }
 
-            throw new ArgumentException("Type does not implement 'IIdentifiable<TId>'", nameof(resourceType));
+            _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
+
+            return (false, null);
         }
 
         private void AssertEntityIsNotAlreadyDefined(Type entityType)

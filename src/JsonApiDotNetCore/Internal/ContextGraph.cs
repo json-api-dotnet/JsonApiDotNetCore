@@ -4,25 +4,47 @@ using System.Linq;
 
 namespace JsonApiDotNetCore.Internal
 {
+    public interface IContextGraph
+    {
+        object GetRelationship<TParent>(TParent entity, string relationshipName);
+        string GetRelationshipName<TParent>(string relationshipName);
+        ContextEntity GetContextEntity(string dbSetName);
+        ContextEntity GetContextEntity(Type entityType);
+        bool UsesDbContext { get; }
+    }
+
     public class ContextGraph : IContextGraph
     {
-        private List<ContextEntity> _entities;
+        internal List<ContextEntity> Entities { get; }
+        internal List<ValidationResult> ValidationResults { get; }
 
         public ContextGraph() { }
 
         public ContextGraph(List<ContextEntity> entities, bool usesDbContext)
         {
-            _entities = entities;
+            Entities = entities;
             UsesDbContext = usesDbContext;
+            ValidationResults = new List<ValidationResult>();
+        }
+
+        // eventually, this is the planned public constructor
+        // to avoid breaking changes, we will be leaving the original constructor in place
+        // until the context graph validation process is completed
+        // you can track progress on this issue here: https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170
+        internal ContextGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults)
+        {
+            Entities = entities;
+            UsesDbContext = usesDbContext;
+            ValidationResults = validationResults;
         }
 
         public bool UsesDbContext { get; }
 
         public ContextEntity GetContextEntity(string entityName)
-            => _entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
+            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
 
         public ContextEntity GetContextEntity(Type entityType)
-            => _entities.SingleOrDefault(e => e.EntityType == entityType);
+            => Entities.SingleOrDefault(e => e.EntityType == entityType);
 
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
@@ -41,7 +63,7 @@ namespace JsonApiDotNetCore.Internal
         public string GetRelationshipName<TParent>(string relationshipName)
         {
             var entityType = typeof(TParent);
-            return _entities
+            return Entities
                 .SingleOrDefault(e => e.EntityType == entityType)
                 ?.Relationships
                 .SingleOrDefault(r => r.Is(relationshipName))
