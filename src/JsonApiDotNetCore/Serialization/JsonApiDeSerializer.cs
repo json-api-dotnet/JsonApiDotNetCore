@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
@@ -9,7 +10,6 @@ using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -246,8 +246,6 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var resourceRelationships = attr.Type.GetEmptyCollection<IIdentifiable>();
-
                 var relationshipShells = relationshipData.ManyData.Select(r =>
                 {
                     var instance = attr.Type.New<IIdentifiable>();
@@ -255,7 +253,11 @@ namespace JsonApiDotNetCore.Serialization
                     return instance;
                 });
 
-                attr.SetValue(entity, relationshipShells);
+                var convertedCollection = TypeHelper.ConvertCollection(relationshipShells, attr.Type);
+
+                // var convertedCollection = TypeHelper.ConvertCollection(relationshipShells, attr.Type);
+
+                attr.SetValue(entity, convertedCollection);
             }
 
             return entity;

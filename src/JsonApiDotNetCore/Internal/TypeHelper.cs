@@ -7,6 +7,14 @@ namespace JsonApiDotNetCore.Internal
 {
     public static class TypeHelper
     {
+        public static IList ConvertCollection(IEnumerable<object> collection, Type targetType)
+        {
+            var list = Activator.CreateInstance(typeof(List<>).MakeGenericType(targetType)) as IList;
+            foreach(var item in collection)
+                list.Add(ConvertType(item, targetType));
+            return list;
+        }
+
         public static object ConvertType(object value, Type type)
         {
             if (value == null)

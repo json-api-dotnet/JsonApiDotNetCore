@@ -35,12 +35,12 @@ namespace JsonApiDotNetCore.Extensions
         /// <summary>
         /// Creates a List{TInterface} where TInterface is the generic for type specified by t
         /// </summary>
-        public static IEnumerable<TInterface> GetEmptyCollection<TInterface>(this Type t)
+        public static IEnumerable GetEmptyCollection(this Type t)
         {
             if (t == null) throw new ArgumentNullException(nameof(t));
 
             var listType = typeof(List<>).MakeGenericType(t);
-            var list = (IEnumerable<TInterface>)Activator.CreateInstance(listType);
+            var list = (IEnumerable)Activator.CreateInstance(listType);
             return list;
         }
 

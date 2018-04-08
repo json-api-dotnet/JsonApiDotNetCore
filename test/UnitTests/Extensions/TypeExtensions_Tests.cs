@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Xunit;
-using JsonApiDotNetCore.Extensions;
-using System.Collections.Generic;
 
 namespace UnitTests.Extensions
 {
@@ -14,7 +14,7 @@ namespace UnitTests.Extensions
             var type = typeof(Model);
 
             // act
-            var collection = type.GetEmptyCollection<IIdentifiable>();
+            var collection = type.GetEmptyCollection();
 
             // assert
             Assert.NotNull(collection);
