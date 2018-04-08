@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Request;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -52,6 +52,7 @@ namespace JsonApiDotNetCore.Services
         public Type ControllerType { get; set; }
         public Dictionary<string, object> DocumentMeta { get; set; }
         public bool IsBulkOperationRequest { get; set; }
+        public HasManyRelationshipPointers HasManyRelationshipPointers { get; } = new HasManyRelationshipPointers();
 
         public IJsonApiContext ApplyContext<T>(object controller)
         {

@@ -232,12 +232,6 @@ namespace JsonApiDotNetCore.Serialization
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships)
         {
-            // TODO: is this necessary? if not, remove
-            // var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
-
-            // if (entityProperty == null)
-            //     throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a relationsip named '{attr.InternalRelationshipName}'");
-
             var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
@@ -255,9 +249,9 @@ namespace JsonApiDotNetCore.Serialization
 
                 var convertedCollection = TypeHelper.ConvertCollection(relationshipShells, attr.Type);
 
-                // var convertedCollection = TypeHelper.ConvertCollection(relationshipShells, attr.Type);
-
                 attr.SetValue(entity, convertedCollection);
+
+                _jsonApiContext.HasManyRelationshipPointers.Add(attr.Type, convertedCollection);
             }
 
             return entity;
