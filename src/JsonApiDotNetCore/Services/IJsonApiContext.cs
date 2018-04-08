@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Request;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -28,6 +29,7 @@ namespace JsonApiDotNetCore.Services
         Type ControllerType { get; set; }
         Dictionary<string, object> DocumentMeta { get; set; }
         bool IsBulkOperationRequest { get; set; }
+        HasManyRelationshipPointers HasManyRelationshipPointers { get; }
 
         TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
     }
