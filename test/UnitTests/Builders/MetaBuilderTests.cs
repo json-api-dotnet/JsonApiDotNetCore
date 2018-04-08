@@ -1,8 +1,8 @@
-using Xunit;
-using JsonApiDotNetCore.Builders;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Builders;
+using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Unit.Builders
+namespace UnitTests.Builders
 {
     public class MetaBuilderTests
     {
