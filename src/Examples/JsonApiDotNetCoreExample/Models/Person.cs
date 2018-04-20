@@ -20,6 +20,9 @@ namespace JsonApiDotNetCoreExample.Models
         
         [HasMany("todo-collections")]
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
+        
+        [HasOne("unincludeable-item", Link.All, false)]
+        public virtual TodoItem UnIncludeableItem { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
         {
