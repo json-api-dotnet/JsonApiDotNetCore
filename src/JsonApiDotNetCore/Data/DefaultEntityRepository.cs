@@ -131,11 +131,18 @@ namespace JsonApiDotNetCore.Data
         {
             var entity = _jsonApiContext.RequestEntity;
             var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
-            if (relationship != null)
-                return entities.Include(relationship.InternalRelationshipName);
+            if (relationship == null) 
+            {
+                throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
+                    $"{entity.EntityName} does not have a relationship named {relationshipName}");
+            }
 
-            throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
-                $"{entity.EntityName} does not have a relationship named {relationshipName}");
+            if (!relationship.CanInclude)
+            {
+                throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
+            }
+            return entities.Include(relationship.InternalRelationshipName);
+
         }
 
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
