@@ -37,7 +37,7 @@ public class TodoItemService : EntityResourceService<TodoItem> {
         _notificationService.Notify($"Entity created: { newEntity.Id }");
 
         // don't forget to return the new entity
-        return entity;
+        return newEntity;
     }
 }
 ```
