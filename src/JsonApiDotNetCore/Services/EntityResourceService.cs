@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Services
             return await _entities.DeleteAsync(id);
         }
 
-        private IQueryable<T> ApplySortAndFilterQuery(IQueryable<T> entities)
+        protected virtual IQueryable<T> ApplySortAndFilterQuery(IQueryable<T> entities)
         {
             var query = _jsonApiContext.QuerySet;
 
@@ -163,7 +163,7 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        private async Task<IEnumerable<T>> ApplyPageQueryAsync(IQueryable<T> entities)
+        protected virtual async Task<IEnumerable<T>> ApplyPageQueryAsync(IQueryable<T> entities)
         {
             var pageManager = _jsonApiContext.PageManager;
             if (!pageManager.IsPaginated)
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Services
             return await _entities.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage);
         }
 
-        private IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)
+        protected virtual IQueryable<T> IncludeRelationships(IQueryable<T> entities, List<string> relationships)
         {
             _jsonApiContext.IncludedRelationships = relationships;
 
