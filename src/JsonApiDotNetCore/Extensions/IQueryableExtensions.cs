@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, AttrFilterQuery filterQuery)
         {
-            if (filterQuery == null)
+            if (filterQuery == null || filterQuery.IsAttribute == false)
                 return source;
 
             var concreteType = typeof(TSource);
