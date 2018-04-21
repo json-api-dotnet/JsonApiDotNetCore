@@ -19,6 +19,12 @@ namespace JsonApiDotNetCore.Controllers
 
         public JsonApiController(
             IJsonApiContext jsonApiContext,
+            IResourceService<T, int> resourceService)
+            : base(jsonApiContext, resourceService)
+        { }
+
+        public JsonApiController(
+            IJsonApiContext jsonApiContext,
             IGetAllService<T, int> getAll = null,
             IGetByIdService<T, int> getById = null,
             IGetRelationshipService<T, int> getRelationship = null,
