@@ -18,7 +18,7 @@ See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/mas
 
 ## Installation And Usage
 
-See [the documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/) for detailed usage. 
+See [the documentation](https://json-api-dotnet.github.io/#/) for detailed usage. 
 
 ### Models
 
