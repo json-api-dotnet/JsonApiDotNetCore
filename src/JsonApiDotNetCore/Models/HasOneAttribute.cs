@@ -2,8 +2,8 @@ namespace JsonApiDotNetCore.Models
 {
     public class HasOneAttribute : RelationshipAttribute
     {
-        public HasOneAttribute(string publicName, Link documentLinks = Link.All)
-        : base(publicName, documentLinks)
+        public HasOneAttribute(string publicName, Link documentLinks = Link.All, bool canInclude = true)
+        : base(publicName, documentLinks, canInclude)
         { }
 
         public override void SetValue(object entity, object newValue)

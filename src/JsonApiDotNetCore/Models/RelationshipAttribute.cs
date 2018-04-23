@@ -4,10 +4,11 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName, Link documentLinks)
+        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude)
         {
             PublicRelationshipName = publicName;
             DocumentLinks = documentLinks;
+            CanInclude = canInclude;
         }
 
         public string PublicRelationshipName { get; }
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Models
         public bool IsHasMany => GetType() == typeof(HasManyAttribute);
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
+        public bool CanInclude { get; }
 
         public abstract void SetValue(object entity, object newValue);
 
@@ -26,8 +28,7 @@ namespace JsonApiDotNetCore.Models
 
         public override bool Equals(object obj)
         {
-            var attr = obj as RelationshipAttribute;
-            if (attr == null)
+            if (!(obj is RelationshipAttribute attr))
             {
                 return false;
             }

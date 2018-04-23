@@ -335,5 +335,29 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [Fact]
+        public async Task Request_ToIncludeRelationshipMarkedCanIncludeFalse_Returns_400()
+        {
+            // arrange
+            var person = _context.People.First();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+
+            var route = $"/api/v1/people/{person.Id}?include=unincludeable-item";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }
