@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ContextGraph.");
 
             var context = _httpContextAccessor.HttpContext;
-            var path = context.Request.Path.Value.Split('/');
+            var requestPath = context.Request.Path.Value;
 
             if (context.Request.Query.Count > 0)
             {
@@ -75,10 +75,13 @@ namespace JsonApiDotNetCore.Services
             var linkBuilder = new LinkBuilder(this);
             BasePath = linkBuilder.GetBasePath(context, _controllerContext.RequestEntity.EntityName);
             PageManager = GetPageManager();
-            IsRelationshipPath = path[path.Length - 2] == "relationships";
+
+            var pathSpans = new SpanSplitter(ref requestPath, '/');
+            IsRelationshipPath = pathSpans[pathSpans.Count - 2].ToString() == "relationships";
+
             return this;
         }
-
+        
         private PageManager GetPageManager()
         {
             if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))

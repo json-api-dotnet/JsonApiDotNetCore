@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
@@ -93,16 +94,16 @@ namespace JsonApiDotNetCore.Services
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
             var queries = new List<FilterQuery>();
+            var openBracketIndex = key.IndexOf(OPEN_BRACKET);
+            var closedBracketIndex = key.IndexOf(CLOSE_BRACKET);
+            var propertyNameSlice = key.AsSpan().Slice(openBracketIndex + 1, closedBracketIndex - openBracketIndex - 1);
+            var propertyName = propertyNameSlice.ToString();
 
-            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET)[1];
-
-            var values = value.Split(COMMA);
-            foreach (var val in values)
+            var spanSplitter = new SpanSplitter(ref value, COMMA);
+            for (var i = 0; i < spanSplitter.Count; i++)
             {
-                (var operation, var filterValue) = ParseFilterOperation(val);
-                queries.Add(new FilterQuery(propertyName, filterValue, operation));
+                queries.Add(BuildFilterQuery(spanSplitter[i], propertyName));
             }
-
             return queries;
         }
 
@@ -234,6 +235,12 @@ namespace JsonApiDotNetCore.Services
             {
                 throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
             }
+        }
+
+        private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)
+        {
+            var (operation, filterValue) = ParseFilterOperation(query.ToString());
+            return new FilterQuery(propertyName, filterValue, operation);
         }
     }
 }
