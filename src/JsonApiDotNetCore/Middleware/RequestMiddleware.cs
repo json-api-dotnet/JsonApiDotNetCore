@@ -56,10 +56,9 @@ namespace JsonApiDotNetCore.Middleware
         private static bool ContainsMediaTypeParameters(string mediaType)
         {
             const char delimeter = ';';
-            var sliceLength = mediaType.IndexOf(delimeter);
-            if (sliceLength < 0) return false;
-            var mediaTypeSlice = mediaType.AsSpan().Slice(0, sliceLength);
-            return mediaTypeSlice.Length == 2 && mediaTypeSlice.SequenceEqual(Constants.ContentType.AsSpan());
+            var subSpans = new SpanSplitter(ref mediaType, delimeter);
+            if (subSpans.Count == 0) return false;
+            return subSpans.Count == 2 && subSpans[0].ToString() == Constants.ContentType;
         }
 
         private static void FlushResponse(HttpContext context, int statusCode)
