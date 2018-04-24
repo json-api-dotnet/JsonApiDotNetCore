@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
@@ -54,8 +55,11 @@ namespace JsonApiDotNetCore.Middleware
 
         private static bool ContainsMediaTypeParameters(string mediaType)
         {
-            var mediaTypeArr = mediaType.Split(';');
-            return (mediaTypeArr[0] ==  Constants.ContentType && mediaTypeArr.Length == 2);
+            const char delimeter = ';';
+            var sliceLength = mediaType.IndexOf(delimeter);
+            if (sliceLength < 0) return false;
+            var mediaTypeSlice = mediaType.AsSpan().Slice(0, sliceLength);
+            return mediaTypeSlice.Length == 2 && mediaTypeSlice.SequenceEqual(Constants.ContentType.AsSpan());
         }
 
         private static void FlushResponse(HttpContext context, int statusCode)

@@ -1,3 +1,6 @@
+using System;
+using System.Text;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -20,20 +23,18 @@ namespace JsonApiDotNetCore.Builders
                 : $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
 
-        private string GetNamespaceFromPath(string path, string entityName)
+        private static string GetNamespaceFromPath(string path, string entityName)
         {
-            var nSpace = string.Empty;
-            var segments = path.Split('/');
-
-            for (var i = 1; i < segments.Length; i++)
+            var sb = new StringBuilder();
+            var entityNameSpan = entityName.AsSpan();
+            var subSpans = new SpanSplitter(ref path, '/');
+            for (var i = 1; i < subSpans.Count; i++)
             {
-                if (segments[i].ToLower() == entityName)
-                    break;
-
-                nSpace += $"/{segments[i]}";
+                var span = subSpans[i];
+                if (entityNameSpan.SequenceEqual(span)) break;
+                sb.Append($"/{span.ToString()}");
             }
-
-            return nSpace;
+            return sb.ToString();
         }
 
         public string GetSelfRelationLink(string parent, string parentId, string child)

@@ -8,20 +8,21 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrFilterQuery : BaseFilterQuery
     {
         private readonly IJsonApiContext _jsonApiContext;
-
+        
         public RelatedAttrFilterQuery(
             IJsonApiContext jsonApiCopntext,
             FilterQuery filterQuery)
         {
             _jsonApiContext = jsonApiCopntext;
-
-            var relationshipArray = filterQuery.Attribute.Split('.');
-
-            var relationship = GetRelationship(relationshipArray[0]);
+            var filterQueryAttribute = filterQuery.Attribute;
+            var relationshipSubSpans = new SpanSplitter(ref filterQueryAttribute, '.');
+            var relationship1 = relationshipSubSpans[0].ToString();
+            var relationship2 = relationshipSubSpans[1].ToString();
+            var relationship = GetRelationship(relationshipSubSpans[0].ToString());
             if (relationship == null)
-                throw new JsonApiException(400, $"{relationshipArray[1]} is not a valid relationship on {relationshipArray[0]}.");
+                throw new JsonApiException(400, $"{relationship2} is not a valid relationship on {relationship1}.");
 
-            var attribute = GetAttribute(relationship, relationshipArray[1]);
+            var attribute = GetAttribute(relationship, relationship2);
 
             if (attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
