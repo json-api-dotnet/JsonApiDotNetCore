@@ -15,14 +15,14 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             _jsonApiContext = jsonApiCopntext;
             var filterQueryAttribute = filterQuery.Attribute;
-            var relationshipSubSpans = new SpanSplitter(ref filterQueryAttribute, '.');
-            var relationship1 = relationshipSubSpans[0].ToString();
-            var relationship2 = relationshipSubSpans[1].ToString();
-            var relationship = GetRelationship(relationshipSubSpans[0].ToString());
+            var filterQuerySubSpans = new SpanSplitter(ref filterQueryAttribute, '.');
+            var subSpan1 = filterQuerySubSpans[0].ToString();
+            var subSpan2 = filterQuerySubSpans[1].ToString();
+            var relationship = GetRelationship(subSpan1);
             if (relationship == null)
-                throw new JsonApiException(400, $"{relationship2} is not a valid relationship on {relationship1}.");
+                throw new JsonApiException(400, $"{subSpan2} is not a valid relationship on {subSpan1}.");
 
-            var attribute = GetAttribute(relationship, relationship2);
+            var attribute = GetAttribute(relationship, subSpan2);
 
             if (attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
