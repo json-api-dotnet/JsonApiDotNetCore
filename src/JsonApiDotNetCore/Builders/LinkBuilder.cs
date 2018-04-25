@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +28,7 @@ namespace JsonApiDotNetCore.Builders
         {
             var sb = new StringBuilder();
             var entityNameSpan = entityName.AsSpan();
-            var subSpans = new SpanSplitter(ref path, '/');
+            var subSpans = path.SpanSplit('/');
             for (var i = 1; i < subSpans.Count; i++)
             {
                 var span = subSpans[i];

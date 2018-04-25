@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -15,7 +16,7 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             _jsonApiContext = jsonApiCopntext;
             var filterQueryAttribute = filterQuery.Attribute;
-            var filterQuerySubSpans = new SpanSplitter(ref filterQueryAttribute, '.');
+            var filterQuerySubSpans = filterQueryAttribute.SpanSplit('.');
             var subSpan1 = filterQuerySubSpans[0].ToString();
             var subSpan2 = filterQuerySubSpans[1].ToString();
             var relationship = GetRelationship(subSpan1);
