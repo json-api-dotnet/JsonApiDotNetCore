@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -61,6 +62,11 @@ namespace JsonApiDotNetCore.Extensions
                 indexes.Add(i);
             }
             return indexes;
+        }
+
+        public static SpanSplitter SpanSplit(this string str, char delimeter)
+        {
+            return SpanSplitter.Split(str, delimeter);
         }
         
     }

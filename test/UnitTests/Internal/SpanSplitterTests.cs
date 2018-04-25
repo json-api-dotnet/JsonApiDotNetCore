@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using Xunit;
 
@@ -88,7 +89,7 @@ namespace UnitTests.Internal
         protected void WhenSplittingIntoSubstrings()
         {
             SpanSplitter spanSplitter;
-            spanSplitter = new SpanSplitter(ref _baseString, _delimeter);
+            spanSplitter = _baseString.SpanSplit(_delimeter);
             for (var i = 0; i < spanSplitter.Count; i++)
             {
                 var span = spanSplitter[i];

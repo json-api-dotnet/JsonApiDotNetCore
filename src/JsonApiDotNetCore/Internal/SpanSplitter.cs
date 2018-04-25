@@ -15,12 +15,17 @@ namespace JsonApiDotNetCore.Internal
         public int Count => _substringIndexes.Count();
         public ReadOnlySpan<char> this[int index] => GetSpanForSubstring(index + 1);
 
-        public SpanSplitter(ref string str, char delimeter)
+        private SpanSplitter(ref string str, char delimeter)
         {
             _span = str.AsSpan();
             _delimeterIndexes = str.IndexesOf(delimeter).ToList();
             _substringIndexes = new List<Tuple<int, int>>();
             BuildSubstringIndexes();
+        }
+
+        public static SpanSplitter Split(string str, char delimeter)
+        {
+            return new SpanSplitter(ref str, delimeter);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -76,7 +77,7 @@ namespace JsonApiDotNetCore.Services
             BasePath = linkBuilder.GetBasePath(context, _controllerContext.RequestEntity.EntityName);
             PageManager = GetPageManager();
 
-            var pathSpans = new SpanSplitter(ref requestPath, '/');
+            var pathSpans = requestPath.SpanSplit('/');
             IsRelationshipPath = pathSpans[pathSpans.Count - 2].ToString() == "relationships";
 
             return this;

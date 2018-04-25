@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -56,7 +57,7 @@ namespace JsonApiDotNetCore.Middleware
         private static bool ContainsMediaTypeParameters(string mediaType)
         {
             const char delimeter = ';';
-            var subSpans = new SpanSplitter(ref mediaType, delimeter);
+            var subSpans = mediaType.SpanSplit(delimeter);
             if (subSpans.Count == 0) return false;
             return subSpans.Count == 2 && subSpans[0].ToString() == Constants.ContentType;
         }

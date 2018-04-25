@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Services
             var propertyNameSlice = key.AsSpan().Slice(openBracketIndex + 1, closedBracketIndex - openBracketIndex - 1);
             var propertyName = propertyNameSlice.ToString();
 
-            var spanSplitter = new SpanSplitter(ref value, COMMA);
+            var spanSplitter = value.SpanSplit(COMMA);
             for (var i = 0; i < spanSplitter.Count; i++)
             {
                 queries.Add(BuildFilterQuery(spanSplitter[i], propertyName));
