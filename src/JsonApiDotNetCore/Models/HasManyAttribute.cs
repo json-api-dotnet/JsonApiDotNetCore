@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Models
                 .GetType()
                 .GetProperty(InternalRelationshipName);
             
-            propertyInfo.SetValue(entity, newValue);        
+            propertyInfo.SetValue(entity, newValue);
         }
     }
 }

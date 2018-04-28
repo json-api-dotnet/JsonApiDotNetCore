@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
@@ -15,14 +16,20 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
         private readonly IJsonApiContext _jsonApiContext;
-        private readonly IGenericProcessorFactory _genericProcessorFactory;
 
+        [Obsolete(
+            "The deserializer no longer depends on the IGenericProcessorFactory",
+            error: false)]
         public JsonApiDeSerializer(
             IJsonApiContext jsonApiContext,
             IGenericProcessorFactory genericProcessorFactory)
         {
             _jsonApiContext = jsonApiContext;
-            _genericProcessorFactory = genericProcessorFactory;
+        }
+
+        public JsonApiDeSerializer(IJsonApiContext jsonApiContext)
+        {
+            _jsonApiContext = jsonApiContext;
         }
 
         public object Deserialize(string requestBody)
@@ -225,11 +232,6 @@ namespace JsonApiDotNetCore.Serialization
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships)
         {
-            var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
-
-            if (entityProperty == null)
-                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
-
             var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
@@ -238,11 +240,18 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), attr.Type);
+                var relationshipShells = relationshipData.ManyData.Select(r =>
+                {
+                    var instance = attr.Type.New<IIdentifiable>();
+                    instance.StringId = r.Id;
+                    return instance;
+                });
 
-                var ids = relationshipData.ManyData.Select(r => r.Id);
+                var convertedCollection = TypeHelper.ConvertCollection(relationshipShells, attr.Type);
 
-                genericProcessor.SetRelationships(entity, attr, ids);
+                attr.SetValue(entity, convertedCollection);
+
+                _jsonApiContext.HasManyRelationshipPointers.Add(attr.Type, convertedCollection);
             }
 
             return entity;
