@@ -12,6 +12,16 @@
 
 A framework for building [json:api](http://jsonapi.org/) compliant web APIs. The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection making extensibility incredibly easy.
 
+## Getting Started
+
+These are some steps you can take to help you understand what this project is and how you can use it:
+
+- [What is json:api and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/)
+- [The json:api specification](http://jsonapi.org/format/)
+- [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
+- [Our documentation](https://json-api-dotnet.github.io)
+- Check out the examples in the next section
+
 ## Examples
 
 See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications. There is also a [Todo List App](https://github.com/json-api-dotnet/TodoListExample) that includes a JADNC API and an EmberJs client.
