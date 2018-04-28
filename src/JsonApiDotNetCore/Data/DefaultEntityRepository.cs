@@ -84,9 +84,27 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
+            AttachHasManyPointers();
             _dbSet.Add(entity);
+
             await _context.SaveChangesAsync();
             return entity;
+        }
+
+        /// <summary>
+        /// This is used to allow creation of HasMany relationships when the
+        /// dependent side of the relationship already exists.
+        /// </summary>
+        private void AttachHasManyPointers()
+        {
+            var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
+            foreach(var relationship in relationships)
+            {
+                foreach(var pointer in relationship.Value)
+                {
+                    _context.Entry(pointer).State = EntityState.Unchanged;
+                }
+            }
         }
 
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)
