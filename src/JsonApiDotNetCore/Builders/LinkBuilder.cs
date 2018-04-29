@@ -1,7 +1,4 @@
 using System;
-using System.Text;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -20,22 +17,39 @@ namespace JsonApiDotNetCore.Builders
         {
             var r = context.Request;
             return (_context.Options.RelativeLinks)
-                ? $"{GetNamespaceFromPath(r.Path, entityName)}"
+                ? GetNamespaceFromPath(r.Path, entityName)
                 : $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
 
         private static string GetNamespaceFromPath(string path, string entityName)
         {
-            var sb = new StringBuilder();
             var entityNameSpan = entityName.AsSpan();
-            var subSpans = path.SpanSplit('/');
-            for (var i = 1; i < subSpans.Count; i++)
+            var pathSpan = path.AsSpan();
+            const char delimiter = '/';
+            for (var i = 0; i < pathSpan.Length; i++)
             {
-                var span = subSpans[i];
-                if (entityNameSpan.SequenceEqual(span)) break;
-                sb.Append($"/{span.ToString()}");
+                if(pathSpan[i].Equals(delimiter))
+                {
+                    var nextPosition = i + 1;
+                    if(pathSpan.Length > i + entityNameSpan.Length)
+                    {
+                        var possiblePathSegment = pathSpan.Slice(nextPosition, entityNameSpan.Length);
+                        if (entityNameSpan.SequenceEqual(possiblePathSegment)) 
+                        {
+                            // check to see if it's the last position in the string
+                            //   or if the next character is a /
+                            var lastCharacterPosition = nextPosition + entityNameSpan.Length;
+
+                            if(lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition].Equals(delimiter))
+                            {
+                                return pathSpan.Slice(0, i).ToString();
+                            }
+                        }
+                    }
+                }
             }
-            return sb.ToString();
+
+            return string.Empty;
         }
 
         public string GetSelfRelationLink(string parent, string parentId, string child)
