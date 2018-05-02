@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Running;
 using Benchmarks.LinkBuilder;
 using Benchmarks.Query;
+using Benchmarks.RequestMiddleware;
 using Benchmarks.Serialization;
 
 namespace Benchmarks {
@@ -10,7 +11,8 @@ namespace Benchmarks {
                 typeof(JsonApiDeserializer_Benchmarks),
                 typeof(JsonApiSerializer_Benchmarks),
                 typeof(QueryParser_Benchmarks),
-                typeof(LinkBuilder_GetNamespaceFromPath_Benchmarks)
+                typeof(LinkBuilder_GetNamespaceFromPath_Benchmarks),
+                typeof(ContainsMediaTypeParameters_Benchmarks)
             });
             switcher.Run(args);
         }
