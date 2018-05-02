@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Builders
                 : $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
 
-        private static string GetNamespaceFromPath(string path, string entityName)
+        internal static string GetNamespaceFromPath(string path, string entityName)
         {
             var entityNameSpan = entityName.AsSpan();
             var pathSpan = path.AsSpan();

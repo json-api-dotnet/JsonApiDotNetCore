@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.Text;
-using System.Threading;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Exporters;
 using BenchmarkDotNet.Attributes.Jobs;
@@ -22,7 +20,7 @@ namespace Benchmarks.LinkBuilder
         public void UsingSpanWithStringBuilder() => GetNamespaceFromPath_Using_Span_With_StringBuilder(PATH, ENTITY_NAME);
 
         [Benchmark]
-        public void UsingSpanWithNoAlloc() => GetNamespaceFromPath_Using_Span_No_Alloc(PATH, ENTITY_NAME);
+        public void Current() => GetNameSpaceFromPath_Current(PATH, ENTITY_NAME);
 
         public static string GetNamespaceFromPath_BySplitting(string path, string entityName)
         {
@@ -40,36 +38,8 @@ namespace Benchmarks.LinkBuilder
             return nSpace;
         }
 
-        public static string GetNamespaceFromPath_Using_Span_No_Alloc(string path, string entityName)
-        {
-            var entityNameSpan = entityName.AsSpan();
-            var pathSpan = path.AsSpan();
-            const char delimiter = '/';
-            for (var i = 0; i < pathSpan.Length; i++)
-            {
-                if(pathSpan[i].Equals(delimiter))
-                {
-                    var nextPosition = i+1;
-                    if(pathSpan.Length > i + entityNameSpan.Length)
-                    {
-                        var possiblePathSegment = pathSpan.Slice(nextPosition, entityNameSpan.Length);
-                        if (entityNameSpan.SequenceEqual(possiblePathSegment)) 
-                        {
-                            // check to see if it's the last position in the string
-                            //   or if the next character is a /
-                            var lastCharacterPosition = nextPosition + entityNameSpan.Length;
-
-                            if(lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition + 1].Equals(delimiter))
-                            {
-                                return pathSpan.Slice(0, i).ToString();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return string.Empty;
-        }
+        public static string GetNameSpaceFromPath_Current(string path, string entityName)
+            => JsonApiDotNetCore.Builders.LinkBuilder.GetNamespaceFromPath(path, entityName);
 
         public static string GetNamespaceFromPath_Using_Span_With_StringBuilder(string path, string entityName)
         {
