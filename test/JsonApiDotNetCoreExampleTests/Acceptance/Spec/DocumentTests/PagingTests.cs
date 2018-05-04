@@ -23,9 +23,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<TodoItemCollection> _todoItemCollectionFaker;
+        private DateTime CurrentTime;
 
         public PagingTests(TestFixture<TestStartup> fixture)
         {
+            CurrentTime = DateTime.Now;
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
             _personFaker = new Faker<Person>()
@@ -35,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
-                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+                .RuleFor(t => t.CreatedDate, f => CurrentTime);
 
             _todoItemCollectionFaker = new Faker<TodoItemCollection>()
                 .RuleFor(t => t.Name, f => f.Company.CatchPhrase());
@@ -82,6 +84,52 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={startPageNumber-1}", links.Prev);
             Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={numberOfPages}", links.Last);
             Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]=1", links.First);
+        }
+
+        [Fact]
+        public async Task Server_IncludesPaginationAndFilter_LinksContainFilter()
+        {
+            //arrange
+            // arrange
+            var pageSize = 5;
+            const int minimumNumberOfRecords = 11;
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            for(var i=0; i < minimumNumberOfRecords; i++)
+                _context.TodoItems.Add(_todoItemFaker.Generate());
+
+            await _context.SaveChangesAsync();
+
+            var numberOfPages = (int)Math.Ceiling(decimal.Divide(minimumNumberOfRecords, pageSize));
+            var startPageNumber = 2;
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[number]=2&filter[created-date]=eq:{CurrentTime}";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var links = documents.Links;
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(links.First);
+            Assert.NotEmpty(links.Next);
+            Assert.NotEmpty(links.Last);
+
+            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={startPageNumber+1}&filter[created-date]=eq:{CurrentTime}", links.Next);
+            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={startPageNumber-1}&filter[created-date]=eq:{CurrentTime}", links.Prev);
+            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={numberOfPages}&filter[created-date]=eq:{CurrentTime}", links.Last);
+            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]=1&filter[created-date]=eq:{CurrentTime}", links.First);
+
+
         }
     }
 }
