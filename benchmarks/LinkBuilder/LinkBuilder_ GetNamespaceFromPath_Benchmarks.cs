@@ -1,9 +1,6 @@
-using System;
-using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Exporters;
 using BenchmarkDotNet.Attributes.Jobs;
-using JsonApiDotNetCore.Extensions;
 
 namespace Benchmarks.LinkBuilder
 {
@@ -15,9 +12,6 @@ namespace Benchmarks.LinkBuilder
 
         [Benchmark]
         public void UsingSplit() => GetNamespaceFromPath_BySplitting(PATH, ENTITY_NAME);
-
-        [Benchmark]
-        public void UsingSpanWithStringBuilder() => GetNamespaceFromPath_Using_Span_With_StringBuilder(PATH, ENTITY_NAME);
 
         [Benchmark]
         public void Current() => GetNameSpaceFromPath_Current(PATH, ENTITY_NAME);
@@ -40,21 +34,5 @@ namespace Benchmarks.LinkBuilder
 
         public static string GetNameSpaceFromPath_Current(string path, string entityName)
             => JsonApiDotNetCore.Builders.LinkBuilder.GetNamespaceFromPath(path, entityName);
-
-        public static string GetNamespaceFromPath_Using_Span_With_StringBuilder(string path, string entityName)
-        {
-            var sb = new StringBuilder();
-            var entityNameSpan = entityName.AsSpan();
-            var subSpans = path.SpanSplit('/');
-            for (var i = 1; i < subSpans.Count; i++)
-            {
-                var span = subSpans[i];
-                if (entityNameSpan.SequenceEqual(span)) 
-                    break;
-
-                sb.Append($"/{span.ToString()}");
-            }
-            return sb.ToString();
-        }
     }
 }

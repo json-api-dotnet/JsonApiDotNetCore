@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
-using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -53,21 +50,5 @@ namespace JsonApiDotNetCore.Extensions
             }
             return str;
         }
-
-        public static IEnumerable<int> IndexesOf(this string str, char delimeter)
-        {
-            var indexes = new List<int>();
-            for (var i = str.IndexOf(delimeter); i > -1 ; i = str.IndexOf(delimeter, i+1))
-            {
-                indexes.Add(i);
-            }
-            return indexes;
-        }
-
-        public static SpanSplitter SpanSplit(this string str, char delimeter)
-        {
-            return SpanSplitter.Split(str, delimeter);
-        }
-        
     }
 }
