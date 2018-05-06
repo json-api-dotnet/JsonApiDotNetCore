@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
@@ -94,16 +93,16 @@ namespace JsonApiDotNetCore.Services
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
             var queries = new List<FilterQuery>();
-            var openBracketIndex = key.IndexOf(OPEN_BRACKET);
-            var closedBracketIndex = key.IndexOf(CLOSE_BRACKET);
-            var propertyNameSlice = key.AsSpan().Slice(openBracketIndex + 1, closedBracketIndex - openBracketIndex - 1);
-            var propertyName = propertyNameSlice.ToString();
 
-            var spanSplitter = value.SpanSplit(COMMA);
-            for (var i = 0; i < spanSplitter.Count; i++)
+            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET)[1];
+
+            var values = value.Split(COMMA);
+            foreach (var val in values)
             {
-                queries.Add(BuildFilterQuery(spanSplitter[i], propertyName));
+                (var operation, var filterValue) = ParseFilterOperation(val);
+                queries.Add(new FilterQuery(propertyName, filterValue, operation));
             }
+
             return queries;
         }
 
