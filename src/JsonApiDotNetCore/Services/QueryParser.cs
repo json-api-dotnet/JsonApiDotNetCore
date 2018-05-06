@@ -20,17 +20,6 @@ namespace JsonApiDotNetCore.Services
         private readonly IControllerContext _controllerContext;
         private readonly JsonApiOptions _options;
 
-        private const string FILTER = "filter";
-        private const string SORT = "sort";
-        private const string INCLUDE = "include";
-        private const string PAGE = "page";
-        private const string FIELDS = "fields";
-        private const char OPEN_BRACKET = '[';
-        private const char CLOSE_BRACKET = ']';
-        private const char COMMA = ',';
-        private const char COLON = ':';
-        private const string COLON_STR = ":";
-
         public QueryParser(
             IControllerContext controllerContext,
             JsonApiOptions options)
@@ -46,35 +35,35 @@ namespace JsonApiDotNetCore.Services
 
             foreach (var pair in query)
             {
-                if (pair.Key.StartsWith(FILTER))
+                if (pair.Key.StartsWith(QueryConstants.FILTER))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Filter) == false)
                         querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
-                if (pair.Key.StartsWith(SORT))
+                if (pair.Key.StartsWith(QueryConstants.SORT))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Sort) == false)
                         querySet.SortParameters = ParseSortParameters(pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(INCLUDE))
+                if (pair.Key.StartsWith(QueryConstants.INCLUDE))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
                         querySet.IncludedRelationships = ParseIncludedRelationships(pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(PAGE))
+                if (pair.Key.StartsWith(QueryConstants.PAGE))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Page) == false)
                         querySet.PageQuery = ParsePageQuery(querySet.PageQuery, pair.Key, pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(FIELDS))
+                if (pair.Key.StartsWith(QueryConstants.FIELDS))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Fields) == false)
                         querySet.Fields = ParseFieldsQuery(pair.Key, pair.Value);
@@ -94,9 +83,9 @@ namespace JsonApiDotNetCore.Services
             // expected input = filter[id]=eq:1
             var queries = new List<FilterQuery>();
 
-            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET)[1];
+            var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
-            var values = value.Split(COMMA);
+            var values = value.Split(QueryConstants.COMMA);
             foreach (var val in values)
             {
                 (var operation, var filterValue) = ParseFilterOperation(val);
@@ -111,7 +100,7 @@ namespace JsonApiDotNetCore.Services
             if (value.Length < 3)
                 return (string.Empty, value);
 
-            var operation = value.Split(COLON);
+            var operation = value.Split(QueryConstants.COLON);
 
             if (operation.Length == 1)
                 return (string.Empty, value);
@@ -121,7 +110,7 @@ namespace JsonApiDotNetCore.Services
                 return (string.Empty, value);
 
             var prefix = operation[0];
-            value = string.Join(COLON_STR, operation.Skip(1));
+            value = string.Join(QueryConstants.COLON_STR, operation.Skip(1));
 
             return (prefix, value);
         }
@@ -132,7 +121,7 @@ namespace JsonApiDotNetCore.Services
             //                  page[number]=1
             pageQuery = pageQuery ?? new PageQuery();
 
-            var propertyName = key.Split(OPEN_BRACKET, CLOSE_BRACKET)[1];
+            var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             const string SIZE = "size";
             const string NUMBER = "number";
@@ -157,7 +146,7 @@ namespace JsonApiDotNetCore.Services
             var sortParameters = new List<SortQuery>();
 
             const char DESCENDING_SORT_OPERATOR = '-';
-            var sortSegments = value.Split(COMMA);
+            var sortSegments = value.Split(QueryConstants.COMMA);
 
             foreach (var sortSegment in sortSegments)
             {
@@ -189,14 +178,14 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(400, "Deeply nested relationships are not supported");
 
             return value
-                .Split(COMMA)
+                .Split(QueryConstants.COMMA)
                 .ToList();
         }
 
         protected virtual List<string> ParseFieldsQuery(string key, string value)
         {
             // expected: fields[TYPE]=prop1,prop2
-            var typeName = key.Split(OPEN_BRACKET, CLOSE_BRACKET)[1];
+            var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             const string ID = "Id";
             var includedFields = new List<string> { ID };
@@ -205,7 +194,7 @@ namespace JsonApiDotNetCore.Services
             if (string.Equals(typeName, _controllerContext.RequestEntity.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 return includedFields;
 
-            var fields = value.Split(COMMA);
+            var fields = value.Split(QueryConstants.COMMA);
             foreach (var field in fields)
             {
                 var attr = _controllerContext.RequestEntity

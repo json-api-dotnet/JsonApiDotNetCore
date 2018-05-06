@@ -64,7 +64,9 @@ namespace JsonApiDotNetCore.Builders
 
         public string GetPageLink(int pageOffset, int pageSize)
         {
-            return $"{_context.BasePath}/{_context.RequestEntity.EntityName}?page[size]={pageSize}&page[number]={pageOffset}";
+            var filterQueryComposer = new QueryComposer();
+            var filters = filterQueryComposer.Compose(_context);
+            return $"{_context.BasePath}/{_context.RequestEntity.EntityName}?page[size]={pageSize}&page[number]={pageOffset}{filters}";
         }
     }
 }
