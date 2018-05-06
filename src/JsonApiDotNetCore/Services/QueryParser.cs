@@ -235,5 +235,11 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
             }
         }
+
+        private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)
+        {
+            var (operation, filterValue) = ParseFilterOperation(query.ToString());
+            return new FilterQuery(propertyName, filterValue, operation);
+        }
     }
 }
