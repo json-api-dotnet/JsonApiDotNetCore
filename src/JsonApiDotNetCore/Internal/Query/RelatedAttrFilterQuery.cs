@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -8,21 +9,19 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrFilterQuery : BaseFilterQuery
     {
         private readonly IJsonApiContext _jsonApiContext;
-
+        
         public RelatedAttrFilterQuery(
-            IJsonApiContext jsonApiCopntext,
+            IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
         {
-            _jsonApiContext = jsonApiCopntext;
+            _jsonApiContext = jsonApiContext;
 
             var relationshipArray = filterQuery.Attribute.Split('.');
-
             var relationship = GetRelationship(relationshipArray[0]);
             if (relationship == null)
                 throw new JsonApiException(400, $"{relationshipArray[1]} is not a valid relationship on {relationshipArray[0]}.");
 
             var attribute = GetAttribute(relationship, relationshipArray[1]);
-
             if (attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
 
