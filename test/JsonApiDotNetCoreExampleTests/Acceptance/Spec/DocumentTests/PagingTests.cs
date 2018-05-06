@@ -23,6 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<TodoItemCollection> _todoItemCollectionFaker;
+        private DateTime CurrentTime;
 
         public PagingTests(TestFixture<TestStartup> fixture)
         {
