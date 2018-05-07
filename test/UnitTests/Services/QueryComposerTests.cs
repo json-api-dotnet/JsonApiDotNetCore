@@ -17,10 +17,10 @@ namespace UnitTests.Services
         }
 
         [Fact]
-        public void Can_Compose_FilterStringForUrl()
+        public void Can_ComposeEqual_FilterStringForUrl()
         {
             // arrange
-            var filter = new FilterQuery("attribute", "value", "=");
+            var filter = new FilterQuery("attribute", "value", "eq");
             var querySet = new QuerySet();
             List<FilterQuery> filters = new List<FilterQuery>();
             filters.Add(filter);
@@ -34,7 +34,28 @@ namespace UnitTests.Services
             // act
             var filterString = queryComposer.Compose(_jsonApiContext.Object);
             // assert
-            Assert.Equal("&filter[attribute]=value", filterString);
+            Assert.Equal("&filter[attribute]=eq:value", filterString);
+        }
+
+        [Fact]
+        public void Can_ComposeLessThan_FilterStringForUrl()
+        {
+            // arrange
+            var filter = new FilterQuery("attribute", "value", "le");
+            var querySet = new QuerySet();
+            List<FilterQuery> filters = new List<FilterQuery>();
+            filters.Add(filter);
+            querySet.Filters = filters;
+
+            _jsonApiContext
+                .Setup(m => m.QuerySet)
+                .Returns(querySet);
+
+            var queryComposer = new QueryComposer();
+            // act
+            var filterString = queryComposer.Compose(_jsonApiContext.Object);
+            // assert
+            Assert.Equal("&filter[attribute]=le:value", filterString);
         }
 
         [Fact]
