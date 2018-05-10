@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Builders
                 Id = entity.StringId
             };
 
-            if (_jsonApiContext.IsRelationshipData)
+            if (_jsonApiContext.IsRelationshipPath)
                 return data;
 
             data.Attributes = new Dictionary<string, object>();

@@ -80,10 +80,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
-        {
-            _jsonApiContext.IsRelationshipData = true;
-            return await GetRelationshipAsync(id, relationshipName);
-        }
+            => await GetRelationshipAsync(id, relationshipName);
 
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
