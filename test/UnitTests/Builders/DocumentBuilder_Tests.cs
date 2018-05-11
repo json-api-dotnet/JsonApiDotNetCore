@@ -28,6 +28,7 @@ namespace UnitTests
             _options.BuildContextGraph(builder =>
             {
                 builder.AddResource<Model>("models");
+                builder.AddResource<RelatedModel>("related-models");
             });
 
             _jsonApiContextMock
@@ -119,6 +120,37 @@ namespace UnitTests
 
             // assert
             Assert.Null(document.Data.Relationships["related-model"].Links);
+        }
+
+        [Fact]
+        public void Related_Data_Included_In_Relationships_By_Default()
+        {
+            // arrange
+            const string relationshipName = "related-models";
+            const int relatedId = 1;
+            _jsonApiContextMock
+                .Setup(m => m.ContextGraph)
+                .Returns(_options.ContextGraph);
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var entity = new Model
+            {
+                RelatedModel = new RelatedModel
+                {
+                    Id = relatedId
+                }
+            };
+
+            // act
+            var document = documentBuilder.Build(entity);
+
+            // assert
+            var relationshipData = document.Data.Relationships[relationshipName];
+            Assert.NotNull(relationshipData);
+            Assert.NotNull(relationshipData.SingleData);
+            Assert.NotNull(relationshipData.SingleData);
+            Assert.Equal(relatedId.ToString(), relationshipData.SingleData.Id);
+            Assert.Equal(relationshipName, relationshipData.SingleData.Type);
         }
 
         [Fact]
