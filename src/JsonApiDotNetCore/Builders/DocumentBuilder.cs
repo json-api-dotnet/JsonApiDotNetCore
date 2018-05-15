@@ -158,20 +158,17 @@ namespace JsonApiDotNetCore.Builders
                     if (r.DocumentLinks.HasFlag(Link.Related))
                         relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
                 }
+                
+                var navigationEntity = _jsonApiContext.ContextGraph
+                    .GetRelationship(entity, r.InternalRelationshipName);
 
-                if (RelationshipIsIncluded(r.PublicRelationshipName))
-                {
-                    var navigationEntity = _jsonApiContext.ContextGraph
-                        .GetRelationship(entity, r.InternalRelationshipName);
-
-                    if (navigationEntity == null)
-                        relationshipData.SingleData = null;
-                    else if (navigationEntity is IEnumerable)
-                        relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
-                    else
-                        relationshipData.SingleData = GetRelationship(navigationEntity);
-                }
-
+                if (navigationEntity == null)
+                    relationshipData.SingleData = null;
+                else if (navigationEntity is IEnumerable)
+                    relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
+                else
+                    relationshipData.SingleData = GetRelationship(navigationEntity);
+                
                 data.Relationships.Add(r.PublicRelationshipName, relationshipData);
             });
         }
