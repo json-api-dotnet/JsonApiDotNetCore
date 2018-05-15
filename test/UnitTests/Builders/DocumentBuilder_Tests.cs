@@ -60,7 +60,7 @@ namespace UnitTests
         [Fact]
         public void Includes_Paging_Links_By_Default()
         {
-            // arrange            
+            // arrange
             _pageManager.PageSize = 1;
             _pageManager.TotalRecords = 1;
             _pageManager.CurrentPage = 1;
@@ -126,7 +126,8 @@ namespace UnitTests
         public void Related_Data_Included_In_Relationships_By_Default()
         {
             // arrange
-            const string relationshipName = "related-models";
+            const string relatedTypeName = "related-models";
+            const string relationshipName = "related-model";
             const int relatedId = 1;
             _jsonApiContextMock
                 .Setup(m => m.ContextGraph)
@@ -150,7 +151,7 @@ namespace UnitTests
             Assert.NotNull(relationshipData.SingleData);
             Assert.NotNull(relationshipData.SingleData);
             Assert.Equal(relatedId.ToString(), relationshipData.SingleData.Id);
-            Assert.Equal(relationshipName, relationshipData.SingleData.Type);
+            Assert.Equal(relatedTypeName, relationshipData.SingleData.Type);
         }
 
         [Fact]
@@ -177,12 +178,12 @@ namespace UnitTests
 
 
         [Theory]
-        [InlineData(null,null,true)]
-        [InlineData(false,null,true)]
-        [InlineData(true,null,false)]
-        [InlineData(null,"foo",true)]
-        [InlineData(false,"foo",true)]
-        [InlineData(true,"foo",true)]
+        [InlineData(null, null, true)]
+        [InlineData(false, null, true)]
+        [InlineData(true, null, false)]
+        [InlineData(null, "foo", true)]
+        [InlineData(false, "foo", true)]
+        [InlineData(true, "foo", true)]
         public void DocumentBuilderOptions(bool? omitNullValuedAttributes,
             string attributeValue,
             bool resultContainsAttribute)
@@ -194,7 +195,7 @@ namespace UnitTests
                     .Returns(new DocumentBuilderOptions(omitNullValuedAttributes.Value));
             }
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, null, omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
-            var document = documentBuilder.Build(new Model(){StringProperty = attributeValue});
+            var document = documentBuilder.Build(new Model() { StringProperty = attributeValue });
 
             Assert.Equal(resultContainsAttribute, document.Data.Attributes.ContainsKey("StringProperty"));
         }
