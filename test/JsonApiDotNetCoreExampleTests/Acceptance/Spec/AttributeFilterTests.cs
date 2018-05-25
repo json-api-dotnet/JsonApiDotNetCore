@@ -129,7 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(deserializedTodoItems.Count(), todoItems.Count() -1);
+            Assert.Equal(deserializedTodoItems.Count, todoItems.Count() -1);
             Assert.False(deserializedTodoItems.Any(i => i.GuidProperty == lastTodoItem.GuidProperty));
         }
     }
