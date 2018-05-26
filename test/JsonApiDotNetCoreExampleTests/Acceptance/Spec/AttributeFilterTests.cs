@@ -111,13 +111,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
-            var todoItems = _todoItemFaker.Generate(5); 
-            context.TodoItems.AddRange(todoItems);
+            var todoItem = _todoItemFaker.Generate();
+            context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var lastTodoItem = context.TodoItems.Last();
+            var totalCount = context.TodoItems.Count();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[guid-property]=ne:{lastTodoItem.GuidProperty}";
+            var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[ordinal]=ne:{todoItem.Ordinal}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // act
@@ -129,8 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(deserializedTodoItems.Count, todoItems.Count() -1);
-            Assert.False(deserializedTodoItems.Any(i => i.GuidProperty == lastTodoItem.GuidProperty));
+            Assert.False(deserializedTodoItems.Any(i => i.Ordinal == todoItem.Ordinal));
         }
     }
 }
