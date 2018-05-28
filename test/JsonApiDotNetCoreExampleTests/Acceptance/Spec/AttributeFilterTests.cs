@@ -105,5 +105,31 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [Fact]
+        public async Task Can_Filter_On_Not_Equal_Values()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var todoItem = _todoItemFaker.Generate();
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
+            var totalCount = context.TodoItems.Count();
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[ordinal]=ne:{todoItem.Ordinal}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedTodoItems = _fixture
+                .GetService<IJsonApiDeSerializer>()
+                .DeserializeList<TodoItem>(body);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.False(deserializedTodoItems.Any(i => i.Ordinal == todoItem.Ordinal));
+        }
     }
 }
