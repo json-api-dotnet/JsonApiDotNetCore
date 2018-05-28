@@ -195,6 +195,10 @@ namespace JsonApiDotNetCore.Extensions
                 case FilterOperations.like:
                     body = Expression.Call(left, "Contains", null, right);
                     break;
+                    // {model.Id != 1}
+                case FilterOperations.ne:
+                    body = Expression.NotEqual(left, right);
+                    break;
                 default:
                     throw new JsonApiException(500, $"Unknown filter operation {operation}");
             }
