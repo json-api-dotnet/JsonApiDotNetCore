@@ -276,6 +276,8 @@ namespace JsonApiDotNetCore.Builders
                 return null;
 
             var relatedContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(hasOne.Type);
+            if (relatedContextEntity == null) // TODO: this should probably be a debug log at minimum
+                return null;
 
             return new ResourceIdentifierObject
             {
