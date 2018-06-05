@@ -175,7 +175,7 @@ namespace JsonApiDotNetCore.Serialization
             foreach (var attr in contextEntity.Relationships)
             {
                 entity = attr.IsHasOne
-                    ? SetHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships)
+                    ? SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, contextEntity, relationships)
                     : SetHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
             }
 
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object SetHasOneRelationship(object entity,
             PropertyInfo[] entityProperties,
-            RelationshipAttribute attr,
+            HasOneAttribute attr,
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships)
         {
@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 var newValue = rio.Id;
 
-                var foreignKey = attr.InternalRelationshipName + "Id";
+                var foreignKey = attr.IdentifiablePropertyName;
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
                 if (entityProperty == null)
                     throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");

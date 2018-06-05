@@ -155,6 +155,35 @@ namespace UnitTests
         }
 
         [Fact]
+        public void IndependentIdentifier__Included_In_HasOne_Relationships_By_Default()
+        {
+            // arrange
+            const string relatedTypeName = "related-models";
+            const string relationshipName = "related-model";
+            const int relatedId = 1;
+            _jsonApiContextMock
+                .Setup(m => m.ContextGraph)
+                .Returns(_options.ContextGraph);
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var entity = new Model
+            {
+                RelatedModelId = relatedId
+            };
+
+            // act
+            var document = documentBuilder.Build(entity);
+
+            // assert
+            var relationshipData = document.Data.Relationships[relationshipName];
+            Assert.NotNull(relationshipData);
+            Assert.NotNull(relationshipData.SingleData);
+            Assert.NotNull(relationshipData.SingleData);
+            Assert.Equal(relatedId.ToString(), relationshipData.SingleData.Id);
+            Assert.Equal(relatedTypeName, relationshipData.SingleData.Type);
+        }
+
+        [Fact]
         public void Build_Can_Build_Arrays()
         {
             var entities = new[] { new Model() };

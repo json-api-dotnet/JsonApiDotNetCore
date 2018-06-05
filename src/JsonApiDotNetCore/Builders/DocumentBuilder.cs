@@ -13,9 +13,9 @@ namespace JsonApiDotNetCore.Builders
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IContextGraph _contextGraph;
         private readonly IRequestMeta _requestMeta;
-        private readonly DocumentBuilderOptions _documentBuilderOptions; 
+        private readonly DocumentBuilderOptions _documentBuilderOptions;
 
-        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta=null, IDocumentBuilderOptionsProvider documentBuilderOptionsProvider=null)
+        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta = null, IDocumentBuilderOptionsProvider documentBuilderOptionsProvider = null)
         {
             _jsonApiContext = jsonApiContext;
             _contextGraph = jsonApiContext.ContextGraph;
@@ -143,34 +143,42 @@ namespace JsonApiDotNetCore.Builders
         private void AddRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)
         {
             data.Relationships = new Dictionary<string, RelationshipData>();
+            contextEntity.Relationships.ForEach(r =>
+                data.Relationships.Add(
+                    r.PublicRelationshipName,
+                    GetRelationshipData(r, contextEntity, entity)
+                )
+            );
+        }
+
+        private RelationshipData GetRelationshipData(RelationshipAttribute attr, ContextEntity contextEntity, IIdentifiable entity)
+        {
             var linkBuilder = new LinkBuilder(_jsonApiContext);
 
-            contextEntity.Relationships.ForEach(r =>
+            var relationshipData = new RelationshipData();
+
+            if (attr.DocumentLinks.HasFlag(Link.None) == false)
             {
-                var relationshipData = new RelationshipData();
+                relationshipData.Links = new Links();
+                if (attr.DocumentLinks.HasFlag(Link.Self))
+                    relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
 
-                if (r.DocumentLinks.HasFlag(Link.None) == false)
-                {
-                    relationshipData.Links = new Links();
-                    if (r.DocumentLinks.HasFlag(Link.Self))
-                        relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
+                if (attr.DocumentLinks.HasFlag(Link.Related))
+                    relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
+            }
 
-                    if (r.DocumentLinks.HasFlag(Link.Related))
-                        relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, r.PublicRelationshipName);
-                }
-                
-                var navigationEntity = _jsonApiContext.ContextGraph
-                    .GetRelationship(entity, r.InternalRelationshipName);
+            // this only includes the navigation property, we need to actually check the navigation property Id
+            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, attr.InternalRelationshipName);
+            if (navigationEntity == null)
+                relationshipData.SingleData = attr.IsHasOne
+                    ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
+                    : null;
+            else if (navigationEntity is IEnumerable)
+                relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
+            else
+                relationshipData.SingleData = GetRelationship(navigationEntity);
 
-                if (navigationEntity == null)
-                    relationshipData.SingleData = null;
-                else if (navigationEntity is IEnumerable)
-                    relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
-                else
-                    relationshipData.SingleData = GetRelationship(navigationEntity);
-                
-                data.Relationships.Add(r.PublicRelationshipName, relationshipData);
-            });
+            return relationshipData;
         }
 
         private List<DocumentData> GetIncludedEntities(List<DocumentData> included, ContextEntity contextEntity, IIdentifiable entity)
@@ -240,22 +248,41 @@ namespace JsonApiDotNetCore.Builders
             var relationships = new List<ResourceIdentifierObject>();
             foreach (var entity in entities)
             {
-                relationships.Add(new ResourceIdentifierObject {
+                relationships.Add(new ResourceIdentifierObject
+                {
                     Type = typeName.EntityName,
                     Id = ((IIdentifiable)entity).StringId
                 });
             }
             return relationships;
         }
+
         private ResourceIdentifierObject GetRelationship(object entity)
         {
             var objType = entity.GetType();
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
-
-            return new ResourceIdentifierObject {
-                Type = typeName.EntityName,
+            return new ResourceIdentifierObject
+            {
+                Type = contextEntity.EntityName,
                 Id = ((IIdentifiable)entity).StringId
+            };
+        }
+
+        private ResourceIdentifierObject GetIndependentRelationshipIdentifier(HasOneAttribute hasOne, IIdentifiable entity)
+        {
+            var independentRelationshipIdentifier = hasOne.GetIdentifiablePropertyValue(entity);
+            if (independentRelationshipIdentifier == null)
+                return null;
+
+            var relatedContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(hasOne.Type);
+            if (relatedContextEntity == null) // TODO: this should probably be a debug log at minimum
+                return null;
+
+            return new ResourceIdentifierObject
+            {
+                Type = relatedContextEntity.EntityName,
+                Id = independentRelationshipIdentifier.ToString()
             };
         }
     }
