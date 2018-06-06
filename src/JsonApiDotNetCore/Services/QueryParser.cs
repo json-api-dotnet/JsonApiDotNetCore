@@ -85,8 +85,8 @@ namespace JsonApiDotNetCore.Services
             var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             // InArray case
-            var op = GetFilterOperation(value);
-            if (op == FilterOperations.@in.ToString())
+            string op = GetFilterOperation(value);
+            if (string.Equals(op, FilterOperations.@in.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 (var operation, var filterValue) = ParseFilterOperation(value);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
@@ -232,16 +232,17 @@ namespace JsonApiDotNetCore.Services
 
         private string GetFilterOperation(string value)
         {
-            var operation = value.Split(QueryConstants.COLON);
+            var values = value.Split(QueryConstants.COLON);
 
-            if (operation.Length == 1)
+            if (values.Length == 1)
                 return string.Empty;
 
+            var operation = values[0];
             // remove prefix from value
-            if (Enum.TryParse(operation[0], out FilterOperations op) == false)
+            if (Enum.TryParse(operation, out FilterOperations op) == false)
                 return string.Empty;
 
-            return operation[0];
+            return operation;
         }
 
         private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)

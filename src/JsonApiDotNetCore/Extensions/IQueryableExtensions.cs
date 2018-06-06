@@ -12,6 +12,23 @@ namespace JsonApiDotNetCore.Extensions
     // ReSharper disable once InconsistentNaming
     public static class IQueryableExtensions
     {
+        private static MethodInfo _containsMethod;
+        private static MethodInfo ContainsMethod
+        {
+            get
+            {
+                if (_containsMethod == null)
+                {
+                    _containsMethod = typeof(Enumerable)
+                      .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                      .Where(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Count() == 2)
+                      .First();
+                }
+                return _containsMethod;
+            }
+        }
+
+
         public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)
@@ -238,17 +255,7 @@ namespace JsonApiDotNetCore.Extensions
             else
                 member = Expression.Property(entity, fieldname);
 
-            var containsMethods = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public).Where(m => m.Name == "Contains");
-            MethodInfo method = null;
-            foreach (var m in containsMethods)
-            {
-                if (m.GetParameters().Count() == 2)
-                {
-                    method = m;
-                    break;
-                }
-            }
-            method = method.MakeGenericMethod(member.Type);
+            var method = ContainsMethod.MakeGenericMethod(member.Type);
             var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
 
             var exprContains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });

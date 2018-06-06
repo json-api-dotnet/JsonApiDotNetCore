@@ -139,12 +139,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
-            var todoItems = _todoItemFaker.Generate(3);
+            var todoItems = _todoItemFaker.Generate(5);
             var guids = new List<Guid>();
+            var notInGuids = new List<Guid>();
             foreach (var item in todoItems)
             {
                 context.TodoItems.Add(item);
-                guids.Add(item.GuidProperty);
+                // Exclude 2 items
+                if (guids.Count < (todoItems.Count() - 2))
+                    guids.Add(item.GuidProperty);
+                else 
+                    notInGuids.Add(item.GuidProperty);
             }
             context.SaveChanges();
 
@@ -164,7 +169,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(guids.Count(), deserializedTodoItems.Count());
             foreach (var item in deserializedTodoItems)
+            {
                 Assert.True(guids.Contains(item.GuidProperty));
+                Assert.False(notInGuids.Contains(item.GuidProperty));
+            }
         }
 
         [Fact]
