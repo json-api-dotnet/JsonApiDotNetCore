@@ -82,14 +82,23 @@ namespace JsonApiDotNetCore.Services
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
             var queries = new List<FilterQuery>();
-
             var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
-            var values = value.Split(QueryConstants.COMMA);
-            foreach (var val in values)
+            // InArray case
+            string op = GetFilterOperation(value);
+            if (string.Equals(op, FilterOperations.@in.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                (var operation, var filterValue) = ParseFilterOperation(val);
-                queries.Add(new FilterQuery(propertyName, filterValue, operation));
+                (var operation, var filterValue) = ParseFilterOperation(value);
+                queries.Add(new FilterQuery(propertyName, filterValue, op));
+            }
+            else
+            {
+                var values = value.Split(QueryConstants.COMMA);
+                foreach (var val in values)
+                {
+                    (var operation, var filterValue) = ParseFilterOperation(val);
+                    queries.Add(new FilterQuery(propertyName, filterValue, operation));
+                }
             }
 
             return queries;
@@ -100,19 +109,15 @@ namespace JsonApiDotNetCore.Services
             if (value.Length < 3)
                 return (string.Empty, value);
 
-            var operation = value.Split(QueryConstants.COLON);
+            var operation = GetFilterOperation(value);
+            var values = value.Split(QueryConstants.COLON);
 
-            if (operation.Length == 1)
+            if (string.IsNullOrEmpty(operation))
                 return (string.Empty, value);
 
-            // remove prefix from value
-            if (Enum.TryParse(operation[0], out FilterOperations op) == false)
-                return (string.Empty, value);
+            value = string.Join(QueryConstants.COLON_STR, values.Skip(1));
 
-            var prefix = operation[0];
-            value = string.Join(QueryConstants.COLON_STR, operation.Skip(1));
-
-            return (prefix, value);
+            return (operation, value);
         }
 
         protected virtual PageQuery ParsePageQuery(PageQuery pageQuery, string key, string value)
@@ -223,6 +228,21 @@ namespace JsonApiDotNetCore.Services
             {
                 throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
             }
+        }
+
+        private string GetFilterOperation(string value)
+        {
+            var values = value.Split(QueryConstants.COLON);
+
+            if (values.Length == 1)
+                return string.Empty;
+
+            var operation = values[0];
+            // remove prefix from value
+            if (Enum.TryParse(operation, out FilterOperations op) == false)
+                return string.Empty;
+
+            return operation;
         }
 
         private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)

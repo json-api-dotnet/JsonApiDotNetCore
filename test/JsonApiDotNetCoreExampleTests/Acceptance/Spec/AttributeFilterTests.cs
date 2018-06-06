@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -130,6 +132,83 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.False(deserializedTodoItems.Any(i => i.Ordinal == todoItem.Ordinal));
+        }
+
+        [Fact]
+        public async Task Can_Filter_On_In_Array_Values()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var todoItems = _todoItemFaker.Generate(5);
+            var guids = new List<Guid>();
+            var notInGuids = new List<Guid>();
+            foreach (var item in todoItems)
+            {
+                context.TodoItems.Add(item);
+                // Exclude 2 items
+                if (guids.Count < (todoItems.Count() - 2))
+                    guids.Add(item.GuidProperty);
+                else 
+                    notInGuids.Add(item.GuidProperty);
+            }
+            context.SaveChanges();
+
+            var totalCount = context.TodoItems.Count();
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[guid-property]=in:{string.Join(",", guids)}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedTodoItems = _fixture
+                .GetService<IJsonApiDeSerializer>()
+                .DeserializeList<TodoItem>(body);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(guids.Count(), deserializedTodoItems.Count());
+            foreach (var item in deserializedTodoItems)
+            {
+                Assert.True(guids.Contains(item.GuidProperty));
+                Assert.False(notInGuids.Contains(item.GuidProperty));
+            }
+        }
+
+        [Fact]
+        public async Task Can_Filter_On_Related_In_Array_Values()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var todoItems = _todoItemFaker.Generate(3);
+            var ownerFirstNames = new List<string>();
+            foreach (var item in todoItems)
+            {
+                var person = _personFaker.Generate();
+                ownerFirstNames.Add(person.FirstName);
+                item.Owner = person;
+                context.TodoItems.Add(item);               
+            }
+            context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?include=owner&filter[owner.first-name]=in:{string.Join(",", ownerFirstNames)}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var included = documents.Included;
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(ownerFirstNames.Count(), documents.Data.Count());
+            Assert.NotNull(included);
+            Assert.NotEmpty(included);
+            foreach (var item in included)
+                Assert.True(ownerFirstNames.Contains(item.Attributes["first-name"]));
+
         }
     }
 }
