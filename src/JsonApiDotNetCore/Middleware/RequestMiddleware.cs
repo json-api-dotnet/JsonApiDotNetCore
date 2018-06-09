@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
@@ -52,10 +53,23 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static bool ContainsMediaTypeParameters(string mediaType)
+        internal static bool ContainsMediaTypeParameters(string mediaType)
         {
-            var mediaTypeArr = mediaType.Split(';');
-            return (mediaTypeArr[0] ==  Constants.ContentType && mediaTypeArr.Length == 2);
+            var incomingMediaTypeSpan = mediaType.AsSpan();
+
+            // if the content type is not application/vnd.api+json then continue on
+            if(incomingMediaTypeSpan.Length < Constants.ContentType.Length)
+                return false;
+
+            var incomingContentType = incomingMediaTypeSpan.Slice(0, Constants.ContentType.Length);
+            if(incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)
+                return false;
+
+            // anything appended to "application/vnd.api+json;" will be considered a media type param
+            return (
+                incomingMediaTypeSpan.Length >= Constants.ContentType.Length + 2
+                && incomingMediaTypeSpan[Constants.ContentType.Length] == ';'
+            );
         }
 
         private static void FlushResponse(HttpContext context, int statusCode)

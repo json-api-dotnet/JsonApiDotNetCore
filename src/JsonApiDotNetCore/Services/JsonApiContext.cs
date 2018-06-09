@@ -65,7 +65,6 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ContextGraph.");
 
             var context = _httpContextAccessor.HttpContext;
-            var path = context.Request.Path.Value.Split('/');
 
             if (context.Request.Query.Count > 0)
             {
@@ -73,13 +72,47 @@ namespace JsonApiDotNetCore.Services
                 IncludedRelationships = QuerySet.IncludedRelationships;
             }
 
-            var linkBuilder = new LinkBuilder(this);
-            BasePath = linkBuilder.GetBasePath(context, _controllerContext.RequestEntity.EntityName);
+            BasePath = new LinkBuilder(this).GetBasePath(context, _controllerContext.RequestEntity.EntityName);
             PageManager = GetPageManager();
-            IsRelationshipPath = path[path.Length - 2] == "relationships";
+            IsRelationshipPath = PathIsRelationship(context.Request.Path.Value);
+
             return this;
         }
 
+        internal static bool PathIsRelationship(string requestPath)
+        {
+            // while(!Debugger.IsAttached) { Thread.Sleep(1000); }
+            const string relationships = "relationships";
+            const char pathSegmentDelimiter = '/';
+
+            var span = requestPath.AsSpan();
+            
+            // we need to iterate over the string, from the end,
+            // checking whether or not the 2nd to last path segment
+            // is "relationships"
+            // -2 is chosen in case the path ends with '/'
+            for(var i = requestPath.Length - 2; i >= 0; i--)
+            {
+                // if there are not enough characters left in the path to 
+                // contain "relationships"
+                if(i < relationships.Length) 
+                    return false;
+
+                // we have found the first instance of '/'
+                if(span[i] == pathSegmentDelimiter)
+                {
+                    // in the case of a "relationships" route, the next
+                    // path segment will be "relationships"
+                    return (
+                        span.Slice(i - relationships.Length, relationships.Length)
+                            .SequenceEqual(relationships.AsSpan())
+                    );
+                }
+            }
+
+            return false;
+        }
+        
         private PageManager GetPageManager()
         {
             if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))

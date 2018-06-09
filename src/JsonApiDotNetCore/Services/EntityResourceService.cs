@@ -80,10 +80,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
-        {
-            _jsonApiContext.IsRelationshipData = true;
-            return await GetRelationshipAsync(id, relationshipName);
-        }
+            => await GetRelationshipAsync(id, relationshipName);
 
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
@@ -136,7 +133,7 @@ namespace JsonApiDotNetCore.Services
                 .Relationships
                 .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
 
-            var relationshipIds = relationships.Select(r => r.Id?.ToString());
+            var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Services;
@@ -11,6 +12,23 @@ namespace JsonApiDotNetCore.Extensions
     // ReSharper disable once InconsistentNaming
     public static class IQueryableExtensions
     {
+        private static MethodInfo _containsMethod;
+        private static MethodInfo ContainsMethod
+        {
+            get
+            {
+                if (_containsMethod == null)
+                {
+                    _containsMethod = typeof(Enumerable)
+                      .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                      .Where(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Count() == 2)
+                      .First();
+                }
+                return _containsMethod;
+            }
+        }
+
+
         public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)
@@ -101,21 +119,30 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                // convert the incoming value to the target value type
-                // "1" -> 1
-                var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, property.PropertyType);
-                // {model}
-                var parameter = Expression.Parameter(concreteType, "model");
-                // {model.Id}
-                var left = Expression.PropertyOrField(parameter, property.Name);
-                // {1}
-                var right = Expression.Constant(convertedValue, property.PropertyType);
+                if (filterQuery.FilterOperation == FilterOperations.@in )
+                {
+                    string[] propertyValues = filterQuery.PropertyValue.Split(',');
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name);
 
-                var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
+                    return source.Where(lambdaIn);
+                }
+                else
+                {   // convert the incoming value to the target value type
+                    // "1" -> 1
+                    var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, property.PropertyType);
+                    // {model}
+                    var parameter = Expression.Parameter(concreteType, "model");
+                    // {model.Id}
+                    var left = Expression.PropertyOrField(parameter, property.Name);
+                    // {1}
+                    var right = Expression.Constant(convertedValue, property.PropertyType);
 
-                var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+                    var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
 
-                return source.Where(lambda);
+                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                    return source.Where(lambda);
+                }
             }
             catch (FormatException)
             {
@@ -140,26 +167,36 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                // convert the incoming value to the target value type
-                // "1" -> 1
-                var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, relatedAttr.PropertyType);
-                // {model}
-                var parameter = Expression.Parameter(concreteType, "model");
+                if (filterQuery.FilterOperation == FilterOperations.@in)
+                {
+                    string[] propertyValues = filterQuery.PropertyValue.Split(',');
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, relation.Name);
 
-                // {model.Relationship}
-                var leftRelationship = Expression.PropertyOrField(parameter, relation.Name);
+                    return source.Where(lambdaIn);
+                }
+                else
+                {
+                    // convert the incoming value to the target value type
+                    // "1" -> 1
+                    var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, relatedAttr.PropertyType);
+                    // {model}
+                    var parameter = Expression.Parameter(concreteType, "model");
 
-                // {model.Relationship.Attr}
-                var left = Expression.PropertyOrField(leftRelationship, relatedAttr.Name);
+                    // {model.Relationship}
+                    var leftRelationship = Expression.PropertyOrField(parameter, relation.Name);
 
-                // {1}
-                var right = Expression.Constant(convertedValue, relatedAttr.PropertyType);
+                    // {model.Relationship.Attr}
+                    var left = Expression.PropertyOrField(leftRelationship, relatedAttr.Name);
 
-                var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
+                    // {1}
+                    var right = Expression.Constant(convertedValue, relatedAttr.PropertyType);
 
-                var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+                    var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
 
-                return source.Where(lambda);
+                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                    return source.Where(lambda);
+                }
             }
             catch (FormatException)
             {
@@ -195,11 +232,34 @@ namespace JsonApiDotNetCore.Extensions
                 case FilterOperations.like:
                     body = Expression.Call(left, "Contains", null, right);
                     break;
+                    // {model.Id != 1}
+                case FilterOperations.ne:
+                    body = Expression.NotEqual(left, right);
+                    break;
                 default:
                     throw new JsonApiException(500, $"Unknown filter operation {operation}");
             }
 
             return body;
+        }
+
+        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, string relationName = null)
+        {
+            ParameterExpression entity = Expression.Parameter(typeof(TSource), "entity");
+            MemberExpression member;
+            if (!string.IsNullOrEmpty(relationName))
+            {
+                var relation = Expression.PropertyOrField(entity, relationName);
+                member = Expression.Property(relation, fieldname);
+            }
+            else
+                member = Expression.Property(entity, fieldname);
+
+            var method = ContainsMethod.MakeGenericMethod(member.Type);
+            var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
+
+            var exprContains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
+            return Expression.Lambda<Func<TSource, bool>>(exprContains, entity);
         }
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)

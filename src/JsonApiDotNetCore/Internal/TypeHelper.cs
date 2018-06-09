@@ -64,5 +64,23 @@ namespace JsonApiDotNetCore.Internal
         {
             return (T)ConvertType(value, typeof(T));
         }
+
+        /// <summary>
+        /// Convert collection of query string params to Collection of concrete Type
+        /// </summary>
+        /// <param name="values">Collection like ["10","20","30"]</param>
+        /// <param name="type">Non array type. For e.g. int</param>
+        /// <returns>Collection of concrete type</returns>
+        public static IList ConvertListType(IEnumerable<string> values, Type type)
+        {
+            var listType = typeof(List<>).MakeGenericType(type);
+            IList list = (IList)Activator.CreateInstance(listType);
+            foreach (var value in values)
+            {
+                list.Add(ConvertType(value, type));
+            }
+
+            return list;
+        }
     }
 }
