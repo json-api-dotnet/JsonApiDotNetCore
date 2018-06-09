@@ -19,6 +19,28 @@ namespace JsonApiDotNetCore.Models
         public Link DocumentLinks { get; } = Link.All;
         public bool CanInclude { get; }
 
+        public bool TryGetHasOne(out HasOneAttribute result)
+        {
+            if (IsHasOne)
+            {
+                result = (HasOneAttribute)this;
+                return true;
+            }
+            result = null;
+            return false;
+        }
+
+        public bool TryGetHasMany(out HasManyAttribute result)
+        {
+            if (IsHasMany)
+            {
+                result = (HasManyAttribute)this;
+                return true;
+            }
+            result = null;
+            return false;
+        }
+
         public abstract void SetValue(object entity, object newValue);
 
         public override string ToString()

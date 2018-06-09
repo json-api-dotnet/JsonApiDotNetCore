@@ -8,6 +8,8 @@ namespace JsonApiDotNetCore.Internal.Query
         gt = 2,
         le = 3,
         ge = 4,
-        like = 5
+        like = 5,
+        ne = 6,
+        @in = 7, // prefix with @ to use keyword
     }
 }

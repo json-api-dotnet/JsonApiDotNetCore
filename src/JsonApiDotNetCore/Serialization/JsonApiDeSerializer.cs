@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Serialization
             foreach (var attr in contextEntity.Relationships)
             {
                 entity = attr.IsHasOne
-                    ? SetHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships)
+                    ? SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, contextEntity, relationships)
                     : SetHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
             }
 
@@ -191,7 +191,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object SetHasOneRelationship(object entity,
             PropertyInfo[] entityProperties,
-            RelationshipAttribute attr,
+            HasOneAttribute attr,
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships)
         {
@@ -207,20 +207,25 @@ namespace JsonApiDotNetCore.Serialization
 
                 var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
 
-                if (rio == null) return entity;
-
-                var newValue = rio.Id;
-
-                var foreignKey = attr.InternalRelationshipName + "Id";
+                var foreignKey = attr.IdentifiablePropertyName;
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
-                if (entityProperty == null)
+                if (entityProperty == null && rio != null)
                     throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
 
-                var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+                if (entityProperty != null)
+                {
+                    // e.g. PATCH /articles
+                    // {... { "relationships":{ "Owner": { "data" :null } } } }
+                    if (rio == null && Nullable.GetUnderlyingType(entityProperty.PropertyType) == null)
+                        throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null.");
 
-                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+                    var newValue = rio?.Id ?? null;
+                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
 
-                entityProperty.SetValue(entity, convertedValue);
+                    _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+
+                    entityProperty.SetValue(entity, convertedValue);
+                }
             }
 
             return entity;
