@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Services
                 .Relationships
                 .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
 
-            var relationshipIds = relationships.Select(r => r.Id?.ToString());
+            var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
         }
