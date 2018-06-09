@@ -345,8 +345,6 @@ namespace UnitTests.Serialization
             public int IndependentId { get; set; }
         }
 
-
-
         [Fact]
         public void Can_Deserialize_Object_With_HasManyRelationship()
         {
