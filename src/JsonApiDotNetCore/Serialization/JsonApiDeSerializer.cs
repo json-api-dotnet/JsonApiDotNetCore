@@ -209,20 +209,23 @@ namespace JsonApiDotNetCore.Serialization
 
                 var foreignKey = attr.IdentifiablePropertyName;
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
-                if (entityProperty == null)
+                if (entityProperty == null && rio != null)
                     throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
 
-                // e.g. PATCH /articles
-                // {... { "relationships":{ "Owner": { "data" :null } } } }
-                if (rio == null && Nullable.GetUnderlyingType(entityProperty.PropertyType) == null)
-                    throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null.");
+                if (entityProperty != null)
+                {
+                    // e.g. PATCH /articles
+                    // {... { "relationships":{ "Owner": { "data" :null } } } }
+                    if (rio == null && Nullable.GetUnderlyingType(entityProperty.PropertyType) == null)
+                        throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null.");
 
-                var newValue = rio?.Id ?? null;
-                var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
+                    var newValue = rio?.Id ?? null;
+                    var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
 
-                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+                    _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
 
-                entityProperty.SetValue(entity, convertedValue);
+                    entityProperty.SetValue(entity, convertedValue);
+                }
             }
 
             return entity;
