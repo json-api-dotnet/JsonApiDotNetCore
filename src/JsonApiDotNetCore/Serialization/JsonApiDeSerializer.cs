@@ -207,15 +207,17 @@ namespace JsonApiDotNetCore.Serialization
 
                 var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
 
-                if (rio == null) return entity;
-
-                var newValue = rio.Id;
-
                 var foreignKey = attr.IdentifiablePropertyName;
                 var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
                 if (entityProperty == null)
                     throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
 
+                // e.g. PATCH /articles
+                // {... { "relationships":{ "Owner": { "data" :null } } } }
+                if (rio == null && Nullable.GetUnderlyingType(entityProperty.PropertyType) == null)
+                    throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null.");
+
+                var newValue = rio?.Id ?? null;
                 var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
 
                 _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;

@@ -25,10 +25,7 @@ namespace UnitTests.Extensions
             var services = new ServiceCollection();
             var jsonApiOptions = new JsonApiOptions();
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseInMemoryDatabase();
-            }, ServiceLifetime.Transient);
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
 
             // act
             services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);

@@ -39,9 +39,14 @@ namespace JsonApiDotNetCore.Models
             ? $"{InternalRelationshipName}Id"
             : _explicitIdentifiablePropertyName;
 
+        /// <summary>
+        /// Sets the value of the property identified by this attribute
+        /// </summary>
+        /// <param name="entity">The target object</param>
+        /// <param name="newValue">The new property value</param>
         public override void SetValue(object entity, object newValue)
         {
-            var propertyName = (newValue.GetType() == Type)
+            var propertyName = (newValue?.GetType() == Type)
                 ? InternalRelationshipName
                 : IdentifiablePropertyName;
 
