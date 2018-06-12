@@ -18,25 +18,32 @@ function CheckLastExitCode {
     }
 }
 
+function Run($exp) {
+    Invoke-Expression $exp
+    CheckLastExitCode
+}
+
+function BuildVerison($version) {
+    Write-Output "Testing project against ASP.Net Core $version"
+    $msBuildParams = "/p:TestProjectDependencyVersions=$version /p:NoWarn=NU1605"
+
+    Run "dotnet restore $msBuildParams"
+    Run "dotnet test ./test/UnitTests/UnitTests.csproj $msBuildParams"
+    Run "dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj $msBuildParams"
+    Run "dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj $msBuildParams"
+    Run "dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj $msBuildParams"
+}
+
 $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
-dotnet restore
+$supportedVersions = @("2.0.1", "2.1.0")
+foreach ($version in $supportedVersions) {
+	BuildVerison $version
+}
 
-dotnet test ./test/UnitTests/UnitTests.csproj
-CheckLastExitCode
-
-dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
-CheckLastExitCode
-
-dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj
-CheckLastExitCode
-
-dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj
-CheckLastExitCode
-
-dotnet build .\src\JsonApiDotNetCore -c Release
-CheckLastExitCode
+Run "dotnet restore .\src\JsonApiDotNetCore"
+Run "dotnet build .\src\JsonApiDotNetCore -c Release"
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
 
@@ -46,18 +53,15 @@ If($env:APPVEYOR_REPO_TAG -eq $true) {
 
     IF ([string]::IsNullOrWhitespace($revision)){
         Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
-        CheckLastExitCode
+        Run "dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"        
     }
     Else {
         Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision 
-        CheckLastExitCode
+        Run "dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
     }
 }
 Else { 
     Write-Output "VERSION-SUFFIX: alpha1-$revision"
     Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision"
-    dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision 
-    CheckLastExitCode
+    Run "dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision"
 }
