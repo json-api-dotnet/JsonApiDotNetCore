@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(MicrosoftLoggingVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
     <PackageReference Include="Npgsql" Version="$(NpgsqlVersion)" />
-    <PackageReference Include="Dapper" Version="1.50.2" />
+    <PackageReference Include="Dapper" Version="1.50.5" />
   </ItemGroup>
 
 </Project>
