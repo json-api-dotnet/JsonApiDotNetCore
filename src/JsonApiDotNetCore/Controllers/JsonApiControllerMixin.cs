@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public abstract class JsonApiControllerMixin : Controller
+    public abstract class JsonApiControllerMixin : ControllerBase
     {
         protected IActionResult UnprocessableEntity()
         {
