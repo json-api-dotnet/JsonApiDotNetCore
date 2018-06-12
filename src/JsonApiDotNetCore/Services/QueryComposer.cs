@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Query;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -14,8 +13,8 @@ namespace JsonApiDotNetCore.Services
         public string Compose(IJsonApiContext jsonApiContext)
         {
             string result = "";
-            if(jsonApiContext != null && jsonApiContext.QuerySet != null)
-            {                
+            if (jsonApiContext != null && jsonApiContext.QuerySet != null)
+            {
                 List<FilterQuery> filterQueries = jsonApiContext.QuerySet.Filters;
                 if (filterQueries.Count > 0)
                 {
