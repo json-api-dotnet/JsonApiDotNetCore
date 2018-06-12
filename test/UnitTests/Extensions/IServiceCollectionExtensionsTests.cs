@@ -10,12 +10,11 @@ using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using UnitTests;
 using Xunit;
+using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
+namespace UnitTests.Extensions
 {
     public class IServiceCollectionExtensionsTests
     {
@@ -26,10 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Unit.Extensions
             var services = new ServiceCollection();
             var jsonApiOptions = new JsonApiOptions();
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseMemoryCache(new MemoryCache(new MemoryCacheOptions()));
-            }, ServiceLifetime.Transient);
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
 
             // act
             services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);
