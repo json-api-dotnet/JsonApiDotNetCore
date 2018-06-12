@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>2.2.4</VersionPrefix>
+    <VersionPrefix>2.2.5</VersionPrefix>
     <TargetFrameworks>$(NetStandardVersion)</TargetFrameworks>
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
