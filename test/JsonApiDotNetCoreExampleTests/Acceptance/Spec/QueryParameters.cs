@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal(1, body.Errors.Count);
+            Assert.Single(body.Errors);
             Assert.Equal($"[{queryKey}, {queryValue}] is not a valid query.", body.Errors[0].Title);
         }
     }

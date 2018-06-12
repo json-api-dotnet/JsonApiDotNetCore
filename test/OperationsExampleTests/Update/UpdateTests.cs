@@ -52,7 +52,7 @@ namespace OperationsExampleTests.Update
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(data);
-            Assert.Equal(1, data.Operations.Count);
+            Assert.Single(data.Operations);
 
             var attrs = data.Operations.Single().DataObject.Attributes;
             Assert.Equal(updates.Name, attrs["name"]);

@@ -68,7 +68,7 @@ namespace OperationsExampleTests
             // for now, it is up to application implementations to perform validation and 
             // provide the proper HTTP response code
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            Assert.Equal(1, data.Errors.Count);
+            Assert.Single(data.Errors);
             Assert.Contains("operation[1] (add)", data.Errors[0].Title);
 
             var dbAuthors = await context.Authors.Where(a => a.Name == author.Name).ToListAsync();

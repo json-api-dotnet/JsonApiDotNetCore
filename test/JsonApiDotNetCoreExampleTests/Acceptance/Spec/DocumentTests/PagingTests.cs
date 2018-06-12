@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample;
@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
-using Person = JsonApiDotNetCoreExample.Models.Person;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using Bogus;
@@ -18,28 +17,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class PagingTests
     {
-        private TestFixture<TestStartup> _fixture;
-        private AppDbContext _context;
-        private Faker<Person> _personFaker;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<TodoItemCollection> _todoItemCollectionFaker;
-        private DateTime CurrentTime;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
 
         public PagingTests(TestFixture<TestStartup> fixture)
         {
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
-            _personFaker = new Faker<Person>()
-                .RuleFor(p => p.FirstName, f => f.Name.FirstName())
-                .RuleFor(p => p.LastName, f => f.Name.LastName());
-
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
-
-            _todoItemCollectionFaker = new Faker<TodoItemCollection>()
-                .RuleFor(t => t.Name, f => f.Company.CatchPhrase());
         }
 
         [Fact]
