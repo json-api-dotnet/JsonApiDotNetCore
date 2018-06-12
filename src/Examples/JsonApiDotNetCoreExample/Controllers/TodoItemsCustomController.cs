@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExample.Controllers
     }
 
     public class CustomJsonApiController<T, TId>
-    : Controller where T : class, IIdentifiable<TId>
+    : ControllerBase where T : class, IIdentifiable<TId>
     {
         private readonly ILogger _logger;
         private readonly IResourceService<T, TId> _resourceService;

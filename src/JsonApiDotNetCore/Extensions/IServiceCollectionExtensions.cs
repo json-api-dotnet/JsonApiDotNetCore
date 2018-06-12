@@ -23,20 +23,20 @@ namespace JsonApiDotNetCore.Extensions
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services)
             where TContext : DbContext
         {
-            var mvcBuilder = services.AddMvc();
-            return AddJsonApi<TContext>(services, (opt) => { }, mvcBuilder);
+            var mvcBuilder = services.AddMvcCore();
+            return AddJsonApi<TContext>(services, opt => { }, mvcBuilder);
         }
 
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options)
             where TContext : DbContext
         {
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvcCore();
             return AddJsonApi<TContext>(services, options, mvcBuilder);
         }
 
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
            Action<JsonApiOptions> options,
-           IMvcBuilder mvcBuilder) where TContext : DbContext
+           IMvcCoreBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
 
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IServiceCollection AddJsonApi(this IServiceCollection services,
             Action<JsonApiOptions> options,
-            IMvcBuilder mvcBuilder)
+            IMvcCoreBuilder mvcBuilder)
         {
             var config = new JsonApiOptions();
 

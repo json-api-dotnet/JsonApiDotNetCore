@@ -5,7 +5,7 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
 {
     [Route("[controller]")]
     [HttpReadOnly]
-    public class ReadOnlyController : Controller
+    public class ReadOnlyController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get() => Ok();
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
 
     [Route("[controller]")]
     [NoHttpPost]
-    public class NoHttpPostController : Controller
+    public class NoHttpPostController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get() => Ok();
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
 
     [Route("[controller]")]
     [NoHttpPatch]
-    public class NoHttpPatchController : Controller
+    public class NoHttpPatchController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get() => Ok();
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExample.Controllers.Restricted
 
     [Route("[controller]")]
     [NoHttpDelete]
-    public class NoHttpDeleteController : Controller
+    public class NoHttpDeleteController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get() => Ok();
