@@ -7,11 +7,6 @@ namespace JsonApiDotNetCore.Controllers
 {
     public abstract class JsonApiControllerMixin : ControllerBase
     {
-        protected IActionResult UnprocessableEntity()
-        {
-            return new StatusCodeResult(422);
-        }
-
         protected IActionResult Forbidden()
         {
             return new StatusCodeResult(403);
@@ -23,18 +18,19 @@ namespace JsonApiDotNetCore.Controllers
             {
                 Errors = new List<Error> { error }
             };
-            var result = new ObjectResult(errorCollection);
-            result.StatusCode = error.StatusCode;
 
-            return result;
+            return new ObjectResult(errorCollection)
+            {
+                StatusCode = error.StatusCode
+            };
         }
 
         protected IActionResult Errors(ErrorCollection errors)
         {
-            var result = new ObjectResult(errors);
-            result.StatusCode = GetErrorStatusCode(errors);
-
-            return result;
+            return new ObjectResult(errors)
+            {
+                StatusCode = GetErrorStatusCode(errors)
+            };
         }
 
         private int GetErrorStatusCode(ErrorCollection errors)

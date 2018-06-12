@@ -39,11 +39,6 @@ namespace JsonApiDotNetCoreExample.Controllers
         private readonly IResourceService<T, TId> _resourceService;
         private readonly IJsonApiContext _jsonApiContext;
 
-        protected IActionResult UnprocessableEntity()
-        {
-            return new StatusCodeResult(422);
-        }
-
         protected IActionResult Forbidden()
         {
             return new StatusCodeResult(403);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
-            Assert.Equal(1, documents.Included.Count);
+            Assert.Single(documents.Included);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
-            Assert.Equal(1, documents.Included.Count);
+            Assert.Single(documents.Included);
         }
 
         [Fact]
