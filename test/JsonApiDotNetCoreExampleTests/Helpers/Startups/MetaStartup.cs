@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Startups
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Trace);
+            loggerFactory.AddConsole(LogLevel.Warning);
 
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
