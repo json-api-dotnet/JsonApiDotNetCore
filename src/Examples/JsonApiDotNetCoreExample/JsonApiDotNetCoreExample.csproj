@@ -25,9 +25,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EFCoreToolsVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
   </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="$(EFCoreToolsVersion)" />
-  </ItemGroup>
-
 </Project>
