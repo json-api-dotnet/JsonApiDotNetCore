@@ -10,22 +10,21 @@ function Get-Version-Suffix-From-Tag
 }
 
 function CheckLastExitCode {
-    param ([int[]]$SuccessCodes = @(0), [scriptblock]$CleanupScript=$null)
+    param ([string]$Command, [int[]]$SuccessCodes = @(0), [scriptblock]$CleanupScript=$null)
 
     if ($SuccessCodes -notcontains $LastExitCode) {
-        $msg = "EXE RETURNED EXIT CODE $LastExitCode"
-        throw $msg
+        throw "$Command exited with $LastExitCode"
     }
 }
 
 function Run($exp) {
     Invoke-Expression $exp
-    CheckLastExitCode
+    CheckLastExitCode $exp
 }
 
 function BuildVerison($version) {
     Write-Output "Testing project against ASP.Net Core $version"
-    $msBuildParams = "/p:TestProjectDependencyVersions=$version /p:NoWarn=NU1605"
+    $msBuildParams = "/p:TestProjectDependencyVersions=$version /p:NoWarn=NU1605 /v:q"
 
     Run "dotnet restore $msBuildParams"
     Run "dotnet test ./test/UnitTests/UnitTests.csproj $msBuildParams"
