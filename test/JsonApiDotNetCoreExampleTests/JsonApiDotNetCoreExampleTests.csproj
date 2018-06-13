@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
     <ProjectReference Include="../../src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
-    <ProjectReference Include="..\UnitTests\UnitTests.csproj" />
+    <ProjectReference Include="../UnitTests/UnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,9 +25,8 @@
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
-    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
   </ItemGroup>
 </Project>

@@ -89,8 +89,10 @@ namespace JsonApiDotNetCore.Services
 
             if (relationshipName == null)
                 throw new JsonApiException(422, "Relationship name not specified.");
-
-            _logger.LogTrace($"Looking up '{relationshipName}'...");
+            if (_logger.IsEnabled(LogLevel.Trace))
+            {
+                _logger.LogTrace($"Looking up '{relationshipName}'...");
+            }
 
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
@@ -166,7 +168,10 @@ namespace JsonApiDotNetCore.Services
             if (!pageManager.IsPaginated)
                 return await _entities.ToListAsync(entities);
 
-            _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
+            if (_logger?.IsEnabled(LogLevel.Information) == true)
+            {
+                _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
+            }
 
             return await _entities.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage);
         }
