@@ -1,3 +1,6 @@
 <Project>
-  <Import Project="2.0.1.props" Condition="'$(PropsFileImported)'!='True'"/>
+  <!-- default props file -->
+  <Import Project="2.0.1.props" Condition="'$(TestProjectDependencyVersions)'==''"/>
+  <!-- test props file -->
+  <Import Project="$(TestProjectDependencyVersions).props" Condition="'$(TestProjectDependencyVersions)'!=''"/>
 </Project>
