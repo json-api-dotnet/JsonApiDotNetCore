@@ -15,12 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
     {
         public static string ToSql<TEntity>(this IQueryable<TEntity> query) where TEntity : class
         {
-            var efCoreVersion = FileVersionInfo.GetVersionInfo(typeof(QueryCompiler).Assembly.Location);
-            var majorMinor = $"{efCoreVersion.ProductMajorPart}.{efCoreVersion.ProductMinorPart}";
-
-            return majorMinor == "2.1"
-                ? QueryGenerator_2_1_0.ToSql(query)
-                : QueryGenerator_2_0_0.ToSql(query);
+#if DEPS_2_1_0
+            return QueryGenerator_2_1_0.ToSql(query);
+#else
+            return QueryGenerator_2_0_0.ToSql(query);
+#endif
         }
     }
 
@@ -61,6 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
         }
     }
 
+#if DEPS_2_1_0
     public static class QueryGenerator_2_1_0
     {
         private static readonly FieldInfo QueryCompilerField = typeof(EntityQueryProvider).GetTypeInfo().DeclaredFields.Single(x => x.Name == "_queryCompiler");
@@ -90,4 +90,5 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
             return modelVisitor.Queries.Join(Environment.NewLine + Environment.NewLine);
         }
     }
+#endif
 }

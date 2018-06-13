@@ -24,7 +24,7 @@ function Run($exp) {
 
 function BuildVerison($version) {
     Write-Output "Testing project against ASP.Net Core $version"
-    $msBuildParams = "/p:TestProjectDependencyVersions=$version /p:NoWarn=NU1605 /v:q"
+    $msBuildParams = "/p:TestProjectDependencyVersions=$version /p:NoWarn=NU1605 /v:minimal"
 
     Run "dotnet restore $msBuildParams"
     Run "dotnet test ./test/UnitTests/UnitTests.csproj $msBuildParams"

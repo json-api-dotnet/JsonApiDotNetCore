@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <PropsFileImported>True</PropsFileImported>
+    <DefineConstants>DEPS_2_0_1</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
