@@ -45,7 +45,11 @@ namespace JsonApiDotNetCore.Services
             var stringValue = GetFilterValue(key);
             if (stringValue == null)
             {
-                _logger.LogInformation($"'{key}' was not found in the query collection");
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation($"'{key}' was not found in the query collection");
+                }
+
                 return false;
             }
 
@@ -56,7 +60,12 @@ namespace JsonApiDotNetCore.Services
             }
             catch (FormatException)
             {
-                _logger.LogInformation($"'{value}' is not a valid '{typeof(T).Name}' value for query parameter {key}");
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation(
+                        $"'{value}' is not a valid '{typeof(T).Name}' value for query parameter {key}");
+                }
+
                 return false;
             }
         }
