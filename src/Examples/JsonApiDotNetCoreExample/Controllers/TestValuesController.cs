@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JsonApiDotNetCoreExample.Controllers
 {
     [Route("[controller]")]
-    public class TestValuesController : Controller
+    public class TestValuesController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get()
