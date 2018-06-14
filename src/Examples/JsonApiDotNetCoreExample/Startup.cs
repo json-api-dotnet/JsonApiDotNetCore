@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExample
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Trace);
+            loggerFactory.AddConsole(LogLevel.Warning);
 
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
@@ -57,7 +57,6 @@ namespace JsonApiDotNetCoreExample
             context.Database.EnsureCreated();
 
             loggerFactory.AddConsole(Config.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             app.UseJsonApi();
         }
