@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Condition="'$(TestProjectDependencyVersions)'!=''" Project="../../../$(TestProjectDependencyVersions).props" />
+
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <IsPackable>false</IsPackable>
