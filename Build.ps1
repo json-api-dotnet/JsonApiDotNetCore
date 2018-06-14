@@ -1,63 +1,75 @@
 # Gets the version suffix from the repo tag
 # example: v1.0.0-preview1-final => preview1-final
-function Get-Version-Suffix-From-Tag
-{
-  $tag=$env:APPVEYOR_REPO_TAG_NAME
-  $split=$tag -split "-"
-  $suffix=$split[1..2]
-  $final=$suffix -join "-"
-  return $final
+function Get-Version-Suffix-From-Tag {
+    $tag = $env:APPVEYOR_REPO_TAG_NAME
+    $split = $tag -split "-"
+    $suffix = $split[1..2]
+    $final = $suffix -join "-"
+    return $final
 }
 
 function CheckLastExitCode {
-    param ([int[]]$SuccessCodes = @(0), [scriptblock]$CleanupScript=$null)
+    param ([string]$Command, [int[]]$SuccessCodes = @(0), [scriptblock]$CleanupScript = $null)
 
     if ($SuccessCodes -notcontains $LastExitCode) {
-        $msg = "EXE RETURNED EXIT CODE $LastExitCode"
-        throw $msg
+        throw "$Command exited with $LastExitCode"
     }
 }
 
-$revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
-$revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
+function Run($exp) {
+    Invoke-Expression $exp
+    CheckLastExitCode $exp
+}
 
-dotnet restore
+function BuildVersion($version) {
+    Write-Output "Testing project against ASP.Net Core $version"
+    $msBuildParams = "/p:TestProjectDependencyVersions=$version /p:NoWarn=NU1605 /v:minimal"
 
-dotnet test ./test/UnitTests/UnitTests.csproj
-CheckLastExitCode
+    Run "dotnet restore $msBuildParams"
+    Run "dotnet msbuild $msBuildParams"
+    Run "dotnet test ./test/UnitTests/UnitTests.csproj --no-build $msBuildParams"
+    Run "dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj --no-build $msBuildParams"
+    Run "dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj --no-build $msBuildParams"
+    Run "dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj --no-build $msBuildParams"
+}
 
-dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
-CheckLastExitCode
-
-dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj
-CheckLastExitCode
-
-dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj
-CheckLastExitCode
-
-dotnet build .\src\JsonApiDotNetCore -c Release
-CheckLastExitCode
-
-Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
-
-If($env:APPVEYOR_REPO_TAG -eq $true) {
-    $revision = Get-Version-Suffix-From-Tag
-    Write-Output "VERSION-SUFFIX: $revision"
-
-    IF ([string]::IsNullOrWhitespace($revision)){
-        Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
-        CheckLastExitCode
-    }
-    Else {
-        Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision 
-        CheckLastExitCode
+function Test() {
+    $supportedVersions = @("2.0.1", "2.1.0")
+    foreach ($version in $supportedVersions) {
+        BuildVersion $version
     }
 }
-Else { 
-    Write-Output "VERSION-SUFFIX: alpha1-$revision"
-    Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision"
-    dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision 
-    CheckLastExitCode
+
+function Build() {
+    Run "dotnet restore .\src\JsonApiDotNetCore"
+    Run "dotnet build .\src\JsonApiDotNetCore -c Release"
 }
+
+function Pack() {
+    Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
+
+    $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+    $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
+    If ($env:APPVEYOR_REPO_TAG -eq $true) {
+        $revision = Get-Version-Suffix-From-Tag
+        Write-Output "VERSION-SUFFIX: $revision"
+
+        IF ([string]::IsNullOrWhitespace($revision)) {
+            Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"
+            Run "dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts"        
+        }
+        Else {
+            Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
+            Run "dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$revision"
+        }
+    }
+    Else { 
+        Write-Output "VERSION-SUFFIX: alpha1-$revision"
+        Write-Output "RUNNING dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision"
+        Run "dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=alpha1-$revision"
+    }
+}
+
+Test
+Build
+Pack

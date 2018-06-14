@@ -9,7 +9,8 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
         {
             return Regex.Replace(input, @"\s+", string.Empty)
                 .ToUpper()
-                .Replace('"', '\'');
+                .Replace("\"", string.Empty)
+                .Replace("'", string.Empty);
         }
     }
 }
