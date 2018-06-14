@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
-    <ProjectReference Include="..\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
+    <ProjectReference Include="../JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
