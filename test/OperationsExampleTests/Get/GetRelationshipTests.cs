@@ -43,7 +43,7 @@ namespace OperationsExampleTests
             Assert.NotNull(response);
             Assert.NotNull(data);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(1, data.Operations.Count);
+            Assert.Single(data.Operations);
             var resourceObject = data.Operations.Single().DataObject;
             Assert.Equal(author.Id.ToString(), resourceObject.Id);
             Assert.Equal("authors", resourceObject.Type);

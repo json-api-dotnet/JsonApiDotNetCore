@@ -31,7 +31,7 @@ namespace NoEntityFrameworkExample
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvcCore();
 
             services.AddJsonApi(options => {
                 options.Namespace = "api/v1";

@@ -4,28 +4,27 @@
     <NetCoreAppVersion>netcoreapp2.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.0</NetStandardVersion>
 
-    <AspNetCoreVersion>2.0.1</AspNetCoreVersion>
+    <AspNetCoreVersion>2.1.0</AspNetCoreVersion>
 
-    <MicrosoftLoggingVersion>2.0.0</MicrosoftLoggingVersion>
-    <MicrosoftConfigurationVersion>2.0.0</MicrosoftConfigurationVersion>
-    <MicrosoftOptionsVersion>2.0.0</MicrosoftOptionsVersion>
+    <MicrosoftLoggingVersion>2.1.0</MicrosoftLoggingVersion>
+    <MicrosoftConfigurationVersion>2.1.0</MicrosoftConfigurationVersion>
+    <MicrosoftOptionsVersion>2.1.0</MicrosoftOptionsVersion>
 
-    <EFCoreVersion>2.0.1</EFCoreVersion>
-    <EFCoreToolsVersion>2.0.1</EFCoreToolsVersion>
+    <EFCoreVersion>2.1.0</EFCoreVersion>
+    <EFCoreToolsVersion>2.1.0</EFCoreToolsVersion>
 
-    <NpgsqlVersion>3.2.6</NpgsqlVersion>
-    <NpgsqlPostgreSQLVersion>2.0.0</NpgsqlPostgreSQLVersion>
+    <NpgsqlVersion>4.0.0</NpgsqlVersion>
+    <NpgsqlPostgreSQLVersion>2.1.0</NpgsqlPostgreSQLVersion>
 
-    <TuplesVersion>4.4.0</TuplesVersion>
+    <TuplesVersion>4.5.0</TuplesVersion>
   </PropertyGroup>
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <TestSdkVersion>15.3.0-preview-20170427-09</TestSdkVersion>
-    <TestHostVersion>1.1.2</TestHostVersion>
-    <XUnitVersion>2.3.0-beta3-build3705</XUnitVersion>
-    <BogusVersion>15.0.3</BogusVersion>
-    <MoqVersion>4.7.99</MoqVersion>
+    <TestSdkVersion>15.7.2</TestSdkVersion>
+    <XUnitVersion>2.3.1</XUnitVersion>
+    <BogusVersion>22.1.2</BogusVersion>
+    <MoqVersion>4.8.3</MoqVersion>
   </PropertyGroup>
 
 </Project>
