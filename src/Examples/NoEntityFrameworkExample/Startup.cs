@@ -55,7 +55,6 @@ namespace NoEntityFrameworkExample
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, AppDbContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             context.Database.EnsureCreated();
 

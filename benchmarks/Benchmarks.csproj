@@ -10,6 +10,6 @@
     <PackageReference Include="xunit" Version="$(xUnitVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="../src/JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
   </ItemGroup>
 </Project>
