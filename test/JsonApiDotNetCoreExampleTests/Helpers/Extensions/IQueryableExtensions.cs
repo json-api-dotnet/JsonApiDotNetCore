@@ -18,6 +18,10 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
 #if DEPS_2_1_0
             return QueryGenerator_2_1_0.ToSql(query);
 #else
+            // this has to be the default value, 
+            // constants will not be defined for the primary package build
+            // the constants only exist to simulate scenarios where consumers specify
+            // different version for framework dependencies
             return QueryGenerator_2_0_0.ToSql(query);
 #endif
         }
