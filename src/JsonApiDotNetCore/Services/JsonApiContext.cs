@@ -119,11 +119,13 @@ namespace JsonApiDotNetCore.Services
                 return new PageManager();
 
             var query = QuerySet?.PageQuery ?? new PageQuery();
+            var requestMethod = _httpContextAccessor.HttpContext.Request.Method;
 
             return new PageManager
             {
                 DefaultPageSize = Options.DefaultPageSize,
                 CurrentPage = query.PageOffset,
+                TotalRecords = (requestMethod == "POST" || requestMethod == "PATCH") ? 1 : 0,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
             };
         }
