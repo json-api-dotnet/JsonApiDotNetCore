@@ -20,7 +20,14 @@ These are some steps you can take to help you understand what this project is an
 - [The json:api specification](http://jsonapi.org/format/)
 - [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
 - [Our documentation](https://json-api-dotnet.github.io)
-- Check out the examples in the next section
+- [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)
+
+## Related Projects
+
+- [Performance Reports](https://github.com/json-api-dotnet/PerformanceReports)
+- [JsonApiDotNetCore.MongoDb](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb)
+- [JsonApiDotNetCore.Marten](https://github.com/wayne-o/JsonApiDotNetCore.Marten)
+- [Todo List App](https://github.com/json-api-dotnet/TodoListExample)
 
 ## Examples
 
