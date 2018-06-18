@@ -44,7 +44,7 @@ namespace OperationsExampleTests
             Assert.NotNull(result.response);
             Assert.NotNull(result.data);
             Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(1, result.data.Operations.Count);
+            Assert.Single(result.data.Operations);
             Assert.Equal(expectedCount, result.data.Operations.Single().DataList.Count);
         }
     }

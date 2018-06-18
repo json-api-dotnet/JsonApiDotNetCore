@@ -181,7 +181,7 @@ namespace UnitTests.Serialization
 
             // assert
             Assert.NotNull(result.ComplexMember);
-            Assert.Equal(1, attributesToUpdate.Count);
+            Assert.Single(attributesToUpdate);
 
             foreach (var attr in attributesToUpdate)
                 Assert.False(attr.Key.IsImmutable);

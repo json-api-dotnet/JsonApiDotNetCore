@@ -156,7 +156,7 @@ namespace OperationsExampleTests
             Assert.Equal(author.Name, lastAuthor.Name);
 
             // article validation
-            Assert.Equal(1, lastAuthor.Articles.Count);
+            Assert.Single(lastAuthor.Articles);
             Assert.Equal(article.Name, lastAuthor.Articles[0].Name);
             Assert.Equal(articleOperationResult.DataObject.Id, lastAuthor.Articles[0].StringId);
         }

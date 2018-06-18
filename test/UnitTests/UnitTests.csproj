@@ -4,12 +4,12 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
-    <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
+    <ProjectReference Include="../../src/JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="../../src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
   <ItemGroup>
   <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.2" />

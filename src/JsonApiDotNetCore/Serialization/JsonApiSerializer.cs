@@ -65,7 +65,11 @@ namespace JsonApiDotNetCore.Serialization
             }
             else
             {
-                logger?.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
+                if (logger?.IsEnabled(LogLevel.Information) == true)
+                {
+                    logger.LogInformation("Response was not a JSONAPI entity. Serializing as plain JSON.");
+                }
+                
                 return JsonConvert.SerializeObject(responseObject);
             }
         }

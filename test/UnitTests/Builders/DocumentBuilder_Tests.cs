@@ -190,7 +190,7 @@ namespace UnitTests
 
             var documents = documentBuilder.Build(entities);
 
-            Assert.Equal(1, documents.Data.Count);
+            Assert.Single(documents.Data);
         }
 
         [Fact]
@@ -201,7 +201,7 @@ namespace UnitTests
 
             var documents = documentBuilder.Build(entities);
 
-            Assert.Equal(1, documents.Data.Count);
+            Assert.Single(documents.Data);
         }
 
 
