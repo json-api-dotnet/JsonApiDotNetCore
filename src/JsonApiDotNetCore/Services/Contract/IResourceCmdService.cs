@@ -2,7 +2,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IResourceCmdService<T> : IResourceCmdService<T, int> 
+    public interface IResourceCmdService<T> : 
+        ICreateService<T>,
+        IUpdateService<T>,
+        IUpdateRelationshipService<T>,
+        IDeleteService<T>,
+        IResourceCmdService<T, int>
         where T : class, IIdentifiable<int>
     { }
 
