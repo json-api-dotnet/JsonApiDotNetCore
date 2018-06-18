@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Services
 {
     public interface IResourceService<T> 
-        : IResourceService<T, int> 
+        : IResourceCmdService<T>, IResourceQueryService<T>, IResourceService<T, int> 
         where T : class, IIdentifiable<int>
     { }
 
