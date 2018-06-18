@@ -16,26 +16,26 @@ namespace UnitTests
             // arrange
             var errors422 = new ErrorCollection {
                 Errors = new List<Error> {
-                    new Error("422", "bad specific"),
-                    new Error("422", "bad other specific"),
+                    new Error(422, "bad specific"),
+                    new Error(422, "bad other specific"),
                 }
             };
 
             var errors400 = new ErrorCollection {
                 Errors = new List<Error> {
-                    new Error("200", "weird"),
-                    new Error("400", "bad"),
-                    new Error("422", "bad specific"),
+                    new Error(200, "weird"),
+                    new Error(400, "bad"),
+                    new Error(422, "bad specific"),
                 }
             };
 
             var errors500 = new ErrorCollection {
                 Errors = new List<Error> {
-                    new Error("200", "weird"),
-                    new Error("400", "bad"),
-                    new Error("422", "bad specific"),
-                    new Error("500", "really bad"),
-                    new Error("502", "really bad specific"),
+                    new Error(200, "weird"),
+                    new Error(400, "bad"),
+                    new Error(422, "bad specific"),
+                    new Error(500, "really bad"),
+                    new Error(502, "really bad specific"),
                 }
             };
             

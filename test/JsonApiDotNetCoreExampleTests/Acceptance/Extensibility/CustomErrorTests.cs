@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public void Can_Return_Custom_Error_Types()
         {
             // arrange
-            var error = new CustomError("507", "title", "detail", "custom");
+            var error = new CustomError(507, "title", "detail", "custom");
             var errorCollection = new ErrorCollection();
             errorCollection.Add(error);
 
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         }
 
         class CustomError : Error {
-            public CustomError(string status, string title, string detail, string myProp)
+            public CustomError(int status, string title, string detail, string myProp)
             : base(status, title, detail)
             {
                 MyCustomProperty = myProp;

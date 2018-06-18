@@ -20,23 +20,23 @@ namespace JsonApiDotNetCore.Extensions
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
-        public static void AddJsonApi<TContext>(this IServiceCollection services)
+        public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services)
             where TContext : DbContext
         {
-            var mvcBuilder = services.AddMvc();
-            AddJsonApi<TContext>(services, (opt) => { }, mvcBuilder);
+            var mvcBuilder = services.AddMvcCore();
+            return AddJsonApi<TContext>(services, opt => { }, mvcBuilder);
         }
 
-        public static void AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options)
+        public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services, Action<JsonApiOptions> options)
             where TContext : DbContext
         {
-            var mvcBuilder = services.AddMvc();
-            AddJsonApi<TContext>(services, options, mvcBuilder);
+            var mvcBuilder = services.AddMvcCore();
+            return AddJsonApi<TContext>(services, options, mvcBuilder);
         }
 
-        public static void AddJsonApi<TContext>(this IServiceCollection services,
+        public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
            Action<JsonApiOptions> options,
-           IMvcBuilder mvcBuilder) where TContext : DbContext
+           IMvcCoreBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
 
@@ -52,11 +52,12 @@ namespace JsonApiDotNetCore.Extensions
                 });
 
             AddJsonApiInternals<TContext>(services, config);
+            return services;
         }
 
-        public static void AddJsonApi(this IServiceCollection services,
+        public static IServiceCollection AddJsonApi(this IServiceCollection services,
             Action<JsonApiOptions> options,
-            IMvcBuilder mvcBuilder)
+            IMvcCoreBuilder mvcBuilder)
         {
             var config = new JsonApiOptions();
 
@@ -70,6 +71,7 @@ namespace JsonApiDotNetCore.Extensions
                 });
 
             AddJsonApiInternals(services, config);
+            return services;
         }
 
         public static void AddJsonApiInternals<TContext>(

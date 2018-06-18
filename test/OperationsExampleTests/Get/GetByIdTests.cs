@@ -36,14 +36,14 @@ namespace OperationsExampleTests
             };
 
             // act
-            var result = await PatchAsync<OperationsDocument>("api/bulk", content);
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
 
             // assert
-            Assert.NotNull(result.response);
-            Assert.NotNull(result.data);
-            Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
-            Assert.Equal(1, result.data.Operations.Count);
-            Assert.Equal(author.Id.ToString(), result.data.Operations.Single().DataObject.Id);
+            Assert.NotNull(response);
+            Assert.NotNull(data);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Single(data.Operations);
+            Assert.Equal(author.Id.ToString(), data.Operations.Single().DataObject.Id);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace OperationsExampleTests
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.NotNull(data);
-            Assert.Equal(1, data.Errors.Count);
+            Assert.Single(data.Errors);
             Assert.True(data.Errors[0].Detail.Contains("authors"), "The error detail should contain the name of the entity that could not be found.");
             Assert.True(data.Errors[0].Detail.Contains(authorId), "The error detail should contain the entity id that could not be found");
             Assert.True(data.Errors[0].Title.Contains("operation[0]"), "The error title should contain the operation identifier that failed");

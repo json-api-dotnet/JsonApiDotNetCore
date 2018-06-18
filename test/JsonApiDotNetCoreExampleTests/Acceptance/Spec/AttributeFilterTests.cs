@@ -131,7 +131,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.False(deserializedTodoItems.Any(i => i.Ordinal == todoItem.Ordinal));
+            Assert.DoesNotContain(deserializedTodoItems, x => x.Ordinal == todoItem.Ordinal);
         }
 
         [Fact]
@@ -170,8 +170,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(guids.Count(), deserializedTodoItems.Count());
             foreach (var item in deserializedTodoItems)
             {
-                Assert.True(guids.Contains(item.GuidProperty));
-                Assert.False(notInGuids.Contains(item.GuidProperty));
+                Assert.Contains(item.GuidProperty, guids);
+                Assert.DoesNotContain(item.GuidProperty, notInGuids);
             }
         }
 
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.NotNull(included);
             Assert.NotEmpty(included);
             foreach (var item in included)
-                Assert.True(ownerFirstNames.Contains(item.Attributes["first-name"]));
+                Assert.Contains(item.Attributes["first-name"], ownerFirstNames);
 
         }
     }

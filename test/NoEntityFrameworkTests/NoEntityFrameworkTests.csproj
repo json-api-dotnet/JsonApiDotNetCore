@@ -17,11 +17,11 @@
     <ProjectReference Include="../../src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
     <ProjectReference Include="../../test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj" />
     <ProjectReference Include="../../src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
-    <ProjectReference Include="..\UnitTests\UnitTests.csproj" />
+    <ProjectReference Include="../UnitTests/UnitTests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="Bogus" Version="$(BogusVersion)" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
