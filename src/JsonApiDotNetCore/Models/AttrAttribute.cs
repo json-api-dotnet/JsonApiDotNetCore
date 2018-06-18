@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Models
             IsSortable = isSortable;
         }
 
-        internal AttrAttribute(string publicName, string internalName, bool isImmutable = false)
+        public AttrAttribute(string publicName, string internalName, bool isImmutable = false)
         {
             PublicAttributeName = publicName;
             InternalAttributeName = internalName;
