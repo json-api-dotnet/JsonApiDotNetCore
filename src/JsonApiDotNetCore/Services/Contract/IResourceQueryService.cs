@@ -2,7 +2,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IResourceQueryService<T> : IResourceQueryService<T, int> 
+    public interface IResourceQueryService<T> : 
+        IGetAllService<T>,
+        IGetByIdService<T>,
+        IGetRelationshipsService<T>,
+        IGetRelationshipService<T>,
+        IResourceQueryService<T, int>
         where T : class, IIdentifiable<int>
     { }
 
