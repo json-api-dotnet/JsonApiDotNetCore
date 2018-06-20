@@ -86,20 +86,20 @@ namespace JsonApiDotNetCore.Services
             const char pathSegmentDelimiter = '/';
 
             var span = requestPath.AsSpan();
-            
+
             // we need to iterate over the string, from the end,
             // checking whether or not the 2nd to last path segment
             // is "relationships"
             // -2 is chosen in case the path ends with '/'
-            for(var i = requestPath.Length - 2; i >= 0; i--)
+            for (var i = requestPath.Length - 2; i >= 0; i--)
             {
                 // if there are not enough characters left in the path to 
                 // contain "relationships"
-                if(i < relationships.Length) 
+                if (i < relationships.Length)
                     return false;
 
                 // we have found the first instance of '/'
-                if(span[i] == pathSegmentDelimiter)
+                if (span[i] == pathSegmentDelimiter)
                 {
                     // in the case of a "relationships" route, the next
                     // path segment will be "relationships"
@@ -112,20 +112,18 @@ namespace JsonApiDotNetCore.Services
 
             return false;
         }
-        
+
         private PageManager GetPageManager()
         {
             if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
                 return new PageManager();
 
             var query = QuerySet?.PageQuery ?? new PageQuery();
-            var requestMethod = _httpContextAccessor.HttpContext.Request.Method;
 
             return new PageManager
             {
                 DefaultPageSize = Options.DefaultPageSize,
                 CurrentPage = query.PageOffset,
-                TotalRecords = (requestMethod == "POST" || requestMethod == "PATCH") ? 1 : 0,
                 PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
             };
         }

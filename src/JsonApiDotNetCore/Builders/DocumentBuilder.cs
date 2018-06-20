@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Builders
             if (entity is IHasMeta metaEntity)
                 builder.Add(metaEntity.GetMeta(_jsonApiContext));
 
-            if (_jsonApiContext.Options.IncludeTotalRecordCount)
+            if (_jsonApiContext.Options.IncludeTotalRecordCount && _jsonApiContext.PageManager.TotalRecords != null)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
 
             if (_requestMeta != null)

@@ -6,12 +6,12 @@ namespace JsonApiDotNetCore.Internal
 {
     public class PageManager
     {
-        public int TotalRecords { get; set; }
+        public int? TotalRecords { get; set; }
         public int PageSize { get; set; }
         public int DefaultPageSize { get; set; }
         public int CurrentPage { get; set; }
         public bool IsPaginated => PageSize > 0;
-        public int TotalPages => (TotalRecords == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords, PageSize));
+        public int TotalPages => (TotalRecords == 0 || TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
         public RootLinks GetPageLinks(LinkBuilder linkBuilder)
         {
