@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var documents = JsonConvert.DeserializeObject<Documents>(responseBody);
-            
+
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task Total_Record_Count_Not_Included_When_None()
+        public async Task Total_Record_Count_Included_When_None()
         {
             // arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
@@ -75,14 +75,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var documents = JsonConvert.DeserializeObject<Documents>(responseBody);
-            
+
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(documents.Meta);
+            Assert.NotNull(documents.Meta);
+            Assert.Equal(0, (long)documents.Meta["total-records"]);
         }
 
         [Fact]
-        public async Task Total_Record_Count_Included_POST()
+        public async Task Total_Record_Count_Not_Included_In_POST_Response()
         {
             // arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
@@ -116,15 +117,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var documents = JsonConvert.DeserializeObject<Document>(responseBody);
-            
+
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.NotNull(documents.Meta);
-            Assert.Equal((long)expectedCount, (long)documents.Meta["total-records"]);
+            Assert.Null(documents.Meta);
         }
 
         [Fact]
-        public async Task Total_Record_Count_Included_PATCH()
+        public async Task Total_Record_Count_Not_Included_In_PATCH_Response()
         {
             // arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
@@ -161,11 +161,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var documents = JsonConvert.DeserializeObject<Document>(responseBody);
-            
+
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(documents.Meta);
-            Assert.Equal((long)expectedCount, (long)documents.Meta["total-records"]);
+            Assert.Null(documents.Meta);
         }
 
         [Fact]
@@ -187,26 +186,26 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            
+
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
             Assert.NotNull(expectedMeta);
             Assert.NotEmpty(expectedMeta);
-            
-            foreach(var hash in expectedMeta)
+
+            foreach (var hash in expectedMeta)
             {
-                if(hash.Value is IList)
+                if (hash.Value is IList)
                 {
                     var listValue = (IList)hash.Value;
-                    for(var i=0; i < listValue.Count; i++)
+                    for (var i = 0; i < listValue.Count; i++)
                         Assert.Equal(listValue[i].ToString(), ((IList)documents.Meta[hash.Key])[i].ToString());
                 }
                 else
                 {
                     Assert.Equal(hash.Value, documents.Meta[hash.Key]);
                 }
-            }                
+            }
         }
     }
 }
