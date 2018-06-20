@@ -88,7 +88,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
             _context.SaveChanges();
-            var expectedCount = 1;
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
 
@@ -120,7 +119,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.Null(documents.Meta);
+            Assert.False(documents.Meta.ContainsKey("total-records"));
         }
 
         [Fact]
@@ -131,7 +130,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             TodoItem todoItem = new TodoItem();
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
-            var expectedCount = 1;
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
 
@@ -164,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Null(documents.Meta);
+            Assert.False(documents.Meta.ContainsKey("total-records"));
         }
 
         [Fact]

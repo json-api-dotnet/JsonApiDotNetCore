@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Internal
         public int DefaultPageSize { get; set; }
         public int CurrentPage { get; set; }
         public bool IsPaginated => PageSize > 0;
-        public int TotalPages => (TotalRecords == 0 || TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
+        public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
         public RootLinks GetPageLinks(LinkBuilder linkBuilder)
         {
