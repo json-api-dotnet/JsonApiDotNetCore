@@ -53,8 +53,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedBody = JsonConvert.SerializeObject(new {
-                data = new List<object>()
+            var expectedBody = JsonConvert.SerializeObject(new
+            {
+                data = new List<object>(),
+                meta = new Dictionary<string, int> { { "total-records", 0 } }
             });
 
             // act
