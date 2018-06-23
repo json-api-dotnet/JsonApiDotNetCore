@@ -68,21 +68,20 @@ namespace JsonApiDotNetCore.Builders
 
         private Dictionary<string, object> GetMeta(IIdentifiable entity)
         {
-            if (entity == null) return null;
-
             var builder = _jsonApiContext.MetaBuilder;
-
-            if (entity is IHasMeta metaEntity)
-                builder.Add(metaEntity.GetMeta(_jsonApiContext));
-
-            if (_jsonApiContext.Options.IncludeTotalRecordCount)
+            if (_jsonApiContext.Options.IncludeTotalRecordCount && _jsonApiContext.PageManager.TotalRecords != null)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
 
             if (_requestMeta != null)
                 builder.Add(_requestMeta.GetMeta());
 
+            if (entity != null && entity is IHasMeta metaEntity)
+                builder.Add(metaEntity.GetMeta(_jsonApiContext));
+
             var meta = builder.Build();
-            if (meta.Count > 0) return meta;
+            if (meta.Count > 0)
+                return meta;
+
             return null;
         }
 
