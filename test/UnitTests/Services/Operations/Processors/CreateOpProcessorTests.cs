@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
@@ -48,7 +48,7 @@ namespace UnitTests.Services
                 .AddResource<TestResource>("test-resources")
                 .Build();
 
-            _deserializerMock.Setup(m => m.DocumentToObject(It.IsAny<DocumentData>()))
+            _deserializerMock.Setup(m => m.DocumentToObject(It.IsAny<DocumentData>(), It.IsAny<List<DocumentData>>()))
                 .Returns(testResource);
 
             var opProcessor = new CreateOpProcessor<TestResource>(

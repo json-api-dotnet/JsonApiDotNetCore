@@ -185,17 +185,23 @@ namespace JsonApiDotNetCore.Data
 
         public async Task<int> CountAsync(IQueryable<TEntity> entities)
         {
-            return await entities.CountAsync();
+            return (entities is IAsyncEnumerable<TEntity>)
+                 ? await entities.CountAsync()
+                 : entities.Count();
         }
 
-        public Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
+        public async Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
         {
-            return entities.FirstOrDefaultAsync();
+            return (entities is IAsyncEnumerable<TEntity>)
+               ? await entities.FirstOrDefaultAsync()
+               : entities.FirstOrDefault();
         }
 
         public async Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities)
         {
-            return await entities.ToListAsync();
+            return (entities is IAsyncEnumerable<TEntity>)
+                ? await entities.ToListAsync()
+                : entities.ToList();
         }
     }
 }
