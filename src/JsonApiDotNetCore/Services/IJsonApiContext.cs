@@ -82,6 +82,31 @@ namespace JsonApiDotNetCore.Services
         HasManyRelationshipPointers HasManyRelationshipPointers { get; }
 
         /// <summary>
+        /// Stores information to set relationships for the request resource. 
+        /// These relationships must already exist and should not be re-created.
+        /// 
+        /// The expected use case is POST-ing or PATCH-ing 
+        /// an entity with HasOne relationships:
+        /// <code>
+        /// {
+        ///    "data": {
+        ///      "type": "photos",
+        ///      "attributes": {
+        ///        "title": "Ember Hamster",
+        ///        "src": "http://example.com/images/productivity.png"
+        ///      },
+        ///      "relationships": {
+        ///        "photographer": {
+        ///          "data": { "type": "people", "id": "2" }
+        ///        }
+        ///      }
+        ///    }
+        ///  }
+        /// </code>
+        /// </summary>
+        HasOneRelationshipPointers HasOneRelationshipPointers { get; }
+
+        /// <summary>
         /// If the request is a bulk json:api v1.1 operations request.
         /// This is determined by the `
         /// <see cref="JsonApiDotNetCore.Serialization.JsonApiDeSerializer" />` class.
