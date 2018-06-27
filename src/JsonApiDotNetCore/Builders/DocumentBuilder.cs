@@ -262,11 +262,14 @@ namespace JsonApiDotNetCore.Builders
             var objType = entity.GetType();
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            return new ResourceIdentifierObject
-            {
-                Type = contextEntity.EntityName,
-                Id = ((IIdentifiable)entity).StringId
-            };
+            if(entity is IIdentifiable identifiableEntity)
+                return new ResourceIdentifierObject
+                {
+                    Type = contextEntity.EntityName,
+                    Id = identifiableEntity.StringId
+                };
+
+            return null;
         }
 
         private ResourceIdentifierObject GetIndependentRelationshipIdentifier(HasOneAttribute hasOne, IIdentifiable entity)
