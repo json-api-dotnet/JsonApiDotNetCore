@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Models
         public string StringId
         {
             get => GetStringId(Id);
-            set => Id = (T)GetConcreteId(value);
+            set => Id = GetTypedId(value);
         }
 
         protected virtual string GetStringId(object value)
@@ -34,6 +34,13 @@ namespace JsonApiDotNetCore.Models
                 : stringValue;
         }
 
+        protected virtual T GetTypedId(string value)
+        {
+            var convertedValue = TypeHelper.ConvertType(value, typeof(T));
+            return convertedValue == null ? default : (T)convertedValue;
+        }
+
+        [Obsolete("Use GetTypedId instead")]
         protected virtual object GetConcreteId(string value)
         {
             return TypeHelper.ConvertType(value, typeof(T));
