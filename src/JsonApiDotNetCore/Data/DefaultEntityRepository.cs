@@ -84,11 +84,17 @@ namespace JsonApiDotNetCore.Data
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            AttachHasManyPointers();
+            AttachRelationships();
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();
             return entity;
+        }
+
+        protected virtual void AttachRelationships()
+        {
+            AttachHasManyPointers();
+            AttachHasOnePointers();
         }
 
         /// <summary>
@@ -105,6 +111,18 @@ namespace JsonApiDotNetCore.Data
                     _context.Entry(pointer).State = EntityState.Unchanged;
                 }
             }
+        }
+
+        /// <summary>
+        /// This is used to allow creation of HasOne relationships when the
+        /// independent side of the relationship already exists.
+        /// </summary>
+        private void AttachHasOnePointers()
+        {
+            var relationships = _jsonApiContext.HasOneRelationshipPointers.Get();
+            foreach (var relationship in relationships)
+                if (_context.Entry(relationship.Value).State == EntityState.Detached && _context.EntityIsTracked(relationship.Value) == false)
+                    _context.Entry(relationship.Value).State = EntityState.Unchanged;
         }
 
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)

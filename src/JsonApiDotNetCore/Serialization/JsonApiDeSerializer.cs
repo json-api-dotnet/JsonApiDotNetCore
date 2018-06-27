@@ -241,6 +241,11 @@ namespace JsonApiDotNetCore.Serialization
                 var includedRelationshipObject = GetIncludedRelationship(rio, included, relationshipAttr);
                 if (includedRelationshipObject != null)
                     relationshipAttr.SetValue(entity, includedRelationshipObject);
+
+                // we need to store the fact that this relationship was included in the payload
+                // for EF, the repository will use these pointers to make ensure we don't try to
+                // create resources if they already exist, we just need to create the relationship
+                _jsonApiContext.HasOneRelationshipPointers.Add(attr.Type, includedRelationshipObject);
             }
 
             return entity;
