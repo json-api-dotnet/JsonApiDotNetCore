@@ -1,4 +1,5 @@
-﻿using System;
+using JsonApiDotNetCore.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,8 +52,20 @@ namespace JsonApiDotNetCore.Extensions
         {
             if (t == null) throw new ArgumentNullException(nameof(t));
 
-            var instance = (TInterface)Activator.CreateInstance(t);
+            var instance = (TInterface)CreateNewInstance(t);
             return instance;
+        }
+
+        private static object CreateNewInstance(Type type)
+        {
+            try
+            {
+                return Activator.CreateInstance(type);
+            }
+            catch (Exception e)
+            {
+                throw new JsonApiException(500, $"Type '{type}' cannot be instantiated using the default constructor.", e);
+            }
         }
     }
 }
