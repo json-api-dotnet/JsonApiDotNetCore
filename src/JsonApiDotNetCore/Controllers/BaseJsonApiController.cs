@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
                 return Forbidden();
-            if (!ModelState.IsValid)
+            if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
                 return BadRequest(ModelState.ConvertToErrorCollection());
 
             entity = await _create.CreateAsync(entity);
@@ -167,7 +167,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (entity == null)
                 return UnprocessableEntity();
-            if (!ModelState.IsValid)
+            if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
                 return BadRequest(ModelState.ConvertToErrorCollection());
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
