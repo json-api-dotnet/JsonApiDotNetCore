@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -152,6 +153,8 @@ namespace JsonApiDotNetCore.Controllers
 
             if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
                 return Forbidden();
+            if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
+                return BadRequest(ModelState.ConvertToErrorCollection());
 
             entity = await _create.CreateAsync(entity);
 
@@ -164,6 +167,8 @@ namespace JsonApiDotNetCore.Controllers
 
             if (entity == null)
                 return UnprocessableEntity();
+            if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
+                return BadRequest(ModelState.ConvertToErrorCollection());
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 

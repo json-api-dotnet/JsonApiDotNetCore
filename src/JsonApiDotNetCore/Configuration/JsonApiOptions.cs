@@ -125,6 +125,16 @@ namespace JsonApiDotNetCore.Configuration
         /// </remarks>
         public bool EnableOperations { get; set; }
 
+        /// <summary>
+        /// Whether or not to validate model state.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// options.ValidateModelState = true;
+        /// </code>
+        /// </example>
+        public bool ValidateModelState { get; set; }
+
         [Obsolete("JsonContract resolver can now be set on SerializerSettings.")]
         public IContractResolver JsonContractResolver
         {
