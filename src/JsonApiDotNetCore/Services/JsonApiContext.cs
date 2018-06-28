@@ -53,6 +53,7 @@ namespace JsonApiDotNetCore.Services
         public Dictionary<string, object> DocumentMeta { get; set; }
         public bool IsBulkOperationRequest { get; set; }
         public HasManyRelationshipPointers HasManyRelationshipPointers { get; } = new HasManyRelationshipPointers();
+        public HasOneRelationshipPointers HasOneRelationshipPointers { get; } = new HasOneRelationshipPointers();
 
         public IJsonApiContext ApplyContext<T>(object controller)
         {

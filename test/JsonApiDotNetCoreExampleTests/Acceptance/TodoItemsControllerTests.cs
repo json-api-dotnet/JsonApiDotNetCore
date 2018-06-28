@@ -294,10 +294,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
             // Assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
