@@ -136,7 +136,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
-            services.AddScoped(typeof(GenericProcessor<,>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IControllerContext, Services.ControllerContext>();

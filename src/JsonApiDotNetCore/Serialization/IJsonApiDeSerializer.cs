@@ -9,6 +9,6 @@ namespace JsonApiDotNetCore.Serialization
         TEntity Deserialize<TEntity>(string requestBody);
         object DeserializeRelationship(string requestBody);
         List<TEntity> DeserializeList<TEntity>(string requestBody);
-        object DocumentToObject(DocumentData data);
+        object DocumentToObject(DocumentData data, List<DocumentData> included = null);
     }
 }

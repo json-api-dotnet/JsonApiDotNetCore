@@ -13,6 +13,17 @@ namespace JsonApiDotNetCore.Models
 
         public string PublicRelationshipName { get; }
         public string InternalRelationshipName { get; internal set; }
+
+        /// <summary>
+        /// The related entity type. This does not necessarily match the navigation property type.
+        /// In the case of a HasMany relationship, this value will be the generic argument type.
+        /// </summary>
+        /// 
+        /// <example>
+        /// <code>
+        /// public List&lt;Articles&gt; Articles { get; set; } // Type => Article
+        /// </code>
+        /// </example>
         public Type Type { get; internal set; }
         public bool IsHasMany => GetType() == typeof(HasManyAttribute);
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);

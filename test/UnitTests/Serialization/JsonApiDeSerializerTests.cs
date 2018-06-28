@@ -392,20 +392,146 @@ namespace UnitTests.Serialization
             Assert.Equal(1, result.Id);
             Assert.NotNull(result.Dependents);
             Assert.NotEmpty(result.Dependents);
-            Assert.Equal(1, result.Dependents.Count);
+            Assert.Single(result.Dependents);
 
             var dependent = result.Dependents[0];
             Assert.Equal(2, dependent.Id);
         }
 
+        [Fact]
+        public void Sets_Attribute_Values_On_Included_HasMany_Relationships()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<OneToManyIndependent>("independents");
+            contextGraphBuilder.AddResource<OneToManyDependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            var expectedName = "John Doe";
+            var contentString =
+            @"{
+                ""data"": {
+                    ""type"": ""independents"",
+                    ""id"": ""1"",
+                    ""attributes"": { },
+                    ""relationships"": {
+                        ""dependents"": {
+                            ""data"": [
+                                {
+                                    ""type"": ""dependents"",
+                                    ""id"": ""2""
+                                }
+                            ]
+                        }
+                    }
+                },
+                ""included"": [
+                    {
+                        ""type"": ""dependents"",
+                        ""id"": ""2"",
+                        ""attributes"": {
+                            ""name"": """ + expectedName + @"""
+                        }
+                    }
+                ]
+            }";
+
+            // act
+            var result = deserializer.Deserialize<OneToManyIndependent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.NotNull(result.Dependents);
+            Assert.NotEmpty(result.Dependents);
+            Assert.Single(result.Dependents);
+
+            var dependent = result.Dependents[0];
+            Assert.Equal(2, dependent.Id);
+            Assert.Equal(expectedName, dependent.Name);
+        }
+
+        [Fact]
+        public void Sets_Attribute_Values_On_Included_HasOne_Relationships()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<OneToManyIndependent>("independents");
+            contextGraphBuilder.AddResource<OneToManyDependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
+            jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            var expectedName = "John Doe";
+            var contentString =
+            @"{
+                ""data"": {
+                    ""type"": ""dependents"",
+                    ""id"": ""1"",
+                    ""attributes"": { },
+                    ""relationships"": {
+                        ""independent"": {
+                            ""data"": {
+                                ""type"": ""independents"",
+                                ""id"": ""2""
+                            }
+                        }
+                    }
+                },
+                ""included"": [
+                    {
+                        ""type"": ""independents"",
+                        ""id"": ""2"",
+                        ""attributes"": {
+                            ""name"": """ + expectedName + @"""
+                        }
+                    }
+                ]
+            }";
+
+            // act
+            var result = deserializer.Deserialize<OneToManyDependent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.NotNull(result.Independent);
+            Assert.Equal(2, result.Independent.Id);
+            Assert.Equal(expectedName, result.Independent.Name);
+        }
+
         private class OneToManyDependent : Identifiable
         {
+            [Attr("name")] public string Name { get; set; }
             [HasOne("independent")] public OneToManyIndependent Independent { get; set; }
             public int IndependentId { get; set; }
         }
 
         private class OneToManyIndependent : Identifiable
         {
+            [Attr("name")] public string Name { get; set; }
             [HasMany("dependents")] public List<OneToManyDependent> Dependents { get; set; }
         }
     }
