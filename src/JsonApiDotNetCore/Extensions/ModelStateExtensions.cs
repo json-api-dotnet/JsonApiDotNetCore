@@ -11,7 +11,8 @@ namespace JsonApiDotNetCore.Extensions
             ErrorCollection errors = new ErrorCollection();
             foreach (var entry in modelState)
             {
-                if (!entry.Value.Errors.Any()) continue;
+                if (!entry.Value.Errors.Any())
+                    continue;
                 foreach (var modelError in entry.Value.Errors)
                 {
                     errors.Errors.Add(new Error(400, entry.Key, modelError.ErrorMessage, modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null));
