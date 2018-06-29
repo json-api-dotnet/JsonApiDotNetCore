@@ -57,6 +57,10 @@ namespace JsonApiDotNetCore.Serialization
                 var entity = DocumentToObject(document.Data, document.Included);
                 return entity;
             }
+            catch (JsonApiException)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 throw new JsonApiException(400, "Failed to deserialize request body", e);
@@ -109,10 +113,15 @@ namespace JsonApiDotNetCore.Serialization
 
         public object DocumentToObject(DocumentData data, List<DocumentData> included = null)
         {
-            if (data == null) throw new JsonApiException(422, "Failed to deserialize document as json:api.");
+            if (data == null)
+                throw new JsonApiException(422, "Failed to deserialize document as json:api.");
 
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type?.ToString());
-            _jsonApiContext.RequestEntity = contextEntity;
+            _jsonApiContext.RequestEntity = contextEntity ?? throw new JsonApiException(400,
+                    message: $"This API does not contain a json:api resource named '{data.Type}'.",
+                    detail: "This resource is not registered on the ContextGraph. "
+                            + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
+                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."); ;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
 

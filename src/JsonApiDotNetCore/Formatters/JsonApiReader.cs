@@ -52,11 +52,9 @@ namespace JsonApiDotNetCore.Formatters
                 context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
                 return InputFormatterResult.FailureAsync();
             }
-            catch (JsonApiException jex)
+            catch (JsonApiException)
             {
-                _logger?.LogError(new EventId(), jex, "An error occurred while de-serializing the payload");
-                context.ModelState.AddModelError(context.ModelName, jex, context.Metadata);
-                return InputFormatterResult.FailureAsync();
+                throw;
             }
         }
 
