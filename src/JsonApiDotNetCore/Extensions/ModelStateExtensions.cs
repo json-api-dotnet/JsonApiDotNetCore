@@ -8,17 +8,22 @@ namespace JsonApiDotNetCore.Extensions
     {
         public static ErrorCollection ConvertToErrorCollection(this ModelStateDictionary modelState)
         {
-            ErrorCollection errors = new ErrorCollection();
+            ErrorCollection collection = new ErrorCollection();
             foreach (var entry in modelState)
             {
-                if (!entry.Value.Errors.Any())
+                if (entry.Value.Errors.Any() == false)
                     continue;
+
                 foreach (var modelError in entry.Value.Errors)
                 {
-                    errors.Errors.Add(new Error(400, entry.Key, modelError.ErrorMessage, modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null));
+                    if (modelError.Exception is JsonApiException jex)
+                        collection.Errors.AddRange(jex.GetError().Errors);
+                    else
+                        collection.Errors.Add(new Error(400, entry.Key, modelError.ErrorMessage, modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null));
                 }
             }
-            return errors;
+
+            return collection;
         }
     }
 }
