@@ -1,20 +1,33 @@
-using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Extensions
 {
     public static class DbContextExtensions
     {
-        public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class
-        {
-            var contextProperties = context.GetType().GetProperties();
-            foreach(var property in contextProperties)
-            {
-                if (property.PropertyType == typeof(DbSet<T>))
-                    return (DbSet<T>)property.GetValue(context);
-            }
+        [Obsolete("This is no longer required since the introduction of context.Set<T>", error: false)]
+        public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class 
+            => context.Set<T>();
 
-            throw new ArgumentException($"DbSet of type {typeof(T).FullName} not found on the DbContext", nameof(T));
+        /// <summary>
+        /// Determines whether or not EF is already tracking an entity of the same Type and Id
+        /// </summary>
+        public static bool EntityIsTracked(this DbContext context, IIdentifiable entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            
+            var trackedEntries = context.ChangeTracker
+                .Entries()
+                .FirstOrDefault(entry => 
+                    entry.Entity.GetType() == entity.GetType() 
+                    && ((IIdentifiable)entry.Entity).StringId == entity.StringId
+                );
+
+            return trackedEntries != null;
         }
     }
 }

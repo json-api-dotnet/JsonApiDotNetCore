@@ -5,11 +5,11 @@
     <AssemblyName>Benchmarks</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.10.10" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.14" />
     <PackageReference Include="moq" Version="$(MoqVersion)" />
     <PackageReference Include="xunit" Version="$(xUnitVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="../src/JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
   </ItemGroup>
 </Project>

@@ -28,20 +28,17 @@ namespace JsonApiDotNetCoreExample
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Trace);
-            services.AddSingleton<ILoggerFactory>(loggerFactory);
+            loggerFactory.AddConsole(LogLevel.Warning);
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(GetDbConnectionString());
-            }, ServiceLifetime.Transient);
-
-            services.AddJsonApi<AppDbContext>(opt =>
-            {
-                opt.Namespace = "api/v1";
-                opt.DefaultPageSize = 5;
-                opt.IncludeTotalRecordCount = true;
-            });
+            services
+                .AddSingleton<ILoggerFactory>(loggerFactory)
+                .AddDbContext<AppDbContext>(options =>
+                    options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
+                .AddJsonApi<AppDbContext>(options => {
+                    options.Namespace = "api/v1";
+                    options.DefaultPageSize = 5;
+                    options.IncludeTotalRecordCount = true;
+                });
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();
@@ -60,7 +57,6 @@ namespace JsonApiDotNetCoreExample
             context.Database.EnsureCreated();
 
             loggerFactory.AddConsole(Config.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             app.UseJsonApi();
         }

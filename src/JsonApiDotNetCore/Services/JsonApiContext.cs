@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Request;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -51,6 +52,8 @@ namespace JsonApiDotNetCore.Services
         public Type ControllerType { get; set; }
         public Dictionary<string, object> DocumentMeta { get; set; }
         public bool IsBulkOperationRequest { get; set; }
+        public HasManyRelationshipPointers HasManyRelationshipPointers { get; } = new HasManyRelationshipPointers();
+        public HasOneRelationshipPointers HasOneRelationshipPointers { get; } = new HasOneRelationshipPointers();
 
         public IJsonApiContext ApplyContext<T>(object controller)
         {
@@ -84,20 +87,20 @@ namespace JsonApiDotNetCore.Services
             const char pathSegmentDelimiter = '/';
 
             var span = requestPath.AsSpan();
-            
+
             // we need to iterate over the string, from the end,
             // checking whether or not the 2nd to last path segment
             // is "relationships"
             // -2 is chosen in case the path ends with '/'
-            for(var i = requestPath.Length - 2; i >= 0; i--)
+            for (var i = requestPath.Length - 2; i >= 0; i--)
             {
                 // if there are not enough characters left in the path to 
                 // contain "relationships"
-                if(i < relationships.Length) 
+                if (i < relationships.Length)
                     return false;
 
                 // we have found the first instance of '/'
-                if(span[i] == pathSegmentDelimiter)
+                if (span[i] == pathSegmentDelimiter)
                 {
                     // in the case of a "relationships" route, the next
                     // path segment will be "relationships"
@@ -110,7 +113,7 @@ namespace JsonApiDotNetCore.Services
 
             return false;
         }
-        
+
         private PageManager GetPageManager()
         {
             if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Request;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Moq;
@@ -11,10 +11,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace UnitTests.Serialization {
-    public class JsonApiDeSerializerTests {
+namespace UnitTests.Serialization
+{
+    public class JsonApiDeSerializerTests
+    {
         [Fact]
-        public void Can_Deserialize_Complex_Types() {
+        public void Can_Deserialize_Complex_Types()
+        {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResource>("test-resource");
@@ -29,20 +32,18 @@ namespace UnitTests.Serialization {
             jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
-
-            var content = new Document {
-                Data = new DocumentData {
-                Type = "test-resource",
-                Id = "1",
-                Attributes = new Dictionary<string, object> {
+            var content = new Document
+            {
+                Data = new DocumentData
                 {
-                "complex-member",
-                new { compoundName = "testName" }
-                }
-                }
+                    Type = "test-resource",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object>
+                    {
+                        { "complex-member", new { compoundName = "testName" } }
+                    }
                 }
             };
 
@@ -55,7 +56,8 @@ namespace UnitTests.Serialization {
         }
 
         [Fact]
-        public void Can_Deserialize_Complex_List_Types() {
+        public void Can_Deserialize_Complex_List_Types()
+        {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResourceWithList>("test-resource");
@@ -69,22 +71,18 @@ namespace UnitTests.Serialization {
             jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
-
-            var content = new Document {
-                Data = new DocumentData {
-                Type = "test-resource",
-                Id = "1",
-                Attributes = new Dictionary<string, object> {
+            var content = new Document
+            {
+                Data = new DocumentData
                 {
-                "complex-members",
-                new [] {
-                new { compoundName = "testName" }
-                }
-                }
-                }
+                    Type = "test-resource",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object>
+                    {
+                        { "complex-members", new [] { new { compoundName = "testName" } } }
+                    }
                 }
             };
 
@@ -98,7 +96,8 @@ namespace UnitTests.Serialization {
         }
 
         [Fact]
-        public void Can_Deserialize_Complex_Types_With_Dasherized_Attrs() {
+        public void Can_Deserialize_Complex_Types_With_Dasherized_Attrs()
+        {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResource>("test-resource");
@@ -113,20 +112,20 @@ namespace UnitTests.Serialization {
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver(); // <--
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
-
-            var content = new Document {
-                Data = new DocumentData {
-                Type = "test-resource",
-                Id = "1",
-                Attributes = new Dictionary<string, object> {
+            var content = new Document
+            {
+                Data = new DocumentData
                 {
-                "complex-member",
-                new Dictionary<string, string> { { "compound-name", "testName" } }
-                }
-                }
+                    Type = "test-resource",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object>
+                    {
+                        {
+                            "complex-member", new Dictionary<string, string> { { "compound-name", "testName" } }
+                        }
+                    }
                 }
             };
 
@@ -139,7 +138,8 @@ namespace UnitTests.Serialization {
         }
 
         [Fact]
-        public void Immutable_Attrs_Are_Not_Included_In_AttributesToUpdate() {
+        public void Immutable_Attrs_Are_Not_Included_In_AttributesToUpdate()
+        {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<TestResource>("test-resource");
@@ -156,22 +156,21 @@ namespace UnitTests.Serialization {
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
-
-            var content = new Document {
-                Data = new DocumentData {
-                Type = "test-resource",
-                Id = "1",
-                Attributes = new Dictionary<string, object> {
+            var content = new Document
+            {
+                Data = new DocumentData
                 {
-                "complex-member",
-                new Dictionary<string, string> { { "compound-name", "testName" }
-                }
-                },
-                { "immutable", "value" }
-                }
+                    Type = "test-resource",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object>
+                    {
+                        {
+                            "complex-member", new Dictionary<string, string> { { "compound-name", "testName" } }
+                        },
+                        { "immutable", "value" }
+                    }
                 }
             };
 
@@ -182,14 +181,15 @@ namespace UnitTests.Serialization {
 
             // assert
             Assert.NotNull(result.ComplexMember);
-            Assert.Equal(1, attributesToUpdate.Count);
+            Assert.Single(attributesToUpdate);
 
             foreach (var attr in attributesToUpdate)
                 Assert.False(attr.Key.IsImmutable);
         }
 
         [Fact]
-        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship() {
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship()
+        {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<Independent>("independents");
@@ -204,17 +204,16 @@ namespace UnitTests.Serialization {
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
-
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
             var property = Guid.NewGuid().ToString();
-            var content = new Document {
-                Data = new DocumentData {
-                Type = "independents",
-                Id = "1",
-                Attributes = new Dictionary<string, object> { { "property", property }
-                }
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
+                    Type = "independents",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object> { { "property", property } }
                 }
             };
 
@@ -229,7 +228,8 @@ namespace UnitTests.Serialization {
         }
 
         [Fact]
-        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_Relationship_Body() {
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_Relationship_Body()
+        {
             // arrange
             var contextGraphBuilder = new ContextGraphBuilder();
             contextGraphBuilder.AddResource<Independent>("independents");
@@ -244,20 +244,18 @@ namespace UnitTests.Serialization {
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
-
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
             var property = Guid.NewGuid().ToString();
-            var content = new Document {
-                Data = new DocumentData {
-                Type = "independents",
-                Id = "1",
-                Attributes = new Dictionary<string, object> { { "property", property }
-                },
-                // a common case for this is deserialization in unit tests
-                Relationships = new Dictionary<string, RelationshipData> { { "dependent", new RelationshipData { } }
-                }
+            var content = new Document
+            {
+                Data = new DocumentData
+                {
+                    Type = "independents",
+                    Id = "1",
+                    Attributes = new Dictionary<string, object> { { "property", property } },
+                    // a common case for this is deserialization in unit tests
+                    Relationships = new Dictionary<string, RelationshipData> { { "dependent", new RelationshipData { } } }
                 }
             };
 
@@ -288,24 +286,21 @@ namespace UnitTests.Serialization {
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
 
             var property = Guid.NewGuid().ToString();
-            
+
             var content = new Document
-            {   
-                Meta = new Dictionary<string, object>() { {"foo", "bar"}},
+            {
+                Meta = new Dictionary<string, object>() { { "foo", "bar" } },
                 Data = new DocumentData
                 {
                     Type = "independents",
                     Id = "1",
-                    Attributes = new Dictionary<string, object> { { "property", property }
-                    },
+                    Attributes = new Dictionary<string, object> { { "property", property } },
                     // a common case for this is deserialization in unit tests
-                    Relationships = new Dictionary<string, RelationshipData> { { "dependent", new RelationshipData { } }
-                    }
+                    Relationships = new Dictionary<string, RelationshipData> { { "dependent", new RelationshipData { } } }
                 }
             };
 
@@ -318,32 +313,226 @@ namespace UnitTests.Serialization {
             jsonApiContextMock.VerifySet(mock => mock.DocumentMeta = content.Meta);
         }
 
-
-        private class TestResource : Identifiable {
+        private class TestResource : Identifiable
+        {
             [Attr("complex-member")]
             public ComplexType ComplexMember { get; set; }
 
-            [Attr("immutable", isImmutable : true)]
+            [Attr("immutable", isImmutable: true)]
             public string Immutable { get; set; }
         }
 
-        private class TestResourceWithList : Identifiable {
+        private class TestResourceWithList : Identifiable
+        {
             [Attr("complex-members")]
             public List<ComplexType> ComplexMembers { get; set; }
         }
 
-        private class ComplexType {
+        private class ComplexType
+        {
             public string CompoundName { get; set; }
         }
 
-        private class Independent : Identifiable {
+        private class Independent : Identifiable
+        {
             [Attr("property")] public string Property { get; set; }
             [HasOne("dependent")] public Dependent Dependent { get; set; }
         }
 
-        private class Dependent : Identifiable {
+        private class Dependent : Identifiable
+        {
             [HasOne("independent")] public Independent Independent { get; set; }
             public int IndependentId { get; set; }
+        }
+
+        [Fact]
+        public void Can_Deserialize_Object_With_HasManyRelationship()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<OneToManyIndependent>("independents");
+            contextGraphBuilder.AddResource<OneToManyDependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            var contentString =
+            @"{
+                ""data"": {
+                    ""type"": ""independents"",
+                    ""id"": ""1"",
+                    ""attributes"": { },
+                    ""relationships"": {
+                        ""dependents"": {
+                            ""data"": [
+                                {
+                                    ""type"": ""dependents"",
+                                    ""id"": ""2""
+                                }
+                            ]
+                        }
+                    }
+                }
+            }";
+
+            // act
+            var result = deserializer.Deserialize<OneToManyIndependent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.NotNull(result.Dependents);
+            Assert.NotEmpty(result.Dependents);
+            Assert.Single(result.Dependents);
+
+            var dependent = result.Dependents[0];
+            Assert.Equal(2, dependent.Id);
+        }
+
+        [Fact]
+        public void Sets_Attribute_Values_On_Included_HasMany_Relationships()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<OneToManyIndependent>("independents");
+            contextGraphBuilder.AddResource<OneToManyDependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            var expectedName = "John Doe";
+            var contentString =
+            @"{
+                ""data"": {
+                    ""type"": ""independents"",
+                    ""id"": ""1"",
+                    ""attributes"": { },
+                    ""relationships"": {
+                        ""dependents"": {
+                            ""data"": [
+                                {
+                                    ""type"": ""dependents"",
+                                    ""id"": ""2""
+                                }
+                            ]
+                        }
+                    }
+                },
+                ""included"": [
+                    {
+                        ""type"": ""dependents"",
+                        ""id"": ""2"",
+                        ""attributes"": {
+                            ""name"": """ + expectedName + @"""
+                        }
+                    }
+                ]
+            }";
+
+            // act
+            var result = deserializer.Deserialize<OneToManyIndependent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.NotNull(result.Dependents);
+            Assert.NotEmpty(result.Dependents);
+            Assert.Single(result.Dependents);
+
+            var dependent = result.Dependents[0];
+            Assert.Equal(2, dependent.Id);
+            Assert.Equal(expectedName, dependent.Name);
+        }
+
+        [Fact]
+        public void Sets_Attribute_Values_On_Included_HasOne_Relationships()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<OneToManyIndependent>("independents");
+            contextGraphBuilder.AddResource<OneToManyDependent>("dependents");
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
+            jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            var expectedName = "John Doe";
+            var contentString =
+            @"{
+                ""data"": {
+                    ""type"": ""dependents"",
+                    ""id"": ""1"",
+                    ""attributes"": { },
+                    ""relationships"": {
+                        ""independent"": {
+                            ""data"": {
+                                ""type"": ""independents"",
+                                ""id"": ""2""
+                            }
+                        }
+                    }
+                },
+                ""included"": [
+                    {
+                        ""type"": ""independents"",
+                        ""id"": ""2"",
+                        ""attributes"": {
+                            ""name"": """ + expectedName + @"""
+                        }
+                    }
+                ]
+            }";
+
+            // act
+            var result = deserializer.Deserialize<OneToManyDependent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.NotNull(result.Independent);
+            Assert.Equal(2, result.Independent.Id);
+            Assert.Equal(expectedName, result.Independent.Name);
+        }
+
+        private class OneToManyDependent : Identifiable
+        {
+            [Attr("name")] public string Name { get; set; }
+            [HasOne("independent")] public OneToManyIndependent Independent { get; set; }
+            public int IndependentId { get; set; }
+        }
+
+        private class OneToManyIndependent : Identifiable
+        {
+            [Attr("name")] public string Name { get; set; }
+            [HasMany("dependents")] public List<OneToManyDependent> Dependents { get; set; }
         }
     }
 }

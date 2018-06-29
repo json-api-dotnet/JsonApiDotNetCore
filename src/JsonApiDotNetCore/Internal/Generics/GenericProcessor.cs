@@ -14,12 +14,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
     }
 
-    public class GenericProcessor<T> : GenericProcessor<T, int> where T : class, IIdentifiable<int>
-    {
-        public GenericProcessor(IDbContextResolver contextResolver) : base(contextResolver) { }
-    }
-
-    public class GenericProcessor<T, TId> : IGenericProcessor where T : class, IIdentifiable<TId>
+    public class GenericProcessor<T> : IGenericProcessor where T : class, IIdentifiable
     {
         private readonly DbContext _context;
         public GenericProcessor(IDbContextResolver contextResolver)
@@ -38,12 +33,12 @@ namespace JsonApiDotNetCore.Internal.Generics
         {
             if (relationship.IsHasMany)
             {
-                var entities = _context.GetDbSet<T>().Where(x => relationshipIds.Contains(x.StringId)).ToList();
+                var entities = _context.Set<T>().Where(x => relationshipIds.Contains(x.StringId)).ToList();
                 relationship.SetValue(parent, entities);
             }
             else
             {
-                var entity = _context.GetDbSet<T>().SingleOrDefault(x => relationshipIds.First() == x.StringId);
+                var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == x.StringId);
                 relationship.SetValue(parent, entity);
             }
         }

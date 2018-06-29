@@ -33,7 +33,7 @@ namespace UnitTests.Internal
             var contextGraph = contextGraphBuilder.Build() as ContextGraph;
 
             // assert
-            Assert.Equal(1, contextGraph.ValidationResults.Count);
+            Assert.Single(contextGraph.ValidationResults);
             Assert.Contains(contextGraph.ValidationResults, v => v.LogLevel == LogLevel.Warning);
         }
 

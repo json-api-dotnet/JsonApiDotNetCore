@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Controllers
     /// <summary>
     /// A controller to be used for bulk operations as defined in the json:api 1.1 specification
     /// </summary>
-    public class JsonApiOperationsController : Controller
+    public class JsonApiOperationsController : ControllerBase
     {
         private readonly IOperationsProcessor _operationsProcessor;
 

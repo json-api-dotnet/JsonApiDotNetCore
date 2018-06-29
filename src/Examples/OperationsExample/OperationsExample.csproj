@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
-    <ProjectReference Include="..\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
+    <ProjectReference Include="../JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,10 +25,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EFCoreToolsVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EFCoreToolsVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="$(EFCoreToolsVersion)" />
   </ItemGroup>
 
 </Project>

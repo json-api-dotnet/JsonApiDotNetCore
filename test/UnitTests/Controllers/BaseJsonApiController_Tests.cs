@@ -5,7 +5,10 @@ using JsonApiDotNetCore.Services;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UnitTests
 {
@@ -143,6 +146,8 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
+            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
+            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions());
             var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, update: serviceMock.Object);
 
             // act
@@ -151,6 +156,47 @@ namespace UnitTests
             // assert
             serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Once);
             VerifyApplyContext();
+        }
+
+        [Fact]
+        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateDisbled()
+        {
+            // arrange
+            const int id = 0;
+            var resource = new Resource();
+            var serviceMock = new Mock<IUpdateService<Resource>>();
+            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
+            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = false });
+            var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, update: serviceMock.Object);
+
+            // act
+            var response = await controller.PatchAsync(id, resource);
+
+            // assert
+            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Once);
+            VerifyApplyContext();
+            Assert.IsNotType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateEnabled()
+        {
+            // arrange
+            const int id = 0;
+            var resource = new Resource();
+            var serviceMock = new Mock<IUpdateService<Resource>>();
+            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
+            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions{ValidateModelState = true});
+            var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, update: serviceMock.Object);
+            controller.ModelState.AddModelError("Id", "Failed Validation");
+
+            // act
+            var response = await controller.PatchAsync(id, resource);
+
+            // assert
+            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Never);
+            Assert.IsType<BadRequestObjectResult>(response);
+            Assert.IsType<ErrorCollection>(((BadRequestObjectResult) response).Value);
         }
 
         [Fact]
@@ -166,6 +212,67 @@ namespace UnitTests
 
             // assert
             Assert.Equal(405, exception.GetStatusCode());
+        }
+
+        [Fact]
+        public async Task PostAsync_Calls_Service()
+        {
+            // arrange
+            var resource = new Resource();
+            var serviceMock = new Mock<ICreateService<Resource>>();
+            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
+            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions());
+            var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, create: serviceMock.Object);
+            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
+            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext {HttpContext = new DefaultHttpContext()};
+
+            // act
+            await controller.PostAsync(resource);
+
+            // assert
+            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
+            VerifyApplyContext();
+        }
+
+        [Fact]
+        public async Task PostAsync_ModelStateInvalid_ValidateModelStateDisabled()
+        {
+            // arrange
+            var resource = new Resource();
+            var serviceMock = new Mock<ICreateService<Resource>>();
+            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
+            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = false });
+            var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, create: serviceMock.Object);
+            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
+            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
+
+            // act
+            var response = await controller.PostAsync(resource);
+
+            // assert
+            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
+            VerifyApplyContext();
+            Assert.IsNotType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task PostAsync_ModelStateInvalid_ValidateModelStateEnabled()
+        {
+            // arrange
+            var resource = new Resource();
+            var serviceMock = new Mock<ICreateService<Resource>>();
+            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
+            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = true });
+            var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, create: serviceMock.Object);
+            controller.ModelState.AddModelError("Id", "Failed Validation");
+
+            // act
+            var response = await controller.PostAsync(resource);
+
+            // assert
+            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Never);
+            Assert.IsType<BadRequestObjectResult>(response);
+            Assert.IsType<ErrorCollection>(((BadRequestObjectResult)response).Value);
         }
 
         [Fact]

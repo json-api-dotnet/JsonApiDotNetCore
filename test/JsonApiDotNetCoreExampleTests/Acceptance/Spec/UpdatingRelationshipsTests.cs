@@ -127,5 +127,100 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(todoItemsOwner);
         }
+
+        [Fact]
+        public async Task Can_Delete_Relationship_By_Patching_Resource()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+
+            _context.People.Add(person);
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    relationships = new
+                    {
+                        owner = new
+                        {
+                            data = (object)null
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var todoItemResult = _context.TodoItems
+                .AsNoTracking()
+                .Include(t => t.Owner)
+                .Single(t => t.Id == todoItem.Id);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Null(todoItemResult.Owner);
+        }
+
+        [Fact]
+        public async Task Can_Delete_Relationship_By_Patching_Relationship()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+
+            _context.People.Add(person);
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = (object)null
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}/relationships/owner";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var todoItemResult = _context.TodoItems
+                .AsNoTracking()
+                .Include(t => t.Owner)
+                .Single(t => t.Id == todoItem.Id);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Null(todoItemResult.Owner);
+        }
     }
 }

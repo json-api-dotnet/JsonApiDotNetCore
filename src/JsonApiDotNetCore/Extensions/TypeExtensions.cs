@@ -1,4 +1,5 @@
-﻿using System;
+using JsonApiDotNetCore.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,41 @@ namespace JsonApiDotNetCore.Extensions
             var elementType = enumerableTypes[0].GenericTypeArguments[0];
 
             return elementType;
+        }
+
+        /// <summary>
+        /// Creates a List{TInterface} where TInterface is the generic for type specified by t
+        /// </summary>
+        public static IEnumerable GetEmptyCollection(this Type t)
+        {
+            if (t == null) throw new ArgumentNullException(nameof(t));
+
+            var listType = typeof(List<>).MakeGenericType(t);
+            var list = (IEnumerable)Activator.CreateInstance(listType);
+            return list;
+        }
+
+        /// <summary>
+        /// Creates a new instance of type t, casting it to the specified TInterface 
+        /// </summary>
+        public static TInterface New<TInterface>(this Type t)
+        {
+            if (t == null) throw new ArgumentNullException(nameof(t));
+
+            var instance = (TInterface)CreateNewInstance(t);
+            return instance;
+        }
+
+        private static object CreateNewInstance(Type type)
+        {
+            try
+            {
+                return Activator.CreateInstance(type);
+            }
+            catch (Exception e)
+            {
+                throw new JsonApiException(500, $"Type '{type}' cannot be instantiated using the default constructor.", e);
+            }
         }
     }
 }

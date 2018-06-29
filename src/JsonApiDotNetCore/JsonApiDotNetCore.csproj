@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>2.2.3</VersionPrefix>
+    <VersionPrefix>2.3.4</VersionPrefix>
     <TargetFrameworks>$(NetStandardVersion)</TargetFrameworks>
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,29 +17,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ben.Demystifier" Version="0.1.0" />
+    <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(MicrosoftLoggingVersion)" />
-    <PackageReference Include="System.Memory" Version="4.5.0-preview2-26406-04" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.Memory" Version="4.5.0" />
     <PackageReference Include="System.ValueTuple" Version="$(TuplesVersion)" />
   </ItemGroup>
 
-  <!-- XML documentation -->
-  <PropertyGroup>
+  <!-- 
+    To generate DocFX documentation on Windows platforms: dotnet build -c Release /p:DocFx=true
+  -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateDocumentation Condition="'$(IsWindows)|$(DocFx)' == 'true|true'">true</GenerateDocumentation>
     <DocumentationFile>bin\Release\netstandard2.0\JsonApiDotNetCore.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <LangVersion>7.2</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <LangVersion>7.2</LangVersion>
-  </PropertyGroup>
-  <ItemGroup Condition="$(IsWindows)=='true'">
+
+  <ItemGroup Condition="'$(GenerateDocumentation)' == 'true'">
     <PackageReference Include="docfx.console" Version="2.33.0" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
@@ -15,14 +16,20 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
         private readonly IJsonApiContext _jsonApiContext;
-        private readonly IGenericProcessorFactory _genericProcessorFactory;
 
+        [Obsolete(
+            "The deserializer no longer depends on the IGenericProcessorFactory",
+            error: false)]
         public JsonApiDeSerializer(
             IJsonApiContext jsonApiContext,
             IGenericProcessorFactory genericProcessorFactory)
         {
             _jsonApiContext = jsonApiContext;
-            _genericProcessorFactory = genericProcessorFactory;
+        }
+
+        public JsonApiDeSerializer(IJsonApiContext jsonApiContext)
+        {
+            _jsonApiContext = jsonApiContext;
         }
 
         public object Deserialize(string requestBody)
@@ -47,8 +54,12 @@ namespace JsonApiDotNetCore.Serialization
                 var document = bodyJToken.ToObject<Document>();
 
                 _jsonApiContext.DocumentMeta = document.Meta;
-                var entity = DocumentToObject(document.Data);
+                var entity = DocumentToObject(document.Data, document.Included);
                 return entity;
+            }
+            catch (JsonApiException)
+            {
+                throw;
             }
             catch (Exception e)
             {
@@ -88,8 +99,8 @@ namespace JsonApiDotNetCore.Serialization
                 var deserializedList = new List<TEntity>();
                 foreach (var data in documents.Data)
                 {
-                    var entity = DocumentToObject(data);
-                    deserializedList.Add((TEntity)entity);
+                    var entity = (TEntity)DocumentToObject(data, documents.Included);
+                    deserializedList.Add(entity);
                 }
 
                 return deserializedList;
@@ -100,17 +111,22 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        public object DocumentToObject(DocumentData data)
+        public object DocumentToObject(DocumentData data, List<DocumentData> included = null)
         {
-            if (data == null) throw new JsonApiException(422, "Failed to deserialize document as json:api.");
+            if (data == null)
+                throw new JsonApiException(422, "Failed to deserialize document as json:api.");
 
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type?.ToString());
-            _jsonApiContext.RequestEntity = contextEntity;
+            _jsonApiContext.RequestEntity = contextEntity ?? throw new JsonApiException(400,
+                    message: $"This API does not contain a json:api resource named '{data.Type}'.",
+                    detail: "This resource is not registered on the ContextGraph. "
+                            + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
+                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."); ;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
 
             entity = SetEntityAttributes(entity, contextEntity, data.Attributes);
-            entity = SetRelationships(entity, contextEntity, data.Relationships);
+            entity = SetRelationships(entity, contextEntity, data.Relationships, included);
 
             var identifiableEntity = (IIdentifiable)entity;
 
@@ -165,7 +181,8 @@ namespace JsonApiDotNetCore.Serialization
         private object SetRelationships(
             object entity,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships)
+            Dictionary<string, RelationshipData> relationships, 
+            List<DocumentData> included = null)
         {
             if (relationships == null || relationships.Count == 0)
                 return entity;
@@ -175,8 +192,8 @@ namespace JsonApiDotNetCore.Serialization
             foreach (var attr in contextEntity.Relationships)
             {
                 entity = attr.IsHasOne
-                    ? SetHasOneRelationship(entity, entityProperties, attr, contextEntity, relationships)
-                    : SetHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships);
+                    ? SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, contextEntity, relationships, included)
+                    : SetHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships, included);
             }
 
             return entity;
@@ -184,36 +201,60 @@ namespace JsonApiDotNetCore.Serialization
 
         private object SetHasOneRelationship(object entity,
             PropertyInfo[] entityProperties,
-            RelationshipAttribute attr,
+            HasOneAttribute attr,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships)
+            Dictionary<string, RelationshipData> relationships,
+            List<DocumentData> included = null)
         {
             var relationshipName = attr.PublicRelationshipName;
 
-            if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
+            if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData) == false)
+                return entity;
+            
+            var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
+                .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
+
+            if (relationshipAttr == null)
+                throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
+
+            var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
+
+            var foreignKey = attr.IdentifiablePropertyName;
+            var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
+
+            if (foreignKeyProperty == null && rio == null)
+                return entity;
+
+            if (foreignKeyProperty == null && rio != null)
+                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
+
+            // e.g. PATCH /articles
+            // {... { "relationships":{ "Owner": { "data": null } } } }
+            if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
+                throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
+
+            var newValue = rio?.Id ?? null;
+            var convertedValue = TypeHelper.ConvertType(newValue, foreignKeyProperty.PropertyType);
+
+            _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+
+            foreignKeyProperty.SetValue(entity, convertedValue);
+
+
+            if(rio != null
+                // if the resource identifier is null, there should be no reason to instantiate an instance
+                && rio.Id != null)
             {
-                var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
-                    .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
+                // we have now set the FK property on the resource, now we need to check to see if the
+                // related entity was included in the payload and update its attributes
+                var includedRelationshipObject = GetIncludedRelationship(rio, included, relationshipAttr);
+                if (includedRelationshipObject != null)
+                    relationshipAttr.SetValue(entity, includedRelationshipObject);
 
-                if (relationshipAttr == null)
-                    throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
-
-                var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
-
-                if (rio == null) return entity;
-
-                var newValue = rio.Id;
-
-                var foreignKey = attr.InternalRelationshipName + "Id";
-                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
-                if (entityProperty == null)
-                    throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
-
-                var convertedValue = TypeHelper.ConvertType(newValue, entityProperty.PropertyType);
-
-                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
-
-                entityProperty.SetValue(entity, convertedValue);
+                // we need to store the fact that this relationship was included in the payload
+                // for EF, the repository will use these pointers to make ensure we don't try to
+                // create resources if they already exist, we just need to create the relationship
+                _jsonApiContext.HasOneRelationshipPointers.Add(attr.Type, includedRelationshipObject);
             }
 
             return entity;
@@ -223,13 +264,9 @@ namespace JsonApiDotNetCore.Serialization
             PropertyInfo[] entityProperties,
             RelationshipAttribute attr,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships)
+            Dictionary<string, RelationshipData> relationships,
+            List<DocumentData> included = null)
         {
-            var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalRelationshipName);
-
-            if (entityProperty == null)
-                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain an relationsip named {attr.InternalRelationshipName}");
-
             var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
@@ -238,14 +275,56 @@ namespace JsonApiDotNetCore.Serialization
 
                 if (data == null) return entity;
 
-                var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), attr.Type);
+                var relatedResources = relationshipData.ManyData.Select(r =>
+                {
+                    var instance = GetIncludedRelationship(r, included, attr);
+                    return instance;
+                });
 
-                var ids = relationshipData.ManyData.Select(r => r.Id);
+                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.Type);
 
-                genericProcessor.SetRelationships(entity, attr, ids);
+                attr.SetValue(entity, convertedCollection);
+
+                _jsonApiContext.HasManyRelationshipPointers.Add(attr.Type, convertedCollection);
             }
 
             return entity;
+        }
+
+        private IIdentifiable GetIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier, List<DocumentData> includedResources, RelationshipAttribute relationshipAttr)
+        {
+            // at this point we can be sure the relationshipAttr.Type is IIdentifiable because we were able to successfully build the ContextGraph
+            var relatedInstance = relationshipAttr.Type.New<IIdentifiable>();
+            relatedInstance.StringId = relatedResourceIdentifier.Id;
+
+            // can't provide any more data other than the rio since it is not contained in the included section
+            if (includedResources == null || includedResources.Count == 0)
+                return relatedInstance;
+
+            var includedResource = GetLinkedResource(relatedResourceIdentifier, includedResources);
+            if (includedResource == null)
+                return relatedInstance;
+
+            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationshipAttr.Type);
+            if (contextEntity == null)
+                throw new JsonApiException(400, $"Included type '{relationshipAttr.Type}' is not a registered json:api resource.");
+            
+            SetEntityAttributes(relatedInstance, contextEntity, includedResource.Attributes);
+
+            return relatedInstance;
+        }
+
+        private DocumentData GetLinkedResource(ResourceIdentifierObject relatedResourceIdentifier, List<DocumentData> includedResources)
+        {
+            try
+            {
+                return includedResources.SingleOrDefault(r => r.Type == relatedResourceIdentifier.Type && r.Id == relatedResourceIdentifier.Id);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new JsonApiException(400, $"A compound document MUST NOT include more than one resource object for each type and id pair."
+                        + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
+            }
         }
     }
 }

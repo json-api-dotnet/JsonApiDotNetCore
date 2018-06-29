@@ -1,7 +1,7 @@
 ﻿using JsonApiDotNetCore.Models;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.Unit.Models
+namespace UnitTests.Models
 {
     public class AttributesEqualsTests
     {
