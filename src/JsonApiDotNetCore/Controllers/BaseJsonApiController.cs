@@ -146,13 +146,15 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
-            if (_create == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_create == null)
+                throw Exceptions.UnSupportedRequestMethod;
 
             if (entity == null)
                 return UnprocessableEntity();
 
             if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
                 return Forbidden();
+
             if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
                 return BadRequest(ModelState.ConvertToErrorCollection());
 
