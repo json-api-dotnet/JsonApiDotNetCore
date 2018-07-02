@@ -174,20 +174,27 @@ namespace JsonApiDotNetCore.Builders
                     var (isJsonApiResource, idType) = GetIdType(entityType);
 
                     if (isJsonApiResource)
-                        _entities.Add(GetEntity(GetResourceName(property), entityType, idType));
+                        _entities.Add(GetEntity(GetResourceName(property, entityType), entityType, idType));
                 }
             }
 
             return this;
         }
 
-        private string GetResourceName(PropertyInfo property)
+        private string GetResourceName(PropertyInfo property, Type resourceType)
         {
-            var resourceAttribute = property.GetCustomAttribute(typeof(ResourceAttribute));
-            if (resourceAttribute == null)
-                return property.Name.Dasherize();
+            // check the class definition first
+            // [Resource("models"] public class Model : Identifiable { /* ... */ }
+            if (resourceType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute classResourceAttribute)
+                return classResourceAttribute.ResourceName;
 
-            return ((ResourceAttribute)resourceAttribute).ResourceName;
+            // check the DbContext member next
+            // [Resource("models")] public DbSet<Model> Models { get; set; }
+            if (property.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute resourceAttribute)
+                return resourceAttribute.ResourceName;
+
+            // fallback to dsherized...this should actually check for a custom IResourceNameFormatter
+            return property.Name.Dasherize();            
         }
 
         private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
