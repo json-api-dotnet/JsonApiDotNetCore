@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Internal

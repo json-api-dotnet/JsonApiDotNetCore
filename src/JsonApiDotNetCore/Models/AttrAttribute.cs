@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
@@ -70,33 +71,24 @@ namespace JsonApiDotNetCore.Models
         public bool IsSortable { get; }
 
         /// <summary>
+        /// The member property info
+        /// </summary>
+        internal PropertyInfo PropertyInfo { get; set; }
+
+        /// <summary>
         /// Get the value of the attribute for the given object.
         /// Returns null if the attribute does not belong to the
         /// provided object.
         /// </summary>
-        public object GetValue(object entity)
-        {
-            return entity
-                .GetType()
-                .GetProperty(InternalAttributeName)
-                ?.GetValue(entity);
-        }
+        public object GetValue(object entity) => PropertyInfo.GetValue(entity);
 
         /// <summary>
         /// Sets the value of the attribute on the given object.
         /// </summary>
         public void SetValue(object entity, object newValue)
         {
-            var propertyInfo = entity
-                .GetType()
-                .GetProperty(InternalAttributeName);
-
-            if (propertyInfo != null)
-            {
-                var convertedValue = TypeHelper.ConvertType(newValue, propertyInfo.PropertyType);
-
-                propertyInfo.SetValue(entity, convertedValue);
-            }
+            var convertedValue = TypeHelper.ConvertType(newValue, PropertyInfo.PropertyType);
+            PropertyInfo.SetValue(entity, convertedValue);
         }
 
         /// <summary>
