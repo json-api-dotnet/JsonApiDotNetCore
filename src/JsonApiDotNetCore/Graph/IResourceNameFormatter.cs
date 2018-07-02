@@ -35,8 +35,7 @@ namespace JsonApiDotNetCore.Graph
         {
             try
             {
-                var attribute = type.GetCustomAttributes(typeof(ResourceAttribute)).SingleOrDefault() as ResourceAttribute;
-                if (attribute != null)
+                if (type.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
                     return attribute.ResourceName;
 
                 return str.Dasherize(type.Name.Pluralize());
