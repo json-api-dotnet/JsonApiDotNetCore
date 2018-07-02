@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;

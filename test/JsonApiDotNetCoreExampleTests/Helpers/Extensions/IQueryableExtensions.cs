@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
-using Remotion.Linq.Parsing.Structure;
 using Database = Microsoft.EntityFrameworkCore.Storage.Database;
 
 namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions

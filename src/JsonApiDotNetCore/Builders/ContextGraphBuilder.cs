@@ -59,7 +59,6 @@ namespace JsonApiDotNetCore.Builders
             _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
 
             var graph = new ContextGraph(_entities, _usesDbContext, _validationResults);
-
             return graph;
         }
 
@@ -83,7 +82,8 @@ namespace JsonApiDotNetCore.Builders
             EntityType = entityType,
             IdentityType = idType,
             Attributes = GetAttributes(entityType),
-            Relationships = GetRelationships(entityType)
+            Relationships = GetRelationships(entityType),
+            ResourceType = GetResourceDefinitionType(entityType)
         };
 
         private Link GetLinkFlags(Type entityType)
@@ -104,8 +104,12 @@ namespace JsonApiDotNetCore.Builders
             foreach (var prop in properties)
             {
                 var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
-                if (attribute == null) continue;
+                if (attribute == null)
+                    continue;
+
                 attribute.InternalAttributeName = prop.Name;
+                attribute.PropertyInfo = prop;
+
                 attributes.Add(attribute);
             }
             return attributes;
@@ -135,6 +139,8 @@ namespace JsonApiDotNetCore.Builders
             else
                 return prop.PropertyType;
         }
+
+        private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 
         public IContextGraphBuilder AddDbContext<T>() where T : DbContext
         {
