@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
@@ -34,9 +35,10 @@ namespace JsonApiDotNetCore.Extensions
             return AddJsonApi<TContext>(services, options, mvcBuilder);
         }
 
-        public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
-           Action<JsonApiOptions> options,
-           IMvcCoreBuilder mvcBuilder) where TContext : DbContext
+        public static IServiceCollection AddJsonApi<TContext>(
+            this IServiceCollection services,
+            Action<JsonApiOptions> options,
+            IMvcCoreBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
 
@@ -44,8 +46,7 @@ namespace JsonApiDotNetCore.Extensions
 
             config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
 
-            mvcBuilder
-                .AddMvcOptions(opt =>
+            mvcBuilder.AddMvcOptions(opt =>
                 {
                     opt.Filters.Add(typeof(JsonApiExceptionFilter));
                     opt.SerializeAsJsonApi(config);
@@ -55,22 +56,28 @@ namespace JsonApiDotNetCore.Extensions
             return services;
         }
 
-        public static IServiceCollection AddJsonApi(this IServiceCollection services,
-            Action<JsonApiOptions> options,
-            IMvcCoreBuilder mvcBuilder)
+        public static IServiceCollection AddJsonApi(
+            this IServiceCollection services,
+            Action<JsonApiOptions> configureOptions,
+            IMvcCoreBuilder mvcBuilder,
+            Action<ServiceDiscoveryFacade> autoDiscover = null)
         {
-            var config = new JsonApiOptions();
+            var options = new JsonApiOptions();
+            configureOptions(options);
 
-            options(config);
+            if(autoDiscover != null)
+            {
+                var facade = new ServiceDiscoveryFacade(services, options.ContextGraphBuilder);
+                autoDiscover(facade);
+            }
 
-            mvcBuilder
-                .AddMvcOptions(opt =>
+            mvcBuilder.AddMvcOptions(opt =>
                 {
                     opt.Filters.Add(typeof(JsonApiExceptionFilter));
-                    opt.SerializeAsJsonApi(config);
+                    opt.SerializeAsJsonApi(options);
                 });
 
-            AddJsonApiInternals(services, config);
+            AddJsonApiInternals(services, options);
             return services;
         }
 
@@ -90,6 +97,9 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
+            if (jsonApiOptions.ContextGraph == null)
+                jsonApiOptions.ContextGraph = jsonApiOptions.ContextGraphBuilder.Build();
+
             if (jsonApiOptions.ContextGraph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
