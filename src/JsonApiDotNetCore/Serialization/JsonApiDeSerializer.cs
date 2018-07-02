@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Serialization
                     message: $"This API does not contain a json:api resource named '{data.Type}'.",
                     detail: "This resource is not registered on the ContextGraph. "
                             + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
-                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."); ;
+                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
 
