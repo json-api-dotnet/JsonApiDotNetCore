@@ -7,6 +7,9 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Resources;
+using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -38,7 +41,9 @@ namespace JsonApiDotNetCoreExample
                     options.Namespace = "api/v1";
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
-                });
+                })
+                // TODO: this should be handled via auto-discovery
+                .AddScoped<ResourceDefinition<User>, UserResource>();
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();

@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Http;
 using System;
 
 namespace JsonApiDotNetCore.Internal.Generics
