@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Internal;
-using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using Moq;
 using Microsoft.EntityFrameworkCore;
@@ -53,10 +51,13 @@ namespace UnitTests.Data
                 Description = Guid.NewGuid().ToString()
             };
 
+            var descAttr = new AttrAttribute("description", "Description");
+            descAttr.PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description));
+
             _attrsToUpdate = new Dictionary<AttrAttribute, object> 
             {
                 {
-                    new AttrAttribute("description", "Description"),
+                    descAttr,
                     todoItemUpdates.Description
                 }
             };

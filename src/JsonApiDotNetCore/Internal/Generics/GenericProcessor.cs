@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 

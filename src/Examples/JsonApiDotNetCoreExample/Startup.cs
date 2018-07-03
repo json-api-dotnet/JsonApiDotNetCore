@@ -30,21 +30,20 @@ namespace JsonApiDotNetCoreExample
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddConsole(LogLevel.Warning);
 
+            var mvcBuilder = services.AddMvcCore();
+
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
-                .AddDbContext<AppDbContext>(options =>
-                    options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
-                .AddJsonApi<AppDbContext>(options => {
+                .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
+                .AddJsonApi(options => {
                     options.Namespace = "api/v1";
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
-                });
+                }, 
+                mvcBuilder,
+                discovery => discovery.AddCurrentAssemblyServices());
 
-            var provider = services.BuildServiceProvider();
-            var appContext = provider.GetRequiredService<AppDbContext>();
-            if(appContext == null)
-                throw new ArgumentException();
-                
+            var provider = services.BuildServiceProvider();                
             return provider;
         }
 
