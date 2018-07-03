@@ -1,10 +1,8 @@
-using System;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Xunit;
 
 namespace UnitTests
@@ -33,10 +31,11 @@ namespace UnitTests
 
             // assert
             var contextGraph = container.GetRequiredService<IContextGraph>();
-            var dbResource = contextGraph.GetContextEntity("db-resources").EntityType;
-            var nonDbResource = contextGraph.GetContextEntity("non-db-resources").EntityType;
-            Assert.Equal(typeof(DbResource), dbResource);
-            Assert.Equal(typeof(NonDbResource), nonDbResource);
+            var dbResource = contextGraph.GetContextEntity("db-resources");
+            var nonDbResource = contextGraph.GetContextEntity("non-db-resources");
+            Assert.Equal(typeof(DbResource), dbResource.EntityType);
+            Assert.Equal(typeof(NonDbResource), nonDbResource.EntityType);
+            Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceType);
         }
     }
 }

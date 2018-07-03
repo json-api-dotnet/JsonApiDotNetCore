@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Services;

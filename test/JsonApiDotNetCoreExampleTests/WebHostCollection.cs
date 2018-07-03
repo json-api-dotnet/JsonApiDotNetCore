@@ -1,4 +1,3 @@
-using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExampleTests.Acceptance;
 using Xunit;
 
