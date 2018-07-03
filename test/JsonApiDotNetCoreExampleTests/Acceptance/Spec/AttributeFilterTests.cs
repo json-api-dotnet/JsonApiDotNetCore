@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
