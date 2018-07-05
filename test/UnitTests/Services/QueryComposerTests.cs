@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
 

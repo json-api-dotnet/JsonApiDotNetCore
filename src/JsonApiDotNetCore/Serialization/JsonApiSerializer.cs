@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IDocumentBuilder _documentBuilder;
         private readonly ILogger<JsonApiSerializer> _logger;
         private readonly IJsonApiContext _jsonApiContext;
-
+        
         public JsonApiSerializer(
             IJsonApiContext jsonApiContext,
             IDocumentBuilder documentBuilder)
