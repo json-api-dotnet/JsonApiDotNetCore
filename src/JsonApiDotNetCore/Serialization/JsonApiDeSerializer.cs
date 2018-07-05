@@ -147,7 +147,7 @@ namespace JsonApiDotNetCore.Serialization
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
                     var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
-                    attr.PropertyInfo.SetValue(entity, convertedValue);
+                    attr.SetValue(entity, convertedValue);
 
                     if (attr.IsImmutable == false)
                         _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
