@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using System.Collections;

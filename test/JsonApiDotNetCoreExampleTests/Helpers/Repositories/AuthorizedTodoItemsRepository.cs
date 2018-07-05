@@ -1,7 +1,6 @@
 using System.Linq;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Services;
 using Microsoft.Extensions.Logging;

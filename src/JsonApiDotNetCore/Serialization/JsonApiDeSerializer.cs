@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Serialization
                             + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."); ;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
-
+            
             entity = SetEntityAttributes(entity, contextEntity, data.Attributes);
             entity = SetRelationships(entity, contextEntity, data.Relationships, included);
 
@@ -141,20 +141,13 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (attributeValues == null || attributeValues.Count == 0)
                 return entity;
-
-            var entityProperties = entity.GetType().GetProperties();
-
+            
             foreach (var attr in contextEntity.Attributes)
             {
-                var entityProperty = entityProperties.FirstOrDefault(p => p.Name == attr.InternalAttributeName);
-
-                if (entityProperty == null)
-                    throw new ArgumentException($"{contextEntity.EntityType.Name} does not contain an attribute named {attr.InternalAttributeName}", nameof(entity));
-
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                    var convertedValue = ConvertAttrValue(newValue, entityProperty.PropertyType);
-                    entityProperty.SetValue(entity, convertedValue);
+                    var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
+                    attr.SetValue(entity, convertedValue);
 
                     if (attr.IsImmutable == false)
                         _jsonApiContext.AttributesToUpdate[attr] = convertedValue;

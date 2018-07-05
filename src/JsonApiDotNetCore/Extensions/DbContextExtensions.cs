@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 

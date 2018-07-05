@@ -17,14 +17,15 @@ namespace JsonApiDotNetCore.Internal
     {
         internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
+        internal static IContextGraph Instance { get; set; }
 
         public ContextGraph() { }
-
         public ContextGraph(List<ContextEntity> entities, bool usesDbContext)
         {
             Entities = entities;
             UsesDbContext = usesDbContext;
             ValidationResults = new List<ValidationResult>();
+            Instance = this;
         }
 
         // eventually, this is the planned public constructor
@@ -36,6 +37,7 @@ namespace JsonApiDotNetCore.Internal
             Entities = entities;
             UsesDbContext = usesDbContext;
             ValidationResults = validationResults;
+            Instance = this;
         }
 
         public bool UsesDbContext { get; }

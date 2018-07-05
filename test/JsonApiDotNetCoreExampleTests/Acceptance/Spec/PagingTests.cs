@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
