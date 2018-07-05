@@ -5,10 +5,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -302,6 +304,74 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
             Assert.Null(deserializedBody.AchievedDate);
+        }
+
+
+        [Fact]
+        public async Task Can_Post_TodoItem_With_Different_Owner_And_Assignee()
+        {
+            // Arrange
+            var person1 = new Person();
+            var person2 = new Person();
+            _context.People.Add(person1);
+            _context.People.Add(person2);
+            _context.SaveChanges();
+
+            var todoItem = _todoItemFaker.Generate();
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new Dictionary<string, object>()
+                    {
+                        { "description", todoItem.Description },
+                        { "ordinal", todoItem.Ordinal },
+                        { "created-date", todoItem.CreatedDate }
+                    },
+                    relationships = new
+                    {
+                        owner = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = person1.Id.ToString()
+                            }
+                        },
+                        assignee = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = person2.Id.ToString()
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("POST");
+            var route = $"/api/v1/todo-items";
+
+            var request = new HttpRequestMessage(httpMethod, route);
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert -- response
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            var resultId = int.Parse(document.Data.Id);
+
+            // Assert -- database
+            var todoItemResult = await _context.TodoItems.SingleAsync(t => t.Id == resultId);
+
+            Assert.Equal(person1.Id, todoItemResult.OwnerId);
+            Assert.Equal(person2.Id, todoItemResult.AssigneeId);
         }
 
         [Fact]

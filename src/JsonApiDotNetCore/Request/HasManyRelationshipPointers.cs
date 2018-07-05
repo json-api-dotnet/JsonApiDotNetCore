@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Request
 {
@@ -32,18 +32,18 @@ namespace JsonApiDotNetCore.Request
     /// </summary>
     public class HasManyRelationshipPointers
     {
-        private Dictionary<Type, IList> _hasManyRelationships = new Dictionary<Type, IList>();
+        private Dictionary<RelationshipAttribute, IList> _hasManyRelationships = new Dictionary<RelationshipAttribute, IList>();
 
         /// <summary>
         /// Add the relationship to the list of relationships that should be 
         /// set in the repository layer.
         /// </summary>
-        public void Add(Type dependentType, IList entities)
-            => _hasManyRelationships[dependentType] = entities;
+        public void Add(RelationshipAttribute relationship, IList entities)
+            => _hasManyRelationships[relationship] = entities;
 
         /// <summary>
         /// Get all the models that should be associated
         /// </summary>
-        public Dictionary<Type, IList> Get() => _hasManyRelationships;
+        public Dictionary<RelationshipAttribute, IList> Get() => _hasManyRelationships;
     }
 }
