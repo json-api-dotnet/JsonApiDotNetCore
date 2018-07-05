@@ -80,15 +80,54 @@ namespace JsonApiDotNetCore.Models
         /// Returns null if the attribute does not belong to the
         /// provided object.
         /// </summary>
-        public object GetValue(object entity) => PropertyInfo.GetValue(entity);
+        public object GetValue(object entity)
+        {
+            if (entity == null)
+                throw new InvalidOperationException("Cannot GetValue from null object.");
+
+            var prop = GetResourceProperty(entity);
+            return prop?.GetValue(entity);
+        }
 
         /// <summary>
         /// Sets the value of the attribute on the given object.
         /// </summary>
         public void SetValue(object entity, object newValue)
         {
-            var convertedValue = TypeHelper.ConvertType(newValue, PropertyInfo.PropertyType);
-            PropertyInfo.SetValue(entity, convertedValue);
+            if (entity == null)
+                throw new InvalidOperationException("Cannot SetValue on null object.");
+
+            var prop = GetResourceProperty(entity);
+            if(prop != null)
+            {
+                var convertedValue = TypeHelper.ConvertType(newValue, prop.PropertyType);
+                prop.SetValue(entity, convertedValue);
+            }            
+        }
+
+        private PropertyInfo GetResourceProperty(object resource)
+        {
+            // There are some scenarios, especially ones where users are using a different
+            // data model than view model, where they may use a repository implmentation
+            // that does not match the deserialized type. For now, we will continue to support
+            // this use case.
+            var targetType = resource.GetType();
+            if (targetType != PropertyInfo.DeclaringType)
+            {
+                var propertyInfo = resource
+                    .GetType()
+                    .GetProperty(InternalAttributeName);
+
+                return propertyInfo;
+
+                // TODO: this should throw but will be a breaking change in some cases
+                //if (propertyInfo == null)
+                //    throw new InvalidOperationException(
+                //        $"'{targetType}' does not contain a member named '{InternalAttributeName}'." +
+                //        $"There is also a mismatch in target types. Expected '{PropertyInfo.DeclaringType}' but instead received '{targetType}'.");
+            }
+
+            return PropertyInfo;
         }
 
         /// <summary>

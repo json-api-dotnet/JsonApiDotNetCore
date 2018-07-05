@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Models
             // model => model.Attribute
             if (filter.Body is MemberExpression memberExpression)
                 return _contextEntity.Attributes
-                        .Where(a => a.PropertyInfo.Name != memberExpression.Member.Name)
+                        .Where(a => a.InternalAttributeName != memberExpression.Member.Name)
                         .ToList();
 
             // model => new { model.Attribute1, model.Attribute2 }
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Models
             {
                 var attributes = new List<AttrAttribute>();
                 foreach (var attr in _contextEntity.Attributes)
-                    if (newExpression.Members.Any(m => m.Name == attr.PropertyInfo.Name) == false)
+                    if (newExpression.Members.Any(m => m.Name == attr.InternalAttributeName) == false)
                         attributes.Add(attr);                 
 
                 return attributes;
