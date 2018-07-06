@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -49,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            
+
             var content = new
             {
                 data = new
@@ -78,6 +80,124 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
+
+        [Fact]
+        public async Task Can_Patch_Entity()
+        {
+            // arrange
+            var todoItem = _todoItemFaker.Generate();
+            var person = _personFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var newTodoItem = _todoItemFaker.Generate();
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new
+                    {
+                        description = newTodoItem.Description,
+                        ordinal = newTodoItem.Ordinal
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert -- response
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotNull(document);
+            Assert.NotNull(document.Data);
+            Assert.NotNull(document.Data.Attributes);
+            Assert.Equal(newTodoItem.Description, document.Data.Attributes["description"]);
+            Assert.Equal(newTodoItem.Ordinal, (long)document.Data.Attributes["ordinal"]);
+            Assert.True(document.Data.Relationships.ContainsKey("owner"));
+            Assert.NotNull(document.Data.Relationships["owner"].SingleData);
+            Assert.Equal(person.Id.ToString(), document.Data.Relationships["owner"].SingleData.Id);
+            Assert.Equal("people", document.Data.Relationships["owner"].SingleData.Type);
+
+            // Assert -- database
+            var updatedTodoItem = _context.TodoItems.AsNoTracking()
+                .Include(t => t.Owner)
+                .SingleOrDefault(t => t.Id == todoItem.Id);
+
+            Assert.Equal(person.Id, updatedTodoItem.OwnerId);
+            Assert.Equal(newTodoItem.Description, updatedTodoItem.Description);
+            Assert.Equal(newTodoItem.Ordinal, updatedTodoItem.Ordinal);
+        }
+
+        [Fact]
+        public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
+        {
+            // arrange
+            var todoItem = _todoItemFaker.Generate();
+            var person = _personFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var newPerson = _personFaker.Generate();
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    attributes = new Dictionary<string, object>
+                    {
+                        { "last-name",  newPerson.LastName },
+                        { "first-name",  newPerson.FirstName},
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert -- response
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Console.WriteLine(body);
+            Assert.NotNull(document);
+            Assert.NotNull(document.Data);
+            Assert.NotNull(document.Data.Attributes);
+            Assert.Equal(newPerson.LastName, document.Data.Attributes["last-name"]);
+            Assert.Equal(newPerson.FirstName, document.Data.Attributes["first-name"]);
+            Assert.True(document.Data.Relationships.ContainsKey("todo-items"));
+            Assert.Null(document.Data.Relationships["todo-items"].ManyData);
+            Assert.Null(document.Data.Relationships["todo-items"].SingleData);
+        }
+
         [Fact]
         public async Task Can_Patch_Entity_And_HasOne_Relationships()
         {
@@ -92,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            
+
             var content = new
             {
                 data = new
