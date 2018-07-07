@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
-    public interface ICreateOpProcessor<T> : IOpProcessor
+    public interface ICreateOpProcessor<T> : ICreateOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     { }
 
@@ -15,7 +15,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         where T : class, IIdentifiable<TId>
     { }
 
-    public class CreateOpProcessor<T> : CreateOpProcessor<T, int>
+    public class CreateOpProcessor<T>
+        : CreateOpProcessor<T, int>, ICreateOpProcessor<T>
         where T : class, IIdentifiable<int>
     {
         public CreateOpProcessor(
