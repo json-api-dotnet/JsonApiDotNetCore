@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         { }
     }
 
-    public class UpdateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
+    public class UpdateOpProcessor<T, TId> : IUpdateOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<T, TId> _service;
