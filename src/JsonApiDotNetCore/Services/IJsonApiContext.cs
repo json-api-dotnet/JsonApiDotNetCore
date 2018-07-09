@@ -152,5 +152,12 @@ namespace JsonApiDotNetCore.Services
 
         [Obsolete("Use the proxied method IControllerContext.GetControllerAttribute instead.")]
         TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
+
+        /// <summary>
+        /// **_Experimental_**: do not use. It is likely to change in the future.
+        /// 
+        /// Resets operational state information.
+        /// </summary>
+        void BeginOperation();
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
@@ -9,16 +10,23 @@ namespace JsonApiDotNetCore.Middleware
     public class RequestMiddleware
     {
         private readonly RequestDelegate _next;
-        
+
         public RequestMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext)
         {
             if (IsValid(context))
+            {
+                // HACK: this currently results in allocation of
+                // objects that may or may not be used and even double allocation
+                // since the JsonApiContext is using field initializers
+                // Need to work on finding a better solution.
+                jsonApiContext.BeginOperation();
                 await _next(context);
+            }
         }
 
         private static bool IsValid(HttpContext context)
@@ -58,11 +66,11 @@ namespace JsonApiDotNetCore.Middleware
             var incomingMediaTypeSpan = mediaType.AsSpan();
 
             // if the content type is not application/vnd.api+json then continue on
-            if(incomingMediaTypeSpan.Length < Constants.ContentType.Length)
+            if (incomingMediaTypeSpan.Length < Constants.ContentType.Length)
                 return false;
 
             var incomingContentType = incomingMediaTypeSpan.Slice(0, Constants.ContentType.Length);
-            if(incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)
+            if (incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)
                 return false;
 
             // anything appended to "application/vnd.api+json;" will be considered a media type param
