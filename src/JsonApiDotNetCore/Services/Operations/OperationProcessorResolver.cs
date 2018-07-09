@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services.Operations.Processors;
@@ -90,6 +91,9 @@ namespace JsonApiDotNetCore.Services.Operations
             var resource = operation.GetResourceTypeName();
 
             var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            if (contextEntity == null)
+                throw new JsonApiException(400, $"This API does not expose a resource of type '{resource}'.");
+
             var processor = _processorFactory.GetProcessor<IOpProcessor>(
                 typeof(IUpdateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
             );

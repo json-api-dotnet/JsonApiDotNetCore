@@ -122,6 +122,7 @@ namespace JsonApiDotNetCore.Extensions
 
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
+
             services.AddSingleton<JsonApiOptions>(jsonApiOptions);
             services.AddSingleton<IContextGraph>(jsonApiOptions.ContextGraph);
             services.AddScoped<IJsonApiContext, JsonApiContext>();
