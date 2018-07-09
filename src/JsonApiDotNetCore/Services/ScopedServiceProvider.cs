@@ -15,14 +15,14 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class RequestScopedServiceProvider : IScopedServiceProvider
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RequestScopedServiceProvider(IHttpContextAccessor httpContextAccessor)
         {
-            _serviceProvider = httpContextAccessor.HttpContext.RequestServices;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc />
-        public object GetService(Type serviceType) => _serviceProvider.GetService(serviceType);
+        public object GetService(Type serviceType) => _httpContextAccessor.HttpContext.RequestServices.GetService(serviceType);
     }
 }

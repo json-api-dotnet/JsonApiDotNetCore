@@ -53,16 +53,17 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 throw new JsonApiException(400, "The data.id parameter is required for replace operations");
 
             var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
+
             var result = await _service.UpdateAsync(model.Id, model);
+            if (result == null)
+                throw new JsonApiException(404, $"Could not find an instance of '{operation.DataObject.Type}' with id {operation.DataObject.Id}");
 
             var operationResult = new Operation
             {
                 Op = OperationCode.update
             };
 
-            operationResult.Data = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
-                result);
+            operationResult.Data = _documentBuilder.GetData(_contextGraph.GetContextEntity(operation.GetResourceTypeName()), result);
 
             return operationResult;
         }
