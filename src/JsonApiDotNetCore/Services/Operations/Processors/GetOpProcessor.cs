@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     /// Handles all "<see cref="OperationCode.get"/>" operations 
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public interface IGetOpProcessor<T> : IOpProcessor
+    public interface IGetOpProcessor<T> : IGetOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     { }
 
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     { }
 
     /// <inheritdoc />
-    public class GetOpProcessor<T> : GetOpProcessor<T, int>
+    public class GetOpProcessor<T> : GetOpProcessor<T, int>, IGetOpProcessor<T>
         where T : class, IIdentifiable<int>
     {
         /// <inheritdoc />

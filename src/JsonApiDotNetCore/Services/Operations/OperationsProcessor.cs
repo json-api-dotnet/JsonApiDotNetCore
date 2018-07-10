@@ -19,13 +19,16 @@ namespace JsonApiDotNetCore.Services.Operations
     {
         private readonly IOperationProcessorResolver _processorResolver;
         private readonly DbContext _dbContext;
+        private readonly IJsonApiContext _jsonApiContext;
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
-            IDbContextResolver dbContextResolver)
+            IDbContextResolver dbContextResolver,
+            IJsonApiContext jsonApiContext)
         {
             _processorResolver = processorResolver;
             _dbContext = dbContextResolver.GetContext();
+            _jsonApiContext = jsonApiContext;
         }
 
         public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
@@ -40,6 +43,7 @@ namespace JsonApiDotNetCore.Services.Operations
                 {
                     foreach (var op in inputOps)
                     {
+                        _jsonApiContext.BeginOperation();
                         lastAttemptedOperation = op.Op;
                         await ProcessOperation(op, outputOps);
                         opIndex++;
@@ -75,7 +79,8 @@ namespace JsonApiDotNetCore.Services.Operations
 
         private void ReplaceLocalIdsInResourceObject(ResourceObject resourceObject, List<Operation> outputOps)
         {
-            if (resourceObject == null) return;
+            if (resourceObject == null)
+                return;
 
             // it is strange to me that a top level resource object might use a lid.
             // by not replacing it, we avoid a case where the first operation is an 'add' with an 'lid'

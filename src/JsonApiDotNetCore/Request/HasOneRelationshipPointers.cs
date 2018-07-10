@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Models;
-using System;
 using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Request
@@ -29,18 +28,18 @@ namespace JsonApiDotNetCore.Request
     /// </summary>
     public class HasOneRelationshipPointers
     {
-        private Dictionary<Type, IIdentifiable> _hasOneRelationships = new Dictionary<Type, IIdentifiable>();
+        private Dictionary<RelationshipAttribute, IIdentifiable> _hasOneRelationships = new Dictionary<RelationshipAttribute, IIdentifiable>();
 
         /// <summary>
         /// Add the relationship to the list of relationships that should be 
         /// set in the repository layer.
         /// </summary>
-        public void Add(Type dependentType, IIdentifiable entity)
-            => _hasOneRelationships[dependentType] = entity;
+        public void Add(RelationshipAttribute relationship, IIdentifiable entity)
+            => _hasOneRelationships[relationship] = entity;
 
         /// <summary>
         /// Get all the models that should be associated
         /// </summary>
-        public Dictionary<Type, IIdentifiable> Get() => _hasOneRelationships;
+        public Dictionary<RelationshipAttribute, IIdentifiable> Get() => _hasOneRelationships;
     }
 }

@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Serialization
                             + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."); ;
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
-            
+
             entity = SetEntityAttributes(entity, contextEntity, data.Attributes);
             entity = SetRelationships(entity, contextEntity, data.Relationships, included);
 
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (attributeValues == null || attributeValues.Count == 0)
                 return entity;
-            
+
             foreach (var attr in contextEntity.Attributes)
             {
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Serialization
         private object SetRelationships(
             object entity,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships, 
+            Dictionary<string, RelationshipData> relationships,
             List<DocumentData> included = null)
         {
             if (relationships == null || relationships.Count == 0)
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData) == false)
                 return entity;
-            
+
             var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
                 .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
 
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Serialization
             foreignKeyProperty.SetValue(entity, convertedValue);
 
 
-            if(rio != null
+            if (rio != null
                 // if the resource identifier is null, there should be no reason to instantiate an instance
                 && rio.Id != null)
             {
@@ -247,7 +247,7 @@ namespace JsonApiDotNetCore.Serialization
                 // we need to store the fact that this relationship was included in the payload
                 // for EF, the repository will use these pointers to make ensure we don't try to
                 // create resources if they already exist, we just need to create the relationship
-                _jsonApiContext.HasOneRelationshipPointers.Add(attr.Type, includedRelationshipObject);
+                _jsonApiContext.HasOneRelationshipPointers.Add(attr, includedRelationshipObject);
             }
 
             return entity;
@@ -278,7 +278,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 attr.SetValue(entity, convertedCollection);
 
-                _jsonApiContext.HasManyRelationshipPointers.Add(attr.Type, convertedCollection);
+                _jsonApiContext.HasManyRelationshipPointers.Add(attr, convertedCollection);
             }
 
             return entity;
@@ -301,7 +301,7 @@ namespace JsonApiDotNetCore.Serialization
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationshipAttr.Type);
             if (contextEntity == null)
                 throw new JsonApiException(400, $"Included type '{relationshipAttr.Type}' is not a registered json:api resource.");
-            
+
             SetEntityAttributes(relatedInstance, contextEntity, includedResource.Attributes);
 
             return relatedInstance;
