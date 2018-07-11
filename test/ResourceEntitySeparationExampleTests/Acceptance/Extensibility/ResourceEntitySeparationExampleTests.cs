@@ -1,49 +1,31 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Bogus;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace ResourceEntitySeparationExampleTests.Acceptance.Extensibility
 {
-    public class ResourceEntitySeparationExampleTests
+    public class ResourceEntitySeparationExampleTests : IClassFixture<TestFixture>
     {
-        private readonly TestServer _server;
-        private readonly AppDbContext _context;
+        private readonly TestFixture _fixture;
 
-        private Faker<StudentEntity> _studentFaker;
-
-        public ResourceEntitySeparationExampleTests()
+        public ResourceEntitySeparationExampleTests(TestFixture fixture)
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<TestStartup>();
-            _server = new TestServer(builder);
-            _context = _server.GetService<AppDbContext>();
-            _context.Database.EnsureCreated();
-
-            _studentFaker = new Faker<StudentEntity>()
-                .RuleFor(s => s.FirstName, f => f.Name.FirstName())
-                .RuleFor(s => s.LastName, f => f.Name.LastName());
+            _fixture = fixture;
         }
-
+        
         [Fact]
         public async Task Can_Get_Students()
         {
             // arrange
-            _context.Students.Add(_studentFaker.Generate());
-            _context.SaveChanges();
-
-            var client = _server.CreateClient();
+            _fixture.Context.Students.Add(_fixture.StudentFaker.Generate());
+            _fixture.Context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/students";
@@ -51,9 +33,9 @@ namespace ResourceEntitySeparationExampleTests.Acceptance.Extensibility
             var request = new HttpRequestMessage(httpMethod, route);
 
             // act
-            var response = await client.SendAsync(request);
+            var response = await _fixture.Server.CreateClient().SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = _fixture.Server.GetService<IJsonApiDeSerializer>()
                 .DeserializeList<StudentDto>(responseBody);
 
             // assert
@@ -66,11 +48,9 @@ namespace ResourceEntitySeparationExampleTests.Acceptance.Extensibility
         public async Task Can_Get_Students_By_Id()
         {
             // arrange
-            var student = _studentFaker.Generate();
-            _context.Students.Add(student);
-            _context.SaveChanges();
-
-            var client = _server.CreateClient();
+            var student = _fixture.StudentFaker.Generate();
+            _fixture.Context.Students.Add(student);
+            _fixture.Context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/students/{student.Id}";
@@ -78,9 +58,9 @@ namespace ResourceEntitySeparationExampleTests.Acceptance.Extensibility
             var request = new HttpRequestMessage(httpMethod, route);
 
             // act
-            var response = await client.SendAsync(request);
+            var response = await _fixture.Server.CreateClient().SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (StudentDto)_server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (StudentDto)_fixture.Server.GetService<IJsonApiDeSerializer>()
                 .Deserialize(responseBody);
 
             // assert
@@ -93,8 +73,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance.Extensibility
         public async Task Can_Create_Students()
         {
             // arrange
-            var student = _studentFaker.Generate();
-            var client = _server.CreateClient();
+            var student = _fixture.StudentFaker.Generate();
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/students/";
             var content = new
@@ -114,9 +93,9 @@ namespace ResourceEntitySeparationExampleTests.Acceptance.Extensibility
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // act
-            var response = await client.SendAsync(request);
+            var response = await _fixture.Server.CreateClient().SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (StudentDto)_server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (StudentDto)_fixture.Server.GetService<IJsonApiDeSerializer>()
                 .Deserialize(responseBody);
 
             // assert
