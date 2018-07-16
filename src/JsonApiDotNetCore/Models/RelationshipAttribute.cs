@@ -4,11 +4,12 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude)
+        protected RelationshipAttribute(string publicName, string internalName, Link documentLinks, bool canInclude)
         {
             PublicRelationshipName = publicName;
             DocumentLinks = documentLinks;
             CanInclude = canInclude;
+            InternalRelationshipName = internalName;
         }
 
         public string PublicRelationshipName { get; }

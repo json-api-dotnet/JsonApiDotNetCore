@@ -7,6 +7,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
+        /// <param name="internalName">The relationship name as defined in the entity layer, if not provided defaults to the variable name</param>
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForiegnKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
@@ -24,8 +25,9 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName, Link documentLinks = Link.All, bool canInclude = true, string withForiegnKey = null)
-        : base(publicName, documentLinks, canInclude)
+        public HasOneAttribute(string publicName, string internalName = null, Link documentLinks = Link.All, 
+            bool canInclude = true, string withForiegnKey = null)
+        : base(publicName, internalName, documentLinks, canInclude)
         {
             _explicitIdentifiablePropertyName = withForiegnKey;
         }
