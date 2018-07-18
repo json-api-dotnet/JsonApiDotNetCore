@@ -5,6 +5,8 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExample.Models.Entities;
+using JsonApiDotNetCoreExample.Models.Resources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -35,24 +37,30 @@ namespace ResourceEntitySeparationExample
             loggerFactory.AddConsole(LogLevel.Warning);
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 
-            services.AddDbContext<AppDbContext>(options =>
-                    options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient);
+            services.AddDbContext<AppDbContext>(options => options
+                .UseNpgsql(GetDbConnectionString())
+                /*.UseLazyLoadingProxies()*/,
+            ServiceLifetime.Transient);
             services.AddScoped<IDbContextResolver, DbContextResolver<AppDbContext>>();
 
             var mvcBuilder = services.AddMvcCore();
 
             services.AddJsonApi(options => {
                 options.Namespace = "api/v1";
-                options.DefaultPageSize = 5;
+                options.DefaultPageSize = 10;
                 options.IncludeTotalRecordCount = true;
                 options.BuildContextGraph((builder) => {
-                    builder.AddResource<StudentDto>("students");
+                    builder.AddResource<CourseResource>("courses");
+                    builder.AddResource<DepartmentResource>("departments");
+                    builder.AddResource<StudentResource>("students");
                 });
             }, mvcBuilder);
 
+            // inject automapper and mapping resources
             services.AddAutoMapper();
-
-            services.AddScoped<IResourceService<StudentDto>, MappingResourceService<StudentDto, StudentEntity>>();
+            services.AddScoped<IResourceService<CourseResource>, MappingResourceService<CourseResource, CourseEntity>>();
+            services.AddScoped<IResourceService<DepartmentResource>, MappingResourceService<DepartmentResource, DepartmentEntity>>();
+            services.AddScoped<IResourceService<StudentResource>, MappingResourceService<StudentResource, StudentEntity>>();
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();

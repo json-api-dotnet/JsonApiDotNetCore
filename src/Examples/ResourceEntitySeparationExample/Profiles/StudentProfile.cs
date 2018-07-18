@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using AutoMapper;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExample.Models.Entities;
+using JsonApiDotNetCoreExample.Models.Resources;
 
 namespace ResourceEntitySeparationExample.Profiles
 {
@@ -7,27 +9,31 @@ namespace ResourceEntitySeparationExample.Profiles
     {
         public StudentProfile()
         {
-            CreateMap<StudentDto, StudentEntity>()
-                .ForMember(e => e.FirstName, opt => opt.MapFrom(d => StringSplit(d.Name, " ", 0)))
-                .ForMember(e => e.LastName, opt => opt.MapFrom(d => StringSplit(d.Name, " ", 1)));
-            CreateMap<StudentEntity, StudentDto>()
-                .ForMember(d => d.Name, opt => opt.MapFrom(e => e.FirstName + " " + e.LastName));
+            CreateMap<StudentEntity, StudentResource>()
+                .ForMember(d => d.Courses, opt => opt.MapFrom(e => CoursesFromRegistrations(e.Courses)))
+                ;
+
+            CreateMap<StudentResource, StudentEntity>()
+                .ForMember(e => e.Courses, opt =>
+                {
+                });
         }
 
-        private string StringSplit(string value, string split, int pos)
+        private ICollection<CourseResource> CoursesFromRegistrations(ICollection<CourseStudentEntity> registrations)
         {
-            if (value == null)
+            ICollection<CourseResource> courses = new HashSet<CourseResource>();
+            foreach (CourseStudentEntity reg in registrations)
             {
-                return null;
+                CourseEntity e = reg.Course;
+                courses.Add(new CourseResource
+                {
+                    Id = e.Id,
+                    Number = e.Number,
+                    Title = e.Title,
+                    Description = e.Description
+                });
             }
-
-            var pieces = value.Split(split);
-            if (pieces.Length < pos+1)
-            {
-                return null;
-            }
-
-            return pieces[pos];
+            return courses.Count == 0 ? null : courses;
         }
     }
 }

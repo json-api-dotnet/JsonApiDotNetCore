@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ResourceEntitySeparationExample.Controllers
 {
-    public class StudentsController : JsonApiController<StudentResource>
+    public class CoursesController : JsonApiController<CourseResource>
     {
-        public StudentsController(
+        public CoursesController(
             IJsonApiContext jsonApiContext,
-            IResourceService<StudentResource> resourceService,
+            IResourceService<CourseResource> resourceService,
             ILoggerFactory loggerFactory)
             : base(jsonApiContext, resourceService, loggerFactory)
         { }

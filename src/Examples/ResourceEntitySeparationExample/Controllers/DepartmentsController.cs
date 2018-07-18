@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models.Resources;
@@ -5,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ResourceEntitySeparationExample.Controllers
 {
-    public class StudentsController : JsonApiController<StudentResource>
+    public class DepartmentsController : JsonApiController<DepartmentResource>
     {
-        public StudentsController(
+        public DepartmentsController(
             IJsonApiContext jsonApiContext,
-            IResourceService<StudentResource> resourceService,
+            IResourceService<DepartmentResource> resourceService,
             ILoggerFactory loggerFactory)
             : base(jsonApiContext, resourceService, loggerFactory)
         { }
