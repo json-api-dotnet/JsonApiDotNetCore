@@ -84,24 +84,13 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
-            relationshipName = _jsonApiContext.ContextGraph
-                    .GetRelationshipName<T>(relationshipName);
-
-            if (relationshipName == null)
-                throw new JsonApiException(422, "Relationship name not specified.");
-            if (_logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogTrace($"Looking up '{relationshipName}'...");
-            }
-
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
             if (entity == null)
                 throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
 
-            var relationship = _jsonApiContext.ContextGraph
-                    .GetRelationship(entity, relationshipName);
+            var relationship = _jsonApiContext.ContextGraph.GetRelationship(entity, relationshipName);
 
             return relationship;
         }
@@ -119,12 +108,6 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<DocumentData> relationships)
         {
-            relationshipName = _jsonApiContext.ContextGraph
-                      .GetRelationshipName<T>(relationshipName);
-
-            if (relationshipName == null)
-                throw new JsonApiException(422, "Relationship name not specified.");
-
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
 
             if (entity == null)
@@ -133,7 +116,7 @@ namespace JsonApiDotNetCore.Services
             var relationship = _jsonApiContext.ContextGraph
                 .GetContextEntity(typeof(T))
                 .Relationships
-                .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
+                .FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 

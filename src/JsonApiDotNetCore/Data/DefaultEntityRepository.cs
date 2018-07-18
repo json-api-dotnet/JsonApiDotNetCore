@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
@@ -75,9 +76,7 @@ namespace JsonApiDotNetCore.Data
         {
             _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var result = await Get()
-                .Include(relationshipName)
-                .SingleOrDefaultAsync(e => e.Id.Equals(id));
+            var result = await Include(Get(), relationshipName).SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;
         }
@@ -178,7 +177,6 @@ namespace JsonApiDotNetCore.Data
                 throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
             }
             return entities.Include(relationship.InternalRelationshipName);
-
         }
 
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)

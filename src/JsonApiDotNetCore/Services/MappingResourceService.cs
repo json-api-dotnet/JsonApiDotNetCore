@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using JsonApiDotNetCore.Data;
@@ -10,10 +13,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
 {
-    public class MappingResourceService<TDto, TEntity> :
-    MappingResourceService<TDto, TEntity, int>,
-    IResourceService<TDto>
-        where TDto : class, IIdentifiable<int>
+    public class MappingResourceService<TResource, TEntity> 
+        : MappingResourceService<TResource, TEntity, int>,
+        IResourceService<TResource>
+        where TResource : class, IIdentifiable<int>
         where TEntity : class, IIdentifiable<int>
     {
         public MappingResourceService(
@@ -25,8 +28,9 @@ namespace JsonApiDotNetCore.Services
         { }
     }
 
-    public class MappingResourceService<TDto, TEntity, TId> : IResourceService<TDto, TId>
-        where TDto : class, IIdentifiable<TId>
+    public class MappingResourceService<TResource, TEntity, TId> 
+        : IResourceService<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IJsonApiContext _jsonApiContext;
@@ -42,11 +46,11 @@ namespace JsonApiDotNetCore.Services
         {
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<MappingResourceService<TDto, TEntity, TId>>();
+            _logger = loggerFactory.CreateLogger<MappingResourceService<TResource, TEntity, TId>>();
             _mapper = mapper;
         }
 
-        public virtual async Task<IEnumerable<TDto>> GetAsync()
+        public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             var entities = _entities.Get();
 
@@ -63,20 +67,23 @@ namespace JsonApiDotNetCore.Services
             return pagedEntities;
         }
 
-        public virtual async Task<TDto> GetAsync(TId id)
+        public virtual async Task<TResource> GetAsync(TId id)
         {
-            TDto entity;
+            TResource dto;
             if (ShouldIncludeRelationships())
-                entity = await GetWithRelationshipsAsync(id);
+                dto = await GetWithRelationshipsAsync(id);
             else
-                entity = _mapper.Map<TDto>(await _entities.GetAsync(id));
-            return entity;
+            {
+                TEntity entity = await _entities.GetAsync(id);
+                dto = _mapper.Map<TResource>(entity);
+            }
+            return dto;
         }
 
         private bool ShouldIncludeRelationships()
             => (_jsonApiContext.QuerySet?.IncludedRelationships != null && _jsonApiContext.QuerySet.IncludedRelationships.Count > 0);
 
-        private async Task<TDto> GetWithRelationshipsAsync(TId id)
+        private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var query = _entities.Get().Where(e => e.Id.Equals(id));
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
@@ -84,7 +91,7 @@ namespace JsonApiDotNetCore.Services
                 query = _entities.Include(query, r);
             });
             var value = await _entities.FirstOrDefaultAsync(query);
-            return _mapper.Map<TDto>(value);
+            return _mapper.Map<TResource>(value);
         }
 
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
@@ -92,61 +99,60 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
-            relationshipName = _jsonApiContext.ContextGraph
-                    .GetRelationshipName<TDto>(relationshipName);
-
-            if (relationshipName == null)
-                throw new JsonApiException(422, "Relationship name not specified.");
-            if (_logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogTrace($"Looking up '{relationshipName}'...");
-            }
-
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
             if (entity == null)
+            {
                 throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
+            }
 
-            var relationship = _jsonApiContext.ContextGraph
-                    .GetRelationship(entity, relationshipName);
-
+            var resource = _mapper.Map<TResource>(entity);
+            var relationship = _jsonApiContext.ContextGraph.GetRelationship(resource, relationshipName);
             return relationship;
         }
 
-        public virtual async Task<TDto> CreateAsync(TDto entity)
+        public virtual async Task<TResource> CreateAsync(TResource resource)
         {
-            var createdEntity = await _entities.CreateAsync(_mapper.Map<TEntity>(entity));
-            return _mapper.Map<TDto>(createdEntity);
+            var entity = _mapper.Map<TEntity>(resource);
+            entity = await _entities.CreateAsync(entity);
+            return _mapper.Map<TResource>(entity);
         }
 
-        public virtual async Task<TDto> UpdateAsync(TId id, TDto entity)
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
         {
-            var updatedEntity = await _entities.UpdateAsync(id, _mapper.Map<TEntity>(entity));
-            return _mapper.Map<TDto>(updatedEntity);
+            var entity = _mapper.Map<TEntity>(resource);
+            entity = await _entities.UpdateAsync(id, entity);
+            return _mapper.Map<TResource>(entity);
         }
 
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<DocumentData> relationships)
         {
-            relationshipName = _jsonApiContext.ContextGraph
-                      .GetRelationshipName<TDto>(relationshipName);
-
-            if (relationshipName == null)
-                throw new JsonApiException(422, "Relationship name not specified.");
-
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
-
             if (entity == null)
+            {
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
+            }
 
             var relationship = _jsonApiContext.ContextGraph
-                .GetContextEntity(typeof(TDto))
+                .GetContextEntity(typeof(TResource))
                 .Relationships
-                .FirstOrDefault(r => r.InternalRelationshipName == relationshipName);
+                .FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
+            var relationshipType = relationship.Type;
+
+            // update relationship type with internalname
+            var entityProperty = typeof(TEntity).GetProperty(relationship.InternalRelationshipName);
+            if (entityProperty == null)
+            {
+                throw new JsonApiException(404, $"Property {relationship.InternalRelationshipName} could not be found on entity.");
+            }
+            relationship.Type = relationship.IsHasMany ? entityProperty.PropertyType.GetGenericArguments()[0] : entityProperty.PropertyType;
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
+
+            relationship.Type = relationshipType;
         }
 
         public virtual async Task<bool> DeleteAsync(TId id)
@@ -171,18 +177,18 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        protected virtual async Task<IEnumerable<TDto>> ApplyPageQueryAsync(IQueryable<TEntity> entities)
+        protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TEntity> entities)
         {
             var pageManager = _jsonApiContext.PageManager;
             if (!pageManager.IsPaginated)
-                return _mapper.Map<IEnumerable<TDto>>(await _entities.ToListAsync(entities));
+                return _mapper.Map<IEnumerable<TResource>>(await _entities.ToListAsync(entities));
 
             if (_logger?.IsEnabled(LogLevel.Information) == true)
             {
                 _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} with {pageManager.PageSize} entities");
             }
 
-            return _mapper.Map<IEnumerable<TDto>>(await _entities.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage));
+            return _mapper.Map<IEnumerable<TResource>>(await _entities.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage));
         }
 
         protected virtual IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
