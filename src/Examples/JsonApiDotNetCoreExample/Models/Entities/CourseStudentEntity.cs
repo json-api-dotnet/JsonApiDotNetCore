@@ -1,10 +1,11 @@
+using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JsonApiDotNetCoreExample.Models.Entities
 {
     [Table("CourseStudent")]
-    public class CourseStudentEntity
+    public class CourseStudentEntity : Identifiable
     {
         private CourseEntity _course;
         private StudentEntity _student;

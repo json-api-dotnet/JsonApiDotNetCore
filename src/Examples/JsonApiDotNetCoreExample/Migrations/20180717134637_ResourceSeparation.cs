@@ -61,6 +61,8 @@ namespace JsonApiDotNetCoreExample.Migrations
                 name: "CourseStudent",
                 columns: table => new
                 {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     courseid = table.Column<int>(name: "course_id", nullable: false),
                     studentid = table.Column<int>(name: "student_id", nullable: false)
                 },
@@ -82,14 +84,19 @@ namespace JsonApiDotNetCoreExample.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Course_department-id",
+                name: "IX_Course_department_id",
                 table: "Course",
                 column: "department_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseStudent_student-id",
+                name: "IX_CourseStudent_student_id",
                 table: "CourseStudent",
                 column: "student_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseStudent_Id",
+                table: "CourseStudent",
+                column: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

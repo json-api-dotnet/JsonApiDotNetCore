@@ -38,9 +38,8 @@ namespace ResourceEntitySeparationExample
             services.AddSingleton<ILoggerFactory>(loggerFactory);
 
             services.AddDbContext<AppDbContext>(options => options
-                .UseNpgsql(GetDbConnectionString())
-                /*.UseLazyLoadingProxies()*/,
-            ServiceLifetime.Transient);
+                .UseNpgsql(GetDbConnectionString()),
+                ServiceLifetime.Transient);
             services.AddScoped<IDbContextResolver, DbContextResolver<AppDbContext>>();
 
             var mvcBuilder = services.AddMvcCore();
