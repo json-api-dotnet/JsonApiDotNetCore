@@ -149,21 +149,6 @@ namespace JsonApiDotNetCoreExample.Migrations
                 name: "IX_TodoItems_OwnerId",
                 table: "TodoItems",
                 column: "OwnerId");
-
-            migrationBuilder.CreateTable(
-                name: "student",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    firstname = table.Column<string>(name: "first-name", nullable: false),
-                    lastname = table.Column<string>(name: "last-name", maxLength: 255, nullable: false),
-                    address = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_student", x => x.Id);
-                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -185,9 +170,6 @@ namespace JsonApiDotNetCoreExample.Migrations
 
             migrationBuilder.DropTable(
                 name: "People");
-
-            migrationBuilder.DropTable(
-                name: "student");
         }
     }
 }

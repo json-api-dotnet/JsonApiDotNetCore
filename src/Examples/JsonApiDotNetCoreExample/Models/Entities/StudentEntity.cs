@@ -1,22 +1,25 @@
 using JsonApiDotNetCore.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExample.Models.Entities
 {
-    [Table("student")]
+    [Table("Student")]
     public class StudentEntity : Identifiable
     {
-        [Column("first-name")]
+        [Column("firstname")]
         [Required]
         public string FirstName { get; set; }
 
-        [Column("last-name")]
+        [Column("lastname")]
         [Required]
         [StringLength(255, MinimumLength = 3)]
         public string LastName { get; set; }
 
         [Column("address")]
         public string Address { get; set; }
+
+        public List<CourseStudentEntity> Courses { get; set; }
     }
 }
