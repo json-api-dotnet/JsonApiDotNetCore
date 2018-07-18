@@ -1,3 +1,5 @@
+using System;
+
 namespace JsonApiDotNetCore.Models
 {
     public class HasOneAttribute : RelationshipAttribute
@@ -7,10 +9,9 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="internalName">The relationship name as defined in the entity layer, if not provided defaults to the variable name</param>
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
-        /// <param name="withForiegnKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
+        /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
         /// 
         /// <example>
         /// Using an alternative foreign key:
@@ -25,17 +26,16 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName, string internalName = null, Link documentLinks = Link.All, 
-            bool canInclude = true, string withForiegnKey = null)
-        : base(publicName, internalName, documentLinks, canInclude)
+        public HasOneAttribute(string publicName, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null)
+        : base(publicName, documentLinks, canInclude)
         {
-            _explicitIdentifiablePropertyName = withForiegnKey;
+            _explicitIdentifiablePropertyName = withForeignKey;
         }
 
         private readonly string _explicitIdentifiablePropertyName;
 
         /// <summary>
-        /// The independent entity identifier.
+        /// The independent resource identifier.
         /// </summary>
         public string IdentifiablePropertyName => string.IsNullOrWhiteSpace(_explicitIdentifiablePropertyName)
             ? $"{InternalRelationshipName}Id"
@@ -44,19 +44,19 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Sets the value of the property identified by this attribute
         /// </summary>
-        /// <param name="entity">The target object</param>
+        /// <param name="resource">The target object</param>
         /// <param name="newValue">The new property value</param>
-        public override void SetValue(object entity, object newValue)
+        public override void SetValue(object resource, object newValue)
         {
             var propertyName = (newValue?.GetType() == Type)
                 ? InternalRelationshipName
                 : IdentifiablePropertyName;
 
-            var propertyInfo = entity
+            var propertyInfo = resource
                 .GetType()
                 .GetProperty(propertyName);
 
-            propertyInfo.SetValue(entity, newValue);
+            propertyInfo.SetValue(resource, newValue);
         }
 
         // HACK: this will likely require boxing
@@ -65,16 +65,16 @@ namespace JsonApiDotNetCore.Models
         /// Gets the value of the independent identifier (e.g. Article.AuthorId)
         /// </summary>
         /// 
-        /// <param name="entity">
+        /// <param name="resource">
         /// An instance of dependent resource
         /// </param>
         /// 
         /// <returns>
         /// The property value or null if the property does not exist on the model.
         /// </returns>
-        internal object GetIdentifiablePropertyValue(object entity) => entity
+        internal object GetIdentifiablePropertyValue(object resource) => resource
                 .GetType()
                 .GetProperty(IdentifiablePropertyName)
-                ?.GetValue(entity);
+                ?.GetValue(resource);
     }
 }

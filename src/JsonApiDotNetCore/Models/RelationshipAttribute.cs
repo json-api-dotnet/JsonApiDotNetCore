@@ -4,17 +4,16 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName, string internalName, Link documentLinks, bool canInclude)
+        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude)
         {
             PublicRelationshipName = publicName;
             DocumentLinks = documentLinks;
             CanInclude = canInclude;
-            InternalRelationshipName = internalName;
         }
 
         public string PublicRelationshipName { get; }
         public string InternalRelationshipName { get; internal set; }
-
+        
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
