@@ -31,7 +31,7 @@ namespace OperationsExampleTests
                 operations = new[] {
                     new Dictionary<string, object> {
                         { "op", "get"},
-                        { "ref",  new { type = "articles", id = article.StringId, relationship = nameof(article.Author) } }
+                        { "ref",  new { type = "articles", id = article.StringId, relationship = "author" } }
                     }
                 }
             };
