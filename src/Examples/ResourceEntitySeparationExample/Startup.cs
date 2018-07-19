@@ -57,9 +57,9 @@ namespace ResourceEntitySeparationExample
 
             // inject automapper and mapping resources
             services.AddAutoMapper();
-            services.AddScoped<IResourceService<CourseResource>, MappingResourceService<CourseResource, CourseEntity>>();
-            services.AddScoped<IResourceService<DepartmentResource>, MappingResourceService<DepartmentResource, DepartmentEntity>>();
-            services.AddScoped<IResourceService<StudentResource>, MappingResourceService<StudentResource, StudentEntity>>();
+            services.AddScoped<IResourceService<CourseResource, int>, DefaultResourceService<CourseResource, CourseEntity, int>>();
+            services.AddScoped<IResourceService<DepartmentResource, int>, DefaultResourceService<DepartmentResource, DepartmentEntity, int>>();
+            services.AddScoped<IResourceService<StudentResource, int>, DefaultResourceService<StudentResource, StudentEntity, int>>();
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();

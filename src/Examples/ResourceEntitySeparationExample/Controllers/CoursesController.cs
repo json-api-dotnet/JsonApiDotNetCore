@@ -9,7 +9,7 @@ namespace ResourceEntitySeparationExample.Controllers
     {
         public CoursesController(
             IJsonApiContext jsonApiContext,
-            IResourceService<CourseResource> resourceService,
+            IResourceService<CourseResource, int> resourceService,
             ILoggerFactory loggerFactory)
             : base(jsonApiContext, resourceService, loggerFactory)
         { }
