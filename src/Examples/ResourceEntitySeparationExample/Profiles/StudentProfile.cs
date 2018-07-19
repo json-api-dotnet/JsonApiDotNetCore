@@ -10,13 +10,9 @@ namespace ResourceEntitySeparationExample.Profiles
         public StudentProfile()
         {
             CreateMap<StudentEntity, StudentResource>()
-                .ForMember(d => d.Courses, opt => opt.MapFrom(e => CoursesFromRegistrations(e.Courses)))
-                ;
+                .ForMember(d => d.Courses, opt => opt.MapFrom(e => CoursesFromRegistrations(e.Courses)));
 
-            CreateMap<StudentResource, StudentEntity>()
-                .ForMember(e => e.Courses, opt =>
-                {
-                });
+            CreateMap<StudentResource, StudentEntity>();
         }
 
         private ICollection<CourseResource> CoursesFromRegistrations(ICollection<CourseStudentEntity> registrations)

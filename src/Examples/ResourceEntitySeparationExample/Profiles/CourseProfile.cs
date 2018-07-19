@@ -15,12 +15,9 @@ namespace ResourceEntitySeparationExample.Profiles
                 {
                     Id = e.Department.Id,
                     Name = e.Department.Name
-                }))
-                ;
+                }));
 
-            CreateMap<CourseResource, CourseEntity>()
-                // .ForMember(e => e.Registrations, opt => opt.MapFrom(r => RegistrationsFromResource(r)))
-                ;
+            CreateMap<CourseResource, CourseEntity>();
         }
 
         private ICollection<StudentResource> StudentsFromRegistrations(ICollection<CourseStudentEntity> registrations)
@@ -38,16 +35,6 @@ namespace ResourceEntitySeparationExample.Profiles
                 });
             }
             return students.Count == 0 ? null : students;
-        }
-
-        private ICollection<CourseStudentEntity> RegistrationsFromResource(CourseResource course)
-        {
-            ICollection<CourseStudentEntity> registrations = new HashSet<CourseStudentEntity>();
-            foreach (StudentResource s in course.Students)
-            {
-                registrations.Add(new CourseStudentEntity(course.Id, s.Id));
-            }
-            return registrations.Count == 0 ? null : registrations;
         }
     }
 }
