@@ -159,8 +159,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
             services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
 
-            services.AddSingleton<IOperationProcessorResolver, OperationProcessorResolver>();
-            services.AddSingleton<IGenericProcessorFactory, GenericProcessorFactory>();
+            services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
