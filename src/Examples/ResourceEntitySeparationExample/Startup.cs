@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -13,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ResourceEntitySeparationExample.Models;
+using ResourceEntitySeparationExample.Profiles;
 
 namespace ResourceEntitySeparationExample
 {
@@ -55,8 +58,9 @@ namespace ResourceEntitySeparationExample
                 });
             }, mvcBuilder);
 
-            // inject automapper and mapping resources
             services.AddAutoMapper();
+            services.AddScoped<IResourceMapper, AutoMapperAdapter>();
+
             services.AddScoped<IResourceService<CourseResource, int>, DefaultResourceService<CourseResource, CourseEntity, int>>();
             services.AddScoped<IResourceService<DepartmentResource, int>, DefaultResourceService<DepartmentResource, DepartmentEntity, int>>();
             services.AddScoped<IResourceService<StudentResource, int>, DefaultResourceService<StudentResource, StudentEntity, int>>();

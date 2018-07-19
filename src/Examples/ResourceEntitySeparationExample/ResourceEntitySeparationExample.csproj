@@ -9,4 +9,8 @@
     <ProjectReference Include="..\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
+  </ItemGroup>
+
 </Project>
