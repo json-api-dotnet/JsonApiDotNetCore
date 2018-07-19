@@ -1,4 +1,3 @@
-using AutoMapper;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -42,7 +41,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IEntityRepository<TEntity, TId> _entities;
         private readonly ILogger _logger;
-        private readonly IMapper _mapper;
+        private readonly IResourceMapper _mapper;
 
         public DefaultResourceService(
                 IJsonApiContext jsonApiContext,
@@ -65,7 +64,7 @@ namespace JsonApiDotNetCore.Services
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
                 ILoggerFactory loggerFactory,
-                IMapper mapper)
+                IResourceMapper mapper)
         {
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
