@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace JsonApiDotNetCore.Services
 {
-    public class DefaultResourceService<TResource> : DefaultResourceService<TResource, int>, 
+    public class EntityResourceService<TResource> : EntityResourceService<TResource, int>, 
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceService(
+        public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
             ILoggerFactory loggerFactory) :
@@ -21,11 +21,11 @@ namespace JsonApiDotNetCore.Services
         { }
     }
 
-    public class DefaultResourceService<TResource, TId> : DefaultResourceService<TResource, TResource, TId>, 
+    public class EntityResourceService<TResource, TId> : EntityResourceService<TResource, TResource, TId>, 
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        public DefaultResourceService(
+        public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
             ILoggerFactory loggerFactory) :
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Services
         { }
     }
 
-    public class DefaultResourceService<TResource, TEntity, TId> : 
+    public class EntityResourceService<TResource, TEntity, TId> : 
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
         where TEntity : class, IIdentifiable<TId>
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Services
         private readonly ILogger _logger;
         private readonly IResourceMapper _mapper;
 
-        public DefaultResourceService(
+        public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
                 ILoggerFactory loggerFactory)
@@ -57,10 +57,10 @@ namespace JsonApiDotNetCore.Services
 
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<DefaultResourceService<TResource, TEntity, TId>>();
+            _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
 
-        public DefaultResourceService(
+        public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
                 ILoggerFactory loggerFactory,
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Services
         {
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<DefaultResourceService<TResource, TEntity, TId>>();
+            _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
             _mapper = mapper;
         }
 

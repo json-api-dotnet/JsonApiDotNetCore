@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Builders
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
-                if (attribute.InternalRelationshipName == null) attribute.InternalRelationshipName = prop.Name;
+                attribute.InternalRelationshipName = prop.Name;
                 attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);
             }

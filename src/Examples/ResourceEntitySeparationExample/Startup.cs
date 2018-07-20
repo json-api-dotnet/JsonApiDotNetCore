@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExample.Models.Entities;
 using JsonApiDotNetCoreExample.Models.Resources;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ResourceEntitySeparationExample.Models;
-using ResourceEntitySeparationExample.Profiles;
 
 namespace ResourceEntitySeparationExample
 {
@@ -61,9 +59,9 @@ namespace ResourceEntitySeparationExample
             services.AddAutoMapper();
             services.AddScoped<IResourceMapper, AutoMapperAdapter>();
 
-            services.AddScoped<IResourceService<CourseResource, int>, DefaultResourceService<CourseResource, CourseEntity, int>>();
-            services.AddScoped<IResourceService<DepartmentResource, int>, DefaultResourceService<DepartmentResource, DepartmentEntity, int>>();
-            services.AddScoped<IResourceService<StudentResource, int>, DefaultResourceService<StudentResource, StudentEntity, int>>();
+            services.AddScoped<IResourceService<CourseResource, int>, EntityResourceService<CourseResource, CourseEntity, int>>();
+            services.AddScoped<IResourceService<DepartmentResource, int>, EntityResourceService<DepartmentResource, DepartmentEntity, int>>();
+            services.AddScoped<IResourceService<StudentResource, int>, EntityResourceService<StudentResource, StudentEntity, int>>();
 
             var provider = services.BuildServiceProvider();
             var appContext = provider.GetRequiredService<AppDbContext>();

@@ -102,26 +102,26 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
-            services.AddScoped(typeof(ICreateService<>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(ICreateService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped(typeof(IGetAllService<>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(IGetAllService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(IGetAllService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IGetAllService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped(typeof(IGetByIdService<>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(IGetByIdService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(IGetByIdService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IGetByIdService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(IGetRelationshipService<,>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IGetRelationshipService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped(typeof(IUpdateService<>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(IUpdateService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(IUpdateService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IUpdateService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped(typeof(IDeleteService<>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(IDeleteService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(IDeleteService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IDeleteService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped(typeof(IResourceService<>), typeof(DefaultResourceService<>));
-            services.AddScoped(typeof(IResourceService<,>), typeof(DefaultResourceService<,>));
+            services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
+            services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
             services.AddSingleton(jsonApiOptions);
             services.AddSingleton(jsonApiOptions.ContextGraph);
