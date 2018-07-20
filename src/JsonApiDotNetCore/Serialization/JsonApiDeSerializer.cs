@@ -218,21 +218,21 @@ namespace JsonApiDotNetCore.Serialization
             if (foreignKeyProperty == null && rio == null)
                 return entity;
 
-            if (foreignKeyProperty == null && rio != null)
-                throw new JsonApiException(400, $"{contextEntity.EntityType.Name} does not contain a foreign key property '{foreignKey}' for has one relationship '{attr.InternalRelationshipName}'");
+            var foreignKeyPropertyValue = rio?.Id ?? null;
+            if (foreignKeyProperty != null)
+            {
+                // in the case of the HasOne independent side of the relationship, we should still create the shell entity on the other side
+                // we should not actually require the resource to have a foreign key (be the dependent side of the relationship)
 
-            // e.g. PATCH /articles
-            // {... { "relationships":{ "Owner": { "data": null } } } }
-            if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
-                throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
+                // e.g. PATCH /articles
+                // {... { "relationships":{ "Owner": { "data": null } } } }
+                if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
+                    throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
 
-            var newValue = rio?.Id ?? null;
-            var convertedValue = TypeHelper.ConvertType(newValue, foreignKeyProperty.PropertyType);
-
-            _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
-
-            foreignKeyProperty.SetValue(entity, convertedValue);
-
+                var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
+                foreignKeyProperty.SetValue(entity, convertedValue);
+                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+            }
 
             if (rio != null
                 // if the resource identifier is null, there should be no reason to instantiate an instance
