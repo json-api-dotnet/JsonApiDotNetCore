@@ -204,20 +204,21 @@ namespace JsonApiDotNetCore.Serialization
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData) == false)
                 return entity;
 
-            var relationshipAttr = _jsonApiContext.RequestEntity.Relationships
-                .SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
-
-            if (relationshipAttr == null)
-                throw new JsonApiException(400, $"{_jsonApiContext.RequestEntity.EntityName} does not contain a relationship '{relationshipName}'");
-
             var rio = (ResourceIdentifierObject)relationshipData.ExposedData;
 
             var foreignKey = attr.IdentifiablePropertyName;
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == foreignKey);
-
             if (foreignKeyProperty == null && rio == null)
                 return entity;
 
+            SetHasOneForeignKeyValue(entity, attr, foreignKeyProperty, rio);
+            SetHasOneNavigationPropertyValue(entity, attr, rio, included);
+
+            return entity;
+        }
+
+        private void SetHasOneForeignKeyValue(object entity, HasOneAttribute hasOneAttr, PropertyInfo foreignKeyProperty, ResourceIdentifierObject rio)
+        {
             var foreignKeyPropertyValue = rio?.Id ?? null;
             if (foreignKeyProperty != null)
             {
@@ -227,30 +228,35 @@ namespace JsonApiDotNetCore.Serialization
                 // e.g. PATCH /articles
                 // {... { "relationships":{ "Owner": { "data": null } } } }
                 if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
-                    throw new JsonApiException(400, $"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
+                    throw new JsonApiException(400, $"Cannot set required relationship identifier '{hasOneAttr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
 
                 var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
                 foreignKeyProperty.SetValue(entity, convertedValue);
-                _jsonApiContext.RelationshipsToUpdate[relationshipAttr] = convertedValue;
+                _jsonApiContext.RelationshipsToUpdate[hasOneAttr] = convertedValue;
             }
+        }
 
-            if (rio != null
-                // if the resource identifier is null, there should be no reason to instantiate an instance
-                && rio.Id != null)
+        /// <summary>
+        /// Sets the value of the navigation property for the related resource.
+        /// If the resource has been included, all attributes will be set.
+        /// If the resource has not been included, only the id will be set.
+        /// </summary>
+        private void SetHasOneNavigationPropertyValue(object entity, HasOneAttribute hasOneAttr, ResourceIdentifierObject rio, List<DocumentData> included)
+        {
+            // if the resource identifier is null, there should be no reason to instantiate an instance
+            if (rio != null && rio.Id != null)
             {
                 // we have now set the FK property on the resource, now we need to check to see if the
                 // related entity was included in the payload and update its attributes
-                var includedRelationshipObject = GetIncludedRelationship(rio, included, relationshipAttr);
+                var includedRelationshipObject = GetIncludedRelationship(rio, included, hasOneAttr);
                 if (includedRelationshipObject != null)
-                    relationshipAttr.SetValue(entity, includedRelationshipObject);
+                    hasOneAttr.SetValue(entity, includedRelationshipObject);
 
                 // we need to store the fact that this relationship was included in the payload
                 // for EF, the repository will use these pointers to make ensure we don't try to
                 // create resources if they already exist, we just need to create the relationship
-                _jsonApiContext.HasOneRelationshipPointers.Add(attr, includedRelationshipObject);
+                _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, includedRelationshipObject);
             }
-
-            return entity;
         }
 
         private object SetHasManyRelationship(object entity,
