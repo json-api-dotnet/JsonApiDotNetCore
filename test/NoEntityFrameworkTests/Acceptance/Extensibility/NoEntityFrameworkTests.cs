@@ -4,38 +4,30 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {
-    public class NoEntityFrameworkTests
+    public class NoEntityFrameworkTests : IClassFixture<TestFixture>
     {
-        private readonly TestServer _server;
-        private readonly AppDbContext _context;
+        private readonly TestFixture _fixture;
 
-        public NoEntityFrameworkTests()
+        public NoEntityFrameworkTests(TestFixture fixture)
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<TestStartup>();
-            _server = new TestServer(builder);
-            _context = _server.GetService<AppDbContext>();
-            _context.Database.EnsureCreated();
+            _fixture = fixture;
         }
 
         [Fact]
         public async Task Can_Get_TodoItems()
         {
             // arrange
-            _context.TodoItems.Add(new TodoItem());
-            _context.SaveChanges();
+            _fixture.Context.TodoItems.Add(new TodoItem());
+            _fixture.Context.SaveChanges();
 
-            var client = _server.CreateClient();
+            var client = _fixture.Server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/custom-todo-items";
@@ -45,7 +37,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = _fixture.Server.GetService<IJsonApiDeSerializer>()
                 .DeserializeList<TodoItem>(responseBody);
 
             // assert
@@ -59,10 +51,10 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         {
             // arrange
             var todoItem = new TodoItem();
-            _context.TodoItems.Add(todoItem);
-            _context.SaveChanges();
+            _fixture.Context.TodoItems.Add(todoItem);
+            _fixture.Context.SaveChanges();
 
-            var client = _server.CreateClient();
+            var client = _fixture.Server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/custom-todo-items/{todoItem.Id}";
@@ -72,7 +64,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeSerializer>()
                 .Deserialize(responseBody);
 
             // assert
@@ -86,7 +78,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         {
             // arrange
             var description = Guid.NewGuid().ToString();
-            var client = _server.CreateClient();
+            var client = _fixture.Server.CreateClient();
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/custom-todo-items/";
             var content = new
@@ -109,7 +101,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeSerializer>()
                 .Deserialize(responseBody);
 
             // assert
