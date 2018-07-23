@@ -343,6 +343,57 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Create_And_Set_HasOne_Relationships_From_Independent_Side()
+        {
+            // arrange
+            var builder = new WebHostBuilder()
+                .UseStartup<ClientGeneratedIdsStartup>();
+            var httpMethod = new HttpMethod("POST");
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var context = _fixture.GetService<AppDbContext>();
+
+            var person = new JsonApiDotNetCoreExample.Models.Person();
+            context.People.Add(person);
+            await context.SaveChangesAsync();
+
+            var route = "/api/v1/person-roles";
+            var request = new HttpRequestMessage(httpMethod, route);
+            var clientDefinedId = Guid.NewGuid();
+            var content = new
+            {
+                data = new
+                {
+                    type = "person-roles",
+                    relationships = new
+                    {
+                        person = new
+                        {
+                            data = new
+                            {
+                                type = "people",
+                                id = person.Id.ToString()
+                            }
+                        }
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var deserializedBody = (PersonRole)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            Assert.Equal(person.Id, deserializedBody.Person.Id);
+        }
+
+        [Fact]
         public async Task ShouldReceiveLocationHeader_InResponse()
         {
             // arrange
