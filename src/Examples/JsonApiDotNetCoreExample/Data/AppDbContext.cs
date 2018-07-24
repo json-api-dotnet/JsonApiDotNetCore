@@ -39,5 +39,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<PersonRole> PersonRoles { get; set; }
     }
 }
