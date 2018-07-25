@@ -59,5 +59,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<DepartmentEntity> Departments { get; set; }
         public DbSet<CourseStudentEntity> Registrations { get; set; }
         public DbSet<StudentEntity> Students { get; set; }
+        
+        public DbSet<PersonRole> PersonRoles { get; set; }
     }
 }
