@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Extensions
             if (jsonApiOptions.ContextGraph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
-                services.AddSingleton<DbContextOptions>(new DbContextOptionsBuilder().Options);
+                services.AddSingleton(new DbContextOptionsBuilder().Options);
             }
 
             if (jsonApiOptions.EnableOperations)
@@ -123,8 +123,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
-            services.AddSingleton<JsonApiOptions>(jsonApiOptions);
-            services.AddSingleton<IContextGraph>(jsonApiOptions.ContextGraph);
+            services.AddSingleton(jsonApiOptions);
+            services.AddSingleton(jsonApiOptions.ContextGraph);
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();

@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual PersonRole Role { get; set; }
         public int? PersonRoleId { get; set; }
 
-        [HasOne("unincludeable-item", Link.All, canInclude: false)]
+        [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)

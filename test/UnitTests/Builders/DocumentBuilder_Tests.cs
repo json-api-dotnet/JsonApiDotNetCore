@@ -233,7 +233,7 @@ namespace UnitTests
         {
             [Attr("StringProperty")] public string StringProperty { get; set; }
 
-            [HasOne("related-model", Link.None)]
+            [HasOne("related-model", documentLinks: Link.None)]
             public RelatedModel RelatedModel { get; set; }
             public int RelatedModelId { get; set; }
         }

@@ -1,3 +1,5 @@
+using System;
+
 namespace JsonApiDotNetCore.Models
 {
     public class HasManyAttribute : RelationshipAttribute
@@ -28,15 +30,15 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Sets the value of the property identified by this attribute
         /// </summary>
-        /// <param name="entity">The target object</param>
+        /// <param name="resource">The target object</param>
         /// <param name="newValue">The new property value</param>
-        public override void SetValue(object entity, object newValue)
+        public override void SetValue(object resource, object newValue)
         {
-            var propertyInfo = entity
+            var propertyInfo = resource
                 .GetType()
                 .GetProperty(InternalRelationshipName);
 
-            propertyInfo.SetValue(entity, newValue);
+            propertyInfo.SetValue(resource, newValue);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Models
 
         public string PublicRelationshipName { get; }
         public string InternalRelationshipName { get; internal set; }
-
+        
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
