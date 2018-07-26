@@ -122,17 +122,24 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
-            var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+            // compound-property -> CompoundProperty
+            var navigationPropertyName = _jsonApiContext.ContextGraph.GetRelationshipName<TResource>(relationshipName);
+            if (navigationPropertyName == null)
+                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+
+            var entity = await _entities.GetAndIncludeAsync(id, navigationPropertyName);
+
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
             if (entity == null)
             {
-                throw new JsonApiException(404, $"Relationship {relationshipName} not found.");
+                throw new JsonApiException(404, $"Relationship '{navigationPropertyName}' not found.");
             }
 
-            var resource = (typeof(TResource) == typeof(TEntity)) ? entity as TResource : 
-                _mapper.Map<TResource>(entity);
-            var relationship = _jsonApiContext.ContextGraph.GetRelationship(resource, relationshipName);
+            var resource = MapOut(entity);
+
+            var relationship = _jsonApiContext.ContextGraph.GetRelationship(resource, navigationPropertyName);
+
             return relationship;
         }
 
@@ -242,5 +249,10 @@ namespace JsonApiDotNetCore.Services
         private bool ShouldIncludeRelationships()
             => (_jsonApiContext.QuerySet?.IncludedRelationships != null && 
             _jsonApiContext.QuerySet.IncludedRelationships.Count > 0);
+
+        private TResource MapOut(TEntity entity)
+            => (typeof(TResource) == typeof(TEntity))
+                ? entity as TResource :
+                _mapper.Map<TResource>(entity);
     }
 }
