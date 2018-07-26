@@ -117,25 +117,24 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
-            // compound-property -> CompoundProperty
-            var navigationPropertyName = _jsonApiContext.ContextGraph.GetRelationshipName<TResource>(relationshipName);
-            if (navigationPropertyName == null)
-                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
-
-            var entity = await _entities.GetAndIncludeAsync(id, navigationPropertyName);
+            var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
             if (entity == null)
             {
-                throw new JsonApiException(404, $"Relationship '{navigationPropertyName}' not found.");
+                throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
             }
 
             var resource = MapOut(entity);
 
-            var relationship = _jsonApiContext.ContextGraph.GetRelationship(resource, navigationPropertyName);
+            // compound-property -> CompoundProperty
+            var navigationPropertyName = _jsonApiContext.ContextGraph.GetRelationshipName<TResource>(relationshipName);
+            if (navigationPropertyName == null)
+                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
 
-            return relationship;
+            var relationshipValue = _jsonApiContext.ContextGraph.GetRelationship(resource, navigationPropertyName);
+            return relationshipValue;
         }
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
