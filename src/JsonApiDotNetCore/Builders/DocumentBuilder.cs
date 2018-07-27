@@ -138,7 +138,6 @@ namespace JsonApiDotNetCore.Builders
 
             return data;
         }
-
         private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue)
         {
             return OmitNullValuedAttribute(attr, attributeValue) == false
