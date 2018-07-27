@@ -51,7 +51,8 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var resource = operation.GetResourceTypeName();
 
-            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var contextEntity = GetResourceMetadata(resource);
+
             var processor = _processorFactory.GetProcessor<IOpProcessor>(
                 typeof(ICreateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
             );
@@ -64,7 +65,8 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var resource = operation.GetResourceTypeName();
 
-            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var contextEntity = GetResourceMetadata(resource);
+
             var processor = _processorFactory.GetProcessor<IOpProcessor>(
                 typeof(IGetOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
             );
@@ -77,7 +79,8 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var resource = operation.GetResourceTypeName();
 
-            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
+            var contextEntity = GetResourceMetadata(resource);
+
             var processor = _processorFactory.GetProcessor<IOpProcessor>(
                 typeof(IRemoveOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
             );
@@ -90,15 +93,22 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var resource = operation.GetResourceTypeName();
 
-            var contextEntity = _context.ContextGraph.GetContextEntity(resource);
-            if (contextEntity == null)
-                throw new JsonApiException(400, $"This API does not expose a resource of type '{resource}'.");
+            var contextEntity = GetResourceMetadata(resource);
 
             var processor = _processorFactory.GetProcessor<IOpProcessor>(
                 typeof(IUpdateOpProcessor<,>), contextEntity.EntityType, contextEntity.IdentityType
             );
 
             return processor;
+        }
+
+        private ContextEntity GetResourceMetadata(string resourceName)
+        {
+            var contextEntity = _context.ContextGraph.GetContextEntity(resourceName);
+            if(contextEntity == null)
+                throw new JsonApiException(400, $"This API does not expose a resource of type '{resourceName}'.");
+
+            return contextEntity;
         }
     }
 }
