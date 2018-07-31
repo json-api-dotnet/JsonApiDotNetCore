@@ -86,7 +86,8 @@ namespace JsonApiDotNetCore.Services
 
             // InArray case
             string op = GetFilterOperation(value);
-            if (string.Equals(op, FilterOperations.@in.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(op, FilterOperations.@in.ToString(), StringComparison.OrdinalIgnoreCase)
+                || string.Equals(op, FilterOperations.nin.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 (var operation, var filterValue) = ParseFilterOperation(value);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
