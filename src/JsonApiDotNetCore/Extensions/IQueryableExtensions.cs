@@ -119,10 +119,10 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                if (filterQuery.FilterOperation == FilterOperations.@in )
+                if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name);
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name, filterQuery.FilterOperation);
 
                     return source.Where(lambdaIn);
                 }
@@ -167,10 +167,10 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                if (filterQuery.FilterOperation == FilterOperations.@in)
+                if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, relation.Name);
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, filterQuery.FilterOperation, relation.Name);
 
                     return source.Where(lambdaIn);
                 }
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCore.Extensions
             return body;
         }
 
-        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, string relationName = null)
+        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, FilterOperations op, string relationName = null)
         {
             ParameterExpression entity = Expression.Parameter(typeof(TSource), "entity");
             MemberExpression member;
@@ -258,8 +258,18 @@ namespace JsonApiDotNetCore.Extensions
             var method = ContainsMethod.MakeGenericMethod(member.Type);
             var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
 
-            var exprContains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
-            return Expression.Lambda<Func<TSource, bool>>(exprContains, entity);
+            if (op == FilterOperations.@in)
+            {
+                // Where(i => arr.Contains(i.column))
+                var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
+                return Expression.Lambda<Func<TSource, bool>>(contains, entity);
+            }
+            else
+            {
+                // Where(i => !arr.Contains(i.column))
+                var notContains = Expression.Not(Expression.Call(method, new Expression[] { Expression.Constant(obj), member }));
+                return Expression.Lambda<Func<TSource, bool>>(notContains, entity);
+            }
         }
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)

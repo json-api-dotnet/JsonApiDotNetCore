@@ -209,5 +209,45 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Assert.Contains(item.Attributes["first-name"], ownerFirstNames);
 
         }
+
+        [Fact]
+        public async Task Can_Filter_On_Not_In_Array_Values()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var todoItems = _todoItemFaker.Generate(5);
+            var guids = new List<Guid>();
+            var notInGuids = new List<Guid>();
+            foreach (var item in todoItems)
+            {
+                context.TodoItems.Add(item);
+                // Exclude 2 items
+                if (guids.Count < (todoItems.Count() - 2))
+                    guids.Add(item.GuidProperty);
+                else
+                    notInGuids.Add(item.GuidProperty);
+            }
+            context.SaveChanges();
+
+            var totalCount = context.TodoItems.Count();
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[guid-property]=nin:{string.Join(",", notInGuids)}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedTodoItems = _fixture
+                .GetService<IJsonApiDeSerializer>()
+                .DeserializeList<TodoItem>(body);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(totalCount - notInGuids.Count(), deserializedTodoItems.Count());
+            foreach (var item in deserializedTodoItems)
+            {
+                Assert.DoesNotContain(item.GuidProperty, notInGuids);
+            }
+        }
     }
 }
