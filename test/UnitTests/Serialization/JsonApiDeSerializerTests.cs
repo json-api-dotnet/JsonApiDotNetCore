@@ -240,6 +240,7 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
@@ -255,7 +256,14 @@ namespace UnitTests.Serialization
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } },
                     // a common case for this is deserialization in unit tests
-                    Relationships = new Dictionary<string, RelationshipData> { { "dependent", new RelationshipData { } } }
+                    Relationships = new Dictionary<string, RelationshipData> {
+                        {
+                            "dependent", new RelationshipData
+                            {
+                                SingleData = new ResourceIdentifierObject("dependents", "1")
+                            }
+                        }
+                    }
                 }
             };
 
@@ -267,6 +275,8 @@ namespace UnitTests.Serialization
             // assert
             Assert.NotNull(result);
             Assert.Equal(property, result.Property);
+            Assert.NotNull(result.Dependent);
+            Assert.Equal(1, result.Dependent.Id);
         }
 
         [Fact]

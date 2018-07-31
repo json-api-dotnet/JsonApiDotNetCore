@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
-    public interface IUpdateOpProcessor<T> : IOpProcessor
+    public interface IUpdateOpProcessor<T> : IUpdateOpProcessor<T, int>
         where T : class, IIdentifiable<int>
     { }
 
@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         where T : class, IIdentifiable<TId>
     { }
 
-    public class UpdateOpProcessor<T> : UpdateOpProcessor<T, int>
+    public class UpdateOpProcessor<T> : UpdateOpProcessor<T, int>, IUpdateOpProcessor<T>
         where T : class, IIdentifiable<int>
     {
         public UpdateOpProcessor(
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         { }
     }
 
-    public class UpdateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
+    public class UpdateOpProcessor<T, TId> : IUpdateOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<T, TId> _service;
@@ -53,16 +53,17 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 throw new JsonApiException(400, "The data.id parameter is required for replace operations");
 
             var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
+
             var result = await _service.UpdateAsync(model.Id, model);
+            if (result == null)
+                throw new JsonApiException(404, $"Could not find an instance of '{operation.DataObject.Type}' with id {operation.DataObject.Id}");
 
             var operationResult = new Operation
             {
                 Op = OperationCode.update
             };
 
-            operationResult.Data = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
-                result);
+            operationResult.Data = _documentBuilder.GetData(_contextGraph.GetContextEntity(operation.GetResourceTypeName()), result);
 
             return operationResult;
         }

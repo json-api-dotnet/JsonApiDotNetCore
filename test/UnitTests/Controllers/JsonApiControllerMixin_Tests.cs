@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;

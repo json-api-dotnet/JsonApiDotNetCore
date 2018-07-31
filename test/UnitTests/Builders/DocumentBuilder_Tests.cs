@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
@@ -154,7 +155,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void IndependentIdentifier__Included_In_HasOne_Relationships_By_Default()
+        public void IndependentIdentifier_Included_In_HasOne_Relationships_By_Default()
         {
             // arrange
             const string relatedTypeName = "related-models";
@@ -204,7 +205,6 @@ namespace UnitTests
             Assert.Single(documents.Data);
         }
 
-
         [Theory]
         [InlineData(null, null, true)]
         [InlineData(false, null, true)]
@@ -212,7 +212,8 @@ namespace UnitTests
         [InlineData(null, "foo", true)]
         [InlineData(false, "foo", true)]
         [InlineData(true, "foo", true)]
-        public void DocumentBuilderOptions(bool? omitNullValuedAttributes,
+        public void DocumentBuilderOptions(
+            bool? omitNullValuedAttributes,
             string attributeValue,
             bool resultContainsAttribute)
         {
@@ -230,12 +231,11 @@ namespace UnitTests
 
         private class Model : Identifiable
         {
-            [HasOne("related-model", Link.None)]
+            [Attr("StringProperty")] public string StringProperty { get; set; }
+
+            [HasOne("related-model", documentLinks: Link.None)]
             public RelatedModel RelatedModel { get; set; }
             public int RelatedModelId { get; set; }
-            [Attr("StringProperty")]
-            public string StringProperty { get; set; }
-
         }
 
         private class RelatedModel : Identifiable
@@ -262,6 +262,114 @@ namespace UnitTests
             {
                 return models.GetEnumerator();
             }
+        }
+
+        [Fact]
+        public void Build_Will_Use_Resource_If_Defined_For_Multiple_Documents()
+        {
+            var entities = new[] { new User() };
+            var contextGraph = new ContextGraphBuilder()
+                    .AddResource<User>("user")
+                    .Build();
+            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+
+            var scopedServiceProvider = new TestScopedServiceProvider(
+                new ServiceCollection()
+                    .AddScoped<ResourceDefinition<User>, UserResource>()
+                    .BuildServiceProvider());
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+
+            var documents = documentBuilder.Build(entities);
+
+            Assert.Single(documents.Data);
+            Assert.False(documents.Data[0].Attributes.ContainsKey("password"));
+            Assert.True(documents.Data[0].Attributes.ContainsKey("username"));
+        }
+
+        [Fact]
+        public void Build_Will_Use_Resource_If_Defined_For_Single_Document()
+        {
+            var entity = new User();
+            var contextGraph = new ContextGraphBuilder()
+                    .AddResource<User>("user")
+                    .Build();
+            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+
+            var scopedServiceProvider = new TestScopedServiceProvider(
+                new ServiceCollection()
+                    .AddScoped<ResourceDefinition<User>, UserResource>()
+                    .BuildServiceProvider());
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+
+            var documents = documentBuilder.Build(entity);
+
+            Assert.False(documents.Data.Attributes.ContainsKey("password"));
+            Assert.True(documents.Data.Attributes.ContainsKey("username"));
+        }
+
+        [Fact]
+        public void Build_Will_Use_Instance_Specific_Resource_If_Defined_For_Multiple_Documents()
+        {
+            var entities = new[] { new User() };
+            var contextGraph = new ContextGraphBuilder()
+                    .AddResource<User>("user")
+                    .Build();
+            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+
+            var scopedServiceProvider = new TestScopedServiceProvider(
+                new ServiceCollection()
+                    .AddScoped<ResourceDefinition<User>, InstanceSpecificUserResource>()
+                    .BuildServiceProvider());
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+
+            var documents = documentBuilder.Build(entities);
+
+            Assert.Single(documents.Data);
+            Assert.False(documents.Data[0].Attributes.ContainsKey("password"));
+            Assert.True(documents.Data[0].Attributes.ContainsKey("username"));
+        }
+
+        [Fact]
+        public void Build_Will_Use_Instance_Specific_Resource_If_Defined_For_Single_Document()
+        {
+            var entity = new User();
+            var contextGraph = new ContextGraphBuilder()
+                    .AddResource<User>("user")
+                    .Build();
+            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+
+            var scopedServiceProvider = new TestScopedServiceProvider(
+                new ServiceCollection()
+                    .AddScoped<ResourceDefinition<User>, InstanceSpecificUserResource>()
+                    .BuildServiceProvider());
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+
+            var documents = documentBuilder.Build(entity);
+            
+            Assert.False(documents.Data.Attributes.ContainsKey("password"));
+            Assert.True(documents.Data.Attributes.ContainsKey("username"));
+        }
+
+        public class User : Identifiable
+        {
+            [Attr("username")] public string Username { get; set; }
+            [Attr("password")] public string Password { get; set; }
+        }
+
+        public class InstanceSpecificUserResource : ResourceDefinition<User>
+        {
+            protected override List<AttrAttribute> OutputAttrs(User instance)
+                => Remove(user => user.Password);
+        }
+
+        public class UserResource : ResourceDefinition<User>
+        {
+            protected override List<AttrAttribute> OutputAttrs()
+                => Remove(user => user.Password);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,22 +15,29 @@ namespace JsonApiDotNetCore.Builders
         private readonly IContextGraph _contextGraph;
         private readonly IRequestMeta _requestMeta;
         private readonly DocumentBuilderOptions _documentBuilderOptions;
+        private readonly IScopedServiceProvider _scopedServiceProvider;
 
-        public DocumentBuilder(IJsonApiContext jsonApiContext, IRequestMeta requestMeta = null, IDocumentBuilderOptionsProvider documentBuilderOptionsProvider = null)
+        public DocumentBuilder(
+            IJsonApiContext jsonApiContext, 
+            IRequestMeta requestMeta = null, 
+            IDocumentBuilderOptionsProvider documentBuilderOptionsProvider = null,
+            IScopedServiceProvider scopedServiceProvider = null)
         {
             _jsonApiContext = jsonApiContext;
             _contextGraph = jsonApiContext.ContextGraph;
             _requestMeta = requestMeta;
-            _documentBuilderOptions = documentBuilderOptionsProvider?.GetDocumentBuilderOptions() ?? new DocumentBuilderOptions(); ;
+            _documentBuilderOptions = documentBuilderOptionsProvider?.GetDocumentBuilderOptions() ?? new DocumentBuilderOptions();
+            _scopedServiceProvider = scopedServiceProvider;
         }
 
         public Document Build(IIdentifiable entity)
         {
             var contextEntity = _contextGraph.GetContextEntity(entity.GetType());
 
+            var resourceDefinition = _scopedServiceProvider?.GetService(contextEntity.ResourceType) as IResourceDefinition;
             var document = new Document
             {
-                Data = GetData(contextEntity, entity),
+                Data = GetData(contextEntity, entity, resourceDefinition),
                 Meta = GetMeta(entity)
             };
 
@@ -44,8 +52,8 @@ namespace JsonApiDotNetCore.Builders
         public Documents Build(IEnumerable<IIdentifiable> entities)
         {
             var entityType = entities.GetElementType();
-
             var contextEntity = _contextGraph.GetContextEntity(entityType);
+            var resourceDefinition = _scopedServiceProvider?.GetService(contextEntity.ResourceType) as IResourceDefinition;
 
             var enumeratedEntities = entities as IList<IIdentifiable> ?? entities.ToList();
             var documents = new Documents
@@ -59,7 +67,7 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var entity in enumeratedEntities)
             {
-                documents.Data.Add(GetData(contextEntity, entity));
+                documents.Data.Add(GetData(contextEntity, entity, resourceDefinition));
                 documents.Included = AppendIncludedObject(documents.Included, contextEntity, entity);
             }
 
@@ -98,7 +106,11 @@ namespace JsonApiDotNetCore.Builders
             return includedObject;
         }
 
+        [Obsolete("You should specify an IResourceDefinition implementation using the GetData/3 overload.")]
         public DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
+            => GetData(contextEntity, entity, resourceDefinition: null);
+
+        public DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity, IResourceDefinition resourceDefinition = null)
         {
             var data = new DocumentData
             {
@@ -111,7 +123,8 @@ namespace JsonApiDotNetCore.Builders
 
             data.Attributes = new Dictionary<string, object>();
 
-            contextEntity.Attributes.ForEach(attr =>
+            var resourceAttributes = resourceDefinition?.GetOutputAttrs(entity) ?? contextEntity.Attributes;
+            resourceAttributes.ForEach(attr =>
             {
                 var attributeValue = attr.GetValue(entity);
                 if (ShouldIncludeAttribute(attr, attributeValue))
@@ -125,7 +138,6 @@ namespace JsonApiDotNetCore.Builders
 
             return data;
         }
-
         private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue)
         {
             return OmitNullValuedAttribute(attr, attributeValue) == false
@@ -219,8 +231,9 @@ namespace JsonApiDotNetCore.Builders
             if (entity == null) return null;
 
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
+            var resourceDefinition = _scopedServiceProvider.GetService(contextEntity.ResourceType) as IResourceDefinition;
 
-            var data = GetData(contextEntity, entity);
+            var data = GetData(contextEntity, entity, resourceDefinition);
 
             data.Attributes = new Dictionary<string, object>();
 

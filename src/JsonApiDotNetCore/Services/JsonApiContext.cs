@@ -47,13 +47,14 @@ namespace JsonApiDotNetCore.Services
         public PageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
-        public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
-        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
         public Type ControllerType { get; set; }
         public Dictionary<string, object> DocumentMeta { get; set; }
         public bool IsBulkOperationRequest { get; set; }
-        public HasManyRelationshipPointers HasManyRelationshipPointers { get; } = new HasManyRelationshipPointers();
-        public HasOneRelationshipPointers HasOneRelationshipPointers { get; } = new HasOneRelationshipPointers();
+
+        public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
+        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
+        public HasManyRelationshipPointers HasManyRelationshipPointers { get; private set; } = new HasManyRelationshipPointers();
+        public HasOneRelationshipPointers HasOneRelationshipPointers { get; private set; } = new HasOneRelationshipPointers();
 
         public IJsonApiContext ApplyContext<T>(object controller)
         {
@@ -132,5 +133,14 @@ namespace JsonApiDotNetCore.Services
         [Obsolete("Use the proxied method IControllerContext.GetControllerAttribute instead.")]
         public TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute
             => _controllerContext.GetControllerAttribute<TAttribute>();
+
+        public void BeginOperation()
+        {
+            IncludedRelationships = new List<string>();
+            AttributesToUpdate = new Dictionary<AttrAttribute, object>();
+            RelationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
+            HasManyRelationshipPointers = new HasManyRelationshipPointers();
+            HasOneRelationshipPointers = new HasOneRelationshipPointers();
+        }
     }
 }

@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,27 @@ namespace OperationsExampleTests
             Assert.Equal(HttpStatusCode.OK, result.response.StatusCode);
             Assert.Single(result.data.Operations);
             Assert.Equal(expectedCount, result.data.Operations.Single().DataList.Count);
+        }
+
+        [Fact]
+        public async Task Get_Non_Existent_Type_Returns_400()
+        {
+            // arrange
+            var content = new
+            {
+                operations = new[] {
+                    new Dictionary<string, object> {
+                        { "op", "get"},
+                        { "ref",  new { type = "non-existent-type" } }
+                    }
+                }
+            };
+
+            // act
+            var result = await PatchAsync<OperationsDocument>("api/bulk", content);
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.response.StatusCode);
         }
     }
 }

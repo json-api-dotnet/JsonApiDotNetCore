@@ -1,9 +1,16 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Models
 {
+    public class PersonRole : Identifiable
+    {
+        [HasOne("person")]
+        public Person Person { get; set; }
+    }
+
     public class Person : Identifiable, IHasMeta
     {
         [Attr("first-name")]
@@ -17,11 +24,15 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasMany("assigned-todo-items")]
         public virtual List<TodoItem> AssignedTodoItems { get; set; }
-        
+
         [HasMany("todo-collections")]
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
-        
-        [HasOne("unincludeable-item", Link.All, canInclude: false)]
+
+        [HasOne("role")]
+        public virtual PersonRole Role { get; set; }
+        public int? PersonRoleId { get; set; }
+
+        [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
