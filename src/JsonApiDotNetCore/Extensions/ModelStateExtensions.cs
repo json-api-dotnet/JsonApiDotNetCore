@@ -14,10 +14,10 @@ namespace JsonApiDotNetCore.Extensions
                 if (entry.Value.Errors.Any() == false)
                     continue;
 
+                var attrName = contextGraph.GetPublicAttributeName<T>(entry.Key);
+
                 foreach (var modelError in entry.Value.Errors)
                 {
-                    var attrName =contextGraph.GetPublicAttributeName<T>(entry.Key);
-
                     if (modelError.Exception is JsonApiException jex)
                         collection.Errors.AddRange(jex.GetError().Errors);
                     else
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Extensions
                             title: entry.Key,
                             detail: modelError.ErrorMessage,
                             meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
-                            source: new {
+                            source: attrName == null ? null : new {
                                 pointer = $"/data/attributes/{attrName}"
                             }));
                 }
