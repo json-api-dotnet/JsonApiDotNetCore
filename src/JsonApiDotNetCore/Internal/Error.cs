@@ -9,9 +9,9 @@ namespace JsonApiDotNetCore.Internal
     {
         public Error()
         { }
-        
+
         [Obsolete("Use Error constructors with int typed status")]
-        public Error(string status, string title, ErrorMeta meta = null, string source = null)
+        public Error(string status, string title, ErrorMeta meta = null, object source = null)
         {
             Status = status;
             Title = title;
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Internal
             Source = source;
         }
 
-        public Error(int status, string title, ErrorMeta meta = null, string source = null)
+        public Error(int status, string title, ErrorMeta meta = null, object source = null)
         {
             Status = status.ToString();
             Title = title;
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Internal
         }
 
         [Obsolete("Use Error constructors with int typed status")]
-        public Error(string status, string title, string detail, ErrorMeta meta = null, string source = null)
+        public Error(string status, string title, string detail, ErrorMeta meta = null, object source = null)
         {
             Status = status;
             Title = title;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Internal
             Source = source;
         }
 
-        public Error(int status, string title, string detail, ErrorMeta meta = null, string source = null)
+        public Error(int status, string title, string detail, ErrorMeta meta = null, object source = null)
         {
             Status = status.ToString();
             Title = title;
@@ -45,13 +45,13 @@ namespace JsonApiDotNetCore.Internal
             Meta = meta;
             Source = source;
         }
-        
+
         [JsonProperty("title")]
         public string Title { get; set; }
 
         [JsonProperty("detail")]
         public string Detail { get; set; }
-        
+
         [JsonProperty("status")]
         public string Status { get; set; }
 
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Internal
         public int StatusCode => int.Parse(Status);
 
         [JsonProperty("source")]
-        public string Source { get; set; }
+        public object Source { get; set; }
 
         [JsonProperty("meta")]
         public ErrorMeta Meta { get; set; }
@@ -73,8 +73,8 @@ namespace JsonApiDotNetCore.Internal
         [JsonProperty("stackTrace")]
         public string[] StackTrace { get; set; }
 
-        public static ErrorMeta FromException(Exception e) 
-            => new ErrorMeta { 
+        public static ErrorMeta FromException(Exception e)
+            => new ErrorMeta {
                 StackTrace = e.Demystify().ToString().Split(new[] { "\n"}, int.MaxValue, StringSplitOptions.RemoveEmptyEntries)
             };
     }
