@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class ModelStateExtensions
     {
-        public static ErrorCollection ConvertToErrorCollection(this ModelStateDictionary modelState, IContextGraph contextGraph)
+        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState, IContextGraph contextGraph)
         {
             ErrorCollection collection = new ErrorCollection();
             foreach (var entry in modelState)
@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Extensions
 
                 foreach (var modelError in entry.Value.Errors)
                 {
-                    var attrName = entry.Key;
+                    var attrName =contextGraph.GetPublicAttributeName<T>(entry.Key);
 
                     if (modelError.Exception is JsonApiException jex)
                         collection.Errors.AddRange(jex.GetError().Errors);
