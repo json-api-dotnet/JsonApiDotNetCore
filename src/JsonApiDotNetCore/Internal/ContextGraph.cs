@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Internal
     public interface IContextGraph
     {
         /// <summary>
-        /// Gets the value of the navigation property, defined by the relationshipName, 
+        /// Gets the value of the navigation property, defined by the relationshipName,
         /// on the provided instance.
         /// </summary>
         /// <param name="resource">The resource instance</param>
@@ -41,6 +41,12 @@ namespace JsonApiDotNetCore.Internal
         /// Get the resource metadata by the resource type
         /// </summary>
         ContextEntity GetContextEntity(Type entityType);
+
+        /// <summary>
+        /// Get the public attribute name for a type based on the internal attribute name.
+        /// </summary>
+        /// <param name="internalAttributeName">The internal attribute name for a <see cref="Attr" />.</param>
+        string GetPublicAttributeName<TParent>(string internalAttributeName);
 
         /// <summary>
         /// Was built against an EntityFrameworkCore DbContext ?
@@ -111,5 +117,13 @@ namespace JsonApiDotNetCore.Internal
                 .SingleOrDefault(r => r.Is(relationshipName))
                 ?.InternalRelationshipName;
         }
-    }
+
+        public string GetPublicAttributeName<TParent>(string internalAttributeName)
+        {
+            return GetContextEntity(typeof(TParent))
+                .Attributes
+                .Single(a => a.InternalAttributeName == internalAttributeName)
+                .PublicAttributeName;
+        }
+  }
 }
