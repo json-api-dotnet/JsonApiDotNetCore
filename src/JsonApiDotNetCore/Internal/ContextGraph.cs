@@ -122,7 +122,7 @@ namespace JsonApiDotNetCore.Internal
         {
             return GetContextEntity(typeof(TParent))
                 .Attributes
-                .Single(a => a.InternalAttributeName == internalAttributeName)
+                .SingleOrDefault(a => a.InternalAttributeName == internalAttributeName)?
                 .PublicAttributeName;
         }
   }
