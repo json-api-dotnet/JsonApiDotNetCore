@@ -200,8 +200,8 @@ namespace UnitTests
 
             // assert
             serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<BadRequestObjectResult>(response);
-            Assert.IsType<ErrorCollection>(((BadRequestObjectResult) response).Value);
+            Assert.IsType<UnprocessableEntityObjectResult>(response);
+            Assert.IsType<ErrorCollection>(((UnprocessableEntityObjectResult) response).Value);
         }
 
         [Fact]
@@ -278,8 +278,8 @@ namespace UnitTests
 
             // assert
             serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<BadRequestObjectResult>(response);
-            Assert.IsType<ErrorCollection>(((BadRequestObjectResult)response).Value);
+            Assert.IsType<UnprocessableEntityObjectResult>(response);
+            Assert.IsType<ErrorCollection>(((UnprocessableEntityObjectResult)response).Value);
         }
 
         [Fact]
