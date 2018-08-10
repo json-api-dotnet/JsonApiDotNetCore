@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Data
         {
             _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var includedSet = await IncludeAsync(Get(), relationshipName);
+            var includedSet = Include(Get(), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;
@@ -106,6 +106,28 @@ namespace JsonApiDotNetCore.Data
         {
             AttachHasManyPointers();
             AttachHasOnePointers();
+        }
+
+        /// <inheritdoc />
+        public void DetachRelationshipPointers(TEntity entity)
+        {
+            foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
+            {
+                _context.Entry(hasOneRelationship.Value).State = EntityState.Detached;
+            }
+
+            foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
+            {
+                foreach (var pointer in hasManyRelationship.Value)
+                {
+                    _context.Entry(pointer).State = EntityState.Detached;
+                }
+
+                // HACK: detaching has many relationships doesn't appear to be sufficient
+                // the navigation property actually needs to be nulled out, otherwise
+                // EF adds duplicate instances to the collection
+                hasManyRelationship.Key.SetValue(entity, null);
+            }
         }
 
         /// <summary>
@@ -178,7 +200,6 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        [Obsolete("Use IncludeAsync")]
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
@@ -195,52 +216,6 @@ namespace JsonApiDotNetCore.Data
             }
 
             return entities.Include(relationship.InternalRelationshipName);
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<IQueryable<TEntity>> IncludeAsync(IQueryable<TEntity> entities, string relationshipName)
-        {
-            var entity = _jsonApiContext.RequestEntity;
-            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
-            if (relationship == null)
-            {
-                throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
-                    $"{entity.EntityName} does not have a relationship named {relationshipName}");
-            }
-
-            if (!relationship.CanInclude)
-            {
-                throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
-            }
-
-            await ReloadPointerAsync(relationship);
-
-            return entities.Include(relationship.InternalRelationshipName);
-        }
-
-        /// <summary>
-        /// Ensure relationships on the provided entity have been fully loaded from the database.
-        /// </summary>
-        /// <remarks>
-        /// The only known case when this should be called is when a POST request is
-        /// sent with an ?include query.
-        /// 
-        /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
-        /// </remarks>
-        private async Task ReloadPointerAsync(RelationshipAttribute relationshipAttr)
-        {
-            if (relationshipAttr.IsHasOne && _jsonApiContext.HasOneRelationshipPointers.Get().TryGetValue(relationshipAttr, out var pointer))
-            {
-                await _context.Entry(pointer).ReloadAsync();
-            }
-
-            if (relationshipAttr.IsHasMany && _jsonApiContext.HasManyRelationshipPointers.Get().TryGetValue(relationshipAttr, out var pointers))
-            {
-                foreach (var hasManyPointer in pointers)
-                {
-                    await _context.Entry(hasManyPointer).ReloadAsync();
-                }
-            }
         }
 
         /// <inheritdoc />
