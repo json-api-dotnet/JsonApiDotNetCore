@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        protected IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
+        protected virtual IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
         {
             _jsonApiContext.IncludedRelationships = relationships;
 
@@ -241,10 +241,10 @@ namespace JsonApiDotNetCore.Services
         {
             var query = _entities.Get().Where(e => e.Id.Equals(id));
 
-            foreach (var r in _jsonApiContext.QuerySet.IncludedRelationships)
+            _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
                 query = _entities.Include(query, r);
-            }
+            });
 
             var value = await _entities.FirstOrDefaultAsync(query);
 
