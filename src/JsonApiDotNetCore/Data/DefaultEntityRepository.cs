@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
 {
+    /// <inheritdoc />
     public class DefaultEntityRepository<TEntity>
         : DefaultEntityRepository<TEntity, int>,
         IEntityRepository<TEntity>
@@ -26,6 +27,10 @@ namespace JsonApiDotNetCore.Data
         { }
     }
 
+    /// <summary>
+    /// Provides a default repository implementation and is responsible for
+    /// abstracting any EF Core APIs away from the service layer.
+    /// </summary>
     public class DefaultEntityRepository<TEntity, TId>
         : IEntityRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
@@ -48,7 +53,7 @@ namespace JsonApiDotNetCore.Data
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Get()
         {
             if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
@@ -57,41 +62,43 @@ namespace JsonApiDotNetCore.Data
             return _dbSet;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
             return entities.Sort(sortQueries);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
             return await Get().SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
             _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var result = await Include(Get(), relationshipName).SingleOrDefaultAsync(e => e.Id.Equals(id));
+            var includedSet = await IncludeAsync(Get(), relationshipName);
+            var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             AttachRelationships();
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();
+
             return entity;
         }
 
@@ -129,7 +136,7 @@ namespace JsonApiDotNetCore.Data
                     _context.Entry(relationship.Value).State = EntityState.Unchanged;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)
         {
             var oldEntity = await GetAsync(id);
@@ -148,14 +155,14 @@ namespace JsonApiDotNetCore.Data
             return oldEntity;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
             var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), relationship.Type);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             var entity = await GetAsync(id);
@@ -170,7 +177,8 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
+        [Obsolete("Use IncludeAsync")]
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
@@ -185,10 +193,57 @@ namespace JsonApiDotNetCore.Data
             {
                 throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
             }
+
             return entities.Include(relationship.InternalRelationshipName);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
+        public virtual async Task<IQueryable<TEntity>> IncludeAsync(IQueryable<TEntity> entities, string relationshipName)
+        {
+            var entity = _jsonApiContext.RequestEntity;
+            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
+            if (relationship == null)
+            {
+                throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
+                    $"{entity.EntityName} does not have a relationship named {relationshipName}");
+            }
+
+            if (!relationship.CanInclude)
+            {
+                throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
+            }
+
+            await ReloadPointerAsync(relationship);
+
+            return entities.Include(relationship.InternalRelationshipName);
+        }
+
+        /// <summary>
+        /// Ensure relationships on the provided entity have been fully loaded from the database.
+        /// </summary>
+        /// <remarks>
+        /// The only known case when this should be called is when a POST request is
+        /// sent with an ?include query.
+        /// 
+        /// See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
+        /// </remarks>
+        private async Task ReloadPointerAsync(RelationshipAttribute relationshipAttr)
+        {
+            if (relationshipAttr.IsHasOne && _jsonApiContext.HasOneRelationshipPointers.Get().TryGetValue(relationshipAttr, out var pointer))
+            {
+                await _context.Entry(pointer).ReloadAsync();
+            }
+
+            if (relationshipAttr.IsHasMany && _jsonApiContext.HasManyRelationshipPointers.Get().TryGetValue(relationshipAttr, out var pointers))
+            {
+                foreach (var hasManyPointer in pointers)
+                {
+                    await _context.Entry(hasManyPointer).ReloadAsync();
+                }
+            }
+        }
+
+        /// <inheritdoc />
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
             if (pageNumber >= 0)
@@ -209,7 +264,7 @@ namespace JsonApiDotNetCore.Data
                     .ToListAsync();
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task<int> CountAsync(IQueryable<TEntity> entities)
         {
             return (entities is IAsyncEnumerable<TEntity>)
@@ -217,7 +272,7 @@ namespace JsonApiDotNetCore.Data
                  : entities.Count();
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
         {
             return (entities is IAsyncEnumerable<TEntity>)
@@ -225,7 +280,7 @@ namespace JsonApiDotNetCore.Data
                : entities.FirstOrDefault();
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities)
         {
             return (entities is IAsyncEnumerable<TEntity>)

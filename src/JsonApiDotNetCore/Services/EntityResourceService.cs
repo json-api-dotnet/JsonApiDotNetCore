@@ -77,6 +77,12 @@ namespace JsonApiDotNetCore.Services
 
             entity = await _entities.CreateAsync(entity);
 
+            // this ensures relationships get reloaded from the database if they have
+            // been requested
+            // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
+            if (ShouldIncludeRelationships())
+                return await GetWithRelationshipsAsync(entity.Id);
+
             return MapOut(entity);
         }
 
@@ -92,7 +98,7 @@ namespace JsonApiDotNetCore.Services
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
-                entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
+                entities = await IncludeRelationshipsAsync(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
@@ -218,7 +224,8 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        protected virtual IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
+        [Obsolete("Use IncludeRelationshipsAsync")]
+        protected IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
         {
             _jsonApiContext.IncludedRelationships = relationships;
 
@@ -228,14 +235,24 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
+        protected virtual async Task<IQueryable<TEntity>> IncludeRelationshipsAsync(IQueryable<TEntity> entities, List<string> relationships)
+        {
+            _jsonApiContext.IncludedRelationships = relationships;
+
+            foreach (var r in relationships)
+                entities = await _entities.IncludeAsync(entities, r);
+
+            return entities;
+        }
+
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var query = _entities.Get().Where(e => e.Id.Equals(id));
 
-            _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
+            foreach (var r in _jsonApiContext.QuerySet.IncludedRelationships)
             {
-                query = _entities.Include(query, r);
-            });
+                query = await _entities.IncludeAsync(query, r);
+            }
 
             var value = await _entities.FirstOrDefaultAsync(query);
 

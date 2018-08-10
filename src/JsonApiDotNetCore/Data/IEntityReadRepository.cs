@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,6 +21,9 @@ namespace JsonApiDotNetCore.Data
         /// </summary>
         IQueryable<TEntity> Get();
 
+        [Obsolete("Use IncludeAsync")]
+        IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName);
+
         /// <summary>
         /// Include a relationship in the query
         /// </summary>
@@ -28,7 +32,7 @@ namespace JsonApiDotNetCore.Data
         /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
         /// </code>
         /// </example>
-        IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName);
+        Task<IQueryable<TEntity>> IncludeAsync(IQueryable<TEntity> entities, string relationshipName);
 
         /// <summary>
         /// Apply a filter to the provided queryable
