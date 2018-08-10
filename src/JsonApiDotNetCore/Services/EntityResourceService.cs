@@ -82,7 +82,9 @@ namespace JsonApiDotNetCore.Services
             // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
             if (ShouldIncludeRelationships())
             {
-                _entities.DetachRelationshipPointers(entity);
+                if(_entities is IEntityFrameworkRepository<TEntity> efRepository)
+                    efRepository.DetachRelationshipPointers(entity);
+
                 return await GetWithRelationshipsAsync(entity.Id);
             }
 

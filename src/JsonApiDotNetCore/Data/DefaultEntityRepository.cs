@@ -32,7 +32,8 @@ namespace JsonApiDotNetCore.Data
     /// abstracting any EF Core APIs away from the service layer.
     /// </summary>
     public class DefaultEntityRepository<TEntity, TId>
-        : IEntityRepository<TEntity, TId>
+        : IEntityRepository<TEntity, TId>,
+        IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly DbContext _context;
