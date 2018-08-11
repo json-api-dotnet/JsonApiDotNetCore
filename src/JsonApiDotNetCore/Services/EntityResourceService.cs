@@ -77,6 +77,17 @@ namespace JsonApiDotNetCore.Services
 
             entity = await _entities.CreateAsync(entity);
 
+            // this ensures relationships get reloaded from the database if they have
+            // been requested
+            // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
+            if (ShouldIncludeRelationships())
+            {
+                if(_entities is IEntityFrameworkRepository<TEntity> efRepository)
+                    efRepository.DetachRelationshipPointers(entity);
+
+                return await GetWithRelationshipsAsync(entity.Id);
+            }
+
             return MapOut(entity);
         }
 

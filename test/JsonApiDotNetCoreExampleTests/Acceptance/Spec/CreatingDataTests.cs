@@ -286,6 +286,71 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Create_With_HasMany_Relationship_And_Include_Result()
+        {
+            // arrange
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+            var httpMethod = new HttpMethod("POST");
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var context = _fixture.GetService<AppDbContext>();
+
+            var owner = new JsonApiDotNetCoreExample.Models.Person();
+            var todoItem = new TodoItem();
+            todoItem.Owner = owner;
+            todoItem.Description = "Description";
+            context.People.Add(owner);
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
+            var route = "/api/v1/todo-collections?include=todo-items";
+            var request = new HttpRequestMessage(httpMethod, route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-collections",
+                    relationships = new Dictionary<string, dynamic>
+                    {
+                        {  "owner",  new {
+                            data = new
+                            {
+                                type = "people",
+                                id = owner.Id.ToString()
+                            }
+                        } },
+                        {  "todo-items", new {
+                            data = new dynamic[]
+                            {
+                                new {
+                                    type = "todo-items",
+                                    id = todoItem.Id.ToString()
+                                }
+                            }
+                        } }
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // act
+            var response = await client.SendAsync(request);
+
+            // assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var collectionResult = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<TodoItemCollection>(body);
+
+            Assert.NotNull(collectionResult);
+            Assert.NotEmpty(collectionResult.TodoItems);
+            Assert.Equal(todoItem.Description, collectionResult.TodoItems.Single().Description);
+        }
+
+        [Fact]
         public async Task Can_Create_And_Set_HasOne_Relationships()
         {
             // arrange
@@ -340,6 +405,62 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .SingleOrDefault(c => c.Id == newId);
 
             Assert.Equal(owner.Id, todoItemResult.OwnerId);
+        }
+
+        [Fact]
+        public async Task Can_Create_With_HasOne_Relationship_And_Include_Result()
+        {
+            // arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("POST");
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var context = _fixture.GetService<AppDbContext>();
+
+            var todoItem = new TodoItem();
+            var owner = new JsonApiDotNetCoreExample.Models.Person
+            {
+                FirstName = "Alice"
+            };
+            context.People.Add(owner);
+
+            await context.SaveChangesAsync();
+
+            var route = "/api/v1/todo-items?include=owner";
+            var request = new HttpRequestMessage(httpMethod, route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    relationships = new Dictionary<string, dynamic>
+                    {
+                        {  "owner",  new {
+                            data = new
+                            {
+                                type = "people",
+                                id = owner.Id.ToString()
+                            }
+                        } }
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var todoItemResult = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize<TodoItem>(body);
+            Assert.NotNull(todoItemResult);
+            Assert.NotNull(todoItemResult.Owner);
+            Assert.Equal(owner.FirstName, todoItemResult.Owner.FirstName);
         }
 
         [Fact]

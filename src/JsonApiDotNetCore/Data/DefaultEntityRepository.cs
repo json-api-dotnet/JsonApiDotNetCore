@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
 {
+    /// <inheritdoc />
     public class DefaultEntityRepository<TEntity>
         : DefaultEntityRepository<TEntity, int>,
         IEntityRepository<TEntity>
@@ -26,8 +27,13 @@ namespace JsonApiDotNetCore.Data
         { }
     }
 
+    /// <summary>
+    /// Provides a default repository implementation and is responsible for
+    /// abstracting any EF Core APIs away from the service layer.
+    /// </summary>
     public class DefaultEntityRepository<TEntity, TId>
-        : IEntityRepository<TEntity, TId>
+        : IEntityRepository<TEntity, TId>,
+        IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly DbContext _context;
@@ -48,7 +54,7 @@ namespace JsonApiDotNetCore.Data
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Get()
         {
             if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
@@ -57,41 +63,43 @@ namespace JsonApiDotNetCore.Data
             return _dbSet;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
             return entities.Sort(sortQueries);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
             return await Get().SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
             _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var result = await Include(Get(), relationshipName).SingleOrDefaultAsync(e => e.Id.Equals(id));
+            var includedSet = Include(Get(), relationshipName);
+            var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             AttachRelationships();
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();
+
             return entity;
         }
 
@@ -99,6 +107,28 @@ namespace JsonApiDotNetCore.Data
         {
             AttachHasManyPointers();
             AttachHasOnePointers();
+        }
+
+        /// <inheritdoc />
+        public void DetachRelationshipPointers(TEntity entity)
+        {
+            foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
+            {
+                _context.Entry(hasOneRelationship.Value).State = EntityState.Detached;
+            }
+
+            foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
+            {
+                foreach (var pointer in hasManyRelationship.Value)
+                {
+                    _context.Entry(pointer).State = EntityState.Detached;
+                }
+
+                // HACK: detaching has many relationships doesn't appear to be sufficient
+                // the navigation property actually needs to be nulled out, otherwise
+                // EF adds duplicate instances to the collection
+                hasManyRelationship.Key.SetValue(entity, null);
+            }
         }
 
         /// <summary>
@@ -129,7 +159,7 @@ namespace JsonApiDotNetCore.Data
                     _context.Entry(relationship.Value).State = EntityState.Unchanged;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)
         {
             var oldEntity = await GetAsync(id);
@@ -148,14 +178,14 @@ namespace JsonApiDotNetCore.Data
             return oldEntity;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
             var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), relationship.Type);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             var entity = await GetAsync(id);
@@ -170,7 +200,7 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
             var entity = _jsonApiContext.RequestEntity;
@@ -185,10 +215,11 @@ namespace JsonApiDotNetCore.Data
             {
                 throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
             }
+
             return entities.Include(relationship.InternalRelationshipName);
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
             if (pageNumber >= 0)
@@ -209,7 +240,7 @@ namespace JsonApiDotNetCore.Data
                     .ToListAsync();
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task<int> CountAsync(IQueryable<TEntity> entities)
         {
             return (entities is IAsyncEnumerable<TEntity>)
@@ -217,7 +248,7 @@ namespace JsonApiDotNetCore.Data
                  : entities.Count();
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
         {
             return (entities is IAsyncEnumerable<TEntity>)
@@ -225,7 +256,7 @@ namespace JsonApiDotNetCore.Data
                : entities.FirstOrDefault();
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public async Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities)
         {
             return (entities is IAsyncEnumerable<TEntity>)
