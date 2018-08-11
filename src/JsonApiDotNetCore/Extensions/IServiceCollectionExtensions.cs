@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Services.Operations;
 using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,12 +45,7 @@ namespace JsonApiDotNetCore.Extensions
 
             config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
 
-            mvcBuilder
-                .AddMvcOptions(opt =>
-                {
-                    opt.Filters.Add(typeof(JsonApiExceptionFilter));
-                    opt.SerializeAsJsonApi(config);
-                });
+            mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
 
             AddJsonApiInternals<TContext>(services, config);
             return services;
@@ -63,15 +59,17 @@ namespace JsonApiDotNetCore.Extensions
 
             options(config);
 
-            mvcBuilder
-                .AddMvcOptions(opt =>
-                {
-                    opt.Filters.Add(typeof(JsonApiExceptionFilter));
-                    opt.SerializeAsJsonApi(config);
-                });
+            mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
 
             AddJsonApiInternals(services, config);
             return services;
+        }
+
+        private static void AddMvcOptions(MvcOptions options, JsonApiOptions config)
+        {
+            options.Filters.Add(typeof(JsonApiExceptionFilter));
+            options.Filters.Add(typeof(TypeMatchFilter));
+            options.SerializeAsJsonApi(config);
         }
 
         public static void AddJsonApiInternals<TContext>(
@@ -141,6 +139,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
+
+            // services.AddScoped<IActionFilter, TypeMatchFilter>();
         }
 
         private static void AddOperationServices(IServiceCollection services)
