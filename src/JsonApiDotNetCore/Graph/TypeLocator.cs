@@ -6,11 +6,19 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Graph
 {
+    /// <summary>
+    /// Used to locate types and facilitate auto-resource discovery
+    /// </summary>
     internal static class TypeLocator
     {
         private static Dictionary<Assembly, Type[]> _typeCache = new Dictionary<Assembly, Type[]>();
         private static Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
+
         
+        /// <summary>
+        /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
+        /// Returns the status and the resultant id type, either `(true, Type)` OR `(false, null)`
+        /// </summary>        
         public static (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
         {
             var identitifableType = GetIdentifiableIdType(resourceType);
@@ -37,6 +45,10 @@ namespace JsonApiDotNetCore.Graph
             return types;
         }
 
+
+        /// <summary>
+        /// Get all implementations of <see cref="IIdentifiable"/>. in the assembly
+        /// </summary>
         public static List<ResourceDescriptor> GetIdentifableTypes(Assembly assembly)
         {
             if (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
@@ -55,6 +67,17 @@ namespace JsonApiDotNetCore.Graph
             return descriptors;
         }
 
+        /// <summary>
+        /// Get all implementations of the generic interface
+        /// </summary>
+        /// <param name="assembly">The assembly to search</param>
+        /// <param name="openGenericInterfaceType">The open generic type, e.g. `typeof(IResourceService&lt;&gt;)`</param>
+        /// <param name="genericInterfaceArguments">Parameters to the generic type</param>
+        /// <example>
+        /// <code>
+        /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService&lt;&gt;), typeof(Article), typeof(Guid));
+        /// </code>
+        /// </example>
         public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterfaceType, params Type[] genericInterfaceArguments)
         {
             foreach (var type in assembly.GetTypes())
@@ -71,16 +94,33 @@ namespace JsonApiDotNetCore.Graph
             return (null, null);
         }
 
-        public static IEnumerable<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, Type genericArgument)
+        /// <summary>
+        /// Get all derivitives of the concrete, generic type.
+        /// </summary>
+        /// <param name="assembly">The assembly to search</param>
+        /// <param name="openGenericType">The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`</param>
+        /// <param name="genericArguments">Parameters to the generic type</param>
+        /// <example>
+        /// <code>
+        /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
+        /// </code>
+        /// </example>
+        public static IEnumerable<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {
-            var genericType = openGenericType.MakeGenericType(genericArgument);
-            foreach (var type in assembly.GetTypes())
-            {
-                if (genericType.IsAssignableFrom(type))
-                    yield return type;
-            }
+            var genericType = openGenericType.MakeGenericType(genericArguments);
+            return GetDerivedTypes(assembly, genericType);
         }
 
+        /// <summary>
+        /// Get all derivitives of the specified type.
+        /// </summary>
+        /// <param name="assembly">The assembly to search</param>
+        /// <param name="openGenericType">The inherited type</param>
+        /// <example>
+        /// <code>
+        /// GetDerivedGenericTypes(assembly, typeof(DbContext))
+        /// </code>
+        /// </example>
         public static IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type inheritedType)
         {
             foreach (var type in assembly.GetTypes())
