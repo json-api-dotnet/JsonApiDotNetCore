@@ -9,7 +9,9 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// The exposed resource name
         /// </summary>
-        public string EntityName { get; set; }
+        public string EntityName {
+            get;
+            set; }
 
         /// <summary>
         /// The data model type

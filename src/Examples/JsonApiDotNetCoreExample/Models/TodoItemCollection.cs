@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
+    [Resource("todo-collections")]
     public class TodoItemCollection : Identifiable<Guid>
     {
         [Attr("name")]

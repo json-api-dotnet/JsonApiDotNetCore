@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
@@ -35,9 +36,10 @@ namespace JsonApiDotNetCore.Extensions
             return AddJsonApi<TContext>(services, options, mvcBuilder);
         }
 
-        public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
-           Action<JsonApiOptions> options,
-           IMvcCoreBuilder mvcBuilder) where TContext : DbContext
+        public static IServiceCollection AddJsonApi<TContext>(
+            this IServiceCollection services,
+            Action<JsonApiOptions> options,
+            IMvcCoreBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
 
@@ -51,13 +53,20 @@ namespace JsonApiDotNetCore.Extensions
             return services;
         }
 
-        public static IServiceCollection AddJsonApi(this IServiceCollection services,
-            Action<JsonApiOptions> options,
-            IMvcCoreBuilder mvcBuilder)
+        public static IServiceCollection AddJsonApi(
+            this IServiceCollection services,
+            Action<JsonApiOptions> configureOptions,
+            IMvcCoreBuilder mvcBuilder,
+            Action<ServiceDiscoveryFacade> autoDiscover = null)
         {
             var config = new JsonApiOptions();
+            configureOptions(config);
 
-            options(config);
+            if(autoDiscover != null)
+            {
+                var facade = new ServiceDiscoveryFacade(services, config.ContextGraphBuilder);
+                autoDiscover(facade);
+            }
 
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
 
@@ -88,6 +97,9 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
+            if (jsonApiOptions.ContextGraph == null)
+                jsonApiOptions.ContextGraph = jsonApiOptions.ContextGraphBuilder.Build();
+
             if (jsonApiOptions.ContextGraph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
