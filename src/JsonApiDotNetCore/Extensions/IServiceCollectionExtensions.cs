@@ -59,18 +59,18 @@ namespace JsonApiDotNetCore.Extensions
             IMvcCoreBuilder mvcBuilder,
             Action<ServiceDiscoveryFacade> autoDiscover = null)
         {
-            var options = new JsonApiOptions();
-            configureOptions(options);
+            var config = new JsonApiOptions();
+            configureOptions(config);
 
             if(autoDiscover != null)
             {
-                var facade = new ServiceDiscoveryFacade(services, options.ContextGraphBuilder);
+                var facade = new ServiceDiscoveryFacade(services, config.ContextGraphBuilder);
                 autoDiscover(facade);
             }
 
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
 
-            AddJsonApiInternals(services, options);
+            AddJsonApiInternals(services, config);
             return services;
         }
 
