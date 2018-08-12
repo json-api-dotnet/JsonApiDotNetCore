@@ -35,6 +35,8 @@ namespace JsonApiDotNetCore.Graph
         {
             try
             {
+                // check the class definition first
+                // [Resource("models"] public class Model : Identifiable { /* ... */ }
                 if (type.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
                     return attribute.ResourceName;
 
