@@ -195,6 +195,10 @@ namespace JsonApiDotNetCore.Builders
 
         private string GetResourceNameFromDbSetProperty(PropertyInfo property, Type resourceType)
         {
+            // this check is actually duplicated in the DefaultResourceNameFormatter
+            // however, we perform it here so that we allow class attributes to be prioritized over
+            // the DbSet attribute. Eventually, the DbSet attribute should be deprecated.
+            //
             // check the class definition first
             // [Resource("models"] public class Model : Identifiable { /* ... */ }
             if (resourceType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute classResourceAttribute)
