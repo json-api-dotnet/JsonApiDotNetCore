@@ -45,7 +45,6 @@ namespace JsonApiDotNetCore.Graph
             return types;
         }
 
-
         /// <summary>
         /// Get all implementations of <see cref="IIdentifiable"/>. in the assembly
         /// </summary>
@@ -80,15 +79,28 @@ namespace JsonApiDotNetCore.Graph
         /// </example>
         public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterfaceType, params Type[] genericInterfaceArguments)
         {
+            if(assembly == null) throw new ArgumentNullException(nameof(assembly));
+            if(openGenericInterfaceType == null) throw new ArgumentNullException(nameof(openGenericInterfaceType));
+            if(genericInterfaceArguments == null) throw new ArgumentNullException(nameof(genericInterfaceArguments));
+            if(genericInterfaceArguments.Length == 0) throw new ArgumentException("No arguments supplied for the generic interface.", nameof(genericInterfaceArguments));
+            if(openGenericInterfaceType.IsGenericType == false) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterfaceType));
+
             foreach (var type in assembly.GetTypes())
             {
                 var interfaces = type.GetInterfaces();
                 foreach (var interfaceType in interfaces)
-                    if (interfaceType.GetTypeInfo().IsGenericType && interfaceType.GetGenericTypeDefinition() == openGenericInterfaceType)
-                        return (
-                            type,
-                            interfaceType.MakeGenericType(genericInterfaceArguments)
-                        );
+                {
+                    if (interfaceType.IsGenericType)
+                    {
+                        var genericTypeDefinition = interfaceType.GetGenericTypeDefinition();
+                        if(genericTypeDefinition == openGenericInterfaceType.GetGenericTypeDefinition()) {
+                            return (
+                                type,
+                                genericTypeDefinition.MakeGenericType(genericInterfaceArguments)
+                            );
+                        }
+                    }
+                }
             }
 
             return (null, null);
