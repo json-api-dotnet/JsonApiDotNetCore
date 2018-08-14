@@ -214,6 +214,15 @@ namespace JsonApiDotNetCore.Serialization
             SetHasOneForeignKeyValue(entity, attr, foreignKeyProperty, rio);
             SetHasOneNavigationPropertyValue(entity, attr, rio, included);
 
+            // recursive call ...
+            var navigationPropertyValue = attr.GetValue(entity);
+            var contextGraphEntity = _jsonApiContext.ContextGraph.GetContextEntity(attr.Type);
+            if(navigationPropertyValue != null && contextGraphEntity != null)
+            {
+                var includedResource = included.Single(r => r.Type == rio.Type && r.Id == rio.Id);
+                SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
+            }
+
             return entity;
         }
 

@@ -203,20 +203,38 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
+            if(string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(400, "Include parameter must not be empty if provided");
+
+            var relationshipChain = relationshipName.Split('.');
+
+            // variables mutated in recursive loop
+            // TODO: make recursive method
+            string internalRelationshipPath = null;
             var entity = _jsonApiContext.RequestEntity;
-            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == relationshipName);
-            if (relationship == null)
+            for(var i = 0; i < relationshipChain.Length; i++)
             {
-                throw new JsonApiException(400, $"Invalid relationship {relationshipName} on {entity.EntityName}",
-                    $"{entity.EntityName} does not have a relationship named {relationshipName}");
+                var requestedRelationship = relationshipChain[i];
+                var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
+                if (relationship == null)
+                {
+                    throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
+                        $"{entity.EntityName} does not have a relationship named {requestedRelationship}");
+                }
+
+                if (relationship.CanInclude == false)
+                {
+                    throw new JsonApiException(400, $"Including the relationship {requestedRelationship} on {entity.EntityName} is not allowed");
+                }
+
+                internalRelationshipPath = (internalRelationshipPath == null)
+                    ? relationship.InternalRelationshipName
+                    : $"{internalRelationshipPath}.{relationship.InternalRelationshipName}";
+                
+                if(i < relationshipChain.Length)
+                    entity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
             }
 
-            if (!relationship.CanInclude)
-            {
-                throw new JsonApiException(400, $"Including the relationship {relationshipName} on {entity.EntityName} is not allowed");
-            }
-
-            return entities.Include(relationship.InternalRelationshipName);
+            return entities.Include(internalRelationshipPath);
         }
 
         /// <inheritdoc />
