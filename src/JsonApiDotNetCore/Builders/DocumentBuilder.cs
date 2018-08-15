@@ -202,28 +202,51 @@ namespace JsonApiDotNetCore.Builders
 
                     var contextEntity = rootContextEntity;
                     var entity = rootResource;
-
-                    for(var i = 0; i < relationshipChain.Length; i++)
-                    {
-                        var requestedRelationship = relationshipChain[i];
-                        var relationship = contextEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
-                        var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, relationship.InternalRelationshipName);
-                        if (navigationEntity is IEnumerable hasManyNavigationEntity)
-                            foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
-                                included = AddIncludedEntity(included, includedEntity);
-                        else
-                            included = AddIncludedEntity(included, (IIdentifiable)navigationEntity);
-                        
-                        if(i < relationshipChain.Length) {
-                            contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
-                            entity = (IIdentifiable)navigationEntity; // HACK: only handles HasOne case ...
-                        }
-                    }
+                    included = IncludeRelationshipChain(included, rootContextEntity, rootResource, relationshipChain, 0);
                 }                
             }
 
             return included;
         }
+
+        private List<DocumentData> IncludeRelationshipChain(
+            List<DocumentData> included, ContextEntity parentEntity, IIdentifiable parentResource, string[] relationshipChain, int relationshipChainIndex)
+        {
+            var requestedRelationship = relationshipChain[relationshipChainIndex];
+            var relationship = parentEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
+            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(parentResource, relationship.InternalRelationshipName);
+            if (navigationEntity is IEnumerable hasManyNavigationEntity)
+            {
+                foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
+                {
+                    included = AddIncludedEntity(included, includedEntity);
+                    included = IncludeSingleResourceRelationships(included, includedEntity, relationship, relationshipChain, relationshipChainIndex);
+                }
+            }
+            else
+            {
+                included = AddIncludedEntity(included, (IIdentifiable)navigationEntity);
+                included = IncludeSingleResourceRelationships(included, (IIdentifiable)navigationEntity, relationship, relationshipChain, relationshipChainIndex);
+            }
+
+            return included;
+        }
+
+        private List<DocumentData> IncludeSingleResourceRelationships(
+            List<DocumentData> included, IIdentifiable navigationEntity, RelationshipAttribute relationship, string[] relationshipChain, int relationshipChainIndex)
+        {
+            if(relationshipChainIndex < relationshipChain.Length) 
+            {
+                var nextContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
+                var resource = (IIdentifiable)navigationEntity;
+                // recursive call
+                if(relationshipChainIndex < relationshipChain.Length - 1)
+                    included = IncludeRelationshipChain(included, nextContextEntity, resource, relationshipChain, relationshipChainIndex + 1);
+            }
+            
+            return included;
+        }
+
 
         private List<DocumentData> AddIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
         {
