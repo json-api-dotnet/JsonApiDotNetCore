@@ -221,8 +221,9 @@ namespace JsonApiDotNetCore.Serialization
                 var contextGraphEntity = _jsonApiContext.ContextGraph.GetContextEntity(attr.Type);
                 if(navigationPropertyValue != null && contextGraphEntity != null)
                 {
-                    var includedResource = included.Single(r => r.Type == rio.Type && r.Id == rio.Id);
-                    SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
+                    var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
+                    if(includedResource != null) 
+                        SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
                 }
             }
 
