@@ -215,12 +215,15 @@ namespace JsonApiDotNetCore.Serialization
             SetHasOneNavigationPropertyValue(entity, attr, rio, included);
 
             // recursive call ...
-            var navigationPropertyValue = attr.GetValue(entity);
-            var contextGraphEntity = _jsonApiContext.ContextGraph.GetContextEntity(attr.Type);
-            if(navigationPropertyValue != null && contextGraphEntity != null)
+            if(included != null) 
             {
-                var includedResource = included.Single(r => r.Type == rio.Type && r.Id == rio.Id);
-                SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
+                var navigationPropertyValue = attr.GetValue(entity);
+                var contextGraphEntity = _jsonApiContext.ContextGraph.GetContextEntity(attr.Type);
+                if(navigationPropertyValue != null && contextGraphEntity != null)
+                {
+                    var includedResource = included.Single(r => r.Type == rio.Type && r.Id == rio.Id);
+                    SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
+                }
             }
 
             return entity;
