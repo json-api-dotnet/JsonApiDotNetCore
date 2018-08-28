@@ -127,9 +127,14 @@ namespace JsonApiDotNetCore.Extensions
                     return source.Where(lambdaIn);
                 }
                 else
-                {   // convert the incoming value to the target value type
+                {   
+                    var isNullabe = IsNullable(property.PropertyType);
+                    var propertyValue = filterQuery.PropertyValue;
+                    var value = isNullabe && propertyValue == "" ? null : propertyValue;
+
+                    // convert the incoming value to the target value type
                     // "1" -> 1
-                    var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, property.PropertyType);
+                    var convertedValue = TypeHelper.ConvertType(value, property.PropertyType);
                     // {model}
                     var parameter = Expression.Parameter(concreteType, "model");
                     // {model.Id}
@@ -203,6 +208,9 @@ namespace JsonApiDotNetCore.Extensions
                 throw new JsonApiException(400, $"Could not cast {filterQuery.PropertyValue} to {relatedAttr.PropertyType.Name}");
             }
         }
+
+        private static bool IsNullable(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
 
         private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
         {

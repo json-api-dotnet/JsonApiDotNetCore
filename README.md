@@ -75,3 +75,41 @@ public class Startup
     }
 }
 ```
+
+### Development
+
+Restore all nuget packages with:
+
+```bash
+dotnet restore
+```
+
+#### Testing
+
+Running tests locally requires access to a postgresql database.  
+If you have docker installed, this can be propped up via: 
+
+```bash
+docker run --rm --name jsonapi-dotnet-core-testing \
+  -e POSTGRES_DB=JsonApiDotNetCoreExample \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  postgres
+```
+
+And then to run the tests:
+
+```bash
+dotnet test
+```
+
+#### Cleaning
+
+Sometimes the compiled files can be dirty / corrupt from other branches / failed builds.
+If your bash prompt supports the globstar, you can recursively delete the `bin` and `obj` directories:
+
+```bash
+shopt -s globstar
+rm -rf **/bin && rm -rf **/obj
+```
