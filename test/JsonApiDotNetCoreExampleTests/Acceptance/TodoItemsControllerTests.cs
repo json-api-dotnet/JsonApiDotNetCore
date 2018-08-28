@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -91,16 +92,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Can_Filter_TodoItems_Using_NotEqual_Operator()
+        public async Task Can_Filter_TodoItems_Using_IsNot_Operator()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();
-            todoItem.UpdatedDate = null;
+            todoItem.UpdatedDate = new DateTime();
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[updated-date]=ne:";
+            var route = $"/api/v1/todo-items?filter[updated-date]=isnot:null";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -110,7 +111,30 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Empty(deserializedBody);
+            Assert.NotEmpty(deserializedBody);
+        }
+
+        [Fact]
+        public async Task Can_Filter_TodoItems_Using_Is_Operator()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.UpdatedDate = null;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[updated-date]=is:null";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
         }
 
         [Fact]
