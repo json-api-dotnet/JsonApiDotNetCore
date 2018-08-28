@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[updated-date]=ne:null";
+            var route = $"/api/v1/todo-items?filter[updated-date]=ne:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
