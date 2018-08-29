@@ -98,7 +98,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var documents = JsonConvert.DeserializeObject<Documents>(body);
             var included = documents.Included;
             
-            Assert.Equal(4, included.Count); // 1 collection, 3 todos
+            Assert.Equal(4, included.Count);
+
+            Assert.Equal(3, included.CountOfType("todo-items"));
+            Assert.Equal(1, included.CountOfType("todo-collections"));
         }
 
         [Fact]
@@ -135,7 +138,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var documents = JsonConvert.DeserializeObject<Documents>(body);
             var included = documents.Included;
             
-            Assert.Equal(5, included.Count); // 1 collection, 3 todos, 1 owner
+            Assert.Equal(5, included.Count);
+
+            Assert.Equal(3, included.CountOfType("todo-items"));
+            Assert.Equal(1, included.CountOfType("people"));
+            Assert.Equal(1, included.CountOfType("todo-collections"));
         }
 
         [Fact]
@@ -174,7 +181,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var documents = JsonConvert.DeserializeObject<Documents>(body);
             var included = documents.Included;
             
-            Assert.Equal(7, included.Count); // 1 collection, 3 todos, 2 owners, 1 role
+            Assert.Equal(7, included.Count);
+            
+            Assert.Equal(3, included.CountOfType("todo-items"));
+            Assert.Equal(2, included.CountOfType("people"));
+            Assert.Equal(1, included.CountOfType("person-roles"));
+            Assert.Equal(1, included.CountOfType("todo-collections"));
         }
 
         [Fact]
