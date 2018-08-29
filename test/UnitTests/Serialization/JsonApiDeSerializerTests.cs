@@ -532,17 +532,176 @@ namespace UnitTests.Serialization
             Assert.Equal(expectedName, result.Independent.Name);
         }
 
+
+        [Fact]
+        public void Can_Deserialize_Nested_Included_HasMany_Relationships()
+        {
+            // arrange
+            var contextGraphBuilder = new ContextGraphBuilder();
+            contextGraphBuilder.AddResource<OneToManyIndependent>("independents");
+            contextGraphBuilder.AddResource<OneToManyDependent>("dependents");
+            contextGraphBuilder.AddResource<ManyToManyNested>("many-to-manys");
+
+            var deserializer = GetDeserializer(contextGraphBuilder);
+          
+            var contentString =
+            @"{
+                ""data"": {
+                    ""type"": ""independents"",
+                    ""id"": ""1"",
+                    ""attributes"": { },
+                    ""relationships"": {
+                        ""many-to-manys"": {
+                           ""data"": [{
+                                ""type"": ""many-to-manys"",
+                                ""id"": ""2""
+                            }, {
+                                ""type"": ""many-to-manys"",
+                                ""id"": ""3""
+                            }]
+                        }
+                    }
+                },
+                ""included"": [
+                    {
+                        ""type"": ""many-to-manys"",
+                        ""id"": ""2"",
+                        ""attributes"": {},
+                        ""relationships"": {
+                            ""dependent"": {
+                                ""data"": {
+                                    ""type"": ""dependents"",
+                                    ""id"": ""4""
+                                }
+                            },
+                            ""independent"": {
+                                ""data"": {
+                                    ""type"": ""independents"",
+                                    ""id"": ""5""
+                                }
+                            }
+                        }
+                    },
+                    {
+                        ""type"": ""many-to-manys"",
+                        ""id"": ""3"",
+                        ""attributes"": {},
+                        ""relationships"": {
+                            ""dependent"": {
+                                ""data"": {
+                                    ""type"": ""dependents"",
+                                    ""id"": ""4""
+                                }
+                            },
+                            ""independent"": {
+                                ""data"": {
+                                    ""type"": ""independents"",
+                                    ""id"": ""6""
+                                }
+                            }
+                        }
+                    },
+                    {
+                        ""type"": ""dependents"",
+                        ""id"": ""4"",
+                        ""attributes"": {},
+                        ""relationships"": {
+                            ""many-to-manys"": {
+                                ""data"": [{
+                                    ""type"": ""many-to-manys"",
+                                    ""id"": ""2""
+                                }, {
+                                    ""type"": ""many-to-manys"",
+                                    ""id"": ""3""
+                                }]
+                            }
+                        }
+                    }
+                    ,
+                    {
+                        ""type"": ""independents"",
+                        ""id"": ""5"",
+                        ""attributes"": {},
+                        ""relationships"": {
+                            ""many-to-manys"": {
+                                ""data"": [{
+                                    ""type"": ""many-to-manys"",
+                                    ""id"": ""2""
+                                }]
+                            }
+                        }
+                    }
+                    ,
+                    {
+                        ""type"": ""independents"",
+                        ""id"": ""6"",
+                        ""attributes"": {},
+                        ""relationships"": {
+                            ""many-to-manys"": {
+                                ""data"": [{
+                                    ""type"": ""many-to-manys"",
+                                    ""id"": ""3""
+                                }]
+                            }
+                        }
+                    }
+                ]
+            }";
+
+            // act
+            var result = deserializer.Deserialize<OneToManyDependent>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Id);
+            Assert.NotNull(result.ManyToManys);
+            Assert.Equal(2, result.ManyToManys.Count);
+        }
+
+        private JsonApiDeSerializer GetDeserializer(ContextGraphBuilder contextGraphBuilder)
+        {
+            var contextGraph = contextGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
+            jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            return deserializer;
+        }
+
+        private class ManyToManyNested : Identifiable
+        {
+            [Attr("name")] public string Name { get; set; }
+            [HasOne("dependent")] public OneToManyDependent Dependents { get; set; }
+            public int DependentId { get; set; }
+            [HasOne("independent")] public OneToManyIndependent Independents { get; set; }
+            public int InependentId { get; set; }
+        }
+
         private class OneToManyDependent : Identifiable
         {
             [Attr("name")] public string Name { get; set; }
             [HasOne("independent")] public OneToManyIndependent Independent { get; set; }
             public int IndependentId { get; set; }
+
+            [HasMany("many-to-manys")] public List<ManyToManyNested> ManyToManys { get; set; }
         }
 
         private class OneToManyIndependent : Identifiable
         {
             [Attr("name")] public string Name { get; set; }
             [HasMany("dependents")] public List<OneToManyDependent> Dependents { get; set; }
+
+            [HasMany("many-to-manys")] public List<ManyToManyNested> ManyToManys { get; set; }
         }
     }
 }
