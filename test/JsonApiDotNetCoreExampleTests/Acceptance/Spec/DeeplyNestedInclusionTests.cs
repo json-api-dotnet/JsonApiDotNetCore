@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var documents = JsonConvert.DeserializeObject<Documents>(body);
             var included = documents.Included;
             
-            Assert.Equal(3, included.Count); // 1 collection, 2 todos
+            Assert.Equal(4, included.Count); // 1 collection, 3 todos
         }
 
         [Fact]
@@ -123,7 +123,45 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var documents = JsonConvert.DeserializeObject<Documents>(body);
             var included = documents.Included;
             
-            Assert.Equal(4, included.Count); // 1 collection, 2 todos, 1 owner
+            Assert.Equal(5, included.Count); // 1 collection, 3 todos, 1 owner
+        }
+
+        [Fact]
+        public async Task Can_Include_Nested_Relationships_With_Multiple_Paths()
+        {
+            // arrange
+            const string route = "/api/v1/todo-items?include=collection.owner.role,collection.todo-items.owner";
+
+            var todoItem = new TodoItem {
+                Collection = new TodoItemCollection {
+                    Owner = new Person {
+                        Role = new PersonRole()
+                    },
+                    TodoItems = new List<TodoItem> {
+                        new TodoItem {
+                            Owner = new Person()
+                        },
+                        new TodoItem()
+                    }
+                }
+            };
+        
+            var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+
+            // act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Documents>(body);
+            var included = documents.Included;
+            
+            Assert.Equal(7, included.Count); // 1 collection, 3 todos, 2 owners, 1 role
         }
     }
 }
