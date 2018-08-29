@@ -649,13 +649,23 @@ namespace UnitTests.Serialization
             }";
 
             // act
-            var result = deserializer.Deserialize<OneToManyDependent>(contentString);
+            var result = deserializer.Deserialize<OneToManyIndependent>(contentString);
 
             // assert
             Assert.NotNull(result);
             Assert.Equal(1, result.Id);
             Assert.NotNull(result.ManyToManys);
             Assert.Equal(2, result.ManyToManys.Count);
+
+            // TODO: not sure if this should be a thing that works?
+            //       could this cause cycles in the graph?
+            // Assert.NotNull(result.ManyToManys[0].Dependent);
+            // Assert.NotNull(result.ManyToManys[0].Independent);
+            // Assert.NotNull(result.ManyToManys[1].Dependent);
+            // Assert.NotNull(result.ManyToManys[1].Independent);
+
+            // Assert.Equal(result.ManyToManys[0].Dependent, result.ManyToManys[1].Dependent);
+            // Assert.NotEqual(result.ManyToManys[0].Independent, result.ManyToManys[1].Independent);
         }
 
         private JsonApiDeSerializer GetDeserializer(ContextGraphBuilder contextGraphBuilder)
@@ -681,9 +691,9 @@ namespace UnitTests.Serialization
         private class ManyToManyNested : Identifiable
         {
             [Attr("name")] public string Name { get; set; }
-            [HasOne("dependent")] public OneToManyDependent Dependents { get; set; }
+            [HasOne("dependent")] public OneToManyDependent Dependent { get; set; }
             public int DependentId { get; set; }
-            [HasOne("independent")] public OneToManyIndependent Independents { get; set; }
+            [HasOne("independent")] public OneToManyIndependent Independent { get; set; }
             public int InependentId { get; set; }
         }
 
