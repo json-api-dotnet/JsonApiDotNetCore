@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Internal
 
         public int GetStatusCode()
         {
-            if (_errors.Errors.Count == 1)
+            if (_errors.Errors.Select(a => a.StatusCode).Distinct().Count() == 1)
                 return _errors.Errors[0].StatusCode;
 
             if (_errors.Errors.FirstOrDefault(e => e.StatusCode >= 500) != null)
