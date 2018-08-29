@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -83,15 +84,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.DeSerializer.DeserializeList<TodoItem>(body);
-
-            var responseTodoItem = todoItems[0];
-            Assert.NotNull(responseTodoItem);
-            Assert.NotNull(responseTodoItem.Collection);
-            Assert.NotNull(responseTodoItem.Collection.TodoItems);
-            Assert.Equal(2, responseTodoItem.Collection.TodoItems.Count);
-
-            // TODO: assert number of things in included
+            var documents = JsonConvert.DeserializeObject<Documents>(body);
+            var included = documents.Included;
+            
+            Assert.Equal(3, included.Count); // 1 collection, 2 todos
         }
 
         [Fact]
@@ -124,15 +120,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.DeSerializer.DeserializeList<TodoItem>(body);
-
-            var responseTodoItem = todoItems[0];
-            Assert.NotNull(responseTodoItem);
-            Assert.NotNull(responseTodoItem.Collection);
-            Assert.NotNull(responseTodoItem.Collection.TodoItems);
-            Assert.Equal(2, responseTodoItem.Collection.TodoItems.Count);
-
-            // TODO: assert number of things in included
+            var documents = JsonConvert.DeserializeObject<Documents>(body);
+            var included = documents.Included;
+            
+            Assert.Equal(4, included.Count); // 1 collection, 2 todos, 1 owner
         }
     }
 }
