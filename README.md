@@ -107,9 +107,7 @@ dotnet test
 #### Cleaning
 
 Sometimes the compiled files can be dirty / corrupt from other branches / failed builds.
-If your bash prompt supports the globstar, you can recursively delete the `bin` and `obj` directories:
 
 ```bash
-shopt -s globstar
-rm -rf **/bin && rm -rf **/obj
+dotnet clean
 ```

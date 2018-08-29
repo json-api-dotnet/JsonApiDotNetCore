@@ -127,11 +127,12 @@ namespace JsonApiDotNetCore.Extensions
 
                     return source.Where(lambdaIn);
                 }
-                else if (op == FilterOperations.@is || op == FilterOperations.isnot) {
+                else if (op == FilterOperations.isnotnull || op == FilterOperations.isnull) {
+                    // {model}
                     var parameter = Expression.Parameter(concreteType, "model");
                     // {model.Id}
                     var left = Expression.PropertyOrField(parameter, property.Name);
-                    var right = Expression.Constant(filterQuery.PropertyValue, typeof(string));
+                    var right = Expression.Constant(null);
 
                     var body = GetFilterExpressionLambda(left, right, op);
                     var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
@@ -139,22 +140,9 @@ namespace JsonApiDotNetCore.Extensions
                     return source.Where(lambda);
                 }
                 else
-                {   
-                    var isNullabe = IsNullable(property.PropertyType);
-                    var propertyValue = filterQuery.PropertyValue;
-                    var value = propertyValue;
-
-                    if (op == FilterOperations.@isnot || op == FilterOperations.isnot)
-                    {
-                        if (isNullabe && propertyValue == "null") 
-                        {
-                            value = null;
-                        }
-                    }
-
-                    // convert the incoming value to the target value type
+                {   // convert the incoming value to the target value type
                     // "1" -> 1
-                    var convertedValue = TypeHelper.ConvertType(value, property.PropertyType);
+                    var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, property.PropertyType);
                     // {model}
                     var parameter = Expression.Parameter(concreteType, "model");
                     // {model.Id}
@@ -264,11 +252,11 @@ namespace JsonApiDotNetCore.Extensions
                 case FilterOperations.ne:
                     body = Expression.NotEqual(left, right);
                     break;
-                case FilterOperations.isnot:
+                case FilterOperations.isnotnull:
                     // {model.Id != null}
                     body = Expression.NotEqual(left, right);
                     break;
-                case FilterOperations.@is:
+                case FilterOperations.isnull:
                     // {model.Id == null}
                     body = Expression.Equal(left, right);
                     break;

@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Internal.Query
         ne = 6,
         @in = 7, // prefix with @ to use keyword
         nin = 8,
-        @is = 9,
-        isnot = 10
+        isnull = 9,
+        isnotnull = 10
     }
 }
