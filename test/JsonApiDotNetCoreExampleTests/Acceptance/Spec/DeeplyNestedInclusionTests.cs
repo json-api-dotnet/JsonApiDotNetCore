@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(6, included.Count); 
 
             
-            var collectionDocument = included.FindResource("todo-item-collections", collection.Id);
+            var collectionDocument = included.FindResource("todo-collections", collection.Id);
             var ownerDocument = included.FindResource("people", collectionOwner.Id);
             var assigneeDocument = included.FindResource("people", assignee.Id);
             var roleDocument = included.FindResource("person-roles", role.Id);
