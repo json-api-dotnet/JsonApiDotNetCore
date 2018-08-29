@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Xunit;
@@ -181,22 +182,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var role = new PersonRole();
-            var asignee = new Person { Role = role };
+            var assignee = new Person { Role = role };
             var collectionOwner = new Person();
             var someOtherOwner = new Person();
             var collection = new TodoItemCollection { Owner = collectionOwner };
-            var todoItem1 = new TodoItem { Collection = collection, Assignee = asignee };
-            var todoItem2 = new TodoItem { Collection = collection, Assignee = asignee };
+            var todoItem1 = new TodoItem { Collection = collection, Assignee = assignee };
+            var todoItem2 = new TodoItem { Collection = collection, Assignee = assignee };
             var todoItem3 = new TodoItem { Collection = collection, Owner = someOtherOwner };
-            var todoItem4 = new TodoItem { Collection = collection, Owner = asignee };
-
-
-            string route = 
-                "/api/v1/todo-items/" + todoItem1.Id + "?include=" +
-                    "collection.owner," + 
-                    "asignee.role," + 
-                    "asignee.assigned-todo-items";
-
+            var todoItem4 = new TodoItem { Collection = collection, Owner = assignee };
         
             var context = _fixture.GetService<AppDbContext>();
             ResetContext(context);
@@ -206,13 +199,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.TodoItems.Add(todoItem3);
             context.TodoItems.Add(todoItem4);
             context.PersonRoles.Add(role);
-            context.People.Add(asignee);
+            context.People.Add(assignee);
             context.People.Add(collectionOwner);
             context.People.Add(someOtherOwner);
             context.TodoItemCollections.Add(collection);
 
 
             await context.SaveChangesAsync();
+
+            string route = 
+                "/api/v1/todo-items/" + todoItem1.Id + "?include=" +
+                    "collection.owner," + 
+                    "assignee.role," + 
+                    "assignee.assigned-todo-items";
 
             // act
             var response = await _fixture.Client.GetAsync(route);
@@ -225,9 +224,35 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var included = documents.Included;
             
             // 1 collection, 1 owner, 
-            // 1 asignee, 1 asignee role,
-            // 2 assigned todo items
+            // 1 assignee, 1 assignee role,
+            // 2 assigned todo items (including the primary resource)
             Assert.Equal(6, included.Count); 
+
+            
+            var collectionDocument = included.FindResource("todo-item-collections", collection.Id);
+            var ownerDocument = included.FindResource("people", collectionOwner.Id);
+            var assigneeDocument = included.FindResource("people", assignee.Id);
+            var roleDocument = included.FindResource("person-roles", role.Id);
+            var assignedTodo1 = included.FindResource("todo-items", todoItem1.Id);
+            var assignedTodo2 = included.FindResource("todo-items", todoItem2.Id);
+
+            Assert.NotNull(assignedTodo1);
+            Assert.Equal(todoItem1.Id.ToString(), assignedTodo1.Id);
+
+            Assert.NotNull(assignedTodo2);
+            Assert.Equal(todoItem2.Id.ToString(), assignedTodo2.Id);
+
+            Assert.NotNull(collectionDocument);
+            Assert.Equal(collection.Id.ToString(), collectionDocument.Id);
+
+            Assert.NotNull(ownerDocument);
+            Assert.Equal(collectionOwner.Id.ToString(), ownerDocument.Id);
+
+            Assert.NotNull(assigneeDocument);
+            Assert.Equal(assignee.Id.ToString(), assigneeDocument.Id);
+
+            Assert.NotNull(roleDocument);
+            Assert.Equal(role.Id.ToString(), roleDocument.Id);
         }        
     }
 }
