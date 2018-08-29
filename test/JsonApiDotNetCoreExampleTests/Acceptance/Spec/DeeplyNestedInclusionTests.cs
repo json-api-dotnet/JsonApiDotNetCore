@@ -228,7 +228,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // 2 assigned todo items (including the primary resource)
             Assert.Equal(6, included.Count); 
 
-            
             var collectionDocument = included.FindResource("todo-collections", collection.Id);
             var ownerDocument = included.FindResource("people", collectionOwner.Id);
             var assigneeDocument = included.FindResource("people", assignee.Id);
@@ -253,6 +252,53 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.NotNull(roleDocument);
             Assert.Equal(role.Id.ToString(), roleDocument.Id);
+        }        
+
+        [Fact]
+        public async Task Can_Include_Doubly_HasMany_Relationships()
+        {
+            // arrange
+            var person = new Person {
+                TodoItemCollections = new List<TodoItemCollection> {
+                    new TodoItemCollection {
+                        TodoItems = new List<TodoItem> {
+                            new TodoItem(),
+                            new TodoItem()
+                        }
+                    },
+                    new TodoItemCollection {
+                        TodoItems = new List<TodoItem> {
+                            new TodoItem(),
+                            new TodoItem(),
+                            new TodoItem()
+                        }
+                    }
+                }
+            };
+        
+            var context = _fixture.GetService<AppDbContext>();
+            ResetContext(context);
+
+            context.People.Add(person);
+
+            await context.SaveChangesAsync();
+
+            string route = "/api/v1/people/" + person.Id + "?include=todo-collections.todo-items";
+
+            // act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Document>(body);
+            var included = documents.Included;
+            
+            Assert.Equal(7, included.Count); 
+
+            Assert.Equal(5, included.CountOfType("todo-items"));
+            Assert.Equal(2, included.CountOfType("todo-collections"));
         }        
     }
 }

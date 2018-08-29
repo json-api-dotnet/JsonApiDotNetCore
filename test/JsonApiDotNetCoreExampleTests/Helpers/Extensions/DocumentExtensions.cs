@@ -22,5 +22,9 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
 
             return document;
         }
+
+        public static int CountOfType(this List<DocumentData> included, string type) {
+            return included.Where(documentData => documentData.Type == type).Count();
+        }
     }
 }
