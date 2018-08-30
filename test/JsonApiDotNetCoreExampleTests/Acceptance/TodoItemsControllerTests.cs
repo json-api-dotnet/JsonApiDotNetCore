@@ -114,6 +114,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.NotEmpty(deserializedBody);
+
+            foreach (var todoItemResult in deserializedBody)
+                Assert.Equal(todoItem.Ordinal, todoItemResult.Ordinal);
         }
 
         [Fact]
@@ -139,6 +142,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.NotEmpty(deserializedBody);
+
+            foreach (var todoItemResult in deserializedBody)
+                Assert.Equal(todoItem.Ordinal, todoItemResult.Ordinal);
         }
 
         [Fact]
