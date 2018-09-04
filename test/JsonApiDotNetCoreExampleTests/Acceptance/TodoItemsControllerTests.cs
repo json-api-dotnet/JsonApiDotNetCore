@@ -97,7 +97,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.UpdatedDate = new DateTime();
-            _context.TodoItems.Add(todoItem);
+
+            var otherTodoItem = _todoItemFaker.Generate();
+            otherTodoItem.UpdatedDate = null;
+
+            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
@@ -110,13 +114,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
             // Assert
-            Assert.NotEmpty(deserializedBody);
-
-            foreach (var todoItemResult in deserializedBody)
-                Assert.Equal(todoItem.Ordinal, todoItemResult.Ordinal);
+            Assert.NotEmpty(todoItems);
+            Assert.All(todoItems, t => Assert.NotNull(t.UpdatedDate));
         }
 
         [Fact]
@@ -125,7 +127,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.UpdatedDate = null;
-            _context.TodoItems.Add(todoItem);
+
+            var otherTodoItem = _todoItemFaker.Generate();
+            otherTodoItem.UpdatedDate = new DateTime();
+
+            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
@@ -138,13 +144,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
             // Assert
-            Assert.NotEmpty(deserializedBody);
-
-            foreach (var todoItemResult in deserializedBody)
-                Assert.Equal(todoItem.Ordinal, todoItemResult.Ordinal);
+            Assert.NotEmpty(todoItems);
+            Assert.All(todoItems, t => Assert.Null(t.UpdatedDate));
         }
 
         [Fact]
