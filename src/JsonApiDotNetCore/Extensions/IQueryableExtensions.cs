@@ -113,18 +113,31 @@ namespace JsonApiDotNetCore.Extensions
 
             var concreteType = typeof(TSource);
             var property = concreteType.GetProperty(filterQuery.FilteredAttribute.InternalAttributeName);
+            var op = filterQuery.FilterOperation;
 
             if (property == null)
                 throw new ArgumentException($"'{filterQuery.FilteredAttribute.InternalAttributeName}' is not a valid property of '{concreteType}'");
 
             try
             {
-                if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
+                if (op == FilterOperations.@in || op == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name, filterQuery.FilterOperation);
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name, op);
 
                     return source.Where(lambdaIn);
+                }
+                else if (op == FilterOperations.isnotnull || op == FilterOperations.isnull) {
+                    // {model}
+                    var parameter = Expression.Parameter(concreteType, "model");
+                    // {model.Id}
+                    var left = Expression.PropertyOrField(parameter, property.Name);
+                    var right = Expression.Constant(null);
+
+                    var body = GetFilterExpressionLambda(left, right, op);
+                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                    return source.Where(lambda);
                 }
                 else
                 {   // convert the incoming value to the target value type
@@ -137,7 +150,7 @@ namespace JsonApiDotNetCore.Extensions
                     // {1}
                     var right = Expression.Constant(convertedValue, property.PropertyType);
 
-                    var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
+                    var body = GetFilterExpressionLambda(left, right, op);
 
                     var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
 
@@ -204,6 +217,9 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
+        private static bool IsNullable(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+
         private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
         {
             Expression body;
@@ -235,6 +251,14 @@ namespace JsonApiDotNetCore.Extensions
                     // {model.Id != 1}
                 case FilterOperations.ne:
                     body = Expression.NotEqual(left, right);
+                    break;
+                case FilterOperations.isnotnull:
+                    // {model.Id != null}
+                    body = Expression.NotEqual(left, right);
+                    break;
+                case FilterOperations.isnull:
+                    // {model.Id == null}
+                    body = Expression.Equal(left, right);
                     break;
                 default:
                     throw new JsonApiException(500, $"Unknown filter operation {operation}");

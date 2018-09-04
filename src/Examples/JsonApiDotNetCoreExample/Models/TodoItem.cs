@@ -24,6 +24,12 @@ namespace JsonApiDotNetCoreExample.Models
 
         [Attr("achieved-date", isFilterable: false, isSortable: false)]
         public DateTime? AchievedDate { get; set; }
+
+
+        [Attr("updated-date")]
+        public DateTime? UpdatedDate { get; set; }
+
+
         
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }
