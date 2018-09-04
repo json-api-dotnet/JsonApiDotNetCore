@@ -37,6 +37,9 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         protected virtual string GetStringId(object value)
         {
+            if(value == null)
+                return string.Empty;
+
             var type = typeof(T);
             var stringValue = value.ToString();
 
