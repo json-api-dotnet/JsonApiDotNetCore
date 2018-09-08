@@ -42,6 +42,24 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IJsonApiContext jsonApiContext
         ) : base(getAll, getById, getRelationship, deSerializer, documentBuilder, contextGraph, jsonApiContext)
         { }
+
+        public GetOpProcessor(
+            IResourceQueryService<T, int> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph,
+            IJsonApiContext jsonApiContext
+        ) : base(service, service, service, deSerializer, documentBuilder, contextGraph, jsonApiContext)
+        { }
+
+        public GetOpProcessor(
+            IResourceService<T, int> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph,
+            IJsonApiContext jsonApiContext
+        ) : base(service, service, service, deSerializer, documentBuilder, contextGraph, jsonApiContext)
+        { }
     }
 
     /// <inheritdoc />
@@ -69,6 +87,38 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             _getAll = getAll;
             _getById = getById;
             _getRelationship = getRelationship;
+            _deSerializer = deSerializer;
+            _documentBuilder = documentBuilder;
+            _contextGraph = contextGraph;
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
+        }
+
+        public GetOpProcessor(
+            IResourceQueryService<T, TId> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph,
+            IJsonApiContext jsonApiContext)
+        {
+            _getAll = service;
+            _getById = service;
+            _getRelationship = service;
+            _deSerializer = deSerializer;
+            _documentBuilder = documentBuilder;
+            _contextGraph = contextGraph;
+            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
+        }
+
+        public GetOpProcessor(
+            IResourceService<T, TId> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph,
+            IJsonApiContext jsonApiContext)
+        {
+            _getAll = service;
+            _getById = service;
+            _getRelationship = service;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
             _contextGraph = contextGraph;
