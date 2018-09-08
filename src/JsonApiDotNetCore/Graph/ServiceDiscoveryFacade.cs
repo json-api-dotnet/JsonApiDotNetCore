@@ -107,12 +107,25 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddAssemblyServices(Assembly assembly)
         {
+            RegisterServiceImplementations(assembly, typeof(IResourceService<>));
             RegisterServiceImplementations(assembly, typeof(IResourceService<,>));
+
+            RegisterServiceImplementations(assembly, typeof(ICreateService<>));
             RegisterServiceImplementations(assembly, typeof(ICreateService<,>));
+
+            RegisterServiceImplementations(assembly, typeof(IGetAllService<>));
             RegisterServiceImplementations(assembly, typeof(IGetAllService<,>));
+
+            RegisterServiceImplementations(assembly, typeof(IGetByIdService<>));
             RegisterServiceImplementations(assembly, typeof(IGetByIdService<,>));
+
+            RegisterServiceImplementations(assembly, typeof(IGetRelationshipService<>));
             RegisterServiceImplementations(assembly, typeof(IGetRelationshipService<,>));
+            
+            RegisterServiceImplementations(assembly, typeof(IUpdateService<>));
             RegisterServiceImplementations(assembly, typeof(IUpdateService<,>));
+            
+            RegisterServiceImplementations(assembly, typeof(IDeleteService<>));
             RegisterServiceImplementations(assembly, typeof(IDeleteService<,>));
 
             return this;
@@ -122,8 +135,19 @@ namespace JsonApiDotNetCore.Graph
         /// Add <see cref="IEntityRepository{T, TId}"/> implementations to container.
         /// </summary>
         /// <param name="assembly">The assembly to search for resources in.</param>
-        public ServiceDiscoveryFacade AddAssemblyRepositories(Assembly assembly)
-            => RegisterServiceImplementations(assembly, typeof(IEntityRepository<,>));
+        public ServiceDiscoveryFacade AddAssemblyRepositories(Assembly assembly) 
+        {
+            RegisterServiceImplementations(assembly, typeof(IEntityRepository<>));
+            RegisterServiceImplementations(assembly, typeof(IEntityRepository<,>));
+
+            RegisterServiceImplementations(assembly, typeof(IEntityWriteRepository<>));
+            RegisterServiceImplementations(assembly, typeof(IEntityWriteRepository<,>));
+
+            RegisterServiceImplementations(assembly, typeof(IEntityReadRepository<>));
+            RegisterServiceImplementations(assembly, typeof(IEntityReadRepository<,>));
+
+            return this;
+        }
 
         private ServiceDiscoveryFacade RegisterServiceImplementations(Assembly assembly, Type interfaceType)
         {
