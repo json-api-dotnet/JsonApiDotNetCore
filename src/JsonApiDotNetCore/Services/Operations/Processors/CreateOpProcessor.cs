@@ -26,6 +26,22 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IContextGraph contextGraph
         ) : base(service, deSerializer, documentBuilder, contextGraph)
         { }
+
+        public CreateOpProcessor(
+            IResourceCmdService<T, int> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph
+        ) : base(service, deSerializer, documentBuilder, contextGraph)
+        { }
+
+        public CreateOpProcessor(
+            IResourceService<T, int> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph
+        ) : base(service, deSerializer, documentBuilder, contextGraph)
+        { }
     }
 
     public class CreateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
@@ -38,6 +54,30 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
 
         public CreateOpProcessor(
             ICreateService<T, TId> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph)
+        {
+            _service = service;
+            _deSerializer = deSerializer;
+            _documentBuilder = documentBuilder;
+            _contextGraph = contextGraph;
+        }
+
+        public CreateOpProcessor(
+            IResourceCmdService<T, TId> service,
+            IJsonApiDeSerializer deSerializer,
+            IDocumentBuilder documentBuilder,
+            IContextGraph contextGraph)
+        {
+            _service = service;
+            _deSerializer = deSerializer;
+            _documentBuilder = documentBuilder;
+            _contextGraph = contextGraph;
+        }
+
+        public CreateOpProcessor(
+            IResourceService<T, TId> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
             IContextGraph contextGraph)
