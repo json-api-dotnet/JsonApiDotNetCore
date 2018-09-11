@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Controllers
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipsAsync(
-            TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
+            TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
             => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]

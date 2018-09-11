@@ -33,7 +33,7 @@ namespace UnitTests.Services
                 Name = "some-name"
             };
 
-            var data = new DocumentData {
+            var data = new ResourceObject {
                 Type = "test-resources",
                 Attributes = new Dictionary<string, object> {
                     { "name", testResource.Name }
@@ -48,7 +48,7 @@ namespace UnitTests.Services
                 .AddResource<TestResource>("test-resources")
                 .Build();
 
-            _deserializerMock.Setup(m => m.DocumentToObject(It.IsAny<DocumentData>(), It.IsAny<List<DocumentData>>()))
+            _deserializerMock.Setup(m => m.DocumentToObject(It.IsAny<ResourceObject>(), It.IsAny<List<ResourceObject>>()))
                 .Returns(testResource);
 
             var opProcessor = new CreateOpProcessor<TestResource>(

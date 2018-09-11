@@ -181,7 +181,7 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(updatedEntity);
         }
 
-        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
+        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
         {
             if (_updateRelationships == null) throw Exceptions.UnSupportedRequestMethod;
 

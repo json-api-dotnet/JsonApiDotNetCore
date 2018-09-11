@@ -157,7 +157,7 @@ namespace JsonApiDotNetCore.Services
             return MapOut(entity);
         }
 
-        public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<DocumentData> relationships)
+        public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<ResourceObject> relationships)
         {
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (entity == null)

@@ -32,18 +32,18 @@ namespace JsonApiDotNetCore.Models.Operations
             if (data is JArray jArray)
             {
                 DataIsList = true;
-                DataList = jArray.ToObject<List<DocumentData>>();
+                DataList = jArray.ToObject<List<ResourceObject>>();
             }
-            else if (data is List<DocumentData> dataList)
+            else if (data is List<ResourceObject> dataList)
             {
                 DataIsList = true;
                 DataList = dataList;
             }
             else if (data is JObject jObject)
             {
-                DataObject = jObject.ToObject<DocumentData>();
+                DataObject = jObject.ToObject<ResourceObject>();
             }
-            else if (data is DocumentData dataObject)
+            else if (data is ResourceObject dataObject)
             {
                 DataObject = dataObject;
             }
@@ -53,10 +53,10 @@ namespace JsonApiDotNetCore.Models.Operations
         public bool DataIsList { get; private set; }
 
         [JsonIgnore]
-        public List<DocumentData> DataList { get; private set; }
+        public List<ResourceObject> DataList { get; private set; }
 
         [JsonIgnore]
-        public DocumentData DataObject { get; private set; }
+        public ResourceObject DataObject { get; private set; }
 
         public string GetResourceTypeName()
         {
