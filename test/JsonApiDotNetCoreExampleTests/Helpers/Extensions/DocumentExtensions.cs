@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
 {
     public static class DocumentExtensions
     {
-        public static DocumentData FindResource<TId>(this List<DocumentData> included, string type, TId id)
+        public static ResourceObject FindResource<TId>(this List<ResourceObject> included, string type, TId id)
         {
             var document = included.Where(documentData => (
                 documentData.Type == type 
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
             return document;
         }
 
-        public static int CountOfType(this List<DocumentData> included, string type) {
+        public static int CountOfType(this List<ResourceObject> included, string type) {
             return included.Where(documentData => documentData.Type == type).Count();
         }
     }

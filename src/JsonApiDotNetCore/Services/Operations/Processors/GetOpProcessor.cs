@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         {
             var result = await _getAll.GetAsync();
 
-            var operations = new List<DocumentData>();
+            var operations = new List<ResourceObject>();
             foreach (var resource in result)
             {
                 var doc = _documentBuilder.GetData(
@@ -153,14 +153,14 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 detail: $"Type '{result.GetType()} does not implement {nameof(IIdentifiable)} nor {nameof(IEnumerable<IIdentifiable>)}'");
         }
 
-        private DocumentData GetData(ContextEntity contextEntity, IIdentifiable singleResource)
+        private ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource)
         {
             return _documentBuilder.GetData(contextEntity, singleResource);
         }
 
-        private List<DocumentData> GetData(ContextEntity contextEntity, IEnumerable multipleResults)
+        private List<ResourceObject> GetData(ContextEntity contextEntity, IEnumerable multipleResults)
         {
-            var resources = new List<DocumentData>();
+            var resources = new List<ResourceObject>();
             foreach (var singleResult in multipleResults)
             {
                 if (singleResult is IIdentifiable resource)

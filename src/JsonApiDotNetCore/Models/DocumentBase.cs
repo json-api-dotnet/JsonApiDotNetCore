@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Models
         public RootLinks Links { get; set; }
 
         [JsonProperty("included", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DocumentData> Included { get; set; }
+        public List<ResourceObject> Included { get; set; }
 
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }

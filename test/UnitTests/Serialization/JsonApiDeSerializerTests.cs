@@ -36,8 +36,7 @@ namespace UnitTests.Serialization
 
             var content = new Document
             {
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -75,8 +74,7 @@ namespace UnitTests.Serialization
 
             var content = new Document
             {
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -116,8 +114,7 @@ namespace UnitTests.Serialization
 
             var content = new Document
             {
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -160,8 +157,7 @@ namespace UnitTests.Serialization
 
             var content = new Document
             {
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -209,8 +205,7 @@ namespace UnitTests.Serialization
             var property = Guid.NewGuid().ToString();
             var content = new Document
             {
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "independents",
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } }
@@ -250,8 +245,7 @@ namespace UnitTests.Serialization
             var property = Guid.NewGuid().ToString();
             var content = new Document
             {
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "independents",
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } },
@@ -304,8 +298,7 @@ namespace UnitTests.Serialization
             var content = new Document
             {
                 Meta = new Dictionary<string, object>() { { "foo", "bar" } },
-                Data = new DocumentData
-                {
+                Data = new ResourceObject {
                     Type = "independents",
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } },

@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Builders
             var enumeratedEntities = entities as IList<IIdentifiable> ?? entities.ToList();
             var documents = new Documents
             {
-                Data = new List<DocumentData>(),
+                Data = new List<ResourceObject>(),
                 Meta = GetMeta(enumeratedEntities.FirstOrDefault())
             };
 
@@ -95,7 +95,7 @@ namespace JsonApiDotNetCore.Builders
 
         private bool ShouldIncludePageLinks(ContextEntity entity) => entity.Links.HasFlag(Link.Paging);
 
-        private List<DocumentData> AppendIncludedObject(List<DocumentData> includedObject, ContextEntity contextEntity, IIdentifiable entity)
+        private List<ResourceObject> AppendIncludedObject(List<ResourceObject> includedObject, ContextEntity contextEntity, IIdentifiable entity)
         {
             var includedEntities = GetIncludedEntities(includedObject, contextEntity, entity);
             if (includedEntities?.Count > 0)
@@ -107,13 +107,12 @@ namespace JsonApiDotNetCore.Builders
         }
 
         [Obsolete("You should specify an IResourceDefinition implementation using the GetData/3 overload.")]
-        public DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity)
+        public ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity)
             => GetData(contextEntity, entity, resourceDefinition: null);
 
-        public DocumentData GetData(ContextEntity contextEntity, IIdentifiable entity, IResourceDefinition resourceDefinition = null)
+        public ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity, IResourceDefinition resourceDefinition = null)
         {
-            var data = new DocumentData
-            {
+            var data = new ResourceObject {
                 Type = contextEntity.EntityName,
                 Id = entity.StringId
             };
@@ -151,7 +150,7 @@ namespace JsonApiDotNetCore.Builders
             return attributeValue == null && _documentBuilderOptions.OmitNullValuedAttributes;
         }
 
-        private void AddRelationships(DocumentData data, ContextEntity contextEntity, IIdentifiable entity)
+        private void AddRelationships(ResourceObject data, ContextEntity contextEntity, IIdentifiable entity)
         {
             data.Relationships = new Dictionary<string, RelationshipData>();
             contextEntity.Relationships.ForEach(r =>
@@ -192,9 +191,9 @@ namespace JsonApiDotNetCore.Builders
             return relationshipData;
         }
 
-        private List<DocumentData> GetIncludedEntities(List<DocumentData> included, ContextEntity rootContextEntity, IIdentifiable rootResource)
+        private List<ResourceObject> GetIncludedEntities(List<ResourceObject> included, ContextEntity rootContextEntity, IIdentifiable rootResource)
         {
-            if(_jsonApiContext.IncludedRelationships != null)
+            if (_jsonApiContext.IncludedRelationships != null)
             {
                 foreach(var relationshipName in _jsonApiContext.IncludedRelationships)
                 {
@@ -209,8 +208,8 @@ namespace JsonApiDotNetCore.Builders
             return included;
         }
 
-        private List<DocumentData> IncludeRelationshipChain(
-            List<DocumentData> included, ContextEntity parentEntity, IIdentifiable parentResource, string[] relationshipChain, int relationshipChainIndex)
+        private List<ResourceObject> IncludeRelationshipChain(
+            List<ResourceObject> included, ContextEntity parentEntity, IIdentifiable parentResource, string[] relationshipChain, int relationshipChainIndex)
         {
             var requestedRelationship = relationshipChain[relationshipChainIndex];
             var relationship = parentEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
@@ -232,10 +231,10 @@ namespace JsonApiDotNetCore.Builders
             return included;
         }
 
-        private List<DocumentData> IncludeSingleResourceRelationships(
-            List<DocumentData> included, IIdentifiable navigationEntity, RelationshipAttribute relationship, string[] relationshipChain, int relationshipChainIndex)
+        private List<ResourceObject> IncludeSingleResourceRelationships(
+            List<ResourceObject> included, IIdentifiable navigationEntity, RelationshipAttribute relationship, string[] relationshipChain, int relationshipChainIndex)
         {
-            if(relationshipChainIndex < relationshipChain.Length) 
+            if (relationshipChainIndex < relationshipChain.Length) 
             {
                 var nextContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
                 var resource = (IIdentifiable)navigationEntity;
@@ -248,12 +247,12 @@ namespace JsonApiDotNetCore.Builders
         }
 
 
-        private List<DocumentData> AddIncludedEntity(List<DocumentData> entities, IIdentifiable entity)
+        private List<ResourceObject> AddIncludedEntity(List<ResourceObject> entities, IIdentifiable entity)
         {
             var includedEntity = GetIncludedEntity(entity);
 
             if (entities == null)
-                entities = new List<DocumentData>();
+                entities = new List<ResourceObject>();
 
             if (includedEntity != null && entities.Any(doc =>
                 string.Equals(doc.Id, includedEntity.Id) && string.Equals(doc.Type, includedEntity.Type)) == false)
@@ -264,7 +263,7 @@ namespace JsonApiDotNetCore.Builders
             return entities;
         }
 
-        private DocumentData GetIncludedEntity(IIdentifiable entity)
+        private ResourceObject GetIncludedEntity(IIdentifiable entity)
         {
             if (entity == null) return null;
 
