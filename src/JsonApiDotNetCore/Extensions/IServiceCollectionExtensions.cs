@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -186,10 +187,12 @@ namespace JsonApiDotNetCore.Extensions
         }
 
         /// <summary>
+        /// Adds all required registrations for the service to the container
         /// </summary>
+        /// <exception cref="JsonApiSetupException"/>
         public static IServiceCollection AddResourceService<T>(this IServiceCollection services) 
         {
-            var typeImplemenetsAnExpectedInterface = false;
+            var typeImplementsAnExpectedInterface = false;
 
             var serviceImplementationType = typeof(T);
 
@@ -200,19 +203,25 @@ namespace JsonApiDotNetCore.Extensions
             {
                 foreach(var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
                 {
-                    var concreteGenericType = openGenericType.GetGenericArguments().Length == 1
+                    // A shorthand interface is one where the id type is ommitted
+                    // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
+                    var isShorthandInterface = (openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1);
+                    if(isShorthandInterface && resourceDescriptor.IdType != typeof(int))
+                        continue; // we can't create a shorthand for id types other than int
+
+                    var concreteGenericType = isShorthandInterface
                         ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)
                         : openGenericType.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
 
                     if(concreteGenericType.IsAssignableFrom(serviceImplementationType)) {
-                        services.AddScoped(serviceImplementationType, serviceImplementationType);
-                        typeImplemenetsAnExpectedInterface = true;
+                        services.AddScoped(concreteGenericType, serviceImplementationType);
+                        typeImplementsAnExpectedInterface = true;
                     }
                 }
             }
 
-            if(typeImplemenetsAnExpectedInterface == false)
-                throw new JsonApiSetupException($"{typeImplemenetsAnExpectedInterface} does not implement any of the expected JsonApiDotNetCore interfaces.");
+            if(typeImplementsAnExpectedInterface == false)
+                throw new JsonApiSetupException($"{serviceImplementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
 
             return services;
         }
@@ -225,8 +234,8 @@ namespace JsonApiDotNetCore.Extensions
             {
                 if(i.IsGenericType)
                 {
-                    var firstGenericArgument = i.GetGenericTypeDefinition().GetGenericArguments().FirstOrDefault();
-                    if(TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == false)
+                    var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
+                    if(TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
                     {
                         resourceDecriptors.Add(resourceDescriptor);
                     }

@@ -67,16 +67,16 @@ namespace UnitTests.Extensions
             
             // assert
             var provider = services.BuildServiceProvider();
-            Assert.IsType<IntResourceService>(typeof(IResourceService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IResourceCmdService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IResourceQueryService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IGetAllService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IGetByIdService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IGetRelationshipService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IGetRelationshipsService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(ICreateService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IUpdateService<IntResource>));
-            Assert.IsType<IntResourceService>(typeof(IDeleteService<IntResource>));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceCmdService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceQueryService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IGetAllService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IGetByIdService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IGetRelationshipService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IGetRelationshipsService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(ICreateService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IUpdateService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IDeleteService<IntResource>)));
         }
 
         [Fact]
@@ -90,16 +90,16 @@ namespace UnitTests.Extensions
             
             // assert
             var provider = services.BuildServiceProvider();
-            Assert.IsType<GuidResourceService>(typeof(IResourceService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IResourceCmdService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IResourceQueryService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IGetAllService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IGetByIdService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IGetRelationshipService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IGetRelationshipsService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(ICreateService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IUpdateService<GuidResource, Guid>));
-            Assert.IsType<GuidResourceService>(typeof(IDeleteService<GuidResource, Guid>));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceCmdService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceQueryService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IGetAllService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IGetByIdService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IGetRelationshipService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IGetRelationshipsService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(ICreateService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IUpdateService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IDeleteService<GuidResource, Guid>)));
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace UnitTests.Extensions
             var services = new ServiceCollection();
             
             // act, assert
-            Assert.Throws<JsonApiException>(() => services.AddResourceService<int>());
+            Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
         }
 
         private class IntResource : Identifiable { }
