@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -7,6 +9,7 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
@@ -181,6 +184,57 @@ namespace JsonApiDotNetCore.Extensions
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
 
             options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
+        }
+
+        /// <summary>
+        /// </summary>
+        public static IServiceCollection AddResourceService<T>(this IServiceCollection services) 
+        {
+            var typeImplemenetsAnExpectedInterface = false;
+
+            var serviceImplementationType = typeof(T);
+
+            // it is _possible_ that a single concrete type could be used for multiple resources...
+            var resourceDescriptors = GetResourceTypesFromServiceImplementation(serviceImplementationType);
+
+            foreach(var resourceDescriptor in resourceDescriptors)
+            {
+                foreach(var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
+                {
+                    var concreteGenericType = openGenericType.GetGenericArguments().Length == 1
+                        ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)
+                        : openGenericType.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+
+                    if(concreteGenericType.IsAssignableFrom(serviceImplementationType)) {
+                        services.AddScoped(serviceImplementationType, serviceImplementationType);
+                        typeImplemenetsAnExpectedInterface = true;
+                    }
+                }
+            }
+
+            if(typeImplemenetsAnExpectedInterface == false)
+                throw new JsonApiSetupException($"{typeImplemenetsAnExpectedInterface} does not implement any of the expected JsonApiDotNetCore interfaces.");
+
+            return services;
+        }
+
+        private static HashSet<ResourceDescriptor> GetResourceTypesFromServiceImplementation(Type type)
+        {
+            var resourceDecriptors = new HashSet<ResourceDescriptor>();
+            var interfaces = type.GetInterfaces();
+            foreach(var i in interfaces)
+            {
+                if(i.IsGenericType)
+                {
+                    var firstGenericArgument = i.GetGenericTypeDefinition().GetGenericArguments().FirstOrDefault();
+                    if(TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == false)
+                    {
+                        resourceDecriptors.Add(resourceDescriptor);
+                    }
+                }
+            }
+
+            return resourceDecriptors;
         }
     }
 }
