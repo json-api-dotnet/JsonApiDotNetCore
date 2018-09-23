@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
-            ILoggerFactory loggerFactory) :
+            ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, loggerFactory)
         { }
     }
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            ILoggerFactory loggerFactory) :
+            ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, loggerFactory)
         { }
     }
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                ILoggerFactory loggerFactory)
+                ILoggerFactory loggerFactory = null)
         {
             // no mapper provided, TResource & TEntity must be the same type
             if (typeof(TResource) != typeof(TEntity))
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Services
 
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
 
         public EntityResourceService(

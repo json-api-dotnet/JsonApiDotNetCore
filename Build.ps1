@@ -38,6 +38,9 @@ CheckLastExitCode
 dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj
 CheckLastExitCode
 
+dotnet test ./test/DiscoveryTests/DiscoveryTests.csproj
+CheckLastExitCode
+
 dotnet build ./src/JsonApiDotNetCore/JsonApiDotNetCore.csproj -c Release
 CheckLastExitCode
 

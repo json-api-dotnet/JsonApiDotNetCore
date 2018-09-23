@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Models
                 var attributes = new List<AttrAttribute>();
                 foreach (var attr in _contextEntity.Attributes)
                     if (newExpression.Members.Any(m => m.Name == attr.InternalAttributeName) == false)
-                        attributes.Add(attr);                 
+                        attributes.Add(attr);
 
                 return attributes;
             }
@@ -76,12 +76,24 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <summary>
+        /// Allows POST / PATCH requests to set the value of an
+        /// attribute, but exclude the attribute in the response
+        /// this might be used if the incoming value gets hashed or
+        /// encrypted prior to being persisted and this value should
+        /// never be sent back to the client.
+        ///
         /// Called once per filtered resource in request.
         /// </summary>
         protected virtual List<AttrAttribute> OutputAttrs() => _contextEntity.Attributes;
 
         /// <summary>
-        /// Called for every instance of a resource
+        /// Allows POST / PATCH requests to set the value of an
+        /// attribute, but exclude the attribute in the response
+        /// this might be used if the incoming value gets hashed or
+        /// encrypted prior to being persisted and this value should
+        /// never be sent back to the client.
+        ///
+        /// Called for every instance of a resource.
         /// </summary>
         protected virtual List<AttrAttribute> OutputAttrs(T instance) => _contextEntity.Attributes;
 

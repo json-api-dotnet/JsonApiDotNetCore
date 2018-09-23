@@ -171,7 +171,11 @@ namespace JsonApiDotNetCore.Graph
 
         private void RegisterServiceImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
-            var service = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+            var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
+                ? new [] { resourceDescriptor.ResourceType, resourceDescriptor.IdType }
+                : new [] { resourceDescriptor.ResourceType };
+
+            var service = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
             if (service.implementation != null)
                 _services.AddScoped(service.registrationInterface, service.implementation);
         }

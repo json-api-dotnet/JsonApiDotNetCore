@@ -1,4 +1,5 @@
 using GettingStarted.Models;
+using GettingStarted.ResourceDefinitionExample;
 using Microsoft.EntityFrameworkCore;
 
 namespace GettingStarted
@@ -11,5 +12,6 @@ namespace GettingStarted
 
         public DbSet<Article> Articles { get; set; }
         public DbSet<Person> People { get; set; }
+        public DbSet<Model> Models { get; set; }
     }
 }

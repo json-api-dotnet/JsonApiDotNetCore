@@ -20,6 +20,12 @@ namespace JsonApiDotNetCore.Data
         where TEntity : class, IIdentifiable<int>
     {
         public DefaultEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver)
+        : base(jsonApiContext, contextResolver)
+        { }
+
+        public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver)
@@ -41,6 +47,16 @@ namespace JsonApiDotNetCore.Data
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
+
+        public DefaultEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver)
+        {
+            _context = contextResolver.GetContext();
+            _dbSet = contextResolver.GetDbSet<TEntity>();
+            _jsonApiContext = jsonApiContext;
+            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+        }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
@@ -84,7 +100,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
-            _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
+            _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
             var includedSet = Include(Get(), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
