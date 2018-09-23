@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
@@ -45,9 +46,7 @@ namespace JsonApiDotNetCore.Extensions
             IMvcCoreBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
-
             options(config);
-
             config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
 
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
