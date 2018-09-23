@@ -4,10 +4,10 @@ namespace GettingStarted.Models
 {
     public class Article : Identifiable
     {
-        [Attr("title")]
+        [Attr]
         public string Title { get; set; }
 
-        [HasOne("author")]
+        [HasOne]
         public Person Author { get; set; }
         public int AuthorId { get; set; }
     }

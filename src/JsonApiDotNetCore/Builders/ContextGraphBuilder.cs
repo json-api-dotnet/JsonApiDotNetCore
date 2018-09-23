@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
@@ -64,9 +65,8 @@ namespace JsonApiDotNetCore.Builders
     {
         private List<ContextEntity> _entities = new List<ContextEntity>();
         private List<ValidationResult> _validationResults = new List<ValidationResult>();
-
         private bool _usesDbContext;
-        private IResourceNameFormatter _resourceNameFormatter = new DefaultResourceNameFormatter();
+        private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
         public Link DocumentLinks { get; set; } = Link.All;
 
@@ -128,6 +128,7 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
+                attribute.PublicAttributeName = attribute.PublicAttributeName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalAttributeName = prop.Name;
                 attribute.PropertyInfo = prop;
 
@@ -146,6 +147,8 @@ namespace JsonApiDotNetCore.Builders
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
+
+                attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
                 attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);

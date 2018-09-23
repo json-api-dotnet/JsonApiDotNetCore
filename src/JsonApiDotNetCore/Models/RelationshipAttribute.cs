@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Models
             CanInclude = canInclude;
         }
 
-        public string PublicRelationshipName { get; }
+        public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
         
         /// <summary>

@@ -1,7 +1,6 @@
 using GettingStarted.Models;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.Logging;
 
 namespace GettingStarted
 {
@@ -9,9 +8,8 @@ namespace GettingStarted
     {
         public PeopleController(
           IJsonApiContext jsonApiContext,
-          IResourceService<Person> resourceService,
-          ILoggerFactory loggerFactory)
-          : base(jsonApiContext, resourceService, loggerFactory)
+          IResourceService<Person> resourceService)
+          : base(jsonApiContext, resourceService)
         { }
     }
 }

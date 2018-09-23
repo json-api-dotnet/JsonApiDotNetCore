@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -55,23 +56,20 @@ namespace JsonApiDotNetCore.Graph
         /// <summary>
         /// Add resources, services and repository implementations to the container.
         /// </summary>
-        /// <param name="resourceNameFormatter">The type name formatter used to get the string representation of resource names.</param>
-        public ServiceDiscoveryFacade AddCurrentAssembly(IResourceNameFormatter resourceNameFormatter = null)
-            => AddAssembly(Assembly.GetCallingAssembly(), resourceNameFormatter);
+        public ServiceDiscoveryFacade AddCurrentAssembly() => AddAssembly(Assembly.GetCallingAssembly());
 
         /// <summary>
         /// Add resources, services and repository implementations to the container.
         /// </summary>
         /// <param name="assembly">The assembly to search for resources in.</param>
-        /// <param name="resourceNameFormatter">The type name formatter used to get the string representation of resource names.</param>
-        public ServiceDiscoveryFacade AddAssembly(Assembly assembly, IResourceNameFormatter resourceNameFormatter = null)
+        public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
             AddDbContextResolvers(assembly);
 
             var resourceDescriptors = TypeLocator.GetIdentifableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
-                AddResource(assembly, resourceDescriptor, resourceNameFormatter);
+                AddResource(assembly, resourceDescriptor);
                 AddServices(assembly, resourceDescriptor);
                 AddRepositories(assembly, resourceDescriptor);
             }
@@ -93,20 +91,19 @@ namespace JsonApiDotNetCore.Graph
         /// Adds resources to the graph and registers <see cref="ResourceDefinition{T}"/> types on the container.
         /// </summary>
         /// <param name="assembly">The assembly to search for resources in.</param>
-        /// <param name="resourceNameFormatter">The type name formatter used to get the string representation of resource names.</param>
-        public ServiceDiscoveryFacade AddResources(Assembly assembly, IResourceNameFormatter resourceNameFormatter = null)
+        public ServiceDiscoveryFacade AddResources(Assembly assembly)
         {
             var identifiables = TypeLocator.GetIdentifableTypes(assembly);
             foreach (var identifiable in identifiables)
-                AddResource(assembly, identifiable, resourceNameFormatter);
+                AddResource(assembly, identifiable);
 
             return this;
         }
 
-        private void AddResource(Assembly assembly, ResourceDescriptor resourceDescriptor, IResourceNameFormatter resourceNameFormatter = null)
+        private void AddResource(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
             RegisterResourceDefinition(assembly, resourceDescriptor);
-            AddResourceToGraph(resourceDescriptor, resourceNameFormatter);
+            AddResourceToGraph(resourceDescriptor);
         }
 
         private void RegisterResourceDefinition(Assembly assembly, ResourceDescriptor identifiable)
@@ -125,17 +122,14 @@ namespace JsonApiDotNetCore.Graph
             }            
         }
 
-        private void AddResourceToGraph(ResourceDescriptor identifiable, IResourceNameFormatter resourceNameFormatter = null)
+        private void AddResourceToGraph(ResourceDescriptor identifiable)
         {
-            var resourceName = FormatResourceName(identifiable.ResourceType, resourceNameFormatter);
+            var resourceName = FormatResourceName(identifiable.ResourceType);
             _graphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType, resourceName);
         }
 
-        private string FormatResourceName(Type resourceType, IResourceNameFormatter resourceNameFormatter)
-        {
-            resourceNameFormatter = resourceNameFormatter ?? new DefaultResourceNameFormatter();
-            return resourceNameFormatter.FormatResourceName(resourceType);
-        }
+        private string FormatResourceName(Type resourceType) 
+            => JsonApiOptions.ResourceNameFormatter.FormatResourceName(resourceType);
 
         /// <summary>
         /// Add <see cref="IResourceService{T, TId}"/> implementations to container.
