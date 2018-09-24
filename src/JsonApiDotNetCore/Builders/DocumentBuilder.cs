@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Builders
             return OmitNullValuedAttribute(attr, attributeValue) == false
                    && ((_jsonApiContext.QuerySet == null
                        || _jsonApiContext.QuerySet.Fields.Count == 0)
-                       || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
+                       || _jsonApiContext.QuerySet.Fields.Any(i => i.Attribute == attr.InternalAttributeName));
         }
 
         private bool OmitNullValuedAttribute(AttrAttribute attr, object attributeValue)

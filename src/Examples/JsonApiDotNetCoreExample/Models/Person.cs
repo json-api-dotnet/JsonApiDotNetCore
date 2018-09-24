@@ -19,6 +19,9 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("last-name")]
         public string LastName { get; set; }
 
+        [Attr("age")]
+        public int Age { get; set; }
+
         [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
 

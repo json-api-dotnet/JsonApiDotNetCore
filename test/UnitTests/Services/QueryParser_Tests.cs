@@ -263,8 +263,8 @@ namespace UnitTests.Services
             // assert
             Assert.NotEmpty(querySet.Fields);
             Assert.Equal(2, querySet.Fields.Count);
-            Assert.Equal("Id", querySet.Fields[0]);
-            Assert.Equal(internalAttrName, querySet.Fields[1]);
+            Assert.Equal("Id", querySet.Fields.ElementAt(0).Attribute);
+            Assert.Equal(internalAttrName, querySet.Fields.ElementAt(1).Attribute);
         }
 
         [Fact]

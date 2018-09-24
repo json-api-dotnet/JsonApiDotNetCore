@@ -85,9 +85,9 @@ namespace JsonApiDotNetCore.Services
             var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             // InArray case
-            string op = GetFilterOperation(value);
-            if (string.Equals(op, FilterOperations.@in.ToString(), StringComparison.OrdinalIgnoreCase)
-                || string.Equals(op, FilterOperations.nin.ToString(), StringComparison.OrdinalIgnoreCase))
+            string op = FilterOperations.GetFilterOperationFromQuery(value);
+            if (string.Equals(op, FilterOperationsEnum.@in.ToString(), StringComparison.OrdinalIgnoreCase)
+                || string.Equals(op, FilterOperationsEnum.nin.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 (var operation, var filterValue) = ParseFilterOperation(value);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCore.Services
             if (value.Length < 3)
                 return (string.Empty, value);
 
-            var operation = GetFilterOperation(value);
+            var operation = FilterOperations.GetFilterOperationFromQuery(value);
             var values = value.Split(QueryConstants.COLON);
 
             if (string.IsNullOrEmpty(operation))
@@ -166,12 +166,7 @@ namespace JsonApiDotNetCore.Services
                     propertyName = propertyName.Substring(1);
                 }
 
-                var attribute = GetAttribute(propertyName);
-
-                if (attribute.IsSortable == false)
-                    throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
-
-                sortParameters.Add(new SortQuery(direction, attribute));
+                sortParameters.Add(new SortQuery(direction, propertyName));
             };
 
             return sortParameters;
@@ -184,13 +179,11 @@ namespace JsonApiDotNetCore.Services
                 .ToList();
         }
 
-        protected virtual List<string> ParseFieldsQuery(string key, string value)
+        protected virtual List<QueryAttribute> ParseFieldsQuery(string key, string value)
         {
             // expected: fields[TYPE]=prop1,prop2
             var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
-
-            const string ID = "Id";
-            var includedFields = new List<string> { ID };
+            var includedFields = new List<QueryAttribute> { new QueryAttribute(nameof(Identifiable.Id)) };
 
             // this will not support nested inclusions, it requires that the typeName is the current request type
             if (string.Equals(typeName, _controllerContext.RequestEntity.EntityName, StringComparison.OrdinalIgnoreCase) == false)
@@ -199,53 +192,68 @@ namespace JsonApiDotNetCore.Services
             var fields = value.Split(QueryConstants.COMMA);
             foreach (var field in fields)
             {
-                var attr = _controllerContext.RequestEntity
-                    .Attributes
-                    .SingleOrDefault(a => a.Is(field));
+                string queryField = null;
+                if(field.Contains('.'))
+                {
+                    var properties = field.Split('.');
+                    var relationship = GetRelationshipAttribute(properties[0]);
 
-                if (attr == null) throw new JsonApiException(400, $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'.");
+                    // Temp method - no chance to get attribute of relationship on Controller level
+                    queryField = relationship.InternalRelationshipName + "." + UppercaseFirst(properties[1]);
+                }
+                else
+                {
+                    var attr = GetAttribute(field);
+                    queryField = attr.InternalAttributeName;
+                }
 
-                var internalAttrName = attr.InternalAttributeName;
-                includedFields.Add(internalAttrName);
+                // Store Internal attributes names
+                includedFields.Add(new QueryAttribute(queryField));
             }
 
             return includedFields;
         }
+    
+        private string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
 
-        protected virtual AttrAttribute GetAttribute(string propertyName)
+        protected virtual RelationshipAttribute GetRelationshipAttribute(string relationship)
+        {
+            try
+            {
+                return _controllerContext
+                    .RequestEntity
+                    .Relationships
+                    .Single(attr => attr.Is(relationship));
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new JsonApiException(400, $"Relationship '{relationship}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
+            }
+        }
+
+        protected virtual AttrAttribute GetAttribute(string attribute)
         {
             try
             {
                 return _controllerContext
                     .RequestEntity
                     .Attributes
-                    .Single(attr => attr.Is(propertyName));
+                    .Single(attr => attr.Is(attribute));
             }
             catch (InvalidOperationException e)
             {
-                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
+                throw new JsonApiException(400, $"Attribute '{attribute}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
             }
         }
 
-        private string GetFilterOperation(string value)
-        {
-            var values = value.Split(QueryConstants.COLON);
-
-            if (values.Length == 1)
-                return string.Empty;
-
-            var operation = values[0];
-            // remove prefix from value
-            if (Enum.TryParse(operation, out FilterOperations op) == false)
-                return string.Empty;
-
-            return operation;
-        }
-
-        private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)
-        {
-            var (operation, filterValue) = ParseFilterOperation(query.ToString());
-            return new FilterQuery(propertyName, filterValue, operation);
-        }
     }
 }

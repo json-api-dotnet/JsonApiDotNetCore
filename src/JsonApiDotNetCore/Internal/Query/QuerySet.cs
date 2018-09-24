@@ -8,6 +8,6 @@ namespace JsonApiDotNetCore.Internal.Query
         public PageQuery PageQuery { get; set; } = new PageQuery();
         public List<SortQuery> SortParameters { get; set; } = new List<SortQuery>();
         public List<string> IncludedRelationships { get; set; } = new List<string>();
-        public List<string> Fields { get; set; } = new List<string>();
+        public List<QueryAttribute> Fields { get; set; } = new List<QueryAttribute>();
     }
 }

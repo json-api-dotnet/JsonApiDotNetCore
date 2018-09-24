@@ -2,14 +2,13 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class SortQuery
+    public class SortQuery: QueryAttribute
     {
-        public SortQuery(SortDirection direction, AttrAttribute sortedAttribute)
+        public SortQuery(SortDirection direction, string sortedAttribute)
+            :base(sortedAttribute)
         {
             Direction = direction;
-            SortedAttribute = sortedAttribute;
         }
         public SortDirection Direction { get; set; }
-        public AttrAttribute SortedAttribute { get; set; }
     }
 }
