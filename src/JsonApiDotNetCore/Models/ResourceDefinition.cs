@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,10 @@ namespace JsonApiDotNetCore.Models
     }
 
     /// <summary>
-    /// A scoped service used to...
+    /// exposes developer friendly hooks into how their resources are exposed. 
+    /// It is intended to improve the experience and reduce boilerplate for commonly required features.
+    /// The goal of this class is to reduce the frequency with which developers have to override the
+    /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
     public class ResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
@@ -47,8 +51,10 @@ namespace JsonApiDotNetCore.Models
             return declaringType == derivedType;
         }
         
+        public delegate dynamic FilterExpression(T type);        
+
         // TODO: need to investigate options for caching these
-        protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
+        protected List<AttrAttribute> Remove(Expression<FilterExpression> filter, List<AttrAttribute> from = null)
         {
             from = from ?? _contextEntity.Attributes;
 
@@ -115,5 +121,71 @@ namespace JsonApiDotNetCore.Models
 
             return _requestCachedAttrs;
         }
+
+        /// <summary>
+        /// Define a set of custom query expressions that can be applied
+        /// instead of the default query behavior. A common use-case for this
+        /// is including related resources and filtering on them.
+        /// </summary>
+        /// <returns>
+        /// A set of custom queries that will be applied instead of the default
+        /// queries for the given key. Null will be returned if default behavior
+        /// is desired.
+        /// </returns>
+        /// <example>
+        /// <code>
+        /// protected override QueryFilters GetQueryFilters() =>  { 
+        ///     { "facility", (t, value) => t.Include(t => t.Tenant)
+        ///                                   .Where(t => t.Facility == value) }
+        ///  }
+        /// </code>
+        /// 
+        /// If the logic is simply too complex for an in-line expression, you can
+        /// delegate to a private method:
+        /// <code>
+        /// protected override QueryFilters GetQueryFilters()
+        ///     => new QueryFilters {
+        ///         { "is-active", FilterIsActive }
+        ///     };
+        /// 
+        /// private IQueryable&lt;Model&gt; FilterIsActive(IQueryable&lt;Model&gt; query, string value)
+        /// {
+        ///     // some complex logic goes here...
+        ///     return query.Where(x => x.IsActive == computedValue);
+        /// }
+        /// </code>
+        /// </example>
+        protected virtual QueryFilters GetQueryFilters() => null;
+
+        /// <summary>
+        /// This is an alias type intended to simplify the implementation's
+        /// method signature.
+        /// See <see cref="GetQueryFilters" /> for usage details.
+        /// <summary>
+        public class QueryFilters : Dictionary<string, Func<IQueryable<T>, string, IQueryable<T>>> { }
+
+        /// <summary>
+        /// Define a the default sort order if no sort key is provided.
+        /// </summary>
+        /// <returns>
+        /// A list of properties and the direction they should be sorted.
+        /// </returns>
+        /// <example>
+        /// <code>
+        /// protected override PropertySortOrder GetDefaultSortOrder()
+        ///     => new PropertySortOrder {
+        ///         (t => t.Prop1, SortDirection.Ascending),
+        ///         (t => t.Prop2, SortDirection.Descending),
+        ///     };
+        /// </code>
+        /// </example>
+        protected virtual PropertySortOrder GetDefaultSortOrder() => null;
+
+        /// <summary>
+        /// This is an alias type intended to simplify the implementation's
+        /// method signature.
+        /// See <see cref="GetQueryFilters" /> for usage details.
+        /// <summary>
+        public class PropertySortOrder : List<(Expression<Func<T, dynamic>>, SortDirection)> { }
     }
 }
