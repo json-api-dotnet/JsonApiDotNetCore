@@ -171,14 +171,14 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                if (op == FilterOperationsEnum.@in || op == FilterOperationsEnum.nin)
+                if (op == FilterOperations.@in || op == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
                     var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name, op);
 
                     return source.Where(lambdaIn);
                 }
-                else if (op == FilterOperationsEnum.isnotnull || op == FilterOperationsEnum.isnull) {
+                else if (op == FilterOperations.isnotnull || op == FilterOperations.isnull) {
                     // {model}
                     var parameter = Expression.Parameter(concreteType, "model");
                     // {model.Id}
@@ -231,7 +231,7 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                if (filterQuery.FilterOperation == FilterOperationsEnum.@in || filterQuery.FilterOperation == FilterOperationsEnum.nin)
+                if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
                     var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, filterQuery.FilterOperation, relation.Name);
@@ -271,43 +271,43 @@ namespace JsonApiDotNetCore.Extensions
         private static bool IsNullable(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
 
-        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperationsEnum operation)
+        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
         {
             Expression body;
             switch (operation)
             {
-                case FilterOperationsEnum.eq:
+                case FilterOperations.eq:
                     // {model.Id == 1}
                     body = Expression.Equal(left, right);
                     break;
-                case FilterOperationsEnum.lt:
+                case FilterOperations.lt:
                     // {model.Id < 1}
                     body = Expression.LessThan(left, right);
                     break;
-                case FilterOperationsEnum.gt:
+                case FilterOperations.gt:
                     // {model.Id > 1}
                     body = Expression.GreaterThan(left, right);
                     break;
-                case FilterOperationsEnum.le:
+                case FilterOperations.le:
                     // {model.Id <= 1}
                     body = Expression.LessThanOrEqual(left, right);
                     break;
-                case FilterOperationsEnum.ge:
+                case FilterOperations.ge:
                     // {model.Id >= 1}
                     body = Expression.GreaterThanOrEqual(left, right);
                     break;
-                case FilterOperationsEnum.like:
+                case FilterOperations.like:
                     body = Expression.Call(left, "Contains", null, right);
                     break;
                     // {model.Id != 1}
-                case FilterOperationsEnum.ne:
+                case FilterOperations.ne:
                     body = Expression.NotEqual(left, right);
                     break;
-                case FilterOperationsEnum.isnotnull:
+                case FilterOperations.isnotnull:
                     // {model.Id != null}
                     body = Expression.NotEqual(left, right);
                     break;
-                case FilterOperationsEnum.isnull:
+                case FilterOperations.isnull:
                     // {model.Id == null}
                     body = Expression.Equal(left, right);
                     break;
@@ -318,7 +318,7 @@ namespace JsonApiDotNetCore.Extensions
             return body;
         }
 
-        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, FilterOperationsEnum op, string relationName = null)
+        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, FilterOperations op, string relationName = null)
         {
             ParameterExpression entity = Expression.Parameter(typeof(TSource), "entity");
             MemberExpression member;
@@ -333,7 +333,7 @@ namespace JsonApiDotNetCore.Extensions
             var method = ContainsMethod.MakeGenericMethod(member.Type);
             var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
 
-            if (op == FilterOperationsEnum.@in)
+            if (op == FilterOperations.@in)
             {
                 // Where(i => arr.Contains(i.column))
                 var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
@@ -347,44 +347,20 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<QueryAttribute> columns)
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)
         {
             if (columns == null || columns.Count == 0)
                 return source;
 
             var sourceType = source.ElementType;
+
             var resultType = typeof(TSource);
 
             // {model}
             var parameter = Expression.Parameter(sourceType, "model");
-            var attrs = new List<string>();
-            // Key = Relationship, Value = Attribute
-            var relationAttrs = new Dictionary<string, string>();
-            foreach(var item in columns)
-            {
-                if (item.IsAttributeOfRelationship)
-                    relationAttrs.Add(item.RelationshipAttribute, item.Attribute) ;
-                else
-                    attrs.Add(item.Attribute);
-            }
 
-            var bindings = new List<MemberAssignment>();
-            bindings.AddRange(attrs.Select(column => Expression.Bind(resultType.GetProperty(column), Expression.PropertyOrField(parameter, column))));
-
-
-            //foreach (var relationAttr in relationAttrs)
-            //{
-            //    var relation = Expression.PropertyOrField(parameter, relationAttr.Key);
-            //    var member = Expression.Property(relation, relationAttr.Value);
-            //    var relationType = member.Type;
-
-            //    var relationshipBindings = new List<MemberAssignment>();
-            //    relationshipBindings.AddRange(attrs.Select(column => Expression.Bind(resultType.GetProperty(column), Expression.PropertyOrField(parameter, column))));
-
-            //    var body = Expression.MemberInit(Expression.New(relation.Type), bindings);
-            //    var ah = Expression.Bind(relation.Member, member.Expression);
-            //    bindings.Add(ah);
-            //}
+            var bindings = columns.Select(column => Expression.Bind(
+                resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
 
             // { new Model () { Property = model.Property } }
             var body = Expression.MemberInit(Expression.New(resultType), bindings);

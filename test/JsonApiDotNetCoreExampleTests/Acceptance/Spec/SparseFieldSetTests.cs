@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Select_Sparse_Fieldsets()
         {
             // arrange
-            var fields = new List<QueryAttribute> { new QueryAttribute("Id"), new QueryAttribute("Description"), new QueryAttribute("CreatedDate"), new QueryAttribute("AchievedDate") };
+            var fields = new List<string> { "Id","Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem {
                 Description = "description",
                 Ordinal = 1,
@@ -97,40 +97,5 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todoItem.Description, deserializeBody.Data.Attributes["description"]);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.Data.Attributes["created-date"]).ToString("G"));
         }
-
-        //[Fact]
-        //public async Task Fields_Query_Selects_Sparse_Nested_Field_Sets()
-        //{
-        //    // arrange
-        //    var todoItem = new TodoItem
-        //    {
-        //        Description = "description",
-        //        Ordinal = 1,
-        //        CreatedDate = DateTime.Now,
-        //        Owner = new Person() { Age = 30, FirstName = "Jack", LastName = "Daniels"}
-        //    };
-        //    _dbContext.TodoItems.Add(todoItem);
-        //    await _dbContext.SaveChangesAsync();
-
-        //    var builder = new WebHostBuilder()
-        //        .UseStartup<Startup>();
-        //    var httpMethod = new HttpMethod("GET");
-        //    var server = new TestServer(builder);
-        //    var client = server.CreateClient();
-
-        //    var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner&fields[todo-items]=owner.age";
-        //    var request = new HttpRequestMessage(httpMethod, route);
-
-        //    // act
-        //    var response = await client.SendAsync(request);
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
-        //    var included = deserializeBody.Included.First();
-        //    // assert
-        //    Assert.Equal(todoItem.StringId, deserializeBody.Data.Id);
-        //    Assert.Empty(deserializeBody.Data.Attributes);
-        //    Assert.Single(included.Attributes);
-        //    Assert.Equal(todoItem.Owner.Age, included.Attributes["age"]);
-        //}
     }
 }

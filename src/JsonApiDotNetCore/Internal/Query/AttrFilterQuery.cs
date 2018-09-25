@@ -15,11 +15,11 @@ namespace JsonApiDotNetCore.Internal.Query
                 throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
 
             PropertyValue = filterQuery.Value;
-            FilterOperation = FilterOperations.GetFilterOperation(filterQuery.Operation);
+            FilterOperation = filterQuery.OperationType;
         }
 
         public string PropertyValue { get; }
-        public FilterOperationsEnum FilterOperation { get; }
+        public FilterOperations FilterOperation { get; }
 
     }
 }

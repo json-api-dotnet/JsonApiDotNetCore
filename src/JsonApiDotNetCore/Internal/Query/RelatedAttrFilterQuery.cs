@@ -13,11 +13,11 @@ namespace JsonApiDotNetCore.Internal.Query
             :base(jsonApiContext, filterQuery)
         {
             PropertyValue = filterQuery.Value;
-            FilterOperation = FilterOperations.GetFilterOperation(filterQuery.Operation);
+            FilterOperation = filterQuery.OperationType;
         }
 
         public string PropertyValue { get; set; }
-        public FilterOperationsEnum FilterOperation { get; set; }
+        public FilterOperations FilterOperation { get; set; }
 
     }
 }

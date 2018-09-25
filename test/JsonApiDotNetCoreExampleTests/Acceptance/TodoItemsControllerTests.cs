@@ -246,11 +246,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
             Assert.NotEmpty(deserializedBody);
 
             long lastAge = 0;
@@ -284,11 +284,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
             Assert.NotEmpty(deserializedBody);
 
             int maxAge = deserializedBody.Max(i => i.Owner.Age) + 1;

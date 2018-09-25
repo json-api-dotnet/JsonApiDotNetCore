@@ -16,7 +16,6 @@ namespace JsonApiDotNetCore.Internal.Query
                 Attribute = attribute;
                 IsAttributeOfRelationship = false;
             }
-
         }
         
         public string Attribute { get; }
