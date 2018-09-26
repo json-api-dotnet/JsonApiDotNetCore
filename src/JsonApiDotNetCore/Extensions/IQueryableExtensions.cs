@@ -49,14 +49,14 @@ namespace JsonApiDotNetCore.Extensions
         {
             if (sortQuery.IsAttributeOfRelationship)
             {
-                var relatedAttrQuery = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
+                var relatedAttrQuery = new RelatedAttrQuery(jsonApiContext, sortQuery);
                 return sortQuery.Direction == SortDirection.Descending
                     ? source.OrderByDescending(relatedAttrQuery)
                     : source.OrderBy(relatedAttrQuery);
             }
             else
             {
-                var attrQuery = new AttrSortQuery(jsonApiContext, sortQuery);
+                var attrQuery = new AttrQuery(jsonApiContext, sortQuery);
                 return sortQuery.Direction == SortDirection.Descending
                     ? source.OrderByDescending(attrQuery)
                     : source.OrderBy(attrQuery);
@@ -67,14 +67,14 @@ namespace JsonApiDotNetCore.Extensions
         {
             if (sortQuery.IsAttributeOfRelationship)
             {
-                var relatedAttrQuery = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
+                var relatedAttrQuery = new RelatedAttrQuery(jsonApiContext, sortQuery);
                 return sortQuery.Direction == SortDirection.Descending
                     ? source.OrderByDescending(relatedAttrQuery)
                     : source.OrderBy(relatedAttrQuery);
             }
             else
             {
-                var attrQuery = new AttrSortQuery(jsonApiContext, sortQuery);
+                var attrQuery = new AttrQuery(jsonApiContext, sortQuery);
                 return sortQuery.Direction == SortDirection.Descending
                     ? source.OrderByDescending(attrQuery)
                     : source.OrderBy(attrQuery);
@@ -152,12 +152,12 @@ namespace JsonApiDotNetCore.Extensions
                 return source;
 
             if (filterQuery.IsAttributeOfRelationship)
-                return source.Filter(new RelatedAttrFilterQuery(jsonApiContext, filterQuery));
+                return source.Filter(new RelatedAttrQuery(jsonApiContext, filterQuery));
 
-            return source.Filter(new AttrFilterQuery(jsonApiContext, filterQuery));
+            return source.Filter(new AttrQuery(jsonApiContext, filterQuery));
         }
 
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, AttrFilterQuery filterQuery)
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, AttrQuery filterQuery)
         {
             if (filterQuery == null)
                 return source;
@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, RelatedAttrFilterQuery filterQuery)
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, RelatedAttrQuery filterQuery)
         {
             if (filterQuery == null)
                 return source;

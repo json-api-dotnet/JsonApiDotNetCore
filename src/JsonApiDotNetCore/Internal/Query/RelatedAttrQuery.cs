@@ -8,17 +8,40 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrQuery
     {
         private readonly IJsonApiContext _jsonApiContext;
+        public AttrAttribute Attribute { get; }
+        public RelationshipAttribute RelationshipAttribute { get; }
 
-        public RelatedAttrQuery(IJsonApiContext jsonApiContext, QueryAttribute query)
+        // Filter properties
+        public string PropertyValue { get; }
+        public FilterOperations FilterOperation { get; }
+        // Sort properties
+        public SortDirection Direction { get; set; }
+
+        public RelatedAttrQuery(IJsonApiContext jsonApiContext, FilterQuery filterQuery)
         {
             _jsonApiContext = jsonApiContext;
 
-            RelationshipAttribute = GetRelationshipAttribute(query.RelationshipAttribute);
-            Attribute = GetAttribute(RelationshipAttribute, query.Attribute);
+            RelationshipAttribute = GetRelationshipAttribute(filterQuery.RelationshipAttribute);
+            Attribute = GetAttribute(RelationshipAttribute, filterQuery.Attribute);
+
+            if (Attribute.IsFilterable == false)
+                throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
+
+            PropertyValue = filterQuery.Value;
+            FilterOperation = filterQuery.OperationType;
         }
 
-        public AttrAttribute Attribute { get; }
-        public RelationshipAttribute RelationshipAttribute { get; }
+        public RelatedAttrQuery(IJsonApiContext jsonApiContext, SortQuery sortQuery)
+        {
+            _jsonApiContext = jsonApiContext;
+            RelationshipAttribute = GetRelationshipAttribute(sortQuery.RelationshipAttribute);
+            Attribute = GetAttribute(RelationshipAttribute, sortQuery.Attribute);
+
+            if (Attribute.IsSortable == false)
+                throw new JsonApiException(400, $"Sort is not allowed for attribute '{Attribute.PublicAttributeName}'.");
+
+            Direction = sortQuery.Direction;
+        }
 
         private RelationshipAttribute GetRelationshipAttribute(string relationship)
         {
