@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
 
-            const int numberOfItems = 5;
+            const int numberOfItems = 10;
 
             for (var i = 1; i < numberOfItems; i++)
             {
@@ -267,7 +267,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             _context.TodoItems.RemoveRange(_context.TodoItems);
 
-            const int numberOfItems = 5;
+            const int numberOfItems = 10;
 
             for (var i = 1; i < numberOfItems; i++)
             {

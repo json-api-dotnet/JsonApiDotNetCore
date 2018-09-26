@@ -1,6 +1,6 @@
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class QueryAttribute
+    public abstract class QueryAttribute
     {
         public QueryAttribute(string attribute)
         {
