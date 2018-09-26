@@ -166,7 +166,25 @@ namespace JsonApiDotNetCore.Builders
                 attribute.InternalRelationshipName = prop.Name;
                 attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);
+
+                if(attribute is HasManyThroughAttribute hasManyThroughAttribute) {
+                    var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
+                    if(throughProperty == null)
+                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
+                    
+                    // assumption: the property should be a generic collection, e.g. List<ArticleTag>
+                    if(prop.PropertyType.IsGenericType == false)
+                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Expected through entity to be a generic type, such as List<{prop.PropertyType}>.");
+                    hasManyThroughAttribute.ThroughType = prop.PropertyType.GetGenericArguments()[0];
+
+                    var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();
+                    // Article → ArticleTag.Article
+                    hasManyThroughAttribute.LeftProperty = throughProperties.Single(x => x.PropertyType == entityType);
+                    // Article → ArticleTag.Tag
+                    hasManyThroughAttribute.RightProperty = throughProperties.Single(x => x.PropertyType == hasManyThroughAttribute.Type);
+                }
             }
+
             return attributes;
         }
 

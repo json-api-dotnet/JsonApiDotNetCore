@@ -12,6 +12,16 @@ namespace JsonApiDotNetCore.Extensions
             => context.Set<T>();
 
         /// <summary>
+        /// Get the DbSet when the model type is unknown until runtime
+        /// </summary>
+        public static IQueryable<object> Set(this DbContext context, Type t)
+            => (IQueryable<object>)context
+                .GetType()
+                .GetMethod("Set")
+                .MakeGenericMethod(t) // TODO: will caching help runtime performance?
+                .Invoke(context, null);
+
+        /// <summary>
         /// Determines whether or not EF is already tracking an entity of the same Type and Id
         /// </summary>
         public static bool EntityIsTracked(this DbContext context, IIdentifiable entity)
