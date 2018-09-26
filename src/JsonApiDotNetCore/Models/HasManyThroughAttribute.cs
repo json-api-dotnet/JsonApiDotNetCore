@@ -15,6 +15,30 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// 
         /// </summary>
+        /// 
+        /// <param name="publicName">The relationship name as exposed by the API</param>
+        /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
+        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
+        /// 
+        /// <example>
+        /// 
+        /// </example>
+        public HasManyThroughAttribute(string internalThroughName, Link documentLinks = Link.All, bool canInclude = true)
+        : base(null, documentLinks, canInclude)
+        {
+            InternalThroughName = internalThroughName;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
+        /// <param name="publicName">The relationship name as exposed by the API</param>
+        /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
+        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
+        /// 
         /// <example>
         /// 
         /// </example>
