@@ -231,7 +231,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             const int numberOfItems = 10;
 
-            for (var i = 1; i < numberOfItems; i++)
+            for (var i = 1; i <= numberOfItems; i++)
             {
                 var todoItem = _todoItemFaker.Generate();
                 todoItem.Ordinal = i;
@@ -241,7 +241,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner&sort=owner.age";
+            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=owner.age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -256,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             long lastAge = 0;
             foreach (var todoItemResult in deserializedBody)
             {
-                Assert.True(todoItemResult.Owner.Age > lastAge);
+                Assert.True(todoItemResult.Owner.Age >= lastAge);
                 lastAge = todoItemResult.Owner.Age;
             }
         }
@@ -269,7 +269,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             const int numberOfItems = 10;
 
-            for (var i = 1; i < numberOfItems; i++)
+            for (var i = 1; i <= numberOfItems; i++)
             {
                 var todoItem = _todoItemFaker.Generate();
                 todoItem.Ordinal = i;
@@ -279,7 +279,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner&sort=-owner.age";
+            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=-owner.age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -294,7 +294,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             int maxAge = deserializedBody.Max(i => i.Owner.Age) + 1;
             foreach (var todoItemResult in deserializedBody)
             {
-                Assert.True(todoItemResult.Owner.Age < maxAge);
+                Assert.True(todoItemResult.Owner.Age <= maxAge);
                 maxAge = todoItemResult.Owner.Age;
             }
         }
