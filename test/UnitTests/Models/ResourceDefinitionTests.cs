@@ -29,8 +29,7 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(null);
 
             // assert
-            Assert.Single(attrs);
-            Assert.Equal(nameof(Model.Password), attrs[0].InternalAttributeName);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
@@ -43,7 +42,8 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(null);
 
             // assert
-            Assert.Empty(attrs);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.Password));
         }
 
         [Fact]
@@ -57,8 +57,7 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(model);
 
             // assert
-            Assert.Single(attrs);
-            Assert.Equal(nameof(Model.Password), attrs[0].InternalAttributeName);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
@@ -72,7 +71,8 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(model);
 
             // assert
-            Assert.Empty(attrs);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.Password));
         }
 
         [Fact]
