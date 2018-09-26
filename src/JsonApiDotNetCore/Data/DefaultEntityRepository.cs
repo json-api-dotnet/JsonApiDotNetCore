@@ -21,15 +21,17 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver)
-        : base(jsonApiContext, contextResolver)
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(jsonApiContext, contextResolver, resourceDefinition)
         { }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver)
-        : base(loggerFactory, jsonApiContext, contextResolver)
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
         { }
     }
 
@@ -47,27 +49,32 @@ namespace JsonApiDotNetCore.Data
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
+        private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver)
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _resourceDefinition = resourceDefinition;
         }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver)
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _resourceDefinition = resourceDefinition;
         }
 
         /// <inheritdoc />
@@ -82,13 +89,38 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
+            if(_resourceDefinition != null) 
+            {
+                var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
+                if(defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
+                {
+                    return defaultQueryFilter(entities, filterQuery.Value);
+                }
+            }
+
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
-            return entities.Sort(sortQueries);
+            if (sortQueries != null && sortQueries.Count > 0)
+                return entities.Sort(sortQueries);
+            
+            if(_resourceDefinition != null) 
+            {
+                var defaultSortOrder = _resourceDefinition.DefaultSort();
+                if(defaultSortOrder != null && defaultSortOrder.Count > 0)
+                {
+                    foreach(var sortProp in defaultSortOrder)
+                    { 
+                        // this is dumb...add an overload, don't allocate for no reason
+                        entities.Sort(new SortQuery(sortProp.Item2, sortProp.Item1));
+                    }
+                }
+            }
+
+            return entities;
         }
 
         /// <inheritdoc />

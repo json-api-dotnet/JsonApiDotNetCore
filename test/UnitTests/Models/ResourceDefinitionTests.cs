@@ -120,7 +120,7 @@ namespace UnitTests.Models
                 ? Remove(m => m.AlwaysExcluded)
                 : Remove(m => new { m.AlwaysExcluded, m.Password }, from: base.OutputAttrs());
         
-        protected override QueryFilters GetQueryFilters()
+        public override QueryFilters GetQueryFilters()
             => new QueryFilters {
                 { "is-active", (query, value) => query.Select(x => x) }
             };

@@ -223,8 +223,7 @@ namespace JsonApiDotNetCore.Services
                 foreach (var filter in query.Filters)
                     entities = _entities.Filter(entities, filter);
 
-            if (query.SortParameters != null && query.SortParameters.Count > 0)
-                entities = _entities.Sort(entities, query.SortParameters);
+            entities = _entities.Sort(entities, query.SortParameters);
 
             return entities;
         }

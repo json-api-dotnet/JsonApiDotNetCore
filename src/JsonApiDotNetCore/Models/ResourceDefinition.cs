@@ -49,12 +49,10 @@ namespace JsonApiDotNetCore.Models
                 .FirstOrDefault();
             var declaringType = instanceMethod?.DeclaringType;
             return declaringType == derivedType;
-        }
-        
-        public delegate dynamic FilterExpression(T type);        
+        }   
 
         // TODO: need to investigate options for caching these
-        protected List<AttrAttribute> Remove(Expression<FilterExpression> filter, List<AttrAttribute> from = null)
+        protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
         {
             from = from ?? _contextEntity.Attributes;
 
@@ -155,7 +153,7 @@ namespace JsonApiDotNetCore.Models
         /// }
         /// </code>
         /// </example>
-        protected virtual QueryFilters GetQueryFilters() => null;
+        public virtual QueryFilters GetQueryFilters() => null;
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
@@ -180,6 +178,28 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// </example>
         protected virtual PropertySortOrder GetDefaultSortOrder() => null;
+
+        internal List<(AttrAttribute, SortDirection)> DefaultSort()
+        {
+            var defaultSortOrder = GetDefaultSortOrder();
+            if(defaultSortOrder != null && defaultSortOrder.Count > 0)
+            {
+                var order = new List<(AttrAttribute, SortDirection)>();
+                foreach(var sortProp in defaultSortOrder)
+                {
+                    // TODO: error handling, log or throw?
+                    if (sortProp.Item1.Body is MemberExpression memberExpression)
+                        order.Add(
+                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name), 
+                            sortProp.Item2)
+                        );
+                }
+
+                return order;
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
