@@ -18,6 +18,10 @@ namespace JsonApiDotNetCore.Internal
         /// <code>
         /// _graph.GetRelationship(todoItem, nameof(TodoItem.Owner));
         /// </code>
+        /// <remarks>
+        /// This method will not work with HasManyThrough relationships. 
+        /// You should instead use the <see cref="GetRelationshipValue" /> method instead.
+        /// </remarks>
         /// </example>
         object GetRelationship<TParent>(TParent resource, string propertyName);
 
