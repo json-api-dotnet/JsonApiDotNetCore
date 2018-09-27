@@ -49,6 +49,18 @@ namespace JsonApiDotNetCore.Internal.Query
             Direction = sortQuery.Direction;
         }
 
+        /// <summary>
+        /// Get relationship and attribute connected by '.' character
+        /// </summary>
+        /// <example>
+        /// "TodoItem.Owner"
+        /// </example>
+        /// <returns></returns>
+        public string GetRelatedPropertyPath()
+        {
+            return string.Format("{0}.{1}", RelationshipAttribute.InternalRelationshipName, Attribute.InternalAttributeName);
+        }
+
         private RelationshipAttribute GetRelationshipAttribute(string relationship)
         {
             try

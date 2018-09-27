@@ -49,17 +49,19 @@ namespace JsonApiDotNetCore.Extensions
         {
             if (sortQuery.IsAttributeOfRelationship)
             {
+                // For now is created new instance, later resolve from cache
                 var relatedAttrQuery = new RelatedAttrQuery(jsonApiContext, sortQuery);
+                var path = relatedAttrQuery.GetRelatedPropertyPath();
                 return sortQuery.Direction == SortDirection.Descending
-                    ? source.OrderByDescending(relatedAttrQuery)
-                    : source.OrderBy(relatedAttrQuery);
+                    ? source.OrderByDescending(path)
+                    : source.OrderBy(path);
             }
             else
             {
                 var attrQuery = new AttrQuery(jsonApiContext, sortQuery);
                 return sortQuery.Direction == SortDirection.Descending
-                    ? source.OrderByDescending(attrQuery)
-                    : source.OrderBy(attrQuery);
+                    ? source.OrderByDescending(attrQuery.Attribute.InternalAttributeName)
+                    : source.OrderBy(attrQuery.Attribute.InternalAttributeName);
             }
         }
 
@@ -68,30 +70,31 @@ namespace JsonApiDotNetCore.Extensions
             if (sortQuery.IsAttributeOfRelationship)
             {
                 var relatedAttrQuery = new RelatedAttrQuery(jsonApiContext, sortQuery);
+                var path = relatedAttrQuery.GetRelatedPropertyPath();
                 return sortQuery.Direction == SortDirection.Descending
-                    ? source.OrderByDescending(relatedAttrQuery)
-                    : source.OrderBy(relatedAttrQuery);
+                    ? source.OrderByDescending(path)
+                    : source.OrderBy(path);
             }
             else
             {
                 var attrQuery = new AttrQuery(jsonApiContext, sortQuery);
                 return sortQuery.Direction == SortDirection.Descending
-                    ? source.OrderByDescending(attrQuery)
-                    : source.OrderBy(attrQuery);
+                    ? source.OrderByDescending(attrQuery.Attribute.InternalAttributeName)
+                    : source.OrderBy(attrQuery.Attribute.InternalAttributeName);
             }
         }
 
-        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, BaseAttrQuery baseAttrQuery)
-            => CallGenericOrderMethod(source, baseAttrQuery, "OrderBy");
+        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)
+            => CallGenericOrderMethod(source, propertyName, "OrderBy");
 
-        public static IOrderedQueryable<TSource> OrderByDescending<TSource>(this IQueryable<TSource> source, BaseAttrQuery baseAttrQuery)
-            => CallGenericOrderMethod(source, baseAttrQuery, "OrderByDescending");
+        public static IOrderedQueryable<TSource> OrderByDescending<TSource>(this IQueryable<TSource> source, string propertyName)
+            => CallGenericOrderMethod(source, propertyName, "OrderByDescending");
 
-        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, BaseAttrQuery baseAttrQuery)
-            => CallGenericOrderMethod(source, baseAttrQuery, "ThenBy");
+        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, string propertyName)
+            => CallGenericOrderMethod(source, propertyName, "ThenBy");
 
-        public static IOrderedQueryable<TSource> ThenByDescending<TSource>(this IOrderedQueryable<TSource> source, BaseAttrQuery baseAttrQuery)
-            => CallGenericOrderMethod(source, baseAttrQuery, "ThenByDescending");
+        public static IOrderedQueryable<TSource> ThenByDescending<TSource>(this IOrderedQueryable<TSource> source, string propertyName)
+            => CallGenericOrderMethod(source, propertyName, "ThenByDescending");
 
         public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, FilterQuery filterQuery)
         {
@@ -206,21 +209,24 @@ namespace JsonApiDotNetCore.Extensions
 
         #region Generic method calls
 
-        private static IOrderedQueryable<TSource> CallGenericOrderMethod<TSource>(IQueryable<TSource> source, BaseAttrQuery baseAttrQuery, string method)
+        private static IOrderedQueryable<TSource> CallGenericOrderMethod<TSource>(IQueryable<TSource> source, string propertyName, string method)
         {
             // {x}
             var parameter = Expression.Parameter(typeof(TSource), "x");
             MemberExpression member;
-            // {x.relationship.propertyName}
-            if (baseAttrQuery.IsAttributeOfRelationship)
-            {
-                var relation = Expression.PropertyOrField(parameter, baseAttrQuery.RelationshipAttribute.InternalRelationshipName);
-                member = Expression.Property(relation, baseAttrQuery.Attribute.InternalAttributeName);
-            }
-            // {x.propertyName}
-            else
-                member = Expression.Property(parameter, baseAttrQuery.Attribute.InternalAttributeName);
 
+            var values = propertyName.Split('.');
+            if (values.Length > 1)
+            {
+                var relation = Expression.PropertyOrField(parameter, values[0]);
+                // {x.relationship.propertyName}
+                member = Expression.Property(relation, values[1]);
+            }
+            else
+            {
+                // {x.propertyName}
+                member = Expression.Property(parameter, values[0]);
+            }
             // {x=>x.propertyName} or {x=>x.relationship.propertyName}
             var lambda = Expression.Lambda(member, parameter);
 
