@@ -1,10 +1,17 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Xunit;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -51,6 +58,69 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             
             var tagResponse = Assert.Single(articleResponse.Tags);
             Assert.Equal(tag.Id, tagResponse.Id);
+        }
+
+        [Fact]
+        public async Task Can_Create_Many_To_Many()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var tag = _tagFaker.Generate();
+            var author = new Person();
+            context.Tags.Add(tag);
+            context.People.Add(author);
+            await context.SaveChangesAsync();
+
+            var article = _articleFaker.Generate();
+
+            var route = "/api/v1/articles";
+            var request = new HttpRequestMessage(new HttpMethod("POST"), route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "articles",
+                    relationships = new Dictionary<string, dynamic>
+                    {
+                        {  "author",  new {
+                            data = new
+                            {
+                                type = "people",
+                                id = author.StringId
+                            }
+                        } },
+                        {  "tags", new {
+                            data = new dynamic[]
+                            {
+                                new {
+                                    type = "tags",
+                                    id = tag.StringId
+                                }
+                            }
+                        } }
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            
+            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            Assert.NotNull(articleResponse);
+            
+            var persistedArticle = await _fixture.Context.Articles
+                .Include(a => a.ArticleTags)
+                .SingleAsync(a => a.Id == articleResponse.Id);
+
+            var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
+            Assert.Equal(tag.Id, persistedArticleTag.TagId);
         }
     }
 }
