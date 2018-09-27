@@ -177,8 +177,9 @@ namespace JsonApiDotNetCore.Builders
                     relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
             }
 
-            // this only includes the navigation property, we need to actually check the navigation property Id
-            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, attr.InternalRelationshipName);
+             // this only includes the navigation property, we need to actually check the navigation property Id
+            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationshipValue(entity, attr);
+
             if (navigationEntity == null)
                 relationshipData.SingleData = attr.IsHasOne
                     ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
@@ -213,7 +214,7 @@ namespace JsonApiDotNetCore.Builders
         {
             var requestedRelationship = relationshipChain[relationshipChainIndex];
             var relationship = parentEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
-            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(parentResource, relationship.InternalRelationshipName);
+            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(parentResource, relationship.InternalRelationshipName);    
             if (navigationEntity is IEnumerable hasManyNavigationEntity)
             {
                 foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
@@ -226,7 +227,7 @@ namespace JsonApiDotNetCore.Builders
             {
                 included = AddIncludedEntity(included, (IIdentifiable)navigationEntity);
                 included = IncludeSingleResourceRelationships(included, (IIdentifiable)navigationEntity, relationship, relationshipChain, relationshipChainIndex);
-            }
+            }        
 
             return included;
         }
@@ -284,16 +285,14 @@ namespace JsonApiDotNetCore.Builders
 
         private List<ResourceIdentifierObject> GetRelationships(IEnumerable<object> entities)
         {
-            var objType = entities.GetElementType();
-
-            var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
-
+            string typeName = null;
             var relationships = new List<ResourceIdentifierObject>();
             foreach (var entity in entities)
             {
+                typeName = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType()).EntityName;
                 relationships.Add(new ResourceIdentifierObject
                 {
-                    Type = typeName.EntityName,
+                    Type = typeName,
                     Id = ((IIdentifiable)entity).StringId
                 });
             }

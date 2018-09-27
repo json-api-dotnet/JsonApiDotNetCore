@@ -275,8 +275,8 @@ namespace JsonApiDotNetCore.Data
                 }
 
                 internalRelationshipPath = (internalRelationshipPath == null)
-                    ? relationship.InternalRelationshipName
-                    : $"{internalRelationshipPath}.{relationship.InternalRelationshipName}";
+                    ? relationship.RelationshipPath
+                    : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
                 
                 if(i < relationshipChain.Length)
                     entity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);

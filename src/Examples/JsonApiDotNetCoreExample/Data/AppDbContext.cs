@@ -31,13 +31,15 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<CourseStudentEntity>()
                 .HasOne(r => r.Course)
                 .WithMany(c => c.Students)
-                .HasForeignKey(r => r.CourseId)
-                ;
+                .HasForeignKey(r => r.CourseId);
 
             modelBuilder.Entity<CourseStudentEntity>()
                 .HasOne(r => r.Student)
                 .WithMany(s => s.Courses)
                 .HasForeignKey(r => r.StudentId);
+
+            modelBuilder.Entity<ArticleTag>()
+                .HasKey(bc => new { bc.ArticleId, bc.TagId });
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }

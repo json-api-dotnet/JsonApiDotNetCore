@@ -173,15 +173,20 @@ namespace JsonApiDotNetCore.Builders
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
                     
                     // assumption: the property should be a generic collection, e.g. List<ArticleTag>
-                    if(prop.PropertyType.IsGenericType == false)
+                    if(throughProperty.PropertyType.IsGenericType == false)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Expected through entity to be a generic type, such as List<{prop.PropertyType}>.");
-                    hasManyThroughAttribute.ThroughType = prop.PropertyType.GetGenericArguments()[0];
+
+                    hasManyThroughAttribute.ThroughType = throughProperty.PropertyType.GetGenericArguments()[0];
 
                     var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();
+                    
                     // Article → ArticleTag.Article
-                    hasManyThroughAttribute.LeftProperty = throughProperties.Single(x => x.PropertyType == entityType);
+                    hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {entityType}");
+                  
                     // Article → ArticleTag.Tag
-                    hasManyThroughAttribute.RightProperty = throughProperties.Single(x => x.PropertyType == hasManyThroughAttribute.Type);
+                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.Type)
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.Type}");
                 }
             }
 

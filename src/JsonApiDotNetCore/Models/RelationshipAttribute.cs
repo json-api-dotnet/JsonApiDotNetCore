@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// </example>
         public Type Type { get; internal set; }
-        public bool IsHasMany => GetType() == typeof(HasManyAttribute);
+        public bool IsHasMany => GetType() == typeof(HasManyAttribute) || typeof(HasManyAttribute).IsAssignableFrom(GetType());
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
         public bool CanInclude { get; }
@@ -78,5 +78,13 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public virtual bool Is(string publicRelationshipName)
             => string.Equals(publicRelationshipName, PublicRelationshipName, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// The internal navigation property path to the related entity.
+        /// <summary>
+        /// <remarks>
+        /// In all cases except the HasManyThrough relationships, this will just be the <see cref"InternalRelationshipName" />.
+        /// </remarks>
+        public virtual string RelationshipPath => InternalRelationshipName;
     }
 }

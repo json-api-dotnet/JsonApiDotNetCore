@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -18,6 +20,19 @@ namespace JsonApiDotNetCore.Internal
         /// </code>
         /// </example>
         object GetRelationship<TParent>(TParent resource, string propertyName);
+
+        /// <summary>
+        /// Gets the value of the navigation property, defined by the relationshipName,
+        /// on the provided instance.
+        /// </summary>
+        /// <param name="resource">The resource instance</param>
+        /// <param name="relationship">The attribute used to define the relationship.</param>
+        /// <example>
+        /// <code>
+        /// _graph.GetRelationshipValue(todoItem, nameof(TodoItem.Owner));
+        /// </code>
+        /// </example>
+        object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable;
 
         /// <summary>
         /// Get the internal navigation property name for the specified public
@@ -107,6 +122,29 @@ namespace JsonApiDotNetCore.Internal
             return navigationProperty.GetValue(entity);
         }
 
+        public object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable
+        {
+            if(relationship is HasManyThroughAttribute hasManyThroughRelationship) 
+            {
+                return GetHasManyThrough(resource, hasManyThroughRelationship);
+            }
+
+            return GetRelationship(resource, relationship.InternalRelationshipName);
+        }
+
+        private IEnumerable<IIdentifiable> GetHasManyThrough(IIdentifiable parent, HasManyThroughAttribute hasManyThrough)
+        {
+            var throughProperty = GetRelationship(parent, hasManyThrough.InternalThroughName);
+            if (throughProperty is IEnumerable hasManyNavigationEntity)
+            {
+                foreach (var includedEntity in hasManyNavigationEntity)
+                {
+                    var targetValue = hasManyThrough.RightProperty.GetValue(includedEntity) as IIdentifiable;
+                    yield return targetValue;
+                }
+            }
+        }
+
         /// </ inheritdoc>
         public string GetRelationshipName<TParent>(string relationshipName)
         {
@@ -125,5 +163,5 @@ namespace JsonApiDotNetCore.Internal
                 .SingleOrDefault(a => a.InternalAttributeName == internalAttributeName)?
                 .PublicAttributeName;
         }
-  }
+    }
 }

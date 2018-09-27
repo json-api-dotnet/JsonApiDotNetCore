@@ -80,5 +80,11 @@ namespace JsonApiDotNetCore.Models
         ///
         /// </example>
         public PropertyInfo RightProperty { get; internal set; }
+
+        /// <inheritdoc />
+        /// <example>
+        /// "ArticleTags.Tag"
+        /// </example>
+        public override string RelationshipPath => $"{InternalThroughName}.{RightProperty.Name}";
     }
 }
