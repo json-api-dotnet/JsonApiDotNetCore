@@ -18,16 +18,19 @@ namespace JsonApiDotNetCore.Internal
         /// <code>
         /// _graph.GetRelationship(todoItem, nameof(TodoItem.Owner));
         /// </code>
-        /// <remarks>
-        /// This method will not work with HasManyThrough relationships. 
-        /// You should instead use the <see cref="GetRelationshipValue" /> method instead.
-        /// </remarks>
         /// </example>
+        /// <remarks>
+        /// In the case of a `HasManyThrough` relationship, it will not traverse the relationship 
+        /// and will instead return the value of the shadow property (e.g. Articles.Tags).
+        /// If you want to traverse the relationship, you should use <see cref="GetRelationshipValue" />.
+        /// </remarks>
         object GetRelationship<TParent>(TParent resource, string propertyName);
 
         /// <summary>
-        /// Gets the value of the navigation property, defined by the relationshipName,
+        /// Gets the value of the navigation property (defined by the <see cref="RelationshipAttribute" />)
         /// on the provided instance.
+        /// In the case of `HasManyThrough` relationships, it will traverse the through entity and return the 
+        /// value of the relationship on the other side of a join entity (e.g. Articles.ArticleTags.Tag).
         /// </summary>
         /// <param name="resource">The resource instance</param>
         /// <param name="relationship">The attribute used to define the relationship.</param>
