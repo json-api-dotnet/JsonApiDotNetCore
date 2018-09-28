@@ -5,6 +5,7 @@ namespace JsonApiDotNetCore.Models
 {
     /// <summary>
     /// Create a HasMany relationship through a many-to-many join relationship.
+    /// This type can only be applied on types that implement IList.
     /// </summary>
     /// 
     /// <example>
@@ -108,6 +109,21 @@ namespace JsonApiDotNetCore.Models
         ///
         /// </example>
         public PropertyInfo RightProperty { get; internal set; }
+
+        /// <summary>
+        /// The join entity property on the parent resource.
+        /// </summary>
+        /// 
+        /// <example>
+        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
+        /// this would point to the `Article.ArticleTags` property
+        ///
+        /// <code>
+        /// public List&lt;ArticleTags&gt; ArticleTags { get; set; }
+        /// </code>
+        ///
+        /// </example>
+        public PropertyInfo ThroughProperty { get; internal set; }
 
         /// <inheritdoc />
         /// <example>

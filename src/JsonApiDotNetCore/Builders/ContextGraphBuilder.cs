@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -172,10 +173,17 @@ namespace JsonApiDotNetCore.Builders
                     if(throughProperty == null)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
                     
+                    if(throughProperty.PropertyType.Implements<IList>() == false)
+                        throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}.{throughProperty.Name}'. Property type does not implement IList.");
+                    
                     // assumption: the property should be a generic collection, e.g. List<ArticleTag>
                     if(throughProperty.PropertyType.IsGenericType == false)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Expected through entity to be a generic type, such as List<{prop.PropertyType}>.");
 
+                    // Article → List<ArticleTag>
+                    hasManyThroughAttribute.ThroughProperty = throughProperty;
+
+                    // ArticleTag
                     hasManyThroughAttribute.ThroughType = throughProperty.PropertyType.GetGenericArguments()[0];
 
                     var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();

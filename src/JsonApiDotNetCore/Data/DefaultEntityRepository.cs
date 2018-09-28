@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -143,7 +144,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            AttachRelationships();
+            AttachRelationships(entity);
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();
@@ -151,9 +152,9 @@ namespace JsonApiDotNetCore.Data
             return entity;
         }
 
-        protected virtual void AttachRelationships()
+        protected virtual void AttachRelationships(TEntity entity = null)
         {
-            AttachHasManyPointers();
+            AttachHasManyPointers(entity);
             AttachHasOnePointers();
         }
 
@@ -183,15 +184,42 @@ namespace JsonApiDotNetCore.Data
         /// This is used to allow creation of HasMany relationships when the
         /// dependent side of the relationship already exists.
         /// </summary>
-        private void AttachHasManyPointers()
+        private void AttachHasManyPointers(TEntity entity)
         {
             var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
             foreach (var relationship in relationships)
             {
-                foreach (var pointer in relationship.Value)
-                {
-                    _context.Entry(pointer).State = EntityState.Unchanged;
-                }
+                if(relationship.Key is HasManyThroughAttribute hasManyThrough)
+                    AttachHasManyThrough(entity, hasManyThrough, relationship.Value);
+                else
+                    AttachHasMany(relationship.Key as HasManyAttribute, relationship.Value);                
+            }
+        }
+
+        private void AttachHasMany(HasManyAttribute relationship, IList pointers)
+        {
+            foreach (var pointer in pointers)
+            {
+                _context.Entry(pointer).State = EntityState.Unchanged;
+            }
+        }
+
+        private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
+        {
+            // create the collection (e.g. List<ArticleTag>)
+            // this type MUST implement IList so we can build the collection
+            // if this is problematic, we _could_ reflect on the type and find an Add method
+            // or we might be able to create a proxy type and implement the enumerator
+            var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
+            hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
+            foreach (var pointer in pointers)
+            {
+                _context.Entry(pointer).State = EntityState.Unchanged;
+
+                var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
+                hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
+                hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
+                throughRelationshipCollection.Add(throughInstance);
             }
         }
 

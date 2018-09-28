@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
 {
