@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Models;
 using System;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -13,5 +14,10 @@ namespace JsonApiDotNetCore.Internal.Query
 
             return opertion;
         }
+
+        public AttrAttribute FilteredAttribute { get; protected set; }
+        public RelationshipAttribute FilteredRelationship { get; protected set; }
+        public string PropertyValue { get; protected set; }
+        public FilterOperations FilterOperation { get; protected set; }
     }
 }

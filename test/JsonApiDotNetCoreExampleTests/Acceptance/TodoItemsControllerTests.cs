@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private AppDbContext _context;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
+        private Faker<Person> _personFaker;
 
         public TodoItemControllerTests(TestFixture<TestStartup> fixture)
         {
@@ -35,6 +36,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+
+            _personFaker = new Faker<Person>()
+                .RuleFor(t => t.FirstName, f => f.Name.FirstName())
+                .RuleFor(t => t.LastName, f => f.Name.LastName())
+                .RuleFor(t => t.Age, f => f.Random.Int(1, 99));
         }
 
         [Fact]
@@ -214,6 +220,82 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Assert.True(todoItemResult.Ordinal > priorOrdinal);
                 priorOrdinal = todoItemResult.Ordinal;
+            }
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Nested_Attribute_Ascending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 10;
+
+            for (var i = 1; i <= numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = _personFaker.Generate();
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=owner.age";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            Assert.NotEmpty(deserializedBody);
+
+            long lastAge = 0;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Owner.Age >= lastAge);
+                lastAge = todoItemResult.Owner.Age;
+            }
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Nested_Attribute_Descending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 10;
+
+            for (var i = 1; i <= numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = _personFaker.Generate();
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=-owner.age";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            Assert.NotEmpty(deserializedBody);
+
+            int maxAge = deserializedBody.Max(i => i.Owner.Age) + 1;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Owner.Age <= maxAge);
+                maxAge = todoItemResult.Owner.Age;
             }
         }
 

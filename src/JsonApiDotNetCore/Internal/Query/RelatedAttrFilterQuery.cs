@@ -7,14 +7,14 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrFilterQuery : BaseFilterQuery
     {
         private readonly IJsonApiContext _jsonApiContext;
-        
+
         public RelatedAttrFilterQuery(
             IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
         {
             _jsonApiContext = jsonApiContext;
 
-            var relationshipArray = filterQuery.Attribute.Split('.');
+            var relationshipArray = filterQuery.Attribute.Split(QueryConstants.DOT);
             var relationship = GetRelationship(relationshipArray[0]);
             if (relationship == null)
                 throw new JsonApiException(400, $"{relationshipArray[1]} is not a valid relationship on {relationshipArray[0]}.");
@@ -31,11 +31,6 @@ namespace JsonApiDotNetCore.Internal.Query
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);
         }
-
-        public AttrAttribute FilteredAttribute { get; set; }
-        public string PropertyValue { get; set; }
-        public FilterOperations FilterOperation { get; set; }
-        public RelationshipAttribute FilteredRelationship { get; }
 
         private RelationshipAttribute GetRelationship(string propertyName)
             => _jsonApiContext.RequestEntity.Relationships.FirstOrDefault(r => r.Is(propertyName));

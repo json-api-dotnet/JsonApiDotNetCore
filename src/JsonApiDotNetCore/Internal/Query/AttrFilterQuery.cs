@@ -27,9 +27,6 @@ namespace JsonApiDotNetCore.Internal.Query
             FilterOperation = GetFilterOperation(filterQuery.Operation);
         }
 
-        public AttrAttribute FilteredAttribute { get; }
-        public string PropertyValue { get; }
-        public FilterOperations FilterOperation { get; }
 
         private AttrAttribute GetAttribute(string attribute) =>
             _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(attr => attr.Is(attribute));

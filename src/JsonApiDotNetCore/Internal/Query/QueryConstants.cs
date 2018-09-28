@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.Internal.Query{
         public const char COMMA = ',';
         public const char COLON = ':';
         public const string COLON_STR = ":";
+        public const char DOT = '.';
 
     }
 }
