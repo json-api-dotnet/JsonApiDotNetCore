@@ -214,47 +214,12 @@ namespace JsonApiDotNetCore.Data
             foreach (var pointer in pointers)
             {
                 _context.Entry(pointer).State = EntityState.Unchanged;
-
                 var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
+
                 hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
                 hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
 
                 throughRelationshipCollection.Add(throughInstance);
-            }
-        }
-
-        private void UpdateHasManyThrough(TEntity entity)
-        {
-            var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
-            foreach (var relationship in relationships)
-            {
-                if(relationship.Key is HasManyThroughAttribute hasManyThrough)
-                {   
-                    // create the collection (e.g. List<ArticleTag>)
-                    // this type MUST implement IList so we can build the collection
-                    // if this is problematic, we _could_ reflect on the type and find an Add method
-                    // or we might be able to create a proxy type and implement the enumerator
-                    var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
-                    hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
-                    foreach (var pointer in relationship.Value)
-                    {                
-                        _context.Entry(pointer).State = EntityState.Unchanged;
-
-                        var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
-                        _context.Entry(throughInstance).State = EntityState.Added;
-
-                        hasManyThrough.LeftIdProperty.SetValue(throughInstance, entity.Id);
-                        hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
-                        hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
-                        
-                        var pointerId = (pointer as Identifiable<TId>) // known limitation, just need to come up with a solution...
-                            ?? throw new JsonApiException(500, $"Cannot update the HasManyThrough relationship '{hasManyThrough.PublicRelationshipName}'. Id type must match the parent resource id type.");
-
-                        hasManyThrough.RightIdProperty.SetValue(throughInstance, pointerId.Id);
-
-                        throughRelationshipCollection.Add(throughInstance);
-                    }
-                }
             }
         }
 
@@ -284,7 +249,7 @@ namespace JsonApiDotNetCore.Data
             foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 relationship.Key.SetValue(oldEntity, relationship.Value);
 
-            UpdateHasManyThrough(entity);
+            AttachRelationships(oldEntity);
 
             await _context.SaveChangesAsync();
 
