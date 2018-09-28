@@ -122,5 +122,59 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
             Assert.Equal(tag.Id, persistedArticleTag.TagId);
         }
+
+        [Fact]
+        public async Task Can_Update_Many_To_Many()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var tag = _tagFaker.Generate();
+            var article = _articleFaker.Generate();
+            context.Tags.Add(tag);
+            context.Articles.Add(article);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles/{article.Id}";
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "articles",
+                    id = article.StringId,
+                    relationships = new Dictionary<string, dynamic>
+                    {
+                        {  "tags",  new {
+                            data = new [] { new
+                            {
+                                type = "tags",
+                                id = tag.StringId
+                            } }
+                        } }
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            
+            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            Assert.NotNull(articleResponse);
+            
+            _fixture.ReloadDbContext();
+            var persistedArticle = await _fixture.Context.Articles
+                .Include(a => a.ArticleTags)
+                .SingleAsync(a => a.Id == articleResponse.Id);
+
+            var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
+            Assert.Equal(tag.Id, persistedArticleTag.TagId);
+        }
     }
 }

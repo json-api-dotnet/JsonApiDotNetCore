@@ -212,11 +212,14 @@ namespace JsonApiDotNetCore.Data
             // or we might be able to create a proxy type and implement the enumerator
             var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
             hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
+
             foreach (var pointer in pointers)
             {
                 _context.Entry(pointer).State = EntityState.Unchanged;
 
                 var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
+                _context.Entry(throughInstance).State = EntityState.Added;
+
                 hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
                 hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
                 throughRelationshipCollection.Add(throughInstance);
@@ -248,6 +251,8 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 relationship.Key.SetValue(oldEntity, relationship.Value);
+
+            AttachRelationships(entity);
 
             await _context.SaveChangesAsync();
 

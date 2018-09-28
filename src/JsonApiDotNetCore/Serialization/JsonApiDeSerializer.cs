@@ -283,6 +283,10 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
+                if(relationshipData.IsHasMany == false) {
+                    throw new JsonApiException(400, $"Cannot set HasMany relationship '{attr.PublicRelationshipName}'. Value must be a JSON array of Resource Identifier Objects.");
+                }
+
                 var data = (List<ResourceIdentifierObject>)relationshipData.ExposedData;
 
                 if (data == null) return entity;
