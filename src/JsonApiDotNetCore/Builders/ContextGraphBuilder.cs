@@ -191,20 +191,10 @@ namespace JsonApiDotNetCore.Builders
                     // Article → ArticleTag.Article
                     hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {entityType}");
-                  
-                    // ArticleTag.ArticleId
-                    var leftIdPropertyName = hasManyThroughAttribute.GetIdentityPropertyName(hasManyThroughAttribute.LeftProperty);
-                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(p => p.Name == leftIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain an identity property {leftIdPropertyName}");
 
                     // Article → ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.Type)
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.Type}");
-                    
-                    // ArticleTag.TagId
-                    var rightIdPropertyName = hasManyThroughAttribute.GetIdentityPropertyName(hasManyThroughAttribute.RightProperty);
-                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(p => p.Name == rightIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain an identity property {rightIdPropertyName}");
                 }
             }
 
