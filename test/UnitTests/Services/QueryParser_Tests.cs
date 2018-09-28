@@ -3,6 +3,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -99,7 +100,8 @@ namespace UnitTests.Services
 
             // assert
             Assert.Equal(dt, querySet.Filters.Single(f => f.Attribute == "key").Value);
-            Assert.Equal("eq", querySet.Filters.Single(f => f.Attribute == "key").Operation);
+            Assert.Equal(string.Empty, querySet.Filters.Single(f => f.Attribute == "key").Operation);
+            Assert.Equal(FilterOperations.eq, querySet.Filters.Single(f => f.Attribute == "key").OperationType);
         }
 
         [Fact]

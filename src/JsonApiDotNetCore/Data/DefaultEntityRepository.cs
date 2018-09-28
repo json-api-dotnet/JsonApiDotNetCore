@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
-            return entities.Sort(_jsonApiContext, sortQueries);
+            return entities.Sort(sortQueries);
         }
 
         /// <inheritdoc />

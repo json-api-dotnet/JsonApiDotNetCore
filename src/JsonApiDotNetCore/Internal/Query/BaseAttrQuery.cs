@@ -6,20 +6,28 @@ using System.Linq;
 namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
-    /// Abstract class to make available shared properties for AttrQuery and RelatedAttrQuery
+    /// Abstract class to make available shared properties of all query implementations
     /// It elimines boilerplate of providing specified type(AttrQuery or RelatedAttrQuery) 
     /// while filter and sort operations and eliminates plenty of methods to keep DRY principles 
     /// </summary>
     public abstract class BaseAttrQuery
     {
-        public AttrAttribute Attribute { get; protected set; }
-        public RelationshipAttribute RelationshipAttribute { get; protected set; }
-        public bool IsAttributeOfRelationship { get; protected set; }
+        protected BaseAttrQuery(RelationshipAttribute relationship, AttrAttribute attr)
+        {
+            Relationship = relationship;
+            Attr = attr;
+        }
 
-        // Filter properties
-        public string PropertyValue { get; protected set; }
-        public FilterOperations FilterOperation { get; protected set; }
-        // Sort properties
-        public SortDirection Direction { get; protected set; }
+        public AttrAttribute Attr { get; }
+        public RelationshipAttribute Relationship { get; }
+        public bool IsAttributeOfRelationship => Relationship != null;
+
+        public string GetPropertyPath()
+        {
+            if (IsAttributeOfRelationship)
+                return string.Format("{0}.{1}", Relationship.InternalRelationshipName, Attr.InternalAttributeName);
+            else
+                return Attr.InternalAttributeName;
+        }
     }
 }

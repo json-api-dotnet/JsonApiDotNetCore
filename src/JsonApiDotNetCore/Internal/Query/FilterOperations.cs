@@ -1,6 +1,4 @@
 // ReSharper disable InconsistentNaming
-using System;
-
 namespace JsonApiDotNetCore.Internal.Query
 {
     public enum FilterOperations
@@ -17,5 +15,4 @@ namespace JsonApiDotNetCore.Internal.Query
         isnull = 9,
         isnotnull = 10
     }
-
 }
