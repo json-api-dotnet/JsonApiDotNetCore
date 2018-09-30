@@ -68,8 +68,8 @@ namespace JsonApiDotNetCore.Extensions
                     $" Use Sort method with IJsonApiContext parameter instead.");
 
             return sortQuery.Direction == SortDirection.Descending
-                ? source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName)
-                : source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
+                ? source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName)
+                : source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
         }
 
         public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, List<SortQuery> sortQueries)
@@ -120,8 +120,8 @@ namespace JsonApiDotNetCore.Extensions
                 attr = new AttrSortQuery(jsonApiContext, sortQuery);
 
             return sortQuery.Direction == SortDirection.Descending
-                ? source.OrderByDescending(attr.GetPropertyPath())
-                : source.OrderBy(attr.GetPropertyPath());
+                ? source.ThenByDescending(attr.GetPropertyPath())
+                : source.ThenBy(attr.GetPropertyPath());
         }     
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)

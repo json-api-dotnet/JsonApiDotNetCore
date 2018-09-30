@@ -4,7 +4,7 @@ using System;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public abstract class BaseFilterQuery : BaseAttrQuery
+    public class BaseFilterQuery : BaseAttrQuery
     {
         public BaseFilterQuery(
             IJsonApiContext jsonApiContext,
