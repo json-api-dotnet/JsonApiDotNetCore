@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using System;
 using System.Linq;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -12,22 +11,44 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public abstract class BaseAttrQuery
     {
-        protected BaseAttrQuery(RelationshipAttribute relationship, AttrAttribute attr)
+        private readonly IJsonApiContext _jsonApiContext;
+
+        public BaseAttrQuery(IJsonApiContext jsonApiContext, string relationship, string attribute)
         {
-            Relationship = relationship;
-            Attr = attr;
+            _jsonApiContext = jsonApiContext;
+            if (string.IsNullOrEmpty(relationship))
+                Attribute = GetAttribute(attribute);           
+            else
+            {
+                Relationship = GetRelationship(relationship);
+                Attribute = GetAttribute(Relationship, attribute);
+            }
+            
         }
 
-        public AttrAttribute Attr { get; }
+        public AttrAttribute Attribute { get; }
         public RelationshipAttribute Relationship { get; }
         public bool IsAttributeOfRelationship => Relationship != null;
 
         public string GetPropertyPath()
         {
             if (IsAttributeOfRelationship)
-                return string.Format("{0}.{1}", Relationship.InternalRelationshipName, Attr.InternalAttributeName);
+                return string.Format("{0}.{1}", Relationship.InternalRelationshipName, Attribute.InternalAttributeName);
             else
-                return Attr.InternalAttributeName;
+                return Attribute.InternalAttributeName;
+        }
+
+        private AttrAttribute GetAttribute(string attribute)
+            => _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(attr => attr.Is(attribute));
+
+        private RelationshipAttribute GetRelationship(string propertyName)
+            => _jsonApiContext.RequestEntity.Relationships.FirstOrDefault(r => r.Is(propertyName));
+
+        private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
+        {
+            var relatedContextExntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
+            return relatedContextExntity.Attributes
+              .FirstOrDefault(a => a.Is(attribute));
         }
     }
 }

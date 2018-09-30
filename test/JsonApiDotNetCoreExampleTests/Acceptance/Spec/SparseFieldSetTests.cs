@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -35,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Select_Sparse_Fieldsets()
         {
             // arrange
-            var fields = new List<string> { "Id","Description", "CreatedDate", "AchievedDate" };
+            var fields = new List<string> { "Id", "Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem {
                 Description = "description",
                 Ordinal = 1,

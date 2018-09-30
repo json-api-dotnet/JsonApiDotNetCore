@@ -56,7 +56,7 @@ namespace UnitTests.Services
             // act
             var filterString = queryComposer.Compose(_jsonApiContext.Object);
             // assert
-            Assert.Equal("&filter[attribute]=le:value&filter[attribute2]=value2", filterString);
+            Assert.Equal("&filter[attribute]=le:value&filter[attribute2]=eq:value2", filterString);
         }
 
         [Fact]

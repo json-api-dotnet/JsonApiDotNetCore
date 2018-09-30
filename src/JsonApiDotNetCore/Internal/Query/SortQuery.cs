@@ -3,28 +3,26 @@ using System;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class SortQuery : BaseAttrQuery
+    public class SortQuery : BaseQuery
     {
+        [Obsolete("Use constructor with string attribute parameter. New constructor provides nested sort feature.")]
         public SortQuery(SortDirection direction, AttrAttribute sortedAttribute)
-            : base(null, sortedAttribute)
+            :base(sortedAttribute.InternalAttributeName)
         {
             Direction = direction;
             SortedAttribute = sortedAttribute;
-            if (Attr.IsSortable == false)
-                throw new JsonApiException(400, $"Sort is not allowed for attribute '{Attr.PublicAttributeName}'.");
+            if (SortedAttribute.IsSortable == false)
+                throw new JsonApiException(400, $"Sort is not allowed for attribute '{SortedAttribute.PublicAttributeName}'.");
         }
 
-        public SortQuery(SortDirection direction, RelationshipAttribute relationship, AttrAttribute sortedAttribute)
-            : base(relationship, sortedAttribute)
+        public SortQuery(SortDirection direction, string attribute)
+            : base(attribute)
         {
             Direction = direction;
-            SortedAttribute = sortedAttribute;
-            if (Attr.IsSortable == false)
-                throw new JsonApiException(400, $"Sort is not allowed for attribute '{Attr.PublicAttributeName}'.");
         }
 
         public SortDirection Direction { get; set; }
-        [Obsolete("Use generic Attr property of BaseAttrQuery instead")]
+        [Obsolete("Use string based Attribute instead. This provides nested sort feature (e.g. ?sort=owner.first-name)")]
         public AttrAttribute SortedAttribute { get; set; }
     }
 }

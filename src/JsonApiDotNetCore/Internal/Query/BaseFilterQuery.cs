@@ -1,10 +1,24 @@
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using System;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class BaseFilterQuery
+    public abstract class BaseFilterQuery : BaseAttrQuery
     {
+        public BaseFilterQuery(
+            IJsonApiContext jsonApiContext,
+            string relationship,
+            string attribute,
+            string value,
+            FilterOperations op)
+        : base(jsonApiContext, relationship, attribute)
+        {
+            PropertyValue = value;
+            FilterOperation = op;
+        }
+
+        [Obsolete("To resolve operation use enum typed " + nameof(FilterQuery.OperationType) + " property of "+ nameof(FilterQuery) +" class")]
         protected FilterOperations GetFilterOperation(string prefix)
         {
             if (prefix.Length == 0) return FilterOperations.eq;
@@ -15,9 +29,7 @@ namespace JsonApiDotNetCore.Internal.Query
             return opertion;
         }
 
-        public AttrAttribute FilteredAttribute { get; protected set; }
-        public RelationshipAttribute FilteredRelationship { get; protected set; }
-        public string PropertyValue { get; protected set; }
-        public FilterOperations FilterOperation { get; protected set; }
+        public string PropertyValue { get; }
+        public FilterOperations FilterOperation { get; }
     }
 }

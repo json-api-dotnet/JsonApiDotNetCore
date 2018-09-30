@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Services
             return querySet;
         }
 
-        protected virtual List<FilterQuery> ParseFilterParameters(string key, string value)
+        protected virtual List<FilterQuery> ParseFilterQuery(string key, string value)
         {
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
@@ -87,57 +87,13 @@ namespace JsonApiDotNetCore.Services
             // InArray case
             var arrOpVal = ParseFilterOperationAndValue(value);
             if (arrOpVal.operation == FilterOperations.@in || arrOpVal.operation == FilterOperations.nin)
-                queries.Add(CreateFilterQuery(propertyName, arrOpVal.value, arrOpVal.operation));
-            else
-            {
-                var values = value.Split(QueryConstants.COMMA);
-                foreach (var val in values)
-                {
-                    var opVal = ParseFilterOperationAndValue(value);
-                    var query = CreateFilterQuery(propertyName, opVal.value, opVal.operation);
-                    queries.Add(query);
-                }
-            }
-
-            return queries;
-        }
-
-        private FilterQuery CreateFilterQuery(string propertyName, string value, FilterOperations op)
-        {
-            var properties = ParseProperties(propertyName);
-            AttrAttribute attr;
-            if (properties.Count > 1)
-            {
-                RelationshipAttribute relationshipAttr = GetRelationshipAttribute(properties[0]);
-                attr = GetAttribute(relationshipAttr, properties[1]);
-
-                return new FilterQuery(relationshipAttr, attr, value, op);
-            }
-            else
-            {
-                attr = GetAttribute(properties[0]);
-                return new FilterQuery(attr, value, op);
-            }
-        }
-
-        [Obsolete("Use '"  + nameof(ParseFilterParameters) + "' method instead. New method provide better control over FilterQueries")]
-        protected virtual List<FilterQuery> ParseFilterQuery(string key, string value)
-        {
-            // expected input = filter[id]=1
-            // expected input = filter[id]=eq:1
-            var queries = new List<FilterQuery>();
-            var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
-
-            // InArray case
-            var arrOpVal = ParseFilterOperation(value);
-            if (arrOpVal.operation == FilterOperations.@in.ToString() || arrOpVal.operation == FilterOperations.nin.ToString())
                 queries.Add(new FilterQuery(propertyName, arrOpVal.value, arrOpVal.operation));
             else
             {
                 var values = value.Split(QueryConstants.COMMA);
                 foreach (var val in values)
                 {
-                    var opVal = ParseFilterOperation(value);
+                    var opVal = ParseFilterOperationAndValue(value);
                     queries.Add(new FilterQuery(propertyName, opVal.value, opVal.operation));
                 }
             }
@@ -145,13 +101,14 @@ namespace JsonApiDotNetCore.Services
             return queries;
         }
 
-        [Obsolete("Use " + nameof(ParseFilterOperationAndValue) + " method instead.")]
+        [Obsolete("This method is not used anymore! Use " + nameof(ParseFilterOperationAndValue) + " method with FilterOperations operation return value." +
+            "Operation as string is not used at all.")]
         protected virtual (string operation, string value) ParseFilterOperation(string value)
         {
             if (value.Length < 3)
                 return (string.Empty, value);
 
-            var operation = GetFilterOperation(value);
+            var operation = GetFilterOperationOld(value);
             var values = value.Split(QueryConstants.COLON);
 
             if (string.IsNullOrEmpty(operation))
@@ -165,10 +122,10 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Parse filter operation enum and value by string value.
         /// Input string can contain:
-        /// a) property value only, then FilterOperations.eq, value is returned
-        /// b) filter prefix and value e.g. "prefix:value", then FilterOperations.prefix, value is returned
+        /// a) property value only, then FilterOperations.eq and value is returned
+        /// b) filter prefix and value e.g. "prefix:value", then FilterOperations.prefix and value is returned
         /// In case of prefix is provided and is not in FilterOperations enum,
-        /// the invalid filter prefix exception is thrown.
+        /// invalid filter prefix exception is thrown.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -186,7 +143,7 @@ namespace JsonApiDotNetCore.Services
             // prefix:value
             else if (values.Length == 2)
             {
-                var (operation, succeeded) = ResolveFilterOperation(values[0]);
+                var (operation, succeeded) = GetFilterOperation(values[0]);
                 if (succeeded == false)
                     throw new JsonApiException(400, $"Invalid filter prefix '{values[0]}'");
 
@@ -197,7 +154,7 @@ namespace JsonApiDotNetCore.Services
             {
                 // succeeded = false means no prefix found => some value with colons(datetime)
                 // succeeded = true means prefix provide + some value with colons(datetime)
-                var (operation, succeeded) = ResolveFilterOperation(values[0]);
+                var (operation, succeeded) = GetFilterOperation(values[0]);
                 var value = "";
                 // datetime
                 if (succeeded == false)
@@ -213,7 +170,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="operation">String represented operation</param>
         /// <returns></returns>
-        public static (FilterOperations operation, bool succeeded) ResolveFilterOperation(string operation)
+        public static (FilterOperations operation, bool succeeded) GetFilterOperation(string operation)
         {
             var success = Enum.TryParse(operation, out FilterOperations opertion);
             return (opertion, success);
@@ -263,42 +220,16 @@ namespace JsonApiDotNetCore.Services
                     propertyName = propertyName.Substring(1);
                 }
 
-                var sortParam = CreateSortQuery(propertyName, direction);
-                sortParameters.Add(sortParam);
+                sortParameters.Add(new SortQuery(direction, propertyName));
             };
 
             return sortParameters;
-        }
-
-        private SortQuery CreateSortQuery(string propertyName, SortDirection direction)
-        {
-            var properties = ParseProperties(propertyName);
-            AttrAttribute attr;
-            if (properties.Count > 1)
-            {
-                RelationshipAttribute relationshipAttr = GetRelationshipAttribute(properties[0]);
-                attr = GetAttribute(relationshipAttr, properties[1]);
-
-                return new SortQuery(direction, relationshipAttr, attr);
-            }
-            else
-            {
-                attr = GetAttribute(properties[0]);
-                return new SortQuery(direction, attr);
-            }
         }
 
         protected virtual List<string> ParseIncludedRelationships(string value)
         {
             return value
                 .Split(QueryConstants.COMMA)
-                .ToList();
-        }
-
-        protected virtual List<string> ParseProperties(string value)
-        {
-            return value
-                .Split(QueryConstants.DOT)
                 .ToList();
         }
 
@@ -326,7 +257,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         [Obsolete("Delete also when " + nameof(ParseFilterOperation) + " deleted." )]
-        private string GetFilterOperation(string value)
+        private string GetFilterOperationOld(string value)
         {
             var values = value.Split(QueryConstants.COLON);
 
@@ -355,34 +286,5 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(400, $"Attribute '{attribute}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
             }
         }
-
-        protected virtual AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
-        {
-            var relatedContextExntity = _options.ContextGraph.GetContextEntity(relationship.Type);
-            try
-            {
-                return relatedContextExntity.Attributes.Single(attr => attr.Is(attribute));        
-            }
-            catch (InvalidOperationException e)
-            {
-                throw new JsonApiException(400, $"Attribute '{attribute}' does not exist on resource '{relatedContextExntity.EntityName}'", e);
-            }
-        }
-
-        protected virtual RelationshipAttribute GetRelationshipAttribute(string relationshipAttribute)
-        {
-            try
-            {
-                return _controllerContext
-                    .RequestEntity
-                    .Relationships
-                    .Single(attr => attr.Is(relationshipAttribute));
-            }
-            catch (InvalidOperationException e)
-            {
-                throw new JsonApiException(400, $"Relationship '{relationshipAttribute}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
-            }
-        }
-
     }
 }

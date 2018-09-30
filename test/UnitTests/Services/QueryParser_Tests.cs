@@ -100,7 +100,6 @@ namespace UnitTests.Services
 
             // assert
             Assert.Equal(dt, querySet.Filters.Single(f => f.Attribute == "key").Value);
-            Assert.Equal(string.Empty, querySet.Filters.Single(f => f.Attribute == "key").Operation);
             Assert.Equal(FilterOperations.eq, querySet.Filters.Single(f => f.Attribute == "key").OperationType);
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -6,29 +7,25 @@ namespace JsonApiDotNetCore.Internal.Query
 {
     public class AttrFilterQuery : BaseFilterQuery
     {
-        private readonly IJsonApiContext _jsonApiContext;
-
         public AttrFilterQuery(
             IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
+            : base(jsonApiContext, 
+                  null,
+                  filterQuery.Attribute, 
+                  filterQuery.Value, 
+                  filterQuery.OperationType)
         {
-            _jsonApiContext = jsonApiContext;
-
-            var attribute = GetAttribute(filterQuery.Attribute);
-
-            if (attribute == null)
+            if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
 
-            if (attribute.IsFilterable == false)
-                throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
+            if (Attribute.IsFilterable == false)
+                throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
 
-            FilteredAttribute = attribute;
-            PropertyValue = filterQuery.Value;
-            FilterOperation = GetFilterOperation(filterQuery.Operation);
+            FilteredAttribute = Attribute;
         }
 
-
-        private AttrAttribute GetAttribute(string attribute) =>
-            _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(attr => attr.Is(attribute));
+        [Obsolete("Use " + nameof(Attribute) + " property of " + nameof(BaseAttrQuery) + "class. This property is shared for all AttrQuery and RelatedAttrQuery (filter,sort..) implementations.")]
+        public AttrAttribute FilteredAttribute { get; set; }
     }
 }

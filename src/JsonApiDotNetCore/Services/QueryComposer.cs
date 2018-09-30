@@ -30,8 +30,7 @@ namespace JsonApiDotNetCore.Services
         private string ComposeSingleFilter(FilterQuery query)
         {
             var result = "&filter";
-            var operation = string.IsNullOrWhiteSpace(query.Operation) ? query.Operation : query.Operation + ":";
-            result += QueryConstants.OPEN_BRACKET + query.Attribute + QueryConstants.CLOSE_BRACKET + "=" + operation + query.Value;
+            result += QueryConstants.OPEN_BRACKET + query.Attribute + QueryConstants.CLOSE_BRACKET + "=" + query.OperationType + QueryConstants.COLON + query.Value;
             return result;
         }
     }
