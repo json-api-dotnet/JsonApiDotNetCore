@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
     }
 
-    public class GenericProcessor<T> : IGenericProcessor where T : class, IIdentifiable
+    public class GenericProcessor<T> : IGenericProcessor where T : class
     {
         private readonly DbContext _context;
         public GenericProcessor(IDbContextResolver contextResolver)
@@ -33,39 +33,51 @@ namespace JsonApiDotNetCore.Internal.Generics
 
         public virtual void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            if (relationship is HasManyThroughAttribute hasManyThrough)
+            if (relationship is HasManyThroughAttribute hasManyThrough && parent is IIdentifiable identifiableParent)
             {
-                var parentId = ((IIdentifiable)parent).StringId;
-                ParameterExpression parameter = Expression.Parameter(hasManyThrough.Type);
-                Expression property = Expression.Property(parameter, hasManyThrough.LeftProperty);
+                // ArticleTag
+                ParameterExpression parameter = Expression.Parameter(hasManyThrough.ThroughType);
+
+                // ArticleTag.ArticleId
+                Expression property = Expression.Property(parameter, hasManyThrough.LeftIdProperty);
+
+                // article.Id
+                var parentId = TypeHelper.ConvertType(identifiableParent.StringId, hasManyThrough.LeftIdProperty.PropertyType);
                 Expression target = Expression.Constant(parentId);
-                Expression toString = Expression.Call(property, "ToString", null, null);
-                Expression equals = Expression.Call(toString, "Equals", null, target);
-                Expression<Func<object, bool>> lambda = Expression.Lambda<Func<object, bool>>(equals, parameter);
+
+                // ArticleTag.ArticleId.Equals(article.Id)
+                Expression equals = Expression.Call(property, "Equals", null, target);
+
+                var lambda = Expression.Lambda<Func<T, bool>>(equals, parameter);
 
                 var oldLinks = _context
-                    .Set(hasManyThrough.ThroughType)
+                    .Set<T>()
                     .Where(lambda.Compile())
                     .ToList();
 
-                _context.Remove(oldLinks);
+                // TODO: we shouldn't need to do this and it especially shouldn't happen outside a transaction
+                //       instead we should try updating the existing?
+                _context.RemoveRange(oldLinks);
 
                 var newLinks = relationshipIds.Select(x => {
                     var link = Activator.CreateInstance(hasManyThrough.ThroughType);
-                    hasManyThrough.LeftProperty.SetValue(link, TypeHelper.ConvertType(parent, hasManyThrough.LeftProperty.PropertyType));
-                    hasManyThrough.RightProperty.SetValue(link, TypeHelper.ConvertType(x, hasManyThrough.RightProperty.PropertyType));
+                    hasManyThrough.LeftIdProperty.SetValue(link, TypeHelper.ConvertType(parentId, hasManyThrough.LeftIdProperty.PropertyType));
+                    hasManyThrough.RightIdProperty.SetValue(link, TypeHelper.ConvertType(x, hasManyThrough.RightIdProperty.PropertyType));
                     return link;
                 });
+
                 _context.AddRange(newLinks);
             }
             else if (relationship.IsHasMany)
             {
-                var entities = _context.Set<T>().Where(x => relationshipIds.Contains(x.StringId)).ToList();
+                // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
+                var entities = _context.Set<T>().Where(x => relationshipIds.Contains(((IIdentifiable)x).StringId)).ToList();
                 relationship.SetValue(parent, entities);
             }
             else
             {
-                var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == x.StringId);
+                // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
+                var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == ((IIdentifiable)x).StringId);
                 relationship.SetValue(parent, entity);
             }
         }

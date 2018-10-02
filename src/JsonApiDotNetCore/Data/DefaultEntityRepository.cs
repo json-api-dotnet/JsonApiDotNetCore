@@ -259,7 +259,15 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), relationship.Type);
+            // TODO: it would be better to let this be determined within the relationship attribute...
+            // need to think about the right way to do that since HasMany doesn't need to think about this
+            // and setting the HasManyThrough.Type to the join type (ArticleTag instead of Tag) for this changes the semantics
+            // of the property...
+            var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
+                ? hasManyThrough.ThroughType
+                : relationship.Type;
+
+            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 

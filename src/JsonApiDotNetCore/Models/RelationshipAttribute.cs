@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -22,11 +23,11 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// <example>
         /// <code>
-        /// public List&lt;Articles&gt; Articles { get; set; } // Type => Article
+        /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
         /// </code>
         /// </example>
         public Type Type { get; internal set; }
-        public bool IsHasMany => GetType() == typeof(HasManyAttribute) || typeof(HasManyAttribute).IsAssignableFrom(GetType());
+        public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
         public bool CanInclude { get; }

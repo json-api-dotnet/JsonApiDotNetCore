@@ -79,5 +79,17 @@ namespace JsonApiDotNetCore.Extensions
         /// </summary>
         public static bool Implements(this Type concreteType, Type interfaceType) 
             => interfaceType?.IsAssignableFrom(concreteType) == true;
+
+        /// <summary>
+        /// Whether or not a type inherits a base type.
+        /// </summary>
+        public static bool Inherits<T>(this Type concreteType) 
+            => Inherits(concreteType, typeof(T));
+
+        /// <summary>
+        /// Whether or not a type inherits a base type.
+        /// </summary>
+        public static bool Inherits(this Type concreteType, Type interfaceType) 
+            => interfaceType?.IsAssignableFrom(concreteType) == true;
     }
 }

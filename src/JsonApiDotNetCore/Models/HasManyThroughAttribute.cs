@@ -96,6 +96,21 @@ namespace JsonApiDotNetCore.Models
         public PropertyInfo LeftProperty { get; internal set; }
 
         /// <summary>
+        /// The id property back to the parent resource from the join type.
+        /// </summary>
+        /// 
+        /// <example>
+        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
+        /// this would point to the `Article.ArticleTags.ArticleId` property
+        ///
+        /// <code>
+        /// public int ArticleId { get; set; }
+        /// </code>
+        ///
+        /// </example>
+        public PropertyInfo LeftIdProperty { get; internal set; }
+
+        /// <summary>
         /// The navigation property to the related resource from the join type.
         /// </summary>
         /// 
@@ -109,6 +124,21 @@ namespace JsonApiDotNetCore.Models
         ///
         /// </example>
         public PropertyInfo RightProperty { get; internal set; }
+
+        /// <summary>
+        /// The id property to the related resource from the join type.
+        /// </summary>
+        /// 
+        /// <example>
+        /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
+        /// this would point to the `Article.ArticleTags.TagId` property
+        ///
+        /// <code>
+        /// public int TagId { get; set; }
+        /// </code>
+        ///
+        /// </example>
+        public PropertyInfo RightIdProperty { get; internal set; }
 
         /// <summary>
         /// The join entity property on the parent resource.

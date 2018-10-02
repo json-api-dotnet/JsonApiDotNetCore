@@ -210,13 +210,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
             
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
-            Assert.NotNull(articleResponse);
-            
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)
-                .SingleAsync(a => a.Id == articleResponse.Id);
+                .SingleAsync(a => a.Id == article.Id);
 
             var persistedArticleTag = Assert.Single(persistedArticle.ArticleTags);
             Assert.Equal(tag.Id, persistedArticleTag.TagId);
