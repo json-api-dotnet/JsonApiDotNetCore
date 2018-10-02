@@ -35,7 +35,10 @@ CheckLastExitCode
 dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj
 CheckLastExitCode
 
-dotnet build .\src\JsonApiDotNetCore -c Release
+dotnet test ./test/ResourceEntitySeparationExampleTests/ResourceEntitySeparationExampleTests.csproj
+CheckLastExitCode
+
+dotnet build ./src/JsonApiDotNetCore -c Release
 CheckLastExitCode
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
