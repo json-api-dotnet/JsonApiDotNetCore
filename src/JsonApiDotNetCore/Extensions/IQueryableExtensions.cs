@@ -113,18 +113,31 @@ namespace JsonApiDotNetCore.Extensions
 
             var concreteType = typeof(TSource);
             var property = concreteType.GetProperty(filterQuery.FilteredAttribute.InternalAttributeName);
+            var op = filterQuery.FilterOperation;
 
             if (property == null)
                 throw new ArgumentException($"'{filterQuery.FilteredAttribute.InternalAttributeName}' is not a valid property of '{concreteType}'");
 
             try
             {
-                if (filterQuery.FilterOperation == FilterOperations.@in )
+                if (op == FilterOperations.@in || op == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name);
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name, op);
 
                     return source.Where(lambdaIn);
+                }
+                else if (op == FilterOperations.isnotnull || op == FilterOperations.isnull) {
+                    // {model}
+                    var parameter = Expression.Parameter(concreteType, "model");
+                    // {model.Id}
+                    var left = Expression.PropertyOrField(parameter, property.Name);
+                    var right = Expression.Constant(null);
+
+                    var body = GetFilterExpressionLambda(left, right, op);
+                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                    return source.Where(lambda);
                 }
                 else
                 {   // convert the incoming value to the target value type
@@ -137,7 +150,7 @@ namespace JsonApiDotNetCore.Extensions
                     // {1}
                     var right = Expression.Constant(convertedValue, property.PropertyType);
 
-                    var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
+                    var body = GetFilterExpressionLambda(left, right, op);
 
                     var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
 
@@ -167,10 +180,10 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                if (filterQuery.FilterOperation == FilterOperations.@in)
+                if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
                 {
                     string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, relation.Name);
+                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, filterQuery.FilterOperation, relation.Name);
 
                     return source.Where(lambdaIn);
                 }
@@ -204,6 +217,9 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
+        private static bool IsNullable(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+
         private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
         {
             Expression body;
@@ -236,6 +252,14 @@ namespace JsonApiDotNetCore.Extensions
                 case FilterOperations.ne:
                     body = Expression.NotEqual(left, right);
                     break;
+                case FilterOperations.isnotnull:
+                    // {model.Id != null}
+                    body = Expression.NotEqual(left, right);
+                    break;
+                case FilterOperations.isnull:
+                    // {model.Id == null}
+                    body = Expression.Equal(left, right);
+                    break;
                 default:
                     throw new JsonApiException(500, $"Unknown filter operation {operation}");
             }
@@ -243,7 +267,7 @@ namespace JsonApiDotNetCore.Extensions
             return body;
         }
 
-        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, string relationName = null)
+        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, FilterOperations op, string relationName = null)
         {
             ParameterExpression entity = Expression.Parameter(typeof(TSource), "entity");
             MemberExpression member;
@@ -258,8 +282,18 @@ namespace JsonApiDotNetCore.Extensions
             var method = ContainsMethod.MakeGenericMethod(member.Type);
             var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
 
-            var exprContains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
-            return Expression.Lambda<Func<TSource, bool>>(exprContains, entity);
+            if (op == FilterOperations.@in)
+            {
+                // Where(i => arr.Contains(i.column))
+                var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
+                return Expression.Lambda<Func<TSource, bool>>(contains, entity);
+            }
+            else
+            {
+                // Where(i => !arr.Contains(i.column))
+                var notContains = Expression.Not(Expression.Call(method, new Expression[] { Expression.Constant(obj), member }));
+                return Expression.Lambda<Func<TSource, bool>>(notContains, entity);
+            }
         }
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)

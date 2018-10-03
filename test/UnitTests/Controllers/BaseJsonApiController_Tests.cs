@@ -13,8 +13,12 @@ namespace UnitTests
 {
     public class BaseJsonApiController_Tests
     {
-        public class Resource : Identifiable { }
+        public class Resource : Identifiable
+        {
+            [Attr("test-attribute")] public string TestAttribute { get; set; }
+        }
         private Mock<IJsonApiContext> _jsonApiContextMock = new Mock<IJsonApiContext>();
+        private Mock<IContextGraph> _contextGraphMock = new Mock<IContextGraph>();
 
         [Fact]
         public async Task GetAsync_Calls_Service()
@@ -184,18 +188,20 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
+            _jsonApiContextMock.SetupGet(a => a.ContextGraph).Returns(_contextGraphMock.Object);
+            _contextGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
             _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
             _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions{ValidateModelState = true});
             var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, update: serviceMock.Object);
-            controller.ModelState.AddModelError("Id", "Failed Validation");
+            controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
 
             // act
             var response = await controller.PatchAsync(id, resource);
 
             // assert
             serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<BadRequestObjectResult>(response);
-            Assert.IsType<ErrorCollection>(((BadRequestObjectResult) response).Value);
+            Assert.IsType<UnprocessableEntityObjectResult>(response);
+            Assert.IsType<ErrorCollection>(((UnprocessableEntityObjectResult) response).Value);
         }
 
         [Fact]
@@ -260,18 +266,20 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
+            _jsonApiContextMock.SetupGet(a => a.ContextGraph).Returns(_contextGraphMock.Object);
+            _contextGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
             _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
             _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = true });
             var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, create: serviceMock.Object);
-            controller.ModelState.AddModelError("Id", "Failed Validation");
+            controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
 
             // act
             var response = await controller.PostAsync(resource);
 
             // assert
             serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<BadRequestObjectResult>(response);
-            Assert.IsType<ErrorCollection>(((BadRequestObjectResult)response).Value);
+            Assert.IsType<UnprocessableEntityObjectResult>(response);
+            Assert.IsType<ErrorCollection>(((UnprocessableEntityObjectResult)response).Value);
         }
 
         [Fact]

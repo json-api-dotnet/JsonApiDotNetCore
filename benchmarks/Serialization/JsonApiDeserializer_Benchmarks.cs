@@ -17,7 +17,7 @@ namespace Benchmarks.Serialization {
     public class JsonApiDeserializer_Benchmarks {
         private const string TYPE_NAME = "simple-types";
         private static readonly string Content = JsonConvert.SerializeObject(new Document {
-            Data = new DocumentData {
+            Data = new ResourceObject {
                 Type = TYPE_NAME,
                     Id = "1",
                     Attributes = new Dictionary<string, object> {

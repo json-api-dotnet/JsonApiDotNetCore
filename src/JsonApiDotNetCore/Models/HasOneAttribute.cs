@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null)
+        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null)
         : base(publicName, documentLinks, canInclude)
         {
             _explicitIdentifiablePropertyName = withForeignKey;

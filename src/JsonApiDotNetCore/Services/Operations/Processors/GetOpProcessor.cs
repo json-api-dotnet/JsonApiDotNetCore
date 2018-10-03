@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,10 +84,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             };
 
             operationResult.Data = string.IsNullOrWhiteSpace(operation.Ref.Id)
-            ? await GetAllAsync(operation)
-            : string.IsNullOrWhiteSpace(operation.Ref.Relationship)
-                ? await GetByIdAsync(operation)
-                : await GetRelationshipAsync(operation);
+                ? await GetAllAsync(operation)
+                : string.IsNullOrWhiteSpace(operation.Ref.Relationship)
+                    ? await GetByIdAsync(operation)
+                    : await GetRelationshipAsync(operation);
 
             return operationResult;
         }
@@ -95,7 +96,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         {
             var result = await _getAll.GetAsync();
 
-            var operations = new List<DocumentData>();
+            var operations = new List<ResourceObject>();
             foreach (var resource in result)
             {
                 var doc = _documentBuilder.GetData(
@@ -135,11 +136,38 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             // when no generic parameter is available
             var relationshipType = _contextGraph.GetContextEntity(operation.GetResourceTypeName())
                 .Relationships.Single(r => r.Is(operation.Ref.Relationship)).Type;
+
             var relatedContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationshipType);
 
-            var doc = _documentBuilder.GetData(relatedContextEntity, result as IIdentifiable); // TODO: if this is safe, then it should be cast in the GetRelationshipAsync call
+            if (result == null)
+                return null;
 
-            return doc;
+            if (result is IIdentifiable singleResource)
+                return GetData(relatedContextEntity, singleResource);
+
+            if (result is IEnumerable multipleResults)
+                return GetData(relatedContextEntity, multipleResults);
+
+            throw new JsonApiException(500,
+                $"An unexpected type was returned from '{_getRelationship.GetType()}.{nameof(IGetRelationshipService<T, TId>.GetRelationshipAsync)}'.",
+                detail: $"Type '{result.GetType()} does not implement {nameof(IIdentifiable)} nor {nameof(IEnumerable<IIdentifiable>)}'");
+        }
+
+        private ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource)
+        {
+            return _documentBuilder.GetData(contextEntity, singleResource);
+        }
+
+        private List<ResourceObject> GetData(ContextEntity contextEntity, IEnumerable multipleResults)
+        {
+            var resources = new List<ResourceObject>();
+            foreach (var singleResult in multipleResults)
+            {
+                if (singleResult is IIdentifiable resource)
+                    resources.Add(_documentBuilder.GetData(contextEntity, resource));
+            }
+
+            return resources;
         }
 
         private TId GetReferenceId(Operation operation) => TypeHelper.ConvertType<TId>(operation.Ref.Id);

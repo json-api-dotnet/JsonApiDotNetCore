@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class BaseJsonApiController<T> 
+    public class BaseJsonApiController<T>
         : BaseJsonApiController<T, int>
         where T : class, IIdentifiable<int>
     {
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Controllers
         private readonly ICreateService<T, TId> _create;
         private readonly IUpdateService<T, TId> _update;
         private readonly IUpdateRelationshipService<T, TId> _updateRelationships;
-        private readonly IDeleteService<T, TId> _delete;        
+        private readonly IDeleteService<T, TId> _delete;
         private readonly IJsonApiContext _jsonApiContext;
 
         public BaseJsonApiController(
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCore.Controllers
                 return Forbidden();
 
             if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
-                return BadRequest(ModelState.ConvertToErrorCollection());
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ContextGraph));
 
             entity = await _create.CreateAsync(entity);
 
@@ -169,8 +169,9 @@ namespace JsonApiDotNetCore.Controllers
 
             if (entity == null)
                 return UnprocessableEntity();
+
             if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
-                return BadRequest(ModelState.ConvertToErrorCollection());
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ContextGraph));
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 
@@ -180,7 +181,7 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(updatedEntity);
         }
 
-        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<DocumentData> relationships)
+        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
         {
             if (_updateRelationships == null) throw Exceptions.UnSupportedRequestMethod;
 

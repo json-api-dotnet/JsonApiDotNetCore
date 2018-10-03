@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Models
             CanInclude = canInclude;
         }
 
-        public string PublicRelationshipName { get; }
+        public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
         
         /// <summary>
@@ -53,6 +53,11 @@ namespace JsonApiDotNetCore.Models
         }
 
         public abstract void SetValue(object entity, object newValue);
+
+        public object GetValue(object entity) => entity
+            ?.GetType()
+            .GetProperty(InternalRelationshipName)
+            .GetValue(entity);
 
         public override string ToString()
         {

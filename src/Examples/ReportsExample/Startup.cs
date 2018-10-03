@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,16 +25,10 @@ namespace ReportsExample
         public virtual void ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddMvcCore();
-            services.AddJsonApi(opt =>
-            {
-                opt.BuildContextGraph(builder =>
-                {
-                    builder.AddResource<Report>("reports");
-                });
-                opt.Namespace = "api";
-            }, mvcBuilder);
-
-            services.AddScoped<IGetAllService<Report>, ReportService>();
+            services.AddJsonApi(
+                opt => opt.Namespace = "api", 
+                mvcBuilder,
+                discovery => discovery.AddCurrentAssembly());
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

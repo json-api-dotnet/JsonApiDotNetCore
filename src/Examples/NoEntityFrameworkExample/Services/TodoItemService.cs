@@ -84,7 +84,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateRelationshipsAsync(int id, string relationshipName, List<DocumentData> relationships)
+        public Task UpdateRelationshipsAsync(int id, string relationshipName, List<ResourceObject> relationships)
         {
             throw new NotImplementedException();
         }

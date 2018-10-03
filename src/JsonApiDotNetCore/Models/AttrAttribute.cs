@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public AttrAttribute(string publicName, bool isImmutable = false, bool isFilterable = true, bool isSortable = true)
+        public AttrAttribute(string publicName = null, bool isImmutable = false, bool isFilterable = true, bool isSortable = true)
         {
             PublicAttributeName = publicName;
             IsImmutable = isImmutable;
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Models
             IsSortable = isSortable;
         }
 
-        public AttrAttribute(string publicName, string internalName, bool isImmutable = false)
+        internal AttrAttribute(string publicName, string internalName, bool isImmutable = false)
         {
             PublicAttributeName = publicName;
             InternalAttributeName = internalName;
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// How this attribute is exposed through the API
         /// </summary>
-        public string PublicAttributeName { get; }
+        public string PublicAttributeName { get; internal set;}
 
         /// <summary>
         /// The internal property name this attribute belongs to.
