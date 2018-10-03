@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
-            ILoggerFactory loggerFactory) :
+            ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, loggerFactory)
         { }
     }
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            ILoggerFactory loggerFactory) :
+            ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, loggerFactory)
         { }
     }
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                ILoggerFactory loggerFactory)
+                ILoggerFactory loggerFactory = null)
         {
             // no mapper provided, TResource & TEntity must be the same type
             if (typeof(TResource) != typeof(TEntity))
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Services
 
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
 
         public EntityResourceService(
@@ -223,8 +223,7 @@ namespace JsonApiDotNetCore.Services
                 foreach (var filter in query.Filters)
                     entities = _entities.Filter(entities, filter);
 
-            if (query.SortParameters != null && query.SortParameters.Count > 0)
-                entities = _entities.Sort(entities, query.SortParameters);
+            entities = _entities.Sort(entities, query.SortParameters);
 
             return entities;
         }

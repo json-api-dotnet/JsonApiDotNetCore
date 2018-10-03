@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasManyAttribute(string publicName, Link documentLinks = Link.All, bool canInclude = true)
+        public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true)
         : base(publicName, documentLinks, canInclude)
         { }
 

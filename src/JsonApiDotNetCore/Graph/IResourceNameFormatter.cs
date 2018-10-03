@@ -17,6 +17,11 @@ namespace JsonApiDotNetCore.Graph
         /// Get the publicly visible resource name from the internal type name
         /// </summary>
         string FormatResourceName(Type resourceType);
+
+        /// <summary>
+        /// Get the publicly visible name for the given property
+        /// </summary>
+        string FormatPropertyName(PropertyInfo property);
     }
 
     public class DefaultResourceNameFormatter : IResourceNameFormatter
@@ -47,5 +52,22 @@ namespace JsonApiDotNetCore.Graph
                 throw new InvalidOperationException($"Cannot define multiple {nameof(ResourceAttribute)}s on type '{type}'.", e);
             }
         }
+
+        /// <summary>
+        /// Uses the internal PropertyInfo to determine the external resource name.
+        /// By default the name will be formatted to kebab-case.
+        /// </summary>
+        /// <example>
+        /// Given the following property:
+        /// <code>
+        /// public string CompoundProperty { get; set; }
+        /// </code>
+        /// The public attribute will be formatted like so:
+        /// <code>
+        /// _default.FormatPropertyName(compoundProperty).Dump(); 
+        /// // > "compound-property"
+        /// </code>
+        /// </example>
+        public string FormatPropertyName(PropertyInfo property) => str.Dasherize(property.Name);
     }
 }

@@ -41,10 +41,9 @@ namespace JsonApiDotNetCoreExample
                     options.IncludeTotalRecordCount = true;
                 }, 
                 mvcBuilder,
-                discovery => discovery.AddCurrentAssemblyServices());
+                discovery => discovery.AddCurrentAssembly());
 
-            var provider = services.BuildServiceProvider();                
-            return provider;
+            return services.BuildServiceProvider();
         }
 
         public virtual void Configure(

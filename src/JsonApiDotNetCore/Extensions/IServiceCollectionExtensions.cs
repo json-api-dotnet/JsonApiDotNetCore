@@ -1,4 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
@@ -7,6 +11,7 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
@@ -42,9 +47,7 @@ namespace JsonApiDotNetCore.Extensions
             IMvcCoreBuilder mvcBuilder) where TContext : DbContext
         {
             var config = new JsonApiOptions();
-
             options(config);
-
             config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
 
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
@@ -181,6 +184,65 @@ namespace JsonApiDotNetCore.Extensions
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
 
             options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
+        }
+
+        /// <summary>
+        /// Adds all required registrations for the service to the container
+        /// </summary>
+        /// <exception cref="JsonApiSetupException"/>
+        public static IServiceCollection AddResourceService<T>(this IServiceCollection services) 
+        {
+            var typeImplementsAnExpectedInterface = false;
+
+            var serviceImplementationType = typeof(T);
+
+            // it is _possible_ that a single concrete type could be used for multiple resources...
+            var resourceDescriptors = GetResourceTypesFromServiceImplementation(serviceImplementationType);
+
+            foreach(var resourceDescriptor in resourceDescriptors)
+            {
+                foreach(var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
+                {
+                    // A shorthand interface is one where the id type is ommitted
+                    // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
+                    var isShorthandInterface = (openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1);
+                    if(isShorthandInterface && resourceDescriptor.IdType != typeof(int))
+                        continue; // we can't create a shorthand for id types other than int
+
+                    var concreteGenericType = isShorthandInterface
+                        ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)
+                        : openGenericType.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+
+                    if(concreteGenericType.IsAssignableFrom(serviceImplementationType)) {
+                        services.AddScoped(concreteGenericType, serviceImplementationType);
+                        typeImplementsAnExpectedInterface = true;
+                    }
+                }
+            }
+
+            if(typeImplementsAnExpectedInterface == false)
+                throw new JsonApiSetupException($"{serviceImplementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
+
+            return services;
+        }
+
+        private static HashSet<ResourceDescriptor> GetResourceTypesFromServiceImplementation(Type type)
+        {
+            var resourceDecriptors = new HashSet<ResourceDescriptor>();
+            var interfaces = type.GetInterfaces();
+            foreach(var i in interfaces)
+            {
+                if(i.IsGenericType)
+                {
+                    var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
+                    if(TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
+                    {
+                        resourceDecriptors.Add(resourceDescriptor);
+                    }
+                }
+            }
+
+            return resourceDecriptors;
         }
     }
 }

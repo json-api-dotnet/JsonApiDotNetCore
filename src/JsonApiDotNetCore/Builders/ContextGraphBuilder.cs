@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
@@ -22,24 +23,36 @@ namespace JsonApiDotNetCore.Builders
         /// Add a json:api resource
         /// </summary>
         /// <typeparam name="TResource">The resource model type</typeparam>
-        /// <param name="pluralizedTypeName">The pluralized name that should be exposed by the API</param>
-        IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>;
+        /// <param name="pluralizedTypeName">
+        /// The pluralized name that should be exposed by the API. 
+        /// If nothing is specified, the configured name formatter will be used.
+        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
+        /// </param>
+        IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
 
         /// <summary>
         /// Add a json:api resource
         /// </summary>
         /// <typeparam name="TResource">The resource model type</typeparam>
         /// <typeparam name="TId">The resource model identifier type</typeparam>
-        /// <param name="pluralizedTypeName">The pluralized name that should be exposed by the API</param>
-        IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>;
+        /// <param name="pluralizedTypeName">
+        /// The pluralized name that should be exposed by the API. 
+        /// If nothing is specified, the configured name formatter will be used.
+        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
+        /// </param>
+        IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
         /// Add a json:api resource
         /// </summary>
         /// <param name="entityType">The resource model type</param>
         /// <param name="idType">The resource model identifier type</param>
-        /// <param name="pluralizedTypeName">The pluralized name that should be exposed by the API</param>
-        IContextGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName);
+        /// <param name="pluralizedTypeName">
+        /// The pluralized name that should be exposed by the API. 
+        /// If nothing is specified, the configured name formatter will be used.
+        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
+        /// </param>
+        IContextGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
 
         /// <summary>
         /// Add all the models that are part of the provided <see cref="DbContext" /> 
@@ -64,9 +77,8 @@ namespace JsonApiDotNetCore.Builders
     {
         private List<ContextEntity> _entities = new List<ContextEntity>();
         private List<ValidationResult> _validationResults = new List<ValidationResult>();
-
         private bool _usesDbContext;
-        private IResourceNameFormatter _resourceNameFormatter = new DefaultResourceNameFormatter();
+        private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
         public Link DocumentLinks { get; set; } = Link.All;
 
@@ -80,17 +92,19 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName) where TResource : class, IIdentifiable<int>
+        public IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
             => AddResource<TResource, int>(pluralizedTypeName);
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName) where TResource : class, IIdentifiable<TId>
+        public IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
             => AddResource(typeof(TResource), typeof(TId), pluralizedTypeName);
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName)
+        public IContextGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null)
         {
             AssertEntityIsNotAlreadyDefined(entityType);
+
+            pluralizedTypeName = pluralizedTypeName ?? _resourceNameFormatter.FormatResourceName(entityType);
 
             _entities.Add(GetEntity(pluralizedTypeName, entityType, idType));
 
@@ -128,6 +142,7 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
+                attribute.PublicAttributeName = attribute.PublicAttributeName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalAttributeName = prop.Name;
                 attribute.PropertyInfo = prop;
 
@@ -146,6 +161,8 @@ namespace JsonApiDotNetCore.Builders
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
+
+                attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
                 attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);
