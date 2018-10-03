@@ -7,15 +7,22 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace JsonApiDotNetCore.Internal.Generics
 {
+    // TODO: consider renaming to PatchRelationshipService (or something)
     public interface IGenericProcessor
     {
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
-        void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
     }
 
+    /// <summary>
+    /// A special processor that gets instantiated for a generic type (&lt;T&gt;)
+    /// when the actual type is not known until runtime. Specifically, this is used for updating
+    /// relationships.
+    /// </summary>
     public class GenericProcessor<T> : IGenericProcessor where T : class
     {
         private readonly DbContext _context;
@@ -26,14 +33,21 @@ namespace JsonApiDotNetCore.Internal.Generics
 
         public virtual async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            SetRelationships(parent, relationship, relationshipIds);
-
-            await _context.SaveChangesAsync();
+            if (relationship is HasManyThroughAttribute hasManyThrough && parent is IIdentifiable identifiableParent)
+            {
+                await SetHasManyThroughRelationshipAsync(identifiableParent, hasManyThrough, relationshipIds);
+            }
+            else
+            {
+                await SetRelationshipsAsync(parent, relationship, relationshipIds);
+            }
         }
 
-        public virtual void SetRelationships(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        private async Task SetHasManyThroughRelationshipAsync(IIdentifiable identifiableParent, HasManyThroughAttribute hasManyThrough, IEnumerable<string> relationshipIds)
         {
-            if (relationship is HasManyThroughAttribute hasManyThrough && parent is IIdentifiable identifiableParent)
+            // we need to create a transaction for the HasManyThrough case so we can get and remove any existing
+            // join entities and only commit if all operations are successful
+            using(var transaction = await _context.GetCurrentOrCreateTransactionAsync())
             {
                 // ArticleTag
                 ParameterExpression parameter = Expression.Parameter(hasManyThrough.ThroughType);
@@ -50,13 +64,14 @@ namespace JsonApiDotNetCore.Internal.Generics
 
                 var lambda = Expression.Lambda<Func<T, bool>>(equals, parameter);
 
+                // TODO: we shouldn't need to do this instead we should try updating the existing?
+                // the challenge here is if a composite key is used, then we will fail to 
+                // create due to a unique key violation
                 var oldLinks = _context
                     .Set<T>()
                     .Where(lambda.Compile())
                     .ToList();
 
-                // TODO: we shouldn't need to do this and it especially shouldn't happen outside a transaction
-                //       instead we should try updating the existing?
                 _context.RemoveRange(oldLinks);
 
                 var newLinks = relationshipIds.Select(x => {
@@ -67,8 +82,15 @@ namespace JsonApiDotNetCore.Internal.Generics
                 });
 
                 _context.AddRange(newLinks);
+                await _context.SaveChangesAsync();
+
+                transaction.Commit();
             }
-            else if (relationship.IsHasMany)
+        }
+
+        private async Task SetRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
+        {
+            if (relationship.IsHasMany)
             {
                 // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entities = _context.Set<T>().Where(x => relationshipIds.Contains(((IIdentifiable)x).StringId)).ToList();
@@ -80,6 +102,8 @@ namespace JsonApiDotNetCore.Internal.Generics
                 var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == ((IIdentifiable)x).StringId);
                 relationship.SetValue(parent, entity);
             }
+
+            await _context.SaveChangesAsync();
         }
     }
 }
