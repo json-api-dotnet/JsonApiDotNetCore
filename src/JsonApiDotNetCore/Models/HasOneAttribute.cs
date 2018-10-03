@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -38,7 +39,7 @@ namespace JsonApiDotNetCore.Models
         /// The independent resource identifier.
         /// </summary>
         public string IdentifiablePropertyName => string.IsNullOrWhiteSpace(_explicitIdentifiablePropertyName)
-            ? $"{InternalRelationshipName}Id"
+            ? JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(InternalRelationshipName)
             : _explicitIdentifiablePropertyName;
 
         /// <summary>

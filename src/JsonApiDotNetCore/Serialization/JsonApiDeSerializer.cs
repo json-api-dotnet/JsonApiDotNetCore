@@ -283,9 +283,8 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                var data = (List<ResourceIdentifierObject>)relationshipData.ExposedData;
-
-                if (data == null) return entity;
+                if(relationshipData.IsHasMany == false || relationshipData.ManyData == null)
+                    return entity;
 
                 var relatedResources = relationshipData.ManyData.Select(r =>
                 {

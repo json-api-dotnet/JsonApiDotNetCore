@@ -23,6 +23,11 @@ namespace JsonApiDotNetCore.Configuration
         public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new DefaultResourceNameFormatter();
 
         /// <summary>
+        /// Provides an interface for formatting relationship id properties given the navigation property name
+        /// </summary>
+        public static IRelatedIdMapper RelatedIdMapper { get; set; } = new DefaultRelatedIdMapper();
+
+        /// <summary>
         /// Whether or not stack traces should be serialized in Error objects
         /// </summary>
         public static bool DisableErrorStackTraces { get; set; }
