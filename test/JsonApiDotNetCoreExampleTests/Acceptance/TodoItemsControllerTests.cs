@@ -301,10 +301,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
             Assert.Equal(person.Id, deserializedBody.OwnerId);
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
