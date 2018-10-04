@@ -34,7 +34,15 @@ namespace JsonApiDotNetCore.Models
             IsSortable = isSortable;
         }
 
-        internal AttrAttribute(string publicName, string internalName, bool isImmutable = false)
+        /// <summary>
+        /// Do not use this overload in your applications.
+        /// Provides a method for instantiating instances of `AttrAttribute` and specifying
+        /// the internal property name.
+        /// The primary intent for this was to enable certain types of unit tests to be possible.
+        /// This overload will be deprecated and removed in future releases and an alternative
+        /// for unit tests will be provided.
+        /// </summary>
+        public AttrAttribute(string publicName, string internalName, bool isImmutable = false)
         {
             PublicAttributeName = publicName;
             InternalAttributeName = internalName;
