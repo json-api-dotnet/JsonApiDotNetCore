@@ -214,6 +214,9 @@ namespace JsonApiDotNetCore.Builders
         {
             var requestedRelationship = relationshipChain[relationshipChainIndex];
             var relationship = parentEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
+            if(relationship == null)
+                throw new JsonApiException(400, $"{parentEntity.EntityName} does not contain relationship {requestedRelationship}");
+
             var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(parentResource, relationship.InternalRelationshipName);
             if (navigationEntity is IEnumerable hasManyNavigationEntity)
             {

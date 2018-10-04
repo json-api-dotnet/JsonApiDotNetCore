@@ -267,8 +267,9 @@ namespace JsonApiDotNetCore.Builders
             if (property.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute resourceAttribute)
                 return resourceAttribute.ResourceName;
 
-            // fallback to dsherized...this should actually check for a custom IResourceNameFormatter
-            return _resourceNameFormatter.FormatResourceName(resourceType);
+            // fallback to the established convention using the DbSet Property.Name
+            // e.g DbSet<FooBar> FooBars { get; set; } => "foo-bars"
+            return _resourceNameFormatter.ApplyCasingConvention(property.Name);
         }
 
         private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
