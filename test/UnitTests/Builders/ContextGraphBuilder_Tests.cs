@@ -139,6 +139,8 @@ namespace UnitTests
 
         public class CamelCaseNameFormatter : IResourceNameFormatter
         {
+            public string ApplyCasingConvention(string properName) => ToCamelCase(properName);
+
             public string FormatPropertyName(PropertyInfo property) => ToCamelCase(property.Name);
 
             public string FormatResourceName(Type resourceType) => ToCamelCase(resourceType.Name.Pluralize());

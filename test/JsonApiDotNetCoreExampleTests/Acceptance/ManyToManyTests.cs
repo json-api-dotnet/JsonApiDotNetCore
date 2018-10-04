@@ -11,7 +11,6 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
-using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -21,6 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private static readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
             .RuleFor(a => a.Author, f => new Author());
+
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
 
         private TestFixture<TestStartup> _fixture;
@@ -66,9 +66,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // arrange
             var context = _fixture.GetService<AppDbContext>();
             var tag = _tagFaker.Generate();
-            var author = new Person();
+            var author = new Author();
             context.Tags.Add(tag);
-            context.People.Add(author);
+            context.Authors.Add(author);
             await context.SaveChangesAsync();
 
             var article = _articleFaker.Generate();
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                         {  "author",  new {
                             data = new
                             {
-                                type = "people",
+                                type = "authors",
                                 id = author.StringId
                             }
                         } },
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+
             var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
             

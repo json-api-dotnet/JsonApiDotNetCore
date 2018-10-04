@@ -112,8 +112,26 @@ namespace UnitTests.Extensions
             Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
         }
 
-        private class IntResource : Identifiable { }
-        private class GuidResource : Identifiable<Guid> { }
+        [Fact]
+        public void AddJsonApi_With_Context_Uses_DbSet_PropertyName_If_NoOtherSpecified()
+        {
+            // arrange
+            var services = new ServiceCollection();
+
+            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+
+            // act
+            services.AddJsonApi<TestContext>();
+
+            // assert
+            var provider = services.BuildServiceProvider();
+            var graph = provider.GetService<IContextGraph>();
+            var resource = graph.GetContextEntity(typeof(IntResource));
+            Assert.Equal("resource", resource.EntityName);
+        }
+
+        public class IntResource : Identifiable { }
+        public class GuidResource : Identifiable<Guid> { }
 
         private class IntResourceService : IResourceService<IntResource>
         {
@@ -137,6 +155,12 @@ namespace UnitTests.Extensions
             public Task<object> GetRelationshipsAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource entity) => throw new NotImplementedException();
             public Task UpdateRelationshipsAsync(Guid id, string relationshipName, List<ResourceObject> relationships) => throw new NotImplementedException();
+        }
+
+
+        public class TestContext : DbContext 
+        {
+            public DbSet<IntResource> Resource { get; set; }
         }
     }
 }
