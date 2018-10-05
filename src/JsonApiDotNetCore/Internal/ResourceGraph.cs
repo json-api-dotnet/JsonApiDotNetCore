@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Get the public attribute name for a type based on the internal attribute name.
         /// </summary>
-        /// <param name="internalAttributeName">The internal attribute name for a <see cref="Attr" />.</param>
+        /// <param name="internalAttributeName">The internal attribute name for a <see cref="AttrAttribute" />.</param>
         string GetPublicAttributeName<TParent>(string internalAttributeName);
 
         /// <summary>
@@ -103,18 +103,18 @@ namespace JsonApiDotNetCore.Internal
             Instance = this;
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public bool UsesDbContext { get; }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public ContextEntity GetContextEntity(string entityName)
             => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public ContextEntity GetContextEntity(Type entityType)
             => Entities.SingleOrDefault(e => e.EntityType == entityType);
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
         {
             var parentEntityType = entity.GetType();
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Internal
             }
         }
 
-        /// </ inheritdoc>
+        /// <inheritdoc />
         public string GetRelationshipName<TParent>(string relationshipName)
         {
             var entityType = typeof(TParent);

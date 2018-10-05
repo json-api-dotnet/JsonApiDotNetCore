@@ -3,8 +3,8 @@
         {
             "src": [
                 {
-                    "files": [ "**.csproj" ],
-                    "src": "C:\\Users\\jnance\\dev\\json-api-dotnet-core\\src\\JsonApiDotNetCore"
+                    "files": [ "**/JsonApiDotNetCore.csproj" ],
+                    "src": "../"
                 }
             ],
             "dest": "api",
@@ -21,8 +21,10 @@
             },
             {
                 "files": [
-                    "articles/**.md",
-                    "articles/**/toc.yml",
+                    "getting-started/**.md",
+                    "getting-started/**/toc.yml",
+                    "usage/**.md",
+                    "request-examples/**.md",
                     "toc.yml",
                     "*.md"
                 ]
