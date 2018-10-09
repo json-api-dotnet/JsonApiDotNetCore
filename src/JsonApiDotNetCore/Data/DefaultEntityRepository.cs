@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,10 +21,18 @@ namespace JsonApiDotNetCore.Data
         where TEntity : class, IIdentifiable<int>
     {
         public DefaultEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(jsonApiContext, contextResolver, resourceDefinition)
+        { }
+
+        public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver)
-        : base(loggerFactory, jsonApiContext, contextResolver)
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
         { }
     }
 
@@ -41,24 +50,39 @@ namespace JsonApiDotNetCore.Data
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
+        private readonly ResourceDefinition<TEntity> _resourceDefinition;
+
+        public DefaultEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        {
+            _context = contextResolver.GetContext();
+            _dbSet = contextResolver.GetDbSet<TEntity>();
+            _jsonApiContext = jsonApiContext;
+            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _resourceDefinition = resourceDefinition;
+        }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver)
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _resourceDefinition = resourceDefinition;
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get()
         {
             if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
-                return _dbSet.Select(_jsonApiContext.QuerySet.Fields);
+                return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
 
             return _dbSet;
         }
@@ -66,13 +90,38 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
+            if(_resourceDefinition != null) 
+            {
+                var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
+                if(defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
+                {
+                    return defaultQueryFilter(entities, filterQuery.Value);
+                }
+            }
+
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
-            return entities.Sort(_jsonApiContext,sortQueries);
+            if (sortQueries != null && sortQueries.Count > 0)
+                return entities.Sort(sortQueries);
+            
+            if(_resourceDefinition != null) 
+            {
+                var defaultSortOrder = _resourceDefinition.DefaultSort();
+                if(defaultSortOrder != null && defaultSortOrder.Count > 0)
+                {
+                    foreach(var sortProp in defaultSortOrder)
+                    { 
+                        // this is dumb...add an overload, don't allocate for no reason
+                        entities.Sort(new SortQuery(sortProp.Item2, sortProp.Item1));
+                    }
+                }
+            }
+
+            return entities;
         }
 
         /// <inheritdoc />
@@ -84,7 +133,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
-            _logger.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
+            _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
             var includedSet = Include(Get(), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
@@ -95,7 +144,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            AttachRelationships();
+            AttachRelationships(entity);
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();
@@ -103,9 +152,9 @@ namespace JsonApiDotNetCore.Data
             return entity;
         }
 
-        protected virtual void AttachRelationships()
+        protected virtual void AttachRelationships(TEntity entity = null)
         {
-            AttachHasManyPointers();
+            AttachHasManyPointers(entity);
             AttachHasOnePointers();
         }
 
@@ -135,15 +184,42 @@ namespace JsonApiDotNetCore.Data
         /// This is used to allow creation of HasMany relationships when the
         /// dependent side of the relationship already exists.
         /// </summary>
-        private void AttachHasManyPointers()
+        private void AttachHasManyPointers(TEntity entity)
         {
             var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
             foreach (var relationship in relationships)
             {
-                foreach (var pointer in relationship.Value)
-                {
-                    _context.Entry(pointer).State = EntityState.Unchanged;
-                }
+                if(relationship.Key is HasManyThroughAttribute hasManyThrough)
+                    AttachHasManyThrough(entity, hasManyThrough, relationship.Value);
+                else
+                    AttachHasMany(relationship.Key as HasManyAttribute, relationship.Value);                
+            }
+        }
+
+        private void AttachHasMany(HasManyAttribute relationship, IList pointers)
+        {
+            foreach (var pointer in pointers)
+                _context.Entry(pointer).State = EntityState.Unchanged;
+        }
+
+        private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
+        {
+            // create the collection (e.g. List<ArticleTag>)
+            // this type MUST implement IList so we can build the collection
+            // if this is problematic, we _could_ reflect on the type and find an Add method
+            // or we might be able to create a proxy type and implement the enumerator
+            var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
+            hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
+
+            foreach (var pointer in pointers)
+            {
+                _context.Entry(pointer).State = EntityState.Unchanged;
+                var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
+
+                hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
+                hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
+
+                throughRelationshipCollection.Add(throughInstance);
             }
         }
 
@@ -173,6 +249,8 @@ namespace JsonApiDotNetCore.Data
             foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 relationship.Key.SetValue(oldEntity, relationship.Value);
 
+            AttachRelationships(oldEntity);
+
             await _context.SaveChangesAsync();
 
             return oldEntity;
@@ -181,7 +259,15 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), relationship.Type);
+            // TODO: it would be better to let this be determined within the relationship attribute...
+            // need to think about the right way to do that since HasMany doesn't need to think about this
+            // and setting the HasManyThrough.Type to the join type (ArticleTag instead of Tag) for this changes the semantics
+            // of the property...
+            var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
+                ? hasManyThrough.ThroughType
+                : relationship.Type;
+
+            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
@@ -227,8 +313,8 @@ namespace JsonApiDotNetCore.Data
                 }
 
                 internalRelationshipPath = (internalRelationshipPath == null)
-                    ? relationship.InternalRelationshipName
-                    : $"{internalRelationshipPath}.{relationship.InternalRelationshipName}";
+                    ? relationship.RelationshipPath
+                    : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
                 
                 if(i < relationshipChain.Length)
                     entity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);

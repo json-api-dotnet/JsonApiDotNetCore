@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -11,7 +13,7 @@ namespace JsonApiDotNetCore.Models
             CanInclude = canInclude;
         }
 
-        public string PublicRelationshipName { get; }
+        public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
         
         /// <summary>
@@ -21,11 +23,11 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// <example>
         /// <code>
-        /// public List&lt;Articles&gt; Articles { get; set; } // Type => Article
+        /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
         /// </code>
         /// </example>
         public Type Type { get; internal set; }
-        public bool IsHasMany => GetType() == typeof(HasManyAttribute);
+        public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
         public bool CanInclude { get; }
@@ -78,5 +80,13 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public virtual bool Is(string publicRelationshipName)
             => string.Equals(publicRelationshipName, PublicRelationshipName, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// The internal navigation property path to the related entity.
+        /// <summary>
+        /// <remarks>
+        /// In all cases except the HasManyThrough relationships, this will just be the <see cref"InternalRelationshipName" />.
+        /// </remarks>
+        public virtual string RelationshipPath => InternalRelationshipName;
     }
 }

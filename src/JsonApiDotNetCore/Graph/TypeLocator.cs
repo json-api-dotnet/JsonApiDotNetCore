@@ -46,24 +46,44 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Get all implementations of <see cref="IIdentifiable"/>. in the assembly
+        /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
         /// </summary>
-        public static List<ResourceDescriptor> GetIdentifableTypes(Assembly assembly)
-        {
-            if (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
-            {
-                descriptors = new List<ResourceDescriptor>();
-                _identifiableTypeCache[assembly] = descriptors;
+        public static IEnumerable<ResourceDescriptor> GetIdentifableTypes(Assembly assembly) 
+            => (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
+                    ? FindIdentifableTypes(assembly)
+                    :  _identifiableTypeCache[assembly];
 
-                foreach (var type in assembly.GetTypes())
+        private static IEnumerable<ResourceDescriptor> FindIdentifableTypes(Assembly assembly)
+        {
+            var descriptors = new List<ResourceDescriptor>();
+            _identifiableTypeCache[assembly] = descriptors;
+
+            foreach (var type in assembly.GetTypes())
+            {
+                if (TryGetResourceDescriptor(type, out var descriptor)) 
                 {
-                    var possible = GetIdType(type);
-                    if (possible.isJsonApiResource)
-                        descriptors.Add(new ResourceDescriptor(type, possible.idType));
+                    descriptors.Add(descriptor);
+                    yield return descriptor;
                 }
             }
+        }
 
-            return descriptors;
+        /// <summary>
+        /// Attempts to get a descriptor of the resource type.
+        /// </summary>
+        /// <returns>
+        /// True if the type is a valid json:api type (must implement <see cref="IIdentifiable"/>), false otherwise.
+        /// </returns>
+        internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
+        {
+            var possible = GetIdType(type);
+            if (possible.isJsonApiResource) {
+                descriptor = new ResourceDescriptor(type, possible.idType);
+                return true;
+            }                
+            
+            descriptor = ResourceDescriptor.Empty;
+            return false;
         }
 
         /// <summary>

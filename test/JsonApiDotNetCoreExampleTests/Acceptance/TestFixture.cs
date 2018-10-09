@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -33,6 +34,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public IJsonApiDeSerializer DeSerializer { get; private set; }
         public IJsonApiContext JsonApiContext { get; private set; }
         public T GetService<T>() => (T)_services.GetService(typeof(T));
+        
+        public void ReloadDbContext()
+        {
+            Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>());
+        }
 
         private bool disposedValue = false;
         protected virtual void Dispose(bool disposing)

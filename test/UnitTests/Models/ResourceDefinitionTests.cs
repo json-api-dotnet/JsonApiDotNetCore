@@ -1,7 +1,9 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace UnitTests.Models
@@ -27,8 +29,7 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(null);
 
             // assert
-            Assert.Single(attrs);
-            Assert.Equal(nameof(Model.Password), attrs[0].InternalAttributeName);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
@@ -41,7 +42,8 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(null);
 
             // assert
-            Assert.Empty(attrs);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.Password));
         }
 
         [Fact]
@@ -55,8 +57,7 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(model);
 
             // assert
-            Assert.Single(attrs);
-            Assert.Equal(nameof(Model.Password), attrs[0].InternalAttributeName);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
@@ -70,7 +71,8 @@ namespace UnitTests.Models
             var attrs = resource.GetOutputAttrs(model);
 
             // assert
-            Assert.Empty(attrs);
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.Password));
         }
 
         [Fact]
@@ -98,6 +100,7 @@ namespace UnitTests.Models
     {
         [Attr("name")] public string AlwaysExcluded { get; set; }
         [Attr("password")] public string Password { get; set; }
+        [Attr("prop")] public string Prop { get; set; }
     }
 
     public class RequestFilteredResource : ResourceDefinition<Model>
@@ -116,6 +119,16 @@ namespace UnitTests.Models
             => _isAdmin
                 ? Remove(m => m.AlwaysExcluded)
                 : Remove(m => new { m.AlwaysExcluded, m.Password }, from: base.OutputAttrs());
+        
+        public override QueryFilters GetQueryFilters()
+            => new QueryFilters {
+                { "is-active", (query, value) => query.Select(x => x) }
+            };
+
+        protected override PropertySortOrder GetDefaultSortOrder()
+            => new PropertySortOrder {
+                (t => t.Prop, SortDirection.Ascending)
+            };
     }
     
     public class InstanceFilteredResource : ResourceDefinition<Model>

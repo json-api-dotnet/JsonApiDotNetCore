@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Xunit;
@@ -84,6 +85,61 @@ namespace UnitTests.Internal
             Assert.NotNull(result);
             Assert.False(result.isJsonApiResource);
             Assert.Equal(exextedIdType, result.idType);
+        }
+
+        [Fact]
+        public void GetIdentifableTypes_Locates_Identifiable_Resource()
+        {
+            // arrange
+            var resourceType = typeof(Model);
+
+            // act
+            var results = TypeLocator.GetIdentifableTypes(resourceType.Assembly);
+
+            // assert
+            Assert.Contains(results, r => r.ResourceType == resourceType);
+        }
+
+        [Fact]
+        public void GetIdentifableTypes__Only_Contains_IIdentifiable_Types()
+        {
+            // arrange
+            var resourceType = typeof(Model);
+
+            // act
+            var resourceDescriptors = TypeLocator.GetIdentifableTypes(resourceType.Assembly);
+
+            // assert
+            foreach(var resourceDescriptor in resourceDescriptors)
+                Assert.True(typeof(IIdentifiable).IsAssignableFrom(resourceDescriptor.ResourceType));
+        }
+
+        [Fact]
+        public void TryGetResourceDescriptor_Returns_True_If_Type_Is_IIdentfiable()
+        {
+            // arrange
+            var resourceType = typeof(Model);
+
+            // act
+            var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var descriptor);
+
+            // assert
+            Assert.True(isJsonApiResource);
+            Assert.Equal(resourceType, descriptor.ResourceType);
+            Assert.Equal(typeof(int), descriptor.IdType);
+        }
+
+        [Fact]
+        public void TryGetResourceDescriptor_Returns_False_If_Type_Is_IIdentfiable()
+        {
+            // arrange
+            var resourceType = typeof(String);
+
+            // act
+            var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var descriptor);
+
+            // assert
+            Assert.False(isJsonApiResource);
         }
     }
 

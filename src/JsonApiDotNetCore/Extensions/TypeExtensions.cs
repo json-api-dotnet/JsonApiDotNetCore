@@ -67,5 +67,29 @@ namespace JsonApiDotNetCore.Extensions
                 throw new JsonApiException(500, $"Type '{type}' cannot be instantiated using the default constructor.", e);
             }
         }
+
+        /// <summary>
+        /// Whether or not a type implements an interface.
+        /// </summary>
+        public static bool Implements<T>(this Type concreteType) 
+            => Implements(concreteType, typeof(T));
+
+        /// <summary>
+        /// Whether or not a type implements an interface.
+        /// </summary>
+        public static bool Implements(this Type concreteType, Type interfaceType) 
+            => interfaceType?.IsAssignableFrom(concreteType) == true;
+
+        /// <summary>
+        /// Whether or not a type inherits a base type.
+        /// </summary>
+        public static bool Inherits<T>(this Type concreteType) 
+            => Inherits(concreteType, typeof(T));
+
+        /// <summary>
+        /// Whether or not a type inherits a base type.
+        /// </summary>
+        public static bool Inherits(this Type concreteType, Type interfaceType) 
+            => interfaceType?.IsAssignableFrom(concreteType) == true;
     }
 }

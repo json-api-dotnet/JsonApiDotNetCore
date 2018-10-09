@@ -18,8 +18,8 @@ namespace JsonApiDotNetCore.Builders
         private readonly IScopedServiceProvider _scopedServiceProvider;
 
         public DocumentBuilder(
-            IJsonApiContext jsonApiContext, 
-            IRequestMeta requestMeta = null, 
+            IJsonApiContext jsonApiContext,
+            IRequestMeta requestMeta = null,
             IDocumentBuilderOptionsProvider documentBuilderOptionsProvider = null,
             IScopedServiceProvider scopedServiceProvider = null)
         {
@@ -112,7 +112,8 @@ namespace JsonApiDotNetCore.Builders
 
         public ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity, IResourceDefinition resourceDefinition = null)
         {
-            var data = new ResourceObject {
+            var data = new ResourceObject
+            {
                 Type = contextEntity.EntityName,
                 Id = entity.StringId
             };
@@ -178,7 +179,7 @@ namespace JsonApiDotNetCore.Builders
             }
 
             // this only includes the navigation property, we need to actually check the navigation property Id
-            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(entity, attr.InternalRelationshipName);
+            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationshipValue(entity, attr);
             if (navigationEntity == null)
                 relationshipData.SingleData = attr.IsHasOne
                     ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
@@ -195,14 +196,14 @@ namespace JsonApiDotNetCore.Builders
         {
             if (_jsonApiContext.IncludedRelationships != null)
             {
-                foreach(var relationshipName in _jsonApiContext.IncludedRelationships)
+                foreach (var relationshipName in _jsonApiContext.IncludedRelationships)
                 {
                     var relationshipChain = relationshipName.Split('.');
 
                     var contextEntity = rootContextEntity;
                     var entity = rootResource;
                     included = IncludeRelationshipChain(included, rootContextEntity, rootResource, relationshipChain, 0);
-                }                
+                }
             }
 
             return included;
@@ -213,6 +214,9 @@ namespace JsonApiDotNetCore.Builders
         {
             var requestedRelationship = relationshipChain[relationshipChainIndex];
             var relationship = parentEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
+            if(relationship == null)
+                throw new JsonApiException(400, $"{parentEntity.EntityName} does not contain relationship {requestedRelationship}");
+
             var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(parentResource, relationship.InternalRelationshipName);
             if (navigationEntity is IEnumerable hasManyNavigationEntity)
             {
@@ -234,15 +238,15 @@ namespace JsonApiDotNetCore.Builders
         private List<ResourceObject> IncludeSingleResourceRelationships(
             List<ResourceObject> included, IIdentifiable navigationEntity, RelationshipAttribute relationship, string[] relationshipChain, int relationshipChainIndex)
         {
-            if (relationshipChainIndex < relationshipChain.Length) 
+            if (relationshipChainIndex < relationshipChain.Length)
             {
                 var nextContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
                 var resource = (IIdentifiable)navigationEntity;
                 // recursive call
-                if(relationshipChainIndex < relationshipChain.Length - 1)
+                if (relationshipChainIndex < relationshipChain.Length - 1)
                     included = IncludeRelationshipChain(included, nextContextEntity, resource, relationshipChain, relationshipChainIndex + 1);
             }
-            
+
             return included;
         }
 
@@ -284,16 +288,18 @@ namespace JsonApiDotNetCore.Builders
 
         private List<ResourceIdentifierObject> GetRelationships(IEnumerable<object> entities)
         {
-            var objType = entities.GetElementType();
-
-            var typeName = _jsonApiContext.ContextGraph.GetContextEntity(objType);
-
+            string typeName = null;
             var relationships = new List<ResourceIdentifierObject>();
             foreach (var entity in entities)
             {
+                // this method makes the assumption that entities is a homogenous collection
+                // so, we just lookup the type of the first entity on the graph
+                // this is better than trying to get it from the generic parameter since it could
+                // be less specific than what is registered on the graph (e.g. IEnumerable<object>) 
+                typeName = typeName ?? _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType()).EntityName;
                 relationships.Add(new ResourceIdentifierObject
                 {
-                    Type = typeName.EntityName,
+                    Type = typeName,
                     Id = ((IIdentifiable)entity).StringId
                 });
             }
@@ -305,7 +311,7 @@ namespace JsonApiDotNetCore.Builders
             var objType = entity.GetType();
             var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(objType);
 
-            if(entity is IIdentifiable identifiableEntity)
+            if (entity is IIdentifiable identifiableEntity)
                 return new ResourceIdentifierObject
                 {
                     Type = contextEntity.EntityName,

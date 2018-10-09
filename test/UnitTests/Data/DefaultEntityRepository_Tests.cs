@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Services;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections;
+using JsonApiDotNetCore.Request;
 
 namespace UnitTests.Data
 {
@@ -90,6 +92,14 @@ namespace UnitTests.Data
             _jsonApiContextMock
                 .Setup(m => m.RelationshipsToUpdate)
                 .Returns(_relationshipsToUpdate);
+
+            _jsonApiContextMock
+                .Setup(m => m.HasManyRelationshipPointers)
+                .Returns(new HasManyRelationshipPointers());
+
+            _jsonApiContextMock
+                .Setup(m => m.HasOneRelationshipPointers)
+                .Returns(new HasOneRelationshipPointers());
 
             return new DefaultEntityRepository<TodoItem>(
                 _loggFactoryMock.Object,
