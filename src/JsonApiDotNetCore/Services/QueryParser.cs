@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Services
                 var values = value.Split(QueryConstants.COMMA);
                 foreach (var val in values)
                 {
-                    var opVal = ParseFilterOperationAndValue(value);
+                    var opVal = ParseFilterOperationAndValue(val);
                     queries.Add(new FilterQuery(propertyName, opVal.value, opVal.operation));
                 }
             }
@@ -256,7 +256,7 @@ namespace JsonApiDotNetCore.Services
             return includedFields;
         }
 
-        [Obsolete("Delete also when " + nameof(ParseFilterOperation) + " deleted." )]
+        [Obsolete("Delete also when " + nameof(ParseFilterOperation) + " deleted.")]
         private string GetFilterOperationOld(string value)
         {
             var values = value.Split(QueryConstants.COLON);
