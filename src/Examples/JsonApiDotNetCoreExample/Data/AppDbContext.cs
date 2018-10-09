@@ -1,5 +1,4 @@
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCoreExample.Models.Entities;
 
@@ -32,24 +31,21 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<CourseStudentEntity>()
                 .HasOne(r => r.Course)
                 .WithMany(c => c.Students)
-                .HasForeignKey(r => r.CourseId)
-                ;
+                .HasForeignKey(r => r.CourseId);
 
             modelBuilder.Entity<CourseStudentEntity>()
                 .HasOne(r => r.Student)
                 .WithMany(s => s.Courses)
                 .HasForeignKey(r => r.StudentId);
+
+            modelBuilder.Entity<ArticleTag>()
+                .HasKey(bc => new { bc.ArticleId, bc.TagId });
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Person> People { get; set; }
-
-        [Resource("todo-collections")]
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
-
-        [Resource("camelCasedModels")]
         public DbSet<CamelCasedModel> CamelCasedModels { get; set; }
-
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
@@ -59,7 +55,8 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<DepartmentEntity> Departments { get; set; }
         public DbSet<CourseStudentEntity> Registrations { get; set; }
         public DbSet<StudentEntity> Students { get; set; }
-        
         public DbSet<PersonRole> PersonRoles { get; set; }
+        public DbSet<ArticleTag> ArticleTags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }

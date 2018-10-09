@@ -179,10 +179,6 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual List<string> ParseIncludedRelationships(string value)
         {
-            const string NESTED_DELIMITER = ".";
-            if (value.Contains(NESTED_DELIMITER))
-                throw new JsonApiException(400, "Deeply nested relationships are not supported");
-
             return value
                 .Split(QueryConstants.COMMA)
                 .ToList();

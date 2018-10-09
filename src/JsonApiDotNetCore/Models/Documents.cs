@@ -6,6 +6,6 @@ namespace JsonApiDotNetCore.Models
     public class Documents : DocumentBase
     {
         [JsonProperty("data")]
-        public List<DocumentData> Data { get; set; }
+        public List<ResourceObject> Data { get; set; }
     }
 }

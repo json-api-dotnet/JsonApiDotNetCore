@@ -23,6 +23,9 @@ $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
 dotnet restore
 
+dotnet build ./src/Examples/GettingStarted/GettingStarted.csproj
+CheckLastExitCode
+
 dotnet test ./test/UnitTests/UnitTests.csproj
 CheckLastExitCode
 
@@ -35,7 +38,13 @@ CheckLastExitCode
 dotnet test ./test/OperationsExampleTests/OperationsExampleTests.csproj
 CheckLastExitCode
 
-dotnet build .\src\JsonApiDotNetCore -c Release
+dotnet test ./test/ResourceEntitySeparationExampleTests/ResourceEntitySeparationExampleTests.csproj
+CheckLastExitCode
+
+dotnet test ./test/DiscoveryTests/DiscoveryTests.csproj
+CheckLastExitCode
+
+dotnet build ./src/JsonApiDotNetCore/JsonApiDotNetCore.csproj -c Release
 CheckLastExitCode
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"

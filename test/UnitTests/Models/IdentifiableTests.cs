@@ -21,6 +21,16 @@ namespace UnitTests.Models
             Assert.Equal(0, resource.Id);
         }
 
-        private class IntId : Identifiable { }
+        [Fact]
+        public void GetStringId_Returns_EmptyString_If_Object_Is_Null()
+        {
+            var resource = new IntId();
+            var stringId = resource.ExposedGetStringId(null);
+            Assert.Equal(string.Empty, stringId);
+        }
+
+        private class IntId : Identifiable { 
+            public string ExposedGetStringId(object value) => GetStringId(value);
+        }
     }
 }

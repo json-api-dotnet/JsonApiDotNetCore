@@ -80,9 +80,9 @@ namespace JsonApiDotNetCore.Serialization
                 var data = JToken.Parse(requestBody)["data"];
 
                 if (data is JArray)
-                    return data.ToObject<List<DocumentData>>();
+                    return data.ToObject<List<ResourceObject>>();
 
-                return new List<DocumentData> { data.ToObject<DocumentData>() };
+                return new List<ResourceObject> { data.ToObject<ResourceObject>() };
             }
             catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        public object DocumentToObject(DocumentData data, List<DocumentData> included = null)
+        public object DocumentToObject(ResourceObject data, List<ResourceObject> included = null)
         {
             if (data == null)
                 throw new JsonApiException(422, "Failed to deserialize document as json:api.");
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Serialization
                     message: $"This API does not contain a json:api resource named '{data.Type}'.",
                     detail: "This resource is not registered on the ContextGraph. "
                             + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
-                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."); ;
+                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
 
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCore.Serialization
             object entity,
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships,
-            List<DocumentData> included = null)
+            List<ResourceObject> included = null)
         {
             if (relationships == null || relationships.Count == 0)
                 return entity;
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Serialization
             HasOneAttribute attr,
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships,
-            List<DocumentData> included = null)
+            List<ResourceObject> included = null)
         {
             var relationshipName = attr.PublicRelationshipName;
 
@@ -213,6 +213,19 @@ namespace JsonApiDotNetCore.Serialization
 
             SetHasOneForeignKeyValue(entity, attr, foreignKeyProperty, rio);
             SetHasOneNavigationPropertyValue(entity, attr, rio, included);
+
+            // recursive call ...
+            if(included != null) 
+            {
+                var navigationPropertyValue = attr.GetValue(entity);
+                var contextGraphEntity = _jsonApiContext.ContextGraph.GetContextEntity(attr.Type);
+                if(navigationPropertyValue != null && contextGraphEntity != null)
+                {
+                    var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
+                    if(includedResource != null) 
+                        SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
+                }
+            }
 
             return entity;
         }
@@ -241,7 +254,7 @@ namespace JsonApiDotNetCore.Serialization
         /// If the resource has been included, all attributes will be set.
         /// If the resource has not been included, only the id will be set.
         /// </summary>
-        private void SetHasOneNavigationPropertyValue(object entity, HasOneAttribute hasOneAttr, ResourceIdentifierObject rio, List<DocumentData> included)
+        private void SetHasOneNavigationPropertyValue(object entity, HasOneAttribute hasOneAttr, ResourceIdentifierObject rio, List<ResourceObject> included)
         {
             // if the resource identifier is null, there should be no reason to instantiate an instance
             if (rio != null && rio.Id != null)
@@ -264,15 +277,14 @@ namespace JsonApiDotNetCore.Serialization
             RelationshipAttribute attr,
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships,
-            List<DocumentData> included = null)
+            List<ResourceObject> included = null)
         {
             var relationshipName = attr.PublicRelationshipName;
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                var data = (List<ResourceIdentifierObject>)relationshipData.ExposedData;
-
-                if (data == null) return entity;
+                if(relationshipData.IsHasMany == false || relationshipData.ManyData == null)
+                    return entity;
 
                 var relatedResources = relationshipData.ManyData.Select(r =>
                 {
@@ -290,7 +302,7 @@ namespace JsonApiDotNetCore.Serialization
             return entity;
         }
 
-        private IIdentifiable GetIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier, List<DocumentData> includedResources, RelationshipAttribute relationshipAttr)
+        private IIdentifiable GetIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier, List<ResourceObject> includedResources, RelationshipAttribute relationshipAttr)
         {
             // at this point we can be sure the relationshipAttr.Type is IIdentifiable because we were able to successfully build the ContextGraph
             var relatedInstance = relationshipAttr.Type.New<IIdentifiable>();
@@ -313,7 +325,7 @@ namespace JsonApiDotNetCore.Serialization
             return relatedInstance;
         }
 
-        private DocumentData GetLinkedResource(ResourceIdentifierObject relatedResourceIdentifier, List<DocumentData> includedResources)
+        private ResourceObject GetLinkedResource(ResourceIdentifierObject relatedResourceIdentifier, List<ResourceObject> includedResources)
         {
             try
             {

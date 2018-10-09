@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public AttrAttribute(string publicName, bool isImmutable = false, bool isFilterable = true, bool isSortable = true)
+        public AttrAttribute(string publicName = null, bool isImmutable = false, bool isFilterable = true, bool isSortable = true)
         {
             PublicAttributeName = publicName;
             IsImmutable = isImmutable;
@@ -34,6 +34,14 @@ namespace JsonApiDotNetCore.Models
             IsSortable = isSortable;
         }
 
+        /// <summary>
+        /// Do not use this overload in your applications.
+        /// Provides a method for instantiating instances of `AttrAttribute` and specifying
+        /// the internal property name.
+        /// The primary intent for this was to enable certain types of unit tests to be possible.
+        /// This overload will be deprecated and removed in future releases and an alternative
+        /// for unit tests will be provided.
+        /// </summary>
         public AttrAttribute(string publicName, string internalName, bool isImmutable = false)
         {
             PublicAttributeName = publicName;
@@ -44,7 +52,7 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// How this attribute is exposed through the API
         /// </summary>
-        public string PublicAttributeName { get; }
+        public string PublicAttributeName { get; internal set;}
 
         /// <summary>
         /// The internal property name this attribute belongs to.

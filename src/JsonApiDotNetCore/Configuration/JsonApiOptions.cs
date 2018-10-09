@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
@@ -16,6 +17,16 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public class JsonApiOptions
     {
+        /// <summary>
+        /// Provides an interface for formatting resource names by convention
+        /// </summary>
+        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new DefaultResourceNameFormatter();
+
+        /// <summary>
+        /// Provides an interface for formatting relationship id properties given the navigation property name
+        /// </summary>
+        public static IRelatedIdMapper RelatedIdMapper { get; set; } = new DefaultRelatedIdMapper();
+
         /// <summary>
         /// Whether or not stack traces should be serialized in Error objects
         /// </summary>

@@ -7,9 +7,6 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCoreExample.Resources;
-using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -33,24 +30,20 @@ namespace JsonApiDotNetCoreExample
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddConsole(LogLevel.Warning);
 
+            var mvcBuilder = services.AddMvcCore();
+
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
-                .AddDbContext<AppDbContext>(options =>
-                    options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
-                .AddJsonApi<AppDbContext>(options => {
+                .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
+                .AddJsonApi(options => {
                     options.Namespace = "api/v1";
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
-                })
-                // TODO: this should be handled via auto-discovery
-                .AddScoped<ResourceDefinition<User>, UserResource>();
+                }, 
+                mvcBuilder,
+                discovery => discovery.AddCurrentAssembly());
 
-            var provider = services.BuildServiceProvider();
-            var appContext = provider.GetRequiredService<AppDbContext>();
-            if(appContext == null)
-                throw new ArgumentException();
-                
-            return provider;
+            return services.BuildServiceProvider();
         }
 
         public virtual void Configure(
