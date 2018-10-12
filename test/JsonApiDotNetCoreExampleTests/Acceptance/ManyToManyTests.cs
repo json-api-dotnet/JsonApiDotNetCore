@@ -36,6 +36,41 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+            context.ArticleTags.Add(articleTag);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles?include=tags";
+
+    
+
+            // act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            // this test fails
+            Assert.True(body.Contains("include"));
+
+            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
+            Assert.NotNull(articleResponse);
+
+        }
+
+
+        [Fact]
+        public async Task Can_Fetch_Many_To_Many_Through_Nested()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var article = _articleFaker.Generate();
+            var tag = _tagFaker.Generate();
             var articleTag = new ArticleTag { 
                 Article = article,
                 Tag = tag
@@ -54,6 +89,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             
             var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
+
+
+            // this test fails
+            Assert.True(body.Contains("include"));
+
+
             Assert.Equal(article.Id, articleResponse.Id);
             
             var tagResponse = Assert.Single(articleResponse.Tags);

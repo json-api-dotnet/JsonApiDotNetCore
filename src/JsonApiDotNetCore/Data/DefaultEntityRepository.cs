@@ -297,6 +297,8 @@ namespace JsonApiDotNetCore.Data
             // TODO: make recursive method
             string internalRelationshipPath = null;
             var entity = _jsonApiContext.RequestEntity;
+            var checksum = entities.ToList();
+            var checksumcount = entities.ToList().Count();
             for(var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];

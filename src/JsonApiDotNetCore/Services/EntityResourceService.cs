@@ -105,6 +105,8 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
+            var x = entities.Take(5).ToList();
+
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
@@ -235,6 +237,7 @@ namespace JsonApiDotNetCore.Services
             foreach (var r in relationships)
                 entities = _entities.Include(entities, r);
 
+            var x = entities.ToList().Take(5);
             return entities;
         }
 
