@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -5,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -50,8 +52,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var route = $"/api/v1/articles?include=tags";
 
-
-
             // act
             var response = await _fixture.Client.GetAsync(route);
 
@@ -59,10 +59,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            Assert.True(body.Contains("include"));
+            var document = JsonConvert.DeserializeObject<Documents>(body);
+            Assert.NotEmpty(document.Included);
 
             var articleResponseList = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
             Assert.NotNull(articleResponseList);
+            
             var articleResponse = articleResponseList.FirstOrDefault(a => a.Id == article.Id);
             Assert.NotNull(articleResponse);
             Assert.Equal(article.Name, articleResponse.Name);
@@ -70,7 +72,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var tagResponse = Assert.Single(articleResponse.Tags);
             Assert.Equal(tag.Id, tagResponse.Id);
             Assert.Equal(tag.Name, tagResponse.Name);
-
         }
 
         [Fact]
@@ -96,7 +97,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            Assert.True(body.Contains("include"));
+            
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotEmpty(document.Included);
 
             var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
@@ -105,7 +108,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var tagResponse = Assert.Single(articleResponse.Tags);
             Assert.Equal(tag.Id, tagResponse.Id);
             Assert.Equal(tag.Name, tagResponse.Name);
-
         }
 
         [Fact]
