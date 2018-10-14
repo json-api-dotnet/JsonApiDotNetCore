@@ -217,7 +217,7 @@ namespace JsonApiDotNetCore.Builders
             if(relationship == null)
                 throw new JsonApiException(400, $"{parentEntity.EntityName} does not contain relationship {requestedRelationship}");
 
-            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationship(parentResource, relationship.InternalRelationshipName);
+            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationshipValue(parentResource, relationship);
             if (navigationEntity is IEnumerable hasManyNavigationEntity)
             {
                 foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
