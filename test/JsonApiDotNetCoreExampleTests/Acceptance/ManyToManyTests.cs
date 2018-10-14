@@ -24,25 +24,66 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
 
         private TestFixture<TestStartup> _fixture;
-        public ManyToManyTests(TestFixture<TestStartup> fixture) 
+        public ManyToManyTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
         }
 
         [Fact]
-        public async Task Can_Fetch_Many_To_Many_Through()
+        public async Task Can_Fetch_Many_To_Many_Through_All()
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
-            var articleTag = new ArticleTag { 
+            var articleTag = new ArticleTag
+            {
                 Article = article,
                 Tag = tag
             };
             context.ArticleTags.Add(articleTag);
             await context.SaveChangesAsync();
-            
+
+            var route = $"/api/v1/articles?include=tags";
+
+
+
+            // act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            Assert.True(body.Contains("include"));
+
+            var articleResponseList = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
+            Assert.NotNull(articleResponseList);
+            var articleResponse = articleResponseList.FirstOrDefault(a => a.Id == article.Id);
+            Assert.NotNull(articleResponse);
+            Assert.Equal(article.Name, articleResponse.Name);
+
+            var tagResponse = Assert.Single(articleResponse.Tags);
+            Assert.Equal(tag.Id, tagResponse.Id);
+            Assert.Equal(tag.Name, tagResponse.Name);
+
+        }
+
+        [Fact]
+        public async Task Can_Fetch_Many_To_Many_Through_GetById()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var article = _articleFaker.Generate();
+            var tag = _tagFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+            context.ArticleTags.Add(articleTag);
+            await context.SaveChangesAsync();
+
             var route = $"/api/v1/articles/{article.Id}?include=tags";
 
             // act
@@ -51,13 +92,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+            Assert.True(body.Contains("include"));
+
             var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
             Assert.Equal(article.Id, articleResponse.Id);
-            
+
             var tagResponse = Assert.Single(articleResponse.Tags);
             Assert.Equal(tag.Id, tagResponse.Id);
+            Assert.Equal(tag.Name, tagResponse.Name);
+
         }
 
         [Fact]
