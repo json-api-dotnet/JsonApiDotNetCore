@@ -36,6 +36,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
             var tag = _tagFaker.Generate();
+
+            context.Articles.RemoveRange(context.Articles);
+            await context.SaveChangesAsync();
+
             var articleTag = new ArticleTag
             {
                 Article = article,

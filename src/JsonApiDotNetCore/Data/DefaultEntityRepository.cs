@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
@@ -320,7 +321,9 @@ namespace JsonApiDotNetCore.Data
                     entity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
             }
 
-            return entities.Include(internalRelationshipPath);
+            IQueryable<TEntity> included = entities.Include(internalRelationshipPath);
+            AttachHasManyThrough(relationshipChain, included);
+            return included;
         }
 
         /// <inheritdoc />
@@ -366,6 +369,30 @@ namespace JsonApiDotNetCore.Data
             return (entities is IAsyncEnumerable<TEntity>)
                 ? await entities.ToListAsync()
                 : entities.ToList();
+        }
+
+        private void AttachHasManyThrough(string[] relationshipChain, IQueryable<TEntity> included)
+        {
+            var hasManyThroughRelationships = _jsonApiContext.RequestEntity.Relationships.OfType<HasManyThroughAttribute>();
+            foreach (var hasManyThroughRelation in _jsonApiContext.RequestEntity.Relationships.OfType<HasManyThroughAttribute>())
+            {
+                if (relationshipChain.Contains(hasManyThroughRelation.PublicRelationshipName))
+                {
+                    Type rightInstancesListType = typeof(List<>).MakeGenericType(hasManyThroughRelation.Type);
+                    PropertyInfo rightPropertyOnLeft = _jsonApiContext.RequestEntity.EntityType.GetProperty(hasManyThroughRelation.InternalRelationshipName);
+                    foreach (var leftInstance in included)
+                    {
+                        var rightInstancesList = (IList)Activator.CreateInstance(rightInstancesListType);
+                        var throughInstances = (IList)hasManyThroughRelation.ThroughProperty.GetValue(leftInstance);
+                        foreach (var ti in throughInstances)
+                        {
+                            var rightInstance = hasManyThroughRelation.RightProperty.GetValue(ti);
+                            rightInstancesList.Add(rightInstance);
+                        }
+                        rightPropertyOnLeft.SetValue(leftInstance, rightInstancesList);
+                    }
+                }
+            }
         }
     }
 }
