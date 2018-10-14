@@ -4,7 +4,7 @@ namespace JsonApiDotNetCoreExample.Models
 {
     public class Tag : Identifiable
     {
-        [Attr("name")]
+        [Attr]
         public string Name { get; set; }
     }
 }
