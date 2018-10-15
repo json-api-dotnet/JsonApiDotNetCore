@@ -18,7 +18,7 @@ namespace UnitTests
             [Attr("test-attribute")] public string TestAttribute { get; set; }
         }
         private Mock<IJsonApiContext> _jsonApiContextMock = new Mock<IJsonApiContext>();
-        private Mock<IContextGraph> _contextGraphMock = new Mock<IContextGraph>();
+        private Mock<IResourceGraph> _resourceGraphMock = new Mock<IResourceGraph>();
 
         [Fact]
         public async Task GetAsync_Calls_Service()
@@ -188,8 +188,8 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            _jsonApiContextMock.SetupGet(a => a.ContextGraph).Returns(_contextGraphMock.Object);
-            _contextGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
+            _jsonApiContextMock.SetupGet(a => a.ResourceGraph).Returns(_resourceGraphMock.Object);
+            _resourceGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
             _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
             _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions{ValidateModelState = true});
             var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, update: serviceMock.Object);
@@ -266,8 +266,8 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            _jsonApiContextMock.SetupGet(a => a.ContextGraph).Returns(_contextGraphMock.Object);
-            _contextGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
+            _jsonApiContextMock.SetupGet(a => a.ResourceGraph).Returns(_resourceGraphMock.Object);
+            _resourceGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
             _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
             _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = true });
             var controller = new BaseJsonApiController<Resource>(_jsonApiContextMock.Object, create: serviceMock.Object);

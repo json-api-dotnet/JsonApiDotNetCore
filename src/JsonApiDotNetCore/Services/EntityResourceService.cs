@@ -140,11 +140,11 @@ namespace JsonApiDotNetCore.Services
             var resource = MapOut(entity);
 
             // compound-property -> CompoundProperty
-            var navigationPropertyName = _jsonApiContext.ContextGraph.GetRelationshipName<TResource>(relationshipName);
+            var navigationPropertyName = _jsonApiContext.ResourceGraph.GetRelationshipName<TResource>(relationshipName);
             if (navigationPropertyName == null)
                 throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
 
-            var relationshipValue = _jsonApiContext.ContextGraph.GetRelationship(resource, navigationPropertyName);
+            var relationshipValue = _jsonApiContext.ResourceGraph.GetRelationship(resource, navigationPropertyName);
             return relationshipValue;
         }
 
@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
             }
 
-            var relationship = _jsonApiContext.ContextGraph
+            var relationship = _jsonApiContext.ResourceGraph
                 .GetContextEntity(typeof(TResource))
                 .Relationships
                 .FirstOrDefault(r => r.Is(relationshipName));

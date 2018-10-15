@@ -10,11 +10,11 @@ namespace UnitTests.Models
 {
     public class ResourceDefinition_Scenario_Tests
     {
-        private readonly IContextGraph _graph;
+        private readonly IResourceGraph _graph;
 
         public ResourceDefinition_Scenario_Tests()
         {
-            _graph = new ContextGraphBuilder()
+            _graph = new ResourceGraphBuilder()
                 .AddResource<Model>("models")
                 .Build();
         }

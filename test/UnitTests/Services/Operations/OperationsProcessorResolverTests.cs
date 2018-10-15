@@ -24,7 +24,7 @@ namespace UnitTests.Services
         public void LocateCreateService_Throws_400_For_Entity_Not_Registered()
         {
             // arrange
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(new ContextGraphBuilder().Build());
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(new ResourceGraphBuilder().Build());
             var service = GetService();
             var op = new Operation
             {
@@ -43,7 +43,7 @@ namespace UnitTests.Services
         public void LocateGetService_Throws_400_For_Entity_Not_Registered()
         {
             // arrange
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(new ContextGraphBuilder().Build());
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(new ResourceGraphBuilder().Build());
             var service = GetService();
             var op = new Operation
             {
@@ -62,7 +62,7 @@ namespace UnitTests.Services
         public void LocateRemoveService_Throws_400_For_Entity_Not_Registered()
         {
             // arrange
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(new ContextGraphBuilder().Build());
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(new ResourceGraphBuilder().Build());
             var service = GetService();
             var op = new Operation
             {
@@ -81,7 +81,7 @@ namespace UnitTests.Services
         public void LocateUpdateService_Throws_400_For_Entity_Not_Registered()
         {
             // arrange
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(new ContextGraphBuilder().Build());
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(new ResourceGraphBuilder().Build());
             var service = GetService();
             var op = new Operation
             {

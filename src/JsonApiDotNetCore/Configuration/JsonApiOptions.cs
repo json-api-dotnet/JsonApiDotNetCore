@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The graph of all resources exposed by this application.
         /// </summary>
-        public IContextGraph ContextGraph { get; set; }
+        public IResourceGraph ResourceGraph { get; set; }
 
         /// <summary>
         /// Use relative links for all resources.
@@ -158,28 +158,28 @@ namespace JsonApiDotNetCore.Configuration
             ContractResolver = new DasherizedResolver()
         };
 
-        public void BuildContextGraph<TContext>(Action<IContextGraphBuilder> builder) where TContext : DbContext
+        public void BuildResourceGraph<TContext>(Action<IResourceGraphBuilder> builder) where TContext : DbContext
         {
-            BuildContextGraph(builder);
+            BuildResourceGraph(builder);
 
-            ContextGraphBuilder.AddDbContext<TContext>();
+            ResourceGraphBuilder.AddDbContext<TContext>();
 
-            ContextGraph = ContextGraphBuilder.Build();
+            ResourceGraph = ResourceGraphBuilder.Build();
         }
 
-        public void BuildContextGraph(Action<IContextGraphBuilder> builder)
+        public void BuildResourceGraph(Action<IResourceGraphBuilder> builder)
         {
             if (builder == null) return;
 
-            builder(ContextGraphBuilder);
+            builder(ResourceGraphBuilder);
 
-            ContextGraph = ContextGraphBuilder.Build();
+            ResourceGraph = ResourceGraphBuilder.Build();
         }
 
         public void EnableExtension(JsonApiExtension extension)
             => EnabledExtensions.Add(extension);
 
-        internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
+        internal IResourceGraphBuilder ResourceGraphBuilder { get; } = new ResourceGraphBuilder();
         internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
     }
 }

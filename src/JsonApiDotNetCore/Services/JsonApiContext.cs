@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IControllerContext _controllerContext;
 
         public JsonApiContext(
-            IContextGraph contextGraph,
+            IResourceGraph resourceGraph,
             IHttpContextAccessor httpContextAccessor,
             JsonApiOptions options,
             IMetaBuilder metaBuilder,
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Services
             IQueryParser queryParser,
             IControllerContext controllerContext)
         {
-            ContextGraph = contextGraph;
+            ResourceGraph = resourceGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
             MetaBuilder = metaBuilder;
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         public JsonApiOptions Options { get; set; }
-        public IContextGraph ContextGraph { get; set; }
+        public IResourceGraph ResourceGraph { get; set; }
         [Obsolete("Use the proxied member IControllerContext.RequestEntity instead.")]
         public ContextEntity RequestEntity { get => _controllerContext.RequestEntity; set => _controllerContext.RequestEntity = value; }
         public string BasePath { get; set; }
@@ -62,9 +62,9 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(500, $"Cannot ApplyContext from null controller for type {typeof(T)}");
 
             _controllerContext.ControllerType = controller.GetType();
-            _controllerContext.RequestEntity = ContextGraph.GetContextEntity(typeof(T));
+            _controllerContext.RequestEntity = ResourceGraph.GetContextEntity(typeof(T));
             if (_controllerContext.RequestEntity == null)
-                throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ContextGraph.");
+                throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ResourceGraph.");
 
             var context = _httpContextAccessor.HttpContext;
 
