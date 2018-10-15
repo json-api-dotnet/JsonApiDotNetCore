@@ -42,7 +42,7 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<JsonApiOptions>());
-            Assert.NotNull(provider.GetService<IContextGraph>());
+            Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IJsonApiContext>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder>());
@@ -125,7 +125,7 @@ namespace UnitTests.Extensions
 
             // assert
             var provider = services.BuildServiceProvider();
-            var graph = provider.GetService<IContextGraph>();
+            var graph = provider.GetService<IResourceGraph>();
             var resource = graph.GetContextEntity(typeof(IntResource));
             Assert.Equal("resource", resource.EntityName);
         }

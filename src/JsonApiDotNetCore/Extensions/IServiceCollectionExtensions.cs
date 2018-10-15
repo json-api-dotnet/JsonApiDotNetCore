@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             var config = new JsonApiOptions();
             options(config);
-            config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
+            config.BuildResourceGraph(builder => builder.AddDbContext<TContext>());
 
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
 
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Extensions
 
             if(autoDiscover != null)
             {
-                var facade = new ServiceDiscoveryFacade(services, config.ContextGraphBuilder);
+                var facade = new ServiceDiscoveryFacade(services, config.ResourceGraphBuilder);
                 autoDiscover(facade);
             }
 
@@ -88,8 +88,8 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions) where TContext : DbContext
         {
-            if (jsonApiOptions.ContextGraph == null)
-                jsonApiOptions.BuildContextGraph<TContext>(null);
+            if (jsonApiOptions.ResourceGraph == null)
+                jsonApiOptions.BuildResourceGraph<TContext>(null);
 
             services.AddScoped<IDbContextResolver, DbContextResolver<TContext>>();
 
@@ -100,10 +100,10 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-            if (jsonApiOptions.ContextGraph == null)
-                jsonApiOptions.ContextGraph = jsonApiOptions.ContextGraphBuilder.Build();
+            if (jsonApiOptions.ResourceGraph == null)
+                jsonApiOptions.ResourceGraph = jsonApiOptions.ResourceGraphBuilder.Build();
 
-            if (jsonApiOptions.ContextGraph.UsesDbContext == false)
+            if (jsonApiOptions.ResourceGraph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
                 services.AddSingleton(new DbContextOptionsBuilder().Options);
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
             services.AddSingleton(jsonApiOptions);
-            services.AddSingleton(jsonApiOptions.ContextGraph);
+            services.AddSingleton(jsonApiOptions.ResourceGraph);
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();

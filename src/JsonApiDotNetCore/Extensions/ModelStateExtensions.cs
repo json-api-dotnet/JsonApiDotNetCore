@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class ModelStateExtensions
     {
-        [Obsolete("Use Generic Method ConvertToErrorCollection<T>(IContextGraph contextGraph) instead for full validation errors")]
+        [Obsolete("Use Generic Method ConvertToErrorCollection<T>(IResourceGraph resourceGraph) instead for full validation errors")]
         public static ErrorCollection ConvertToErrorCollection(this ModelStateDictionary modelState)
         {
             ErrorCollection collection = new ErrorCollection();
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Extensions
 
             return collection;
         }
-        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState, IContextGraph contextGraph)
+        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState, IResourceGraph resourceGraph)
         {
             ErrorCollection collection = new ErrorCollection();
             foreach (var entry in modelState)
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (entry.Value.Errors.Any() == false)
                     continue;
 
-                var attrName = contextGraph.GetPublicAttributeName<T>(entry.Key);
+                var attrName = resourceGraph.GetPublicAttributeName<T>(entry.Key);
 
                 foreach (var modelError in entry.Value.Errors)
                 {

@@ -38,9 +38,9 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetRelationshipService<T, int> getRelationship,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph,
+            IResourceGraph resourceGraph,
             IJsonApiContext jsonApiContext
-        ) : base(getAll, getById, getRelationship, deSerializer, documentBuilder, contextGraph, jsonApiContext)
+        ) : base(getAll, getById, getRelationship, deSerializer, documentBuilder, resourceGraph, jsonApiContext)
         { }
     }
 
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IGetRelationshipService<T, TId> _getRelationship;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
-        private readonly IContextGraph _contextGraph;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiContext _jsonApiContext;
 
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetRelationshipService<T, TId> getRelationship,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph,
+            IResourceGraph resourceGraph,
             IJsonApiContext jsonApiContext)
         {
             _getAll = getAll;
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             _getRelationship = getRelationship;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
-            _contextGraph = contextGraph;
+            _resourceGraph = resourceGraph;
             _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
         }
 
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             foreach (var resource in result)
             {
                 var doc = _documentBuilder.GetData(
-                    _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
+                    _resourceGraph.GetContextEntity(operation.GetResourceTypeName()),
                     resource);
                 operations.Add(doc);
             }
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 throw new JsonApiException(404, $"Could not find '{operation.Ref.Type}' record with id '{operation.Ref.Id}'");
 
             var doc = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
+                _resourceGraph.GetContextEntity(operation.GetResourceTypeName()),
                 result);
 
             return doc;
@@ -134,10 +134,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
 
             // TODO: need a better way to get the ContextEntity from a relationship name
             // when no generic parameter is available
-            var relationshipType = _contextGraph.GetContextEntity(operation.GetResourceTypeName())
+            var relationshipType = _resourceGraph.GetContextEntity(operation.GetResourceTypeName())
                 .Relationships.Single(r => r.Is(operation.Ref.Relationship)).Type;
 
-            var relatedContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationshipType);
+            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipType);
 
             if (result == null)
                 return null;

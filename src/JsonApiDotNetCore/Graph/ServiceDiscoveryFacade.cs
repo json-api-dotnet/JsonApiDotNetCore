@@ -48,12 +48,12 @@ namespace JsonApiDotNetCore.Graph
         };
 
         private readonly IServiceCollection _services;
-        private readonly IContextGraphBuilder _graphBuilder;
+        private readonly IResourceGraphBuilder _graphBuilder;
         private readonly List<ResourceDescriptor> _identifiables = new List<ResourceDescriptor>();
 
         public ServiceDiscoveryFacade(
             IServiceCollection services, 
-            IContextGraphBuilder graphBuilder)
+            IResourceGraphBuilder graphBuilder)
         {
             _services = services;
             _graphBuilder = graphBuilder;

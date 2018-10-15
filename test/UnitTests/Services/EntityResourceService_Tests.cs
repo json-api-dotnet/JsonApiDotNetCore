@@ -19,9 +19,9 @@ namespace UnitTests.Services
         public EntityResourceService_Tests()
         {
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
+                .Setup(m => m.ResourceGraph)
                 .Returns(
-                    new ContextGraphBuilder()
+                    new ResourceGraphBuilder()
                         .AddResource<TodoItem>("todo-items")
                         .Build()
                 );

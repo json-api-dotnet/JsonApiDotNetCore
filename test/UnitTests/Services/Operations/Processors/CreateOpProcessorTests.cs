@@ -44,7 +44,7 @@ namespace UnitTests.Services
                 Data = data,                
             };
 
-            var contextGraph = new ContextGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                 .AddResource<TestResource>("test-resources")
                 .Build();
 
@@ -55,7 +55,7 @@ namespace UnitTests.Services
                 _createServiceMock.Object,
                 _deserializerMock.Object,
                 _documentBuilderMock.Object,
-                contextGraph
+                resourceGraph
             );
 
             _documentBuilderMock.Setup(m => m.GetData(It.IsAny<ContextEntity>(), It.IsAny<TestResource>()))

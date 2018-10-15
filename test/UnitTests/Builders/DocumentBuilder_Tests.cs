@@ -25,7 +25,7 @@ namespace UnitTests
 
             _options = new JsonApiOptions();
 
-            _options.BuildContextGraph(builder =>
+            _options.BuildResourceGraph(builder =>
             {
                 builder.AddResource<Model>("models");
                 builder.AddResource<RelatedModel>("related-models");
@@ -36,8 +36,8 @@ namespace UnitTests
                 .Returns(_options);
 
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
-                .Returns(_options.ContextGraph);
+                .Setup(m => m.ResourceGraph)
+                .Returns(_options.ResourceGraph);
 
             _jsonApiContextMock
                 .Setup(m => m.MetaBuilder)
@@ -54,7 +54,7 @@ namespace UnitTests
 
             _jsonApiContextMock
                 .Setup(m => m.RequestEntity)
-                .Returns(_options.ContextGraph.GetContextEntity(typeof(Model)));
+                .Returns(_options.ResourceGraph.GetContextEntity(typeof(Model)));
         }
 
         [Fact]
@@ -84,11 +84,11 @@ namespace UnitTests
             _pageManager.TotalRecords = 1;
             _pageManager.CurrentPage = 1;
 
-            _options.BuildContextGraph(builder => builder.DocumentLinks = Link.None);
+            _options.BuildResourceGraph(builder => builder.DocumentLinks = Link.None);
 
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
-                .Returns(_options.ContextGraph);
+                .Setup(m => m.ResourceGraph)
+                .Returns(_options.ResourceGraph);
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
             var entity = new Model();
@@ -109,8 +109,8 @@ namespace UnitTests
             _pageManager.CurrentPage = 1;
 
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
-                .Returns(_options.ContextGraph);
+                .Setup(m => m.ResourceGraph)
+                .Returns(_options.ResourceGraph);
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
             var entity = new Model();
@@ -130,8 +130,8 @@ namespace UnitTests
             const string relationshipName = "related-model";
             const int relatedId = 1;
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
-                .Returns(_options.ContextGraph);
+                .Setup(m => m.ResourceGraph)
+                .Returns(_options.ResourceGraph);
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
             var entity = new Model
@@ -162,8 +162,8 @@ namespace UnitTests
             const string relationshipName = "related-model";
             const int relatedId = 1;
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
-                .Returns(_options.ContextGraph);
+                .Setup(m => m.ResourceGraph)
+                .Returns(_options.ResourceGraph);
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
             var entity = new Model
@@ -268,10 +268,10 @@ namespace UnitTests
         public void Build_Will_Use_Resource_If_Defined_For_Multiple_Documents()
         {
             var entities = new[] { new User() };
-            var contextGraph = new ContextGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                     .AddResource<User>("user")
                     .Build();
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
 
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
@@ -291,10 +291,10 @@ namespace UnitTests
         public void Build_Will_Use_Resource_If_Defined_For_Single_Document()
         {
             var entity = new User();
-            var contextGraph = new ContextGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                     .AddResource<User>("user")
                     .Build();
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
 
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
@@ -313,10 +313,10 @@ namespace UnitTests
         public void Build_Will_Use_Instance_Specific_Resource_If_Defined_For_Multiple_Documents()
         {
             var entities = new[] { new User() };
-            var contextGraph = new ContextGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                     .AddResource<User>("user")
                     .Build();
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
 
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
@@ -336,10 +336,10 @@ namespace UnitTests
         public void Build_Will_Use_Instance_Specific_Resource_If_Defined_For_Single_Document()
         {
             var entity = new User();
-            var contextGraph = new ContextGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                     .AddResource<User>("user")
                     .Build();
-            _jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
 
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()

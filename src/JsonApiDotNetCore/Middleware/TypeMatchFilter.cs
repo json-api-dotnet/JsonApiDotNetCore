@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (deserializedType != null && targetType != null && deserializedType != targetType)
                 {
-                    var expectedJsonApiResource = _jsonApiContext.ContextGraph.GetContextEntity(targetType);
+                    var expectedJsonApiResource = _jsonApiContext.ResourceGraph.GetContextEntity(targetType);
 
                     throw new JsonApiException(409,
                         $"Cannot '{context.HttpContext.Request.Method}' type '{_jsonApiContext.RequestEntity.EntityName}' "

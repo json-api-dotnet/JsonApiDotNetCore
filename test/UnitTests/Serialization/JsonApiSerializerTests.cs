@@ -21,10 +21,10 @@ namespace UnitTests.Serialization
         public void Can_Serialize_Complex_Types()
         {
             // arrange
-            var contextGraphBuilder = new ContextGraphBuilder();
-            contextGraphBuilder.AddResource<TestResource>("test-resource");
+            var resourceGraphBuilder = new ResourceGraphBuilder();
+            resourceGraphBuilder.AddResource<TestResource>("test-resource");
           
-            var serializer = GetSerializer(contextGraphBuilder);
+            var serializer = GetSerializer(resourceGraphBuilder);
 
             var resource = new TestResource
             {
@@ -69,13 +69,13 @@ namespace UnitTests.Serialization
         public void Can_Serialize_Deeply_Nested_Relationships()
         {
             // arrange
-            var contextGraphBuilder = new ContextGraphBuilder();
-            contextGraphBuilder.AddResource<TestResource>("test-resource");
-            contextGraphBuilder.AddResource<ChildResource>("children");
-            contextGraphBuilder.AddResource<InfectionResource>("infections");
+            var resourceGraphBuilder = new ResourceGraphBuilder();
+            resourceGraphBuilder.AddResource<TestResource>("test-resource");
+            resourceGraphBuilder.AddResource<ChildResource>("children");
+            resourceGraphBuilder.AddResource<InfectionResource>("infections");
           
             var serializer = GetSerializer(
-                contextGraphBuilder,
+                resourceGraphBuilder,
                 included: new List<string> { "children.infections" }
             );
 
@@ -206,16 +206,16 @@ namespace UnitTests.Serialization
         }
 
         private JsonApiSerializer GetSerializer(
-            ContextGraphBuilder contextGraphBuilder, 
+            ResourceGraphBuilder resourceGraphBuilder, 
             List<string> included = null)
         {
-            var contextGraph = contextGraphBuilder.Build();
+            var resourceGraph = resourceGraphBuilder.Build();
 
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
             jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions());
-            jsonApiContextMock.Setup(m => m.RequestEntity).Returns(contextGraph.GetContextEntity("test-resource"));
+            jsonApiContextMock.Setup(m => m.RequestEntity).Returns(resourceGraph.GetContextEntity("test-resource"));
             // jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
             // jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
             // jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
