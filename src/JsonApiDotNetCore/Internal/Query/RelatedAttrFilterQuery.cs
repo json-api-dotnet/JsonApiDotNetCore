@@ -29,5 +29,6 @@ namespace JsonApiDotNetCore.Internal.Query
 
         [Obsolete("Use " + nameof(Relationship) + " instead.")]
         public RelationshipAttribute FilteredRelationship { get; set; }
+
     }
 }
