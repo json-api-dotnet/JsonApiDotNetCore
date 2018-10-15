@@ -156,7 +156,7 @@ namespace JsonApiDotNetCore.Controllers
                 return Forbidden();
 
             if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ContextGraph));
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ResourceGraph));
 
             entity = await _create.CreateAsync(entity);
 
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
 
             if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ContextGraph));
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ResourceGraph));
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 

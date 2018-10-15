@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         // HACK: this will likely require boxing
-        // we should be able to move some of the reflection into the ContextGraphBuilder
+        // we should be able to move some of the reflection into the ResourceGraphBuilder
         /// <summary>
         /// Gets the value of the independent identifier (e.g. Article.AuthorId)
         /// </summary>

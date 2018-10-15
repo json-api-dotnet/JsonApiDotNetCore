@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Builders
     public class DocumentBuilder : IDocumentBuilder
     {
         private readonly IJsonApiContext _jsonApiContext;
-        private readonly IContextGraph _contextGraph;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IRequestMeta _requestMeta;
         private readonly DocumentBuilderOptions _documentBuilderOptions;
         private readonly IScopedServiceProvider _scopedServiceProvider;
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Builders
             IScopedServiceProvider scopedServiceProvider = null)
         {
             _jsonApiContext = jsonApiContext;
-            _contextGraph = jsonApiContext.ContextGraph;
+            _resourceGraph = jsonApiContext.ResourceGraph;
             _requestMeta = requestMeta;
             _documentBuilderOptions = documentBuilderOptionsProvider?.GetDocumentBuilderOptions() ?? new DocumentBuilderOptions();
             _scopedServiceProvider = scopedServiceProvider;
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Builders
 
         public Document Build(IIdentifiable entity)
         {
-            var contextEntity = _contextGraph.GetContextEntity(entity.GetType());
+            var contextEntity = _resourceGraph.GetContextEntity(entity.GetType());
 
             var resourceDefinition = _scopedServiceProvider?.GetService(contextEntity.ResourceType) as IResourceDefinition;
             var document = new Document
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Builders
         public Documents Build(IEnumerable<IIdentifiable> entities)
         {
             var entityType = entities.GetElementType();
-            var contextEntity = _contextGraph.GetContextEntity(entityType);
+            var contextEntity = _resourceGraph.GetContextEntity(entityType);
             var resourceDefinition = _scopedServiceProvider?.GetService(contextEntity.ResourceType) as IResourceDefinition;
 
             var enumeratedEntities = entities as IList<IIdentifiable> ?? entities.ToList();
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Builders
             }
 
             // this only includes the navigation property, we need to actually check the navigation property Id
-            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationshipValue(entity, attr);
+            var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(entity, attr);
             if (navigationEntity == null)
                 relationshipData.SingleData = attr.IsHasOne
                     ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
@@ -217,7 +217,7 @@ namespace JsonApiDotNetCore.Builders
             if(relationship == null)
                 throw new JsonApiException(400, $"{parentEntity.EntityName} does not contain relationship {requestedRelationship}");
 
-            var navigationEntity = _jsonApiContext.ContextGraph.GetRelationshipValue(parentResource, relationship);
+            var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(parentResource, relationship);
             if (navigationEntity is IEnumerable hasManyNavigationEntity)
             {
                 foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
@@ -240,7 +240,7 @@ namespace JsonApiDotNetCore.Builders
         {
             if (relationshipChainIndex < relationshipChain.Length)
             {
-                var nextContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationship.Type);
+                var nextContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
                 var resource = (IIdentifiable)navigationEntity;
                 // recursive call
                 if (relationshipChainIndex < relationshipChain.Length - 1)
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCore.Builders
         {
             if (entity == null) return null;
 
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType());
+            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(entity.GetType());
             var resourceDefinition = _scopedServiceProvider.GetService(contextEntity.ResourceType) as IResourceDefinition;
 
             var data = GetData(contextEntity, entity, resourceDefinition);
@@ -296,7 +296,7 @@ namespace JsonApiDotNetCore.Builders
                 // so, we just lookup the type of the first entity on the graph
                 // this is better than trying to get it from the generic parameter since it could
                 // be less specific than what is registered on the graph (e.g. IEnumerable<object>) 
-                typeName = typeName ?? _jsonApiContext.ContextGraph.GetContextEntity(entity.GetType()).EntityName;
+                typeName = typeName ?? _jsonApiContext.ResourceGraph.GetContextEntity(entity.GetType()).EntityName;
                 relationships.Add(new ResourceIdentifierObject
                 {
                     Type = typeName,
@@ -309,7 +309,7 @@ namespace JsonApiDotNetCore.Builders
         private ResourceIdentifierObject GetRelationship(object entity)
         {
             var objType = entity.GetType();
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(objType);
+            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(objType);
 
             if (entity is IIdentifiable identifiableEntity)
                 return new ResourceIdentifierObject
@@ -327,7 +327,7 @@ namespace JsonApiDotNetCore.Builders
             if (independentRelationshipIdentifier == null)
                 return null;
 
-            var relatedContextEntity = _jsonApiContext.ContextGraph.GetContextEntity(hasOne.Type);
+            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(hasOne.Type);
             if (relatedContextEntity == null) // TODO: this should probably be a debug log at minimum
                 return null;
 

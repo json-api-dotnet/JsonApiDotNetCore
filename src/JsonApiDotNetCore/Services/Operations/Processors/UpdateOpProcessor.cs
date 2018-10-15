@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IUpdateService<T, int> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph
-        ) : base(service, deSerializer, documentBuilder, contextGraph)
+            IResourceGraph resourceGraph
+        ) : base(service, deSerializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -33,18 +33,18 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IUpdateService<T, TId> _service;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
-        private readonly IContextGraph _contextGraph;
+        private readonly IResourceGraph _resourceGraph;
 
         public UpdateOpProcessor(
             IUpdateService<T, TId> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph)
+            IResourceGraph resourceGraph)
         {
             _service = service;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
-            _contextGraph = contextGraph;
+            _resourceGraph = resourceGraph;
         }
 
         public async Task<Operation> ProcessAsync(Operation operation)
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
                 Op = OperationCode.update
             };
 
-            operationResult.Data = _documentBuilder.GetData(_contextGraph.GetContextEntity(operation.GetResourceTypeName()), result);
+            operationResult.Data = _documentBuilder.GetData(_resourceGraph.GetContextEntity(operation.GetResourceTypeName()), result);
 
             return operationResult;
         }

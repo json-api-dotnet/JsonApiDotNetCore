@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Models
     /// <typeparam name="T">The resource type</typeparam>
     public class ResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
     {
-        private readonly IContextGraph _graph;
+        private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;
         internal readonly bool _instanceAttrsAreSpecified;
 
@@ -31,8 +31,8 @@ namespace JsonApiDotNetCore.Models
 
         public ResourceDefinition()
         {
-            _graph = ContextGraph.Instance;
-            _contextEntity = ContextGraph.Instance.GetContextEntity(typeof(T));
+            _graph = ResourceGraph.Instance;
+            _contextEntity = ResourceGraph.Instance.GetContextEntity(typeof(T));
             _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
         }
 

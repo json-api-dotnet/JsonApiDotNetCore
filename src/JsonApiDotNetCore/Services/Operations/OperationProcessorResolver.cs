@@ -104,7 +104,7 @@ namespace JsonApiDotNetCore.Services.Operations
 
         private ContextEntity GetResourceMetadata(string resourceName)
         {
-            var contextEntity = _context.ContextGraph.GetContextEntity(resourceName);
+            var contextEntity = _context.ResourceGraph.GetContextEntity(resourceName);
             if(contextEntity == null)
                 throw new JsonApiException(400, $"This API does not expose a resource of type '{resourceName}'.");
 

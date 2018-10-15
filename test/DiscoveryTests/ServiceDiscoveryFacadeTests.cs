@@ -16,7 +16,7 @@ namespace DiscoveryTests
     public class ServiceDiscoveryFacadeTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
-        private readonly ContextGraphBuilder _graphBuilder = new ContextGraphBuilder();
+        private readonly ResourceGraphBuilder _graphBuilder = new ResourceGraphBuilder();
         private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _graphBuilder);
 
         [Fact]
