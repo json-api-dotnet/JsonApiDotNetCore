@@ -101,8 +101,7 @@ namespace JsonApiDotNetCore.Services
             return queries;
         }
 
-        [Obsolete("This method is not used anymore! Use " + nameof(ParseFilterOperationAndValue) + " method with FilterOperations operation return value." +
-            "Operation as string is not used at all.")]
+        [Obsolete("Use " + nameof(ParseFilterOperationAndValue) + " method instead.")]
         protected virtual (string operation, string value) ParseFilterOperation(string value)
         {
             if (value.Length < 3)
@@ -129,7 +128,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static (FilterOperations operation, string value) ParseFilterOperationAndValue(string input)
+        protected virtual (FilterOperations operation, string value) ParseFilterOperationAndValue(string input)
         {
             // value is empty
             if (input.Length == 0)
@@ -170,7 +169,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="operation">String represented operation</param>
         /// <returns></returns>
-        public static (FilterOperations operation, bool succeeded) GetFilterOperation(string operation)
+        private static (FilterOperations operation, bool succeeded) GetFilterOperation(string operation)
         {
             var success = Enum.TryParse(operation, out FilterOperations opertion);
             return (opertion, success);
@@ -256,7 +255,6 @@ namespace JsonApiDotNetCore.Services
             return includedFields;
         }
 
-        [Obsolete("Delete also when " + nameof(ParseFilterOperation) + " deleted.")]
         private string GetFilterOperationOld(string value)
         {
             var values = value.Split(QueryConstants.COLON);

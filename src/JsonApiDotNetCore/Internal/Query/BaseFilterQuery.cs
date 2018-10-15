@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using System;
 
@@ -8,17 +7,14 @@ namespace JsonApiDotNetCore.Internal.Query
     {
         public BaseFilterQuery(
             IJsonApiContext jsonApiContext,
-            string relationship,
-            string attribute,
-            string value,
-            FilterOperations op)
-        : base(jsonApiContext, relationship, attribute)
+            FilterQuery filterQuery)
+        : base(jsonApiContext, filterQuery)
         {
-            PropertyValue = value;
-            FilterOperation = op;
+            PropertyValue = filterQuery.Value;
+            FilterOperation = filterQuery.OperationType;
         }
 
-        [Obsolete("To resolve operation use enum typed " + nameof(FilterQuery.OperationType) + " property of "+ nameof(FilterQuery) +" class")]
+        [Obsolete("Use " + nameof(FilterQuery.OperationType) + " instead.")]
         protected FilterOperations GetFilterOperation(string prefix)
         {
             if (prefix.Length == 0) return FilterOperations.eq;

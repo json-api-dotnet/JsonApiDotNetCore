@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -10,7 +7,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public AttrSortQuery(
             IJsonApiContext jsonApiContext,
             SortQuery sortQuery)
-            :base(jsonApiContext, null, sortQuery.Attribute)
+            :base(jsonApiContext, sortQuery)
         {
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{sortQuery.Attribute}' is not a valid attribute.");

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -10,7 +9,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public RelatedAttrFilterQuery(
             IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
-            :base(jsonApiContext, filterQuery.Relationship, filterQuery.Attribute, filterQuery.Value, filterQuery.OperationType)
+            :base(jsonApiContext, filterQuery)
         {
             if (Relationship == null)
                 throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {jsonApiContext.RequestEntity.EntityName}.");
@@ -25,10 +24,10 @@ namespace JsonApiDotNetCore.Internal.Query
             FilteredAttribute = Attribute;
         }
 
-        [Obsolete("Use " + nameof(Attribute) + " property. It's shared for all implementations of BaseAttrQuery(better sort, filter) handling")]
+        [Obsolete("Use " + nameof(Attribute) + " instead.")]
         public AttrAttribute FilteredAttribute { get; set; }
 
-        [Obsolete("Use " + nameof(Relationship) + " property. It's shared for all implementations of BaseAttrQuery(better sort, filter) handling")]
+        [Obsolete("Use " + nameof(Relationship) + " instead.")]
         public RelationshipAttribute FilteredRelationship { get; set; }
     }
 }

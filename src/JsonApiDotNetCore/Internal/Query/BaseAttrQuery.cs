@@ -13,15 +13,17 @@ namespace JsonApiDotNetCore.Internal.Query
     {
         private readonly IJsonApiContext _jsonApiContext;
 
-        public BaseAttrQuery(IJsonApiContext jsonApiContext, string relationship, string attribute)
+        public BaseAttrQuery(IJsonApiContext jsonApiContext, BaseQuery baseQuery)
         {
             _jsonApiContext = jsonApiContext;
-            if (string.IsNullOrEmpty(relationship))
-                Attribute = GetAttribute(attribute);           
+            if (baseQuery.IsAttributeOfRelationship)
+            {
+                Relationship = GetRelationship(baseQuery.Relationship);
+                Attribute = GetAttribute(Relationship, baseQuery.Attribute);
+            }
             else
             {
-                Relationship = GetRelationship(relationship);
-                Attribute = GetAttribute(Relationship, attribute);
+                Attribute = GetAttribute(baseQuery.Attribute);
             }
             
         }

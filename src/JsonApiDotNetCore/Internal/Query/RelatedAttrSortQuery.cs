@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -10,7 +7,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public RelatedAttrSortQuery(
             IJsonApiContext jsonApiContext,
             SortQuery sortQuery)
-            :base(jsonApiContext, sortQuery.Relationship, sortQuery.Attribute)
+            :base(jsonApiContext, sortQuery)
         {
             if (Relationship == null)
                 throw new JsonApiException(400, $"{sortQuery.Relationship} is not a valid relationship on {jsonApiContext.RequestEntity.EntityName}.");

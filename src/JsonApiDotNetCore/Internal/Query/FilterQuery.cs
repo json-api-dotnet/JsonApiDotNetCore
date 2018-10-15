@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Internal.Query
         [Obsolete("Key has been replaced by '" + nameof(Attribute) + "'. Members should be located by their public name, not by coercing the provided value to the internal name.")]
         public string Key { get; set; }
         public string Value { get; set; }
-        [Obsolete("Operation has been replaced by '" + nameof(OperationType) + "'. OperationType is typed enum value for Operation property. This should be default property for providing operation type, because of unsustainable string (not typed) value.")]
+        [Obsolete("Use '" + nameof(OperationType) + "' instead.")]
         public string Operation { get; set; }
 
         public FilterOperations OperationType { get; set; }

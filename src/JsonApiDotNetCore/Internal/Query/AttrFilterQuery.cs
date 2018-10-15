@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -10,11 +9,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public AttrFilterQuery(
             IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
-            : base(jsonApiContext, 
-                  null,
-                  filterQuery.Attribute, 
-                  filterQuery.Value, 
-                  filterQuery.OperationType)
+            : base(jsonApiContext, filterQuery)
         {
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
@@ -25,7 +20,7 @@ namespace JsonApiDotNetCore.Internal.Query
             FilteredAttribute = Attribute;
         }
 
-        [Obsolete("Use " + nameof(Attribute) + " property of " + nameof(BaseAttrQuery) + "class. This property is shared for all AttrQuery and RelatedAttrQuery (filter,sort..) implementations.")]
+        [Obsolete("Use " + nameof(BaseAttrQuery.Attribute) + " insetad.")]
         public AttrAttribute FilteredAttribute { get; set; }
     }
 }
