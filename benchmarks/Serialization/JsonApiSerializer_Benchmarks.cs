@@ -19,13 +19,13 @@ namespace Benchmarks.Serialization {
         private readonly JsonApiSerializer _jsonApiSerializer;
 
         public JsonApiSerializer_Benchmarks() {
-            var contextGraphBuilder = new ContextGraphBuilder();
-            contextGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
-            var contextGraph = contextGraphBuilder.Build();
+            var resourceGraphBuilder = new ResourceGraphBuilder();
+            resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
+            var resourceGraph = resourceGraphBuilder.Build();
 
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ContextGraph).Returns(contextGraph);
+            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
 
             var jsonApiOptions = new JsonApiOptions();

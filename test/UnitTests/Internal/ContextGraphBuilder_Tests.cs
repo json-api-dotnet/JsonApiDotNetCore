@@ -6,35 +6,35 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public class ContextGraphBuilder_Tests
+    public class ResourceGraphBuilder_Tests
     {
         [Fact]
         public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_DoNot_Implement_IIdentifiable()
         {
             // arrange
-            var contextGraphBuilder = new ContextGraphBuilder();
+            var resourceGraphBuilder = new ResourceGraphBuilder();
 
             // act
-            contextGraphBuilder.AddDbContext<TestContext>();
-            var contextGraph = contextGraphBuilder.Build() as ContextGraph;
+            resourceGraphBuilder.AddDbContext<TestContext>();
+            var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
 
             // assert
-            Assert.Empty(contextGraph.Entities);
+            Assert.Empty(resourceGraph.Entities);
         }
 
         [Fact]
         public void Adding_DbContext_Members_That_DoNot_Implement_IIdentifiable_Creates_Warning()
         {
             // arrange
-            var contextGraphBuilder = new ContextGraphBuilder();
+            var resourceGraphBuilder = new ResourceGraphBuilder();
 
             // act
-            contextGraphBuilder.AddDbContext<TestContext>();
-            var contextGraph = contextGraphBuilder.Build() as ContextGraph;
+            resourceGraphBuilder.AddDbContext<TestContext>();
+            var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
 
             // assert
-            Assert.Single(contextGraph.ValidationResults);
-            Assert.Contains(contextGraph.ValidationResults, v => v.LogLevel == LogLevel.Warning);
+            Assert.Single(resourceGraph.ValidationResults);
+            Assert.Contains(resourceGraph.ValidationResults, v => v.LogLevel == LogLevel.Warning);
         }
 
         private class Foo { }

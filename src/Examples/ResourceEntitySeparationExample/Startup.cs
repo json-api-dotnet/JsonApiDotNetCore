@@ -49,7 +49,7 @@ namespace ResourceEntitySeparationExample
                 options.Namespace = "api/v1";
                 options.DefaultPageSize = 10;
                 options.IncludeTotalRecordCount = true;
-                options.BuildContextGraph((builder) => {
+                options.BuildResourceGraph((builder) => {
                     builder.AddResource<CourseResource>("courses");
                     builder.AddResource<DepartmentResource>("departments");
                     builder.AddResource<StudentResource>("students");

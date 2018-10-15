@@ -116,10 +116,10 @@ namespace JsonApiDotNetCore.Serialization
             if (data == null)
                 throw new JsonApiException(422, "Failed to deserialize document as json:api.");
 
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(data.Type?.ToString());
+            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(data.Type?.ToString());
             _jsonApiContext.RequestEntity = contextEntity ?? throw new JsonApiException(400,
                     message: $"This API does not contain a json:api resource named '{data.Type}'.",
-                    detail: "This resource is not registered on the ContextGraph. "
+                    detail: "This resource is not registered on the ResourceGraph. "
                             + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
                             + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
 
@@ -218,12 +218,12 @@ namespace JsonApiDotNetCore.Serialization
             if(included != null) 
             {
                 var navigationPropertyValue = attr.GetValue(entity);
-                var contextGraphEntity = _jsonApiContext.ContextGraph.GetContextEntity(attr.Type);
-                if(navigationPropertyValue != null && contextGraphEntity != null)
+                var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.Type);
+                if(navigationPropertyValue != null && resourceGraphEntity != null)
                 {
                     var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
                     if(includedResource != null) 
-                        SetRelationships(navigationPropertyValue, contextGraphEntity, includedResource.Relationships, included);
+                        SetRelationships(navigationPropertyValue, resourceGraphEntity, includedResource.Relationships, included);
                 }
             }
 
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private IIdentifiable GetIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier, List<ResourceObject> includedResources, RelationshipAttribute relationshipAttr)
         {
-            // at this point we can be sure the relationshipAttr.Type is IIdentifiable because we were able to successfully build the ContextGraph
+            // at this point we can be sure the relationshipAttr.Type is IIdentifiable because we were able to successfully build the ResourceGraph
             var relatedInstance = relationshipAttr.Type.New<IIdentifiable>();
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCore.Serialization
             if (includedResource == null)
                 return relatedInstance;
 
-            var contextEntity = _jsonApiContext.ContextGraph.GetContextEntity(relationshipAttr.Type);
+            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipAttr.Type);
             if (contextEntity == null)
                 throw new JsonApiException(400, $"Included type '{relationshipAttr.Type}' is not a registered json:api resource.");
 

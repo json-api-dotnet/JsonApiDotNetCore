@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Services
     public interface IJsonApiApplication
     {
         JsonApiOptions Options { get; set; }
-        IContextGraph ContextGraph { get; set; }
+        IResourceGraph ResourceGraph { get; set; }
     }
 
     public interface IQueryRequest

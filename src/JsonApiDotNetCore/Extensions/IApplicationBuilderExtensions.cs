@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Extensions
         public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app, bool useMvc = true)
         {
             DisableDetailedErrorsIfProduction(app);
-            LogContextGraphValidations(app);
+            LogResourceGraphValidations(app);
 
             app.UseMiddleware<RequestMiddleware>();
 
@@ -35,14 +35,14 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        private static void LogContextGraphValidations(IApplicationBuilder app)
+        private static void LogResourceGraphValidations(IApplicationBuilder app)
         {
-            var logger = app.ApplicationServices.GetService(typeof(ILogger<ContextGraphBuilder>)) as ILogger;
-            var contextGraph = app.ApplicationServices.GetService(typeof(IContextGraph)) as ContextGraph;
+            var logger = app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>)) as ILogger;
+            var resourceGraph = app.ApplicationServices.GetService(typeof(IResourceGraph)) as ResourceGraph;
 
-            if (logger != null && contextGraph != null)
+            if (logger != null && resourceGraph != null)
             {
-                contextGraph.ValidationResults.ForEach((v) =>
+                resourceGraph.ValidationResults.ForEach((v) =>
                     logger.Log(
                         v.LogLevel,
                         new EventId(),
