@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -39,6 +39,51 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
         }
 
+        [Fact]
+        public async Task Can_AddTo_ToMany_Relationship_ThroughLink()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+
+            var todoItem = _todoItemFaker.Generate();
+
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new List<object>
+                {
+                    new {
+                        type = "todo-items",
+                        id = $"{todoItem.Id}"
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("POST");
+            var route = $"/api/v1/people/{person.Id}/relationships/todo-items";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+            _context = _fixture.GetService<AppDbContext>();
+            var personsTodoItems = _context.People.Include(p => p.TodoItems).Single(p => p.Id == person.Id).TodoItems;
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(personsTodoItems);
+        }
         [Fact]
         public async Task Can_Update_ToMany_Relationship_ThroughLink()
         {
