@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Extensions
@@ -122,7 +121,7 @@ namespace JsonApiDotNetCore.Extensions
             return sortQuery.Direction == SortDirection.Descending
                 ? source.ThenByDescending(attr.GetPropertyPath())
                 : source.ThenBy(attr.GetPropertyPath());
-        }     
+        }
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)
             => CallGenericOrderMethod(source, propertyName, "OrderBy");
@@ -183,7 +182,7 @@ namespace JsonApiDotNetCore.Extensions
                 return source;
 
             if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
-                return CallGenericWhereContainsMethod(source,filterQuery);
+                return CallGenericWhereContainsMethod(source, filterQuery);
             else
                 return CallGenericWhereMethod(source, filterQuery);
         }
@@ -216,7 +215,7 @@ namespace JsonApiDotNetCore.Extensions
                 case FilterOperations.like:
                     body = Expression.Call(left, "Contains", null, right);
                     break;
-                    // {model.Id != 1}
+                // {model.Id != 1}
                 case FilterOperations.ne:
                     body = Expression.NotEqual(left, right);
                     break;

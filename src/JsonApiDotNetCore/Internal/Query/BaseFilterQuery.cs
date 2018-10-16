@@ -11,11 +11,13 @@ namespace JsonApiDotNetCore.Internal.Query
         : base(jsonApiContext, filterQuery)
         {
             PropertyValue = filterQuery.Value;
-            FilterOperation = filterQuery.OperationType;
+            FilterOperation = GetFilterOperation(filterQuery.Operation);
         }
 
-        [Obsolete("Use " + nameof(FilterQuery.OperationType) + " instead.")]
-        protected FilterOperations GetFilterOperation(string prefix)
+        public string PropertyValue { get; }
+        public FilterOperations FilterOperation { get; }
+
+        private FilterOperations GetFilterOperation(string prefix)
         {
             if (prefix.Length == 0) return FilterOperations.eq;
 
@@ -25,7 +27,5 @@ namespace JsonApiDotNetCore.Internal.Query
             return opertion;
         }
 
-        public string PropertyValue { get; }
-        public FilterOperations FilterOperation { get; }
     }
 }

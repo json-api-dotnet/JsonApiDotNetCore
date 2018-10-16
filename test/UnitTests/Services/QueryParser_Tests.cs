@@ -3,7 +3,6 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -100,7 +99,7 @@ namespace UnitTests.Services
 
             // assert
             Assert.Equal(dt, querySet.Filters.Single(f => f.Attribute == "key").Value);
-            Assert.Equal(FilterOperations.eq, querySet.Filters.Single(f => f.Attribute == "key").OperationType);
+            Assert.Equal(string.Empty, querySet.Filters.Single(f => f.Attribute == "key").Operation);
         }
 
         [Fact]
@@ -247,7 +246,7 @@ namespace UnitTests.Services
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
-                        Attributes = new List<AttrAttribute>
+                    Attributes = new List<AttrAttribute>
                         {
                             new AttrAttribute(attrName)
                             {
@@ -286,7 +285,7 @@ namespace UnitTests.Services
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
-                        Attributes = new List<AttrAttribute>()
+                    Attributes = new List<AttrAttribute>()
                 });
 
             var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());

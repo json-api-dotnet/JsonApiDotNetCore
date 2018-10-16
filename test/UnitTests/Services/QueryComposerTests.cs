@@ -23,7 +23,7 @@ namespace UnitTests.Services
             var querySet = new QuerySet();
             List<FilterQuery> filters = new List<FilterQuery>();
             filters.Add(filter);
-            querySet.Filters=filters;
+            querySet.Filters = filters;
 
             _jsonApiContext
                 .Setup(m => m.QuerySet)
@@ -56,7 +56,7 @@ namespace UnitTests.Services
             // act
             var filterString = queryComposer.Compose(_jsonApiContext.Object);
             // assert
-            Assert.Equal("&filter[attribute]=le:value&filter[attribute2]=eq:value2", filterString);
+            Assert.Equal("&filter[attribute]=le:value&filter[attribute2]=value2", filterString);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace UnitTests.Services
             // act
             var filterString = queryComposer.Compose(_jsonApiContext.Object);
             // assert
-            Assert.Equal("", filterString); 
+            Assert.Equal("", filterString);
         }
     }
 }
