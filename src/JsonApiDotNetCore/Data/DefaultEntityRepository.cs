@@ -116,7 +116,7 @@ namespace JsonApiDotNetCore.Data
                     foreach (var sortProp in defaultSortOrder)
                     {
                         // this is dumb...add an overload, don't allocate for no reason
-                        entities.Sort(new SortQuery(sortProp.Item2, sortProp.Item1));
+                        entities.Sort(_jsonApiContext, new SortQuery(sortProp.Item2, sortProp.Item1.PublicAttributeName));
                     }
                 }
             }
