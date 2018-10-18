@@ -3,17 +3,14 @@ using System;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
+    /// <summary>
+    /// An internal representation of the raw sort query.
+    /// </summary>
     public class SortQuery : BaseQuery
     {
-        [Obsolete("Use constructor with string attribute parameter. New constructor provides nested sort feature.")]
+        [Obsolete("Use constructor overload (SortDirection, string) instead.", error: true)]
         public SortQuery(SortDirection direction, AttrAttribute sortedAttribute)
-            :base(sortedAttribute.InternalAttributeName)
-        {
-            Direction = direction;
-            SortedAttribute = sortedAttribute;
-            if (SortedAttribute.IsSortable == false)
-                throw new JsonApiException(400, $"Sort is not allowed for attribute '{SortedAttribute.PublicAttributeName}'.");
-        }
+            : base(sortedAttribute.PublicAttributeName) { }
 
         public SortQuery(SortDirection direction, string attribute)
             : base(attribute)
@@ -21,8 +18,12 @@ namespace JsonApiDotNetCore.Internal.Query
             Direction = direction;
         }
 
+        /// <summary>
+        /// Direction the sort should be applied
+        /// </summary>
         public SortDirection Direction { get; set; }
-        [Obsolete("Use string based Attribute instead. This provides nested sort feature (e.g. ?sort=owner.first-name)")]
+
+        [Obsolete("Use string based Attribute instead.", error: true)]
         public AttrAttribute SortedAttribute { get; set; }
     }
 }

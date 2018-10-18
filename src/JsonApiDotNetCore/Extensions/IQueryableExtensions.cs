@@ -28,48 +28,14 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        [Obsolete("Use Sort method with IJsonApiContext parameter instead. New Sort method provides nested sorting.")]
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries)
-        {
-            if (sortQueries == null || sortQueries.Count == 0)
-                return source;
+        [Obsolete("Use overload Sort<T>(IJsonApiContext, List<SortQuery>) instead.", error: true)]
+        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries) => null;
 
-            var orderedEntities = source.Sort(sortQueries[0]);
+        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery) => null;
 
-            if (sortQueries.Count <= 1)
-                return orderedEntities;
-
-            for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(sortQueries[i]);
-
-            return orderedEntities;
-        }
-
-        [Obsolete("Use Sort method with IJsonApiContext parameter instead. New Sort method provides nested sorting.")]
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery)
-        {
-            // For clients using SortQuery constructor with string based parameter
-            if (sortQuery.SortedAttribute == null)
-                throw new JsonApiException(400, $"It's not possible to provide {nameof(SortQuery)} without {nameof(SortQuery.SortedAttribute)} parameter." +
-                    $" Use Sort method with IJsonApiContext parameter instead.");
-
-            return sortQuery.Direction == SortDirection.Descending
-                ? source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName)
-                : source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
-        }
-
-        [Obsolete("Use Sort method with IJsonApiContext parameter instead. New Sort method provides nested sorting.")]
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery)
-        {
-            // For clients using SortQuery constructor with string based parameter
-            if (sortQuery.SortedAttribute == null)
-                throw new JsonApiException(400, $"It's not possible to provide {nameof(SortQuery)} without {nameof(SortQuery.SortedAttribute)} parameter." +
-                    $" Use Sort method with IJsonApiContext parameter instead.");
-
-            return sortQuery.Direction == SortDirection.Descending
-                ? source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName)
-                : source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
-        }
+        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery) => null;
 
         public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, List<SortQuery> sortQueries)
         {
@@ -89,11 +55,6 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, SortQuery sortQuery)
         {
-            // For clients using constructor with AttrAttribute parameter
-            if (sortQuery.SortedAttribute != null)
-                throw new JsonApiException(400, $"It's not possible to provide {nameof(SortQuery)} with {nameof(SortQuery.SortedAttribute)} parameter." +
-                    $" Use {nameof(SortQuery)} constructor overload based on string attribute.");
-
             BaseAttrQuery attr;
             if (sortQuery.IsAttributeOfRelationship)
                 attr = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
@@ -107,11 +68,6 @@ namespace JsonApiDotNetCore.Extensions
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, IJsonApiContext jsonApiContext, SortQuery sortQuery)
         {
-            // For clients using constructor with AttrAttribute parameter
-            if (sortQuery.SortedAttribute != null)
-                throw new JsonApiException(400, $"It's not possible to provide {nameof(SortQuery)} with {nameof(SortQuery.SortedAttribute)} parameter." +
-                    $" Use {nameof(SortQuery)} constructor overload based on string attribute.");
-
             BaseAttrQuery attr;
             if (sortQuery.IsAttributeOfRelationship)
                 attr = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
