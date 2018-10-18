@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -35,7 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var fields = new List<string> { "Id", "Description", "CreatedDate", "AchievedDate" };
-            var todoItem = new TodoItem {
+            var todoItem = new TodoItem
+            {
                 Description = "description",
                 Ordinal = 1,
                 CreatedDate = DateTime.Now,
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var query = _dbContext
                 .TodoItems
-                .Where(t=>t.Id == todoItem.Id)
+                .Where(t => t.Id == todoItem.Id)
                 .Select(fields);
 
             var resultSql = StringExtensions.Normalize(query.ToSql());
@@ -68,14 +69,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Fields_Query_Selects_Sparse_Field_Sets()
         {
             // arrange
-            var todoItem = new TodoItem {
+            var todoItem = new TodoItem
+            {
                 Description = "description",
-                Ordinal = 1, 
+                Ordinal = 1,
                 CreatedDate = DateTime.Now
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
-            
+
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");

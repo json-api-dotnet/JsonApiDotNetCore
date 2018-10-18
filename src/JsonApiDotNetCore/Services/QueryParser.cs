@@ -156,7 +156,6 @@ namespace JsonApiDotNetCore.Services
 
             foreach (var sortSegment in sortSegments)
             {
-
                 var propertyName = sortSegment;
                 var direction = SortDirection.Ascending;
 
@@ -166,12 +165,7 @@ namespace JsonApiDotNetCore.Services
                     propertyName = propertyName.Substring(1);
                 }
 
-                var attribute = GetAttribute(propertyName);
-
-                if (attribute.IsSortable == false)
-                    throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
-
-                sortParameters.Add(new SortQuery(direction, attribute));
+                sortParameters.Add(new SortQuery(direction, propertyName));
             };
 
             return sortParameters;
@@ -240,12 +234,6 @@ namespace JsonApiDotNetCore.Services
                 return string.Empty;
 
             return operation;
-        }
-
-        private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)
-        {
-            var (operation, filterValue) = ParseFilterOperation(query.ToString());
-            return new FilterQuery(propertyName, filterValue, operation);
         }
     }
 }

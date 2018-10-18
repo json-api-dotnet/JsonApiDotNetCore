@@ -90,10 +90,10 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
-            if(_resourceDefinition != null) 
+            if (_resourceDefinition != null)
             {
                 var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
-                if(defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
+                if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
                 {
                     return defaultQueryFilter(entities, filterQuery.Value);
                 }
@@ -106,17 +106,17 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
             if (sortQueries != null && sortQueries.Count > 0)
-                return entities.Sort(sortQueries);
-            
-            if(_resourceDefinition != null) 
+                return entities.Sort(_jsonApiContext, sortQueries);
+
+            if (_resourceDefinition != null)
             {
                 var defaultSortOrder = _resourceDefinition.DefaultSort();
-                if(defaultSortOrder != null && defaultSortOrder.Count > 0)
+                if (defaultSortOrder != null && defaultSortOrder.Count > 0)
                 {
-                    foreach(var sortProp in defaultSortOrder)
-                    { 
+                    foreach (var sortProp in defaultSortOrder)
+                    {
                         // this is dumb...add an overload, don't allocate for no reason
-                        entities.Sort(new SortQuery(sortProp.Item2, sortProp.Item1));
+                        entities.Sort(_jsonApiContext, new SortQuery(sortProp.Item2, sortProp.Item1.PublicAttributeName));
                     }
                 }
             }
@@ -189,10 +189,10 @@ namespace JsonApiDotNetCore.Data
             var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
             foreach (var relationship in relationships)
             {
-                if(relationship.Key is HasManyThroughAttribute hasManyThrough)
+                if (relationship.Key is HasManyThroughAttribute hasManyThrough)
                     AttachHasManyThrough(entity, hasManyThrough, relationship.Value);
                 else
-                    AttachHasMany(relationship.Key as HasManyAttribute, relationship.Value);                
+                    AttachHasMany(relationship.Key as HasManyAttribute, relationship.Value);
             }
         }
 
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
-            if(string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(400, "Include parameter must not be empty if provided");
+            if (string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(400, "Include parameter must not be empty if provided");
 
             var relationshipChain = relationshipName.Split('.');
 
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCore.Data
             // TODO: make recursive method
             string internalRelationshipPath = null;
             var entity = _jsonApiContext.RequestEntity;
-            for(var i = 0; i < relationshipChain.Length; i++)
+            for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];
                 var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
@@ -315,7 +315,7 @@ namespace JsonApiDotNetCore.Data
                 internalRelationshipPath = (internalRelationshipPath == null)
                     ? relationship.RelationshipPath
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
-                
+
                 if(i < relationshipChain.Length)
                     entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
             }

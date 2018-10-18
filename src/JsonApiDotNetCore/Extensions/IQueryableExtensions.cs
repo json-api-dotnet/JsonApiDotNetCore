@@ -28,68 +28,93 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
+        [Obsolete("Use overload Sort<T>(IJsonApiContext, List<SortQuery>) instead.", error: true)]
+        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries) => null;
 
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries)
+        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery) => null;
+
+        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery) => null;
+
+        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)
                 return source;
 
-            var orderedEntities = source.Sort(sortQueries[0]);
+            var orderedEntities = source.Sort(jsonApiContext, sortQueries[0]);
 
-            if (sortQueries.Count <= 1) return orderedEntities;
+            if (sortQueries.Count <= 1)
+                return orderedEntities;
 
             for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(sortQueries[i]);
+                orderedEntities = orderedEntities.Sort(jsonApiContext, sortQueries[i]);
 
             return orderedEntities;
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, SortQuery sortQuery)
         {
+            BaseAttrQuery attr;
+            if (sortQuery.IsAttributeOfRelationship)
+                attr = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
+            else
+                attr = new AttrSortQuery(jsonApiContext, sortQuery);
+
             return sortQuery.Direction == SortDirection.Descending
-                ? source.OrderByDescending(sortQuery.SortedAttribute.InternalAttributeName)
-                : source.OrderBy(sortQuery.SortedAttribute.InternalAttributeName);
+                ? source.OrderByDescending(attr.GetPropertyPath())
+                : source.OrderBy(attr.GetPropertyPath());
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, IJsonApiContext jsonApiContext, SortQuery sortQuery)
         {
+            BaseAttrQuery attr;
+            if (sortQuery.IsAttributeOfRelationship)
+                attr = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
+            else
+                attr = new AttrSortQuery(jsonApiContext, sortQuery);
+
             return sortQuery.Direction == SortDirection.Descending
-                ? source.ThenByDescending(sortQuery.SortedAttribute.InternalAttributeName)
-                : source.ThenBy(sortQuery.SortedAttribute.InternalAttributeName);
+                ? source.ThenByDescending(attr.GetPropertyPath())
+                : source.ThenBy(attr.GetPropertyPath());
         }
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)
-        {
-            return CallGenericOrderMethod(source, propertyName, "OrderBy");
-        }
+            => CallGenericOrderMethod(source, propertyName, "OrderBy");
 
         public static IOrderedQueryable<TSource> OrderByDescending<TSource>(this IQueryable<TSource> source, string propertyName)
-        {
-            return CallGenericOrderMethod(source, propertyName, "OrderByDescending");
-        }
+            => CallGenericOrderMethod(source, propertyName, "OrderByDescending");
 
         public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, string propertyName)
-        {
-            return CallGenericOrderMethod(source, propertyName, "ThenBy");
-        }
+            => CallGenericOrderMethod(source, propertyName, "ThenBy");
 
         public static IOrderedQueryable<TSource> ThenByDescending<TSource>(this IOrderedQueryable<TSource> source, string propertyName)
-        {
-            return CallGenericOrderMethod(source, propertyName, "ThenByDescending");
-        }
+            => CallGenericOrderMethod(source, propertyName, "ThenByDescending");
 
         private static IOrderedQueryable<TSource> CallGenericOrderMethod<TSource>(IQueryable<TSource> source, string propertyName, string method)
         {
             // {x}
             var parameter = Expression.Parameter(typeof(TSource), "x");
-            // {x.propertyName}
-            var property = Expression.Property(parameter, propertyName);
-            // {x=>x.propertyName}
-            var lambda = Expression.Lambda(property, parameter);
+            MemberExpression member;
+
+            var values = propertyName.Split('.');
+            if (values.Length > 1)
+            {
+                var relation = Expression.PropertyOrField(parameter, values[0]);
+                // {x.relationship.propertyName}
+                member = Expression.Property(relation, values[1]);
+            }
+            else
+            {
+                // {x.propertyName}
+                member = Expression.Property(parameter, values[0]);
+            }
+            // {x=>x.propertyName} or {x=>x.relationship.propertyName}
+            var lambda = Expression.Lambda(member, parameter);
 
             // REFLECTION: source.OrderBy(x => x.Property)
             var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == method && x.GetParameters().Length == 2);
-            var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TSource), property.Type);
+            var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(TSource), member.Type);
             var result = orderByGeneric.Invoke(null, new object[] { source, lambda });
 
             return (IOrderedQueryable<TSource>)result;
@@ -100,125 +125,23 @@ namespace JsonApiDotNetCore.Extensions
             if (filterQuery == null)
                 return source;
 
+            // Relationship.Attribute
             if (filterQuery.IsAttributeOfRelationship)
                 return source.Filter(new RelatedAttrFilterQuery(jsonApiContext, filterQuery));
 
             return source.Filter(new AttrFilterQuery(jsonApiContext, filterQuery));
         }
 
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, AttrFilterQuery filterQuery)
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, BaseFilterQuery filterQuery)
         {
             if (filterQuery == null)
                 return source;
 
-            var concreteType = typeof(TSource);
-            var property = concreteType.GetProperty(filterQuery.FilteredAttribute.InternalAttributeName);
-            var op = filterQuery.FilterOperation;
-
-            if (property == null)
-                throw new ArgumentException($"'{filterQuery.FilteredAttribute.InternalAttributeName}' is not a valid property of '{concreteType}'");
-
-            try
-            {
-                if (op == FilterOperations.@in || op == FilterOperations.nin)
-                {
-                    string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, property.Name, op);
-
-                    return source.Where(lambdaIn);
-                }
-                else if (op == FilterOperations.isnotnull || op == FilterOperations.isnull) {
-                    // {model}
-                    var parameter = Expression.Parameter(concreteType, "model");
-                    // {model.Id}
-                    var left = Expression.PropertyOrField(parameter, property.Name);
-                    var right = Expression.Constant(null);
-
-                    var body = GetFilterExpressionLambda(left, right, op);
-                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
-
-                    return source.Where(lambda);
-                }
-                else
-                {   // convert the incoming value to the target value type
-                    // "1" -> 1
-                    var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, property.PropertyType);
-                    // {model}
-                    var parameter = Expression.Parameter(concreteType, "model");
-                    // {model.Id}
-                    var left = Expression.PropertyOrField(parameter, property.Name);
-                    // {1}
-                    var right = Expression.Constant(convertedValue, property.PropertyType);
-
-                    var body = GetFilterExpressionLambda(left, right, op);
-
-                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
-
-                    return source.Where(lambda);
-                }
-            }
-            catch (FormatException)
-            {
-                throw new JsonApiException(400, $"Could not cast {filterQuery.PropertyValue} to {property.PropertyType.Name}");
-            }
+            if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
+                return CallGenericWhereContainsMethod(source, filterQuery);
+            else
+                return CallGenericWhereMethod(source, filterQuery);
         }
-
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, RelatedAttrFilterQuery filterQuery)
-        {
-            if (filterQuery == null)
-                return source;
-
-            var concreteType = typeof(TSource);
-            var relation = concreteType.GetProperty(filterQuery.FilteredRelationship.InternalRelationshipName);
-            if (relation == null)
-                throw new ArgumentException($"'{filterQuery.FilteredRelationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
-
-            var relatedType = filterQuery.FilteredRelationship.Type;
-            var relatedAttr = relatedType.GetProperty(filterQuery.FilteredAttribute.InternalAttributeName);
-            if (relatedAttr == null)
-                throw new ArgumentException($"'{filterQuery.FilteredAttribute.InternalAttributeName}' is not a valid attribute of '{filterQuery.FilteredRelationship.InternalRelationshipName}'");
-
-            try
-            {
-                if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
-                {
-                    string[] propertyValues = filterQuery.PropertyValue.Split(',');
-                    var lambdaIn = ArrayContainsPredicate<TSource>(propertyValues, relatedAttr.Name, filterQuery.FilterOperation, relation.Name);
-
-                    return source.Where(lambdaIn);
-                }
-                else
-                {
-                    // convert the incoming value to the target value type
-                    // "1" -> 1
-                    var convertedValue = TypeHelper.ConvertType(filterQuery.PropertyValue, relatedAttr.PropertyType);
-                    // {model}
-                    var parameter = Expression.Parameter(concreteType, "model");
-
-                    // {model.Relationship}
-                    var leftRelationship = Expression.PropertyOrField(parameter, relation.Name);
-
-                    // {model.Relationship.Attr}
-                    var left = Expression.PropertyOrField(leftRelationship, relatedAttr.Name);
-
-                    // {1}
-                    var right = Expression.Constant(convertedValue, relatedAttr.PropertyType);
-
-                    var body = GetFilterExpressionLambda(left, right, filterQuery.FilterOperation);
-
-                    var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
-
-                    return source.Where(lambda);
-                }
-            }
-            catch (FormatException)
-            {
-                throw new JsonApiException(400, $"Could not cast {filterQuery.PropertyValue} to {relatedAttr.PropertyType.Name}");
-            }
-        }
-
-        private static bool IsNullable(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-
 
         private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
         {
@@ -248,7 +171,7 @@ namespace JsonApiDotNetCore.Extensions
                 case FilterOperations.like:
                     body = Expression.Call(left, "Contains", null, right);
                     break;
-                    // {model.Id != 1}
+                // {model.Id != 1}
                 case FilterOperations.ne:
                     body = Expression.NotEqual(left, right);
                     break;
@@ -267,32 +190,109 @@ namespace JsonApiDotNetCore.Extensions
             return body;
         }
 
-        private static Expression<Func<TSource, bool>> ArrayContainsPredicate<TSource>(string[] propertyValues, string fieldname, FilterOperations op, string relationName = null)
+        private static IQueryable<TSource> CallGenericWhereContainsMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
         {
-            ParameterExpression entity = Expression.Parameter(typeof(TSource), "entity");
-            MemberExpression member;
-            if (!string.IsNullOrEmpty(relationName))
-            {
-                var relation = Expression.PropertyOrField(entity, relationName);
-                member = Expression.Property(relation, fieldname);
-            }
-            else
-                member = Expression.Property(entity, fieldname);
+            var concreteType = typeof(TSource);
+            var property = concreteType.GetProperty(filter.Attribute.InternalAttributeName);
 
-            var method = ContainsMethod.MakeGenericMethod(member.Type);
-            var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
-
-            if (op == FilterOperations.@in)
+            try
             {
-                // Where(i => arr.Contains(i.column))
-                var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
-                return Expression.Lambda<Func<TSource, bool>>(contains, entity);
+                var propertyValues = filter.PropertyValue.Split(QueryConstants.COMMA);
+                ParameterExpression entity = Expression.Parameter(concreteType, "entity");
+                MemberExpression member;
+                if (filter.IsAttributeOfRelationship)
+                {
+                    var relation = Expression.PropertyOrField(entity, filter.Relationship.InternalRelationshipName);
+                    member = Expression.Property(relation, filter.Attribute.InternalAttributeName);
+                }
+                else
+                    member = Expression.Property(entity, filter.Attribute.InternalAttributeName);
+
+                var method = ContainsMethod.MakeGenericMethod(member.Type);
+                var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
+
+                if (filter.FilterOperation == FilterOperations.@in)
+                {
+                    // Where(i => arr.Contains(i.column))
+                    var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
+                    var lambda = Expression.Lambda<Func<TSource, bool>>(contains, entity);
+
+                    return source.Where(lambda);
+                }
+                else
+                {
+                    // Where(i => !arr.Contains(i.column))
+                    var notContains = Expression.Not(Expression.Call(method, new Expression[] { Expression.Constant(obj), member }));
+                    var lambda = Expression.Lambda<Func<TSource, bool>>(notContains, entity);
+
+                    return source.Where(lambda);
+                }
             }
+            catch (FormatException)
+            {
+                throw new JsonApiException(400, $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}");
+            }
+        }
+
+        private static IQueryable<TSource> CallGenericWhereMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
+        {
+            var op = filter.FilterOperation;
+            var concreteType = typeof(TSource);
+            PropertyInfo relationProperty = null;
+            PropertyInfo property = null;
+            MemberExpression left;
+            ConstantExpression right;
+
+            // {model}
+            var parameter = Expression.Parameter(concreteType, "model");
+            // Is relationship attribute
+            if (filter.IsAttributeOfRelationship)
+            {
+                relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
+                if (relationProperty == null)
+                    throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
+
+                var relatedType = filter.Relationship.Type;
+                property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
+                if (property == null)
+                    throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
+
+                var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.InternalRelationshipName);
+                // {model.Relationship}
+                left = Expression.PropertyOrField(leftRelationship, property.Name);
+            }
+            // Is standalone attribute
             else
             {
-                // Where(i => !arr.Contains(i.column))
-                var notContains = Expression.Not(Expression.Call(method, new Expression[] { Expression.Constant(obj), member }));
-                return Expression.Lambda<Func<TSource, bool>>(notContains, entity);
+                property = concreteType.GetProperty(filter.Attribute.InternalAttributeName);
+                if (property == null)
+                    throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid property of '{concreteType}'");
+
+                // {model.Id}
+                left = Expression.PropertyOrField(parameter, property.Name);
+            }
+
+            try
+            {
+                if (op == FilterOperations.isnotnull || op == FilterOperations.isnull)
+                    right = Expression.Constant(null);
+                else
+                {
+                    // convert the incoming value to the target value type
+                    // "1" -> 1
+                    var convertedValue = TypeHelper.ConvertType(filter.PropertyValue, property.PropertyType);
+                    // {1}
+                    right = Expression.Constant(convertedValue, property.PropertyType);
+                }
+
+                var body = GetFilterExpressionLambda(left, right, filter.FilterOperation);
+                var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
+
+                return source.Where(lambda);
+            }
+            catch (FormatException)
+            {
+                throw new JsonApiException(400, $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}");
             }
         }
 
@@ -337,5 +337,6 @@ namespace JsonApiDotNetCore.Extensions
 
             return source;
         }
+
     }
 }

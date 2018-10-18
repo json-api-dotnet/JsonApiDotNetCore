@@ -246,7 +246,7 @@ namespace UnitTests.Services
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
-                        Attributes = new List<AttrAttribute>
+                    Attributes = new List<AttrAttribute>
                         {
                             new AttrAttribute(attrName)
                             {
@@ -285,7 +285,7 @@ namespace UnitTests.Services
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
-                        Attributes = new List<AttrAttribute>()
+                    Attributes = new List<AttrAttribute>()
                 });
 
             var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
