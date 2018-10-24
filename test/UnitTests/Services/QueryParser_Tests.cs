@@ -252,7 +252,8 @@ namespace UnitTests.Services
                             {
                                 InternalAttributeName = internalAttrName
                             }
-                        }
+                        },
+                    Relationships = new List<RelationshipAttribute>()
                 });
 
             var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
@@ -285,7 +286,8 @@ namespace UnitTests.Services
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
-                    Attributes = new List<AttrAttribute>()
+                    Attributes = new List<AttrAttribute>(),
+                    Relationships = new List<RelationshipAttribute>()
                 });
 
             var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
