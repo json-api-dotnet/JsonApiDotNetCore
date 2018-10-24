@@ -248,7 +248,7 @@ namespace JsonApiDotNetCore.Services
             });
 
             TEntity value;
-            // FirstOrDefaultAsync exprects Queryable<TEntity>, but CallGenericSelectMethod creates Queryable only
+            // https://github.com/aspnet/EntityFrameworkCore/issues/6573
             if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
                 value = query.FirstOrDefault();
             else

@@ -304,7 +304,7 @@ namespace JsonApiDotNetCore.Extensions
         private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
         {
             var sourceBindings = new List<MemberAssignment>();
-            var sourceType = typeof(TSource);       
+            var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
             var sourceProperties = new List<string>() { };
 
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCore.Extensions
                         // {x.Owner.Name}
                         var nestedBody = Expression.PropertyOrField(srcBody, nested);
                         var propInfo = nestedPropertyType.GetProperty(nested);
-                        nestedBindings.Add(Expression.Bind(propInfo, nestedBody));                  
+                        nestedBindings.Add(Expression.Bind(propInfo, nestedBody));
                     }
                     // { new Owner() }
                     var newExp = Expression.New(nestedPropertyType);
@@ -397,10 +397,10 @@ namespace JsonApiDotNetCore.Extensions
 
             var sourceInit = Expression.MemberInit(Expression.New(sourceType), sourceBindings);
             var finalBody = Expression.Lambda(sourceInit, parameter);
-          
+
             return source.Provider.CreateQuery<TSource>(Expression.Call(
-                typeof(Queryable), 
-                "Select", // It would be better to call generic IQueryable<TSource>.Select() method (FirstOrDefaultAsync can't be called on non-generic)
+                typeof(Queryable),
+                "Select",
                 new[] { source.ElementType, typeof(TSource) },
                 source.Expression,
                 Expression.Quote(finalBody)));
