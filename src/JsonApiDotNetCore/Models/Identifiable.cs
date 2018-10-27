@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Models
         /// from `typeof(T)` to a string and the setter vice versa.
         /// 
         /// To override this behavior, you can either implement the
-        /// <see cref="IIdentifiable{T}"> interface directly or override
+        /// <see cref="IIdentifiable{T}" /> interface directly or override
         /// `GetStringId` and `GetTypedId` methods.
         /// </summary>
         [NotMapped]

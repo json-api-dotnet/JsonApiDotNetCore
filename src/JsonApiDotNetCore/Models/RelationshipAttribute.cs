@@ -83,9 +83,9 @@ namespace JsonApiDotNetCore.Models
 
         /// <summary>
         /// The internal navigation property path to the related entity.
-        /// <summary>
+        /// </summary>
         /// <remarks>
-        /// In all cases except the HasManyThrough relationships, this will just be the <see cref"InternalRelationshipName" />.
+        /// In all cases except the HasManyThrough relationships, this will just be the <see cref="InternalRelationshipName" />.
         /// </remarks>
         public virtual string RelationshipPath => InternalRelationshipName;
     }
