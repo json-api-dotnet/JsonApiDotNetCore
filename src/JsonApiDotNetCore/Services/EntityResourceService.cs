@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Services
                 .Relationships
                 .FirstOrDefault(r => r.Is(relationshipName));
 
-            var relationshipType = relationship.ResourceType;
+            var relationshipType = relationship.Type;
 
             // update relationship type with internalname
             var entityProperty = typeof(TEntity).GetProperty(relationship.InternalRelationshipName);
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCore.Services
                     $"could not be found on entity.");
             }
 
-            relationship.ResourceType = relationship.IsHasMany
+            relationship.Type = relationship.IsHasMany
                 ? entityProperty.PropertyType.GetGenericArguments()[0]
                 : entityProperty.PropertyType;
 
@@ -188,7 +188,7 @@ namespace JsonApiDotNetCore.Services
 
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
 
-            relationship.ResourceType = relationshipType;
+            relationship.Type = relationshipType;
         }
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TEntity> entities)
