@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -357,6 +358,57 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Can_Ignore_Null_Parent_In_Nested_Include()
+        {
+            // arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = _personFaker.Generate();
+            todoItem.CreatedDate = DateTime.Now;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var todoItemWithNullOwner = _todoItemFaker.Generate();
+            todoItemWithNullOwner.Owner = null;
+            todoItemWithNullOwner.CreatedDate = DateTime.Now;
+            _context.TodoItems.Add(todoItemWithNullOwner);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var httpMethod = new HttpMethod("GET");
+          
+            var route = $"/api/v1/todo-items?sort=-created-date&page[size]=2&include=owner.role"; // last two todo-items
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Documents>(responseString);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Single(documents.Included);
+
+            var ownerValueNull = documents.Data
+                .First(i => i.Id == todoItemWithNullOwner.StringId)
+                .Relationships.First(i => i.Key == "owner")
+                .Value.SingleData;
+
+            Assert.Null(ownerValueNull);
+
+            var ownerValue = documents.Data
+                .First(i => i.Id == todoItem.StringId)
+                .Relationships.First(i => i.Key == "owner")
+                .Value.SingleData;
+
+            Assert.NotNull(ownerValue);
         }
     }
 }
