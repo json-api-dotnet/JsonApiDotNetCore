@@ -254,7 +254,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
-                var relatedType = filter.Relationship.Type;
+                var relatedType = filter.Relationship.ResourceType;
                 property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
                 if (property == null)
                     throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");

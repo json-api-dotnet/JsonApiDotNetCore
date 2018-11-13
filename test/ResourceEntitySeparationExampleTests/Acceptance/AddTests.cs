@@ -46,6 +46,54 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             Assert.Equal(course.Title, data.Title);
             Assert.Equal(course.Description, data.Description);
         }
+        
+        [Fact]
+        public async Task Can_Create_Course_With_Department_Id()
+        {
+            // arrange
+            var route = $"/api/v1/courses/";
+            var course = _fixture.CourseFaker.Generate();
+            
+            var department = _fixture.DepartmentFaker.Generate();
+            _fixture.Context.Departments.Add(department);
+            _fixture.Context.SaveChanges();
+            
+            var content = new
+            {
+                data = new
+                {
+                    type = "courses",
+                    attributes = new Dictionary<string, object>
+                    {
+                        { "number", course.Number },
+                        { "title", course.Title },
+                        { "description", course.Description }
+                    },
+                    relationships = new
+                    {
+                        department = new
+                        {
+                            data = new
+                            {
+                                type = "departments",
+                                id = department.Id    
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // act
+            var (response, data) = await _fixture.PostAsync<CourseResource>(route, content);
+
+            // assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.NotNull(data);
+            Assert.Equal(course.Number, data.Number);
+            Assert.Equal(course.Title, data.Title);
+            Assert.Equal(course.Description, data.Description);
+            Assert.Equal(department.Id, data.DepartmentId);
+        }
 
         [Fact]
         public async Task Can_Create_Department()
