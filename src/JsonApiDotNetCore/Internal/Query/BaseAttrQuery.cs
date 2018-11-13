@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using System;
 using System.Linq;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -15,7 +16,21 @@ namespace JsonApiDotNetCore.Internal.Query
 
         public BaseAttrQuery(IJsonApiContext jsonApiContext, BaseQuery baseQuery)
         {
-            _jsonApiContext = jsonApiContext;
+            _jsonApiContext = jsonApiContext ?? throw new ArgumentNullException(nameof(jsonApiContext));
+
+            if(_jsonApiContext.RequestEntity == null) 
+                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_jsonApiContext.RequestEntity)} cannot be null. "
+                    + "This property contains the ResourceGraph node for the requested entity. "
+                    + "If this is a unit test, you need to mock this member. "
+                    + "See this issue to check the current status of improved test guidelines: "
+                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(jsonApiContext));
+            
+            if(_jsonApiContext.ResourceGraph == null) 
+                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_jsonApiContext.ResourceGraph)} cannot be null. "
+                    + "If this is a unit test, you need to construct a graph containing the resources being tested. "
+                    + "See this issue to check the current status of improved test guidelines: "
+                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(jsonApiContext));
+            
             if (baseQuery.IsAttributeOfRelationship)
             {
                 Relationship = GetRelationship(baseQuery.Relationship);
@@ -48,8 +63,8 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
-            var relatedContextExntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
-            return relatedContextExntity.Attributes
+            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
+            return relatedContextEntity.Attributes
               .FirstOrDefault(a => a.Is(attribute));
         }
     }

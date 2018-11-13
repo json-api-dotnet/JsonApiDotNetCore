@@ -12,8 +12,7 @@ using Newtonsoft.Json.Serialization;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Global options.
-    /// https://json-api-dotnet.github.io/#/global-options
+    /// Global options
     /// </summary>
     public class JsonApiOptions
     {

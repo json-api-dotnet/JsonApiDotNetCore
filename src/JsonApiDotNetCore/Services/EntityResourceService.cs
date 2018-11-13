@@ -247,7 +247,12 @@ namespace JsonApiDotNetCore.Services
                 query = _entities.Include(query, r);
             });
 
-            var value = await _entities.FirstOrDefaultAsync(query);
+            TEntity value;
+            // https://github.com/aspnet/EntityFrameworkCore/issues/6573
+            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
+                value = query.FirstOrDefault();
+            else
+                value = await _entities.FirstOrDefaultAsync(query);
 
             return MapOut(value);
         }
