@@ -6,11 +6,12 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude)
+        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude, Type withEntityType)
         {
             PublicRelationshipName = publicName;
             DocumentLinks = documentLinks;
             CanInclude = canInclude;
+            _entityType = withEntityType;
         }
 
         public string PublicRelationshipName { get; internal set; }
@@ -26,7 +27,11 @@ namespace JsonApiDotNetCore.Models
         /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
         /// </code>
         /// </example>
-        public Type Type { get; internal set; }
+        public Type ResourceType { get; internal set; }
+
+        private readonly Type _entityType;
+        public Type EntityType => _entityType == null ? ResourceType : _entityType;
+
         public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
@@ -55,10 +60,10 @@ namespace JsonApiDotNetCore.Models
         }
 
         public abstract void SetValue(object entity, object newValue);
-
+        
         public object GetValue(object entity) => entity
-            ?.GetType()
-            .GetProperty(InternalRelationshipName)
+            ?.GetType()?
+            .GetProperty(InternalRelationshipName)?
             .GetValue(entity);
 
         public override string ToString()

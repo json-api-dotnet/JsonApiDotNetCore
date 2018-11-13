@@ -11,6 +11,7 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="withEntityType">If the entity model of this relationship refers to a different type, specify that here</param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
         /// 
@@ -20,21 +21,21 @@ namespace JsonApiDotNetCore.Models
         /// <code>
         /// public class Article : Identifiable 
         /// {
-        ///     [HasOne("author", withForiegnKey: nameof(AuthorKey)]
+        ///     [HasOne("author", withForeignKey: nameof(AuthorKey)]
         ///     public Author Author { get; set; }
         ///     public int AuthorKey { get; set; }
         /// }
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null)
-        : base(publicName, documentLinks, canInclude)
+        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, Type withEntityType = null, bool canInclude = true, string withForeignKey = null)
+        : base(publicName, documentLinks, canInclude, withEntityType)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
         }
 
         private readonly string _explicitIdentifiablePropertyName;
-
+        
         /// <summary>
         /// The independent resource identifier.
         /// </summary>
@@ -49,7 +50,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="newValue">The new property value</param>
         public override void SetValue(object resource, object newValue)
         {
-            var propertyName = (newValue?.GetType() == Type)
+            var propertyName = (newValue?.GetType() == ResourceType)
                 ? InternalRelationshipName
                 : IdentifiablePropertyName;
 

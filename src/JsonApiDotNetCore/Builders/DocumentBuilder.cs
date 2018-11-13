@@ -240,7 +240,7 @@ namespace JsonApiDotNetCore.Builders
         {
             if (relationshipChainIndex < relationshipChain.Length)
             {
-                var nextContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
+                var nextContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.ResourceType);
                 var resource = (IIdentifiable)navigationEntity;
                 // recursive call
                 if (relationshipChainIndex < relationshipChain.Length - 1)
@@ -327,7 +327,7 @@ namespace JsonApiDotNetCore.Builders
             if (independentRelationshipIdentifier == null)
                 return null;
 
-            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(hasOne.Type);
+            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(hasOne.ResourceType);
             if (relatedContextEntity == null) // TODO: this should probably be a debug log at minimum
                 return null;
 
