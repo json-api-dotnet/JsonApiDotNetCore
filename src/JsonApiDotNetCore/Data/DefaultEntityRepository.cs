@@ -163,7 +163,17 @@ namespace JsonApiDotNetCore.Data
         {
             foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
             {
-                _context.Entry(hasOneRelationship.Key.EntityType).State = EntityState.Detached;
+                var hasOne = (HasOneAttribute) hasOneRelationship.Key;
+                if (hasOne.EntityPropertyName != null)
+                {
+                    var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
+                    if (relatedEntity != null)
+                        _context.Entry(relatedEntity).State = EntityState.Detached;
+                }
+                else
+                {
+                    _context.Entry(hasOneRelationship.Value).State = EntityState.Detached;
+                }
             }
 
             foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
@@ -232,12 +242,21 @@ namespace JsonApiDotNetCore.Data
             var relationships = _jsonApiContext.HasOneRelationshipPointers.Get();
             foreach (var relationship in relationships)
             {
-                var relatedEntityType = relationship.Key.EntityType; // DepartmentEntity
-                var relatedEntityMember = typeof(TEntity).GetProperties().SingleOrDefault(p => p.PropertyType == relatedEntityType)?.Name;
-                var relatedEntity = relatedEntityMember == null ? null : entity.GetType().GetProperty(relatedEntityMember)?.GetValue(entity);
-                
-                if (relatedEntity != null && _context.Entry(relatedEntity).State == EntityState.Detached && _context.EntityIsTracked((IIdentifiable)relatedEntity) == false)
-                    _context.Entry(relatedEntity).State = EntityState.Unchanged;
+                if (relationship.Key.GetType() != typeof(HasOneAttribute))
+                    continue;
+
+                var hasOne = (HasOneAttribute) relationship.Key;
+                if (hasOne.EntityPropertyName != null)
+                {
+                    var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
+                    if (relatedEntity != null && _context.Entry(relatedEntity).State == EntityState.Detached && _context.EntityIsTracked((IIdentifiable)relatedEntity) == false)
+                        _context.Entry(relatedEntity).State = EntityState.Unchanged;
+                }
+                else
+                {
+                    if (_context.Entry(relationship.Value).State == EntityState.Detached && _context.EntityIsTracked(relationship.Value) == false)
+                        _context.Entry(relationship.Value).State = EntityState.Unchanged;
+                }
             }
         }
 
@@ -271,7 +290,7 @@ namespace JsonApiDotNetCore.Data
             // of the property...
             var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
                 ? hasManyThrough.ThroughType
-                : relationship.ResourceType;
+                : relationship.Type;
 
             var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
@@ -323,7 +342,7 @@ namespace JsonApiDotNetCore.Data
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
 
                 if(i < relationshipChain.Length)
-                    entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.ResourceType);
+                    entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
             }
 
             return entities.Include(internalRelationshipPath);

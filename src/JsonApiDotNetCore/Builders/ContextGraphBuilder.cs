@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Builders
 
                 attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
-                attribute.ResourceType = GetRelationshipType(attribute, prop);
+                attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute) {
@@ -198,13 +198,13 @@ namespace JsonApiDotNetCore.Builders
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
 
                     // Article → ArticleTag.Tag
-                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.ResourceType)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.ResourceType}");
+                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.Type)
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.Type}");
                     
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.ResourceType} with name {rightIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.Type} with name {rightIdPropertyName}");
                 }
             }
 
