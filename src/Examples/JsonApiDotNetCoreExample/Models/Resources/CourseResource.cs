@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Models.Resources
         [Attr("description")]
         public string Description { get; set; }
 
-        [HasOne("department", withEntity: "Department")]
+        [HasOne("department", mappedBy: "Department")]
         public DepartmentResource Department { get; set; }
         public int? DepartmentId { get; set; }
 

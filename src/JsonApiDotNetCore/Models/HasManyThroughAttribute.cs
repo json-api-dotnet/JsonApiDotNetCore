@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Security;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -30,14 +31,15 @@ namespace JsonApiDotNetCore.Models
         /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
+        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
         /// <example>
         /// <code>
         /// [HasManyThrough(nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string internalThroughName, Link documentLinks = Link.All, bool canInclude = true)
-        : base(null, documentLinks, canInclude)
+        public HasManyThroughAttribute(string internalThroughName, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null)
+        : base(null, documentLinks, canInclude, mappedBy)
         {
             InternalThroughName = internalThroughName;
         }
@@ -50,14 +52,15 @@ namespace JsonApiDotNetCore.Models
         /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
+        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
         /// <example>
         /// <code>
         /// [HasManyThrough("tags", nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string publicName, string internalThroughName, Link documentLinks = Link.All, bool canInclude = true)
-        : base(publicName, documentLinks, canInclude)
+        public HasManyThroughAttribute(string publicName, string internalThroughName, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null)
+        : base(publicName, documentLinks, canInclude, mappedBy)
         {
             InternalThroughName = internalThroughName;
         }

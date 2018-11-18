@@ -178,11 +178,23 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
             {
-                foreach (var pointer in hasManyRelationship.Value)
+                var hasMany = (HasOneAttribute) hasManyRelationship.Key;
+                if (hasMany.EntityPropertyName != null)
                 {
-                    _context.Entry(pointer).State = EntityState.Detached;
+                    var relatedList = (IList)entity.GetType().GetProperty(hasMany.EntityPropertyName)?.GetValue(entity);
+                    foreach (var related in relatedList)
+                    {
+                        _context.Entry(related).State = EntityState.Detached;
+                    }
                 }
-
+                else
+                {
+                    foreach (var pointer in hasManyRelationship.Value)
+                    {
+                        _context.Entry(pointer).State = EntityState.Detached;
+                    }
+                }
+                
                 // HACK: detaching has many relationships doesn't appear to be sufficient
                 // the navigation property actually needs to be nulled out, otherwise
                 // EF adds duplicate instances to the collection
@@ -202,14 +214,27 @@ namespace JsonApiDotNetCore.Data
                 if (relationship.Key is HasManyThroughAttribute hasManyThrough)
                     AttachHasManyThrough(entity, hasManyThrough, relationship.Value);
                 else
-                    AttachHasMany(relationship.Key as HasManyAttribute, relationship.Value);
+                    AttachHasMany(entity, relationship.Key as HasManyAttribute, relationship.Value);
             }
         }
 
-        private void AttachHasMany(HasManyAttribute relationship, IList pointers)
+        private void AttachHasMany(TEntity entity, HasManyAttribute relationship, IList pointers)
         {
-            foreach (var pointer in pointers)
-                _context.Entry(pointer).State = EntityState.Unchanged;
+            if (relationship.EntityPropertyName != null)
+            {
+                var relatedList = (IList)entity.GetType().GetProperty(relationship.EntityPropertyName)?.GetValue(entity);
+                foreach (var related in relatedList)
+                {
+                    _context.Entry(related).State = EntityState.Unchanged;
+                }
+            }
+            else
+            {
+                foreach (var pointer in pointers)
+                {
+                    _context.Entry(pointer).State = EntityState.Unchanged;
+                }
+            }  
         }
 
         private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
