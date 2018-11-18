@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Extensions
@@ -297,29 +299,111 @@ namespace JsonApiDotNetCore.Extensions
         }
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)
+            => CallGenericSelectMethod(source, columns);
+
+        private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
         {
-            if (columns == null || columns.Count == 0)
-                return source;
+            var sourceBindings = new List<MemberAssignment>();
+            var sourceType = typeof(TSource);
+            var parameter = Expression.Parameter(source.ElementType, "x");
+            var sourceProperties = new List<string>() { };
 
-            var sourceType = source.ElementType;
+            // Store all property names to it's own related property (name as key)
+            var nestedTypesAndProperties = new Dictionary<string, List<string>>();
+            foreach (var column in columns)
+            {
+                var props = column.Split('.');
+                if (props.Length > 1) // Nested property
+                {
+                    if (nestedTypesAndProperties.TryGetValue(props[0], out var properties) == false)
+                        nestedTypesAndProperties.Add(props[0], new List<string>() { nameof(Identifiable.Id), props[1] });
+                    else
+                        properties.Add(props[1]);
+                }
+                else
+                    sourceProperties.Add(props[0]);
+            }
 
-            var resultType = typeof(TSource);
+            // Bind attributes on TSource
+            sourceBindings = sourceProperties.Select(prop => Expression.Bind(sourceType.GetProperty(prop), Expression.PropertyOrField(parameter, prop))).ToList();
 
-            // {model}
-            var parameter = Expression.Parameter(sourceType, "model");
+            // Bind attributes on nested types
+            var nestedBindings = new List<MemberAssignment>();
+            Expression bindExpression;
+            foreach (var item in nestedTypesAndProperties)
+            {
+                var nestedProperty = sourceType.GetProperty(item.Key);
+                var nestedPropertyType = nestedProperty.PropertyType;
+                // [HasMany] attribute
+                if (nestedPropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(nestedPropertyType))
+                {
+                    // Concrete type of Collection
+                    var singleType = nestedPropertyType.GetGenericArguments().Single();
+                    // {y}
+                    var nestedParameter = Expression.Parameter(singleType, "y");
+                    nestedBindings = item.Value.Select(prop => Expression.Bind(
+                        singleType.GetProperty(prop), Expression.PropertyOrField(nestedParameter, prop))).ToList();
 
-            var bindings = columns.Select(column => Expression.Bind(
-                resultType.GetProperty(column), Expression.PropertyOrField(parameter, column)));
+                    // { new Item() }
+                    var newNestedExp = Expression.New(singleType);
+                    var initNestedExp = Expression.MemberInit(newNestedExp, nestedBindings);
+                    // { y => new Item() {Id = y.Id, Name = y.Name}}
+                    var body = Expression.Lambda(initNestedExp, nestedParameter);
+                    // { x.Items }
+                    Expression propertyExpression = Expression.Property(parameter, nestedProperty.Name);
+                    // { x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name}) }
+                    Expression selectMethod = Expression.Call(
+                        typeof(Enumerable),
+                        "Select",
+                        new Type[] { singleType, singleType },
+                        propertyExpression, body);
 
-            // { new Model () { Property = model.Property } }
-            var body = Expression.MemberInit(Expression.New(resultType), bindings);
+                    // { x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name}).ToList() }
+                    bindExpression = Expression.Call(
+                         typeof(Enumerable),
+                         "ToList",
+                         new Type[] { singleType },
+                         selectMethod);
+                }
+                // [HasOne] attribute
+                else
+                {
+                    // {x.Owner}
+                    var srcBody = Expression.PropertyOrField(parameter, item.Key);
+                    foreach (var nested in item.Value)
+                    {
+                        // {x.Owner.Name}
+                        var nestedBody = Expression.PropertyOrField(srcBody, nested);
+                        var propInfo = nestedPropertyType.GetProperty(nested);
+                        nestedBindings.Add(Expression.Bind(propInfo, nestedBody));
+                    }
+                    // { new Owner() }
+                    var newExp = Expression.New(nestedPropertyType);
+                    // { new Owner() { Id = x.Owner.Id, Name = x.Owner.Name }}
+                    var newInit = Expression.MemberInit(newExp, nestedBindings);
 
-            // { model => new TodoItem() { Property = model.Property } }
-            var selector = Expression.Lambda(body, parameter);
+                    // Handle nullable relationships
+                    // { Owner = x.Owner == null ? null : new Owner() {...} }
+                    bindExpression = Expression.Condition(
+                           Expression.Equal(srcBody, Expression.Constant(null)),
+                           Expression.Convert(Expression.Constant(null), nestedPropertyType),
+                           newInit
+                         );
+                }
 
-            return source.Provider.CreateQuery<TSource>(
-                Expression.Call(typeof(Queryable), "Select", new[] { sourceType, resultType },
-                source.Expression, Expression.Quote(selector)));
+                sourceBindings.Add(Expression.Bind(nestedProperty, bindExpression));
+                nestedBindings.Clear();
+            }
+
+            var sourceInit = Expression.MemberInit(Expression.New(sourceType), sourceBindings);
+            var finalBody = Expression.Lambda(sourceInit, parameter);
+
+            return source.Provider.CreateQuery<TSource>(Expression.Call(
+                typeof(Queryable),
+                "Select",
+                new[] { source.ElementType, typeof(TSource) },
+                source.Expression,
+                Expression.Quote(finalBody)));
         }
 
         public static IQueryable<T> PageForward<T>(this IQueryable<T> source, int pageSize, int pageNumber)

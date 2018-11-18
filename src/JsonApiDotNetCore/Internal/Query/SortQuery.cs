@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public class SortQuery : BaseQuery
     {
-        [Obsolete("Use constructor overload (SortDirection, string) instead.", error: true)]
+        [Obsolete("Use constructor overload (SortDirection, string) instead. The string should be the publicly exposed attribute name.", error: true)]
         public SortQuery(SortDirection direction, AttrAttribute sortedAttribute)
             : base(sortedAttribute.PublicAttributeName) { }
 
