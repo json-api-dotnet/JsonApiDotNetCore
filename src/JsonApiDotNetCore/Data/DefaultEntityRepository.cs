@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
             {
-                var hasMany = (HasOneAttribute) hasManyRelationship.Key;
+                var hasMany = (HasManyAttribute) hasManyRelationship.Key;
                 if (hasMany.EntityPropertyName != null)
                 {
                     var relatedList = (IList)entity.GetType().GetProperty(hasMany.EntityPropertyName)?.GetValue(entity);
