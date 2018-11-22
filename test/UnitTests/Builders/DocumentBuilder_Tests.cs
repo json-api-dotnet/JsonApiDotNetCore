@@ -123,6 +123,30 @@ namespace UnitTests
         }
 
         [Fact]
+        public void Related_Links_Can_Be_Disabled_Globally()
+        {
+            // arrange
+            _pageManager.PageSize = 1;
+            _pageManager.TotalRecords = 1;
+            _pageManager.CurrentPage = 1;
+
+            _options.DisableSelfAndRelatedLinks = true;
+
+            _jsonApiContextMock
+                .Setup(m => m.ResourceGraph)
+                .Returns(_options.ResourceGraph);
+
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var entity = new RelatedModel();
+
+            // act
+            var document = documentBuilder.Build(entity);
+
+            // assert
+            Assert.Null(document.Data.Relationships["models"].Links);
+        }
+
+        [Fact]
         public void Related_Data_Included_In_Relationships_By_Default()
         {
             // arrange
