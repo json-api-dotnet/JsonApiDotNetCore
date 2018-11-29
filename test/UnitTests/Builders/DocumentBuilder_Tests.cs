@@ -130,7 +130,7 @@ namespace UnitTests
             _pageManager.TotalRecords = 1;
             _pageManager.CurrentPage = 1;
 
-            _options.DisableSelfAndRelatedLinks = true;
+            _options.DefaultRelationshipLinks = Link.None;
 
             _jsonApiContextMock
                 .Setup(m => m.ResourceGraph)
