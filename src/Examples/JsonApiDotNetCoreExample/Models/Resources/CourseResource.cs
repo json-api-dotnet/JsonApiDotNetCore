@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using JsonApiDotNetCoreExample.Models.Entities;
 
 namespace JsonApiDotNetCoreExample.Models.Resources
 {
@@ -17,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Models.Resources
         [Attr("description")]
         public string Description { get; set; }
 
-        [HasOne("department")]
+        [HasOne("department", mappedBy: "Department")]
         public DepartmentResource Department { get; set; }
         public int? DepartmentId { get; set; }
 
