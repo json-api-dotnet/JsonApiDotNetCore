@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Middleware
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var request = context.HttpContext.Request;
-            if (IsJsonApiRequest(request) && request.Method == "PATCH" || request.Method == "POST")
+            if (IsJsonApiRequest(request) && (request.Method == "PATCH" || request.Method == "POST"))
             {
                 var deserializedType = context.ActionArguments.FirstOrDefault().Value?.GetType();
                 var targetType = context.ActionDescriptor.Parameters.FirstOrDefault()?.ParameterType;
