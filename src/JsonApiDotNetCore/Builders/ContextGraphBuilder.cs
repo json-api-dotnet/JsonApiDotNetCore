@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.Builders
                 attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);
 
-                if(attribute is HasManyThroughAttribute hasManyThroughAttribute) {
+                if (attribute is HasManyThroughAttribute hasManyThroughAttribute) {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
                     if(throughProperty == null)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
@@ -211,13 +211,8 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
-        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop)
-        {
-            if (relation.IsHasMany)
-                return prop.PropertyType.GetGenericArguments()[0];
-            else
-                return prop.PropertyType;
-        }
+        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
+            relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 

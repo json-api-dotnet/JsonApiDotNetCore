@@ -103,6 +103,26 @@ namespace JsonApiDotNetCore.Configuration
         public bool RelativeLinks { get; set; }
 
         /// <summary>
+        /// Which links to include in relationships. Defaults to <see cref="Link.All"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// options.DefaultRelationshipLinks = Link.None;
+        /// </code>
+        /// <code>
+        /// {
+        ///   "type": "articles",
+        ///   "id": "4309",
+        ///   "relationships": {
+        ///      "author": {}
+        ///      }
+        ///   }
+        /// }
+        /// </code>
+        /// </example>
+        public Link DefaultRelationshipLinks { get; set; } = Link.All;
+
+        /// <summary>
         /// Whether or not to allow all custom query parameters.
         /// </summary>
         /// <example>

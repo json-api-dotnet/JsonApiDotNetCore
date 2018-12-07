@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.Builders
 
             var relationshipData = new RelationshipData();
 
-            if (attr.DocumentLinks.HasFlag(Link.None) == false)
+            if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(Link.None) == false && attr.DocumentLinks.HasFlag(Link.None) == false)
             {
                 relationshipData.Links = new Links();
                 if (attr.DocumentLinks.HasFlag(Link.Self))

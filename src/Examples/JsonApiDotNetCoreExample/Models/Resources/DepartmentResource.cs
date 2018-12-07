@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Models.Resources
         [Attr("name")]
         public string Name { get; set; }
 
-        [HasMany("courses")]
+        [HasMany("courses", mappedBy: "Courses")]
         public List<CourseResource> Courses { get; set; }
     }
 }

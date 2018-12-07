@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Data
         protected virtual void AttachRelationships(TEntity entity = null)
         {
             AttachHasManyPointers(entity);
-            AttachHasOnePointers();
+            AttachHasOnePointers(entity);
         }
 
         /// <inheritdoc />
@@ -163,16 +163,38 @@ namespace JsonApiDotNetCore.Data
         {
             foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
             {
-                _context.Entry(hasOneRelationship.Value).State = EntityState.Detached;
+                var hasOne = (HasOneAttribute) hasOneRelationship.Key;
+                if (hasOne.EntityPropertyName != null)
+                {
+                    var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
+                    if (relatedEntity != null)
+                        _context.Entry(relatedEntity).State = EntityState.Detached;
+                }
+                else
+                {
+                    _context.Entry(hasOneRelationship.Value).State = EntityState.Detached;
+                }
             }
 
             foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
             {
-                foreach (var pointer in hasManyRelationship.Value)
+                var hasMany = (HasManyAttribute) hasManyRelationship.Key;
+                if (hasMany.EntityPropertyName != null)
                 {
-                    _context.Entry(pointer).State = EntityState.Detached;
+                    var relatedList = (IList)entity.GetType().GetProperty(hasMany.EntityPropertyName)?.GetValue(entity);
+                    foreach (var related in relatedList)
+                    {
+                        _context.Entry(related).State = EntityState.Detached;
+                    }
                 }
-
+                else
+                {
+                    foreach (var pointer in hasManyRelationship.Value)
+                    {
+                        _context.Entry(pointer).State = EntityState.Detached;
+                    }
+                }
+                
                 // HACK: detaching has many relationships doesn't appear to be sufficient
                 // the navigation property actually needs to be nulled out, otherwise
                 // EF adds duplicate instances to the collection
@@ -192,14 +214,27 @@ namespace JsonApiDotNetCore.Data
                 if (relationship.Key is HasManyThroughAttribute hasManyThrough)
                     AttachHasManyThrough(entity, hasManyThrough, relationship.Value);
                 else
-                    AttachHasMany(relationship.Key as HasManyAttribute, relationship.Value);
+                    AttachHasMany(entity, relationship.Key as HasManyAttribute, relationship.Value);
             }
         }
 
-        private void AttachHasMany(HasManyAttribute relationship, IList pointers)
+        private void AttachHasMany(TEntity entity, HasManyAttribute relationship, IList pointers)
         {
-            foreach (var pointer in pointers)
-                _context.Entry(pointer).State = EntityState.Unchanged;
+            if (relationship.EntityPropertyName != null)
+            {
+                var relatedList = (IList)entity.GetType().GetProperty(relationship.EntityPropertyName)?.GetValue(entity);
+                foreach (var related in relatedList)
+                {
+                    _context.Entry(related).State = EntityState.Unchanged;
+                }
+            }
+            else
+            {
+                foreach (var pointer in pointers)
+                {
+                    _context.Entry(pointer).State = EntityState.Unchanged;
+                }
+            }  
         }
 
         private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
@@ -227,12 +262,27 @@ namespace JsonApiDotNetCore.Data
         /// This is used to allow creation of HasOne relationships when the
         /// independent side of the relationship already exists.
         /// </summary>
-        private void AttachHasOnePointers()
+        private void AttachHasOnePointers(TEntity entity)
         {
             var relationships = _jsonApiContext.HasOneRelationshipPointers.Get();
             foreach (var relationship in relationships)
-                if (_context.Entry(relationship.Value).State == EntityState.Detached && _context.EntityIsTracked(relationship.Value) == false)
-                    _context.Entry(relationship.Value).State = EntityState.Unchanged;
+            {
+                if (relationship.Key.GetType() != typeof(HasOneAttribute))
+                    continue;
+
+                var hasOne = (HasOneAttribute) relationship.Key;
+                if (hasOne.EntityPropertyName != null)
+                {
+                    var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
+                    if (relatedEntity != null && _context.Entry(relatedEntity).State == EntityState.Detached && _context.EntityIsTracked((IIdentifiable)relatedEntity) == false)
+                        _context.Entry(relatedEntity).State = EntityState.Unchanged;
+                }
+                else
+                {
+                    if (_context.Entry(relationship.Value).State == EntityState.Detached && _context.EntityIsTracked(relationship.Value) == false)
+                        _context.Entry(relationship.Value).State = EntityState.Unchanged;
+                }
+            }
         }
 
         /// <inheritdoc />
