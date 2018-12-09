@@ -139,6 +139,17 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var prop in properties)
             {
+                if (prop.Name == nameof(Identifiable.Id))
+                {
+                    var idAttr = new AttrAttribute()
+                    {
+                        PublicAttributeName = JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop),
+                        PropertyInfo = prop,
+                        InternalAttributeName = prop.Name
+                    };
+                    attributes.Add(idAttr);
+                }
+
                 var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
                 if (attribute == null)
                     continue;

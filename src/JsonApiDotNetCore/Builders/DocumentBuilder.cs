@@ -141,6 +141,7 @@ namespace JsonApiDotNetCore.Builders
         private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue)
         {
             return OmitNullValuedAttribute(attr, attributeValue) == false
+                    && attr.InternalAttributeName != nameof(Identifiable.Id)
                    && ((_jsonApiContext.QuerySet == null
                        || _jsonApiContext.QuerySet.Fields.Count == 0)
                        || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
@@ -280,10 +281,13 @@ namespace JsonApiDotNetCore.Builders
 
             data.Attributes = new Dictionary<string, object>();
 
-            contextEntity.Attributes.ForEach(attr =>
+            foreach(var attr in contextEntity.Attributes)
             {
+                if (attr.InternalAttributeName == nameof(Identifiable.Id))
+                    continue;
+
                 data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
-            });
+            }
 
             return data;
         }

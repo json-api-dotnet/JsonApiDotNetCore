@@ -94,7 +94,7 @@ namespace UnitTests
 
             // assert
             var resource = graph.GetContextEntity(typeof(TestResource));
-            Assert.Equal("compound-attribute", resource.Attributes.Single().PublicAttributeName);
+            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compound-attribute");
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace UnitTests
 
             // assert
             var resource = graph.GetContextEntity(typeof(TestResource));
-            Assert.Equal("compoundAttribute", resource.Attributes.Single().PublicAttributeName);
+            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
 
         [Fact]

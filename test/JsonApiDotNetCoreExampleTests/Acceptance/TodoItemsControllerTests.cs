@@ -70,6 +70,54 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Can_Filter_By_Resource_Id()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[id]={todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+            Assert.Contains(deserializedBody, (i) => i.Id == todoItem.Id);
+        }
+
+        [Fact]
+        public async Task Can_Filter_By_Relationship_Id()
+        {
+            // Arrange
+            var person = new Person();           
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[owner.id]={person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+            Assert.Contains(deserializedBody, (i) => i.OwnerId == person.Id);
+        }
+
+        [Fact]
         public async Task Can_Filter_TodoItems()
         {
             // Arrange
