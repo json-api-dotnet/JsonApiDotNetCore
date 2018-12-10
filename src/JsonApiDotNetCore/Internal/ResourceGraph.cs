@@ -144,11 +144,18 @@ namespace JsonApiDotNetCore.Internal
             var throughProperty = GetRelationship(parent, hasManyThrough.InternalThroughName);
             if (throughProperty is IEnumerable hasManyNavigationEntity)
             {
-                foreach (var includedEntity in hasManyNavigationEntity)
-                {
-                    var targetValue = hasManyThrough.RightProperty.GetValue(includedEntity) as IIdentifiable;
-                    yield return targetValue;
-                }
+                // wrap "yield return" in a sub-function so we can correctly return null if the property is null.
+                return GetHasManyThroughIter(hasManyThrough, hasManyNavigationEntity);
+            }
+            return null;
+        }
+
+        private IEnumerable<IIdentifiable> GetHasManyThroughIter(HasManyThroughAttribute hasManyThrough, IEnumerable hasManyNavigationEntity)
+        {
+            foreach (var includedEntity in hasManyNavigationEntity)
+            {
+                var targetValue = hasManyThrough.RightProperty.GetValue(includedEntity) as IIdentifiable;
+                yield return targetValue;
             }
         }
 
