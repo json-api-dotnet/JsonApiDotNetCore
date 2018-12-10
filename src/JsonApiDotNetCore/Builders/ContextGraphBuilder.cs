@@ -148,6 +148,7 @@ namespace JsonApiDotNetCore.Builders
                         InternalAttributeName = prop.Name
                     };
                     attributes.Add(idAttr);
+                    continue;
                 }
 
                 var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
