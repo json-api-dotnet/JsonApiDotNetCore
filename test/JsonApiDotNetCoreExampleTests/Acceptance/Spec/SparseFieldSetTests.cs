@@ -194,8 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(owner.StringId, included.Id);      
             Assert.Equal(owner.FirstName, included.Attributes["first-name"]);
             Assert.Equal((long)owner.Age, included.Attributes["age"]);
-            Assert.Null(included.Attributes["last-name"]);
-
+            Assert.DoesNotContain("last-name", included.Attributes.Keys);
         }
 
         [Fact]
@@ -233,8 +232,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 var todoItem = todoItems.FirstOrDefault(i => i.StringId == includedItem.Id);
                 Assert.NotNull(todoItem);
                 Assert.Equal(todoItem.Description, includedItem.Attributes["description"]);
-                Assert.Equal(default(long), includedItem.Attributes["ordinal"]);
-                Assert.Equal(default(DateTime), (DateTime)includedItem.Attributes["created-date"]);
+                Assert.DoesNotContain("ordinal", includedItem.Attributes.Keys);
+                Assert.DoesNotContain("created-date", includedItem.Attributes.Keys);
             }
         }
     }
