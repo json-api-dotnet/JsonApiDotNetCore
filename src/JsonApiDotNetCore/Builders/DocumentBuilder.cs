@@ -138,13 +138,15 @@ namespace JsonApiDotNetCore.Builders
 
             return data;
         }
-        private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue)
+        private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue, RelationshipAttribute relationship = null)
         {
             return OmitNullValuedAttribute(attr, attributeValue) == false
                     && attr.InternalAttributeName != nameof(Identifiable.Id)
                    && ((_jsonApiContext.QuerySet == null
                        || _jsonApiContext.QuerySet.Fields.Count == 0)
-                       || _jsonApiContext.QuerySet.Fields.Contains(attr.InternalAttributeName));
+                       || _jsonApiContext.QuerySet.Fields.Contains(relationship != null ?
+                            $"{relationship.InternalRelationshipName}.{attr.InternalAttributeName}" :
+                            attr.InternalAttributeName));
         }
 
         private bool OmitNullValuedAttribute(AttrAttribute attr, object attributeValue)
@@ -225,13 +227,13 @@ namespace JsonApiDotNetCore.Builders
             {
                 foreach (IIdentifiable includedEntity in hasManyNavigationEntity)
                 {
-                    included = AddIncludedEntity(included, includedEntity);
+                    included = AddIncludedEntity(included, includedEntity, relationship);
                     included = IncludeSingleResourceRelationships(included, includedEntity, relationship, relationshipChain, relationshipChainIndex);
                 }
             }
             else
             {
-                included = AddIncludedEntity(included, (IIdentifiable)navigationEntity);
+                included = AddIncludedEntity(included, (IIdentifiable)navigationEntity, relationship);
                 included = IncludeSingleResourceRelationships(included, (IIdentifiable)navigationEntity, relationship, relationshipChain, relationshipChainIndex);
             }
 
@@ -254,9 +256,9 @@ namespace JsonApiDotNetCore.Builders
         }
 
 
-        private List<ResourceObject> AddIncludedEntity(List<ResourceObject> entities, IIdentifiable entity)
+        private List<ResourceObject> AddIncludedEntity(List<ResourceObject> entities, IIdentifiable entity, RelationshipAttribute relationship)
         {
-            var includedEntity = GetIncludedEntity(entity);
+            var includedEntity = GetIncludedEntity(entity, relationship);
 
             if (entities == null)
                 entities = new List<ResourceObject>();
@@ -270,7 +272,7 @@ namespace JsonApiDotNetCore.Builders
             return entities;
         }
 
-        private ResourceObject GetIncludedEntity(IIdentifiable entity)
+        private ResourceObject GetIncludedEntity(IIdentifiable entity, RelationshipAttribute relationship)
         {
             if (entity == null) return null;
 
@@ -281,13 +283,14 @@ namespace JsonApiDotNetCore.Builders
 
             data.Attributes = new Dictionary<string, object>();
 
-            foreach(var attr in contextEntity.Attributes)
+            contextEntity.Attributes.ForEach(attr =>
             {
-                if (attr.InternalAttributeName == nameof(Identifiable.Id))
-                    continue;
-
-                data.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
-            }
+                var attributeValue = attr.GetValue(entity);
+                if (ShouldIncludeAttribute(attr, attributeValue, relationship))
+                {
+                    data.Attributes.Add(attr.PublicAttributeName, attributeValue);
+                }
+            });
 
             return data;
         }
