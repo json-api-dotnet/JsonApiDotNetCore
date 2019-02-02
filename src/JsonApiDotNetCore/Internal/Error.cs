@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -66,6 +68,16 @@ namespace JsonApiDotNetCore.Internal
 
         public bool ShouldSerializeMeta() => (JsonApiOptions.DisableErrorStackTraces == false);
         public bool ShouldSerializeSource() => (JsonApiOptions.DisableErrorSource == false);
+
+        public IActionResult AsActionResult()
+        {
+            var errorCollection = new ErrorCollection
+            {
+                Errors = new List<Error> { this }
+            };
+
+            return errorCollection.AsActionResult();
+        }
     }
 
     public class ErrorMeta
