@@ -75,9 +75,6 @@ We use Newtonsoft.Json for all serialization needs.
 If you want to change the default serializer settings, you can:
 
 ```c#
-options.SerializerSettings = new JsonSerializerSettings()
-{
-    NullValueHandling = NullValueHandling.Ignore,
-    ContractResolver = new DasherizedResolver()
-}
+options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+options.SerializerSettings.ContractResolver = new DasherizedResolver();
 ```
