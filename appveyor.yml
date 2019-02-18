@@ -43,6 +43,7 @@ after_build:
             git add -A 2>&1
             git commit -m "CI Updates" -q
             git push origin gh-pages -q
+            echo "Documentation updated successfully."
         }
 
 pull_requests:
@@ -74,19 +75,6 @@ test: off
 artifacts:
 - path: .\**\artifacts\**\*.nupkg
   name: NuGet
-
-on_success:
-  - git config --global credential.helper store
-  - ps: Add-Content "$HOME\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
-  - git config --global user.email "jaredcnance@gmail.com"
-  - git config --global user.name "Jared Nance"
-  - cd _site
-  - git init
-  - git remote add origin https://github.com/jaredcnance/test.git
-  - git add -A
-  - git commit -m "deploy"
-  - git checkout -b gh-pages
-  - git push -u origin gh-pages
 
 deploy:
 - provider: NuGet
