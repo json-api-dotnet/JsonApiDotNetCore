@@ -1,2 +1,10 @@
-# PLACEHOLDER
-TODO: Add .NET projects to the *src* folder and run `docfx` to generate **REAL** *API Documentation*!
+# API
+
+This section documents the package API and is generated from the XML source comments.
+
+## Common APIs
+
+- [`JsonApiOptions`](JsonApiDotNetCore.Configuration.JsonApiOptions.html)
+- [`IResourceGraph`](JsonApiDotNetCore.Internal.IResourceGraph.html)
+- [`ResourceDefinition<T>`](JsonApiDotNetCore.Models.ResourceDefinition-1.html)
+- [`IQueryAccessor`](JsonApiDotNetCore.Services.IQueryAccessor.html)

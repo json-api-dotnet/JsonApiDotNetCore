@@ -81,8 +81,10 @@ namespace JsonApiDotNetCore.Builders
         private bool _usesDbContext;
         private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
+        /// <inheritdoc />
         public Link DocumentLinks { get; set; } = Link.All;
 
+        /// <inheritdoc />
         public IResourceGraph Build()
         {
             // this must be done at build so that call order doesn't matter

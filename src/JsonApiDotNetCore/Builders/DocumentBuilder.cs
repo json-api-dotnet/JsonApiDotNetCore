@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Builders
 {
+    /// <inheritdoc />
     public class DocumentBuilder : IDocumentBuilder
     {
         private readonly IJsonApiContext _jsonApiContext;
@@ -30,6 +31,7 @@ namespace JsonApiDotNetCore.Builders
             _scopedServiceProvider = scopedServiceProvider;
         }
 
+        /// <inheritdoc />
         public Document Build(IIdentifiable entity)
         {
             var contextEntity = _resourceGraph.GetContextEntity(entity.GetType());
@@ -49,6 +51,7 @@ namespace JsonApiDotNetCore.Builders
             return document;
         }
 
+        /// <inheritdoc />
         public Documents Build(IEnumerable<IIdentifiable> entities)
         {
             var entityType = entities.GetElementType();
@@ -110,6 +113,7 @@ namespace JsonApiDotNetCore.Builders
         public ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity)
             => GetData(contextEntity, entity, resourceDefinition: null);
 
+        /// <inheritdoc />
         public ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity, IResourceDefinition resourceDefinition = null)
         {
             var data = new ResourceObject
