@@ -8,7 +8,7 @@
     <title>Examples </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Examples ">
-    <meta name="generator" content="docfx 2.38.1.0">
+    <meta name="generator" content="docfx 2.40.11.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -77,26 +77,8 @@
                 }
             }
         }&#39;
-</code></pre><pre><code class="lang-json" name="CREATE">HTTP/1.1 201 Created
-
-{
-  &quot;data&quot;: {
-    &quot;attributes&quot;: {
-      &quot;name&quot;: &quot;Alice&quot;
-    },
-    &quot;relationships&quot;: {
-      &quot;articles&quot;: {
-        &quot;links&quot;: {
-          &quot;self&quot;: &quot;http://localhost:5001/api/people/1/relationships/articles&quot;,
-          &quot;related&quot;: &quot;http://localhost:5001/api/people/1/articles&quot;
-        }
-      }
-    },
-    &quot;type&quot;: &quot;people&quot;,
-    &quot;id&quot;: &quot;1&quot;
-  }
-}
-</code></pre><h3 id="create-with-relationship">Create with Relationship</h3>
+</code></pre><!-- Can not find reference 000-CREATE_Person-Response.json -->
+<h3 id="create-with-relationship">Create with Relationship</h3>
 <pre><code class="lang-sh" name="CREATE">curl -vs http://localhost:5001/api/articles         \
     -H &quot;Accept: application/vnd.api+json&quot;           \
     -H &quot;Content-Type: application/vnd.api+json&quot;     \
@@ -116,135 +98,20 @@
                 }
             }
         }&#39;
-</code></pre><pre><code class="lang-json" name="CREATE">HTTP/1.1 201 Created
-
-{
-  &quot;data&quot;: {
-    &quot;attributes&quot;: {
-      &quot;title&quot;: &quot;Moby&quot;
-    },
-    &quot;relationships&quot;: {
-      &quot;author&quot;: {
-        &quot;links&quot;: {
-          &quot;self&quot;: &quot;http://localhost:5001/api/articles/1/relationships/author&quot;,
-          &quot;related&quot;: &quot;http://localhost:5001/api/articles/1/author&quot;
-        },
-        &quot;data&quot;: {
-          &quot;type&quot;: &quot;people&quot;,
-          &quot;id&quot;: &quot;1&quot;
-        }
-      }
-    },
-    &quot;type&quot;: &quot;articles&quot;,
-    &quot;id&quot;: &quot;1&quot;
-  }
-}
-</code></pre><h3 id="get-all">Get All</h3>
+</code></pre><!-- Can not find reference 001-CREATE_Article-Response.json -->
+<h3 id="get-all">Get All</h3>
 <pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles     \
     -H &quot;Accept: application/vnd.api+json&quot;
-</code></pre><pre><code class="lang-json" name="GET Response">HTTP/1.1 200 OK
-
-{
-  &quot;data&quot;: [
-    {
-      &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Moby&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;http://localhost:5001/api/articles/1/relationships/author&quot;,
-            &quot;related&quot;: &quot;http://localhost:5001/api/articles/1/author&quot;
-          },
-          &quot;data&quot;: {
-            &quot;type&quot;: &quot;people&quot;,
-            &quot;id&quot;: &quot;1&quot;
-          }
-        }
-      },
-      &quot;type&quot;: &quot;articles&quot;,
-      &quot;id&quot;: &quot;1&quot;
-    }
-  ]
-}
-</code></pre><h3 id="get-by-id">Get By Id</h3>
+</code></pre><!-- Can not find reference 002-GET_Articles-Response.json -->
+<h3 id="get-by-id">Get By Id</h3>
 <pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles/1     \
     -H &quot;Accept: application/vnd.api+json&quot;
-</code></pre><pre><code class="lang-json" name="GET Response">HTTP/1.1 200 OK
-
-{
-  &quot;data&quot;: {
-    &quot;attributes&quot;: {
-      &quot;title&quot;: &quot;Moby&quot;
-    },
-    &quot;relationships&quot;: {
-      &quot;author&quot;: {
-        &quot;links&quot;: {
-          &quot;self&quot;: &quot;http://localhost:5001/api/articles/1/relationships/author&quot;,
-          &quot;related&quot;: &quot;http://localhost:5001/api/articles/1/author&quot;
-        },
-        &quot;data&quot;: {
-          &quot;type&quot;: &quot;people&quot;,
-          &quot;id&quot;: &quot;1&quot;
-        }
-      }
-    },
-    &quot;type&quot;: &quot;articles&quot;,
-    &quot;id&quot;: &quot;1&quot;
-  }
-}
-</code></pre><h3 id="get-with-relationship">Get with Relationship</h3>
+</code></pre><!-- Can not find reference 003-GET_Article-Response.json -->
+<h3 id="get-with-relationship">Get with Relationship</h3>
 <pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?include=author     \
     -H &quot;Accept: application/vnd.api+json&quot;
-</code></pre><pre><code class="lang-json" name="GET Response">HTTP/1.1 200 OK
-
-{
-  &quot;data&quot;: [
-    {
-      &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Moby&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;http://localhost:5001/api/articles/1/relationships/author&quot;,
-            &quot;related&quot;: &quot;http://localhost:5001/api/articles/1/author&quot;
-          },
-          &quot;data&quot;: {
-            &quot;type&quot;: &quot;people&quot;,
-            &quot;id&quot;: &quot;1&quot;
-          }
-        }
-      },
-      &quot;type&quot;: &quot;articles&quot;,
-      &quot;id&quot;: &quot;1&quot;
-    }
-  ],
-  &quot;included&quot;: [
-    {
-      &quot;attributes&quot;: {
-        &quot;name&quot;: &quot;Alice&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;articles&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;http://localhost:5001/api/people/1/relationships/articles&quot;,
-            &quot;related&quot;: &quot;http://localhost:5001/api/people/1/articles&quot;
-          },
-          &quot;data&quot;: [
-            {
-              &quot;type&quot;: &quot;articles&quot;,
-              &quot;id&quot;: &quot;1&quot;
-            }
-          ]
-        }
-      },
-      &quot;type&quot;: &quot;people&quot;,
-      &quot;id&quot;: &quot;1&quot;
-    }
-  ]
-}
-</code></pre><h3 id="update">Update</h3>
+</code></pre><!-- Can not find reference 004-GET_Articles_With_Authors-Response.json -->
+<h3 id="update">Update</h3>
 <pre><code class="lang-sh" name="PATCH Request">curl -vs http://localhost:5001/api/people/1       \
     -H &quot;Accept: application/vnd.api+json&quot;           \
     -H &quot;Content-Type: application/vnd.api+json&quot;     \
@@ -257,86 +124,23 @@
                 }
             }
         }&#39;
-</code></pre><pre><code class="lang-json" name="PATCH Response">HTTP/1.1 200 OK
-
-{
-  &quot;data&quot;: {
-    &quot;attributes&quot;: {
-      &quot;name&quot;: &quot;Bob&quot;
-    },
-    &quot;relationships&quot;: {
-      &quot;articles&quot;: {
-        &quot;links&quot;: {
-          &quot;self&quot;: &quot;http://localhost:5001/api/people/1/relationships/articles&quot;,
-          &quot;related&quot;: &quot;http://localhost:5001/api/people/1/articles&quot;
-        }
-      }
-    },
-    &quot;type&quot;: &quot;people&quot;,
-    &quot;id&quot;: &quot;1&quot;
-  }
-}
-</code></pre><h3 id="delete">Delete</h3>
+</code></pre><!-- Can not find reference 005-PATCH_Article-Response.json -->
+<h3 id="delete">Delete</h3>
 <pre><code class="lang-sh" name="DELETE Request">curl -vs http://localhost:5001/api/articles/1     \
     -H &quot;Accept: application/vnd.api+json&quot;           \
     -X DELETE
-</code></pre><pre><code class="lang-json" name="DELETE Response">HTTP/1.1 204 No Content
-
-</code></pre><h2 id="filters">Filters</h2>
+</code></pre><!-- Can not find reference 006-DELETE_Article-Response.json -->
+<h2 id="filters">Filters</h2>
 <p><em>Note that cURL requires URLs to be escaped.</em></p>
 <h3 id="equality">Equality</h3>
 <pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/articles?filter%5Btitle%5D=Moby     \
     -H &quot;Accept: application/vnd.api+json&quot;
-</code></pre><pre><code class="lang-json" name="GET Response">HTTP/1.1 200 OK
-
-{
-  &quot;data&quot;: [
-    {
-      &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Moby&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;http://localhost:5001/api/articles/2/relationships/author&quot;,
-            &quot;related&quot;: &quot;http://localhost:5001/api/articles/2/author&quot;
-          },
-          &quot;data&quot;: {
-            &quot;type&quot;: &quot;people&quot;,
-            &quot;id&quot;: &quot;2&quot;
-          }
-        }
-      },
-      &quot;type&quot;: &quot;articles&quot;,
-      &quot;id&quot;: &quot;2&quot;
-    }
-  ]
-}
-</code></pre><h3 id="like">Like</h3>
+</code></pre><!-- Can not find reference 008-GET_Articles_With_Filter_Eq-Response.json -->
+<h3 id="like">Like</h3>
 <pre><code class="lang-sh" name="GET Request">curl -vs http://localhost:5001/api/people?filter%5Bname%5D=like:Al     \
     -H &quot;Accept: application/vnd.api+json&quot;
-</code></pre><pre><code class="lang-json" name="GET Response">HTTP/1.1 200 OK
-
-{
-  &quot;data&quot;: [
-    {
-      &quot;attributes&quot;: {
-        &quot;name&quot;: &quot;Alice&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;articles&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;http://localhost:5001/api/people/2/relationships/articles&quot;,
-            &quot;related&quot;: &quot;http://localhost:5001/api/people/2/articles&quot;
-          }
-        }
-      },
-      &quot;type&quot;: &quot;people&quot;,
-      &quot;id&quot;: &quot;2&quot;
-    }
-  ]
-}
-</code></pre><h2 id="sorting">Sorting</h2>
+</code></pre><!-- Can not find reference 009-GET_Articles_With_Filter_Like-Response.json -->
+<h2 id="sorting">Sorting</h2>
 <h1 id="see-also">See Also</h1>
 <ul>
 <li>Customizing QuerySet</li>

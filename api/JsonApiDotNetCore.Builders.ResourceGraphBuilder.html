@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ResourceGraphBuilder
    ">
-    <meta name="generator" content="docfx 2.38.1.0">
+    <meta name="generator" content="docfx 2.40.11.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -157,12 +157,13 @@
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddDbContext_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddDbContext__1" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext``1">AddDbContext&lt;T&gt;()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Add all the models that are part of the provided <span class="xref">Microsoft.EntityFrameworkCore.DbContext</span> 
+that also implement <a class="xref" href="JsonApiDotNetCore.Models.IIdentifiable.html">IIdentifiable</a></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public IResourceGraphBuilder AddDbContext&lt;T&gt;()
-
     where T : DbContext</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -191,7 +192,8 @@
     <tbody>
       <tr>
         <td><span class="parametername">T</span></td>
-        <td></td>
+        <td><p>The <span class="xref">Microsoft.EntityFrameworkCore.DbContext</span> implementation type.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -204,7 +206,8 @@
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_System_Type_System_Type_System_String_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource(System.Type,System.Type,System.String)">AddResource(Type, Type, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Add a json:api resource</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -223,17 +226,22 @@
       <tr>
         <td><span class="xref">System.Type</span></td>
         <td><span class="parametername">entityType</span></td>
-        <td></td>
+        <td><p>The resource model type</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Type</span></td>
         <td><span class="parametername">idType</span></td>
-        <td></td>
+        <td><p>The resource model identifier type</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">pluralizedTypeName</span></td>
-        <td></td>
+        <td><p>The pluralized name that should be exposed by the API. 
+If nothing is specified, the configured name formatter will be used.
+See <a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceNameFormatter">ResourceNameFormatter</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -261,12 +269,12 @@
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource__1_System_String_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource``1(System.String)">AddResource&lt;TResource&gt;(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Add a json:api resource</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public IResourceGraphBuilder AddResource&lt;TResource&gt;(string pluralizedTypeName = null)
-
     where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -282,7 +290,10 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">pluralizedTypeName</span></td>
-        <td></td>
+        <td><p>The pluralized name that should be exposed by the API. 
+If nothing is specified, the configured name formatter will be used.
+See <a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceNameFormatter">ResourceNameFormatter</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -312,7 +323,8 @@
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td></td>
+        <td><p>The resource model type</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -325,12 +337,12 @@
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource__2_System_String_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource``2(System.String)">AddResource&lt;TResource, TId&gt;(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Add a json:api resource</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public IResourceGraphBuilder AddResource&lt;TResource, TId&gt;(string pluralizedTypeName = null)
-
     where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -346,7 +358,10 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">pluralizedTypeName</span></td>
-        <td></td>
+        <td><p>The pluralized name that should be exposed by the API. 
+If nothing is specified, the configured name formatter will be used.
+See <a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceNameFormatter">ResourceNameFormatter</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -376,11 +391,13 @@
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td></td>
+        <td><p>The resource model type</p>
+</td>
       </tr>
       <tr>
         <td><span class="parametername">TId</span></td>
-        <td></td>
+        <td><p>The resource model identifier type</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -569,7 +586,8 @@
   </span>
   <a id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_UseNameFormatter_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.UseNameFormatter*"></a>
   <h4 id="JsonApiDotNetCore_Builders_ResourceGraphBuilder_UseNameFormatter_JsonApiDotNetCore_Graph_IResourceNameFormatter_" data-uid="JsonApiDotNetCore.Builders.ResourceGraphBuilder.UseNameFormatter(JsonApiDotNetCore.Graph.IResourceNameFormatter)">UseNameFormatter(IResourceNameFormatter)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Specify the <a class="xref" href="JsonApiDotNetCore.Graph.IResourceNameFormatter.html">IResourceNameFormatter</a> used to format resource names.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -588,7 +606,8 @@
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Graph.IResourceNameFormatter.html">IResourceNameFormatter</a></td>
         <td><span class="parametername">resourceNameFormatter</span></td>
-        <td></td>
+        <td><p>Formatter used to define exposed resource names by convention.</p>
+</td>
       </tr>
     </tbody>
   </table>

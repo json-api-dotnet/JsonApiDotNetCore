@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ResourceGraph
    ">
-    <meta name="generator" content="docfx 2.38.1.0">
+    <meta name="generator" content="docfx 2.40.11.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -180,7 +180,8 @@
   </span>
   <a id="JsonApiDotNetCore_Internal_ResourceGraph_UsesDbContext_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.UsesDbContext*"></a>
   <h4 id="JsonApiDotNetCore_Internal_ResourceGraph_UsesDbContext" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.UsesDbContext">UsesDbContext</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Was built against an EntityFrameworkCore DbContext ?</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -212,7 +213,8 @@
   </span>
   <a id="JsonApiDotNetCore_Internal_ResourceGraph_GetContextEntity_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.GetContextEntity*"></a>
   <h4 id="JsonApiDotNetCore_Internal_ResourceGraph_GetContextEntity_System_String_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.GetContextEntity(System.String)">GetContextEntity(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Get the resource metadata by the DbSet property name</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -259,7 +261,8 @@
   </span>
   <a id="JsonApiDotNetCore_Internal_ResourceGraph_GetContextEntity_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.GetContextEntity*"></a>
   <h4 id="JsonApiDotNetCore_Internal_ResourceGraph_GetContextEntity_System_Type_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.GetContextEntity(System.Type)">GetContextEntity(Type)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Get the resource metadata by the resource type</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -435,7 +438,9 @@
   </span>
   <a id="JsonApiDotNetCore_Internal_ResourceGraph_GetRelationshipName_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.GetRelationshipName*"></a>
   <h4 id="JsonApiDotNetCore_Internal_ResourceGraph_GetRelationshipName__1_System_String_" data-uid="JsonApiDotNetCore.Internal.ResourceGraph.GetRelationshipName``1(System.String)">GetRelationshipName&lt;TParent&gt;(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Get the internal navigation property name for the specified public
+relationship name.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -454,7 +459,8 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">relationshipName</span></td>
-        <td></td>
+        <td><p>The public relationship name specified by a <a class="xref" href="JsonApiDotNetCore.Models.HasOneAttribute.html">HasOneAttribute</a> or <a class="xref" href="JsonApiDotNetCore.Models.HasManyAttribute.html">HasManyAttribute</a></p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -502,7 +508,6 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public object GetRelationshipValue&lt;TParent&gt;(TParent resource, RelationshipAttribute relationship)
-
     where TParent : IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
