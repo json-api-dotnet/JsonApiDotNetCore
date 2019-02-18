@@ -1,6 +1,17 @@
 version: '{build}'
 os: Visual Studio 2017
 
+environment:
+  POSTGRES_PORT: tcp://localhost:5432
+  POSTGRES_ENV_POSTGRES_USER: postgres
+  POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
+  POSTGRES_ENV_POSTGRES_DB: JsonApiDotNetCoreExample
+  PGUSER: postgres
+  PGPASSWORD: Password12!
+  Data:DefaultConnection: "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=Password12!"
+  ACCESS_TOKEN:
+    secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
+
 # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
 before_build:
   - ps: |
@@ -24,6 +35,8 @@ after_build:
             Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
             git config --global user.email "jaredcnance@gmail.com"
             git config --global user.name "Jared Nance"
+            git config --global core.autocrlf false
+            git config --global core.safecrlf false
             git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
             Copy-Item origin_site/.git _site -recurse
             CD _site
@@ -31,17 +44,6 @@ after_build:
             git commit -m "CI Updates" -q
             git push origin gh-pages -q
         }
-
-environment:
-  POSTGRES_PORT: tcp://localhost:5432
-  POSTGRES_ENV_POSTGRES_USER: postgres
-  POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
-  POSTGRES_ENV_POSTGRES_DB: JsonApiDotNetCoreExample
-  PGUSER: postgres
-  PGPASSWORD: Password12!
-  Data:DefaultConnection: "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=Password12!"
-  ACCESS_TOKEN:
-    secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
 
 pull_requests:
   do_not_increment_build_number: true
