@@ -8,6 +8,10 @@
   href: api/
   homepage: api/index.md
 
-- name: Request Examples
-  href: request-examples/
-  homepage: request-examples/index.md
+# TODO: re-add the examples after I figure out
+# how to run ./generate.sh on Appveyor. It may
+# be as simple as re-writing it in PS
+#
+# - name: Request Examples
+#   href: request-examples/
+#   homepage: request-examples/index.md
