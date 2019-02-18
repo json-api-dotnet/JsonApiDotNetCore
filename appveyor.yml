@@ -1,6 +1,37 @@
 version: '{build}'
 os: Visual Studio 2017
 
+# REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
+before_build:
+  - ps: |
+        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        {
+            git checkout $env:APPVEYOR_REPO_BRANCH -q
+            choco install docfx -y
+        }
+
+after_build:
+  - ps: |
+        CD ./docs
+        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        {
+            & docfx docfx.json
+            if ($lastexitcode -ne 0){
+              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+            }
+            
+            git config --global credential.helper store
+            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
+            git config --global user.email "jaredcnance@gmail.com"
+            git config --global user.name "Jared Nance"
+            git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
+            Copy-Item origin_site/.git _site -recurse
+            CD _site
+            git add -A 2>&1
+            git commit -m "CI Updates" -q
+            git push origin gh-pages -q
+        }
+
 environment:
   POSTGRES_PORT: tcp://localhost:5432
   POSTGRES_ENV_POSTGRES_USER: postgres
@@ -9,6 +40,8 @@ environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
   Data:DefaultConnection: "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=Password12!"
+  ACCESS_TOKEN:
+    secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
 
 pull_requests:
   do_not_increment_build_number: true
@@ -39,6 +72,19 @@ test: off
 artifacts:
 - path: .\**\artifacts\**\*.nupkg
   name: NuGet
+
+on_success:
+  - git config --global credential.helper store
+  - ps: Add-Content "$HOME\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
+  - git config --global user.email "jaredcnance@gmail.com"
+  - git config --global user.name "Jared Nance"
+  - cd _site
+  - git init
+  - git remote add origin https://github.com/jaredcnance/test.git
+  - git add -A
+  - git commit -m "deploy"
+  - git checkout -b gh-pages
+  - git push -u origin gh-pages
 
 deploy:
 - provider: NuGet
