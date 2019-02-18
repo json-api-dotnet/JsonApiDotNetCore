@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Attributes </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Attributes ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="attributes">Attributes</h1>
+
+<p>If you want an attribute on your model to be publicly available, add the <code>AttrAttribute</code>.</p>
+<pre><code class="lang-c#">public class Person : Identifiable
+{
+    [Attr]
+    public string FirstName { get; set; }
+}
+</code></pre><h2 id="public-name">Public name</h2>
+<p>There are two ways the public attribute name is determined:</p>
+<ol>
+<li><p>By convention, specified by <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ResourceNameFormatter">JsonApiOptions</a></p>
+<pre><code class="lang-c#">options.ResourceNameFormatter = new DefaultResourceNameFormatter();
+</code></pre></li>
+<li><p>Individually using the attribute&#39;s constructor</p>
+<pre><code class="lang-c#">public class Person : Identifiable
+{
+ [Attr(&quot;first-name&quot;)]
+ public string FirstName { get; set; }
+}
+</code></pre></li>
+</ol>
+<h2 id="immutability">Immutability</h2>
+<p>Attributes can be marked as immutable which will prevent <code>PATCH</code> requests from updating them.</p>
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+{
+    [Attr(immutable: true)]
+    public string FirstName { get; set; }
+}
+</code></pre><h2 id="filtersort-ability">Filter|Sort-ability</h2>
+<p>All attributes are filterable and sortable by default. 
+You can disable this by setting <code>IsFiterable</code> and <code>IsSortable</code> to <code>false</code>.
+Requests to filter or sort these attributes will receive an HTTP 400 response.</p>
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+{
+    [Attr(isFilterable: false, isSortable: false)]
+    public string FirstName { get; set; }
+}
+</code></pre><h2 id="complex-attributes">Complex Attributes</h2>
+<p>Models may contain complex attributes.
+Serialization of these types is done by Newtonsoft.Json,
+so you should use their APIs to specify serialization formats.
+You can also use global options to specify the <code>JsonSerializer</code> that gets used.</p>
+<pre><code class="lang-c#">public class Foo : Identifiable
+{
+    [Attr]
+    public Bar Bar { get; set; }
+}
+
+public class Bar
+{
+    [JsonProperty(&quot;compound-member&quot;)]
+    public string CompoundMember { get; set; }
+}
+</code></pre><p>If you need your complex attributes persisted as a 
+JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource. 
+The first member is the concrete type that you will directly interact with in your application. We can use the <code>NotMapped</code> attribute to prevent Entity Framework from mapping it to the database. The second is the raw JSON property that will be persisted to the database. How you use these members should determine which one is responsible for serialization. In this example, we only serialize and deserialize at the time of persistence
+and retrieval.</p>
+<pre><code class="lang-c#">public class Foo : Identifiable
+{
+    [Attr, NotMapped]
+    public Bar Bar { get; set; }
+
+    public string BarJson 
+    { 
+        get =&gt; (Bar == null) 
+                ? &quot;{}&quot;
+                : JsonConvert.SerializeObject(Bar);
+
+        set =&gt; Bar = string.IsNullOrWhiteSpace(value)
+                ? null
+                : JsonConvert.DeserializeObject(value);
+    };
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/usage/resources/attributes.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

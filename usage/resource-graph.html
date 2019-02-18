@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>The Resource Graph </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="The Resource Graph ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="the-resource-graph">The Resource Graph</h1>
+
+<p><em>NOTE: prior to 3.0.0 this was called the <code>ContextGraph</code></em></p>
+<p>The <code>ResourceGraph</code> is a map of all the json:api resources and their relationships that your API serves.</p>
+<p>It is built at app startup and available as a singleton through Dependency Injection.</p>
+<h2 id="constructing-the-graph">Constructing The Graph</h2>
+<p>There are three ways the resource graph can be created:</p>
+<ol>
+<li>Auto-discovery</li>
+<li>Specifying an entire DbContext</li>
+<li>Manually specifying each resource</li>
+</ol>
+<h3 id="auto-discovery">Auto-Discovery</h3>
+<p>Auto-discovery refers to process of reflecting on an assembly and 
+detecting all of the json:api resources and services.</p>
+<p>The following command will build the context graph using all <code>IIdentifiable</code>
+implementations. It also injects service layer overrides which we will 
+cover in a later section. You can enable auto-discovery for the 
+current assembly by adding the following to your <code>Startup</code> class.</p>
+<pre><code class="lang-c#">// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddJsonApi(
+        options =&gt; { /* ... */ }, 
+        mvcBuilder,
+        discovery =&gt; discovery.AddCurrentAssembly());
+}
+</code></pre><h3 id="entity-framework-dbcontext">Entity Framework DbContext</h3>
+<p>If you are using Entity Framework Core as your ORM, you can add an entire <code>DbContext</code> with one line.</p>
+<pre><code class="lang-c#">// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddJsonApi&lt;AppDbContext&gt;();
+}
+</code></pre><h3 id="manual-specification">Manual Specification</h3>
+<p>You can also manually construct the graph.</p>
+<pre><code class="lang-c#">// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    var mvcBuilder = services.AddMvc();
+
+    services.AddJsonApi(options =&gt; {
+        options.BuildResourceGraph((builder) =&gt; {
+            builder.AddResource&lt;MyModel&gt;();
+        });
+    }, mvcBuilder);
+}
+</code></pre><h3 id="public-resource-type-name">Public Resource Type Name</h3>
+<p>The public resource type name for is determined by the following criteria (in order of priority):</p>
+<ol>
+<li><p>The model is decorated with a <code>ResourceAttribute</code></p>
+<pre><code class="lang-c#">[Resource(&quot;my-models&quot;)]
+public class MyModel : Identifiable { /* ... */ }
+</code></pre></li>
+<li><p>The <code>DbSet</code> is decorated with a <code>ResourceAttribute</code>. Note that this only applies if the graph was created from the DbContext (i.e. <code>services.AddJsonApi&lt;AppDbContext&gt;()</code>)</p>
+<pre><code class="lang-c#">[Resource(&quot;my-models&quot;)] 
+public DbSet&lt;MyModel&gt; MyModel { get; set; }
+</code></pre></li>
+<li><p>The configured naming convention (by default this is kebab-case).</p>
+<pre><code class="lang-c#">// this will be registered as &quot;my-models&quot;
+public class MyModel : Identifiable { /* ... */ }
+</code></pre></li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/usage/resource-graph.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Resource Services </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Resource Services ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="resource-services">Resource Services</h1>
+
+<p>The <code>IResourceService</code> acts as a service layer between the controller and the data access layer. 
+This allows you to customize it however you want and not be dependent upon Entity Framework. 
+This is also a good place to implement custom business logic.</p>
+<h2 id="supplementing-default-behavior">Supplementing Default Behavior</h2>
+<p>If you don&#39;t need to alter the actual persistence mechanism, you can inherit from the EntityResourceService<tmodel> and override the existing methods. 
+In simple cases, you can also just wrap the base implementation with your custom logic.<p>
+<p>A simple example would be to send notifications when an entity gets created.</p>
+<pre><code class="lang-c#">public class TodoItemService : EntityResourceService&lt;TodoItem&gt; 
+{
+    private readonly INotificationService _notificationService;
+
+    public TodoItemService(
+        IJsonApiContext jsonApiContext,
+        IEntityRepository&lt;T, TId&gt; repository,
+        ILoggerFactory loggerFactory,
+        INotificationService notificationService) 
+    : base(jsonApiContext, repository, loggerFactory)
+    {
+        _notificationService = notificationService;
+    }
+
+    public override async Task&lt;TEntity&gt; CreateAsync(TEntity entity)
+    {
+        // call the base implementation which uses Entity Framework
+        var newEntity = await base.CreateAsync(entity);
+
+        // custom code
+        _notificationService.Notify($&quot;Entity created: { newEntity.Id }&quot;);
+
+        // don&#39;t forget to return the new entity
+        return newEntity;
+    }
+}
+</code></pre><h2 id="not-using-entity-framework">Not Using Entity Framework?</h2>
+<p>As previously discussed, this library uses Entity Framework by default. 
+If you&#39;d like to use another ORM that does not implement <code>IQueryable</code>, you can use a custom <code>IResourceService&lt;TModel&gt;</code> implementation.</p>
+<pre><code class="lang-c#">// Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // add the service override for MyModel
+    services.AddScoped&lt;IResourceService&lt;MyModel&gt;, MyModelService&gt;();
+
+    // add your own DAO
+    services.AddScoped&lt;IMyModelDao, MyModelDao&gt;();
+    // ...
+}
+
+// MyModelService.cs
+public class MyModelService : IResourceService&lt;MyModel&gt;
+{
+    private readonly IMyModelDao _dao;
+
+    public MyModelService(IMyModelDao dao)
+    { 
+        _dao = dao;
+    } 
+
+    public Task&lt;IEnumerable&lt;MyModel&gt;&gt; GetAsync()
+    {
+        return await _dao.GetModelAsync();
+    }
+
+    // ...
+}
+</code></pre><h2 id="limited-requirements">Limited Requirements</h2>
+<p>In some cases it may be necessary to only expose a few methods on the resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.</p>
+<p>This interface hierarchy is defined by this tree structure.</p>
+<pre><code>IResourceService
+|
+├── IResourceQueryService
+|   |
+│   ├── IGetAllService
+│   │   GET /
+|   |
+│   ├── IGetByIdService
+|   |   GET /{id}
+|   |
+│   ├── IGetRelationshipService
+|   |   GET /{id}/{relationship}
+|   |
+│   └── IGetRelationshipsService
+|       GET /{id}/relationships/{relationship}
+|
+└── IResourceCmdService
+    |
+    ├── ICreateService
+    |   POST /
+    |
+    ├── IDeleteService
+    |   DELETE /{id}
+    |
+    ├── IUpdateService
+    |   PATCH /{id}
+    |
+    └── IUpdateRelationshipService
+        PATCH /{id}/relationships/{relationship}
+</code></pre><p>In order to take advantage of these interfaces you first need to inject the service for each implemented interface.</p>
+<pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt; 
+{
+  // ...
+}
+
+public class Startup 
+{
+    public IServiceProvider ConfigureServices(IServiceCollection services) 
+    {
+        services.AddScoped&lt;ICreateService&lt;Article&gt;, ArticleService&gt;();
+        services.AddScoped&lt;IDeleteService&lt;Article&gt;, ArticleService&gt;();
+    }
+}
+</code></pre><p>Other dependency injection frameworks such as Autofac can be used to simplify this syntax.</p>
+<pre><code class="lang-c#">builder.RegisterType&lt;ArticleService&gt;().AsImplementedInterfaces();
+</code></pre><p>Then in the controller, you should inherit the base controller and pass the services into the named, optional base parameters:</p>
+<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt; 
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext, 
+        ICreateService&lt;Article&gt; create,
+        IDeleteService&lt;Article&gt; delete
+    ) : base(jsonApiContext, create: create, delete: delete) { }
+
+    [HttpPost]
+    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article entity) 
+        =&gt; await base.PostAsync(entity);
+
+    [HttpDelete(&quot;{id}&quot;)]
+    public override async Task&lt;IActionResult&gt;DeleteAsync(int id) 
+        =&gt; await base.DeleteAsync(id);
+}
+</code></pre></tmodel></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/usage/extensibility/services.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

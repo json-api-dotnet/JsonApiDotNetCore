@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Errors </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Errors ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="errors">Errors</h1>
+
+<p>By default, errors will only contain the properties defined by the <code>Error</code> class. 
+However, you can create your own by inheriting from Error and either throwing it in a <code>JsonApiException</code> or returning the error from your controller.</p>
+<pre><code class="lang-c#">public class CustomError : Error 
+{
+    public CustomError(int status, string title, string detail, string myProp)
+        : base(status, title, detail)
+    {
+        MyCustomProperty = myProp;
+    }
+
+    public string MyCustomProperty { get; set; }
+}
+</code></pre><p>If you throw a <code>JsonApiException</code> that is unhandled, the middleware will properly serialize it and return it as a json:api error.</p>
+<pre><code class="lang-c#">public void MyMethod() 
+{
+    var error = new CustomError(507, &quot;title&quot;, &quot;detail&quot;, &quot;custom&quot;);
+    throw new JsonApiException(error);
+}
+</code></pre><p>You can use the <code>IActionResult Error(Error error)</code> method to return a single error message, or you can use the <code>IActionResult Errors(ErrorCollection errors)</code> method to return a collection of errors from your controller.</p>
+<pre><code class="lang-c#">[HttpPost]
+public override async Task&lt;IActionResult&gt; PostAsync([FromBody] MyEntity entity)
+{
+    if(_db.IsFull)
+        return Error(new CustomError(&quot;507&quot;, &quot;Database is full.&quot;, &quot;Theres no more room.&quot;, &quot;Sorry.&quot;));
+
+    if(model.Validations.IsValid == false)
+        return Errors(model.Validations.GetErrors());
+}
+</code></pre><h2 id="example-including-links">Example: Including Links</h2>
+<p>This example demonstrates one way you can include links with your error payloads.</p>
+<p>This example assumes that there is a support documentation site that provides additional information based on the HTTP Status Code.</p>
+<pre><code class="lang-c#">public class LinkableError : Error 
+{
+    public LinkableError(int status, string title)
+        : base(status, title)
+    { }
+
+    public ErrorLink Links =&gt; &quot;https://example.com/errors/&quot; + Status;
+}
+
+var error = new LinkableError(401, &quot;You&#39;re not allowed to do that.&quot;);
+throw new JsonApiException(error);
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/usage/errors.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Step-By-Step Guide to a Running API </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Step-By-Step Guide to a Running API ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="step-by-step-guide-to-a-running-api">Step-By-Step Guide to a Running API</h1>
+
+<p>The most basic use case leverages Entity Framework. 
+The shortest path to a running API looks like:</p>
+<ul>
+<li>Create a new web app</li>
+<li>Install</li>
+<li>Define models</li>
+<li>Define the DbContext</li>
+<li>Define controllers</li>
+<li>Add Middleware and Services</li>
+<li>Seed the database</li>
+<li>Start the app</li>
+</ul>
+<p>This page will walk you through the <strong>simplest</strong> use case. More detailed examples can be found in the detailed usage subsections.</p>
+<h3 id="create-a-new-web-app">Create A New Web App</h3>
+<pre><code>mkdir MyApp
+cd MyApp
+dotnet new webapi
+</code></pre><h3 id="install">Install</h3>
+<pre><code>dotnet add package JsonApiDotnetCore
+
+- or -
+
+Install-Package JsonApiDotnetCore
+</code></pre><h3 id="define-models">Define Models</h3>
+<p>Define your domain models such that they implement <code>IIdentifiable&lt;TId&gt;</code>.
+The easiest way to do this is to inherit <code>Identifiable</code></p>
+<pre><code class="lang-c#">public class Person : Identifiable
+{ 
+    [Attr(&quot;name&quot;)]
+    public string Name { get; set; }
+}
+</code></pre><h3 id="define-dbcontext">Define DbContext</h3>
+<p>Nothing special here, just an ordinary <code>DbContext</code></p>
+<pre><code>public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options)
+        : base(options) { }
+
+    public DbSet&lt;Person&gt; People { get; set; }
+}
+</code></pre><h3 id="define-controllers">Define Controllers</h3>
+<p>You need to create controllers that inherit from <code>JsonApiController&lt;TEntity&gt;</code> or <code>JsonApiController&lt;TEntity, TId&gt;</code>
+where <code>TEntity</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code></p>
+<pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person&gt;
+{
+    public PeopleController(
+        IJsonApiContext jsonApiContext,
+        IResourceService&lt;Person&gt; resourceService,
+        ILoggerFactory loggerFactory) 
+    : base(jsonApiContext, resourceService, loggerFactory)
+    { }
+}
+</code></pre><h3 id="middleware-and-services">Middleware and Services</h3>
+<p>Finally, add the services by adding the following to your Startup.ConfigureServices:</p>
+<pre><code class="lang-c#">public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+    // add the db context like you normally would
+    services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
+    { // use whatever provider you want, this is just an example
+        options.UseNpgsql(GetDbConnectionString());
+    }, ServiceLifetime.Transient);
+
+    // add jsonapi dotnet core
+    services.AddJsonApi&lt;AppDbContext&gt;();
+    // ...
+}
+</code></pre><p>Add the middleware to the Startup.Configure method. Note that under the hood, 
+this will call <code>app.UseMvc()</code> so there is no need to add that as well.</p>
+<pre><code class="lang-c#">public void Configure(IApplicationBuilder app)
+{
+    app.UseJsonApi();
+}
+</code></pre><h3 id="seeding-the-database">Seeding the Database</h3>
+<p>One way to seed the database is in your Configure method:</p>
+<pre><code class="lang-c#">public void Configure(
+    IApplicationBuilder app,
+    AppDbContext context)
+{
+    context.Database.EnsureCreated();
+    if(context.People.Any() == false) 
+    {
+        context.People.Add(new Person {
+            Name = &quot;John Doe&quot;
+        });
+        context.SaveChanges();
+    }
+    // ...
+    app.UseJsonApi();
+}
+</code></pre><h3 id="start-the-app">Start the App</h3>
+<pre><code>dotnet run
+curl http://localhost:5000/people
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/getting-started/step-by-step.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

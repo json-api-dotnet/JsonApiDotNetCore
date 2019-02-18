@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Filtering </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Filtering ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="filtering">Filtering</h1>
+
+<p>Resources can be filtered by attributes using the <code>filter</code> query parameter. 
+By default, all attributes are filterable. 
+The filtering strategy we have selected, uses the following form.</p>
+<pre><code>?filter[attribute]=value
+</code></pre><p>For operations other than equality, the query can be prefixed with an operation identifier.
+Examples can be found in the table below.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Prefix</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Equals</td>
+<td><code>eq</code></td>
+<td><code>?filter[attribute]=eq:value</code></td>
+</tr>
+<tr>
+<td>Not Equals</td>
+<td><code>ne</code></td>
+<td><code>?filter[attribute]=ne:value</code></td>
+</tr>
+<tr>
+<td>Less Than</td>
+<td><code>lt</code></td>
+<td><code>?filter[attribute]=lt:10</code></td>
+</tr>
+<tr>
+<td>Greater Than</td>
+<td><code>gt</code></td>
+<td><code>?filter[attribute]=gt:10</code></td>
+</tr>
+<tr>
+<td>Less Than Or Equal To</td>
+<td><code>le</code></td>
+<td><code>?filter[attribute]=le:10</code></td>
+</tr>
+<tr>
+<td>Greater Than Or Equal To</td>
+<td><code>ge</code></td>
+<td><code>?filter[attribute]=ge:10</code></td>
+</tr>
+<tr>
+<td>Like (string comparison)</td>
+<td><code>like</code></td>
+<td><code>?filter[attribute]=like:value</code></td>
+</tr>
+<tr>
+<td>In Set</td>
+<td><code>in</code></td>
+<td><code>?filter[attribute]=in:value1,value2</code></td>
+</tr>
+<tr>
+<td>Not In Set</td>
+<td><code>nin</code></td>
+<td><code>?filter[attribute]=nin:value1,value2</code></td>
+</tr>
+<tr>
+<td>Is Null</td>
+<td><code>isnull</code></td>
+<td><code>?filter[attribute]=isnull:</code></td>
+</tr>
+<tr>
+<td>Is Not Null</td>
+<td><code>isnotnull</code></td>
+<td><code>?filter[attribute]=isnotnull:</code></td>
+</tr>
+</tbody>
+</table>
+<p>Filters can be combined and will be applied using an AND operator. 
+The following are equivalent query forms to get articles whose ordinal values are between 1-100.</p>
+<pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1,lt:100 HTTP/1.1
+Accept: application/vnd.api+json
+</code></pre><pre><code class="lang-http">GET /api/articles?filter[ordinal]=gt:1&amp;filter[ordinal]=lt:100 HTTP/1.1
+Accept: application/vnd.api+json
+</code></pre><h2 id="custom-filters">Custom Filters</h2>
+<p>There are two ways you can add custom filters:</p>
+<ol>
+<li>Creating a <code>ResourceDefinition</code> as <a href="resources/resource-definitions.html#custom-query-filters">described previously</a></li>
+<li>Overriding the <code>DefaultEntityRepository</code> shown below</li>
+</ol>
+<pre><code class="lang-c#">public class AuthorRepository : DefaultEntityRepository&lt;Author&gt;
+{
+  public AuthorRepository(
+    AppDbContext context,
+    ILoggerFactory loggerFactory,
+    IJsonApiContext jsonApiContext)
+  : base(context, loggerFactory, jsonApiContext)
+  { }
+
+  public override IQueryable&lt;TEntity&gt; Filter(
+      IQueryable&lt;TEntity&gt; authors, 
+      FilterQuery filterQuery)
+        // if the filter key is &quot;query&quot; (filter[query]), 
+        // find Authors with matching first or last names
+        // for all other filter keys, use the base method
+        =&gt; filter.Attribute.Is(&quot;query&quot;)
+                    ? authors.Where(a =&gt; 
+                        a.First.Contains(filter.Value)
+                        || a.Last.Contains(filter.Value))
+                    : base.Filter(authors, filter);
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/usage/filtering.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

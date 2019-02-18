@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Controllers </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Controllers ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="controllers">Controllers</h1>
+
+<p>You need to create controllers that inherit from <code>JsonApiController&lt;TEntity&gt;</code></p>
+<pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article&gt;
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext,
+        IResourceService&lt;Article&gt; resourceService,
+        ILoggerFactory loggerFactory) 
+    : base(jsonApiContext, resourceService, loggerFactory)
+    { }
+}
+</code></pre><h2 id="non-integer-type-keys">Non-Integer Type Keys</h2>
+<p>If your model is using a type other than int for the primary key, you must explicitly declare it in the controller and service generic type definitions.</p>
+<pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
+//---------------------- ^^^^
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext,
+        IResourceService&lt;Article, Guid&gt; resourceService,
+        //--------------------- ^^^^
+
+        ILoggerFactory loggerFactory) 
+    : base(jsonApiContext, resourceService, loggerFactory)
+    { }
+}
+</code></pre><h2 id="resource-access-control">Resource Access Control</h2>
+<p>It is often desirable to limit what methods are exposed on your controller. The first way, you can do this is to simply inherit from <code>BaseJsonApiController</code> and explicitly declare what methods are available.</p>
+<p>In this example, if a client attempts to do anything other than GET a resource, an HTTP 404 Not Found response will be returned since no other methods are exposed.</p>
+<p>This approach is ok, but introduces some boilerplate that can easily be avoided.</p>
+<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext,
+        IResourceService&lt;Article&gt; resourceService) 
+    : base(jsonApiContext, resourceService)
+    { }
+
+    [HttpGet]
+    public override async Task&lt;IActionResult&gt; GetAsync() 
+        =&gt; await base.GetAsync();
+
+    [HttpGet(&quot;{id}&quot;)]
+    public override async Task&lt;IActionResult&gt; GetAsync(TId id) 
+        =&gt; await base.GetAsync(id);
+}
+</code></pre><h2 id="using-actionfilterattributes">Using ActionFilterAttributes</h2>
+<p>The next option is to use the ActionFilterAttributes that ship with the library. The available attributes are:</p>
+<ul>
+<li><code>NoHttpPost</code>: disallow POST requests</li>
+<li><code>NoHttpPatch</code>: disallow PATCH requests</li>
+<li><code>NoHttpDelete</code>: disallow DELETE requests</li>
+<li><code>HttpReadOnly</code>: all of the above</li>
+</ul>
+<p>Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code. 
+An attempt to use one blacklisted methods will result in a HTTP 405 Method Not Allowed response.</p>
+<pre><code class="lang-c#">[HttpReadOnly]
+public class ArticlesController : BaseJsonApiController&lt;Article&gt;
+{
+    public ArticlesController(
+        IJsonApiContext jsonApiContext,
+        IResourceService&lt;Article&gt; resourceService) 
+    : base(jsonApiContext, resourceService)
+    { }
+}
+</code></pre><h2 id="implicit-access-by-service-injection">Implicit Access By Service Injection</h2>
+<p>Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation. In these cases, simply inject the implementation that is available.</p>
+<p>As with the ActionFilterAttributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.</p>
+<p>For more information about resource injection, see the next section titled Resource Services.</p>
+<pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report&gt; 
+{
+    public ReportsController(
+        IJsonApiContext jsonApiContext, 
+        IGetAllService&lt;Report&gt; getAll)
+    : base(jsonApiContext, getAll: getAll)
+    { }
+
+    [HttpGet]
+    public override async Task&lt;IActionResult&gt; GetAsync() 
+        =&gt; await base.GetAsync();
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/new-docs/docs/usage/extensibility/controllers.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>
