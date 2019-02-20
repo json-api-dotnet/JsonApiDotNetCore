@@ -21,6 +21,11 @@ namespace JsonApiDotNetCore.Data
         IQueryable<TEntity> Get();
 
         /// <summary>
+        /// Apply fields to the provided queryable
+        /// </summary>
+        IQueryable<TEntity> Select(IQueryable<TEntity> entities,List<string> fields);
+
+        /// <summary>
         /// Include a relationship in the query
         /// </summary>
         /// <example>

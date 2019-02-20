@@ -79,12 +79,15 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Get()
-        {
-            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
-                return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
+        public virtual IQueryable<TEntity> Get() 
+            => _dbSet;
 
-            return _dbSet;
+        public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
+        {
+            if (fields?.Count > 0)
+                return entities.Select(fields);
+
+            return entities;
         }
 
         /// <inheritdoc />
