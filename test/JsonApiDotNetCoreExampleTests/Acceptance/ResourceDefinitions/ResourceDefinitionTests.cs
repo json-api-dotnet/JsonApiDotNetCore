@@ -16,13 +16,17 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class OutputAttrs_Tests
+    public class ResourceDefinitionTests
     {
         private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
         private Faker<User> _userFaker;
+        private static readonly Faker<Article> _articleFaker = new Faker<Article>()
+            .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
+            .RuleFor(a => a.Author, f => new Author());
 
-        public OutputAttrs_Tests(TestFixture<TestStartup> fixture)
+        private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
+        public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -30,6 +34,54 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .RuleFor(u => u.Username, f => f.Internet.UserName())
                 .RuleFor(u => u.Password, f => f.Internet.Password());
         }
+
+        [Fact]
+        public async Task Tag_Is_Hidden()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var article = _articleFaker.Generate();
+            var tag = _tagFaker.Generate();
+
+            tag.Name = "THISTAGSHOULDNOTBEVISIBLE";
+
+            context.Articles.RemoveRange(context.Articles);
+            await context.SaveChangesAsync();
+
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+            context.ArticleTags.Add(articleTag);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles?include=tags";
+
+            var httpMethod = new HttpMethod("GET");
+            var request = new HttpRequestMessage(httpMethod, route);
+
+
+            // Act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            var document = JsonConvert.DeserializeObject<Documents>(body);
+            Assert.NotEmpty(document.Included);
+
+            var articleResponseList = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
+            Assert.NotNull(articleResponseList);
+
+            var articleResponse = articleResponseList.FirstOrDefault(a => a.Id == article.Id);
+            Assert.NotNull(articleResponse);
+            Assert.Equal(article.Name, articleResponse.Name);
+
+            Assert.Null(articleResponse.Tags);
+        }
+
 
         [Fact]
         public async Task Password_Is_Not_Included_In_Response_Payload()

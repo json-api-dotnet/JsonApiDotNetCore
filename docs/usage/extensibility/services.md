@@ -17,7 +17,7 @@ public class TodoItemService : EntityResourceService<TodoItem>
 
     public TodoItemService(
         IJsonApiContext jsonApiContext,
-        IEntityRepository<T, TId> repository,
+        IEntityRepository<TodoItem, int> repository,
         ILoggerFactory loggerFactory,
         INotificationService notificationService) 
     : base(jsonApiContext, repository, loggerFactory)
@@ -25,7 +25,7 @@ public class TodoItemService : EntityResourceService<TodoItem>
         _notificationService = notificationService;
     }
 
-    public override async Task<TEntity> CreateAsync(TEntity entity)
+    public override async Task<TodoItem> CreateAsync(TodoItem entity)
     {
         // call the base implementation which uses Entity Framework
         var newEntity = await base.CreateAsync(entity);

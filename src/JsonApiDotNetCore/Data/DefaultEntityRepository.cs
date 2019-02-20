@@ -81,10 +81,16 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get()
         {
-            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
-                return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
+            var entities = (IQueryable<TEntity>)_dbSet;
+            if (_resourceDefinition != null)
+            {
+                entities = _resourceDefinition.OnList(entities);
+            }
 
-            return _dbSet;
+            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
+                return entities.Select(_jsonApiContext.QuerySet?.Fields);
+
+            return entities;
         }
 
         /// <inheritdoc />
@@ -163,7 +169,7 @@ namespace JsonApiDotNetCore.Data
         {
             foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
             {
-                var hasOne = (HasOneAttribute) hasOneRelationship.Key;
+                var hasOne = (HasOneAttribute)hasOneRelationship.Key;
                 if (hasOne.EntityPropertyName != null)
                 {
                     var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
@@ -178,7 +184,7 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
             {
-                var hasMany = (HasManyAttribute) hasManyRelationship.Key;
+                var hasMany = (HasManyAttribute)hasManyRelationship.Key;
                 if (hasMany.EntityPropertyName != null)
                 {
                     var relatedList = (IList)entity.GetType().GetProperty(hasMany.EntityPropertyName)?.GetValue(entity);
@@ -194,7 +200,7 @@ namespace JsonApiDotNetCore.Data
                         _context.Entry(pointer).State = EntityState.Detached;
                     }
                 }
-                
+
                 // HACK: detaching has many relationships doesn't appear to be sufficient
                 // the navigation property actually needs to be nulled out, otherwise
                 // EF adds duplicate instances to the collection
@@ -234,7 +240,7 @@ namespace JsonApiDotNetCore.Data
                 {
                     _context.Entry(pointer).State = EntityState.Unchanged;
                 }
-            }  
+            }
         }
 
         private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
@@ -270,7 +276,7 @@ namespace JsonApiDotNetCore.Data
                 if (relationship.Key.GetType() != typeof(HasOneAttribute))
                     continue;
 
-                var hasOne = (HasOneAttribute) relationship.Key;
+                var hasOne = (HasOneAttribute)relationship.Key;
                 if (hasOne.EntityPropertyName != null)
                 {
                     var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
@@ -347,10 +353,16 @@ namespace JsonApiDotNetCore.Data
             // TODO: make recursive method
             string internalRelationshipPath = null;
             var entity = _jsonApiContext.RequestEntity;
+
+            var typeTree = new Dictionary<Type, IResourceDefinition>() { };
+
             for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];
                 var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
+
+                // need to add this to the typetree so we know what we're dealing with
+                typeTree.Add(relationship.Type);
                 if (relationship == null)
                 {
                     throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
@@ -366,11 +378,15 @@ namespace JsonApiDotNetCore.Data
                     ? relationship.RelationshipPath
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
 
-                if(i < relationshipChain.Length)
+                if (i < relationshipChain.Length)
                     entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
             }
 
-            return entities.Include(internalRelationshipPath);
+            entities =  entities.Include(internalRelationshipPath);
+            // here we also need to check for any filters
+
+
+            return entities;
         }
 
         /// <inheritdoc />

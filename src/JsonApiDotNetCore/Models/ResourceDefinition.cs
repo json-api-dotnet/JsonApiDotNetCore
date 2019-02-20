@@ -49,9 +49,16 @@ namespace JsonApiDotNetCore.Models
                 .FirstOrDefault();
             var declaringType = instanceMethod?.DeclaringType;
             return declaringType == derivedType;
-        }   
+        }
 
-        // TODO: need to investigate options for caching these
+        /// <summary>
+        /// Remove an attribute
+        /// 
+        /// @TODO: need to investigate options for caching these
+        /// </summary>
+        /// <param name="filter">the filter to execute</param>
+        /// <param name="from">@TODO</param>
+        /// <returns></returns>
         protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
         {
             from = from ?? _contextEntity.Attributes;
@@ -156,6 +163,14 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
+
+        /// <summary>
+        /// Executed when listing all resources
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public virtual IQueryable<T> OnList(IQueryable<T> entities) => entities;
+
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
