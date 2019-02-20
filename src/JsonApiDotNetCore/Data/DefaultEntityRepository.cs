@@ -7,9 +7,11 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Logic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
@@ -23,16 +25,17 @@ namespace JsonApiDotNetCore.Data
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-        : base(jsonApiContext, contextResolver, resourceDefinition)
+            ILogicCache logicCache = null)
+        : base(jsonApiContext, contextResolver, logicCache)
         { }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
+            ILogicCache logicCache = null
+            )
+        : base(loggerFactory, jsonApiContext, contextResolver, logicCache)
         { }
     }
 
@@ -50,32 +53,42 @@ namespace JsonApiDotNetCore.Data
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
+        private readonly ILogicCache _logicCache;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
+            ILogicCache logicCache)
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-            _resourceDefinition = resourceDefinition;
+            if (logicCache != null)
+            {
+                _logicCache = logicCache;
+                _resourceDefinition = (ResourceDefinition<TEntity>)logicCache.GetLogic(typeof(TEntity));
+            }
+
         }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
+            ILogicCache logicCache)
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-            _resourceDefinition = resourceDefinition;
+            if (logicCache != null)
+            {
+                _logicCache = logicCache;
+                _resourceDefinition = (ResourceDefinition<TEntity>)logicCache.GetLogic(typeof(TEntity));
+            }
         }
 
         /// <inheritdoc />
@@ -354,7 +367,7 @@ namespace JsonApiDotNetCore.Data
             string internalRelationshipPath = null;
             var entity = _jsonApiContext.RequestEntity;
 
-            var typeTree = new Dictionary<Type, IResourceDefinition>() { };
+            var logicTree = new Dictionary<Type, IResourceDefinition>() { };
 
             for (var i = 0; i < relationshipChain.Length; i++)
             {
@@ -362,7 +375,11 @@ namespace JsonApiDotNetCore.Data
                 var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
 
                 // need to add this to the typetree so we know what we're dealing with
-                typeTree.Add(relationship.Type);
+                var logic = _logicCache.GetLogic(relationship.Type);
+                if (logic != null)
+                {
+                    logicTree.Add(relationship.Type, logic);
+                }
                 if (relationship == null)
                 {
                     throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
@@ -382,12 +399,21 @@ namespace JsonApiDotNetCore.Data
                     entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
             }
 
-            entities =  entities.Include(internalRelationshipPath);
+
+
             // here we also need to check for any filters
-
-
+            // we have access to the logicTree which should have the 
+            // Required logic to handle nested changes to the entities
+            // we need to 
+            entities = entities.Include(internalRelationshipPath);
+            // I mean, the including is fine, but we still need to apply a `Where` somehow
+            // we could dynamically build
+            // entities.Where(e = > logic.Apply(e)) or something, but I cant really figure out how atm
             return entities;
         }
+
+
+
 
         /// <inheritdoc />
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)

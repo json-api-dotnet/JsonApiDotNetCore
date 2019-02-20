@@ -7,6 +7,8 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using JsonApiDotNetCore.Logic;
+using JsonApiDotNetCoreExample.Logic;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -43,6 +45,7 @@ namespace JsonApiDotNetCoreExample
                 mvcBuilder,
                 discovery => discovery.AddCurrentAssembly());
 
+            services.AddSingleton<ILogicCache, LogicCache>();
             return services.BuildServiceProvider();
         }
 
