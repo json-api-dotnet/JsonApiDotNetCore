@@ -8,6 +8,10 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
 {
+    public interface IResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
+    {
+        IQueryable<T> OnList(IQueryable<T> entities);
+    }
     public interface IResourceDefinition
     {
         List<AttrAttribute> GetOutputAttrs(object instance);
@@ -20,7 +24,7 @@ namespace JsonApiDotNetCore.Models
     /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
+    public class ResourceDefinition<T> : IResourceDefinition<T> where T : class, IIdentifiable
     {
         private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;
@@ -53,14 +57,13 @@ namespace JsonApiDotNetCore.Models
 
         /// <summary>
         /// Remove an attribute
-        /// 
-        /// @TODO: need to investigate options for caching these
         /// </summary>
         /// <param name="filter">the filter to execute</param>
         /// <param name="from">@TODO</param>
         /// <returns></returns>
         protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
         {
+            //@TODO: need to investigate options for caching these
             from = from ?? _contextEntity.Attributes;
 
             // model => model.Attribute
@@ -172,6 +175,7 @@ namespace JsonApiDotNetCore.Models
         public virtual IQueryable<T> OnList(IQueryable<T> entities) => entities;
 
 
+
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
         /// method signature.
@@ -199,15 +203,15 @@ namespace JsonApiDotNetCore.Models
         internal List<(AttrAttribute, SortDirection)> DefaultSort()
         {
             var defaultSortOrder = GetDefaultSortOrder();
-            if(defaultSortOrder != null && defaultSortOrder.Count > 0)
+            if (defaultSortOrder != null && defaultSortOrder.Count > 0)
             {
                 var order = new List<(AttrAttribute, SortDirection)>();
-                foreach(var sortProp in defaultSortOrder)
+                foreach (var sortProp in defaultSortOrder)
                 {
                     // TODO: error handling, log or throw?
                     if (sortProp.Item1.Body is MemberExpression memberExpression)
                         order.Add(
-                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name), 
+                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name),
                             sortProp.Item2)
                         );
                 }
@@ -217,6 +221,9 @@ namespace JsonApiDotNetCore.Models
 
             return null;
         }
+
+
+
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's

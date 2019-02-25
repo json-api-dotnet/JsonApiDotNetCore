@@ -236,6 +236,14 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
+        /// <summary>
+        /// This calls a generic where method.. more explaining to follow
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         private static IQueryable<TSource> CallGenericWhereMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
         {
             var op = filter.FilterOperation;

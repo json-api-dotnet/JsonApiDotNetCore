@@ -17,11 +17,7 @@
     },
     "GettingStarted": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:56046/"
+      "launchBrowser": true
     }
   }
 }
