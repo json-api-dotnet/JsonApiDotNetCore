@@ -41,19 +41,27 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var article = _articleFaker.Generate();
-            var tag = _tagFaker.Generate();
+            var tags = _tagFaker.Generate(2);
 
-            tag.Name = "THISTAGSHOULDNOTBEVISIBLE";
+            tags[0].Name = "THISTAGSHOULDNOTBEVISIBLE";
 
             context.Articles.RemoveRange(context.Articles);
             await context.SaveChangesAsync();
 
-            var articleTag = new ArticleTag
+            var articleTags = new ArticleTag[]
             {
-                Article = article,
-                Tag = tag
+                new ArticleTag
+                {
+                    Article = article,
+                    Tag = tags[0]
+                },
+                new ArticleTag
+                {
+                    Article = article,
+                    Tag = tags[1]
+                }
             };
-            context.ArticleTags.Add(articleTag);
+            context.ArticleTags.AddRange(articleTags);
             await context.SaveChangesAsync();
 
             var route = $"/api/v1/articles?include=tags";

@@ -10,6 +10,6 @@ namespace JsonApiDotNetCoreExample.Resources
         protected override List<AttrAttribute> OutputAttrs()
             => Remove(user => user.Password);
 
-        public override IQueryable<User> OnList(IQueryable<User> entities) => entities;
+        public override List<User> OnList(List<User> entities) => entities;
     }
 }

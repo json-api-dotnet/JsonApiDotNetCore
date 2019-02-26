@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
@@ -11,7 +13,9 @@ namespace JsonApiDotNetCore.Data
         : IEntityReadRepository<TEntity, TId>,
         IEntityWriteRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
-    { }
+    {
+        IList<TEntity> ApplyLogic(IList<TEntity> entities, string r);
+    }
 
     /// <summary>
     /// A staging interface to avoid breaking changes that 

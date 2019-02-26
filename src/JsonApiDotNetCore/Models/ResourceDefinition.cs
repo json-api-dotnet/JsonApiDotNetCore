@@ -8,13 +8,11 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
 {
-    public interface IResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
-    {
-        IQueryable<T> OnList(IQueryable<T> entities);
-    }
+
     public interface IResourceDefinition
     {
         List<AttrAttribute> GetOutputAttrs(object instance);
+
     }
 
     /// <summary>
@@ -24,7 +22,7 @@ namespace JsonApiDotNetCore.Models
     /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition<T> where T : class, IIdentifiable
+    public class ResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
     {
         private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;
@@ -172,7 +170,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public virtual IQueryable<T> OnList(IQueryable<T> entities) => entities;
+        public virtual List<T> OnList(List<T> entities) => entities;
 
 
 

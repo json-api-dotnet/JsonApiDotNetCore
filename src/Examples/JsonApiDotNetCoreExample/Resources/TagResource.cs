@@ -8,6 +8,10 @@ namespace JsonApiDotNetCoreExample.Resources
     public class TagResource : ResourceDefinition<Tag>
     {
 
-        public override IQueryable<Tag> OnList(IQueryable<Tag> entities) => entities.Where(t => t.Name != "THISTAGSHOULDNOTBEVISIBLE");
+        public override List<Tag> OnList(List<Tag> entities)
+        {
+            return entities.Where(t => t.Name != "THISTAGSHOULDNOTBEVISIBLE").ToList();
+        }
+
     }
 }
