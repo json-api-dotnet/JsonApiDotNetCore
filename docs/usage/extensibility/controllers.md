@@ -20,13 +20,12 @@ If your model is using a type other than int for the primary key, you must expli
 
 ```c#
 public class ArticlesController : JsonApiController<Article, Guid>
-//---------------------- ^^^^
+//---------------------------------------------------------- ^^^^
 {
     public ArticlesController(
         IJsonApiContext jsonApiContext,
         IResourceService<Article, Guid> resourceService,
-        //--------------------- ^^^^
-
+        //----------------------- ^^^^
         ILoggerFactory loggerFactory) 
     : base(jsonApiContext, resourceService, loggerFactory)
     { }
