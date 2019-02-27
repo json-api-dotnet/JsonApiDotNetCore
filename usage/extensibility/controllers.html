@@ -82,13 +82,12 @@
 </code></pre><h2 id="non-integer-type-keys">Non-Integer Type Keys</h2>
 <p>If your model is using a type other than int for the primary key, you must explicitly declare it in the controller and service generic type definitions.</p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
-//---------------------- ^^^^
+//---------------------------------------------------------- ^^^^
 {
     public ArticlesController(
         IJsonApiContext jsonApiContext,
         IResourceService&lt;Article, Guid&gt; resourceService,
-        //--------------------- ^^^^
-
+        //----------------------- ^^^^
         ILoggerFactory loggerFactory) 
     : base(jsonApiContext, resourceService, loggerFactory)
     { }

@@ -2721,7 +2721,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/controllers.html",
-          "hash": "caXgyD2Gj5xsEewlvEtSsg=="
+          "hash": "dFUNas0xiCU6P0YkmkQzNw=="
         }
       },
       "is_incremental": false,
@@ -3003,16 +3003,16 @@
         "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 214,
-          "skipped_file_count": 0
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 29,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 214,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
