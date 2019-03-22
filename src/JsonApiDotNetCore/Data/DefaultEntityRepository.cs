@@ -66,8 +66,6 @@ namespace JsonApiDotNetCore.Data
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-
-
         }
 
         public DefaultEntityRepository(
@@ -82,23 +80,17 @@ namespace JsonApiDotNetCore.Data
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _resourceDefinition = _genericProcessorFactory.GetProcessor<ResourceDefinition<TEntity>>(typeof(ResourceDefinition<>), typeof(TEntity));
-
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get()
         {
             var entities = (IQueryable<TEntity>)_dbSet;
-
-
-
             if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
                 return entities.Select(_jsonApiContext.QuerySet?.Fields);
 
             return entities;
         }
-
-
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
@@ -111,7 +103,6 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery.Value);
                 }
             }
-
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
@@ -359,11 +350,10 @@ namespace JsonApiDotNetCore.Data
 
             // variables mutated in recursive loop
             // TODO: make recursive method
-            string internalRelationshipPath = null;
-            var entity = _jsonApiContext.RequestEntity;
 
             IResourceDefinition logic;
-
+            string internalRelationshipPath = null;
+            var entity = _jsonApiContext.RequestEntity;
             var requestedRelationship = relationshipChain[0];
             var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
             // need to add this to the typetree so we know what we're dealing with
@@ -394,12 +384,18 @@ namespace JsonApiDotNetCore.Data
             {
                 // we need to be nested
                 entities = GetChildren(entities, relationship, entity, relationshipChain);
+                // lets get this query fully done
+                // get tags
+                var entitiesList = ApplyLogic(entities.ToList(), "tags");
+                //// we need it to be an IENumerable for a second so lets do that
+                //var tempEnumerable = entities.ToList();
+                //var logicMethod = rightLogic.GetType().GetRuntimeMethods().First(e => e.Name == "OnList");
+                //var tempEntities = logicMethod.Invoke(this, new object[] { entities.ToList() }) as IQueryable<TEntity>;
             }
+
+
             return entities;
         }
-
-
-
 
         /// <summary>
         /// we Are building the many-to-many relationship here
@@ -446,17 +442,15 @@ namespace JsonApiDotNetCore.Data
                         // {articleTag.Tag}
                         var body = Expression.PropertyOrField(parameterOne, castRelationship.RightProperty.Name);
 
-                        var logic = GetLogic(castRelationship.RightProperty.PropertyType);
+
 
                         // make expression for this one (with logic!)
                         // REFLECTION
                         // get logic
-
                         var baseType = this.GetType();
                         var method = baseType.GetRuntimeMethods().First(e => e.Name == nameof(MakeThenIncludeList));
                         var genericMethod = method.MakeGenericMethod(new[] { castRelationship.ThroughType, castRelationship.RightProperty.PropertyType });
                         var tempEntities = genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
-
 
 
                         // apply logic
@@ -487,38 +481,37 @@ namespace JsonApiDotNetCore.Data
 
 
                     //temp = entities.Include(includeExpression);
-
+                    // This is the same as
+                    // temp = entities.Include(includeExpression);
                     var baseType = this.GetType();
                     var method = baseType.GetRuntimeMethods().First(e => e.Name == nameof(MakeInclude));
                     var genericMethod = method.MakeGenericMethod(new[] { castRelationship.ThroughProperty.PropertyType });
-                    temp = (IIncludableQueryable<TEntity, object >) genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
+                    temp = (IIncludableQueryable<TEntity, object>)genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
 
+                    // Sow heave included {article.articeTags.tags}
+                    //var logic = GetLogic(entity.EntityType)
                     // we stil need to do some lovely little ThenIncluding
                     return GetChildren(temp, relationship, baseEntity, relationshipChain, depth: depth + 1);
-
                 }
 
 
             }
             else
             {
-                var castRelationship = (HasManyThroughAttribute)relationship;
-                var relationProperty = concreteType.GetProperty(castRelationship.InternalThroughName);
+                var castRelationship = (HasManyAttribute)relationship;
+                var relationProperty = concreteType.GetProperty(castRelationship.RelationshipPath);
                 // {article}
-                var parameterOne = Expression.Parameter(typeof(TEntity), "article");
+                var parameterOne = Expression.Parameter(typeof(TEntity), concreteType.ToString());
                 if (relationProperty == null)
                     throw new ArgumentException($"'{castRelationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
                 var relatedType = relationship.Type;
 
                 // {article.ArticleTags}
-                var left = Expression.PropertyOrField(parameterOne, castRelationship.InternalThroughName);
+                var left = Expression.PropertyOrField(parameterOne, castRelationship.RelationshipPath);
 
                 // we arent doing anything with it, so just return the right side
                 var body = left;
-
-
-
                 if (depth > 0)
                 {
                     // make expression for this one (with logic!)
@@ -527,12 +520,19 @@ namespace JsonApiDotNetCore.Data
 
                     temp = entities as IIncludableQueryable<TEntity, object>;
                     temp.ThenInclude(includeExpression);
-
+                }
+                else
+                {
+                    var baseType = GetType();
+                    var method = baseType.GetRuntimeMethods().First(e => e.Name == nameof(MakeIncludeList));
+                    var genericMethod = method.MakeGenericMethod(new[] { castRelationship.Type });
+                    temp = (IIncludableQueryable<TEntity, object>)genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
                 }
             }
 
             return entities;
         }
+
 
 
         public IList<TEntity> ApplyLogic(IList<TEntity> entities, string rel)
@@ -545,37 +545,71 @@ namespace JsonApiDotNetCore.Data
 
             var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == rel);
             Type l1 = typeof(List<>);
-            if(relationship.GetType() == typeof(HasManyThroughAttribute))
+            if (relationship.GetType() == typeof(HasManyThroughAttribute))
             {
                 var castRelationship = relationship as HasManyThroughAttribute;
                 object nestedLogic;
-                for (int index = 0; index < entities.Count(); ++index) {
+                for (int index = 0; index < entities.Count(); ++index)
+                {
                     // this is our {Article}
                     var listEntity = entities[index];
-                    // get articleTags
-
+                    // Get the {Article.ArticleTags}
                     var relevantProperty = listEntity.GetType().GetProperty(castRelationship.InternalThroughName, BindingFlags.Public | BindingFlags.Instance);
+                    var intermediateEntities = relevantProperty.GetValue(listEntity) as IList;
 
-                    var intermediateEntities = relevantProperty.GetValue(listEntity) as IEnumerable;
+                    // Logic for this nested property
                     nestedLogic = GetLogic(castRelationship.Type);
+
+                    // We default to OnList at the moment
                     var method = nestedLogic.GetType().GetMethods().First(e => e.Name == "OnList");
-                    // get Tags
-                    // this can be replaced with some SelectMany's
+
+                    // get Tags, this can be replaced with some SelectMany's
                     Type constructed = l1.MakeGenericType(castRelationship.RightProperty.PropertyType);
-                    object toHold = Activator.CreateInstance(constructed);
+
+                    // Not happy with this, but was needed.
+                    IList toHold = Activator.CreateInstance(constructed) as IList;
                     foreach (var iEntity in intermediateEntities)
                     {
-                        //iterating over the ArticleTags
-                        // we are getting all the Tag's
-                        var tempArticleTags = (iEntity.GetType().GetProperty(castRelationship.RightProperty.Name, BindingFlags.Public | BindingFlags.Instance).GetValue(iEntity));
-                        (toHold as IList).Add( tempArticleTags);
+                        // Iterating over the {ArticleTag}s to get all the {Tag}s
+                        var fetchedTags = (iEntity.GetType().GetProperty(castRelationship.RightProperty.Name, BindingFlags.Public | BindingFlags.Instance).GetValue(iEntity));
+                        toHold.Add(fetchedTags);
                     }
+                    //
 
-                    toHold = method.Invoke(nestedLogic, new object[] { toHold });
-                    PropertyInfo prop = listEntity.GetType().GetProperty(castRelationship.InternalThroughName, BindingFlags.Public | BindingFlags.Instance);
-                    if(null != prop && prop.CanWrite)
+                    IEnumerable filteredTags = method.Invoke(nestedLogic, new object[] { toHold }) as IEnumerable;
+                    toHold = filteredTags as IList;
+
+                    var toHoldHashSet = (HashSet<dynamic>) GetHashSet((IEnumerable<dynamic>)filteredTags);
+                    // We no process all {Article.ArticleTags} in a for loop because we're changing it
+                    for (int i = 0; i < intermediateEntities.Count; i++)
                     {
-                        prop.SetValue(listEntity, toHold, null);
+                        var iEntity = intermediateEntities[i];
+                        var property = iEntity.GetType().GetProperty(castRelationship.RightProperty.Name, BindingFlags.Public | BindingFlags.Instance);
+
+                        var item = property.GetValue(iEntity);
+
+                        if (!toHoldHashSet.ToList().Contains(item))
+                        {
+                            // What we first did:
+                            //property.SetValue(iEntity, null);
+                            // if {tag} is not filled, we shouldnt fill in {ArticleTag} because otherwise
+                            // JsonApiDotNetCore will try to show a null value, resulting in object refrence not set to an instance of an object
+                            // so we delete it here.
+                            // We shouldnt remove, I'm just emulating the WHERE here...
+                            intermediateEntities.RemoveAt(i);
+                        }
+                        else
+                        {
+                            // dont need to do anything
+                            // Maybe, in the future, when patches are done we need to do
+                            // this:
+                            // intermediateEntities[i] = iEntity;
+                        }
+                    }
+                    PropertyInfo prop = listEntity.GetType().GetProperty(castRelationship.InternalThroughName, BindingFlags.Public | BindingFlags.Instance);
+                    if (null != prop && prop.CanWrite)
+                    {
+                        prop.SetValue(listEntity, intermediateEntities);
                     }
 
 
@@ -588,12 +622,15 @@ namespace JsonApiDotNetCore.Data
             return entities;
 
         }
-
+        public HashSet<T> GetHashSet<T>(IEnumerable<T> source)
+        {
+            return new HashSet<T>(source);
+        }
 
 
         private static List<T> ConvertList<T>(List<object> value, Type type)
         {
-            return new List<T>(value.Select(item => (T) Convert.ChangeType(item, type)));
+            return new List<T>(value.Select(item => (T)Convert.ChangeType(item, type)));
         }
 
 
@@ -603,6 +640,7 @@ namespace JsonApiDotNetCore.Data
             var expression = Expression.Lambda<Func<TFrom, TProperty>>(body, parameter);
             return entities.ThenInclude(expression);
         }
+
         /// <summary>
         /// Works. For now.
         /// </summary>
@@ -623,7 +661,11 @@ namespace JsonApiDotNetCore.Data
             var expression = Expression.Lambda<Func<TEntity, TProperty>>(body, parameter);
             return entities.Include(expression);
         }
-
+        public IIncludableQueryable<TEntity, TProperty> MakeIncludeList<TProperty>(IQueryable<TEntity> entities, MemberExpression body, ParameterExpression parameter)
+        {
+            var expression = Expression.Lambda<Func<TEntity, IEnumerable<TProperty>>>(body, parameter);
+            return (IIncludableQueryable < TEntity, TProperty >)  entities.Include(expression);
+        }
 
         private IIncludableQueryable<TType, object> CustomThenInclude<TType>(IIncludableQueryable<TType, object> temp, Expression<Func<dynamic, object>> includeExpression, Type from, Type to) where TType : class, IIdentifiable
         {

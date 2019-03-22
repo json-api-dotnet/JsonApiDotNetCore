@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public virtual List<T> OnList(List<T> entities) => entities;
+        public virtual IEnumerable<T> OnList(List<T> entities) => entities;
 
 
 

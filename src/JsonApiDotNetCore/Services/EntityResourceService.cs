@@ -120,17 +120,16 @@ namespace JsonApiDotNetCore.Services
 
             IEnumerable<TResource> pagedEntities;
             // just to see if it works
-            if (ShouldIncludeRelationships())
-            {
-                pagedEntities = ApplyNestedFilters(entities.ToList(), _jsonApiContext.QuerySet.IncludedRelationships) as IEnumerable<TResource>;
-                //  no pagination atm
-            }
-            else
-            {
-                // pagination should be done last since it will execute the query
-                pagedEntities = await ApplyPageQueryAsync(entities);
-            }
-
+            //if (ShouldIncludeRelationships())
+            //{
+            //    pagedEntities = ApplyNestedFilters(entities.ToList(), _jsonApiContext.QuerySet.IncludedRelationships) as IEnumerable<TResource>;
+            //    //  no pagination atm
+            //}
+            //else
+            //{
+            // pagination should be done last since it will execute the query
+            pagedEntities = await ApplyPageQueryAsync(entities);
+            //}
 
             return pagedEntities;
         }
@@ -237,7 +236,7 @@ namespace JsonApiDotNetCore.Services
         }
         private IEnumerable<TEntity> ApplyNestedFilters(IEnumerable<TEntity> entities, List<string> relationships)
         {
-            foreach(var r in relationships)
+            foreach (var r in relationships)
             {
                 entities = _entities.ApplyLogic(entities.ToList(), r);
             }
