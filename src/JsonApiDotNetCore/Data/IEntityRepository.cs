@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Data
         IEntityWriteRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
     {
-        IList<TEntity> ApplyLogic(IList<TEntity> entities, string r);
+        //IList<TEntity> ApplyLogic(IList<TEntity> entities, string r);
     }
 
     /// <summary>

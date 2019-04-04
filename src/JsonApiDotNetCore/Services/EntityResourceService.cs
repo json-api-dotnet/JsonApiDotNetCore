@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,7 +39,6 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IJsonApiContext _jsonApiContext;
-        private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly IEntityRepository<TEntity, TId> _entities;
         private readonly ILogger _logger;
         private readonly IResourceMapper _mapper;
@@ -57,7 +55,6 @@ namespace JsonApiDotNetCore.Services
             }
 
             _jsonApiContext = jsonApiContext;
-            _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _entities = entityRepository;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
@@ -103,38 +100,18 @@ namespace JsonApiDotNetCore.Services
         {
             var entities = _entities.Get();
 
-
-
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
-            {
-
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
-            }
-
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
-
-            IEnumerable<TResource> pagedEntities;
-            // just to see if it works
-            //if (ShouldIncludeRelationships())
-            //{
-            //    pagedEntities = ApplyNestedFilters(entities.ToList(), _jsonApiContext.QuerySet.IncludedRelationships) as IEnumerable<TResource>;
-            //    //  no pagination atm
-            //}
-            //else
-            //{
             // pagination should be done last since it will execute the query
-            pagedEntities = await ApplyPageQueryAsync(entities);
-            //}
-
+            var pagedEntities = await ApplyPageQueryAsync(entities);
             return pagedEntities;
         }
-
-
 
         public virtual async Task<TResource> GetAsync(TId id)
         {
@@ -234,18 +211,7 @@ namespace JsonApiDotNetCore.Services
 
             return MapOut(pagedEntities);
         }
-        private IEnumerable<TEntity> ApplyNestedFilters(IEnumerable<TEntity> entities, List<string> relationships)
-        {
-            foreach (var r in relationships)
-            {
-                entities = _entities.ApplyLogic(entities.ToList(), r);
-            }
-            return entities;
-        }
-        private IResourceDefinition GetLogic<TModel>(IQueryable<TModel> models)
-        {
-            return _genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), models.GetType());
-        }
+
         protected virtual IQueryable<TEntity> ApplySortAndFilterQuery(IQueryable<TEntity> entities)
         {
             var query = _jsonApiContext.QuerySet;

@@ -71,7 +71,8 @@ namespace JsonApiDotNetCore.Data
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null
             )
         {
             _context = contextResolver.GetContext();
@@ -79,7 +80,7 @@ namespace JsonApiDotNetCore.Data
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-            _resourceDefinition = _genericProcessorFactory.GetProcessor<ResourceDefinition<TEntity>>(typeof(ResourceDefinition<>), typeof(TEntity));
+            _resourceDefinition = resourceDefinition;
         }
 
         /// <inheritdoc />
@@ -350,51 +351,32 @@ namespace JsonApiDotNetCore.Data
 
             // variables mutated in recursive loop
             // TODO: make recursive method
-
-            IResourceDefinition logic;
             string internalRelationshipPath = null;
             var entity = _jsonApiContext.RequestEntity;
-            var requestedRelationship = relationshipChain[0];
-            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
-            // need to add this to the typetree so we know what we're dealing with
-            if (relationship == null)
+            for (var i = 0; i < relationshipChain.Length; i++)
             {
-                throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
-                    $"{entity.EntityName} does not have a relationship named {requestedRelationship}");
+                var requestedRelationship = relationshipChain[i];
+                var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
+                if (relationship == null)
+                {
+                    throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
+                        $"{entity.EntityName} does not have a relationship named {requestedRelationship}");
+                }
+
+                if (relationship.CanInclude == false)
+                {
+                    throw new JsonApiException(400, $"Including the relationship {requestedRelationship} on {entity.EntityName} is not allowed");
+                }
+
+                internalRelationshipPath = (internalRelationshipPath == null)
+                    ? relationship.RelationshipPath
+                    : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
+
+                if (i < relationshipChain.Length)
+                    entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
             }
 
-            logic = GetLogic(entity.EntityType);
-
-
-            if (relationship.CanInclude == false)
-            {
-                throw new JsonApiException(400, $"Including the relationship {requestedRelationship} on {entity.EntityName} is not allowed");
-            }
-
-            internalRelationshipPath = (internalRelationshipPath == null) ? relationship.RelationshipPath : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
-
-
-            //entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
-
-
-            // if we have logic, we should apply this when getting the relationship
-            //entities = entities.Include(relationship.RelationshipPath);
-            //entites.ArticleTags.Tag -> (internalThroughName).InternalRelationshipname
-            if (relationship.IsHasMany)
-            {
-                // we need to be nested
-                entities = GetChildren(entities, relationship, entity, relationshipChain);
-                // lets get this query fully done
-                // get tags
-                var entitiesList = ApplyLogic(entities.ToList(), "tags");
-                //// we need it to be an IENumerable for a second so lets do that
-                //var tempEnumerable = entities.ToList();
-                //var logicMethod = rightLogic.GetType().GetRuntimeMethods().First(e => e.Name == "OnList");
-                //var tempEntities = logicMethod.Invoke(this, new object[] { entities.ToList() }) as IQueryable<TEntity>;
-            }
-
-
-            return entities;
+            return entities.Include(internalRelationshipPath);
         }
 
         /// <summary>
@@ -626,21 +608,15 @@ namespace JsonApiDotNetCore.Data
         {
             return new HashSet<T>(source);
         }
-
-
         private static List<T> ConvertList<T>(List<object> value, Type type)
         {
             return new List<T>(value.Select(item => (T)Convert.ChangeType(item, type)));
         }
-
-
-
         public IIncludableQueryable<TEntity, TProperty> MakeThenIncludeList<TFrom, TProperty>(IIncludableQueryable<TEntity, IEnumerable<TFrom>> entities, MemberExpression body, ParameterExpression parameter)
         {
             var expression = Expression.Lambda<Func<TFrom, TProperty>>(body, parameter);
             return entities.ThenInclude(expression);
         }
-
         /// <summary>
         /// Works. For now.
         /// </summary>
