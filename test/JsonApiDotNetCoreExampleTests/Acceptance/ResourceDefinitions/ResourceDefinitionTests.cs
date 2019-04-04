@@ -62,7 +62,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var article = _articleFaker.Generate();
             var tags = _tagFaker.Generate(2);
 
-            tags[0].Name = "THISTAGSHOULDNOTBEVISIBLE";
+            string toBeExcluded = "THISTAGSHOULDNOTBEVISIBLE";
+            tags[0].Name = toBeExcluded;
 
             context.Articles.RemoveRange(context.Articles);
             await context.SaveChangesAsync();
@@ -106,8 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotNull(articleResponse);
             Assert.Equal(article.Name, articleResponse.Name);
 
-
-            AssertHelper.HasEqualFieldValues(articleResponse.Tags[0], tags[1]);
+            Assert.DoesNotContain(toBeExcluded, body);
         }
 
 

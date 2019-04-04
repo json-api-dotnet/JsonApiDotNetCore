@@ -108,6 +108,7 @@ namespace JsonApiDotNetCore.Services
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
+            entities = _entities.ApplyResourceDefinitionLogic(entities, "tags");
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
             return pagedEntities;

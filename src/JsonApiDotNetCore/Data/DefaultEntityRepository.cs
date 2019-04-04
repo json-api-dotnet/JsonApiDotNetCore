@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
@@ -12,10 +10,7 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 namespace JsonApiDotNetCore.Data
 {
     /// <inheritdoc />
@@ -26,18 +21,19 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver,
+            IResourceLogicExecutor<TEntity> logicExecutor = null
             )
-        : base(jsonApiContext, contextResolver)
+        : base(jsonApiContext, contextResolver, logicExecutor)
         { }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
-
+            IDbContextResolver contextResolver,
+            IResourceLogicExecutor<TEntity> logicExecutor = null
             )
-        : base(loggerFactory, jsonApiContext, contextResolver)
+        : base(loggerFactory, jsonApiContext, contextResolver, logicExecutor)
         { }
     }
 
@@ -56,22 +52,26 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
+        private readonly IResourceLogicExecutor<TEntity> _logicExecutor;
 
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver,
+            IResourceLogicExecutor<TEntity> logicExecutor = null
             )
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _logicExecutor = logicExecutor;
         }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
+            IResourceLogicExecutor<TEntity> logicExecutor = null,
             ResourceDefinition<TEntity> resourceDefinition = null
             )
         {
@@ -81,6 +81,7 @@ namespace JsonApiDotNetCore.Data
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _resourceDefinition = resourceDefinition;
+            _logicExecutor = logicExecutor;
         }
 
         /// <inheritdoc />
@@ -162,6 +163,12 @@ namespace JsonApiDotNetCore.Data
         {
             AttachHasManyPointers(entity);
             AttachHasOnePointers(entity);
+        }
+
+        public virtual IQueryable<TEntity> ApplyResourceDefinitionLogic(IQueryable<TEntity> entities, string rel)
+        {
+            if (_logicExecutor == null) return entities;
+            return _logicExecutor.ApplyLogic(entities.ToList(), rel).AsQueryable();
         }
 
         /// <inheritdoc />
@@ -379,301 +386,14 @@ namespace JsonApiDotNetCore.Data
             return entities.Include(internalRelationshipPath);
         }
 
-        /// <summary>
-        /// we Are building the many-to-many relationship here
-        /// 
-        /// 
-        /// if many-to-many we directly go to the one in question: article -> articleTag -> tag (articleTag is skipped!)
-        /// 
-        /// articles.Include(a => a.ArticleTags)
-        ///     .ThenInclude(at => at.Tag)
-        /// </summary>
-        /// <typeparam name="TType"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="relationship"></param>
-        /// <returns></returns>
-        private IQueryable<TEntity> GetChildren(
-            IQueryable<TEntity> entities,
-            RelationshipAttribute relationship,
-            ContextEntity baseEntity,
-            string[] relationshipChain,
-            string viewKind = "list",
-            int depth = 0
-        )
-        {
-            var concreteType = typeof(TEntity);
-            ContextEntity entity;
-            // we are already getting tags here
-            var parameters = Expression.Parameter(typeof(TEntity), "model");
-            ConstantExpression right;
-
-            IIncludableQueryable<TEntity, object> temp;
-            if (relationship.GetType() == typeof(HasManyThroughAttribute)) //assume many-to-many
-            {
-                var castRelationship = (HasManyThroughAttribute)relationship;
-                if (depth > 0)
-                {
-                    if (depth == 1)
-                    {
-                        // we are at the throughtable so {ArticleTag}, we need {Tag}
-                        // we want to make articleTag => articleTag.Tag
-
-                        // {articleTag}
-                        var parameterOne = Expression.Parameter(castRelationship.ThroughType, "articleTag");
-
-                        // {articleTag.Tag}
-                        var body = Expression.PropertyOrField(parameterOne, castRelationship.RightProperty.Name);
-
-
-
-                        // make expression for this one (with logic!)
-                        // REFLECTION
-                        // get logic
-                        var baseType = this.GetType();
-                        var method = baseType.GetRuntimeMethods().First(e => e.Name == nameof(MakeThenIncludeList));
-                        var genericMethod = method.MakeGenericMethod(new[] { castRelationship.ThroughType, castRelationship.RightProperty.PropertyType });
-                        var tempEntities = genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
-
-
-                        // apply logic
-                        return tempEntities as IIncludableQueryable<TEntity, object>;
-                    }
-
-                    throw new NotImplementedException();
-
-                }
-                else
-                {
-
-                    var relationProperty = concreteType.GetProperty(castRelationship.InternalThroughName);
-                    // {article}
-                    var parameterOne = Expression.Parameter(typeof(TEntity), "article");
-                    if (relationProperty == null)
-                        throw new ArgumentException($"'{castRelationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
-
-                    var relatedType = relationship.Type;
-
-                    // {article.ArticleTags}
-                    var left = Expression.PropertyOrField(parameterOne, castRelationship.InternalThroughName);
-
-                    // we arent doing anything with it, so just return the right side
-                    var body = left;
-                    // make expression for this one (with logic!)
-                    //var includeExpression = Expression.Lambda<Func<TEntity, object>>(body, parameterOne);
-
-
-                    //temp = entities.Include(includeExpression);
-                    // This is the same as
-                    // temp = entities.Include(includeExpression);
-                    var baseType = this.GetType();
-                    var method = baseType.GetRuntimeMethods().First(e => e.Name == nameof(MakeInclude));
-                    var genericMethod = method.MakeGenericMethod(new[] { castRelationship.ThroughProperty.PropertyType });
-                    temp = (IIncludableQueryable<TEntity, object>)genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
-
-                    // Sow heave included {article.articeTags.tags}
-                    //var logic = GetLogic(entity.EntityType)
-                    // we stil need to do some lovely little ThenIncluding
-                    return GetChildren(temp, relationship, baseEntity, relationshipChain, depth: depth + 1);
-                }
-
-
-            }
-            else
-            {
-                var castRelationship = (HasManyAttribute)relationship;
-                var relationProperty = concreteType.GetProperty(castRelationship.RelationshipPath);
-                // {article}
-                var parameterOne = Expression.Parameter(typeof(TEntity), concreteType.ToString());
-                if (relationProperty == null)
-                    throw new ArgumentException($"'{castRelationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
-
-                var relatedType = relationship.Type;
-
-                // {article.ArticleTags}
-                var left = Expression.PropertyOrField(parameterOne, castRelationship.RelationshipPath);
-
-                // we arent doing anything with it, so just return the right side
-                var body = left;
-                if (depth > 0)
-                {
-                    // make expression for this one (with logic!)
-                    var includeExpression = Expression.Lambda<Func<object, object>>(body, parameterOne); //yeah.. object,object
-
-
-                    temp = entities as IIncludableQueryable<TEntity, object>;
-                    temp.ThenInclude(includeExpression);
-                }
-                else
-                {
-                    var baseType = GetType();
-                    var method = baseType.GetRuntimeMethods().First(e => e.Name == nameof(MakeIncludeList));
-                    var genericMethod = method.MakeGenericMethod(new[] { castRelationship.Type });
-                    temp = (IIncludableQueryable<TEntity, object>)genericMethod.Invoke(this, new object[] { entities, body, parameterOne });
-                }
-            }
-
-            return entities;
-        }
-
-
-
-        public IList<TEntity> ApplyLogic(IList<TEntity> entities, string rel)
-        {
-            // seeing as the relationships are already processed, we can just do
-            // Logic.{method}(articles.Tags)
-
-            IResourceDefinition logic;
-            var entity = _jsonApiContext.RequestEntity;
-
-            var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == rel);
-            Type l1 = typeof(List<>);
-            if (relationship.GetType() == typeof(HasManyThroughAttribute))
-            {
-                var castRelationship = relationship as HasManyThroughAttribute;
-                object nestedLogic;
-                for (int index = 0; index < entities.Count(); ++index)
-                {
-                    // this is our {Article}
-                    var listEntity = entities[index];
-                    // Get the {Article.ArticleTags}
-                    var relevantProperty = listEntity.GetType().GetProperty(castRelationship.InternalThroughName, BindingFlags.Public | BindingFlags.Instance);
-                    var intermediateEntities = relevantProperty.GetValue(listEntity) as IList;
-
-                    // Logic for this nested property
-                    nestedLogic = GetLogic(castRelationship.Type);
-
-                    // We default to OnList at the moment
-                    var method = nestedLogic.GetType().GetMethods().First(e => e.Name == "OnList");
-
-                    // get Tags, this can be replaced with some SelectMany's
-                    Type constructed = l1.MakeGenericType(castRelationship.RightProperty.PropertyType);
-
-                    // Not happy with this, but was needed.
-                    IList toHold = Activator.CreateInstance(constructed) as IList;
-                    foreach (var iEntity in intermediateEntities)
-                    {
-                        // Iterating over the {ArticleTag}s to get all the {Tag}s
-                        var fetchedTags = (iEntity.GetType().GetProperty(castRelationship.RightProperty.Name, BindingFlags.Public | BindingFlags.Instance).GetValue(iEntity));
-                        toHold.Add(fetchedTags);
-                    }
-                    //
-
-                    IEnumerable filteredTags = method.Invoke(nestedLogic, new object[] { toHold }) as IEnumerable;
-                    toHold = filteredTags as IList;
-
-                    var toHoldHashSet = (HashSet<dynamic>) GetHashSet((IEnumerable<dynamic>)filteredTags);
-                    // We no process all {Article.ArticleTags} in a for loop because we're changing it
-                    for (int i = 0; i < intermediateEntities.Count; i++)
-                    {
-                        var iEntity = intermediateEntities[i];
-                        var property = iEntity.GetType().GetProperty(castRelationship.RightProperty.Name, BindingFlags.Public | BindingFlags.Instance);
-
-                        var item = property.GetValue(iEntity);
-
-                        if (!toHoldHashSet.ToList().Contains(item))
-                        {
-                            // What we first did:
-                            //property.SetValue(iEntity, null);
-                            // if {tag} is not filled, we shouldnt fill in {ArticleTag} because otherwise
-                            // JsonApiDotNetCore will try to show a null value, resulting in object refrence not set to an instance of an object
-                            // so we delete it here.
-                            // We shouldnt remove, I'm just emulating the WHERE here...
-                            intermediateEntities.RemoveAt(i);
-                        }
-                        else
-                        {
-                            // dont need to do anything
-                            // Maybe, in the future, when patches are done we need to do
-                            // this:
-                            // intermediateEntities[i] = iEntity;
-                        }
-                    }
-                    PropertyInfo prop = listEntity.GetType().GetProperty(castRelationship.InternalThroughName, BindingFlags.Public | BindingFlags.Instance);
-                    if (null != prop && prop.CanWrite)
-                    {
-                        prop.SetValue(listEntity, intermediateEntities);
-                    }
-
-
-                    entities[index] = listEntity;
-
-                }
-
-
-            }
-            return entities;
-
-        }
-        public HashSet<T> GetHashSet<T>(IEnumerable<T> source)
-        {
-            return new HashSet<T>(source);
-        }
-        private static List<T> ConvertList<T>(List<object> value, Type type)
-        {
-            return new List<T>(value.Select(item => (T)Convert.ChangeType(item, type)));
-        }
-        public IIncludableQueryable<TEntity, TProperty> MakeThenIncludeList<TFrom, TProperty>(IIncludableQueryable<TEntity, IEnumerable<TFrom>> entities, MemberExpression body, ParameterExpression parameter)
-        {
-            var expression = Expression.Lambda<Func<TFrom, TProperty>>(body, parameter);
-            return entities.ThenInclude(expression);
-        }
-        /// <summary>
-        /// Works. For now.
-        /// </summary>
-        /// <typeparam name="TFrom"></typeparam>
-        /// <typeparam name="TTo"></typeparam>
-        /// <typeparam name="TSecondTo"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="body"></param>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public IIncludableQueryable<TEntity, TProperty> MakeThenInclude<TTo, TProperty>(IIncludableQueryable<TEntity, TTo> entities, MemberExpression body, ParameterExpression parameter)
-        {
-            var expression = Expression.Lambda<Func<TTo, TProperty>>(body, parameter);
-            return entities.ThenInclude(expression);
-        }
-        public IIncludableQueryable<TEntity, TProperty> MakeInclude<TProperty>(IQueryable<TEntity> entities, MemberExpression body, ParameterExpression parameter)
-        {
-            var expression = Expression.Lambda<Func<TEntity, TProperty>>(body, parameter);
-            return entities.Include(expression);
-        }
-        public IIncludableQueryable<TEntity, TProperty> MakeIncludeList<TProperty>(IQueryable<TEntity> entities, MemberExpression body, ParameterExpression parameter)
-        {
-            var expression = Expression.Lambda<Func<TEntity, IEnumerable<TProperty>>>(body, parameter);
-            return (IIncludableQueryable < TEntity, TProperty >)  entities.Include(expression);
-        }
-
-        private IIncludableQueryable<TType, object> CustomThenInclude<TType>(IIncludableQueryable<TType, object> temp, Expression<Func<dynamic, object>> includeExpression, Type from, Type to) where TType : class, IIdentifiable
-        {
-            Type baseType = temp.GetType();
-            MethodInfo getMethod = baseType.GetMethod("ThenInclude", BindingFlags.Public);
-            MethodInfo genericGet = getMethod.MakeGenericMethod(new[] { from, to });
-            return (IIncludableQueryable<TType, object>)genericGet.Invoke(temp, new object[] { includeExpression });
-        }
-
-        private IQueryable<TType> CallLogic<TType>(IQueryable<TType> entities, IResourceDefinition resourceDefinition) where TType : class, IIdentifiable
-        {
-            Type resourceType = resourceDefinition.GetType();
-            MethodInfo getMethod = resourceType.GetMethod("OnList", System.Reflection.BindingFlags.Public);
-            MethodInfo genericGet = getMethod.MakeGenericMethod(new[] { typeof(TType) });
-
-
-            return (IQueryable<TType>)genericGet.Invoke(resourceType, new object[] { entities });
-        }
-
-        private IResourceDefinition GetLogic(Type model)
-        {
-            return _genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), model);
-        }
-
-
-
         /// <inheritdoc />
         public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
         {
             if (pageNumber >= 0)
             {
-                return await entities.PageForward(pageSize, pageNumber).ToListAsync();
+                // the IQueryable returned from ApplyResourceDefinitionLogic is sometimes consumed here.
+                // In this case, it does not support .ToListAsync(), so we use the method below.
+                return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
             }
 
             // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
