@@ -28,7 +28,20 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
+        /// kijk op root niveau (TEntity)
+        /// haal resourcedefinition op van TEntity
+        /// entities = resourcedefinition.applyresourcelogic(entities)
+        ///     return als geen relatiestring
+        ///    of 
+        ///     recursief verdr met dezelfde functie als wel relatie string.
+        /// 
+        /// 
+        ///  OnList(HashSet<TEntity> allOccuringEntities) 
+        ///  ONList(List<TEntity> entities
         /// </summary>
+        /// <returns>The logic.</returns>
+        /// <param name="entities">Entities.</param>
+        /// <param name="rel">Rel.</param>
         virtual public IList<TEntity> ApplyLogic(IList<TEntity> entities, string rel)
         {
             // seeing as the relationships are already processed, we can just do

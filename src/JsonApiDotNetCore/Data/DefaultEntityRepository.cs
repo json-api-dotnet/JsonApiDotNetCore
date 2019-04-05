@@ -159,6 +159,10 @@ namespace JsonApiDotNetCore.Data
             return entity;
         }
 
+        /// <summary>
+        /// @TODO make comments
+        /// </summary>
+        /// <param name="entity">Entity.</param>
         protected virtual void AttachRelationships(TEntity entity = null)
         {
             AttachHasManyPointers(entity);

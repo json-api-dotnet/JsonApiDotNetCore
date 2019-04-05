@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,27 @@ namespace JsonApiDotNetCore.Models
     public interface IResourceDefinition
     {
         List<AttrAttribute> GetOutputAttrs(object instance);
+    }
+
+    public interface IResourceDefinition<T> : IResourceDefinition  where T : class, IIdentifiable
+    {
+        void BeforeGet();
+        IEnumerable<T> AfterGet(List<T> entities);
+        void BeforeGetSingle(string stringId);
+        T AfterGetSingle(T entity);
+        T BeforeCreate(T entity);
+        void AfterCreate(T entity);
+        T BeforeUpdate(T entity);
+        void AfterUpdate(T entity);
+        void BeforeDelete(T entity);
+        void AfterDelete(T entity);
+        void BeforeGetRelationship(string stringId, string relationshipName);
+        T AfterGetRelationship(T entity);
+        void BeforeUpdateRelationships(T entity, string relationshipName, List<object> relationships);
+        void AfterUpdateRelationships(T entity, string relationshipName, List<object> relationships);
+
+        // See the comments of the method implementation for details on this.
+        // IQueryable<T> OnQueryGet(IQueryable<T> entities);
 
     }
 
@@ -165,12 +187,168 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
+        ///// <summary>
+        ///// Executed when listing all resources
+        ///// </summary>
+        ///// <param name="entities"></param>
+        ///// <returns></returns>
+        //public virtual IEnumerable<T> OnList(List<T> entities, int index) => entities;
+        //public virtual IEnumerable<T> OnList(HashSet<T> entities) => entities;
+
+
+        // GET HOOKS
         /// <summary>
-        /// Executed when listing all resources
+        /// @TODO: should query params be passed along to allow fo authorization on requested relations?
+        /// A hook executed before getting entities. Can be used eg. for authorization.
         /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<T> OnList(List<T> entities) => entities;
+        public virtual void BeforeGet() { }
+        /// <summary>
+        /// A hook executed after getting entities. Can be used eg. for publishing events.
+        /// 
+        /// Can also be used to to filter on the result set of a custom include. For example,
+        /// if Articles -> Blogs -> Tags are retrieved, the AfterGet method as defined in
+        /// in all related ResourceDefinitions (if present) will be called: 
+        ///     * first for all articles;
+        ///     * then for all blogs;
+        ///     * lastly for all tags. 
+        /// This can be used to build an in-memory filtered include, which is not yet suported by EF Core, 
+        /// <see href="https://github.com/aspnet/EntityFrameworkCore/issues/1833">see this issue</see>.
+        /// </summary>
+        /// <returns>The (adjusted) entities that result from the query</returns>
+        /// <param name="entities">The entities that result from the query</param>
+        public virtual IEnumerable<T> AfterGet(List<T> entities) => entities;
+        /// <summary>
+        /// @TODO: should query params be passed along to allow fo authorization on requested relations?
+        /// A hook executed before getting an individual entity. Can be used eg. for authorization.
+        /// 
+        /// @TODO Instead of <paramref name="stringId"/> it would be better to have 
+        /// a generic {TId}, but this will requre to change ResourceDefinition{T} into
+        /// ResourceDefinition{T, TId}. This is probaly better, but not doing this now here
+        /// to keep it simple.
+        /// </summary>
+        /// <param name="stringId">String identifier of the entity to be retrieved</param>
+        public virtual void BeforeGetSingle(string stringId) { }
+        /// <summary>
+        /// A hook executed after getting an individual. Can be used eg. for publishing events.
+        /// 
+        /// Can also be used to to filter on the result set of a custom include. For example,
+        /// if Articls -> Blogs -> Tags are retrieved, the AfterGet() method as defined in
+        /// in all related ResourceDefinitions (if present) will be called: 
+        ///     * first for the retrieved article;
+        ///     * then for all blogs;
+        ///     * lastly for all tags. 
+        /// This can be used to build an in-memory filtered include, which is not yet suported by EF Core, 
+        /// <see href="https://github.com/aspnet/EntityFrameworkCore/issues/1833">see this issue</see>.
+        /// </summary>
+        /// <returns>The (adjusted) entity that result from the query</returns>
+        /// <param name="entity">The entity that result from the query</param>
+        public virtual T AfterGetSingle(T entity) => entity;
+
+        /// <summary>
+        /// @TODO [THIS IS FOR LATER]
+        /// As soon as the <see href="https://github.com/aspnet/EntityFrameworkCore/issues/1833">filtered include issue</see>
+        /// has been resolved, we start building the relationship inclusion expression tree ourselves, 
+        /// and we can allow for a "during query" hook like this to allow for in-sql filtering.
+        /// 
+        /// For now, we are bound to use AfterGet() to achieve the same in-memory after the query has been executed.
+        /// 
+        /// For now we will not expose this method on <see cref="IResourceDefinition"/>.
+        /// </summary>
+        /// <param name="entities">Entities.</param>
+        public virtual IQueryable<T> OnQueryGet(IQueryable<T> entities) => entities;
+        
+
+        // CREATE HOOKS
+        /// <summary>
+        /// A hook executed before creating an entity. Can be used eg. for authorization.
+        /// If the entity also contains to be created relationships, the BeforeUpdateRelationships()
+        /// methods on the ResourceDefinition (if implemented) of the entities associated to these relationships
+        /// will also be called
+        /// @TODO dubble check if BeforeUpdateRelationships should really be called and how 
+        /// </summary>
+        /// <returns>The (adjusted) entity to be created</returns>
+        /// <param name="entity">The entity to be created</param>
+        public virtual T BeforeCreate(T entity) => entity;
+        /// <summary>
+        /// A hook executed after creating an entity. Can be used eg. for publishing events.
+        /// </summary>
+        /// <param name="entity">The entity that was created</param>
+        public virtual void AfterCreate(T entity) { }
+
+        // UPDATE HOOKS
+        /// <summary>
+        /// A hook executed before updating an entity. Can be used eg. for authorization.
+        /// If the entity also contains to be updated relationships, the BeforeUpdateRelationships()
+        /// methods on the ResourceDefinition (if implemented) of the entities associated to these relationships
+        /// will also be called.
+        /// @TODO dubble check if BeforeUpdateRelationships should really be called and how 
+        /// </summary>
+        /// <returns>The (adjusted) entity to be updated</returns>
+        /// <param name="entity">The entity to be updated</param>
+        public virtual T BeforeUpdate(T entity) => entity;
+        /// <summary>
+        /// A hook executed after updating an entity. Can be used eg. for publishing events.
+        /// </summary>
+        /// <param name="entity">The entity that was updated</param>
+        public virtual void AfterUpdate(T entity) { }
+
+        // DELETE HOOKS
+        /// <summary>
+        /// A hook executed before deleting an entity. Can be used eg. for authorization.
+        /// </summary>
+        /// <param name="entity">The entity to be updated</param>
+        public virtual void BeforeDelete(T entity) { }
+        /// <summary>
+        /// A hook executed after deleting an entity. Can be used eg. for publishing events.
+        /// </summary>
+        /// <param name="entity">The entity that was deleted</param>
+        public virtual void AfterDelete(T entity) { }
+
+
+        // GET RELATIONSHIPS HOOKS
+        /// <summary>
+        /// A hook executed before getting a relationship of a particular entity. 
+        /// Can be used eg. for authorization.
+        /// 
+        /// @TODO it would make more sense to include the actual entity here instead of <paramref name="stringId"/>,
+        /// but this would require an new/additional query in <see cref="IResourceService{T}" />
+        /// </summary>
+        /// <param name="stringId">The id of the "parent" entity</param>
+        /// <param name="relationshipName">Name of the relationship</param>
+        public virtual void BeforeGetRelationship(string stringId, string relationshipName) { }
+        /// <summary>
+        /// A hook executed after getting a relationship of a particular entity. 
+        /// Can be used eg. for publishing events.
+        /// 
+        /// Can be used to construct filtered include, similar to AfterGetSingle().
+        /// 
+        /// @TODO: we need to think on how to implement this. Maybe we shoud 
+        /// give user access to parsed relationship object instead of the "parent" 
+        /// entity (the one T where T.Id == stringId)? 
+        /// </summary>
+        /// <returns>The (adjusted) parent entity that contains the requested relationship</returns>
+        /// <param name="entity">The parent entity that contains the requested relationship</param>
+        public virtual T AfterGetRelationship(T entity) => entity;
+
+        // UPDATE RELATIONSHIPS HOOKS
+        /// <summary>
+        /// A hook executed before updating a relationship of a particular entity. 
+        /// @TODO we need to check if it makes sense to expose List{object} relationships
+        /// to the hook.
+        /// </summary>
+        /// <param name="entity">The "parent" entity of which the relationship is to be updated</param>
+        /// <param name="relationshipName">The name of the relationship to be updated</param>
+        /// <param name="relationships">The objects which represent the updated relationships (does this make sense to include?)</param>
+        public virtual void BeforeUpdateRelationships(T entity, string relationshipName, List<object> relationships) { }
+        /// <summary>
+        /// A hook executed after updating a relationship of a particular entity. 
+        /// @TODO we need to check if it makes sense to expose List{object} relationships
+        /// to the hook.
+        /// </summary>
+        /// <param name="entity">The "parent" entity of which the relationship is to be updated</param>
+        /// <param name="relationshipName">The name of the relationship to be updated</param>
+        /// <param name="relationships">The objects which represent the updated relationships (does this make sense to include?)</param>
+        public virtual void AfterUpdateRelationships(T entity, string relationshipName, List<object> relationships) { }
 
 
 
