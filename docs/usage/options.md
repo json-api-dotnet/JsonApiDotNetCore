@@ -81,7 +81,7 @@ options.SerializerSettings.ContractResolver = new DasherizedResolver();
 
 ## Enable ModelState Validation
 
-If you would like to use ModelState validation into your controllers when creating / updating resources you set `ValidateModelState = true`. The default behavior is to try creating the database entries.
+If you would like to use ModelState validation into your controllers when creating / updating resources you set `ValidateModelState = true`. By default, no model validation is performed.
 
 ```c#
 services.AddJsonApi<AppDbContext>(options => {
