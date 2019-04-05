@@ -15,27 +15,6 @@ namespace JsonApiDotNetCore.Models
         List<AttrAttribute> GetOutputAttrs(object instance);
     }
 
-    public interface IResourceDefinition<T> : IResourceDefinition  where T : class, IIdentifiable
-    {
-        void BeforeGet();
-        IEnumerable<T> AfterGet(List<T> entities);
-        void BeforeGetSingle(string stringId);
-        T AfterGetSingle(T entity);
-        T BeforeCreate(T entity);
-        void AfterCreate(T entity);
-        T BeforeUpdate(T entity);
-        void AfterUpdate(T entity);
-        void BeforeDelete(T entity);
-        void AfterDelete(T entity);
-        void BeforeGetRelationship(string stringId, string relationshipName);
-        T AfterGetRelationship(T entity);
-        void BeforeUpdateRelationships(T entity, string relationshipName, List<object> relationships);
-        void AfterUpdateRelationships(T entity, string relationshipName, List<object> relationships);
-
-        // See the comments of the method implementation for details on this.
-        // IQueryable<T> OnQueryGet(IQueryable<T> entities);
-
-    }
 
     /// <summary>
     /// exposes developer friendly hooks into how their resources are exposed. 
@@ -44,7 +23,7 @@ namespace JsonApiDotNetCore.Models
     /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
+    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer<T> where T : class, IIdentifiable
     {
         private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 
@@ -12,37 +13,136 @@ namespace JsonApiDotNetCore.Services
     /// A utility class responsible for executing resource logic as defined in 
     /// the ResourceDefinition<typeparamref name="TEntity"/>> class (eg. OnList)
     /// when the  POST, GET, PATC, DELETE etc pipelines are executed.
-    /// 
-    /// 
     /// </summary>
-    public class ResourceLogicExecutor<TEntity> : IResourceLogicExecutor<TEntity> where TEntity : class, IIdentifiable
+    public class ResourceHookExecutor<TEntity> : IResourceHookExecutor<TEntity> where TEntity : class, IIdentifiable
     {
+
+        protected readonly ResourceHook[] _implementedHooks;
         protected readonly IJsonApiContext _jsonApiContext;
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         //protected readonly ResourceDefinition<TEntity> _resourceDefinition;
 
-        public ResourceLogicExecutor(IJsonApiContext jsonApiContext)
+        public ResourceHookExecutor(IJsonApiContext jsonApiContext, IImplementedResourceHooks<TEntity> hooksConfiguration)
         {
             _genericProcessorFactory = jsonApiContext.GenericProcessorFactory;
             _jsonApiContext = jsonApiContext;
+            _implementedHooks = hooksConfiguration.ImplementedHooks;
         }
 
+        virtual public bool ShouldExecuteHook(ResourceHook hook)
+        {
+            return _implementedHooks.Contains(hook);
+        }
+
+
         /// <summary>
-        /// kijk op root niveau (TEntity)
-        /// haal resourcedefinition op van TEntity
-        /// entities = resourcedefinition.applyresourcelogic(entities)
-        ///     return als geen relatiestring
-        ///    of 
-        ///     recursief verdr met dezelfde functie als wel relatie string.
-        /// 
-        /// 
-        ///  OnList(HashSet<TEntity> allOccuringEntities) 
-        ///  ONList(List<TEntity> entities
+        /// @TODO Implementation overview to be described here
         /// </summary>
-        /// <returns>The logic.</returns>
-        /// <param name="entities">Entities.</param>
-        /// <param name="rel">Rel.</param>
-        virtual public IList<TEntity> ApplyLogic(IList<TEntity> entities, string rel)
+        public virtual void BeforeGet()
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual IEnumerable<TEntity> AfterGet(List<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void BeforeGetSingle(string stringId)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual TEntity AfterGetSingle(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual IQueryable<TEntity> OnQueryGet(IQueryable<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual TEntity BeforeCreate(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void AfterCreate(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual TEntity BeforeUpdate(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void AfterUpdate(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void BeforeDelete(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void AfterDelete(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void BeforeGetRelationship(string stringId, string relationshipName)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual TEntity AfterGetRelationship(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void BeforeUpdateRelationships(TEntity entity, string relationshipName, List<object> relationships)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// @TODO Implementation overview to be described here
+        /// </summary>
+        public virtual void AfterUpdateRelationships(TEntity entity, string relationshipName, List<object> relationships)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        virtual public IList<TEntity> ExecuteHook(IList<TEntity> entities, string rel)
         {
             // seeing as the relationships are already processed, we can just do
             // Logic.{method}(articles.Tags)
@@ -147,6 +247,7 @@ namespace JsonApiDotNetCore.Services
 
             return (IQueryable<TType>)genericGet.Invoke(resourceType, new object[] { entities });
         }
+
 
         private object GetLogic(Type targetEntity)
         {
