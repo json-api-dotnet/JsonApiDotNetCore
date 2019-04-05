@@ -105,7 +105,7 @@
   }
 }
 </code></pre><h2 id="custom-query-parameters">Custom Query Parameters</h2>
-<p>If you would like to use custom query params (parameters not reserved by the json:api specification), you can set AllowCustomQueryParameters = true. The default behavior is to return an HTTP 400 Bad Request for unknown query parameters.</p>
+<p>If you would like to use custom query params (parameters not reserved by the json:api specification), you can set <code>AllowCustomQueryParameters = true</code>. The default behavior is to return an HTTP 400 Bad Request for unknown query parameters.</p>
 <pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
     options.AllowCustomQueryParameters = true;
 });
@@ -114,6 +114,11 @@
 If you want to change the default serializer settings, you can:</p>
 <pre><code class="lang-c#">options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 options.SerializerSettings.ContractResolver = new DasherizedResolver();
+</code></pre><h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
+<p>If you would like to use ModelState validation into your controllers when creating / updating resources you set <code>ValidateModelState = true</code>. By default, no model validation is performed.</p>
+<pre><code class="lang-c#">services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; {
+    options.ValidateModelState = true;
+});
 </code></pre></article>
           </div>
           
