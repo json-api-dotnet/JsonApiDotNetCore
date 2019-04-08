@@ -3,22 +3,27 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
+    public enum ResourceAction
+    {
+        Get,
+        GetSingle,
+        GetRelationship,
+        Create,
+        Patch,
+        PatchRelationships,
+        Delete
+    }
+
     public enum ResourceHook
     {
-        BeforeGet,
-        AfterGet,
-        BeforeGetSingle,
-        AfterGetSingle,
         BeforeCreate,
         AfterCreate,
+        BeforeRead,
+        AfterRead,
         BeforeUpdate,
         AfterUpdate,
         BeforeDelete,
-        AfterDelete,
-        BeforeGetRelationship,
-        AfterGetRelationship,
-        BeforeUpdateRelationships,
-        AfterUpdateRelationships
+        AfterDelete
     }
 
     /// <summary>
@@ -56,10 +61,8 @@ namespace JsonApiDotNetCore.Internal
             }
             else
             {
-                throw new Exception($@" 
-                    Implemented hooks may be discovered only once.
-                    Adding such implementations at runtime is not supported.
-                ");
+                throw new JsonApiSetupException($@" Implemented hooks may be discovered only once.
+                    Adding such implementations at runtime is currently not supported.");
             }
 
             // Do reflective discovery of implemented hooks:
@@ -69,14 +72,15 @@ namespace JsonApiDotNetCore.Internal
             // custom implementation. For these methods, include them in a 
             // ResourceHook[] and the publically ImplementedHooks.
             // Hardcoding this for now.
-            ImplementedHooks = new ResourceHook[] { ResourceHook.BeforeGet,
-            ResourceHook.AfterGet, ResourceHook.BeforeGetSingle,
-            ResourceHook.AfterGetSingle, ResourceHook.BeforeCreate,
-            ResourceHook.AfterCreate, ResourceHook.BeforeUpdate,
-            ResourceHook.AfterUpdate, ResourceHook.BeforeDelete,
-            ResourceHook.AfterDelete, ResourceHook.BeforeGetRelationship,
-            ResourceHook.AfterGetRelationship, ResourceHook.BeforeUpdateRelationships,
-            ResourceHook.AfterUpdateRelationships };
+            ImplementedHooks = new ResourceHook[] {
+                    ResourceHook.BeforeCreate,
+                    ResourceHook.AfterCreate,
+                    ResourceHook.BeforeRead,
+                    ResourceHook.BeforeUpdate,
+                    ResourceHook.AfterUpdate,
+                    ResourceHook.BeforeDelete,
+                    ResourceHook.AfterDelete
+                };
 
         }
     }

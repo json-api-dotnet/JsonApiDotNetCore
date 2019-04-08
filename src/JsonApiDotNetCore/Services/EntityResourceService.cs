@@ -79,13 +79,9 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
             // @TODO implement hook executor
-            // NOTE: requires tree traversing if relations are updated!! 
-            // the TRelationEntity logic in its associated resource resource defintion. 
-            // needs to be used.
-            // entity  = _hookExecutor.BeforeCreate(entity)
+            // entity  = _hookExecutor.BeforeCreate(entity, ResourceAction.Create)
             entity = await _entities.CreateAsync(entity);
-            // @TODO implement hook executor
-            // _hookExecutor.AfterCreate(resource)
+         
 
             // this ensures relationships get reloaded from the database if they have
             // been requested
@@ -95,27 +91,35 @@ namespace JsonApiDotNetCore.Services
                 if (_entities is IEntityFrameworkRepository<TEntity> efRepository)
                     efRepository.DetachRelationshipPointers(entity);
 
-                return await GetWithRelationshipsAsync(entity.Id);
+                entity = await GetWithRelationshipsAsync(entity.Id);
 
             }
+            // @TODO implement hook executor
+            // entity = _hookExecutor.AfterCreate(entity, ResourceAction.Create)
 
             return MapOut(entity);
         }
 
         public virtual async Task<bool> DeleteAsync(TId id)
         {
+            // @TODO the implementation of the DeleteAsync on repo level needs 
+            // to be changed for it to work intuitively with hooks. 
+            // Specifically, we need:
+            // var entity = await _entities.Get(id)
+            // var succeeded = await _entities.DeleteAsync(entity);
+            // so that we can use the entity variable in our hook execution.
             // @TODO implement hook executor
-            // _hookExecutor.BeforeDelete(resource)
+            // _hookExecutor.BeforeDelete(entity, ResourceAction.Delete)
             var succeeded = await _entities.DeleteAsync(id);
             // @TODO implement hook executor
-            // _hookExecutor.AfterDelete(resource)
+            // _hookExecutor.AfterDelete(entity, succeeded, ResourceAction.Delete)
             return succeeded;
         }
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             // @TODO implement hook executor
-            // _hookExecutor.BeforeGet()
+            // _hookExecutor.BeforeRead(ResourceAction.Read)
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
@@ -124,8 +128,9 @@ namespace JsonApiDotNetCore.Services
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             // @TODO implement hook executor
-            // _hookExecutor.AfterGet(entities)
-            //entities = _entities.ApplyResourceDefinitionLogic(entities, "tags");
+            // _hookExecutor.AfterRead(entities, ResourceAction.Read)
+            // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
+            // for every included entity.
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
@@ -138,27 +143,36 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> GetAsync(TId id)
         {
             // @TODO implement hook executor
-            // _hookExecutor.BeforeGetSingle(id)
+            // _hookExecutor.BeforeRead(ResourceAction.ReadSingle, id)
+            //TResource entity = null;
+            TEntity entity;
             if (ShouldIncludeRelationships())
-                return await GetWithRelationshipsAsync(id);
-
-            TEntity entity = await _entities.GetAsync(id);
-
+            {
+                entity = await GetWithRelationshipsAsync(id);
+            } else
+            {
+                entity = await _entities.GetAsync(id);
+            }
             // @TODO implement hook executor
-            // _hookExecutor.AfterGetSingle(entity)
-
+            // entity = _hookExecutor.AfterRead(entity, ResourceAction.ReadSingle).SingleOrDefault();
+            // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
+            // for every included entity.
             return MapOut(entity);
         }
 
+        // triggered by route /articles/1/relationships/{relationshipName}
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName) => await GetRelationshipAsync(id, relationshipName);
 
+        // triggered by route /articles/1/{relationshipName}
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
             // @TODO implement hook executor
-            // _hookExecutor.BeforeGetRelationship(id, relationshipName)
+            // _hookExecutor.BeforeRead(id, ResourceAction.GetRelationship)
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             // @TODO implement hook executor
-            // entity = _hookExecutor.AfterGetRelationship(entity)
+            // entity = _hookExecutor.AfterRead(entity, ResourceAction.GetRelationship).SingleOrDefault();
+            // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
+            // for every included entity.
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
@@ -183,10 +197,10 @@ namespace JsonApiDotNetCore.Services
             var entity = MapIn(resource);
 
             // @TODO implement hook executor
-            // entity = _hookExecutor.BeforeUpdate(id, resource)
+            // entity = _hookExecutor.BeforeUpdate(entity, ResourceAction.Update)
             entity = await _entities.UpdateAsync(id, entity);
             // @TODO implement hook executor
-            // _hookExecutor.AfterUpdate(entity)
+            // entity = _hookExecutor.AfterUpdate(entity, ResourceAction.Update)
 
 
             return MapOut(entity);
@@ -221,11 +235,16 @@ namespace JsonApiDotNetCore.Services
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
+
             // @TODO implement hook executor
-            // _hookExecutor.BeforeUpdateRelationships(entity, relationshipName, relationships)
+            // entity = _hookExecutor.BeforeUpdate(entity, ResourceAction.UpdateRelationships)
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
+            // Note the call in previous line relies on Generic Processor to update relations.
+            // In this call, _hookExecutor will call the BeforeUpdate and AfterUpdate
+            // hooks for the target relation entities. See the SetRelationshipsAsync
+            // method in GenericProcessor.cs
             // @TODO implement hook executor
-            // _hookExecutor.AfterUpdateRelationships(entity, relationshipName, relationships)
+            // _hookExecutor.AfterUpdate(entity, ResourceAction.UpdateRelationships)
 
             relationship.Type = relationshipType;
         }
@@ -277,7 +296,7 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        private async Task<TResource> GetWithRelationshipsAsync(TId id)
+        private async Task<TEntity> GetWithRelationshipsAsync(TId id)
         {
             var query = _entities.Get().Where(e => e.Id.Equals(id));
 
@@ -293,7 +312,7 @@ namespace JsonApiDotNetCore.Services
             else
                 value = await _entities.FirstOrDefaultAsync(query);
 
-            return MapOut(value);
+            return value;
         }
 
         private bool ShouldIncludeRelationships()
