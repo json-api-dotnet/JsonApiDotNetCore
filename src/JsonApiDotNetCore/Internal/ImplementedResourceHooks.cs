@@ -1,19 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public enum ResourceAction
-    {
-        Get,
-        GetSingle,
-        GetRelationship,
-        Create,
-        Patch,
-        PatchRelationships,
-        Delete
-    }
-
     public enum ResourceHook
     {
         BeforeCreate,
@@ -41,6 +34,7 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public class ImplementedResourceHooks<TEntity> : IImplementedResourceHooks<TEntity> where TEntity : class, IIdentifiable
     {
+        private readonly ResourceHook[] _allHooks = Enum.GetValues(typeof(ResourceHook)) as ResourceHook[];
         private bool _isInitialized;
         public ResourceHook[] ImplementedHooks { get; private set; }
 
@@ -65,23 +59,16 @@ namespace JsonApiDotNetCore.Internal
                     Adding such implementations at runtime is currently not supported.");
             }
 
-            // Do reflective discovery of implemented hooks:
-            // eg, for a model Article, it should  discover if there is declared a class
-            // ResourceDefinition<Article>, and if so, will reflectively discover
-            // which of the methods of IResourceHookContainer<Article> have a 
-            // custom implementation. For these methods, include them in a 
-            // ResourceHook[] and the publically ImplementedHooks.
-            // Hardcoding this for now.
-            ImplementedHooks = new ResourceHook[] {
-                    ResourceHook.BeforeCreate,
-                    ResourceHook.AfterCreate,
-                    ResourceHook.BeforeRead,
-                    ResourceHook.BeforeUpdate,
-                    ResourceHook.AfterUpdate,
-                    ResourceHook.BeforeDelete,
-                    ResourceHook.AfterDelete
-                };
+           Type resourceDefinitionImplementationType = null;
 
+            foreach (var match in TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(ResourceDefinition<TEntity>)))
+            {
+                resourceDefinitionImplementationType = match;
+                break;
+            }
+
+            ImplementedHooks = _allHooks.Where(h => resourceDefinitionImplementationType.GetMethod(h.ToString("G")).DeclaringType == resourceDefinitionImplementationType)
+                                        .ToArray();
         }
     }
 }

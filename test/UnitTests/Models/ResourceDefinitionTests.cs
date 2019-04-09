@@ -84,7 +84,7 @@ namespace UnitTests.Models
             // assert
             Assert.True(resource._instanceAttrsAreSpecified);
         }
-        
+
         [Fact]
         public void InstanceOutputAttrsAreSpecified_Returns_False_If_Instance_Method_Is_Not_Overriden()
         {
@@ -119,7 +119,7 @@ namespace UnitTests.Models
             => _isAdmin
                 ? Remove(m => m.AlwaysExcluded)
                 : Remove(m => new { m.AlwaysExcluded, m.Password }, from: base.OutputAttrs());
-        
+
         public override QueryFilters GetQueryFilters()
             => new QueryFilters {
                 { "is-active", (query, value) => query.Select(x => x) }
@@ -130,7 +130,7 @@ namespace UnitTests.Models
                 (t => t.Prop, SortDirection.Ascending)
             };
     }
-    
+
     public class InstanceFilteredResource : ResourceDefinition<Model>
     {
         // Called once per resource instance

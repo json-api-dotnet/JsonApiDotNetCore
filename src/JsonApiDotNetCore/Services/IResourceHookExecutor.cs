@@ -4,7 +4,21 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-
+    /// <summary>
+    /// An enum that represents the initiator of a hook. Eg, when BeforeCreate()
+    /// is called from EntityResourceService.GetAsync(TId id), it will be called
+    /// with parameter actionSource = ResourceAction.GetSingle.
+    /// </summary>
+    public enum ResourceAction
+    {
+        Get,
+        GetSingle,
+        GetRelationship,
+        Create,
+        Patch,
+        PatchRelationships,
+        Delete
+    }
 
     public interface IResourceHookContainer<T> where T : class, IIdentifiable
     {

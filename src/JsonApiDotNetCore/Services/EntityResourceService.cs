@@ -16,9 +16,9 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
-            IResourceHookExecutor<TResource> _hookExecutor = null,
+            IResourceHookExecutor<TResource> hookExecutor = null,
             ILoggerFactory loggerFactory = null) :
-            base(jsonApiContext, entityRepository, _hookExecutor, loggerFactory)
+            base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
         { }
     }
 
@@ -29,9 +29,9 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            IResourceHookExecutor<TResource> _hookExecutor = null,
+            IResourceHookExecutor<TResource> hookExecutor = null,
             ILoggerFactory loggerFactory = null) :
-            base(jsonApiContext, entityRepository, _hookExecutor, loggerFactory)
+            base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
         { }
     }
 
@@ -44,12 +44,12 @@ namespace JsonApiDotNetCore.Services
         private readonly IEntityRepository<TEntity, TId> _entities;
         private readonly ILogger _logger;
         private readonly IResourceMapper _mapper;
-        private readonly IResourceHookExecutor<TResource> _hookExecutor;
+        private readonly IResourceHookExecutor<TEntity> _hookExecutor;
 
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                IResourceHookExecutor<TEntity> _hookExecutor,
+                IResourceHookExecutor<TEntity> hookExecutor,
                 ILoggerFactory loggerFactory = null)
         {
             // no mapper provided, TResource & TEntity must be the same type
@@ -60,6 +60,7 @@ namespace JsonApiDotNetCore.Services
 
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
+            _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
 
