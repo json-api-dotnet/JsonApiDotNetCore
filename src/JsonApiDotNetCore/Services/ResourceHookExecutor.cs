@@ -9,11 +9,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <summary>
-    /// A utility class responsible for executing hooks as defined in 
-    /// the ResourceDefinition<typeparamref name="TEntity"/>> class (eg. OnList)
-    /// when the  POST, GET, PATC, DELETE etc pipelines are executed.
-    /// </summary>
+    /// <inheritdoc/>
     public class ResourceHookExecutor<TEntity> : IResourceHookExecutor<TEntity> where TEntity : class, IIdentifiable
     {
 

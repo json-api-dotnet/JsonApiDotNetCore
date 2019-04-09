@@ -20,6 +20,14 @@ namespace JsonApiDotNetCore.Services
         Delete
     }
 
+
+    /// <summary>
+    /// An interface that should be implemented by the class that defines resource hooks.
+    /// 
+    /// By default, the ResourceDefinition<typeparamref name="T"/>> class inherits
+    /// from IResourceHookContainer<typeparamref name="T"/>>, which means that the 
+    /// hooks can be implemented on ResourceDefinition<typeparamref name="T"/>>.
+    /// </summary>
     public interface IResourceHookContainer<T> where T : class, IIdentifiable
     {
         /// <summary>
@@ -120,6 +128,24 @@ namespace JsonApiDotNetCore.Services
         void AfterDelete(T entity, bool succeeded, ResourceAction actionSource);
     }
 
+
+    /// <summary>
+    /// A utility class responsible for executing hooks as defined in 
+    /// the IResourceHookContainer<typeparamref name="T"/>>.
+    /// 
+    /// The hook execution flow is as follows:
+    /// 1.  The EntityResourceService<typeparamref name="T"/>> instance (service instance)
+    /// holds a reference (through dependency injection) to the executor instance.
+    /// 2.  When the eg. DeleteAsync() method on the service instance is called, the service instance
+    /// calls the BeforeDelete and AfterDelete methods on the hook executor instance.
+    /// 3.  The hook executor instance is then responsible for getting access to and calling the hooks
+    /// that are defined on IResourceHookContainer<typeparamref name="T"/>> (which
+    /// by default is the ResourceDefinition implementation).
+    /// 4. Note that for the simple case of service{Model}.DeleteAsync(), only 
+    /// ResourceDefinition{Model} is involved. But for more complex operations, like that
+    /// of service{Model}.GetAsync() with a nested include of related entities, ResourceDefintions for all
+    /// involved models are resolved and used in a more complex travesal of the resultset.
+    /// </summary>
     public interface IResourceHookExecutor<T> : IResourceHookContainer<T> where T : class, IIdentifiable
     {
         /// <summary>
