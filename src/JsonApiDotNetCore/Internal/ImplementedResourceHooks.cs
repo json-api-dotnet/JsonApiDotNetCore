@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Internal
             }
             else
             {
-                throw new JsonApiSetupException($@" Implemented hooks may be discovered only once.
+                throw new JsonApiSetupException($@"Implemented hooks may be discovered only once.
                     Adding such implementations at runtime is currently not supported.");
             }
 
@@ -66,9 +66,15 @@ namespace JsonApiDotNetCore.Internal
                 resourceDefinitionImplementationType = match;
                 break;
             }
+            if (resourceDefinitionImplementationType != null)
+            {
+                ImplementedHooks = _allHooks.Where(h => resourceDefinitionImplementationType.GetMethod(h.ToString("G")).DeclaringType == resourceDefinitionImplementationType)
+                                            .ToArray();
+            } else
+            {
+                ImplementedHooks = new ResourceHook[0];
+            }
 
-            ImplementedHooks = _allHooks.Where(h => resourceDefinitionImplementationType.GetMethod(h.ToString("G")).DeclaringType == resourceDefinitionImplementationType)
-                                        .ToArray();
         }
     }
 }
