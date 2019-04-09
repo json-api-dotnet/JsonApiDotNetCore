@@ -29,6 +29,7 @@ namespace JsonApiDotNetCore.Services
             _implementedHooks = hooksConfiguration.ImplementedHooks;
         }
 
+        /// <inheritdoc/>
         public virtual bool ShouldExecuteHook(ResourceHook hook)
         {
             return _implementedHooks.Contains(hook);
@@ -86,18 +87,23 @@ namespace JsonApiDotNetCore.Services
         public virtual void BeforeDelete(TEntity entity, ResourceAction actionSource)
         {
             if (!ShouldExecuteHook(ResourceHook.BeforeDelete)) return;
-
-            throw new NotImplementedException();
+            var hookContainer = GetResourceDefinition(typeof(TEntity));
+            hookContainer.BeforeDelete(entity, actionSource);
         }
 
         /// <inheritdoc/>
         public virtual void AfterDelete(TEntity entity, bool succeeded, ResourceAction actionSource)
         {
             if (!ShouldExecuteHook(ResourceHook.AfterDelete)) return;
-
-            throw new NotImplementedException();
+            var hookContainer = GetResourceDefinition(typeof(TEntity));
+            hookContainer.AfterDelete(entity, succeeded, actionSource);
         }
 
+
+        private IResourceHookContainer<TEntity> GetResourceDefinition(Type targetEntity)
+        {
+            return (IResourceHookContainer<TEntity>)_genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), targetEntity);
+        }
 
         //virtual public IList<TEntity> ExecuteHook(IList<TEntity> entities, string rel)
         //{
@@ -206,10 +212,7 @@ namespace JsonApiDotNetCore.Services
         //}
 
 
-        //private object GetLogic(Type targetEntity)
-        //{
-        //    return _genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), targetEntity);
-        //}
+
 
 
 

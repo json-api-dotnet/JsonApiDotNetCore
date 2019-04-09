@@ -45,7 +45,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         T AfterCreate(T entity, ResourceAction actionSource);
 
-
         /// <summary>
         /// A hook executed after before reading entities. Can be used eg. for logging, authorization.
         /// 
@@ -59,7 +58,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="stringId">If the </param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         void BeforeRead(ResourceAction actionSource, string stringId = null);
-
 
         /// <summary>
         /// A hook executed after reading entities. Can be used eg. for publishing events.
@@ -83,7 +81,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction actionSource);
 
-
         /// <summary>
         /// A hook executed before updating an entity. Can be used eg. for authorization.
         /// If the entity also contains to be updated relationships, the BeforeUpdate()
@@ -97,7 +94,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         T BeforeUpdate(T entity, ResourceAction actionSource);
 
-
         /// <summary>
         /// A hook executed after updating an entity. Can be used eg. for publishing an event.
         /// 
@@ -107,7 +103,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entity">The entity that was updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         T AfterUpdate(T entity, ResourceAction actionSource);
-
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for authorization.
@@ -123,19 +118,16 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
         void AfterDelete(T entity, bool succeeded, ResourceAction actionSource);
-
-
     }
 
     public interface IResourceHookExecutor<T> : IResourceHookContainer<T> where T : class, IIdentifiable
     {
         /// <summary>
-        /// Checks whether a hook should be executed or not, by reflectively 
-        /// verifying if a hook is implemented on IResourceModel<typeparamref name="T"/>>
+        /// Checks whether a hook should be executed or not through reflective 
+        /// verification if a hook is implemented on IResourceModel<typeparamref name="T"/>>
         /// </summary>
         /// <returns><c>true</c>, if execute hook should be executed, <c>false</c> otherwise.</returns>
         /// <param name="hook">The enum representing the type of hook.</param>
         bool ShouldExecuteHook(ResourceHook hook);
-
     }
 }
