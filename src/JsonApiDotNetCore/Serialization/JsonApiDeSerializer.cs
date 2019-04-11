@@ -230,15 +230,6 @@ namespace JsonApiDotNetCore.Serialization
             return entity;
         }
 
-        /// @TODO investigate the following: when running the Can_Patch_Entity_And_HasOne_Relationship, the updating of the to-one relation happens
-        /// by assigning a new value to the foreignkey on the TodoItem:  todoItem.ownerId = new value.
-        /// However, this happens in two places: here in this method, but also in the repository, here
-        /// https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/8f685a6a23515acf8f440c70d20444a0cec1c502/src/JsonApiDotNetCore/Data/DefaultEntityRepository.cs#L300
-        /// 
-        /// Is there a reason this happens twice? Should we need to get rid of one? It should probably happen in the repository only, not here,
-        /// because in the case of one-to-one, updating a foreign key on the main entity (TodoItem in this case) is sufficient and can indeed be done from the deserializer,
-        /// but when updating one-to-many or many-to-many, we will need to make extra queries, which is a repository thing.
-        /// 
         private void SetHasOneForeignKeyValue(object entity, HasOneAttribute hasOneAttr, PropertyInfo foreignKeyProperty, ResourceIdentifierObject rio)
         {
             var foreignKeyPropertyValue = rio?.Id ?? null;
