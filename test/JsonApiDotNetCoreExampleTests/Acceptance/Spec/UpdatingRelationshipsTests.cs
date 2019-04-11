@@ -46,6 +46,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // arrange
+            _context.TodoItemCollections.RemoveRange(_context.TodoItemCollections);
+            _context.People.RemoveRange(_context.People);
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            _context.SaveChanges();
+
             var todoCollection = new TodoItemCollection();
             todoCollection.TodoItems = new List<TodoItem>();
             var person = _personFaker.Generate();
@@ -59,8 +64,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var newTodoItem2 = _todoItemFaker.Generate();
             _context.AddRange(new TodoItem[] { newTodoItem1, newTodoItem2 });
             _context.SaveChanges();
-
-
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
@@ -102,13 +105,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
-            var updatedTodoItems = _context.TodoItemCollections
-                                            .Where(tic => tic.Id == todoCollection.Id)
-                                            .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
+            var updatedTodoItems = _context.TodoItemCollections.AsNoTracking()
+                .Where(tic => tic.Id == todoCollection.Id)
+                .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(3, updatedTodoItems.Count);
+            /// we are expecting two, not three, because the request does 
+            /// a "complete replace".
+            Assert.Equal(2, updatedTodoItems.Count);
         }
 
         [Fact]
