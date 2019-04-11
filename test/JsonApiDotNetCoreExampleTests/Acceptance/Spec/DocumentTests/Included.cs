@@ -181,6 +181,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task GET_Included_DoesNot_Duplicate_Records_If_HasOne_Exists_Twice()
         {
             // arrange
+            _context.TodoItemCollections.RemoveRange(_context.TodoItemCollections);
             _context.People.RemoveRange(_context.People); // ensure all people have todo-items
             _context.TodoItems.RemoveRange(_context.TodoItems);
             var person = _personFaker.Generate();
