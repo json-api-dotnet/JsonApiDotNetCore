@@ -46,11 +46,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // arrange
-            _context.TodoItemCollections.RemoveRange(_context.TodoItemCollections);
-            _context.People.RemoveRange(_context.People);
-            _context.TodoItems.RemoveRange(_context.TodoItems);
-            _context.SaveChanges();
-
             var todoCollection = new TodoItemCollection();
             todoCollection.TodoItems = new List<TodoItem>();
             var person = _personFaker.Generate();

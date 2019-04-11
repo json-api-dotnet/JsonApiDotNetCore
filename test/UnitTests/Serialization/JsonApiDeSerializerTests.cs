@@ -361,6 +361,7 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
             jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
@@ -414,6 +415,7 @@ namespace UnitTests.Serialization
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
             jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
             jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
