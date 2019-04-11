@@ -303,7 +303,7 @@ namespace JsonApiDotNetCore.Data
                 {
                     /// If we are updating to-many relations from PATCH, we need to include the relation first,
                     /// else it will not peform a complete replacement, as required by the specs.
-                    /// Also, we currently not support the same for many-to-many
+                    /// Also, we currently do not support the same for many-to-many
                     if (relationship.Key is HasManyAttribute && !(relationship.Key is HasManyThroughAttribute))
                         await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
                     relationship.Key.SetValue(oldEntity, relationship.Value); // article.tags = nieuwe lijst    
