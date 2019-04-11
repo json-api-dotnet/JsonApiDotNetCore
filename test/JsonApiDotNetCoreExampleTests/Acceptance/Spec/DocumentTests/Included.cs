@@ -289,127 +289,127 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(numberOfTodoItems + 1, document.Included.Count);
         }
 
-        //[Fact]
-        //public async Task Request_ToIncludeUnknownRelationship_Returns_400()
-        //{
-        //    // arrange
-        //    var person = _context.People.First();
+        [Fact]
+        public async Task Request_ToIncludeUnknownRelationship_Returns_400()
+        {
+            // arrange
+            var person = _context.People.First();
 
-        //    var builder = new WebHostBuilder()
-        //        .UseStartup<Startup>();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
 
-        //    var httpMethod = new HttpMethod("GET");
+            var httpMethod = new HttpMethod("GET");
 
-        //    var route = $"/api/v1/people/{person.Id}?include=non-existent-relationship";
+            var route = $"/api/v1/people/{person.Id}?include=non-existent-relationship";
 
-        //    var server = new TestServer(builder);
-        //    var client = server.CreateClient();
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // act
-        //    var response = await client.SendAsync(request);
+            // act
+            var response = await client.SendAsync(request);
 
-        //    // assert
-        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        //}
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
 
-        //[Fact]
-        //public async Task Request_ToIncludeDeeplyNestedRelationships_Returns_400()
-        //{
-        //    // arrange
-        //    var person = _context.People.First();
+        [Fact]
+        public async Task Request_ToIncludeDeeplyNestedRelationships_Returns_400()
+        {
+            // arrange
+            var person = _context.People.First();
 
-        //    var builder = new WebHostBuilder()
-        //        .UseStartup<Startup>();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
 
-        //    var httpMethod = new HttpMethod("GET");
+            var httpMethod = new HttpMethod("GET");
 
-        //    var route = $"/api/v1/people/{person.Id}?include=owner.name";
+            var route = $"/api/v1/people/{person.Id}?include=owner.name";
 
-        //    var server = new TestServer(builder);
-        //    var client = server.CreateClient();
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // act
-        //    var response = await client.SendAsync(request);
+            // act
+            var response = await client.SendAsync(request);
 
-        //    // assert
-        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        //}
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
 
-        //[Fact]
-        //public async Task Request_ToIncludeRelationshipMarkedCanIncludeFalse_Returns_400()
-        //{
-        //    // arrange
-        //    var person = _context.People.First();
+        [Fact]
+        public async Task Request_ToIncludeRelationshipMarkedCanIncludeFalse_Returns_400()
+        {
+            // arrange
+            var person = _context.People.First();
 
-        //    var builder = new WebHostBuilder()
-        //        .UseStartup<Startup>();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
 
-        //    var httpMethod = new HttpMethod("GET");
+            var httpMethod = new HttpMethod("GET");
 
-        //    var route = $"/api/v1/people/{person.Id}?include=unincludeable-item";
+            var route = $"/api/v1/people/{person.Id}?include=unincludeable-item";
 
-        //    var server = new TestServer(builder);
-        //    var client = server.CreateClient();
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // act
-        //    var response = await client.SendAsync(request);
+            // act
+            var response = await client.SendAsync(request);
 
-        //    // assert
-        //    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        //}
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
 
-        //[Fact]
-        //public async Task Can_Ignore_Null_Parent_In_Nested_Include()
-        //{
-        //    // arrange
-        //    var todoItem = _todoItemFaker.Generate();
-        //    todoItem.Owner = _personFaker.Generate();
-        //    todoItem.CreatedDate = DateTime.Now;
-        //    _context.TodoItems.Add(todoItem);
-        //    _context.SaveChanges();
+        [Fact]
+        public async Task Can_Ignore_Null_Parent_In_Nested_Include()
+        {
+            // arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = _personFaker.Generate();
+            todoItem.CreatedDate = DateTime.Now;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
 
-        //    var todoItemWithNullOwner = _todoItemFaker.Generate();
-        //    todoItemWithNullOwner.Owner = null;
-        //    todoItemWithNullOwner.CreatedDate = DateTime.Now;
-        //    _context.TodoItems.Add(todoItemWithNullOwner);
-        //    _context.SaveChanges();
+            var todoItemWithNullOwner = _todoItemFaker.Generate();
+            todoItemWithNullOwner.Owner = null;
+            todoItemWithNullOwner.CreatedDate = DateTime.Now;
+            _context.TodoItems.Add(todoItemWithNullOwner);
+            _context.SaveChanges();
 
-        //    var builder = new WebHostBuilder()
-        //        .UseStartup<Startup>();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
 
-        //    var httpMethod = new HttpMethod("GET");
+            var httpMethod = new HttpMethod("GET");
           
-        //    var route = $"/api/v1/todo-items?sort=-created-date&page[size]=2&include=owner.role"; // last two todo-items
+            var route = $"/api/v1/todo-items?sort=-created-date&page[size]=2&include=owner.role"; // last two todo-items
 
-        //    var server = new TestServer(builder);
-        //    var client = server.CreateClient();
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // act
-        //    var response = await client.SendAsync(request);
-        //    var responseString = await response.Content.ReadAsStringAsync();
-        //    var documents = JsonConvert.DeserializeObject<Documents>(responseString);
+            // act
+            var response = await client.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Documents>(responseString);
 
-        //    // assert
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        //    Assert.Single(documents.Included);
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Single(documents.Included);
 
-        //    var ownerValueNull = documents.Data
-        //        .First(i => i.Id == todoItemWithNullOwner.StringId)
-        //        .Relationships.First(i => i.Key == "owner")
-        //        .Value.SingleData;
+            var ownerValueNull = documents.Data
+                .First(i => i.Id == todoItemWithNullOwner.StringId)
+                .Relationships.First(i => i.Key == "owner")
+                .Value.SingleData;
 
-        //    Assert.Null(ownerValueNull);
+            Assert.Null(ownerValueNull);
 
-        //    var ownerValue = documents.Data
-        //        .First(i => i.Id == todoItem.StringId)
-        //        .Relationships.First(i => i.Key == "owner")
-        //        .Value.SingleData;
+            var ownerValue = documents.Data
+                .First(i => i.Id == todoItem.StringId)
+                .Relationships.First(i => i.Key == "owner")
+                .Value.SingleData;
 
-        //    Assert.NotNull(ownerValue);
-        //}
+            Assert.NotNull(ownerValue);
+        }
     }
 }
