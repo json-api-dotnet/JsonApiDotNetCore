@@ -73,14 +73,26 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>Collection of concrete type</returns>
         public static IList ConvertListType(IEnumerable<string> values, Type type)
         {
-            var listType = typeof(List<>).MakeGenericType(type);
-            IList list = (IList)Activator.CreateInstance(listType);
+            var list = CreateListFor(type);
             foreach (var value in values)
             {
                 list.Add(ConvertType(value, type));
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// Reflectively nstantiates a list of a certain type.
+        /// </summary>
+        /// <returns>The list of the target type</returns>
+        /// <param name="type">The target type</param>
+        public static IList CreateListFor(Type type)
+        {
+            var boundListType = typeof(List<>).MakeGenericType(type);
+            IList list = (IList)Activator.CreateInstance(boundListType);
+            return list;
+
         }
     }
 }

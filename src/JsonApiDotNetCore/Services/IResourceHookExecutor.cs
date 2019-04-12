@@ -21,17 +21,7 @@ namespace JsonApiDotNetCore.Services
     }
 
 
-    /// <summary>
-    /// An interface that should be implemented by the class that defines resource hooks.
-    /// 
-    /// By default, the ResourceDefinition<typeparamref name="T"/> class inherits
-    /// from IResourceHookContainer<typeparamref name="T"/>, which means that the 
-    /// hooks can be implemented on ResourceDefinition<typeparamref name="T"/>.
-    /// 
-    /// See IResourceHookExecutor<typeparamref name="T"/> for details on the 
-    /// resource hook execution flow.
-    /// </summary>
-    public interface IResourceHookContainer<T> where T : class, IIdentifiable
+    public interface IResourceHookBase<T> where T : class, IIdentifiable
     {
         /// <summary>
         /// A hook executed before creating an entity. Can be used eg. for authorization.
@@ -41,10 +31,10 @@ namespace JsonApiDotNetCore.Services
         /// This hook is executed from:
         ///     * EntityResourceService.CreateAsync
         /// </summary>
-        /// <returns>The (adjusted) entity to be created</returns>
-        /// <param name="entity">The entity to be created</param>
+        /// <returns>The (adjusted) entities to be created</returns>
+        /// <param name="entities">The entities to be created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        T BeforeCreate(T entity, ResourceAction actionSource);
+        IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction actionSource);
 
         /// <summary>
         /// A hook executed after creating an entity. Can be used eg. for publishing events.
@@ -52,9 +42,9 @@ namespace JsonApiDotNetCore.Services
         /// This hook is executed from:
         ///     * EntityResourceService.CreateAsync
         /// </summary>
-        /// <param name="entity">The entity that was created</param>
+        /// <param name="entities">The entities that were created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        T AfterCreate(T entity, ResourceAction actionSource);
+        IEnumerable<T> AfterCreate(IEnumerable<T> entities, ResourceAction actionSource);
 
         /// <summary>
         /// A hook executed after before reading entities. Can be used eg. for logging, authorization.
@@ -100,10 +90,10 @@ namespace JsonApiDotNetCore.Services
         /// This hook is executed from:
         ///     * EntityResourceService.UpdateAsync
         /// </summary>
-        /// <returns>The (adjusted) entity to be updated</returns>
-        /// <param name="entity">The entity to be updated</param>
+        /// <returns>The (adjusted) entities to be updated</returns>
+        /// <param name="entities">The entities to be updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        T BeforeUpdate(T entity, ResourceAction actionSource);
+        IEnumerable<T> BeforeUpdate(IEnumerable<T> entities, ResourceAction actionSource);
 
         /// <summary>
         /// A hook executed after updating an entity. Can be used eg. for publishing an event.
@@ -111,25 +101,48 @@ namespace JsonApiDotNetCore.Services
         /// This hook is executed from:
         ///     * EntityResourceService.UpdateAsync
         /// </summary>
-        /// <param name="entity">The entity that was updated</param>
+        /// <param name="entities">The entities that were updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        T AfterUpdate(T entity, ResourceAction actionSource);
+        IEnumerable<T> AfterUpdate(IEnumerable<T> entities, ResourceAction actionSource);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for authorization.
         /// </summary>
-        /// <param name="entity">The entity to be deleted</param>
+        /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        void BeforeDelete(T entity, ResourceAction actionSource);
+        void BeforeDelete(IEnumerable<T> entities, ResourceAction actionSource);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for publishing an event.
         /// </summary>
-        /// <param name="entity">The entity to be deleted</param>
+        /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
-        void AfterDelete(T entity, bool succeeded, ResourceAction actionSource);
+        void AfterDelete(IEnumerable<T> entities, bool succeeded, ResourceAction actionSource);
     }
+
+
+    /// <summary>
+    /// An interface that should be implemented by the class that defines resource hooks.
+    /// 
+    /// By default, the ResourceDefinition<typeparamref name="T"/> class inherits
+    /// from IResourceHookContainer<typeparamref name="T"/>, which means that the 
+    /// hooks can be implemented on ResourceDefinition<typeparamref name="T"/>.
+    /// 
+    /// See IResourceHookExecutor<typeparamref name="T"/> for details on the 
+    /// resource hook execution flow.
+    /// </summary>
+    public interface IResourceHookContainer<T> : IResourceHookBase<T> where T : class, IIdentifiable
+    {
+        /// <summary>
+        /// Checks whether a hook should be executed or not through reflective 
+        /// verification if a hook is implemented on IResourceModel<typeparamref name="T"/>
+        /// </summary>
+        /// <returns><c>true</c>, if execute hook should be executed, <c>false</c> otherwise.</returns>
+        /// <param name="hook">The enum representing the type of hook.</param>
+        bool ShouldExecuteHook(ResourceHook hook);
+    }
+
 
 
     /// <summary>
@@ -149,14 +162,8 @@ namespace JsonApiDotNetCore.Services
     /// of service{Model}.GetAsync() with a nested include of related entities, ResourceDefintions for all
     /// involved models are resolved and used in a more complex travesal of the resultset.
     /// </summary>
-    public interface IResourceHookExecutor<T> : IResourceHookContainer<T> where T : class, IIdentifiable
+    public interface IResourceHookExecutor<T> : IResourceHookBase<T> where T : class, IIdentifiable
     {
-        /// <summary>
-        /// Checks whether a hook should be executed or not through reflective 
-        /// verification if a hook is implemented on IResourceModel<typeparamref name="T"/>
-        /// </summary>
-        /// <returns><c>true</c>, if execute hook should be executed, <c>false</c> otherwise.</returns>
-        /// <param name="hook">The enum representing the type of hook.</param>
-        bool ShouldExecuteHook(ResourceHook hook);
+
     }
 }
