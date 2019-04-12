@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -95,21 +96,21 @@ namespace JsonApiDotNetCore.Internal.Generics
                 // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entities = _context.Set<T>().Where(x => relationshipIds.Contains(((IIdentifiable)x).StringId)).ToList();
 
-                // @TODO implement hook executor
-                // entities.Select( e =>  _hookExecutor.BeforeUpdate(e, ResourceAction.UpdateRelationships))
+                // @TODO implement hook executor  @TODO Do we need this here or is sufficient in service?
+                // entities = _hookExecutor.BeforeUpdate(entities, ResourceAction.PatchRelationships)
                 relationship.SetValue(parent, entities);
                 // @TODO implement hook executor
-                // entities.ForEach( e =>  _hookExecutor.AfterUpdate(e, ResourceAction.UpdateRelationships))
+                // entities = _hookExecutor.AfterUpdate(entities, ResourceAction.PatchRelationships)
             }
             else
             {
                 // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == ((IIdentifiable)x).StringId);
-                // @TODO implement hook executor
-                // entity = _hookExecutor.BeforeUpdate(entity, ResourceAction.UpdateRelationships)
+                // @TODO implement hook executor  @TODO Do we need this here or is sufficient in service?
+                // entity = _hookExecutor.BeforeUpdate(AsList(entities), ResourceAction.PatchRelationships).SingleOrDefault()
                 relationship.SetValue(parent, entity);
                 // @TODO implement hook executor
-                // _hookExecutor.AfterUpdate(entity, ResourceAction.UpdateRelationships)
+
             }
 
             await _context.SaveChangesAsync();

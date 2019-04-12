@@ -8,8 +8,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using Xunit;
-using Dummy = UnitTests.Models.AllHooksWithRelations.Dummy;
-using DummyResourceDefinition = UnitTests.Models.AllHooksWithRelations.DummyResourceDefinition;
+
 
 namespace UnitTests.Models
 {
@@ -28,7 +27,7 @@ namespace UnitTests.Models
         public void Hook_Discovery()
         {
             // arrange & act
-            var hookConfig = new ImplementedResourceHooks<PartialHooks.Dummy>();
+            var hookConfig = new ImplementedResourceHooks<Dummy>();
             // assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
@@ -41,9 +40,9 @@ namespace UnitTests.Models
             // arrange
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects();
             // act
-            hookExecutor.BeforeCreate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>());
+            hookExecutor.BeforeCreate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.BeforeCreate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()), Times.Once());
         }
 
         [Fact]
@@ -52,9 +51,9 @@ namespace UnitTests.Models
             // arrange
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects();
             // act
-            hookExecutor.AfterCreate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>());
+            hookExecutor.AfterCreate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.AfterCreate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.AfterCreate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()), Times.Once());
         }
         [Fact]
         public void BeforeRead_Hook_Is_Called()
@@ -82,9 +81,9 @@ namespace UnitTests.Models
             // arrange
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects();
             // act
-            hookExecutor.BeforeUpdate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>());
+            hookExecutor.BeforeUpdate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.BeforeUpdate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()), Times.Once());
         }
         [Fact]
         public void AfterUpdate_Hook_Is_Called()
@@ -92,9 +91,9 @@ namespace UnitTests.Models
             // arrange
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects();
             // act
-            hookExecutor.AfterUpdate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>());
+            hookExecutor.AfterUpdate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.AfterUpdate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()), Times.Once());
         }
         [Fact]
         public void BeforeDelete_Hook_Is_Called()
@@ -103,10 +102,10 @@ namespace UnitTests.Models
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects();
 
             // act
-            hookExecutor.BeforeDelete(It.IsAny<Dummy>(), It.IsAny<ResourceAction>());
+            hookExecutor.BeforeDelete(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>());
 
             // assert
-            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()), Times.Once());
         }
         [Fact]
         public void AfterDelete_Hook_Is_Called()
@@ -114,21 +113,21 @@ namespace UnitTests.Models
             // arrange
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects();
             // act
-            hookExecutor.AfterDelete(It.IsAny<Dummy>(), true, It.IsAny<ResourceAction>());
+            hookExecutor.AfterDelete(It.IsAny<IEnumerable<Dummy>>(), true, It.IsAny<ResourceAction>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<Dummy>(), true, It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<Dummy>>(), true, It.IsAny<ResourceAction>()), Times.Once());
         }
         Mock<DummyResourceDefinition> CreateResourceDefinitionMock()
         {
             var resourceDefinition = new Mock<DummyResourceDefinition>();
-            resourceDefinition.Setup(rd => rd.BeforeCreate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()));
-            resourceDefinition.Setup(rd => rd.AfterCreate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()));
+            resourceDefinition.Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()));
+            resourceDefinition.Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()));
             resourceDefinition.Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null));
             resourceDefinition.Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()));
-            resourceDefinition.Setup(rd => rd.BeforeUpdate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()));
-            resourceDefinition.Setup(rd => rd.AfterUpdate(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()));
-            resourceDefinition.Setup(rd => rd.BeforeDelete(It.IsAny<Dummy>(), It.IsAny<ResourceAction>()));
-            resourceDefinition.Setup(rd => rd.AfterDelete(It.IsAny<Dummy>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()));
+            resourceDefinition.Setup(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()));
+            resourceDefinition.Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()));
+            resourceDefinition.Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<ResourceAction>()));
+            resourceDefinition.Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<Dummy>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()));
             return resourceDefinition;
         }
 
@@ -143,70 +142,28 @@ namespace UnitTests.Models
             var context = new Mock<IJsonApiContext>();
             context.Setup(c => c.GenericProcessorFactory).Returns(processorFactory.Object);
 
-            var hookExecutor = new ResourceHookExecutor<Dummy>(context.Object, new ImplementedResourceHooks<Dummy>());
+            var meta = new ResourceHookMetaInfo(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var hookExecutor = new ResourceHookExecutor<Dummy>(context.Object, new ImplementedResourceHooks<Dummy>(), meta);
 
             return (resourceDefinition, context, hookExecutor);
         }
 
     }
-    public class PartialHooks
+
+    public class Dummy : Identifiable
     {
-        public class Dummy : Identifiable
-        {
 
+    }
+    public class DummyResourceDefinition : ResourceDefinition<Dummy>
+    {
+        public override void BeforeDelete(IEnumerable<Dummy> entities, ResourceAction actionSource)
+        {
         }
-        public class DummyResourceDefinition : ResourceDefinition<Dummy>
+        public override void AfterDelete(IEnumerable<Dummy> entities, bool succeeded, ResourceAction actionSource)
         {
-            public override void BeforeDelete(Dummy entity, ResourceAction actionSource)
-            {
-            }
-            public override void AfterDelete(Dummy entity, bool succeeded, ResourceAction actionSource)
-            {
 
-            }
         }
     }
-    public class AllHooksWithRelations
-    {
-        public class Dummy : Identifiable
-        {
 
-        }
-
-        public class DummyResourceDefinition : ResourceDefinition<Dummy>
-        {
-            public override Dummy BeforeCreate(Dummy entity, ResourceAction actionSource)
-            {
-                return entity;
-            }
-            public override Dummy AfterCreate(Dummy entity, ResourceAction actionSource)
-            {
-                return entity;
-            }
-            public override void BeforeRead(ResourceAction actionSource, string stringId = null)
-            {
-
-            }
-            public override IEnumerable<Dummy> AfterRead(IEnumerable<Dummy> entities, ResourceAction actionSource)
-            {
-                return entities;
-            }
-            public override Dummy BeforeUpdate(Dummy entity, ResourceAction actionSource)
-            {
-                return entity;
-            }
-            public override Dummy AfterUpdate(Dummy entity, ResourceAction actionSource)
-            {
-                return entity;
-            }
-            public override void BeforeDelete(Dummy entity, ResourceAction actionSource)
-            {
-            }
-            public override void AfterDelete(Dummy entity, bool succeeded, ResourceAction actionSource)
-            {
-
-            }
-        }
-    }
 
 }

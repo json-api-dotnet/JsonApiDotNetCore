@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Internal
 
     /// <summary>
     /// A singleton service for a particular TEntity that stores a field of 
-    /// enums that represents which hooks have been implemented for a particular
-    /// entity.
+    /// enums that represents which resource hooks have been implemented for that
+    /// particular entity.
     /// </summary>
     public interface IImplementedResourceHooks<TEntity> where TEntity : class, IIdentifiable
     {
@@ -35,12 +35,16 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public class ImplementedResourceHooks<TEntity> : IImplementedResourceHooks<TEntity> where TEntity : class, IIdentifiable
     {
-        private readonly ResourceHook[] _allHooks = Enum.GetValues(typeof(ResourceHook)) as ResourceHook[];
+        private readonly ResourceHook[] _allHooks;
         private bool _isInitialized;
         public ResourceHook[] ImplementedHooks { get; private set; }
 
         public ImplementedResourceHooks()
         {
+            _allHooks = Enum.GetValues(typeof(ResourceHook))
+                            .Cast<ResourceHook>()
+                            .Where(h => h != ResourceHook.None)
+                            .ToArray();
             DiscoverImplementedHooksForModel();
         }
 

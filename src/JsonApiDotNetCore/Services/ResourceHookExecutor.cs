@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Services
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                 return container.BeforeUpdate(relatedEntities, actionSource);
+                return container.BeforeUpdate(relatedEntities, actionSource);
             });
 
             return entities;
@@ -85,9 +85,15 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.AfterRead);
             if (hookContainer == null) return entities;
+            entities = hookContainer.AfterRead(entities, actionSource);
 
-
-            throw new NotImplementedException();
+            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
+            BreadthFirstTraverse(entities, (container, relatedEntities) =>
+            {
+                container.BeforeRead(actionSource);
+                return container.AfterRead(relatedEntities, actionSource);
+            });
+            return entities;
         }
 
         /// <inheritdoc/>
@@ -128,6 +134,11 @@ namespace JsonApiDotNetCore.Services
             hookContainer.AfterDelete(entities, succeeded, actionSource);
         }
 
+        /// <summary>
+        /// Fires the hooks for related (nested) entities.
+        /// </summary>
+        /// <param name="currentLayer">Current layer.</param>
+        /// <param name="hookExecutionAction">Hook execution action.</param>
         void BreadthFirstTraverse(
             IEnumerable<IIdentifiable> currentLayer,
             Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecutionAction
@@ -242,7 +253,8 @@ namespace JsonApiDotNetCore.Services
                     {
                         if (!parsedEntities.Contains(relationshipValue))
                         {
-                            attr.SetValue(currentLayerEntity, null); 
+                            attr.SetValue(currentLayerEntity, null);
+                        }
                     }
                 }
             }

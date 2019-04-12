@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
             // @TODO implement hook executor
-            // entity  = _hookExecutor.BeforeCreate(entity, ResourceAction.Create)
+            // entity = _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
          
 
@@ -96,11 +96,10 @@ namespace JsonApiDotNetCore.Services
 
             }
             // @TODO implement hook executor
-            // entity = _hookExecutor.AfterCreate(entity, ResourceAction.Create)
+            // entity = _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
 
             return MapOut(entity);
         }
-
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             // @TODO the implementation of the DeleteAsync on repo level needs 
@@ -110,17 +109,17 @@ namespace JsonApiDotNetCore.Services
             // var succeeded = await _entities.DeleteAsync(entity);
             // so that we can use the entity variable in our hook execution.
             // @TODO implement hook executor
-            // _hookExecutor.BeforeDelete(entity, ResourceAction.Delete)
+            // _hookExecutor.BeforeDelete(AsList(entity), ResourceAction.Delete);
             var succeeded = await _entities.DeleteAsync(id);
             // @TODO implement hook executor
-            // _hookExecutor.AfterDelete(entity, succeeded, ResourceAction.Delete)
+            // _hookExecutor.AfterDelete(AsList(entity), succeeded, ResourceAction.Delete);
             return succeeded;
         }
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             // @TODO implement hook executor
-            // _hookExecutor.BeforeRead(ResourceAction.Read)
+            // _hookExecutor.BeforeRead(ResourceAction.Get);
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
@@ -129,7 +128,7 @@ namespace JsonApiDotNetCore.Services
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             // @TODO implement hook executor
-            // _hookExecutor.AfterRead(entities, ResourceAction.Read)
+            // entities = _hookExecutor.AfterRead(entities, ResourceAction.Get);
             // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
             // for every included entity.
 
@@ -144,18 +143,19 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> GetAsync(TId id)
         {
             // @TODO implement hook executor
-            // _hookExecutor.BeforeRead(ResourceAction.ReadSingle, id)
+            // _hookExecutor.BeforeRead(ResourceAction.GetSingle, id.ToString());
             //TResource entity = null;
             TEntity entity;
             if (ShouldIncludeRelationships())
             {
                 entity = await GetWithRelationshipsAsync(id);
-            } else
+            }
+            else
             {
                 entity = await _entities.GetAsync(id);
             }
             // @TODO implement hook executor
-            // entity = _hookExecutor.AfterRead(entity, ResourceAction.ReadSingle).SingleOrDefault();
+            // entity = _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
             // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
             // for every included entity.
             return MapOut(entity);
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Services
             // _hookExecutor.BeforeRead(id, ResourceAction.GetRelationship)
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             // @TODO implement hook executor
-            // entity = _hookExecutor.AfterRead(entity, ResourceAction.GetRelationship).SingleOrDefault();
+            // entity = _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
             // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
             // for every included entity.
 
@@ -198,11 +198,10 @@ namespace JsonApiDotNetCore.Services
             var entity = MapIn(resource);
 
             // @TODO implement hook executor
-            // entity = _hookExecutor.BeforeUpdate(entity, ResourceAction.Update)
+            // entity = _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Update).SingleOrDefault();
             entity = await _entities.UpdateAsync(id, entity);
             // @TODO implement hook executor
-            // entity = _hookExecutor.AfterUpdate(entity, ResourceAction.Update)
-
+            // entity = _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Update).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -238,14 +237,14 @@ namespace JsonApiDotNetCore.Services
 
 
             // @TODO implement hook executor
-            // entity = _hookExecutor.BeforeUpdate(entity, ResourceAction.UpdateRelationships)
+            // entity = _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.UpdateRelationships).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
             // Note the call in previous line relies on Generic Processor to update relations.
-            // In this call, _hookExecutor will call the BeforeUpdate and AfterUpdate
+            // In this call, _hookExecutor will call the BeforeUpdate and AfterUpdate.SingleOrDefault();
             // hooks for the target relation entities. See the SetRelationshipsAsync
             // method in GenericProcessor.cs
             // @TODO implement hook executor
-            // _hookExecutor.AfterUpdate(entity, ResourceAction.UpdateRelationships)
+            // entity = _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationships).SingleOrDefault();
 
             relationship.Type = relationshipType;
         }
@@ -334,5 +333,10 @@ namespace JsonApiDotNetCore.Services
             => (typeof(TResource) == typeof(TEntity))
                 ? resource as TEntity
                 : _mapper.Map<TEntity>(resource);
+
+        private TEntity[] AsList(TEntity entity)
+        {
+            return new TEntity[] { entity };
+        }
     }
 }
