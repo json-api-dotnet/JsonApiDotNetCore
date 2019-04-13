@@ -163,7 +163,7 @@ namespace JsonApiDotNetCore.Data
         {
             foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
             {
-                var hasOne = (HasOneAttribute) hasOneRelationship.Key;
+                var hasOne = (HasOneAttribute)hasOneRelationship.Key;
                 if (hasOne.EntityPropertyName != null)
                 {
                     var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
             {
-                var hasMany = (HasManyAttribute) hasManyRelationship.Key;
+                var hasMany = (HasManyAttribute)hasManyRelationship.Key;
                 if (hasMany.EntityPropertyName != null)
                 {
                     var relatedList = (IList)entity.GetType().GetProperty(hasMany.EntityPropertyName)?.GetValue(entity);
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Data
                         _context.Entry(pointer).State = EntityState.Detached;
                     }
                 }
-                
+
                 // HACK: detaching has many relationships doesn't appear to be sufficient
                 // the navigation property actually needs to be nulled out, otherwise
                 // EF adds duplicate instances to the collection
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Data
                 {
                     _context.Entry(pointer).State = EntityState.Unchanged;
                 }
-            }  
+            }
         }
 
         private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
@@ -270,7 +270,7 @@ namespace JsonApiDotNetCore.Data
                 if (relationship.Key.GetType() != typeof(HasOneAttribute))
                     continue;
 
-                var hasOne = (HasOneAttribute) relationship.Key;
+                var hasOne = (HasOneAttribute)relationship.Key;
                 if (hasOne.EntityPropertyName != null)
                 {
                     var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
@@ -296,13 +296,20 @@ namespace JsonApiDotNetCore.Data
             foreach (var attr in _jsonApiContext.AttributesToUpdate)
                 attr.Key.SetValue(oldEntity, attr.Value);
 
-            foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
-                relationship.Key.SetValue(oldEntity, relationship.Value);
-
-            AttachRelationships(oldEntity);
-
+            if (_jsonApiContext.RelationshipsToUpdate.Any())
+            {
+                AttachRelationships(oldEntity);
+                foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
+                {
+                    /// If we are updating to-many relations from PATCH, we need to include the relation first,
+                    /// else it will not peform a complete replacement, as required by the specs.
+                    /// Also, we currently do not support the same for many-to-many
+                    if (relationship.Key is HasManyAttribute && !(relationship.Key is HasManyThroughAttribute))
+                        await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
+                    relationship.Key.SetValue(oldEntity, relationship.Value); // article.tags = nieuwe lijst    
+                }
+            }
             await _context.SaveChangesAsync();
-
             return oldEntity;
         }
 
@@ -366,7 +373,7 @@ namespace JsonApiDotNetCore.Data
                     ? relationship.RelationshipPath
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
 
-                if(i < relationshipChain.Length)
+                if (i < relationshipChain.Length)
                     entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
             }
 
