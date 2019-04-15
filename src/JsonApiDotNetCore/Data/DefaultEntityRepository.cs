@@ -298,15 +298,23 @@ namespace JsonApiDotNetCore.Data
 
             if (_jsonApiContext.RelationshipsToUpdate.Any())
             {
-                AttachRelationships(oldEntity);
                 foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 {
-                    /// If we are updating to-many relations from PATCH, we need to include the relation first,
-                    /// else it will not peform a complete replacement, as required by the specs.
-                    /// Also, we currently do not support the same for many-to-many
+
                     if (relationship.Key is HasManyAttribute && !(relationship.Key is HasManyThroughAttribute))
-                        await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
-                    relationship.Key.SetValue(oldEntity, relationship.Value); // article.tags = nieuwe lijst    
+                    {
+                        /// If we are updating to-many relations from PATCH, we need to include the relation first,
+                        /// else it will not peform a complete replacement, as required by the specs.
+                        relationship.Key.SetValue(oldEntity, relationship.Value);
+                    } else if (relationship.Key is HasManyThroughAttribute throughAttribute)
+                    {
+                        // If we're updating many-to-many, we only have to load the ArticleTags.
+                        // The new value was already set in the AttachRelationships(oldEntity) call.
+                        // @TODO: It it not consistent that for many-to-many, the new relation value
+                        // is assigned in a helper function, whereas for one-to-many, it happens here.
+                        await _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).LoadAsync();
+                        AttachRelationships(oldEntity);
+                    }
                 }
             }
             await _context.SaveChangesAsync();
