@@ -298,22 +298,31 @@ namespace JsonApiDotNetCore.Data
 
             if (_jsonApiContext.RelationshipsToUpdate.Any())
             {
+                /// For one-to-many and many-to-many, the PATCH must perform a 
+                /// complete replace. When assigning new relationship values, 
+                /// it will only be like this if the to-be-replaced entities are loaded
                 foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 {
-
-                    if (relationship.Key is HasManyAttribute && !(relationship.Key is HasManyThroughAttribute))
+                    if (relationship.Key is HasManyThroughAttribute throughAttribute)
                     {
-                        /// If we are updating to-many relations from PATCH, we need to include the relation first,
-                        /// else it will not peform a complete replacement, as required by the specs.
-                        relationship.Key.SetValue(oldEntity, relationship.Value);
-                    } else if (relationship.Key is HasManyThroughAttribute throughAttribute)
-                    {
-                        // If we're updating many-to-many, we only have to load the ArticleTags.
-                        // The new value was already set in the AttachRelationships(oldEntity) call.
-                        // @TODO: It it not consistent that for many-to-many, the new relation value
-                        // is assigned in a helper function, whereas for one-to-many, it happens here.
                         await _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).LoadAsync();
-                        AttachRelationships(oldEntity);
+                    }
+                    else if (relationship.Key is HasManyAttribute)
+                    { 
+                        await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
+                    }
+                }
+                AttachRelationships(oldEntity);
+
+                /// @TODO: It it not consistent that for many-to-many, the new relationship value
+                /// is assigned in AttachRelationships() helperfunction, whereas for
+                /// one-to-many and one-to-one, we need to do it manually as below.
+                /// As a result, we need to loop over RelationshipsToUpdate a second time.
+                foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
+                {
+                    if (!(relationship.Key is HasManyThroughAttribute))
+                    { 
+                        relationship.Key.SetValue(oldEntity, relationship.Value);
                     }
                 }
             }
