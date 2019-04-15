@@ -256,6 +256,69 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Can_Update_Many_To_Many_With_Complete_Replacement()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var firstTag = _tagFaker.Generate();
+            var article = _articleFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = firstTag
+            };
+            context.ArticleTags.Add(articleTag);
+            await context.SaveChangesAsync();
+
+            var secondTag = _tagFaker.Generate();
+
+            var route = $"/api/v1/articles/{article.Id}";
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "articles",
+                    id = article.StringId,
+                    relationships = new Dictionary<string, dynamic>
+                    {
+                        {  "tags",  new {
+                            data = new [] { new
+                            {
+                                type = "tags",
+                                id = firstTag.StringId
+                            },   new
+                            {
+                                type = "tags",
+                                id = secondTag.StringId
+                            }  }
+                        } }
+                    }
+                }
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            Assert.NotNull(articleResponse);
+
+            _fixture.ReloadDbContext();
+            var persistedArticle = await _fixture.Context.Articles
+                .Include(a => a.ArticleTags)
+                .SingleOrDefaultAsync( a => a.Id == article.Id);
+            var tags = persistedArticle.ArticleTags.Select(at => at.Tag).ToList();
+            Assert.Equal(2, tags.Count);
+        }
+
+        [Fact]
         public async Task Can_Update_Many_To_Many_Through_Relationship_Link()
         {
             // arrange
