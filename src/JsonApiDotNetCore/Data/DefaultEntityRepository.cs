@@ -225,13 +225,15 @@ namespace JsonApiDotNetCore.Data
                 var relatedList = (IList)entity.GetType().GetProperty(relationship.EntityPropertyName)?.GetValue(entity);
                 foreach (var related in relatedList)
                 {
-                    _context.Entry(related).State = EntityState.Unchanged;
+                    if (_context.EntityIsTracked(related as IIdentifiable) == false)
+                        _context.Entry(related).State = EntityState.Unchanged;
                 }
             }
             else
             {
                 foreach (var pointer in pointers)
                 {
+                    if (_context.EntityIsTracked(pointer as IIdentifiable) == false)
                     _context.Entry(pointer).State = EntityState.Unchanged;
                 }
             }
@@ -307,21 +309,27 @@ namespace JsonApiDotNetCore.Data
                     {
                         await _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).LoadAsync();
                     }
-                    else if (relationship.Key is HasManyAttribute)
-                    { 
-                        await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
-                    }
                 }
+
+                /// @HACK @TODO: It is inconsistent that for many-to-many, the new relationship value
+                /// is assigned in AttachRelationships() helper fn below, but not for 
+                /// one-to-many and one-to-one (we need to do that manually as done below).
+                /// Simultaneously, for a proper working "complete replacement", in the case of many-to-many
+                /// we need to LoadAsync() BEFORE calling AttachRelationships(), but for one-to-many we 
+                /// need to do it AFTER AttachRelationships or we we'll get entity tracking errors
+                /// This really needs a refactor.
                 AttachRelationships(oldEntity);
 
-                /// @TODO: It it not consistent that for many-to-many, the new relationship value
-                /// is assigned in AttachRelationships() helperfunction, whereas for
-                /// one-to-many and one-to-one, we need to do it manually as below.
-                /// As a result, we need to loop over RelationshipsToUpdate a second time.
                 foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 {
-                    if (!(relationship.Key is HasManyThroughAttribute))
-                    { 
+
+                    if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasOneAttribute)))
+                    {
+                        relationship.Key.SetValue(oldEntity, relationship.Value);
+                    }
+                    if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasManyAttribute)))
+                    {
+                        await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
                         relationship.Key.SetValue(oldEntity, relationship.Value);
                     }
                 }

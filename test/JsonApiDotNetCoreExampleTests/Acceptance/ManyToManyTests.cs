@@ -313,6 +313,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var tag = persistedArticle.ArticleTags.Select(at => at.Tag).Single();
             Assert.Equal(secondTag.Id, tag.Id);
         }
+
         [Fact]
         public async Task Can_Update_Many_To_Many_With_Complete_Replacement_With_Overlap()
         {
