@@ -69,13 +69,14 @@ namespace JsonApiDotNetCore.Services
             /// we should still consider to fire the hooks of its relation, eg TodoItem.Owner
             if (hookContainer == null) return entities; 
 
-            entities = hookContainer.AfterCreate(entities, actionSource);
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return container.AfterUpdate(relatedEntities, actionSource);
             });
+
+            entities = hookContainer.AfterCreate(entities, actionSource);
 
             return entities;
         }
@@ -85,9 +86,7 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
             if (hookContainer == null) return;
-
-
-            throw new NotImplementedException();
+            hookContainer.BeforeRead(actionSource, stringId);
         }
 
         /// <inheritdoc/>
@@ -95,14 +94,14 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
             if (hookContainer == null) return entities;
-            entities = hookContainer.AfterRead(entities, actionSource);
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
+            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterRead);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                container.BeforeRead(actionSource);
                 return container.AfterRead(relatedEntities, actionSource);
             });
+            entities = hookContainer.AfterRead(entities, actionSource);
+
             return entities;
         }
 
@@ -112,8 +111,15 @@ namespace JsonApiDotNetCore.Services
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
             if (hookContainer == null) return entities;
 
+            entities = hookContainer.BeforeUpdate(entities, actionSource);
 
-            throw new NotImplementedException();
+            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
+            BreadthFirstTraverse(entities, (container, relatedEntities) =>
+            {
+                return container.BeforeUpdate(relatedEntities, actionSource);
+            });
+
+            return entities;
         }
 
         /// <inheritdoc/>
@@ -123,7 +129,16 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer == null) return entities;
 
 
-            throw new NotImplementedException();
+            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
+            BreadthFirstTraverse(entities, (container, relatedEntities) =>
+            {
+                return container.AfterUpdate(relatedEntities, actionSource);
+            });
+
+            entities = hookContainer.AfterUpdate(entities, actionSource);
+
+
+            return entities;
         }
 
         /// <inheritdoc/>
