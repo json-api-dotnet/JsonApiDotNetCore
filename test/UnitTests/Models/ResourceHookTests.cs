@@ -40,8 +40,16 @@ namespace UnitTests.Models
             Assert.Equal(2, hookConfig.ImplementedHooks.Length);
         }
 
+        IImplementedResourceHooks<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks)
+            where TEntity : class, IIdentifiable
+        {
+            var mock = new Mock<IImplementedResourceHooks<TEntity>>();
+            mock.Setup(discovery => discovery.ImplementedHooks)
+                .Returns(implementedHooks);
+            return mock.Object;
+        }
         [Fact]
-        public void BeforeCreate_Hook_Is_Called()
+        public void BeforeCreate_Hook_Is_Called_With_Nested_BeforeUpdate()
         {
             // arrange
             (var contextMock, var hookExecutor, var todoResourceMock,
@@ -59,7 +67,7 @@ namespace UnitTests.Models
         }
 
         [Fact]
-        public void AfterCreate_Hook_Is_Called()
+        public void AfterCreate_Hook_Is_Called_With_Nested_AfterUpdate()
         {
             // arrange
             (var contextMock, var hookExecutor, var todoResourceMock,
@@ -142,8 +150,9 @@ namespace UnitTests.Models
         (Mock<IResourceHookContainer<TodoItem>>, Mock<IJsonApiContext>, IResourceHookExecutor<TodoItem>, Mock<IResourceHookContainer<IIdentifiable>>) CreateTestObjectsForSimpleCase()
         {
 
+            var discovery = new ImplementedResourceHooks<TodoItem>();
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
-            (var hooksDiscovery, var todoItemResource, var identifiableTodoItemResource) = CreateResourceDefinition<TodoItem>();
+            (var todoItemResource, var identifiableTodoItemResource) = CreateResourceDefinition<TodoItem>(discovery);
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
@@ -151,19 +160,25 @@ namespace UnitTests.Models
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
             SetupProcessorFactoryForResourceDefinition<TodoItem, TodoItem>(processorFactory, todoItemResource.Object);
             var meta = new ResourceHookMetaInfo(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
-            var hookExecutor = new ResourceHookExecutor<TodoItem>(context.Object, hooksDiscovery, meta);
+            var hookExecutor = new ResourceHookExecutor<TodoItem>(context.Object, discovery, meta);
             return (todoItemResource, context, hookExecutor, identifiableTodoItemResource);
         }
 
         (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<IIdentifiable>>)
-            CreateTestObjectsForNestedCase<TMain, TNested>()
+            CreateTestObjectsForNestedCase<TMain, TNested>(
+            IImplementedResourceHooks<TMain> mainDiscovery = null,
+            IImplementedResourceHooks<TNested> nestedDiscovery = null
+            )
             where TMain : class, IIdentifiable
             where TNested : class, IIdentifiable
         {
+            mainDiscovery = mainDiscovery ?? new ImplementedResourceHooks<TMain>();
+            nestedDiscovery = nestedDiscovery ?? new ImplementedResourceHooks<TNested>();
 
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
-            (var mainDiscovery, var mainResource, var identifiableMainResource) = CreateResourceDefinition<TMain>();
-            var identifiableNestedResource = CreateResourceDefinition<TNested>().Item3;
+            (var mainResource, var identifiableMainResource) = CreateResourceDefinition<TMain>(mainDiscovery);
+            var identifiableNestedResource = CreateResourceDefinition<TNested>(nestedDiscovery).Item2;
+
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
@@ -178,7 +193,7 @@ namespace UnitTests.Models
 
         Mock<IResourceHookContainer<TImplementAs>> ImplementAs<TImplementAs, TActual>(
             Mock<IResourceHookContainer<TImplementAs>> resourceDefinition,
-            ImplementedResourceHooks<TActual> discovery
+            IImplementedResourceHooks<TActual> discovery
             ) where TImplementAs : class, IIdentifiable
                 where TActual : class, IIdentifiable
         {
@@ -230,17 +245,16 @@ namespace UnitTests.Models
             return resourceDefinition;
         }
 
-        (ImplementedResourceHooks<TModel>, Mock<IResourceHookContainer<TModel>>, Mock<IResourceHookContainer<IIdentifiable>>) CreateResourceDefinition
-            <TModel>()
+        (Mock<IResourceHookContainer<TModel>>, Mock<IResourceHookContainer<IIdentifiable>>) CreateResourceDefinition
+            <TModel>(IImplementedResourceHooks<TModel> discovery)
             where TModel : class, IIdentifiable
         {
-            var discovery = new ImplementedResourceHooks<TModel>();
             var resourceDefinition = new Mock<IResourceHookContainer<TModel>>();
 
             var identifiableResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<IIdentifiable>>(), discovery);
             var modelSpecificResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<TModel>>(), discovery);
 
-            return (discovery, modelSpecificResourceDefinition, identifiableResourceDefinition);
+            return (modelSpecificResourceDefinition, identifiableResourceDefinition);
         }
 
 

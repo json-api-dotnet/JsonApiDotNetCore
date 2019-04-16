@@ -54,30 +54,23 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The implemented hooks for model.</returns>
         void DiscoverImplementedHooksForModel()
         {
-            if (!_isInitialized)
+            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(IResourceHookContainer<TEntity>));
+            try
             {
-                _isInitialized = true;
-            }
-            else
+                Type targetType = derivedTypes.SingleOrDefault(); // multiple containers is not supported
+                if (targetType != null)
+                {
+                    ImplementedHooks = _allHooks.Where(h => targetType.GetMethod(h.ToString("G")).DeclaringType == targetType)
+                                                .ToArray();
+                }
+                else
+                {
+                    ImplementedHooks = new ResourceHook[0];
+                }
+            } catch (Exception e)
             {
-                throw new JsonApiSetupException($@"Implemented hooks may be discovered only once.
-                    Adding such implementations at runtime is currently not supported.");
-            }
-
-           Type resourceDefinitionImplementationType = null;
-
-            foreach (var match in TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(ResourceDefinition<TEntity>)))
-            {
-                resourceDefinitionImplementationType = match;
-                break;
-            }
-            if (resourceDefinitionImplementationType != null)
-            {
-                ImplementedHooks = _allHooks.Where(h => resourceDefinitionImplementationType.GetMethod(h.ToString("G")).DeclaringType == resourceDefinitionImplementationType)
-                                            .ToArray();
-            } else
-            {
-                ImplementedHooks = new ResourceHook[0];
+                throw new JsonApiSetupException($@"Incorrect resource hook setup. For a given model of type TEntity, 
+                only one class may implement IResourceHookContainer<TEntity>");
             }
 
         }
