@@ -10,8 +10,8 @@ namespace JsonApiDotNetCore.Services
     public interface IResourceHookMetaInfo
     {
         IEnumerable<RelationshipAttribute> GetMetaEntries(IIdentifiable currentLayerEntity);
-        IResourceHookContainer<IIdentifiable> GetResourceDefinition(Type targetEntity, ResourceHook hook = ResourceHook.None);
-        IResourceHookContainer<TEntity> GetResourceDefinition<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
+        IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None);
+        IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
         Dictionary<string, RelationshipAttribute> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, ResourceHook hook = ResourceHook.None);
     }
 
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Services
 
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
-        protected readonly Dictionary<Type, IResourceHookContainer<IIdentifiable>> _executors;
+        protected readonly Dictionary<Type, IResourceHookContainer<IIdentifiable>> _hookContainers;
         protected ResourceHook _hookInTreeTraversal;
         protected Dictionary<string, RelationshipAttribute> _meta;
 
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Services
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
             _meta = new Dictionary<string, RelationshipAttribute>();
-            _executors = new Dictionary<Type, IResourceHookContainer<IIdentifiable>>();
+            _hookContainers = new Dictionary<Type, IResourceHookContainer<IIdentifiable>>();
         }
 
 
@@ -53,32 +53,43 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// For a particular ResourceHook, checks if the ResourceDefinition has it implemented
+        /// For a particular ResourceHook and for a given model type, checks if 
+        /// the ResourceDefinition has an implementation for the hook
         /// and if so, return it.
+        /// 
+        /// Also caches the retrieves containers so we don't need to reflectively
+        /// instantiate multiple times.
         /// </summary>
         /// <returns>The resource definition.</returns>
-        /// <typeparam name="TEntity">Target entity type</typeparam>
-        public IResourceHookContainer<IIdentifiable> GetResourceDefinition(Type targetEntity, ResourceHook hook = ResourceHook.None)
+        /// <param name="targetEntity">Target entity type</param>
+        /// <param name="hook">The hook to get a ResourceDefinition for.</param>
+        public IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None)
         {
             hook = (hook == ResourceHook.None) ? _hookInTreeTraversal : hook;
-            if (!_executors.TryGetValue(targetEntity, out IResourceHookContainer<IIdentifiable> executor))
+            if (!_hookContainers.TryGetValue(targetEntity, out IResourceHookContainer<IIdentifiable> container))
             {
-                executor = (IResourceHookContainer<IIdentifiable>)_genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), targetEntity);
+                container = (IResourceHookContainer<IIdentifiable>)_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(IResourceHookContainer<>), targetEntity);
+                _hookContainers[targetEntity] = container;
             }
-            _executors[targetEntity] = executor;
-            if (!executor.ShouldExecuteHook(hook)) executor = null;
-            return executor;
+            if (container == null) return container;
+            if (!container.ShouldExecuteHook(hook)) container = null;
+            return container;
         }
 
         /// <summary>
-        /// For a particular ResourceHook, checks if the ResourceDefinition has it implemented
+        /// For a particular ResourceHook and for a given model type, checks if 
+        /// the ResourceDefinition has an implementation for the hook
         /// and if so, return it.
+        /// 
+        /// Also caches the retrieves containers so we don't need to reflectively
+        /// instantiate multiple times.
         /// </summary>
         /// <returns>The resource definition.</returns>
         /// <typeparam name="TEntity">Target entity type</typeparam>
-        public IResourceHookContainer<TEntity> GetResourceDefinition<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable
+        /// <param name="hook">The hook to get a ResourceDefinition for.</param>
+        public IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable
         {
-            return (IResourceHookContainer<TEntity>)GetResourceDefinition(typeof(TEntity), hook);
+            return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
 
         /// <summary>
@@ -131,7 +142,7 @@ namespace JsonApiDotNetCore.Services
         string CreateMetaKey(RelationshipAttribute attr, Type parentType, bool checkForDuplicates = false)
         {
             var relationType = attr.IsHasOne ? "has-one" : "has-many";
-            string newKey = $"{parentType.Name} {relationType} {attr.Type.Name}";
+            string newKey = $"{parentType.Name} {relationType} {attr.RelationshipPath}";
             if (checkForDuplicates && _meta.ContainsKey(newKey))
             {
                 return $"DUPLICATE-{Guid.NewGuid()}";
@@ -152,12 +163,12 @@ namespace JsonApiDotNetCore.Services
             Dictionary<string, RelationshipAttribute> meta,
             ResourceHook targetHook)
         {
-            var dupes = meta.Where(pair => pair.Key.Contains("DUPLICATE")).Select(pair => pair.Key);
+            var dupes = meta.Where(pair => pair.Key.Contains("DUPLICATE")).Select(pair => pair.Key).ToArray();
             foreach (string target in dupes)
             {
                 meta.Remove(target);
             }
-            var noHookImplementation = meta.Where(pair => GetResourceDefinition(pair.Value.Type, targetHook) == null).Select(pair => pair.Key);
+            var noHookImplementation = meta.Where(pair => GetResourceHookContainer(pair.Value.Type, targetHook) == null).Select(pair => pair.Key).ToArray();
             foreach (string target in noHookImplementation)
             {
                 meta.Remove(target);

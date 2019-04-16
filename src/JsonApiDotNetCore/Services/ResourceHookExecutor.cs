@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual IEnumerable<TEntity> BeforeCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.BeforeCreate);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
             if (hookContainer == null) return entities;
             /// traversing the 0th layer. Not including this in the recursive function
             /// because the most complexities that arrise in the tree traversal do not
@@ -64,16 +64,26 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.AfterCreate);
-            if (hookContainer == null) return entities;
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
+            /// @TODO: even if we don't have an implementation for eg TodoItem AfterCreate, 
+            /// we should still consider to fire the hooks of its relation, eg TodoItem.Owner
+            if (hookContainer == null) return entities; 
 
-            return hookContainer.AfterCreate(entities, actionSource);
+            entities = hookContainer.AfterCreate(entities, actionSource);
+
+            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
+            BreadthFirstTraverse(entities, (container, relatedEntities) =>
+            {
+                return container.AfterUpdate(relatedEntities, actionSource);
+            });
+
+            return entities;
         }
 
         /// <inheritdoc/>
         public virtual void BeforeRead(ResourceAction actionSource, string stringId = null)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.BeforeRead);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
             if (hookContainer == null) return;
 
 
@@ -83,7 +93,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterRead(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.AfterRead);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
             if (hookContainer == null) return entities;
             entities = hookContainer.AfterRead(entities, actionSource);
 
@@ -99,7 +109,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.BeforeUpdate);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
             if (hookContainer == null) return entities;
 
 
@@ -109,7 +119,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.AfterUpdate);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
             if (hookContainer == null) return entities;
 
 
@@ -119,7 +129,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual void BeforeDelete(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.BeforeDelete);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
             if (hookContainer == null) return;
 
             hookContainer.BeforeDelete(entities, actionSource);
@@ -128,7 +138,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual void AfterDelete(IEnumerable<TEntity> entities, bool succeeded, ResourceAction actionSource)
         {
-            var hookContainer = _meta.GetResourceDefinition<TEntity>(ResourceHook.AfterDelete);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
             if (hookContainer == null) return;
 
             hookContainer.AfterDelete(entities, succeeded, actionSource);
@@ -178,6 +188,8 @@ namespace JsonApiDotNetCore.Services
                 foreach (RelationshipAttribute attr in _meta.GetMetaEntries(currentLayerEntity))
                 {
                     var relationshipValue = attr.GetValue(currentLayerEntity);
+                    // skip iteration if there is no relation assigned @TODO what about to-many: will we have empty lists or null? and how does this relate to that being Included by query params
+                    if (relationshipValue == null) continue;
                     if (!(relationshipValue is IEnumerable<IIdentifiable>))
                     {
                         // in the case of a to-one relationship, the assigned value
@@ -211,18 +223,20 @@ namespace JsonApiDotNetCore.Services
             Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecution
             )
         {
-            foreach (var pair in relationshipsInCurrentLayer)
+            var relationships = relationshipsInCurrentLayer.Keys.ToArray();
+
+            foreach (var attr in relationships)
             {
-                var attr = pair.Key;
-                var uniqueEntities = new HashSet<IIdentifiable>(pair.Value);
-                var executor = _meta.GetResourceDefinition(attr.Type);
-                var filteredUniqueEntites = hookExecution(executor, uniqueEntities);
-                relationshipsInCurrentLayer[pair.Key] = filteredUniqueEntites.ToArray();
+                var entities = relationshipsInCurrentLayer[attr];
+                var uniqueEntities = new HashSet<IIdentifiable>(entities);
+                var innerHookContainer = _meta.GetResourceHookContainer(attr.Type);
+                var filteredUniqueEntites = hookExecution(innerHookContainer, uniqueEntities);
+                relationshipsInCurrentLayer[attr] = filteredUniqueEntites.ToArray();
             }
         }
 
         /// <summary>
-        /// When this method is called, the values in relationshipsInCurrentLayer
+        /// B this method is called, the values in relationshipsInCurrentLayer
         /// will contain a subset compared to in the DoExtractionLoop call.
         /// We now need to iterate through currentLayer again and remove any of 
         /// their related entities that do not occur in relationshipsInCurrentLayer
@@ -241,7 +255,11 @@ namespace JsonApiDotNetCore.Services
             {
                 foreach (RelationshipAttribute attr in _meta.GetMetaEntries(currentLayerEntity))
                 {
-                    var parsedEntities = relationshipsInCurrentLayer[attr];
+                    // skip the iteration there is nothing to a given relationship
+                    if (!relationshipsInCurrentLayer.TryGetValue(attr, out var parsedEntities))
+                    {
+                        continue;
+                    }
 
                     var relationshipValue = attr.GetValue(currentLayerEntity);
                     if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)

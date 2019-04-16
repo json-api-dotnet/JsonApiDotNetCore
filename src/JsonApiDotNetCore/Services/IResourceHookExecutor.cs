@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Services
     /// See IResourceHookExecutor<typeparamref name="T"/> for details on the 
     /// resource hook execution flow.
     /// </summary>
-    public interface IResourceHookContainer<T> : IResourceHookBase<T> where T : class, IIdentifiable
+    public interface IResourceHookContainer<T> : IResourceHookContainer, IResourceHookBase<T> where T : class, IIdentifiable
     {
         /// <summary>
         /// Checks whether a hook should be executed or not through reflective 
@@ -143,6 +143,11 @@ namespace JsonApiDotNetCore.Services
         bool ShouldExecuteHook(ResourceHook hook);
     }
 
+
+    public interface IResourceHookContainer
+    {
+
+    }
 
 
     /// <summary>
