@@ -186,7 +186,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 entity = attr.IsHasOne
                     ? SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, contextEntity, relationships, included)
-                    : SetHasManyRelationship(entity, entityProperties, attr, contextEntity, relationships, included);
+                    : SetHasManyRelationship(entity, entityProperties, (HasManyAttribute)attr, contextEntity, relationships, included);
             }
 
             return entity;
@@ -274,7 +274,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object SetHasManyRelationship(object entity,
             PropertyInfo[] entityProperties,
-            RelationshipAttribute attr,
+            HasManyAttribute attr,
             ContextEntity contextEntity,
             Dictionary<string, RelationshipData> relationships,
             List<ResourceObject> included = null)
@@ -295,7 +295,7 @@ namespace JsonApiDotNetCore.Serialization
                 var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.Type);
 
                 attr.SetValue(entity, convertedCollection);
-
+                _jsonApiContext.RelationshipsToUpdate[attr] = convertedCollection;
                 _jsonApiContext.HasManyRelationshipPointers.Add(attr, convertedCollection);
             }
 

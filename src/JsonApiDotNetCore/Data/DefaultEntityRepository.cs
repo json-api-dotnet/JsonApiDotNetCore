@@ -314,13 +314,20 @@ namespace JsonApiDotNetCore.Data
             foreach (var attr in _jsonApiContext.AttributesToUpdate)
                 attr.Key.SetValue(oldEntity, attr.Value);
 
-            foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
-                relationship.Key.SetValue(oldEntity, relationship.Value);
-
-            AttachRelationships(oldEntity);
-
+            if (_jsonApiContext.RelationshipsToUpdate.Any())
+            {
+                AttachRelationships(oldEntity);
+                foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
+                {
+                    /// If we are updating to-many relations from PATCH, we need to include the relation first,
+                    /// else it will not peform a complete replacement, as required by the specs.
+                    /// Also, we currently do not support the same for many-to-many
+                    if (relationship.Key is HasManyAttribute && !(relationship.Key is HasManyThroughAttribute))
+                        await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
+                    relationship.Key.SetValue(oldEntity, relationship.Value); // article.tags = nieuwe lijst    
+                }
+            }
             await _context.SaveChangesAsync();
-
             return oldEntity;
         }
 

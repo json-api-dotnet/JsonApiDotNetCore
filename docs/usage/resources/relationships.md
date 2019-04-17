@@ -20,7 +20,7 @@ public class TodoItem : Identifiable<int>
 }
 ```
 
-The convention used used to locate the foreign key property (e.g. `OwnerId`) can be changed on
+The convention used to locate the foreign key property (e.g. `OwnerId`) can be changed on
 the @JsonApiDotNetCore.Configuration.JsonApiOptions#JsonApiDotNetCore_Configuration_JsonApiOptions_RelatedIdMapper
 
 ## HasMany

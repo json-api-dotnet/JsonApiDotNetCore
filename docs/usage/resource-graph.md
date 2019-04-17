@@ -19,7 +19,7 @@ There are three ways the resource graph can be created:
 Auto-discovery refers to process of reflecting on an assembly and 
 detecting all of the json:api resources and services.
 
-The following command will build the context graph using all `IIdentifiable`
+The following command will build the resource graph using all `IIdentifiable`
 implementations. It also injects service layer overrides which we will 
 cover in a later section. You can enable auto-discovery for the 
 current assembly by adding the following to your `Startup` class.
