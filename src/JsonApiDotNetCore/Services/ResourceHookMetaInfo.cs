@@ -73,8 +73,7 @@ namespace JsonApiDotNetCore.Services
             /// so we need not even bother.
             if (!_hookContainers.TryGetValue(targetEntity, out IResourceHookContainer<IIdentifiable> container))
             {
-
-                container = (IResourceHookContainer<IIdentifiable>)_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(IResourceHookContainer<>), targetEntity);
+                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(IResourceHookContainer<>), targetEntity)) as IResourceHookContainer<IIdentifiable>;
                 _hookContainers[targetEntity] = container;
             }
             if (container == null) return container;

@@ -228,6 +228,9 @@ namespace JsonApiDotNetCore.Services
         {
             // for the entities in the current layer: get the collection of all related entities
             var relationshipsInCurrentLayer = ExtractionLoop(currentLayer);
+
+            if (!relationshipsInCurrentLayer.Any()) return;
+
             // for the unique set of entities in that collection, execute the hooks
             ExecutionLoop(relationshipsInCurrentLayer, hookExecutionAction);
             // for the entities in the current layer: reassign relationships where needed.
