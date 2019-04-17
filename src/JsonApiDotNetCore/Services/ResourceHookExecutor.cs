@@ -239,7 +239,7 @@ namespace JsonApiDotNetCore.Services
             var nextLayer = relationshipsInCurrentLayer.Values.SelectMany(entities => entities);
             if (nextLayer.Any())
             {
-                var uniqueTypesInNextLayer = relationshipsInCurrentLayer.Keys.Select(k => k.Type);
+                var uniqueTypesInNextLayer = relationshipsInCurrentLayer.Keys.Select(k => k.TargetType);
                 _meta.UpdateMetaInformation(uniqueTypesInNextLayer);
                 BreadthFirstTraverse(nextLayer, hookExecutionAction);
             }
@@ -253,34 +253,35 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <returns>Hook targets for current layer.</returns>
         /// <param name="currentLayer">Current layer.</param>
-        Dictionary<RelationshipAttribute, IEnumerable<IIdentifiable>> ExtractionLoop(
+        Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>> ExtractionLoop(
             IEnumerable<IIdentifiable> currentLayer
             )
         {
-            var relationshipsInCurrentLayer = new Dictionary<RelationshipAttribute, IEnumerable<IIdentifiable>>();
+            var relationshipsInCurrentLayer = new Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>>();
             foreach (IIdentifiable currentLayerEntity in currentLayer)
             {
-                foreach (RelationshipAttribute attr in _meta.GetMetaEntries(currentLayerEntity))
+                foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
                 {
-                    var relationshipValue = attr.GetValue(currentLayerEntity);
+
+                    var relationshipValue = proxy.GetValue(currentLayerEntity);
                     // skip iteration if there is no relation assigned @TODO what about to-many: will we have empty lists or null? and how does this relate to that being Included by query params
                     if (relationshipValue == null) continue;
-                    if (!(relationshipValue is IEnumerable<IIdentifiable>))
+                    if (!(relationshipValue is IEnumerable<IIdentifiable> relatedEntities))
                     {
                         // in the case of a to-one relationship, the assigned value
                         // will not be a list. We therefore first wrap it in a list.
                         var list = TypeHelper.CreateListFor(relationshipValue.GetType());
                         list.Add(relationshipValue);
-                        relationshipValue = list;
+                        relatedEntities = (IEnumerable<IIdentifiable>)list;
                     }
-                    var relatedEntities = relationshipValue as IEnumerable<IIdentifiable>;
-                    if (!relationshipsInCurrentLayer.ContainsKey(attr))
+                    
+                    if (!relationshipsInCurrentLayer.ContainsKey(proxy))
                     {
-                        relationshipsInCurrentLayer[attr] = relatedEntities;
+                        relationshipsInCurrentLayer[proxy] = relatedEntities;
                     }
                     else
                     {
-                        relationshipsInCurrentLayer[attr].Concat(relatedEntities);
+                        relationshipsInCurrentLayer[proxy] = relationshipsInCurrentLayer[proxy].Concat(relatedEntities);
                     }
                 }
 
@@ -288,25 +289,26 @@ namespace JsonApiDotNetCore.Services
             return relationshipsInCurrentLayer;
         }
 
+
         /// <summary>
         /// Executes the hooks for every key in relationshipsInCurrentLayer,
         /// </summary>
         /// <param name="relationshipsInCurrentLayer">Hook targets for current layer.</param>
         /// <param name="hookExecution">Hook execution.</param>
         void ExecutionLoop(
-            Dictionary<RelationshipAttribute, IEnumerable<IIdentifiable>> relationshipsInCurrentLayer,
+            Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>> relationshipsInCurrentLayer,
             Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecution
             )
         {
             var relationships = relationshipsInCurrentLayer.Keys.ToArray();
 
-            foreach (var attr in relationships)
+            foreach (var proxy in relationships)
             {
-                var entities = relationshipsInCurrentLayer[attr];
+                var entities = relationshipsInCurrentLayer[proxy];
                 var uniqueEntities = new HashSet<IIdentifiable>(entities);
-                var innerHookContainer = _meta.GetResourceHookContainer(attr.Type);
+                var innerHookContainer = _meta.GetResourceHookContainer(proxy.TargetType);
                 var filteredUniqueEntites = hookExecution(innerHookContainer, uniqueEntities);
-                relationshipsInCurrentLayer[attr] = filteredUniqueEntites.ToArray();
+                relationshipsInCurrentLayer[proxy] = filteredUniqueEntites.ToArray();
             }
         }
 
@@ -320,7 +322,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="relationshipsInCurrentLayer">Hook targets for current layer.</param>
         void AssignmentLoop(
             IEnumerable<IIdentifiable> currentLayer,
-            Dictionary<RelationshipAttribute, IEnumerable<IIdentifiable>> relationshipsInCurrentLayer
+            Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>> relationshipsInCurrentLayer
             )
         {
             // @TODO IM NOT EVEN SURE IF WE NEED TO REASSIGN ?! 
@@ -328,25 +330,26 @@ namespace JsonApiDotNetCore.Services
             // to perform filter check
             foreach (IIdentifiable currentLayerEntity in currentLayer)
             {
-                foreach (RelationshipAttribute attr in _meta.GetMetaEntries(currentLayerEntity))
+                foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
                 {
+
                     // skip the iteration there is nothing to a given relationship
-                    if (!relationshipsInCurrentLayer.TryGetValue(attr, out var parsedEntities))
+                    if (!relationshipsInCurrentLayer.TryGetValue(proxy, out var parsedEntities))
                     {
                         continue;
                     }
 
-                    var relationshipValue = attr.GetValue(currentLayerEntity);
+                    var relationshipValue = proxy.GetValue(currentLayerEntity);
                     if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)
                     {
-                        relationshipValue = relationshipCollection.Intersect(parsedEntities);
-                        attr.SetValue(currentLayerEntity, relationshipValue);
+                        relationshipCollection = (relationshipCollection.Intersect(parsedEntities));
+                        proxy.SetValue(currentLayerEntity, relationshipCollection);
                     }
                     else if (relationshipValue is IIdentifiable relationshipSingle)
                     {
                         if (!parsedEntities.Contains(relationshipValue))
                         {
-                            attr.SetValue(currentLayerEntity, null);
+                            proxy.SetValue(currentLayerEntity, null);
                         }
                     }
                 }

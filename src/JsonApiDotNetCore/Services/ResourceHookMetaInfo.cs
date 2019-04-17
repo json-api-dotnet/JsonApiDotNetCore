@@ -1,19 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
+    public class RelationshipProxy
+    {
+        readonly bool _isHasManyThrough;
+        public RelationshipAttribute Attribute { get; set; }
+        public RelationshipProxy(RelationshipAttribute attr, Type targetType)
+        {
+            TargetType = targetType;
+            Attribute = attr;
+            _isHasManyThrough |= (attr is HasManyThroughAttribute throughAttr && TargetType == throughAttr.ThroughType);
+        }
+
+        public object GetValue(IIdentifiable entity)
+        {
+            if (_isHasManyThrough)
+            {
+                return ((HasManyThroughAttribute)Attribute).ThroughProperty.GetValue(entity);
+            }
+            return Attribute.GetValue(entity);
+        }
+
+        public void SetValue(IIdentifiable entity, object value)
+        {
+            if (_isHasManyThrough)
+            {
+                var list = (IEnumerable<object>)value;
+                ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, TargetType ));
+                return;
+            }
+            Attribute.SetValue(entity, value);
+        }
+
+        public Type TargetType { get; private set; }
+    }
+
     public interface IResourceHookMetaInfo
     {
-        IEnumerable<RelationshipAttribute> GetMetaEntries(IIdentifiable currentLayerEntity);
+        IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable currentLayerEntity);
         IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None);
         IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
-        Dictionary<string, RelationshipAttribute> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, ResourceHook hook = ResourceHook.None);
-        Dictionary<string, RelationshipAttribute> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, IEnumerable<ResourceHook> hooks);
+        Dictionary<string, RelationshipProxy> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, ResourceHook hook = ResourceHook.None);
+        Dictionary<string, RelationshipProxy> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, IEnumerable<ResourceHook> hooks);
+        Type GetTypeFromRelationshipAttribute(RelationshipAttribute attr);
     }
 
     public class ResourceHookMetaInfo : IResourceHookMetaInfo
@@ -23,7 +59,7 @@ namespace JsonApiDotNetCore.Services
         protected readonly IResourceGraph _graph;
         protected readonly Dictionary<Type, IResourceHookContainer<IIdentifiable>> _hookContainers;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
-        protected Dictionary<string, RelationshipAttribute> _meta;
+        protected Dictionary<string, RelationshipProxy> _meta;
 
         public ResourceHookMetaInfo(
             IGenericProcessorFactory genericProcessorFactory,
@@ -32,25 +68,26 @@ namespace JsonApiDotNetCore.Services
         {
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
-            _meta = new Dictionary<string, RelationshipAttribute>();
+            _meta = new Dictionary<string, RelationshipProxy>();
             _hookContainers = new Dictionary<Type, IResourceHookContainer<IIdentifiable>>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
 
-        public IEnumerable<RelationshipAttribute> GetMetaEntries(IIdentifiable currentLayerEntity)
+        public IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable currentLayerEntity)
         {
             foreach (string metaKey in _meta.Keys)
             {
-                var attribute = _meta[metaKey];
+                var proxy = _meta[metaKey];
 
                 /// because currentLayer is not type-homogeneous (which is 
                 /// why we need to use IIdentifiable for the list type of 
                 /// that layer), we need to check if relatedType is really 
                 /// related to parentType. We do this through comparison of Metakey
-                string requiredMetaKey = CreateMetaKey(attribute, currentLayerEntity.GetType());
+                string requiredMetaKey = CreateMetaKey(proxy.Attribute, currentLayerEntity.GetType());
                 if (metaKey != requiredMetaKey) continue;
-                yield return attribute;
+
+                yield return proxy;
             }
         }
 
@@ -129,7 +166,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The meta dict.</returns>
         /// <param name="nextLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hooks">The target resource hook types</param>
-        public Dictionary<string, RelationshipAttribute>
+        public Dictionary<string, RelationshipProxy>
             UpdateMetaInformation(
             IEnumerable<Type> nextLayerTypes,
             IEnumerable<ResourceHook> hooks)
@@ -153,7 +190,7 @@ namespace JsonApiDotNetCore.Services
                     var contextEntity = _graph.GetContextEntity(targetType);
                     var relationshipsForContextEntity = contextEntity.Relationships.ToDictionary(
                                             attr => CreateMetaKey(attr, targetType, checkForDuplicates: true),
-                                            attr => attr);
+                                            attr => new RelationshipProxy(attr, GetTypeFromRelationshipAttribute(attr)));
                     /// keep only the meta info we really need for the traversal of the next layer
                     /// also remove duplicates.
                     PruneMetaDictionary(relationshipsForContextEntity, targetHook);
@@ -187,7 +224,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The meta dict.</returns>
         /// <param name="nextLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hook">The target resource hook type</param>
-        public Dictionary<string, RelationshipAttribute>
+        public Dictionary<string, RelationshipProxy>
             UpdateMetaInformation(
             IEnumerable<Type> nextLayerTypes,
             ResourceHook hook = ResourceHook.None)
@@ -208,8 +245,31 @@ namespace JsonApiDotNetCore.Services
         /// <param name="parentType">Parent type.</param>
         string CreateMetaKey(RelationshipAttribute attr, Type parentType, bool checkForDuplicates = false)
         {
-            var relationType = attr.IsHasOne ? "has-one" : "has-many";
-            string newKey = $"{parentType.Name} {relationType} {attr.RelationshipPath}";
+            string relationType;
+            string rightHandIdentifier;
+            if (attr is HasManyThroughAttribute manyThroughAttr)
+            {
+                relationType = "has-many-through";
+                rightHandIdentifier = manyThroughAttr.ThroughProperty.Name;
+            } else if (attr is HasManyAttribute manyAttr)
+            {
+                relationType = "has-many";
+                rightHandIdentifier = manyAttr.RelationshipPath;
+            }
+            else
+            {
+                relationType = "has-one";
+                rightHandIdentifier = attr.RelationshipPath;
+            }
+            string newKey = $"{parentType.Name} {relationType} {rightHandIdentifier}";
+
+
+            var forbiddenInverse = _meta.Where(pair => pair.Key.Contains("has-many-through")).Select(pair => InverseKey(pair.Key)).ToArray();
+            if (checkForDuplicates && forbiddenInverse.Contains(newKey))
+            {
+                return $"INVERSE-MTM-{Guid.NewGuid()}";
+            }
+
             if (checkForDuplicates && _meta.ContainsKey(newKey))
             {
                 return $"DUPLICATE-{Guid.NewGuid()}";
@@ -221,27 +281,56 @@ namespace JsonApiDotNetCore.Services
         /// Gets rid of keys in the meta dict that won't be needed for the next layer.
         /// 
         /// It does so by:
-        ///     1)  checking if there was at all a IResourceHookExecutor 
-        ///         implemented for this type (ResourceDefinition by default);
-        ///     2)  then checking if there is a implementation of the particular
-        ///         target hook. 
+        /// 
+        /// 1)  checking if there was at all a IResourceHookExecutor  implemented for this type (ResourceDefinition by default);
+        /// 2)  then checking if there is a implementation of the particular target hook. 
+        /// 3)  lastly, in the case of many-to-many, we need to make sure we don't include a meta entry that navigates back from the right side
+        ///     to the left side, or it will get stuck bouncing back and forth and blow up with a stack overflow.
         /// </summary>
         void PruneMetaDictionary(
-            Dictionary<string, RelationshipAttribute> meta,
+            Dictionary<string, RelationshipProxy> meta,
             ResourceHook targetHook)
         {
-            var dupes = meta.Where(pair => pair.Key.Contains("DUPLICATE")).Select(pair => pair.Key).ToArray();
-            foreach (string target in dupes)
+
+   
+
+            var inverseKeys = meta.Where(pair => pair.Key.Contains("INVERSE")).Select(pair => pair.Key).ToArray();
+            foreach (string target in inverseKeys)
             {
                 meta.Remove(target);
             }
-            var noHookImplementation = meta.Where(pair => GetResourceHookContainer(pair.Value.Type, targetHook) == null).Select(pair => pair.Key).ToArray();
-            foreach (string target in noHookImplementation)
+            var dupesKeys = meta.Where(pair => pair.Key.Contains("DUPLICATE")).Select(pair => pair.Key).ToArray();
+            foreach (string target in dupesKeys)
             {
                 meta.Remove(target);
             }
+            var noHookImplementationKeys = meta.Where(pair => GetResourceHookContainer(pair.Value.TargetType, targetHook) == null).Select(pair => pair.Key).ToArray();
+            foreach (string target in noHookImplementationKeys)
+            {
+                meta.Remove(target);
+            }
+
+
         }
 
+        string InverseKey(string key)
+        {
+            var splitted = key.Split(new string[] { " has-many-through " }, StringSplitOptions.None).Reverse().ToArray();
+            splitted[0] = splitted[0].Remove(splitted[0].Length - 1);
+            return string.Join(" has-one ", splitted);
+        }
 
+        public Type GetTypeFromRelationshipAttribute(RelationshipAttribute attr)
+        {
+            if (attr is HasManyThroughAttribute throughAttr)
+            {
+                if (typeof(IIdentifiable).IsAssignableFrom(throughAttr.ThroughType))
+                {
+                    return throughAttr.ThroughType;
+                }
+                return attr.Type;
+            }
+            return attr.Type;
+        }
     }
 }

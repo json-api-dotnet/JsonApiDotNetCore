@@ -91,7 +91,7 @@ namespace UnitTests.ResourceHooks
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
 
             SetupProcessorFactoryForResourceDefinition<TFirstNested, IIdentifiable>(processorFactory, identifiableFirstNestedResource.Object);
-            SetupProcessorFactoryForResourceDefinition<TFirstNested, IIdentifiable>(processorFactory, identifiableSecondNestedResource.Object);
+            SetupProcessorFactoryForResourceDefinition<TSecondNested, IIdentifiable>(processorFactory, identifiableSecondNestedResource.Object);
 
             return (context, hookExecutor, mainResource, identifiableFirstNestedResource, identifiableSecondNestedResource);
         }

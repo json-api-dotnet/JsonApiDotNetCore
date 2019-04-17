@@ -13,6 +13,7 @@
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.2" />
+    <PackageReference Include="Bogus" Version="22.1.2" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json"> 

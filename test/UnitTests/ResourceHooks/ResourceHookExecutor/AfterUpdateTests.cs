@@ -44,6 +44,7 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.AfterUpdate(todoInput, It.IsAny<ResourceAction>());
             // assert
+
             todoResourceMock.Verify(rd => rd.AfterUpdate(todoInput, It.IsAny<ResourceAction>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());

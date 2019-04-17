@@ -40,6 +40,9 @@ namespace JsonApiDotNetCoreExample.Data
 
             modelBuilder.Entity<ArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
+
+            modelBuilder.Entity<IdentifiableArticleTag>()
+                .HasKey(bc => new { bc.ArticleId, bc.TagId });
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
@@ -57,6 +60,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<StudentEntity> Students { get; set; }
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
+        public DbSet<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
     }
 }
