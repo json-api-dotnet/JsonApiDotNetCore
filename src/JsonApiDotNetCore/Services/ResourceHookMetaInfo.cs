@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Services
         IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None);
         IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
         Dictionary<string, RelationshipAttribute> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, ResourceHook hook = ResourceHook.None);
+        Dictionary<string, RelationshipAttribute> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, IEnumerable<ResourceHook> hooks);
     }
 
     public class ResourceHookMetaInfo : IResourceHookMetaInfo
@@ -21,7 +22,7 @@ namespace JsonApiDotNetCore.Services
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
         protected readonly Dictionary<Type, IResourceHookContainer<IIdentifiable>> _hookContainers;
-        protected ResourceHook _hookInTreeTraversal;
+        protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
         protected Dictionary<string, RelationshipAttribute> _meta;
 
         public ResourceHookMetaInfo(
@@ -33,6 +34,7 @@ namespace JsonApiDotNetCore.Services
             _graph = graph;
             _meta = new Dictionary<string, RelationshipAttribute>();
             _hookContainers = new Dictionary<Type, IResourceHookContainer<IIdentifiable>>();
+            _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
 
@@ -65,15 +67,37 @@ namespace JsonApiDotNetCore.Services
         /// <param name="hook">The hook to get a ResourceDefinition for.</param>
         public IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None)
         {
-            hook = (hook == ResourceHook.None) ? _hookInTreeTraversal : hook;
+            /// checking the cache if we have a reference for the requested container, 
+            /// regardless of the hook we will use it for. If the value is null, 
+            /// it means there was no implementation IResourceHookContainer at all, 
+            /// so we need not even bother.
             if (!_hookContainers.TryGetValue(targetEntity, out IResourceHookContainer<IIdentifiable> container))
             {
+
                 container = (IResourceHookContainer<IIdentifiable>)_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(IResourceHookContainer<>), targetEntity);
                 _hookContainers[targetEntity] = container;
             }
             if (container == null) return container;
-            if (!container.ShouldExecuteHook(hook)) container = null;
-            return container;
+
+            /// if there was a container, first check if it implements the hook we 
+            /// want to use it for.
+            List<ResourceHook> targetHooks;
+            if (hook == ResourceHook.None)
+            {
+                CheckForTargetHookExistence();
+                targetHooks = _targetedHooksForRelatedEntities;
+            }
+            else
+            {
+                targetHooks = new List<ResourceHook>() { hook };
+            }
+
+            foreach (ResourceHook targetHook in targetHooks)
+            {
+                if (container.ShouldExecuteHook(targetHook)) return container;
+            }
+            return null;
+
         }
 
         /// <summary>
@@ -90,6 +114,66 @@ namespace JsonApiDotNetCore.Services
         public IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable
         {
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
+        }
+
+
+
+        /// <summary>
+        /// Creates a (helper) dictionary containing meta information needed for
+        /// the traversal of the next layer. It contains as 
+        ///     keys:   Type, namely typeof(TRelatedType) that will occur in the traversal 
+        ///             of the next layer,
+        ///     values: a Tuple of 
+        ///                * RelationshipAttribute (that contains getters and setters)
+        ///                * IResourceHookExecutor{TRelatedType} to access the actual (nested) hook
+        /// </summary>
+        /// <returns>The meta dict.</returns>
+        /// <param name="nextLayerTypes">Unique list of types to extract metadata from</param>
+        /// <param name="hooks">The target resource hook types</param>
+        public Dictionary<string, RelationshipAttribute>
+            UpdateMetaInformation(
+            IEnumerable<Type> nextLayerTypes,
+            IEnumerable<ResourceHook> hooks)
+        {
+        
+            if (hooks == null || !hooks.Any())
+            {
+                CheckForTargetHookExistence();
+                hooks = _targetedHooksForRelatedEntities;
+            }
+            else
+            {
+                if (!_targetedHooksForRelatedEntities.Any())
+                    _targetedHooksForRelatedEntities.AddRange(hooks);
+            }
+
+            foreach (ResourceHook targetHook in hooks)
+            {
+                foreach (Type targetType in nextLayerTypes)
+                {
+                    var contextEntity = _graph.GetContextEntity(targetType);
+                    var relationshipsForContextEntity = contextEntity.Relationships.ToDictionary(
+                                            attr => CreateMetaKey(attr, targetType, checkForDuplicates: true),
+                                            attr => attr);
+                    /// keep only the meta info we really need for the traversal of the next layer
+                    /// also remove duplicates.
+                    PruneMetaDictionary(relationshipsForContextEntity, targetHook);
+                    _meta = _meta.Concat(relationshipsForContextEntity)
+                                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                }
+            }
+
+
+            return _meta;
+
+        }
+
+
+        void CheckForTargetHookExistence()
+        {
+            if (!_targetedHooksForRelatedEntities.Any())
+                throw new InvalidOperationException("Something is not right in the breadth first traversal of resource hook: " +
+                    "trying to get meta information when no allowed hooks are set");
         }
 
         /// <summary>
@@ -109,25 +193,9 @@ namespace JsonApiDotNetCore.Services
             IEnumerable<Type> nextLayerTypes,
             ResourceHook hook = ResourceHook.None)
         {
-
-            _hookInTreeTraversal = _hookInTreeTraversal !=
-                                        ResourceHook.None ?
-                                        _hookInTreeTraversal :
-                                        hook;
-            foreach (Type targetType in nextLayerTypes)
-            {
-                var contextEntity = _graph.GetContextEntity(targetType);
-                var relationshipsForContextEntity = contextEntity.Relationships.ToDictionary(
-                                        attr => CreateMetaKey(attr, targetType, checkForDuplicates: true),
-                                        attr => attr);
-                /// keep only the meta info we really need for the traversal of the next layer
-                /// also remove duplicates.
-                PruneMetaDictionary(relationshipsForContextEntity, _hookInTreeTraversal);
-                _meta = _meta.Concat(relationshipsForContextEntity)
-                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-            return _meta;
-        }
+            var targetHooks = (hook == ResourceHook.None) ? _targetedHooksForRelatedEntities : new List<ResourceHook> { hook };
+            return UpdateMetaInformation(nextLayerTypes, targetHooks);
+       }
 
 
 

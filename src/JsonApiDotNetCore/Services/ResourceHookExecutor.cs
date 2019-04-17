@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -20,6 +21,7 @@ namespace JsonApiDotNetCore.Services
         protected readonly IResourceGraph _graph;
         protected readonly Type _entityType;
         protected readonly IResourceHookMetaInfo _meta;
+        protected readonly ResourceAction[] _singleActions;
         private ResourceHook _hookInTreeTraversal;
 
 
@@ -35,17 +37,32 @@ namespace JsonApiDotNetCore.Services
             _meta = meta;
             _implementedHooks = hooksConfiguration.ImplementedHooks;
             _entityType = typeof(TEntity);
+            _singleActions = new ResourceAction[] 
+                {
+                    ResourceAction.GetSingle,
+                    ResourceAction.Create,
+                    ResourceAction.Delete,
+                    ResourceAction.Patch,
+                    ResourceAction.GetRelationship,
+                    ResourceAction.PatchRelationship
+                };
         }
 
 
         public virtual IEnumerable<TEntity> BeforeCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
-            if (hookContainer == null) return entities;
+
             /// traversing the 0th layer. Not including this in the recursive function
             /// because the most complexities that arrise in the tree traversal do not
             /// apply to the 0th layer (eg non-homogeneity of the next layers)
-            entities = hookContainer.BeforeCreate(entities, actionSource); // eg all of type {Article}
+            if (hookContainer != null)
+            {
+                var parsedEntities = hookContainer.BeforeCreate(entities, actionSource); // eg all of type {Article}
+                ValidateHookResponse(entities, parsedEntities, actionSource);
+                entities = parsedEntities;
+            }
+
 
             /// We use IIdentifiable instead of TEntity, because deeper layers
             /// in the tree traversal will not necessarily be homogenous (i.e. 
@@ -67,8 +84,6 @@ namespace JsonApiDotNetCore.Services
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
             /// @TODO: even if we don't have an implementation for eg TodoItem AfterCreate, 
             /// we should still consider to fire the hooks of its relation, eg TodoItem.Owner
-            if (hookContainer == null) return entities; 
-
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
@@ -76,7 +91,12 @@ namespace JsonApiDotNetCore.Services
                 return container.AfterUpdate(relatedEntities, actionSource);
             });
 
-            entities = hookContainer.AfterCreate(entities, actionSource);
+            if (hookContainer != null)
+            {
+                var parsedEntities = hookContainer.AfterCreate(entities, actionSource); 
+                ValidateHookResponse(entities, parsedEntities, actionSource);
+                return parsedEntities;
+            }
 
             return entities;
         }
@@ -93,25 +113,39 @@ namespace JsonApiDotNetCore.Services
         public virtual IEnumerable<TEntity> AfterRead(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
-            if (hookContainer == null) return entities;
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterRead);
+            _meta.UpdateMetaInformation(new Type[] { _entityType }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                return container.AfterRead(relatedEntities, actionSource);
+                if (container.ShouldExecuteHook(ResourceHook.BeforeRead)) container.BeforeRead(actionSource);
+                if (container.ShouldExecuteHook(ResourceHook.AfterRead))
+                {
+                    var parsedEntities = container.AfterRead(relatedEntities, actionSource);
+                    ValidateHookResponse(relatedEntities, parsedEntities);
+                    return parsedEntities;
+                }
+                return relatedEntities;
             });
-            entities = hookContainer.AfterRead(entities, actionSource);
 
+            if (hookContainer != null)
+            {
+                var parsedEntities = hookContainer.AfterRead(entities, actionSource);
+                ValidateHookResponse(entities, parsedEntities, actionSource);
+                return parsedEntities;
+            }
+                
             return entities;
         }
-
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
-            if (hookContainer == null) return entities;
-
-            entities = hookContainer.BeforeUpdate(entities, actionSource);
+            if (hookContainer != null)
+            {
+                var parsedEntities = hookContainer.BeforeUpdate(entities, actionSource);
+                ValidateHookResponse(entities, parsedEntities, actionSource);
+                entities = parsedEntities;
+            }
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
@@ -126,8 +160,6 @@ namespace JsonApiDotNetCore.Services
         public virtual IEnumerable<TEntity> AfterUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
-            if (hookContainer == null) return entities;
-
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
@@ -135,8 +167,12 @@ namespace JsonApiDotNetCore.Services
                 return container.AfterUpdate(relatedEntities, actionSource);
             });
 
-            entities = hookContainer.AfterUpdate(entities, actionSource);
-
+            if (hookContainer != null)
+            {
+                var parsedEntities = hookContainer.AfterUpdate(entities, actionSource);
+                ValidateHookResponse(entities, parsedEntities, actionSource);
+                return parsedEntities;
+            }
 
             return entities;
         }
@@ -146,7 +182,6 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
             if (hookContainer == null) return;
-
             hookContainer.BeforeDelete(entities, actionSource);
         }
 
@@ -155,8 +190,30 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
             if (hookContainer == null) return;
-
             hookContainer.AfterDelete(entities, succeeded, actionSource);
+        }
+
+        /// <summary>
+        /// Ensures that the return type from the hook matches the required type.
+        /// And when relevant, eg. AfterRead when fired from GetAsync(TId id), checks that the collection
+        /// does not contain more than one item.
+        /// </summary>
+        /// <param name="initalList">The initial collection before the hook was executed.</param>
+        /// <param name="returnedList"> The collection returned from the hook</param>
+        /// <param name="actionSource">The pipeine from which the hook was fired</param>
+        protected void ValidateHookResponse(IEnumerable<IIdentifiable> initalList, IEnumerable<IIdentifiable> returnedList, ResourceAction actionSource = 0)
+        {
+            if (TypeHelper.GetListInnerType(initalList as IEnumerable) != TypeHelper.GetListInnerType(returnedList as IEnumerable))
+            {
+                throw new ApplicationException("The List type of the return value from a resource hook" +
+                    "did not match the the same type as the original collection. Make sure you are returning collections of the same" +
+                    "entities as recieved from your hooks");
+            }
+            if (actionSource != ResourceAction.None && _singleActions.Contains(actionSource) && returnedList.Count() > 1)
+            {
+                throw new ApplicationException("The returned collection from this hook may only contain one item in the case of he" +
+                    actionSource.ToString() + "pipeline");
+            }
         }
 
         /// <summary>

@@ -94,5 +94,15 @@ namespace JsonApiDotNetCore.Internal
             return list;
 
         }
+
+        /// <summary>
+        /// Gets the generic argument T of List{T}
+        /// </summary>
+        /// <returns>The type of the list</returns>
+        /// <param name="list">The list to be inspected/param>
+        public static Type GetListInnerType(IEnumerable list)
+        {
+            return list.GetType().GetGenericArguments()[0];
+        }
     }
 }

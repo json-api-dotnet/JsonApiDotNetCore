@@ -11,12 +11,13 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public enum ResourceAction
     {
+        None,
         Get,
         GetSingle,
         GetRelationship,
         Create,
         Patch,
-        PatchRelationships,
+        PatchRelationship,
         Delete
     }
 

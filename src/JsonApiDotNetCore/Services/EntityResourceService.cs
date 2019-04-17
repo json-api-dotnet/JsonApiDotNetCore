@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
             // @TODO implement hook executor
-            // entity = _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            entity = _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
          
 
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Services
 
             }
             // @TODO implement hook executor
-            // entity = _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+             entity = _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             // @TODO implement hook executor
-            // _hookExecutor.BeforeRead(ResourceAction.Get);
+             //_hookExecutor.BeforeRead(ResourceAction.Get);
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Services
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
             // @TODO implement hook executor
-            // entities = _hookExecutor.AfterRead(entities, ResourceAction.Get);
+             //entities = _hookExecutor.AfterRead(entities, ResourceAction.Get);
             // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
             // for every included entity.
 
