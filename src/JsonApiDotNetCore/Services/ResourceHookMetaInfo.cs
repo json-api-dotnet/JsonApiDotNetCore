@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,19 +12,44 @@ namespace JsonApiDotNetCore.Services
     public class RelationshipProxy
     {
         readonly bool _isHasManyThrough;
+        readonly bool _skipJoinTable;
         public RelationshipAttribute Attribute { get; set; }
         public RelationshipProxy(RelationshipAttribute attr, Type targetType)
         {
             TargetType = targetType;
             Attribute = attr;
-            _isHasManyThrough |= (attr is HasManyThroughAttribute throughAttr && TargetType == throughAttr.ThroughType);
+            if (attr is HasManyThroughAttribute throughAttr)
+            {
+                _isHasManyThrough = true;
+                if (TargetType != throughAttr.ThroughType)
+                {
+                    _skipJoinTable = true;
+                }
+            }
         }
 
         public object GetValue(IIdentifiable entity)
         {
             if (_isHasManyThrough)
             {
-                return ((HasManyThroughAttribute)Attribute).ThroughProperty.GetValue(entity);
+                var throughAttr = (HasManyThroughAttribute)Attribute;
+                if (!_skipJoinTable)
+                {
+                    return throughAttr.ThroughProperty.GetValue(entity);
+                }
+                else
+                {
+                    var collection = new List<IIdentifiable>();
+                    var joinEntities = (IList)throughAttr.ThroughProperty.GetValue(entity);
+                    foreach ( var joinEntity in joinEntities)
+                    {
+                        var rightEntity = (IIdentifiable)throughAttr.RightProperty.GetValue(joinEntity);
+                        if (rightEntity == null) continue;
+                        collection.Add(rightEntity);
+                    }
+                    return collection;
+                }
+
             }
             return Attribute.GetValue(entity);
         }
@@ -32,9 +58,32 @@ namespace JsonApiDotNetCore.Services
         {
             if (_isHasManyThrough)
             {
-                var list = (IEnumerable<object>)value;
-                ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, TargetType ));
-                return;
+                if (!_skipJoinTable)
+                {
+                    var list = (IEnumerable<object>)value;
+                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, TargetType));
+                    return;
+                }
+                else
+                {
+                    var throughAttr = (HasManyThroughAttribute)Attribute;
+                    var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
+
+                    var filteredList = new List<object>();
+                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, TargetType);
+                    foreach (var je in joinEntities)
+                    {
+
+                        if (rightEntities.Contains(throughAttr.RightProperty.GetValue(je)))
+                        {
+                            filteredList.Add(je);
+                        }
+                    }
+
+                    throughAttr.ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(filteredList, throughAttr.ThroughType));
+                    return;
+                }
+
             }
             Attribute.SetValue(entity, value);
         }
