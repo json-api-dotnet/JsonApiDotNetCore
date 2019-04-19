@@ -42,6 +42,190 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Update_Cyclic_ToMany_Relationship_By_Patching_Resource()
+        {
+            // Arrange 
+            var todoItem = _todoItemFaker.Generate();
+            var strayTodoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            _context.TodoItems.Add(strayTodoItem);
+            _context.SaveChanges();
+
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            // Act
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    id = todoItem.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "children-todos", new
+                            {
+                                data = new object[]
+                                {
+                                    new { type = "todo-items", id = $"{todoItem.Id}" },
+                                    new { type = "todo-items", id = $"{strayTodoItem.Id}" }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+
+            // Act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            _context = _fixture.GetService<AppDbContext>();
+
+            var updatedTodoItem = _context.TodoItems.AsNoTracking()
+                 .Where(ti => ti.Id == todoItem.Id)
+                 .Include(ti => ti.ChildrenTodoItems).First();
+
+            updatedTodoItem.ChildrenTodoItems.Any((ti) => ti.Id == todoItem.Id);
+            Assert.Contains(updatedTodoItem.ChildrenTodoItems, (ti) => ti.Id == todoItem.Id);
+        }
+
+        [Fact]
+        public async Task Can_Update_Cyclic_ToOne_Relationship_By_Patching_Resource()
+        {
+            // Arrange 
+            var todoItem = _todoItemFaker.Generate();
+            var strayTodoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            // Act
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    id = todoItem.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "dependent-on-todo", new
+                            {
+                                data = new { type = "todo-items", id = $"{todoItem.Id}" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+
+            // Act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            _context = _fixture.GetService<AppDbContext>();
+
+
+            var updatedTodoItem = _context.TodoItems.AsNoTracking()
+                 .Where(ti => ti.Id == todoItem.Id)
+                 .Include(ti => ti.DependentTodoItem).First();
+
+            Assert.Equal(todoItem.Id, updatedTodoItem.DependentTodoItemId);
+        }
+
+        [Fact]
+        public async Task Can_Update_Both_Cyclic_ToOne_And_ToMany_Relationship_By_Patching_Resource()
+        {
+            // Arrange 
+            var todoItem = _todoItemFaker.Generate();
+            var strayTodoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            _context.TodoItems.Add(strayTodoItem);
+            _context.SaveChanges();
+
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            // Act
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    id = todoItem.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "dependent-on-todo", new
+                            {
+                                data = new { type = "todo-items", id = $"{todoItem.Id}" }
+                            }
+                        },
+                        { "children-todos", new
+                            {
+                                data = new object[]
+                                {
+                                    new { type = "todo-items", id = $"{todoItem.Id}" },
+                                    new { type = "todo-items", id = $"{strayTodoItem.Id}" }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+
+            // Act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            _context = _fixture.GetService<AppDbContext>();
+
+
+            var updatedTodoItem = _context.TodoItems.AsNoTracking()
+                 .Where(ti => ti.Id == todoItem.Id)
+                 .Include(ti => ti.ParentTodoItem).First();
+
+            Assert.Equal(todoItem.Id, updatedTodoItem.ParentTodoItemId);
+        }
+
+        [Fact]
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // arrange

@@ -330,12 +330,37 @@ namespace JsonApiDotNetCore.Data
                     if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasManyAttribute)))
                     {
                         await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
-                        relationship.Key.SetValue(oldEntity, relationship.Value);
+                        var value = CheckForSelfReferingUpdate((IEnumerable<object>)relationship.Value, oldEntity);
+                        relationship.Key.SetValue(oldEntity, value);
                     }
                 }
             }
             await _context.SaveChangesAsync();
             return oldEntity;
+        }
+
+        object CheckForSelfReferingUpdate(IEnumerable<object> relatedEntities, TEntity oldEntity)
+        {
+            var entity = relatedEntities.FirstOrDefault();
+            var list = new List<TEntity>();
+            bool refersSelf = false;
+            if (entity?.GetType() == typeof(TEntity)) 
+            {
+                foreach (TEntity e in relatedEntities)
+                {
+                    if (oldEntity.StringId == e.StringId)
+                    {
+                        list.Add(oldEntity);
+                        refersSelf = true;
+                    }
+                    else
+                    {
+                        list.Add(e);
+                    }
+                }
+            }
+            return (refersSelf ? list : relatedEntities);
+
         }
 
         /// <inheritdoc />

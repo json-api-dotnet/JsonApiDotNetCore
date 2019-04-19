@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCoreExample.Models
         public DateTime? UpdatedDate { get; set; }
 
 
-        
+
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }
         public Guid? CollectionId { get; set; }
@@ -43,5 +44,19 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasOne("collection")]
         public virtual TodoItemCollection Collection { get; set; }
+
+        public virtual int? DependentTodoItemId { get; set; }
+        [HasOne("dependent-on-todo")]
+        public virtual TodoItem DependentTodoItem { get; set; }
+
+
+
+
+        // cyclical structure
+        public virtual int? ParentTodoItemId {get; set;}
+        [HasOne("parent-todo")]
+        public virtual TodoItem ParentTodoItem { get; set; }
+        [HasMany("children-todos")]
+        public virtual List<TodoItem> ChildrenTodoItems { get; set; }
     }
 }
