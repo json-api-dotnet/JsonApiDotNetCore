@@ -338,8 +338,8 @@ namespace JsonApiDotNetCore.Services
                     var relationshipValue = proxy.GetValue(currentLayerEntity);
                     if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)
                     {
-                        relationshipCollection = (relationshipCollection.Intersect(parsedEntities));
-                        proxy.SetValue(currentLayerEntity, relationshipCollection);
+                        var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(parsedEntities), proxy.TargetType);
+                        proxy.SetValue(currentLayerEntity, convertedCollection);
                     }
                     else if (relationshipValue is IIdentifiable relationshipSingle)
                     {
@@ -424,6 +424,11 @@ namespace JsonApiDotNetCore.Services
             return newEntities;
         }
 
+        /// <summary>
+        /// We need to flush the list of processed entities because typically
+        /// the hook executor will be caled twice per service pipeline (eg BeforeCreate
+        /// and AfterCreate).
+        /// </summary>
         void FlushRegister()
         {
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();

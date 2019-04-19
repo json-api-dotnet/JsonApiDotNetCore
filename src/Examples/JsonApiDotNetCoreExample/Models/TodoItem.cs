@@ -42,7 +42,18 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("assignee")]
         public virtual Person Assignee { get; set; }
 
+        [HasMany("stake-holders")]
+        public virtual List<Person> StakeHolders { get; set; }
+
         [HasOne("collection")]
         public virtual TodoItemCollection Collection { get; set; }
+
+
+        // cyclical structure
+        public virtual int? ParentTodoItemId { get; set; }
+        [HasOne("parent-todo")]
+        public virtual TodoItem ParentTodoItem { get; set; }
+        [HasMany("children-todos")]
+        public virtual List<TodoItem> ChildrenTodoItems { get; set; }
     }
 }

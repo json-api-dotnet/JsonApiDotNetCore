@@ -28,7 +28,7 @@ namespace UnitTests.ResourceHooks
             todoItem.Owner = person;
             return todoList;
         }
-        protected (Mock<IResourceHookContainer<TMain>>, Mock<IJsonApiContext>, IResourceHookExecutor<TMain>) 
+        protected (Mock<IJsonApiContext>, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>) 
         CreateTestObjects<TMain>(IImplementedResourceHooks<TMain> discovery = null)
             where TMain : class, IIdentifiable
 
@@ -51,7 +51,7 @@ namespace UnitTests.ResourceHooks
                     first.StringId = "123";
                 })
                 .Verifiable();
-            return (mainResource, context, hookExecutor);
+            return (context, hookExecutor, mainResource);
         }
 
         protected  (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<IIdentifiable>>)
@@ -186,6 +186,7 @@ namespace UnitTests.ResourceHooks
 
             var identifiableResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<IIdentifiable>>(), discovery);
             var modelSpecificResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<TModel>>(), discovery);
+            resourceDefinition.As<IResourceHookBase<IIdentifiable>>();
 
             return (modelSpecificResourceDefinition, identifiableResourceDefinition);
         }

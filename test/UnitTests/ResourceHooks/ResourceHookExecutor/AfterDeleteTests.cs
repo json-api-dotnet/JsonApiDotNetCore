@@ -34,7 +34,7 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var discovery = SetDiscoverableHooks<TodoItem>();
-            (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects(discovery);
+            (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
             // act
             hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>());
             // assert
@@ -49,7 +49,7 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var discovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-            (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects(discovery);
+            (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
             // act
             hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>());
             // assert

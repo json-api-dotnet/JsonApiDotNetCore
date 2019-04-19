@@ -37,14 +37,14 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var person = new Person();
-            var todo = new TodoItem
-            {
-                Owner = person,
-                Assignee = person
-            };
+            var person1 = new Person();
+            var todo = new TodoItem { Owner = person1 };
+            var person2 = new Person { AssignedTodoItems = new List<TodoItem>() { todo } };
+            todo.Assignee = person2;
+            var person3 = new Person { StakeHolderTodo = todo };
+            todo.StakeHolders = new List<Person> { person3 };
+
             var todoList = new List<TodoItem>() { todo };
-            person.AssignedTodoItems = todoList;
             
             // act
             hookExecutor.AfterCreate(todoList, It.IsAny<ResourceAction>());
@@ -58,77 +58,51 @@ namespace UnitTests.ResourceHooks
             ownerResourceMock.VerifyNoOtherCalls();
         }
 
-        //[Fact]
-        //public void AfterCreate_Without_Parent_Hook_Implemented()
-        //{
-        //    // arrange
-        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-        //    var personDiscovery = SetDiscoverableHooks<Person>();
+        [Fact]
+        public void Entity_Has_Cyclic_Relations()
+        {
+            // arrange
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
 
-        //    (var contextMock, var hookExecutor, var todoResourceMock,
-        //        var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-        //    var todoInput = new List<TodoItem>() { new TodoItem
-        //        {
-        //            Owner = new Person()
-        //        }
-        //    };
-        //    // act
-        //    hookExecutor.AfterCreate(todoList, It.IsAny<ResourceAction>());
-        //    // assert
-        //    ownerResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
-        //    ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
-        //    ownerResourceMock.VerifyNoOtherCalls();
-        //    todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
-        //    todoResourceMock.VerifyNoOtherCalls();
+            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);            
+            var todo = new TodoItem();
+            todo.ParentTodoItem = todo;
+            todo.ChildrenTodoItems = new List<TodoItem> { todo };
+            var todoList = new List<TodoItem>() { todo };
+            // act
+            hookExecutor.AfterCreate(todoList, It.IsAny<ResourceAction>());
+            // assert
+            todoResourceMock.Verify(rd => rd.AfterCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
+            todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            todoResourceMock.VerifyNoOtherCalls();
+        }
 
-        //}
+        [Fact]
+        public void Entity_Has_Nested_Cyclic_Relations()
+        {
+            // arrange
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
 
-        //[Fact]
-        //public void AfterCreate_Without_Child_Hook_Implemented()
-        //{
-        //    // arrange
-        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-        //    var personDiscovery = SetDiscoverableHooks<Person>(new ResourceHook[0]);
+            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
+            var rootTodo = new TodoItem();
+            var child = new TodoItem { ParentTodoItem = rootTodo };
+            rootTodo.ChildrenTodoItems = new List<TodoItem> { child };
+            var grandChild = new TodoItem() { ParentTodoItem = child };
+            child.ChildrenTodoItems = new List<TodoItem> { grandChild };
+            var greatGrandChild = new TodoItem() { ParentTodoItem = grandChild };
+            greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo }; ;
 
-        //    (var contextMock, var hookExecutor, var todoResourceMock,
-        //        var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-        //    var todoInput = new List<TodoItem>() { new TodoItem
-        //        {
-        //            Owner = new Person()
-        //        }
-        //    };
-        //    // act
-        //    hookExecutor.AfterCreate(todoList, It.IsAny<ResourceAction>());
-        //    // assert
-        //    todoResourceMock.Verify(rd => rd.AfterCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
-        //    todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
-        //    todoResourceMock.VerifyNoOtherCalls();
-        //    ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
-        //    ownerResourceMock.VerifyNoOtherCalls();
-        //}
+            var todoList = new List<TodoItem>() { rootTodo };
+            // act
+            hookExecutor.AfterCreate(todoList, It.IsAny<ResourceAction>());
+            // assert
+            todoResourceMock.Verify(rd => rd.AfterCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
+            todoResourceMock.As<IResourceHookBase<IIdentifiable>>().Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Exactly(2));
+            todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
 
-        //[Fact]
-        //public void AfterCreate_Without_Any_Hook_Implemented()
-        //{
-        //    // arrange
-        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-        //    var personDiscovery = SetDiscoverableHooks<Person>(new ResourceHook[0]);
+            todoResourceMock.VerifyNoOtherCalls();
+        }
 
-        //    (var contextMock, var hookExecutor, var todoResourceMock,
-        //        var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-        //    var todoInput = new List<TodoItem>() { new TodoItem
-        //        {
-        //            Owner = new Person()
-        //        }
-        //    };
-        //    // act
-        //    hookExecutor.AfterCreate(todoList, It.IsAny<ResourceAction>());
-        //    // assert
-        //    todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
-        //    todoResourceMock.VerifyNoOtherCalls();
-        //    ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
-        //    ownerResourceMock.VerifyNoOtherCalls();
-        //}
     }
 }
 

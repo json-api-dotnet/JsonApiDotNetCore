@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreExample.Models
         [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
 
+
         [HasMany("assigned-todo-items")]
         public virtual List<TodoItem> AssignedTodoItems { get; set; }
 
@@ -32,8 +33,12 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
 
         [HasOne("role")]
-        public virtual PersonRole Role { get; set; }
+        public virtual PersonRole Role { get; set; } 
         public int? PersonRoleId { get; set; }
+
+        [HasOne("stake-holder-todo-item")]
+        public virtual TodoItem StakeHolderTodo { get; set; }
+        public virtual int? StakeHolderTodoId { get; set; }
 
         [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
