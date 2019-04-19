@@ -23,6 +23,8 @@ namespace JsonApiDotNetCore.Services
         protected readonly IResourceHookMetaInfo _meta;
         protected readonly ResourceAction[] _singleActions;
         private ResourceHook _hookInTreeTraversal;
+        protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
+
 
 
         public ResourceHookExecutor(
@@ -37,7 +39,9 @@ namespace JsonApiDotNetCore.Services
             _meta = meta;
             _implementedHooks = hooksConfiguration.ImplementedHooks;
             _entityType = typeof(TEntity);
-            _singleActions = new ResourceAction[] 
+            _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
+
+            _singleActions = new ResourceAction[]
                 {
                     ResourceAction.GetSingle,
                     ResourceAction.Create,
@@ -48,7 +52,6 @@ namespace JsonApiDotNetCore.Services
                 };
         }
 
-
         public virtual IEnumerable<TEntity> BeforeCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
@@ -58,6 +61,7 @@ namespace JsonApiDotNetCore.Services
             /// apply to the 0th layer (eg non-homogeneity of the next layers)
             if (hookContainer != null)
             {
+                RegisterProcessedEntities(entities);
                 var parsedEntities = hookContainer.BeforeCreate(entities, actionSource); // eg all of type {Article}
                 ValidateHookResponse(entities, parsedEntities, actionSource);
                 entities = parsedEntities;
@@ -75,12 +79,14 @@ namespace JsonApiDotNetCore.Services
                 return container.BeforeUpdate(relatedEntities, actionSource);
             });
 
+            FlushRegister();
             return entities;
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
+            RegisterProcessedEntities(entities);
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
             /// @TODO: even if we don't have an implementation for eg TodoItem AfterCreate, 
             /// we should still consider to fire the hooks of its relation, eg TodoItem.Owner
@@ -93,11 +99,12 @@ namespace JsonApiDotNetCore.Services
 
             if (hookContainer != null)
             {
-                var parsedEntities = hookContainer.AfterCreate(entities, actionSource); 
+                var parsedEntities = hookContainer.AfterCreate(entities, actionSource);
                 ValidateHookResponse(entities, parsedEntities, actionSource);
                 return parsedEntities;
             }
 
+            FlushRegister();
             return entities;
         }
 
@@ -112,6 +119,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterRead(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
+            RegisterProcessedEntities(entities);
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
@@ -133,7 +141,8 @@ namespace JsonApiDotNetCore.Services
                 ValidateHookResponse(entities, parsedEntities, actionSource);
                 return parsedEntities;
             }
-                
+
+            FlushRegister();
             return entities;
         }
         /// <inheritdoc/>
@@ -142,6 +151,7 @@ namespace JsonApiDotNetCore.Services
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
             if (hookContainer != null)
             {
+                RegisterProcessedEntities(entities);
                 var parsedEntities = hookContainer.BeforeUpdate(entities, actionSource);
                 ValidateHookResponse(entities, parsedEntities, actionSource);
                 entities = parsedEntities;
@@ -153,12 +163,14 @@ namespace JsonApiDotNetCore.Services
                 return container.BeforeUpdate(relatedEntities, actionSource);
             });
 
+            FlushRegister();
             return entities;
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
+            RegisterProcessedEntities(entities);
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
@@ -174,6 +186,7 @@ namespace JsonApiDotNetCore.Services
                 return parsedEntities;
             }
 
+            FlushRegister();
             return entities;
         }
 
@@ -191,6 +204,153 @@ namespace JsonApiDotNetCore.Services
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
             if (hookContainer == null) return;
             hookContainer.AfterDelete(entities, succeeded, actionSource);
+        }
+
+        /// <summary>
+        /// Fires the hooks for related (nested) entities.
+        /// </summary>
+        /// <param name="currentLayer">Current layer.</param>
+        /// <param name="hookExecutionAction">Hook execution action.</param>
+        void BreadthFirstTraverse(
+            IEnumerable<IIdentifiable> currentLayer,
+            Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecutionAction
+            )
+        {
+            // for the entities in the current layer: get the collection of all related entities
+            var relationshipsInCurrentLayer = ExtractionLoop(currentLayer);
+
+            if (!relationshipsInCurrentLayer.Any()) return;
+
+            // for the unique set of entities in that collection, execute the hooks
+            ExecutionLoop(relationshipsInCurrentLayer, hookExecutionAction);
+            // for the entities in the current layer: reassign relationships where needed.
+            AssignmentLoop(currentLayer, relationshipsInCurrentLayer);
+
+            var nextLayer = relationshipsInCurrentLayer.Values.SelectMany(tuple => tuple.Item2);
+            if (nextLayer.Any())
+            {
+                var uniqueTypesInNextLayer = relationshipsInCurrentLayer.Values.SelectMany(tuple => tuple.Item1.Select(proxy => proxy.TargetType));
+                _meta.UpdateMetaInformation(uniqueTypesInNextLayer);
+                BreadthFirstTraverse(nextLayer, hookExecutionAction);
+            }
+        }
+
+        /// <summary>
+        ///     * Iterates through the entities in the current. This layer can be inhomogeneous.
+        ///     * For each of these entities: gets all related entity  for which we want to 
+        ///       execute a hook (target entities), this is defined in MetaInfo.
+        ///     * Grouped per relation, stores these target in relationshipsInCurrentLayer
+        /// </summary>
+        /// <returns>Hook targets for current layer.</returns>
+        /// <param name="currentLayer">Current layer.</param>
+        Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)> ExtractionLoop(
+            IEnumerable<IIdentifiable> currentLayer
+            )
+        {
+            var relationshipsInCurrentLayer = new Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)>();
+            foreach (IIdentifiable currentLayerEntity in currentLayer)
+            {
+                foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
+                {
+                    var relationshipValue = proxy.GetValue(currentLayerEntity);
+                    // skip iteration if there is no relation assigned
+                    if (relationshipValue == null) continue;
+                    if (!(relationshipValue is IEnumerable<IIdentifiable> relatedEntities))
+                    {
+                        // in the case of a to-one relationship, the assigned value
+                        // will not be a list. We therefore first wrap it in a list.
+                        var list = TypeHelper.CreateListFor(relationshipValue.GetType());
+                        list.Add(relationshipValue);
+                        relatedEntities = (IEnumerable<IIdentifiable>)list;
+                    }
+
+                    // filter the retrieved related entities collection against the entities that were processed in previous iterations
+                    var newEntitiesInTree = UniqueInTree(relatedEntities, proxy.TargetType);
+                    if (!newEntitiesInTree.Any()) continue;
+                    if (!relationshipsInCurrentLayer.ContainsKey(proxy.ParentType))
+                    {
+                        relationshipsInCurrentLayer[proxy.ParentType] = (new List<RelationshipProxy>() { proxy }, newEntitiesInTree);
+                    }
+                    else
+                    {
+                        (var proxies, var entities) = relationshipsInCurrentLayer[proxy.ParentType];
+                        entities.UnionWith(newEntitiesInTree);
+                        if (!proxies.Select(p => p.RelationshipIdentifier).Contains(proxy.RelationshipIdentifier)) proxies.Add(proxy);
+                    }
+                }
+            }
+            return relationshipsInCurrentLayer;
+        }
+
+
+        /// <summary>
+        /// Executes the hooks for every key in relationshipsInCurrentLayer,
+        /// </summary>
+        /// <param name="relationshipsInCurrentLayer">Hook targets for current layer.</param>
+        /// <param name="hookExecution">Hook execution.</param>
+        void ExecutionLoop(
+            Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)> relationshipsInCurrentLayer,
+            Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecution
+            )
+        {
+            // note that it is possible that we have multiple relations to one type.
+            var parentTypes = relationshipsInCurrentLayer.Keys.ToArray();
+
+            foreach (Type type in parentTypes)
+            {
+                (var relationshipsProxy, var relatedEntities) = relationshipsInCurrentLayer[type];
+                var hookContainer = _meta.GetResourceHookContainer(relationshipsProxy.First().TargetType);
+                var filteredEntities = new HashSet<IIdentifiable>(hookExecution(hookContainer, relatedEntities));
+                relationshipsInCurrentLayer[type] = (relationshipsProxy, filteredEntities);
+            }
+        }
+
+        /// <summary>
+        /// B this method is called, the values in relationshipsInCurrentLayer
+        /// will contain a subset compared to in the DoExtractionLoop call.
+        /// We now need to iterate through currentLayer again and remove any of 
+        /// their related entities that do not occur in relationshipsInCurrentLayer
+        /// </summary>
+        /// <param name="currentLayer">Current layer.</param>
+        /// <param name="relationshipsInCurrentLayer">Hook targets for current layer.</param>
+        void AssignmentLoop(
+            IEnumerable<IIdentifiable> currentLayer,
+            Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)> relationshipsInCurrentLayer
+            )
+        {
+            // @TODO IM NOT EVEN SURE IF WE NEED TO REASSIGN ?! 
+            // if we adjust same objects in memory, we should only be required 
+            // to perform filter check
+            foreach (IIdentifiable currentLayerEntity in currentLayer)
+            {
+                foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
+                {
+
+                    /// if there are no related entities included for 
+                    /// currentLayerEntity for this relation, then this key will 
+                    /// not exist, and we may continue to the next.
+                    if (!relationshipsInCurrentLayer.TryGetValue(proxy.TargetType, out var tuple))
+                    {
+                        continue;
+                    }
+                    var parsedEntities = tuple.Item2;
+
+                    var relationshipValue = proxy.GetValue(currentLayerEntity);
+                    if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)
+                    {
+                        relationshipCollection = (relationshipCollection.Intersect(parsedEntities));
+                        proxy.SetValue(currentLayerEntity, relationshipCollection);
+                    }
+                    else if (relationshipValue is IIdentifiable relationshipSingle)
+                    {
+                        if (!parsedEntities.Contains(relationshipValue))
+                        {
+                            proxy.SetValue(currentLayerEntity, null);
+                        }
+                    }
+                }
+
+            }
         }
 
         /// <summary>
@@ -217,143 +377,57 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// Fires the hooks for related (nested) entities.
+        /// Registers the processed entities in the dictionary grouped by type
         /// </summary>
-        /// <param name="currentLayer">Current layer.</param>
-        /// <param name="hookExecutionAction">Hook execution action.</param>
-        void BreadthFirstTraverse(
-            IEnumerable<IIdentifiable> currentLayer,
-            Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecutionAction
-            )
+        /// <param name="entities">Entities to register</param>
+        /// <param name="entityType">Entity type.</param>
+        void RegisterProcessedEntities(IEnumerable<IIdentifiable> entities, Type entityType)
         {
-            // for the entities in the current layer: get the collection of all related entities
-            var relationshipsInCurrentLayer = ExtractionLoop(currentLayer);
 
-            if (!relationshipsInCurrentLayer.Any()) return;
-
-            // for the unique set of entities in that collection, execute the hooks
-            ExecutionLoop(relationshipsInCurrentLayer, hookExecutionAction);
-            // for the entities in the current layer: reassign relationships where needed.
-            AssignmentLoop(currentLayer, relationshipsInCurrentLayer);
-
-            var nextLayer = relationshipsInCurrentLayer.Values.SelectMany(entities => entities);
-            if (nextLayer.Any())
-            {
-                var uniqueTypesInNextLayer = relationshipsInCurrentLayer.Keys.Select(k => k.TargetType);
-                _meta.UpdateMetaInformation(uniqueTypesInNextLayer);
-                BreadthFirstTraverse(nextLayer, hookExecutionAction);
-            }
+            var processedEntities = GetProcessedEntities(entityType);
+            processedEntities.UnionWith(new HashSet<IIdentifiable>(entities));
         }
-
-        /// <summary>
-        ///     * Iterates through the entities in the current. This layer can be inhomogeneous.
-        ///     * For each of these entities: gets all related entity  for which we want to 
-        ///       execute a hook (target entities), this is defined in MetaInfo.
-        ///     * Grouped per relation, stores these target in relationshipsInCurrentLayer
-        /// </summary>
-        /// <returns>Hook targets for current layer.</returns>
-        /// <param name="currentLayer">Current layer.</param>
-        Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>> ExtractionLoop(
-            IEnumerable<IIdentifiable> currentLayer
-            )
+        void RegisterProcessedEntities(IEnumerable<TEntity> entities)
         {
-            var relationshipsInCurrentLayer = new Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>>();
-            foreach (IIdentifiable currentLayerEntity in currentLayer)
-            {
-                foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
-                {
-
-                    var relationshipValue = proxy.GetValue(currentLayerEntity);
-                    // skip iteration if there is no relation assigned @TODO what about to-many: will we have empty lists or null? and how does this relate to that being Included by query params
-                    if (relationshipValue == null) continue;
-                    if (!(relationshipValue is IEnumerable<IIdentifiable> relatedEntities))
-                    {
-                        // in the case of a to-one relationship, the assigned value
-                        // will not be a list. We therefore first wrap it in a list.
-                        var list = TypeHelper.CreateListFor(relationshipValue.GetType());
-                        list.Add(relationshipValue);
-                        relatedEntities = (IEnumerable<IIdentifiable>)list;
-                    }
-                    
-                    if (!relationshipsInCurrentLayer.ContainsKey(proxy))
-                    {
-                        relationshipsInCurrentLayer[proxy] = relatedEntities;
-                    }
-                    else
-                    {
-                        relationshipsInCurrentLayer[proxy] = relationshipsInCurrentLayer[proxy].Concat(relatedEntities);
-                    }
-                }
-
-            }
-            return relationshipsInCurrentLayer;
+            RegisterProcessedEntities(entities, _entityType);
         }
 
 
         /// <summary>
-        /// Executes the hooks for every key in relationshipsInCurrentLayer,
+        /// Gets the processed entities for a given type, instantiates the collection if new.
         /// </summary>
-        /// <param name="relationshipsInCurrentLayer">Hook targets for current layer.</param>
-        /// <param name="hookExecution">Hook execution.</param>
-        void ExecutionLoop(
-            Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>> relationshipsInCurrentLayer,
-            Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecution
-            )
+        /// <returns>The processed entities.</returns>
+        /// <param name="entityType">Entity type.</param>
+        HashSet<IIdentifiable> GetProcessedEntities(Type entityType)
         {
-            var relationships = relationshipsInCurrentLayer.Keys.ToArray();
 
-            foreach (var proxy in relationships)
+            if (!_processedEntities.TryGetValue(entityType, out HashSet<IIdentifiable> processedEntities))
             {
-                var entities = relationshipsInCurrentLayer[proxy];
-                var uniqueEntities = new HashSet<IIdentifiable>(entities);
-                var innerHookContainer = _meta.GetResourceHookContainer(proxy.TargetType);
-                var filteredUniqueEntites = hookExecution(innerHookContainer, uniqueEntities);
-                relationshipsInCurrentLayer[proxy] = filteredUniqueEntites.ToArray();
+                processedEntities = new HashSet<IIdentifiable>();
+                _processedEntities[entityType] = processedEntities;
             }
+            return processedEntities;
+
         }
 
         /// <summary>
-        /// B this method is called, the values in relationshipsInCurrentLayer
-        /// will contain a subset compared to in the DoExtractionLoop call.
-        /// We now need to iterate through currentLayer again and remove any of 
-        /// their related entities that do not occur in relationshipsInCurrentLayer
+        /// Using the register of processed entities, determines the unique and new
+        /// entities with respect to previous iterations.
         /// </summary>
-        /// <param name="currentLayer">Current layer.</param>
-        /// <param name="relationshipsInCurrentLayer">Hook targets for current layer.</param>
-        void AssignmentLoop(
-            IEnumerable<IIdentifiable> currentLayer,
-            Dictionary<RelationshipProxy, IEnumerable<IIdentifiable>> relationshipsInCurrentLayer
-            )
+        /// <returns>The in tree.</returns>
+        /// <param name="entities">Entities.</param>
+        /// <param name="entityType">Entity type.</param>
+        HashSet<IIdentifiable> UniqueInTree(IEnumerable<IIdentifiable> entities, Type entityType)
         {
-            // @TODO IM NOT EVEN SURE IF WE NEED TO REASSIGN ?! 
-            // if we adjust same objects in memory, we should only be required 
-            // to perform filter check
-            foreach (IIdentifiable currentLayerEntity in currentLayer)
-            {
-                foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
-                {
+            var newEntities = new HashSet<IIdentifiable>(entities.Except(GetProcessedEntities(entityType)));
+            RegisterProcessedEntities(entities, entityType);
+            return newEntities;
+        }
 
-                    // skip the iteration there is nothing to a given relationship
-                    if (!relationshipsInCurrentLayer.TryGetValue(proxy, out var parsedEntities))
-                    {
-                        continue;
-                    }
-
-                    var relationshipValue = proxy.GetValue(currentLayerEntity);
-                    if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)
-                    {
-                        relationshipCollection = (relationshipCollection.Intersect(parsedEntities));
-                        proxy.SetValue(currentLayerEntity, relationshipCollection);
-                    }
-                    else if (relationshipValue is IIdentifiable relationshipSingle)
-                    {
-                        if (!parsedEntities.Contains(relationshipValue))
-                        {
-                            proxy.SetValue(currentLayerEntity, null);
-                        }
-                    }
-                }
-            }
+        void FlushRegister()
+        {
+            _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
         }
     }
 }
+

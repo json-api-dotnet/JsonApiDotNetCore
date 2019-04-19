@@ -17,9 +17,9 @@ using System.Collections;
 namespace UnitTests.ResourceHooks
 {
 
-    public class IdentifiableJoinTable_AfterReadTests : ResourceHooksTestBase
+    public class IdentifiableManyToMany_AfterReadTests : ResourceHooksTestBase
     {
-        public IdentifiableJoinTable_AfterReadTests()
+        public IdentifiableManyToMany_AfterReadTests()
         {
             // Build() exposes the static ResourceGraphBuilder.Instance member, which 
             // is consumed by ResourceDefinition class.
@@ -66,8 +66,6 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>();
             var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>();
             var tagDiscovery = SetDiscoverableHooks<Tag>();
-
-
 
             (var contextMock, var hookExecutor, var articleResourceMock,
                 var joinResourceMock, var tagResourceMock ) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);

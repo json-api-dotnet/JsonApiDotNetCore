@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
             // @TODO implement hook executor
-            entity = _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            //entity = _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
          
 
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Services
 
             }
             // @TODO implement hook executor
-             entity = _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+             //entity = _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
 
             return MapOut(entity);
         }

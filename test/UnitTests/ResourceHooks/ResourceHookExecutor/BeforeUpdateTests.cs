@@ -1,4 +1,4 @@
-
+﻿
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
@@ -41,15 +41,12 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeUpdate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(todoInput, It.IsAny<ResourceAction>()), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(todoList, It.IsAny<ResourceAction>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
 
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
@@ -67,13 +64,10 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeUpdate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
@@ -90,15 +84,12 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeUpdate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(todoInput, It.IsAny<ResourceAction>()), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(todoList, It.IsAny<ResourceAction>()), Times.Once());
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
             ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
@@ -113,13 +104,10 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeUpdate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();

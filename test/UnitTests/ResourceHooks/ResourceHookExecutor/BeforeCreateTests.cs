@@ -39,20 +39,17 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeCreate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeCreate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(todoInput, It.IsAny<ResourceAction>()), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
 
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
-            ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce()); ;
             ownerResourceMock.VerifyNoOtherCalls();
         }
 
@@ -65,15 +62,12 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeCreate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeCreate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(todoInput, It.IsAny<ResourceAction>()), Times.Never());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(todoList, It.IsAny<ResourceAction>()), Times.Never());
             ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
 
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
@@ -90,15 +84,12 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeCreate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeCreate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(todoInput, It.IsAny<ResourceAction>()), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
             ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
@@ -113,13 +104,10 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
-            hookExecutor.BeforeCreate(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeCreate(todoList, It.IsAny<ResourceAction>());
             // assert
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();

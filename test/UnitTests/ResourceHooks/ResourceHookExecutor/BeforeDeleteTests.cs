@@ -1,4 +1,4 @@
-
+﻿
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
@@ -35,13 +35,12 @@ namespace UnitTests.ResourceHooks
             var discovery = SetDiscoverableHooks<TodoItem>();
             (var resourceDefinitionMock, var contextMock, var hookExecutor) = CreateTestObjects(discovery);
 
-            var todoInput = new List<TodoItem>() { new TodoItem() };
-
+            var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.BeforeDelete(todoInput, It.IsAny<ResourceAction>());
+            hookExecutor.BeforeDelete(todoList, It.IsAny<ResourceAction>());
 
             // assert
-            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(todoInput, It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(todoList, It.IsAny<ResourceAction>()), Times.Once());
             resourceDefinitionMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             resourceDefinitionMock.VerifyNoOtherCalls();
         }

@@ -1,4 +1,4 @@
-
+﻿
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
@@ -39,11 +39,8 @@ namespace UnitTests.ResourceHooks
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoInput = new List<TodoItem>() { new TodoItem
-                {
-                    Owner = new Person()
-                }
-            };
+            var todoList = CreateTodoWithOwner();
+
             // act
             hookExecutor.BeforeRead(It.IsAny<ResourceAction>());
             // assert

@@ -18,6 +18,16 @@ namespace UnitTests.ResourceHooks
 
     public class ResourceHooksTestBase
     {
+
+
+        protected List<TodoItem> CreateTodoWithOwner()
+        {
+            var todoItem = new TodoItem();
+            var todoList = new List<TodoItem>() { todoItem };
+            var person = new Person() { AssignedTodoItems = todoList };
+            todoItem.Owner = person;
+            return todoList;
+        }
         protected (Mock<IResourceHookContainer<TMain>>, Mock<IJsonApiContext>, IResourceHookExecutor<TMain>) 
         CreateTestObjects<TMain>(IImplementedResourceHooks<TMain> discovery = null)
             where TMain : class, IIdentifiable
