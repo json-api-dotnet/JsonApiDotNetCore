@@ -157,10 +157,10 @@ namespace JsonApiDotNetCore.Extensions
 
             if (jsonApiOptions.EnableResourceHooks)
             {
-                services.AddScoped(typeof(IResourceHookExecutor<>), typeof(ResourceHookExecutor<>));
+                services.AddTransient(typeof(IResourceHookExecutor<>), typeof(ResourceHookExecutor<>));
                 services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
                 services.AddSingleton(typeof(IImplementedResourceHooks<>), typeof(ImplementedResourceHooks<>));
-                services.AddSingleton<IResourceHookMetaInfo, ResourceHookMetaInfo>();
+                services.AddTransient<IResourceHookMetaInfo, ResourceHookMetaInfo>();
             }
 
         }

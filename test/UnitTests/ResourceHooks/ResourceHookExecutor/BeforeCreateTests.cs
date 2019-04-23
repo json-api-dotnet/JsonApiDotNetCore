@@ -45,7 +45,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, It.IsAny<ResourceAction>());
             // assert
             todoResourceMock.Verify(rd => rd.BeforeCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
+            ownerResourceMock.As<IResourceHookContainer<Person>>().Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
 
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
@@ -68,7 +68,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, It.IsAny<ResourceAction>());
             // assert
             todoResourceMock.Verify(rd => rd.BeforeCreate(todoList, It.IsAny<ResourceAction>()), Times.Never());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<IIdentifiable>>(), It.IsAny<ResourceAction>()), Times.Once());
+            ownerResourceMock.As<IResourceHookContainer<Person>>().Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
 
             todoResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();

@@ -55,18 +55,73 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Unauthorized_Article()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            await context.SaveChangesAsync();
+
+            var article = _articleFaker.Generate();
+            article.Name = "Classified";
+            context.Articles.Add(article);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles/{article.Id}";
+
+            var httpMethod = new HttpMethod("GET");
+            var request = new HttpRequestMessage(httpMethod, route);
+
+
+            // Act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+        }
+
+        [Fact]
+        public async Task Article_Is_Hidden()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            await context.SaveChangesAsync();
+
+            var articles = _articleFaker.Generate(3).ToList();
+            string toBeExcluded = "This should be not be included";
+            articles[0].Name = toBeExcluded;
+
+
+            context.Articles.AddRange(articles);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles";
+
+            var httpMethod = new HttpMethod("GET");
+            var request = new HttpRequestMessage(httpMethod, route);
+
+
+            // Act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.DoesNotContain(toBeExcluded, body);
+        }
+
+        [Fact]
         public async Task Tag_Is_Hidden()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
+            await context.SaveChangesAsync();
+
             var article = _articleFaker.Generate();
             var tags = _tagFaker.Generate(2);
-
-            string toBeExcluded = "THISTAGSHOULDNOTBEVISIBLE";
+            string toBeExcluded = "This should be not be included";
             tags[0].Name = toBeExcluded;
-
-            context.Articles.RemoveRange(context.Articles);
-            await context.SaveChangesAsync();
 
             var articleTags = new ArticleTag[]
             {
@@ -96,17 +151,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
-            var document = JsonConvert.DeserializeObject<Documents>(body);
-            Assert.NotEmpty(document.Included);
-
-            var articleResponseList = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
-            Assert.NotNull(articleResponseList);
-
-            var articleResponse = articleResponseList.FirstOrDefault(a => a.Id == article.Id);
-            Assert.NotNull(articleResponse);
-            Assert.Equal(article.Name, articleResponse.Name);
-
             Assert.DoesNotContain(toBeExcluded, body);
         }
 

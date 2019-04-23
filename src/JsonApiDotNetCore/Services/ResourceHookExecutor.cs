@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Services
         protected readonly Type _entityType;
         protected readonly IResourceHookMetaInfo _meta;
         protected readonly ResourceAction[] _singleActions;
-        private ResourceHook _hookInTreeTraversal;
+        protected readonly Type _openContainerType;
         protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
 
 
@@ -39,6 +39,7 @@ namespace JsonApiDotNetCore.Services
             _meta = meta;
             _implementedHooks = hooksConfiguration.ImplementedHooks;
             _entityType = typeof(TEntity);
+            _openContainerType = typeof(ResourceDefinition<>);
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
 
             _singleActions = new ResourceAction[]
@@ -63,9 +64,10 @@ namespace JsonApiDotNetCore.Services
             {
                 RegisterProcessedEntities(entities);
                 var parsedEntities = hookContainer.BeforeCreate(entities, actionSource); // eg all of type {Article}
-                ValidateHookResponse(entities, parsedEntities, actionSource);
+                ValidateHookResponse((IList)parsedEntities, actionSource);
                 entities = parsedEntities;
             }
+
 
 
             /// We use IIdentifiable instead of TEntity, because deeper layers
@@ -76,7 +78,7 @@ namespace JsonApiDotNetCore.Services
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                return container.BeforeUpdate(relatedEntities, actionSource);
+                return (IList)CallHook(container, ResourceHook.BeforeUpdate, new object[] { relatedEntities, actionSource });
             });
 
             FlushRegister();
@@ -94,14 +96,14 @@ namespace JsonApiDotNetCore.Services
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                return container.AfterUpdate(relatedEntities, actionSource);
+                return (IList)CallHook(container, ResourceHook.AfterUpdate, new object[] { relatedEntities, actionSource });
             });
 
             if (hookContainer != null)
             {
                 var parsedEntities = hookContainer.AfterCreate(entities, actionSource);
-                ValidateHookResponse(entities, parsedEntities, actionSource);
-                return parsedEntities;
+                ValidateHookResponse((IList)parsedEntities, actionSource);
+                entities = parsedEntities;
             }
 
             FlushRegister();
@@ -112,8 +114,8 @@ namespace JsonApiDotNetCore.Services
         public virtual void BeforeRead(ResourceAction actionSource, string stringId = null)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
-            if (hookContainer == null) return;
-            hookContainer.BeforeRead(actionSource, stringId);
+            hookContainer?.BeforeRead(actionSource, stringId);
+            FlushRegister();
         }
 
         /// <inheritdoc/>
@@ -125,11 +127,13 @@ namespace JsonApiDotNetCore.Services
             _meta.UpdateMetaInformation(new Type[] { _entityType }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                if (container.ShouldExecuteHook(ResourceHook.BeforeRead)) container.BeforeRead(actionSource);
+                if (container.ShouldExecuteHook(ResourceHook.BeforeRead))
+                    CallHook(container, ResourceHook.BeforeRead, new object[] { actionSource, default(string) });
+
                 if (container.ShouldExecuteHook(ResourceHook.AfterRead))
                 {
-                    var parsedEntities = container.AfterRead(relatedEntities, actionSource);
-                    ValidateHookResponse(relatedEntities, parsedEntities);
+                    var parsedEntities = (IList)CallHook(container, ResourceHook.AfterRead, new object[] { relatedEntities, actionSource });
+                    ValidateHookResponse(parsedEntities);
                     return parsedEntities;
                 }
                 return relatedEntities;
@@ -138,8 +142,8 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 var parsedEntities = hookContainer.AfterRead(entities, actionSource);
-                ValidateHookResponse(entities, parsedEntities, actionSource);
-                return parsedEntities;
+                ValidateHookResponse((IList)parsedEntities, actionSource);
+                entities = parsedEntities;
             }
 
             FlushRegister();
@@ -153,14 +157,14 @@ namespace JsonApiDotNetCore.Services
             {
                 RegisterProcessedEntities(entities);
                 var parsedEntities = hookContainer.BeforeUpdate(entities, actionSource);
-                ValidateHookResponse(entities, parsedEntities, actionSource);
+                ValidateHookResponse((IList)parsedEntities, actionSource);
                 entities = parsedEntities;
             }
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                return container.BeforeUpdate(relatedEntities, actionSource);
+                return (IList)CallHook(container, ResourceHook.BeforeUpdate, new object[] { relatedEntities, actionSource });
             });
 
             FlushRegister();
@@ -176,14 +180,14 @@ namespace JsonApiDotNetCore.Services
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                return container.AfterUpdate(relatedEntities, actionSource);
+                return (IList)CallHook(container, ResourceHook.AfterUpdate, new object[] { relatedEntities, actionSource });
             });
 
             if (hookContainer != null)
             {
                 var parsedEntities = hookContainer.AfterUpdate(entities, actionSource);
-                ValidateHookResponse(entities, parsedEntities, actionSource);
-                return parsedEntities;
+                ValidateHookResponse((IList)parsedEntities, actionSource);
+                entities = parsedEntities;
             }
 
             FlushRegister();
@@ -194,16 +198,16 @@ namespace JsonApiDotNetCore.Services
         public virtual void BeforeDelete(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
-            if (hookContainer == null) return;
-            hookContainer.BeforeDelete(entities, actionSource);
+            hookContainer?.BeforeDelete(entities, actionSource);
+            FlushRegister();
         }
 
         /// <inheritdoc/>
         public virtual void AfterDelete(IEnumerable<TEntity> entities, bool succeeded, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
-            if (hookContainer == null) return;
-            hookContainer.AfterDelete(entities, succeeded, actionSource);
+            hookContainer?.AfterDelete(entities, succeeded, actionSource);
+            FlushRegister();
         }
 
         /// <summary>
@@ -213,7 +217,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="hookExecutionAction">Hook execution action.</param>
         void BreadthFirstTraverse(
             IEnumerable<IIdentifiable> currentLayer,
-            Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecutionAction
+            Func<IResourceHookContainer, IList, IList> hookExecutionAction
             )
         {
             // for the entities in the current layer: get the collection of all related entities
@@ -290,7 +294,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="hookExecution">Hook execution.</param>
         void ExecutionLoop(
             Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)> relationshipsInCurrentLayer,
-            Func<IResourceHookContainer<IIdentifiable>, IEnumerable<IIdentifiable>, IEnumerable<IIdentifiable>> hookExecution
+            Func<IResourceHookContainer, IList, IList> hookExecution
             )
         {
             // note that it is possible that we have multiple relations to one type.
@@ -299,9 +303,10 @@ namespace JsonApiDotNetCore.Services
             foreach (Type type in parentTypes)
             {
                 (var relationshipsProxy, var relatedEntities) = relationshipsInCurrentLayer[type];
-                var hookContainer = _meta.GetResourceHookContainer(relationshipsProxy.First().TargetType);
-                var filteredEntities = new HashSet<IIdentifiable>(hookExecution(hookContainer, relatedEntities));
-                relationshipsInCurrentLayer[type] = (relationshipsProxy, filteredEntities);
+                var targetType = relationshipsProxy.First().TargetType;
+                var hookContainer = _meta.GetResourceHookContainer(targetType);
+                var filteredEntities = hookExecution(hookContainer, TypeHelper.ConvertCollection(relatedEntities, targetType));
+                relationshipsInCurrentLayer[type] = (relationshipsProxy, new HashSet<IIdentifiable>((IEnumerable<IIdentifiable>)filteredEntities));
             }
         }
 
@@ -318,9 +323,7 @@ namespace JsonApiDotNetCore.Services
             Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)> relationshipsInCurrentLayer
             )
         {
-            // @TODO IM NOT EVEN SURE IF WE NEED TO REASSIGN ?! 
-            // if we adjust same objects in memory, we should only be required 
-            // to perform filter check
+
             foreach (IIdentifiable currentLayerEntity in currentLayer)
             {
                 foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
@@ -329,7 +332,7 @@ namespace JsonApiDotNetCore.Services
                     /// if there are no related entities included for 
                     /// currentLayerEntity for this relation, then this key will 
                     /// not exist, and we may continue to the next.
-                    if (!relationshipsInCurrentLayer.TryGetValue(proxy.TargetType, out var tuple))
+                    if (!relationshipsInCurrentLayer.TryGetValue(proxy.ParentType, out var tuple))
                     {
                         continue;
                     }
@@ -361,17 +364,18 @@ namespace JsonApiDotNetCore.Services
         /// <param name="initalList">The initial collection before the hook was executed.</param>
         /// <param name="returnedList"> The collection returned from the hook</param>
         /// <param name="actionSource">The pipeine from which the hook was fired</param>
-        protected void ValidateHookResponse(IEnumerable<IIdentifiable> initalList, IEnumerable<IIdentifiable> returnedList, ResourceAction actionSource = 0)
+        protected void ValidateHookResponse(IList returnedList, ResourceAction actionSource = 0)
         {
-            if (TypeHelper.GetListInnerType(initalList as IEnumerable) != TypeHelper.GetListInnerType(returnedList as IEnumerable))
+            //if (TypeHelper.GetListInnerType(initalList as IEnumerable) != TypeHelper.GetListInnerType(returnedList as IEnumerable))
+            //{
+            //    throw new ApplicationException("The List type of the return value from a resource hook" +
+            //        "did not match the the same type as the original collection. Make sure you are returning collections of the same" +
+            //        "entities as recieved from your hooks");
+            //}
+
+            if (actionSource != ResourceAction.None && _singleActions.Contains(actionSource) && returnedList.Count > 1)
             {
-                throw new ApplicationException("The List type of the return value from a resource hook" +
-                    "did not match the the same type as the original collection. Make sure you are returning collections of the same" +
-                    "entities as recieved from your hooks");
-            }
-            if (actionSource != ResourceAction.None && _singleActions.Contains(actionSource) && returnedList.Count() > 1)
-            {
-                throw new ApplicationException("The returned collection from this hook may only contain one item in the case of he" +
+                throw new ApplicationException("The returned collection from this hook may only contain one item in the case of the" +
                     actionSource.ToString() + "pipeline");
             }
         }
@@ -383,7 +387,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entityType">Entity type.</param>
         void RegisterProcessedEntities(IEnumerable<IIdentifiable> entities, Type entityType)
         {
-
             var processedEntities = GetProcessedEntities(entityType);
             processedEntities.UnionWith(new HashSet<IIdentifiable>(entities));
         }
@@ -424,6 +427,13 @@ namespace JsonApiDotNetCore.Services
             return newEntities;
         }
 
+        object CallHook(IResourceHookContainer container, ResourceHook hook, object[] arguments)
+        {
+
+            var method = container.GetType().GetMethods().First(m => m.Name == hook.ToString("G"));
+            return method.Invoke(container, arguments);
+        }
+
         /// <summary>
         /// We need to flush the list of processed entities because typically
         /// the hook executor will be caled twice per service pipeline (eg BeforeCreate
@@ -431,6 +441,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         void FlushRegister()
         {
+
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
         }
     }

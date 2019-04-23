@@ -4,6 +4,9 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
+
+
+
     /// <summary>
     /// An enum that represents the initiator of a hook. Eg, when BeforeCreate()
     /// is called from EntityResourceService.GetAsync(TId id), it will be called
@@ -22,7 +25,9 @@ namespace JsonApiDotNetCore.Services
     }
 
 
-    public interface IResourceHookBase<T> where T : class, IIdentifiable
+
+
+    public interface IResourceHookBase<T>  where T : class, IIdentifiable
     {
         /// <summary>
         /// A hook executed before creating an entity. Can be used eg. for authorization.
@@ -135,6 +140,12 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public interface IResourceHookContainer<T> : IResourceHookContainer, IResourceHookBase<T> where T : class, IIdentifiable
     {
+
+    }
+
+
+    public interface IResourceHookContainer
+    {
         /// <summary>
         /// Checks whether a hook should be executed or not through reflective 
         /// verification if a hook is implemented on IResourceModel<typeparamref name="T"/>
@@ -142,12 +153,6 @@ namespace JsonApiDotNetCore.Services
         /// <returns><c>true</c>, if execute hook should be executed, <c>false</c> otherwise.</returns>
         /// <param name="hook">The enum representing the type of hook.</param>
         bool ShouldExecuteHook(ResourceHook hook);
-    }
-
-
-    public interface IResourceHookContainer
-    {
-
     }
 
 

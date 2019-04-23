@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Services
                 IResourceHookExecutor<TEntity> hookExecutor,
                 ILoggerFactory loggerFactory = null)
         {
-            // no mapper provided, TResource & TEntity must be the same type
+            // no mapper provided, TResource & TEntity must be the same typemeta
             if (typeof(TResource) != typeof(TEntity))
             {
                 throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");

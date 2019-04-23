@@ -131,7 +131,7 @@ namespace JsonApiDotNetCore.Services
     public interface IResourceHookMetaInfo
     {
         IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable currentLayerEntity);
-        IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None);
+        IResourceHookContainer GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None);
         IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
         Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, ResourceHook hook = ResourceHook.None);
         Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, IEnumerable<ResourceHook> hooks);
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCore.Services
 
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
-        protected readonly Dictionary<Type, IResourceHookContainer<IIdentifiable>> _hookContainers;
+        protected readonly Dictionary<Type, IResourceHookContainer> _hookContainers;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
         protected Dictionary<Type, List<RelationshipProxy>> _meta;
 
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Services
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
             _meta = new Dictionary<Type, List<RelationshipProxy>>();
-            _hookContainers = new Dictionary<Type, IResourceHookContainer<IIdentifiable>>();
+            _hookContainers = new Dictionary<Type, IResourceHookContainer>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
@@ -200,16 +200,16 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The resource definition.</returns>
         /// <param name="targetEntity">Target entity type</param>
         /// <param name="hook">The hook to get a ResourceDefinition for.</param>
-        public IResourceHookContainer<IIdentifiable> GetResourceHookContainer(Type targetEntity, ResourceHook hook = ResourceHook.None)
+        public IResourceHookContainer GetResourceHookContainer(Type targetEntityType, ResourceHook hook = ResourceHook.None)
         {
             /// checking the cache if we have a reference for the requested container, 
             /// regardless of the hook we will use it for. If the value is null, 
             /// it means there was no implementation IResourceHookContainer at all, 
             /// so we need not even bother.
-            if (!_hookContainers.TryGetValue(targetEntity, out IResourceHookContainer<IIdentifiable> container))
+            if (!_hookContainers.TryGetValue(targetEntityType, out IResourceHookContainer container))
             {
-                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(IResourceHookContainer<>), targetEntity)) as IResourceHookContainer<IIdentifiable>;
-                _hookContainers[targetEntity] = container;
+                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), targetEntityType));
+                _hookContainers[targetEntityType] = container;
             }
             if (container == null) return container;
 
@@ -233,6 +233,8 @@ namespace JsonApiDotNetCore.Services
             return null;
 
         }
+
+
 
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 

@@ -186,7 +186,8 @@ namespace UnitTests.ResourceHooks
 
             var identifiableResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<IIdentifiable>>(), discovery);
             var modelSpecificResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<TModel>>(), discovery);
-            resourceDefinition.As<IResourceHookBase<IIdentifiable>>();
+            resourceDefinition.As<IResourceHookBase<TModel>>();
+
 
             return (modelSpecificResourceDefinition, identifiableResourceDefinition);
         }
@@ -209,7 +210,7 @@ namespace UnitTests.ResourceHooks
             where TInnerContainerType : class, IIdentifiable
 
         {
-            processorFactory.Setup(c => c.GetProcessor<IResourceHookContainer>(typeof(IResourceHookContainer<>), typeof(TModel)))
+            processorFactory.Setup(c => c.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
             .Returns(modelResource);
         }
 
