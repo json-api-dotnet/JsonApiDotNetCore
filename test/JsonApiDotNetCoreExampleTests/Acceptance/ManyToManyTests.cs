@@ -30,7 +30,38 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             _fixture = fixture;
         }
+        [Fact]
+        public async Task Can_Fetch_Many_To_Many_Through_Id()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var article = _articleFaker.Generate();
+            var tag = _tagFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+            context.ArticleTags.Add(articleTag);
+            await context.SaveChangesAsync();
 
+            var route = $"/api/v1/articles/{article.Id}/tags";
+            // act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.NotNull(document.Data);
+            
+            var tagResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Tag>(body);
+            Assert.NotNull(tagResponse);
+            Assert.Equal(tag.Id, tagResponse.Id);
+            Assert.Equal(tag.Name, tagResponse.Name);
+            
+        }
         [Fact]
         public async Task Can_Fetch_Many_To_Many_Through_All()
         {
