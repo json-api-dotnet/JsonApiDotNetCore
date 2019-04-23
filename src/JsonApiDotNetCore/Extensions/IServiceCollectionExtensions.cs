@@ -155,10 +155,14 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
-            services.AddScoped(typeof(IResourceHookExecutor<>), typeof(ResourceHookExecutor<>));
-            services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
-            services.AddSingleton(typeof(IImplementedResourceHooks<>), typeof(ImplementedResourceHooks<>));
-            services.AddSingleton<IResourceHookMetaInfo, ResourceHookMetaInfo>();
+            if (jsonApiOptions.EnableResourceHooks)
+            {
+                services.AddScoped(typeof(IResourceHookExecutor<>), typeof(ResourceHookExecutor<>));
+                services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
+                services.AddSingleton(typeof(IImplementedResourceHooks<>), typeof(ImplementedResourceHooks<>));
+                services.AddSingleton<IResourceHookMetaInfo, ResourceHookMetaInfo>();
+            }
+
         }
 
         private static void AddOperationServices(IServiceCollection services)
