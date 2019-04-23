@@ -339,12 +339,20 @@ namespace JsonApiDotNetCore.Data
             return oldEntity;
         }
 
+        /// <summary>
+        /// In case a relationship is updated where the parent type and related 
+        /// are equal, we need to make sure we don't reattach the parent entity 
+        /// as this will cause entity tracking errors.
+        /// </summary>
+        /// <returns>The interpolated related entity collection</returns>
+        /// <param name="relatedEntities">Related entities.</param>
+        /// <param name="oldEntity">Old entity.</param>
         object CheckForSelfReferingUpdate(IEnumerable<object> relatedEntities, TEntity oldEntity)
         {
-            var entity = relatedEntities.FirstOrDefault();
+            var relatedType = TypeHelper.GetTypeOfList(relatedEntities.GetType());
             var list = new List<TEntity>();
             bool refersSelf = false;
-            if (entity?.GetType() == typeof(TEntity)) 
+            if (relatedType == typeof(TEntity)) 
             {
                 foreach (TEntity e in relatedEntities)
                 {
@@ -359,7 +367,7 @@ namespace JsonApiDotNetCore.Data
                     }
                 }
             }
-            return (refersSelf ? list : relatedEntities);
+            return refersSelf ? list : relatedEntities;
 
         }
 

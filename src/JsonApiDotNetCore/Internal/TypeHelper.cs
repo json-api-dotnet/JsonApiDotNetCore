@@ -65,6 +65,15 @@ namespace JsonApiDotNetCore.Internal
             return (T)ConvertType(value, typeof(T));
         }
 
+        public static Type GetTypeOfList(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                return type.GetGenericArguments()[0]; 
+            }
+            return null;
+        }
+
         /// <summary>
         /// Convert collection of query string params to Collection of concrete Type
         /// </summary>
