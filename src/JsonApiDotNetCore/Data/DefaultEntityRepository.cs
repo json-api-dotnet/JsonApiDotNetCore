@@ -250,7 +250,8 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var pointer in pointers)
             {
-                _context.Entry(pointer).State = EntityState.Unchanged;
+                if (_context.EntityIsTracked(pointer as IIdentifiable) == false)
+                    _context.Entry(pointer).State = EntityState.Unchanged;
                 var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
 
                 hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
