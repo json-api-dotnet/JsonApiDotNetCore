@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
 
-            entity = _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
 
 
@@ -96,33 +96,35 @@ namespace JsonApiDotNetCore.Services
 
             }
 
-            entity = _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
 
             return MapOut(entity);
         }
         public virtual async Task<bool> DeleteAsync(TId id)
         {
 
-            var entity =  await _entities.GetAsync(id);
-            _hookExecutor.BeforeDelete(AsList(entity), ResourceAction.Delete);
+            var entity = await _entities.GetAsync(id);
+            _hookExecutor?.BeforeDelete(AsList(entity), ResourceAction.Delete);
+            // will use DeleteAsync(TEntity entity) as soon as this is exposed on IEntityRepository.
+            // Using DeleteAsync(TId id) for now to ensure backwards compatability
             var succeeded = await _entities.DeleteAsync(id);
 
-            _hookExecutor.AfterDelete(AsList(entity), succeeded, ResourceAction.Delete);
+            _hookExecutor?.AfterDelete(AsList(entity), succeeded, ResourceAction.Delete);
             return succeeded;
         }
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
 
-            _hookExecutor.BeforeRead(ResourceAction.Get);
+            _hookExecutor?.BeforeRead(ResourceAction.Get);
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
-                
-            entities = _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get).AsQueryable();
+
+            entities = _hookExecutor == null ? entities : _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get).AsQueryable();
 
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
@@ -136,7 +138,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> GetAsync(TId id)
         {
 
-            _hookExecutor.BeforeRead(ResourceAction.GetSingle, id.ToString());
+            _hookExecutor?.BeforeRead(ResourceAction.GetSingle, id.ToString());
             //TResource entity = null;
             TEntity entity;
             if (ShouldIncludeRelationships())
@@ -148,7 +150,7 @@ namespace JsonApiDotNetCore.Services
                 entity = await _entities.GetAsync(id);
             }
 
-            entity = _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
             // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
             // for every included entity.
             return MapOut(entity);
@@ -161,12 +163,10 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
 
-            _hookExecutor.BeforeRead(ResourceAction.GetRelationship, id.ToString());
+            _hookExecutor?.BeforeRead(ResourceAction.GetRelationship, id.ToString());
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+            entity = _hookExecutor == null ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
 
-            entity = _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
-            // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
-            // for every included entity.
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
@@ -191,10 +191,10 @@ namespace JsonApiDotNetCore.Services
             var entity = MapIn(resource);
 
 
-            entity = _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
             entity = await _entities.UpdateAsync(id, entity);
 
-            entity = _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -230,14 +230,14 @@ namespace JsonApiDotNetCore.Services
 
 
 
-            entity = _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
             // Note the call in previous line relies on Generic Processor to update relations.
             // In this call, _hookExecutor will call the BeforeUpdate and AfterUpdate.SingleOrDefault();
             // hooks for the target relation entities. See the SetRelationshipsAsync
             // method in GenericProcessor.cs
 
-            entity = _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
 
             relationship.Type = relationshipType;
         }

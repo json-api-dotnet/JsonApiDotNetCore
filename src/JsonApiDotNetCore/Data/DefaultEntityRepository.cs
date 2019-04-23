@@ -347,9 +347,16 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
+        [Obsolete("Use overload DeleteAsync(TEntity entity) instead")]
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            var entity = await GetAsync(id);
+            return await DeleteAsync(await GetAsync(id));
+          
+        }
+
+        /// In the next release with breaking changes, this will be added to the IEntityRepository interface
+        public virtual async Task<bool> DeleteAsync(TEntity entity)
+        {
 
             if (entity == null)
                 return false;
@@ -415,10 +422,9 @@ namespace JsonApiDotNetCore.Data
             int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
             int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
 
-            return await entities
+            return await ToListAsync(entities
                     .Skip(virtualFirstIndex)
-                    .Take(numberOfElementsInPage)
-                    .ToListAsync();
+                    .Take(numberOfElementsInPage));
         }
 
         /// <inheritdoc />

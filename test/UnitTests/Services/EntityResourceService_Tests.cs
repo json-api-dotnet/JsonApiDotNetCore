@@ -15,7 +15,6 @@ namespace UnitTests.Services
         private readonly Mock<IJsonApiContext> _jsonApiContextMock = new Mock<IJsonApiContext>();
         private readonly Mock<IEntityRepository<TodoItem>> _repositoryMock = new Mock<IEntityRepository<TodoItem>>();
         private readonly ILoggerFactory _loggerFactory = new Mock<ILoggerFactory>().Object;
-        private readonly Mock<IResourceHookExecutor<TodoItem>> _hookExecutor = new Mock<IResourceHookExecutor<TodoItem>>();
 
         public EntityResourceService_Tests()
         {
@@ -74,6 +73,6 @@ namespace UnitTests.Services
         }
 
         private EntityResourceService<TodoItem> GetService() =>
-            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, _hookExecutor.Object,_loggerFactory);
+            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, null, _loggerFactory);
     }
 }
