@@ -93,24 +93,13 @@ namespace JsonApiDotNetCore.Internal.Generics
         {
             if (relationship.IsHasMany)
             {
-                // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entities = _context.Set<T>().Where(x => relationshipIds.Contains(((IIdentifiable)x).StringId)).ToList();
-
-                // @TODO implement hook executor  @TODO Do we need this here or is sufficient in service?
-                // entities = _hookExecutor.BeforeUpdate(entities, ResourceAction.PatchRelationships)
                 relationship.SetValue(parent, entities);
-                // @TODO implement hook executor
-                // entities = _hookExecutor.AfterUpdate(entities, ResourceAction.PatchRelationships)
             }
             else
             {
-                // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == ((IIdentifiable)x).StringId);
-                // @TODO implement hook executor  @TODO Do we need this here or is sufficient in service?
-                // entity = _hookExecutor.BeforeUpdate(AsList(entities), ResourceAction.PatchRelationships).SingleOrDefault()
                 relationship.SetValue(parent, entity);
-                // @TODO implement hook executor
-
             }
 
             await _context.SaveChangesAsync();
