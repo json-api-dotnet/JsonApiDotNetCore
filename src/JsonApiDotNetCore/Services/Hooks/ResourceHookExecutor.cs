@@ -36,7 +36,6 @@ namespace JsonApiDotNetCore.Services
             _entityType = typeof(TEntity);
             _openContainerType = typeof(ResourceDefinition<>);
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
-
             _singleActions = new ResourceAction[]
                 {
                     ResourceAction.GetSingle,
