@@ -105,10 +105,7 @@ namespace JsonApiDotNetCore.Services
 
             var entity = await _entities.GetAsync(id);
             _hookExecutor?.BeforeDelete(AsList(entity), ResourceAction.Delete);
-            // will use DeleteAsync(TEntity entity) as soon as this is exposed on IEntityRepository.
-            // Using DeleteAsync(TId id) for now to ensure backwards compatability
-            var succeeded = await _entities.DeleteAsync(id);
-
+            var succeeded = await _entities.DeleteAsync(entity);
             _hookExecutor?.AfterDelete(AsList(entity), succeeded, ResourceAction.Delete);
             return succeeded;
         }
@@ -124,6 +121,9 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
+            /// entities.ToList() will execute the query. In the future, when EF
+            /// Core #1833 is suported, we will support for filtered include 
+            /// prior to executing the query
             entities = _hookExecutor == null ? entities : _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get).AsQueryable();
 
 
@@ -139,7 +139,6 @@ namespace JsonApiDotNetCore.Services
         {
 
             _hookExecutor?.BeforeRead(ResourceAction.GetSingle, id.ToString());
-            //TResource entity = null;
             TEntity entity;
             if (ShouldIncludeRelationships())
             {
@@ -151,8 +150,6 @@ namespace JsonApiDotNetCore.Services
             }
 
             entity = _hookExecutor == null ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
-            // note: The hookexecutor will also fire the BeforeRead and AfterRead hooks
-            // for every included entity.
             return MapOut(entity);
         }
 
@@ -228,15 +225,8 @@ namespace JsonApiDotNetCore.Services
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
-
-
             entity = _hookExecutor == null ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
-            // Note the call in previous line relies on Generic Processor to update relations.
-            // In this call, _hookExecutor will call the BeforeUpdate and AfterUpdate.SingleOrDefault();
-            // hooks for the target relation entities. See the SetRelationshipsAsync
-            // method in GenericProcessor.cs
-
             entity = _hookExecutor == null ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
 
             relationship.Type = relationshipType;

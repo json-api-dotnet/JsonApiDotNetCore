@@ -21,19 +21,17 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            IResourceHookExecutor<TEntity> hookExecutor = null
+            IDbContextResolver contextResolver
             )
-        : base(jsonApiContext, contextResolver, hookExecutor)
+        : base(jsonApiContext, contextResolver)
         { }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            IResourceHookExecutor<TEntity> hookExecutor = null
+            IDbContextResolver contextResolver
             )
-        : base(loggerFactory, jsonApiContext, contextResolver, hookExecutor)
+        : base(loggerFactory, jsonApiContext, contextResolver)
         { }
     }
 
@@ -56,22 +54,19 @@ namespace JsonApiDotNetCore.Data
 
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            IResourceHookExecutor<TEntity> hookExecutor = null
+            IDbContextResolver contextResolver
             )
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-            _hookExecutor = hookExecutor;
         }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
-            IResourceHookExecutor<TEntity> hookExecutor = null,
             ResourceDefinition<TEntity> resourceDefinition = null
             )
         {
@@ -81,7 +76,6 @@ namespace JsonApiDotNetCore.Data
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _resourceDefinition = resourceDefinition;
-            _hookExecutor = hookExecutor;
         }
 
         /// <inheritdoc />
@@ -167,13 +161,6 @@ namespace JsonApiDotNetCore.Data
         {
             AttachHasManyPointers(entity);
             AttachHasOnePointers(entity);
-        }
-
-        public virtual IQueryable<TEntity> ApplyResourceDefinitionLogic(IQueryable<TEntity> entities, string rel)
-        {
-            if (_hookExecutor == null) return entities;
-            //return _hookExecutor.ExecuteHook(entities.ToList(), rel).AsQueryable();
-            return entities; // In development! For the sake of not getting build errors for now.
         }
 
         /// <inheritdoc />
@@ -347,17 +334,14 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        [Obsolete("Use overload DeleteAsync(TEntity entity) instead")]
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             return await DeleteAsync(await GetAsync(id));
           
         }
 
-        /// In the next release with breaking changes, this will be added to the IEntityRepository interface
         public virtual async Task<bool> DeleteAsync(TEntity entity)
         {
-
             if (entity == null)
                 return false;
 

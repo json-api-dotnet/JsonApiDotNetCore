@@ -13,9 +13,7 @@ namespace JsonApiDotNetCore.Data
         : IEntityReadRepository<TEntity, TId>,
         IEntityWriteRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
-    {
-        IQueryable<TEntity> ApplyResourceDefinitionLogic(IQueryable<TEntity> entities, string rel);
-    }
+    { }
 
     /// <summary>
     /// A staging interface to avoid breaking changes that 
