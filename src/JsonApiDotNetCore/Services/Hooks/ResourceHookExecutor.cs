@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Services
         protected readonly ResourceDefinition<TEntity> _resourceDefinition;
         protected readonly IResourceGraph _graph;
         protected readonly Type _entityType;
-        protected readonly IResourceHookMetaInfo _meta;
+        protected readonly IMetaHookExecutor _meta;
         protected readonly ResourceAction[] _singleActions;
         protected readonly Type _openContainerType;
         protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Services
         public ResourceHookExecutor(
             IJsonApiContext jsonApiContext,
             IHooksDiscovery<TEntity> hooksConfiguration,
-            IResourceHookMetaInfo meta
+            IMetaHookExecutor meta
             )
         {
             _genericProcessorFactory = jsonApiContext.GenericProcessorFactory;

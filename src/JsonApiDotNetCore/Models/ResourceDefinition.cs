@@ -33,12 +33,12 @@ namespace JsonApiDotNetCore.Models
         private List<AttrAttribute> _requestCachedAttrs;
         protected readonly ResourceHook[] _implementedHooks;
 
-        public ResourceDefinition(IImplementedResourceHooks<T> implementedResourceHooks)
+        public ResourceDefinition(IHooksDiscovery<T> hooksDiscovery)
         {
             _graph = ResourceGraph.Instance;
             _contextEntity = ResourceGraph.Instance.GetContextEntity(typeof(T));
             _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
-            _implementedHooks = implementedResourceHooks.ImplementedHooks;
+            _implementedHooks = hooksDiscovery.ImplementedHooks;
         }
 
         public ResourceDefinition()
