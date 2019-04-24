@@ -1,17 +1,10 @@
-﻿
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
+﻿using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample.Resources;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
-
 
 namespace UnitTests.ResourceHooks
 {
@@ -41,7 +34,7 @@ namespace UnitTests.ResourceHooks
 
             // assert
             resourceDefinitionMock.Verify(rd => rd.BeforeDelete(todoList, It.IsAny<ResourceAction>()), Times.Once());
-            resourceDefinitionMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            resourceDefinitionMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             resourceDefinitionMock.VerifyNoOtherCalls();
         }
 
@@ -56,7 +49,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<ResourceAction>());
 
             // assert
-            resourceDefinitionMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            resourceDefinitionMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             resourceDefinitionMock.VerifyNoOtherCalls();
         }
     }

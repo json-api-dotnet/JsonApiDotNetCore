@@ -1,21 +1,11 @@
-﻿
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Models;
+﻿using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample.Resources;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
-
 
 namespace UnitTests.ResourceHooks
 {
-
     public class BeforeReadTests : ResourceHooksTestBase
     {
         public BeforeReadTests()
@@ -27,8 +17,6 @@ namespace UnitTests.ResourceHooks
                 .AddResource<Person>()
                 .Build();
         }
-
-
 
         [Fact]
         public void BeforeRead()
@@ -46,9 +34,6 @@ namespace UnitTests.ResourceHooks
             // assert
             todoResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), It.IsAny<string>()), Times.Once());
         }
-
-
-
     }
 }
 

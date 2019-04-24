@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
@@ -11,7 +10,6 @@ using Bogus;
 
 namespace UnitTests.ResourceHooks
 {
-
     public class ManyToMany_AfterReadTests : ResourceHooksTestBase
     {
         public ManyToMany_AfterReadTests()
@@ -63,7 +61,7 @@ namespace UnitTests.ResourceHooks
 
 
             (var contextMock, var hookExecutor, var articleResourceMock,
-                var tagResourceMock ) = CreateTestObjects(articleDiscovery, tagDiscovery);
+                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
             (var articles, var joins, var tags) = CreateDummyData();
 
@@ -72,12 +70,12 @@ namespace UnitTests.ResourceHooks
 
             // assert
             articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
-            articleResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            articleResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             articleResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.As<IResourceHookContainer<Tag>>().Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            tagResourceMock.As<IResourceHookContainer<Tag>>().Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>(  (collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
-            tagResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            tagResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -99,12 +97,12 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
 
             // assert
-            articleResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            articleResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             articleResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.As<IResourceHookContainer<Tag>>().Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            tagResourceMock.As<IResourceHookContainer<Tag>>().Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
-            tagResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            tagResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -125,11 +123,11 @@ namespace UnitTests.ResourceHooks
 
             // assert
             articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
-            articleResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            articleResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             articleResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.As<IResourceHookContainer<Tag>>().Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
-            tagResourceMock.As<IResourceHookContainer<Tag>>().As<IResourceHookContainer<Tag>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            tagResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -150,11 +148,11 @@ namespace UnitTests.ResourceHooks
 
             // assert
             articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
-            articleResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            articleResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             articleResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.As<IResourceHookContainer<Tag>>().Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            tagResourceMock.As<IResourceHookContainer<Tag>>().As<IResourceHookContainer<Tag>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
+            tagResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -175,12 +173,13 @@ namespace UnitTests.ResourceHooks
 
             // assert
             articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
-            articleResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            articleResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             articleResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            tagResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             tagResourceMock.VerifyNoOtherCalls();
         }
+
         [Fact]
         public void AfterRead_Without_Any_Hook_Implemented()
         {
@@ -197,11 +196,11 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
 
             // assert
-            articleResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            articleResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             articleResourceMock.VerifyNoOtherCalls();
 
 
-            tagResourceMock.As<IResourceHookContainer<IIdentifiable>>().Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
+            tagResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             tagResourceMock.VerifyNoOtherCalls();
         }
     }

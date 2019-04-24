@@ -6,11 +6,8 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 
-
 namespace JsonApiDotNetCore.Services
 {
-
-
     /// <inheritdoc/>
     public class ResourceHookExecutor<TEntity> : IResourceHookExecutor<TEntity> where TEntity : class, IIdentifiable
     {
@@ -24,8 +21,6 @@ namespace JsonApiDotNetCore.Services
         protected readonly ResourceAction[] _singleActions;
         protected readonly Type _openContainerType;
         protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
-
-
 
         public ResourceHookExecutor(
             IJsonApiContext jsonApiContext,
@@ -53,13 +48,11 @@ namespace JsonApiDotNetCore.Services
                 };
         }
 
+        /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
 
-            /// traversing the 0th layer. Not including this in the recursive function
-            /// because the most complexities that arrise in the tree traversal do not
-            /// apply to the 0th layer (eg non-homogeneity of the next layers)
             if (hookContainer != null)
             {
                 RegisterProcessedEntities(entities);
@@ -68,13 +61,6 @@ namespace JsonApiDotNetCore.Services
                 entities = parsedEntities;
             }
 
-
-
-            /// We use IIdentifiable instead of TEntity, because deeper layers
-            /// in the tree traversal will not necessarily be homogenous (i.e. 
-            /// not all elements will be some same type T).
-            /// eg: this list will be all of type {Article}, but deeper layers 
-            /// could consist of { Tag, Author, Comment }
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
@@ -325,12 +311,10 @@ namespace JsonApiDotNetCore.Services
             Dictionary<Type, (List<RelationshipProxy>, HashSet<IIdentifiable>)> relationshipsInCurrentLayer
             )
         {
-
             foreach (IIdentifiable currentLayerEntity in currentLayer)
             {
                 foreach (RelationshipProxy proxy in _meta.GetMetaEntries(currentLayerEntity))
                 {
-
                     /// if there are no related entities included for 
                     /// currentLayerEntity for this relation, then this key will 
                     /// not exist, and we may continue to the next.
@@ -354,7 +338,6 @@ namespace JsonApiDotNetCore.Services
                         }
                     }
                 }
-
             }
         }
 
@@ -366,8 +349,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeine from which the hook was fired</param>
         protected void ValidateHookResponse(object returnedList, ResourceAction actionSource = 0)
         {
-        
-            if (actionSource != ResourceAction.None && _singleActions.Contains(actionSource) && ((IList)returnedList).Count > 1)
+            if (actionSource != ResourceAction.None && _singleActions.Contains(actionSource) && ((IEnumerable)returnedList).Cast<object>().Count() > 1)
             {
                 throw new ApplicationException("The returned collection from this hook may only contain one item in the case of the" +
                     actionSource.ToString() + "pipeline");
@@ -397,14 +379,12 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entityType">Entity type.</param>
         HashSet<IIdentifiable> GetProcessedEntities(Type entityType)
         {
-
             if (!_processedEntities.TryGetValue(entityType, out HashSet<IIdentifiable> processedEntities))
             {
                 processedEntities = new HashSet<IIdentifiable>();
                 _processedEntities[entityType] = processedEntities;
             }
             return processedEntities;
-
         }
 
         /// <summary>
@@ -426,8 +406,8 @@ namespace JsonApiDotNetCore.Services
         /// A method that reflectively calls a resource hook.
         /// TODO:  I tried casting IResourceHookContainer container to type
         /// IResourceHookContainer{IIdentifiable}, which would have allowed us
-        /// to call the hook on the nested containers normally, but I believe
-        /// this is not possible. We therefore need this helper method.
+        /// to call the hook on the nested containers without reflection, but I 
+        /// believe this is not possible. We therefore need this helper method.
         /// </summary>
         /// <returns>The hook.</returns>
         /// <param name="container">Container for related entity.</param>
@@ -435,7 +415,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="arguments">Arguments to call the hook with.</param>
         object CallHook(IResourceHookContainer container, ResourceHook hook, object[] arguments)
         {
-            var method = container.GetType().GetMethods().First(m => m.Name == hook.ToString("G"));
+            var method = container.GetType().GetMethod(hook.ToString("G"));
             return method.Invoke(container, arguments);
         }
 
@@ -446,7 +426,6 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         void FlushRegister()
         {
-
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
         }
     }

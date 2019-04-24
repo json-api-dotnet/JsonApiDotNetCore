@@ -34,27 +34,20 @@ namespace UnitTests.ResourceHooks
 
         {
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
-            (var mainResource, var identifiableMainResource) = CreateResourceDefinition(discovery);
+            var mainResource = CreateResourceDefinition(discovery);
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
-            SetupProcessorFactoryForResourceDefinition<TMain, TMain>(processorFactory, mainResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object);
             var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, discovery, meta);
 
-            mainResource
-                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TMain>>(), It.IsAny<ResourceAction>()))
-                .Callback<IEnumerable<TMain>, ResourceAction>( (x, y) => {
-                    var first = x.FirstOrDefault();
-                    first.StringId = "123";
-                })
-                .Verifiable();
             return (context, hookExecutor, mainResource);
         }
 
-        protected  (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<IIdentifiable>>)
+        protected  (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
             CreateTestObjects<TMain, TNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TNested> nestedDiscovery = null
@@ -63,22 +56,22 @@ namespace UnitTests.ResourceHooks
             where TNested : class, IIdentifiable
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
-            (var mainResource, var identifiableMainResource) = CreateResourceDefinition(mainDiscovery);
-            var identifiableNestedResource = CreateResourceDefinition(nestedDiscovery).Item2;
+            var mainResource = CreateResourceDefinition(mainDiscovery);
+            var nestedResource = CreateResourceDefinition(nestedDiscovery);
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
-            SetupProcessorFactoryForResourceDefinition<TMain, TMain>(processorFactory, mainResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object);
             var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
 
-            SetupProcessorFactoryForResourceDefinition<TNested, IIdentifiable>(processorFactory, identifiableNestedResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, nestedResource.Object);
 
-            return (context, hookExecutor, mainResource, identifiableNestedResource);
+            return (context, hookExecutor, mainResource, nestedResource);
         }
 
-        protected (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<IIdentifiable>>, Mock<IResourceHookContainer<IIdentifiable>>)
+        protected (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TFirstNested>>, Mock<IResourceHookContainer<TSecondNested>>)
             CreateTestObjects<TMain, TFirstNested, TSecondNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
@@ -89,23 +82,23 @@ namespace UnitTests.ResourceHooks
             where TSecondNested : class, IIdentifiable
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
-            (var mainResource, var identifiableMainResource) = CreateResourceDefinition(mainDiscovery);
-            var identifiableFirstNestedResource = CreateResourceDefinition(firstNestedDiscovery).Item2;
-            var identifiableSecondNestedResource = CreateResourceDefinition(secondNestedDiscovery).Item2;
+            var mainResource = CreateResourceDefinition(mainDiscovery);
+            var firstNestedResource = CreateResourceDefinition(firstNestedDiscovery);
+            var secondNestedResource = CreateResourceDefinition(secondNestedDiscovery);
+
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
-            SetupProcessorFactoryForResourceDefinition<TMain, TMain>(processorFactory, mainResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object);
             var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
 
-            SetupProcessorFactoryForResourceDefinition<TFirstNested, IIdentifiable>(processorFactory, identifiableFirstNestedResource.Object);
-            SetupProcessorFactoryForResourceDefinition<TSecondNested, IIdentifiable>(processorFactory, identifiableSecondNestedResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, secondNestedResource.Object);
 
-            return (context, hookExecutor, mainResource, identifiableFirstNestedResource, identifiableSecondNestedResource);
+            return (context, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }
-
 
         protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks = null)
             where TEntity : class, IIdentifiable
@@ -120,79 +113,55 @@ namespace UnitTests.ResourceHooks
             return mock.Object;
         }
 
-        private Mock<IResourceHookContainer<TImplementAs>> ImplementAs<TImplementAs, TActual>(
-            Mock<IResourceHookContainer<TImplementAs>> resourceDefinition,
-            IHooksDiscovery<TActual> discovery
-            ) where TImplementAs : class, IIdentifiable
-                where TActual : class, IIdentifiable
+       private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
+           <TModel>(IHooksDiscovery<TModel> discovery
+           )
+           where TModel : class, IIdentifiable
         {
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TImplementAs>, ResourceAction>((entities, action) => entities)
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TImplementAs>, ResourceAction>((entities, action) => entities)
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null))
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TImplementAs>, ResourceAction>((entities, action) => entities)
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TImplementAs>, ResourceAction>((entities, action) => entities)
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TImplementAs>, ResourceAction>((entities, action) => entities)
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<ResourceAction>()))
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TImplementAs>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()))
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TImplementAs>>()
-                .Setup(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()))
-                .Returns<ResourceHook>((hook) => discovery.ImplementedHooks.Contains(hook))
-                .Verifiable();
-            resourceDefinition
-                .As<IResourceHookContainer<TActual>>()
-                .Setup(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()))
-                .Returns<ResourceHook>((hook) => discovery.ImplementedHooks.Contains(hook))
-                .Verifiable();
+            var resourceDefinition = new Mock<IResourceHookContainer<TModel>>();
+            MockHooks(resourceDefinition, discovery);
             return resourceDefinition;
         }
 
-         
-         private (Mock<IResourceHookContainer<TModel>>, Mock<IResourceHookContainer<IIdentifiable>>) CreateResourceDefinition
-            <TModel>(IHooksDiscovery<TModel> discovery
-            )
-            where TModel : class, IIdentifiable
+        private void MockHooks<TModel>(
+            Mock<IResourceHookContainer<TModel>> resourceDefinition,
+            IHooksDiscovery<TModel> discovery
+            ) where TModel : class, IIdentifiable
         {
-            var resourceDefinition = new Mock<IResourceHookContainer<TModel>>();
-
-            var identifiableResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<IIdentifiable>>(), discovery);
-            var modelSpecificResourceDefinition = ImplementAs(resourceDefinition.As<IResourceHookContainer<TModel>>(), discovery);
-            resourceDefinition.As<IResourceHookBase<TModel>>();
-
-
-            return (modelSpecificResourceDefinition, identifiableResourceDefinition);
+            resourceDefinition
+                .Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null))
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()))
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()))
+                .Returns<ResourceHook>((hook) => discovery.ImplementedHooks.Contains(hook))
+                .Verifiable();
         }
-
-
 
         private (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
         {
@@ -202,20 +171,15 @@ namespace UnitTests.ResourceHooks
             return (context, processorFactory);
         }
 
-
-        private void SetupProcessorFactoryForResourceDefinition<TModel, TInnerContainerType>(
+        private void SetupProcessorFactoryForResourceDefinition<TModel>(
             Mock<IGenericProcessorFactory> processorFactory,
-            IResourceHookContainer<TInnerContainerType> modelResource)
+            IResourceHookContainer<TModel> modelResource)
             where TModel : class, IIdentifiable
-            where TInnerContainerType : class, IIdentifiable
 
         {
             processorFactory.Setup(c => c.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
             .Returns(modelResource);
         }
-
     }
-
-
 }
 

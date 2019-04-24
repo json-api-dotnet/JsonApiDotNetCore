@@ -1,0 +1,35 @@
+        private void MockHooks<TModel>(
+            Mock<IResourceHookContainer<TModel>> resourceDefinition,
+            IHooksDiscovery<TModel> discovery
+            ) where TModel : class, IIdentifiable
+        {
+            resourceDefinition
+                .Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null))
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()))
+                .Verifiable();
+        }
