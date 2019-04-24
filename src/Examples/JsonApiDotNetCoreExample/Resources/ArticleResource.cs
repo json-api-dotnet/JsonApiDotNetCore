@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class ArticleResource : ResourceDefinition<Article>
     {
-        public ArticleResource(IImplementedResourceHooks<Article> hooks) : base(hooks) { }
+        public ArticleResource(IHooksDiscovery<Article> hooks = null) : base(hooks) { }
 
         public override IEnumerable<Article> AfterRead(IEnumerable<Article> entities, ResourceAction actionSource)
         {

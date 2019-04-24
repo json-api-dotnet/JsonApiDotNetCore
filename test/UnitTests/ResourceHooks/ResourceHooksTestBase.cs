@@ -29,7 +29,7 @@ namespace UnitTests.ResourceHooks
             return todoList;
         }
         protected (Mock<IJsonApiContext>, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>) 
-        CreateTestObjects<TMain>(IImplementedResourceHooks<TMain> discovery = null)
+        CreateTestObjects<TMain>(IHooksDiscovery<TMain> discovery = null)
             where TMain : class, IIdentifiable
 
         {
@@ -41,7 +41,7 @@ namespace UnitTests.ResourceHooks
 
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
             SetupProcessorFactoryForResourceDefinition<TMain, TMain>(processorFactory, mainResource.Object);
-            var meta = new ResourceHookMetaInfo(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, discovery, meta);
 
             mainResource
@@ -56,8 +56,8 @@ namespace UnitTests.ResourceHooks
 
         protected  (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<IIdentifiable>>)
             CreateTestObjects<TMain, TNested>(
-            IImplementedResourceHooks<TMain> mainDiscovery = null,
-            IImplementedResourceHooks<TNested> nestedDiscovery = null
+            IHooksDiscovery<TMain> mainDiscovery = null,
+            IHooksDiscovery<TNested> nestedDiscovery = null
             )
             where TMain : class, IIdentifiable
             where TNested : class, IIdentifiable
@@ -70,7 +70,7 @@ namespace UnitTests.ResourceHooks
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
             SetupProcessorFactoryForResourceDefinition<TMain, TMain>(processorFactory, mainResource.Object);
-            var meta = new ResourceHookMetaInfo(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
 
             SetupProcessorFactoryForResourceDefinition<TNested, IIdentifiable>(processorFactory, identifiableNestedResource.Object);
@@ -80,9 +80,9 @@ namespace UnitTests.ResourceHooks
 
         protected (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<IIdentifiable>>, Mock<IResourceHookContainer<IIdentifiable>>)
             CreateTestObjects<TMain, TFirstNested, TSecondNested>(
-            IImplementedResourceHooks<TMain> mainDiscovery = null,
-            IImplementedResourceHooks<TFirstNested> firstNestedDiscovery = null,
-            IImplementedResourceHooks<TSecondNested> secondNestedDiscovery = null
+            IHooksDiscovery<TMain> mainDiscovery = null,
+            IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
+            IHooksDiscovery<TSecondNested> secondNestedDiscovery = null
             )
             where TMain : class, IIdentifiable
             where TFirstNested : class, IIdentifiable
@@ -97,7 +97,7 @@ namespace UnitTests.ResourceHooks
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
             SetupProcessorFactoryForResourceDefinition<TMain, TMain>(processorFactory, mainResource.Object);
-            var meta = new ResourceHookMetaInfo(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
 
             SetupProcessorFactoryForResourceDefinition<TFirstNested, IIdentifiable>(processorFactory, identifiableFirstNestedResource.Object);
@@ -107,14 +107,14 @@ namespace UnitTests.ResourceHooks
         }
 
 
-        protected IImplementedResourceHooks<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks = null)
+        protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks = null)
             where TEntity : class, IIdentifiable
         {
             implementedHooks = implementedHooks ?? Enum.GetValues(typeof(ResourceHook))
                             .Cast<ResourceHook>()
                             .Where(h => h != ResourceHook.None)
                             .ToArray();
-            var mock = new Mock<IImplementedResourceHooks<TEntity>>();
+            var mock = new Mock<IHooksDiscovery<TEntity>>();
             mock.Setup(discovery => discovery.ImplementedHooks)
                 .Returns(implementedHooks);
             return mock.Object;
@@ -122,7 +122,7 @@ namespace UnitTests.ResourceHooks
 
         private Mock<IResourceHookContainer<TImplementAs>> ImplementAs<TImplementAs, TActual>(
             Mock<IResourceHookContainer<TImplementAs>> resourceDefinition,
-            IImplementedResourceHooks<TActual> discovery
+            IHooksDiscovery<TActual> discovery
             ) where TImplementAs : class, IIdentifiable
                 where TActual : class, IIdentifiable
         {
@@ -178,7 +178,7 @@ namespace UnitTests.ResourceHooks
 
          
          private (Mock<IResourceHookContainer<TModel>>, Mock<IResourceHookContainer<IIdentifiable>>) CreateResourceDefinition
-            <TModel>(IImplementedResourceHooks<TModel> discovery
+            <TModel>(IHooksDiscovery<TModel> discovery
             )
             where TModel : class, IIdentifiable
         {

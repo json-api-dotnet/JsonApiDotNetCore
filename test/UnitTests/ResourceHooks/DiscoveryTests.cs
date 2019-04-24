@@ -1,15 +1,9 @@
 
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample.Resources;
-using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 
@@ -32,7 +26,7 @@ namespace UnitTests.ResourceHooks
         public void Hook_Discovery()
         {
             // arrange & act
-            var hookConfig = new ImplementedResourceHooks<Dummy>();
+            var hookConfig = new HooksDiscovery<Dummy>();
             // assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);

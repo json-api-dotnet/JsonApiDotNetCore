@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TagResource : ResourceDefinition<Tag>
     {
-        public TagResource(IImplementedResourceHooks<Tag> hooks) : base(hooks) { }
+        public TagResource(IHooksDiscovery<Tag> hooks = null) : base(hooks) { }
 
         public override void BeforeRead(ResourceAction actionSource, string stringId = null)
         {
