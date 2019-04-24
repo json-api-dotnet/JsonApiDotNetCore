@@ -6,8 +6,6 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-
-
     /// <summary>
     /// The default implementation for IHooksDiscovery
     /// </summary>

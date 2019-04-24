@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Resources
 
         public override IEnumerable<Tag> AfterRead(IEnumerable<Tag> entities, ResourceAction actionSource)
         {
-            return entities.Where(t => t.Name != "This should be not be included").ToList();
+            return entities.Where(t => t.Name != "This should be not be included");
         }
     }
 }

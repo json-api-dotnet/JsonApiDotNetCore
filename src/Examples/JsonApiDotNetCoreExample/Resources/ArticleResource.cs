@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Resources
             {
                 throw new JsonApiException(401, "Not Allowed", new UnauthorizedAccessException());
             }
-            return entities.Where(t => t.Name != "This should be not be included").ToList();
+            return entities.Where(t => t.Name != "This should be not be included");
         }
     }
 
