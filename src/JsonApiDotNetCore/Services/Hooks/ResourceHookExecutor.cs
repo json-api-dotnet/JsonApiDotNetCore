@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Services
 
         public ResourceHookExecutor(
             IJsonApiContext jsonApiContext,
-            IImplementedResourceHooks<TEntity> hooksConfiguration,
+            IHooksDiscovery<TEntity> hooksConfiguration,
             IResourceHookMetaInfo meta
             )
         {

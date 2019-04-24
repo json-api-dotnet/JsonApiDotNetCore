@@ -1,45 +1,24 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Services
 {
-    public enum ResourceHook
-    {
-        None, // https://stackoverflow.com/questions/24151354/is-it-a-good-practice-to-add-a-null-or-none-member-to-the-enum
-        BeforeCreate,
-        AfterCreate,
-        BeforeRead,
-        AfterRead,
-        BeforeUpdate,
-        AfterUpdate,
-        BeforeDelete,
-        AfterDelete
-    }
+
 
     /// <summary>
-    /// A singleton service for a particular TEntity that stores a field of 
-    /// enums that represents which resource hooks have been implemented for that
-    /// particular entity.
+    /// The default implementation for IHooksDiscovery
     /// </summary>
-    public interface IImplementedResourceHooks<TEntity> where TEntity : class, IIdentifiable
-    {
-        ResourceHook[] ImplementedHooks { get; }
-    }
-
-    /// <summary>
-    /// The default implementation for IImplementedResourceHooks
-    /// </summary>
-    public class ImplementedResourceHooks<TEntity> : IImplementedResourceHooks<TEntity> where TEntity : class, IIdentifiable
+    public class HooksDiscovery<TEntity> : IHooksDiscovery<TEntity> where TEntity : class, IIdentifiable
     {
         private readonly ResourceHook[] _allHooks;
-        private bool _isInitialized;
+
+        /// <inheritdoc/>
         public ResourceHook[] ImplementedHooks { get; private set; }
 
-        public ImplementedResourceHooks()
+        public HooksDiscovery()
         {
             _allHooks = Enum.GetValues(typeof(ResourceHook))
                             .Cast<ResourceHook>()
