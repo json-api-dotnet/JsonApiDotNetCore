@@ -79,7 +79,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var body = await response.Content.ReadAsStringAsync();
         var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
-        var usersBeforeMedian = _context.Users.Where(u => u.Username[0] < median);
         Assert.True(deserializedBody.All(u => u.Username[0] < median));
       }
     }
