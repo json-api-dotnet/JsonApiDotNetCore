@@ -78,13 +78,26 @@ namespace JsonApiDotNetCore.Data
             _resourceDefinition = resourceDefinition;
         }
 
-        /// <inheritdoc />
+
+        
         public virtual IQueryable<TEntity> Get()
         {
             if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
                 return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
 
             return _dbSet;
+        }
+
+        /// <inheritdoc />
+        public virtual IQueryable<TEntity> GetQueryable() 
+            => _dbSet;
+
+        public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
+        {
+            if (fields?.Count > 0)
+                return entities.Select(fields);
+
+            return entities;
         }
 
         /// <inheritdoc />
@@ -127,7 +140,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await Get().SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await GetQueryable().SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         /// <inheritdoc />
@@ -135,7 +148,7 @@ namespace JsonApiDotNetCore.Data
         {
             _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var includedSet = Include(Get(), relationshipName);
+            var includedSet = Include(GetQueryable(), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;
