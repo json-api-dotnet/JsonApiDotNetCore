@@ -49,16 +49,13 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual TodoItemCollection Collection { get; set; }
 
 
-        // cyclical structure
-
+        // cyclical to-one structure
         public virtual int? DependentTodoItemId { get; set; }
         [HasOne("dependent-on-todo")]
         public virtual TodoItem DependentTodoItem { get; set; }
 
 
-
-
-        // cyclical structure
+        // cyclical to-many structure
         public virtual int? ParentTodoItemId {get; set;}
         [HasOne("parent-todo")]
         public virtual TodoItem ParentTodoItem { get; set; }

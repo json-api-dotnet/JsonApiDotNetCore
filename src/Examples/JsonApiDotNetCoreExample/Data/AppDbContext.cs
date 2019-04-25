@@ -50,9 +50,10 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithMany(t => t.StakeHolders)
                 .HasForeignKey(t => t.StakeHolderTodoId);
 
-
             modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.DependentTodoItem);
+
+            modelBuilder.Entity<TodoItem>()
                 .HasMany(t => t.ChildrenTodoItems)
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
