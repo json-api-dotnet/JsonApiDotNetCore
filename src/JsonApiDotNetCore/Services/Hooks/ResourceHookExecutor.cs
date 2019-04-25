@@ -51,11 +51,10 @@ namespace JsonApiDotNetCore.Services
         public virtual IEnumerable<TEntity> BeforeCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
-
             if (hookContainer != null)
             {
                 RegisterProcessedEntities(entities);
-                var parsedEntities = hookContainer.BeforeCreate(entities, actionSource); // eg all of type {Article}
+                var parsedEntities = hookContainer.BeforeCreate(entities, actionSource);
                 ValidateHookResponse(parsedEntities, actionSource);
                 entities = parsedEntities;
             }
@@ -73,23 +72,20 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            RegisterProcessedEntities(entities);
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
-            /// @TODO: even if we don't have an implementation for eg TodoItem AfterCreate, 
-            /// we should still consider to fire the hooks of its relation, eg TodoItem.Owner
+            if (hookContainer != null)
+            {
+                RegisterProcessedEntities(entities);
+                var parsedEntities = hookContainer.AfterCreate(entities, actionSource);
+                ValidateHookResponse(parsedEntities, actionSource);
+                entities = parsedEntities;
+            }
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return CallHook(container, ResourceHook.AfterUpdate, new object[] { relatedEntities, actionSource });
             });
-
-            if (hookContainer != null)
-            {
-                var parsedEntities = hookContainer.AfterCreate(entities, actionSource);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
 
             FlushRegister();
             return entities;
@@ -106,8 +102,14 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterRead(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            RegisterProcessedEntities(entities);
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
+            if (hookContainer != null)
+            {
+                RegisterProcessedEntities(entities);
+                var parsedEntities = hookContainer.AfterRead(entities, actionSource);
+                ValidateHookResponse(parsedEntities, actionSource);
+                entities = parsedEntities;
+            }
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
@@ -121,13 +123,6 @@ namespace JsonApiDotNetCore.Services
                 }
                 return relatedEntities;
             });
-
-            if (hookContainer != null)
-            {
-                var parsedEntities = hookContainer.AfterRead(entities, actionSource);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
 
             FlushRegister();
             return entities;
@@ -157,21 +152,20 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
-            RegisterProcessedEntities(entities);
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
+            if (hookContainer != null)
+            {
+                RegisterProcessedEntities(entities);
+                var parsedEntities = hookContainer.AfterUpdate(entities, actionSource);
+                ValidateHookResponse(parsedEntities, actionSource);
+                entities = parsedEntities;
+            }
 
             _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return CallHook(container, ResourceHook.AfterUpdate, new object[] { relatedEntities, actionSource });
             });
-
-            if (hookContainer != null)
-            {
-                var parsedEntities = hookContainer.AfterUpdate(entities, actionSource);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
 
             FlushRegister();
             return entities;

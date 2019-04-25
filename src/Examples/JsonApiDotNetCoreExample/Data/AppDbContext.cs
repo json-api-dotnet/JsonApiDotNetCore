@@ -41,7 +41,6 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<ArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
 
-
             modelBuilder.Entity<IdentifiableArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
 
@@ -67,7 +66,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
-
         public DbSet<CourseEntity> Courses { get; set; }
         public DbSet<DepartmentEntity> Departments { get; set; }
         public DbSet<CourseStudentEntity> Registrations { get; set; }
