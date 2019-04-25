@@ -61,5 +61,42 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             foreach(var item in deserializedBody)
                 Assert.Equal(person.Id, item.OwnerId);
         }
+
+        [Fact]
+        public async Task Sparse_Fields_Works_With_Get_Override()
+        {
+            // arrange
+            var builder = new WebHostBuilder()
+                .UseStartup<AuthorizedStartup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var context = (AppDbContext)server.Host.Services.GetService(typeof(AppDbContext));
+            var jsonApiContext = (IJsonApiContext)server.Host.Services.GetService(typeof(IJsonApiContext));
+
+            var person = new Person();
+            context.People.Add(person);
+            var todoItem = new TodoItem();
+            todoItem.Owner = person;
+            context.TodoItems.Add(todoItem);
+            context.SaveChanges();
+
+            var authService = (IAuthorizationService)server.Host.Services.GetService(typeof(IAuthorizationService));
+            authService.CurrentUserId = person.Id;
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description";
+
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<TodoItem>(responseBody);
+
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(todoItem.Description, deserializedBody.Description);
+
+        }
     }
 }
