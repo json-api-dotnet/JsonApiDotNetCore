@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
-            var entities = _entities.Get();
+            var entities = _entities.GetQueryable();
 
             entities = ApplySortAndFilterQuery(entities);
 
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.Get().Where(e => e.Id.Equals(id));
+            var query = _entities.GetQueryable().Where(e => e.Id.Equals(id));
 
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
