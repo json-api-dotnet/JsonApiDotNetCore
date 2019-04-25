@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +19,15 @@ namespace JsonApiDotNetCore.Data
         /// The base GET query. This is a good place to apply rules that should affect all reads, 
         /// such as authorization of resources.
         /// </summary>
+        IQueryable<TEntity> GetQueryable();
+
+        [Obsolete("This method has been deprecated, use GetQueryable() instead")]
         IQueryable<TEntity> Get();
+
+        /// <summary>
+        /// Apply fields to the provided queryable
+        /// </summary>
+        IQueryable<TEntity> Select(IQueryable<TEntity> entities,List<string> fields);
 
         /// <summary>
         /// Include a relationship in the query

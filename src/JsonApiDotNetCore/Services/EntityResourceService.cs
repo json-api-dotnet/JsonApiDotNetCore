@@ -112,9 +112,8 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
-
             _hookExecutor?.BeforeRead(ResourceAction.Get);
-            var entities = _entities.Get();
+            var entities = _entities.GetQueryable();
 
             entities = ApplySortAndFilterQuery(entities);
 
@@ -129,6 +128,9 @@ namespace JsonApiDotNetCore.Services
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
+
+            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
+                entities = _entities.Select(entities, _jsonApiContext.QuerySet.Fields);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -281,7 +283,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TEntity> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.Get().Where(e => e.Id.Equals(id));
+            var query = _entities.GetQueryable().Where(e => e.Id.Equals(id));
 
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {

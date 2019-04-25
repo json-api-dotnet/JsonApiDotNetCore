@@ -41,6 +41,7 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<ArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
 
+
             modelBuilder.Entity<IdentifiableArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
 
@@ -49,7 +50,9 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithMany(t => t.StakeHolders)
                 .HasForeignKey(t => t.StakeHolderTodoId);
 
+
             modelBuilder.Entity<TodoItem>()
+                .HasOne(t => t.DependentTodoItem);
                 .HasMany(t => t.ChildrenTodoItems)
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
