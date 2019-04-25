@@ -162,7 +162,7 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class QueryFilters : Dictionary<string, Func<IQueryable<T>, string, IQueryable<T>>> { }
+        public class QueryFilters : Dictionary<string, Func<IQueryable<T>, FilterQuery, IQueryable<T>>> { }
 
         /// <summary>
         /// Define a the default sort order if no sort key is provided.
