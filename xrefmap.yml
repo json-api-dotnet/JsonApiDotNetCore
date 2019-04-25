@@ -2150,6 +2150,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).GetAsync
   nameWithType: DefaultEntityRepository<TEntity, TId>.GetAsync
   nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).GetAsync
+- uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable
+  name: GetQueryable()
+  href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_GetQueryable
+  commentId: M:JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable
+  fullName: JsonApiDotNetCore.Data.DefaultEntityRepository<TEntity, TId>.GetQueryable()
+  fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).GetQueryable()
+  nameWithType: DefaultEntityRepository<TEntity, TId>.GetQueryable()
+  nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).GetQueryable()
+- uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable*
+  name: GetQueryable
+  href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_GetQueryable_
+  commentId: Overload:JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Data.DefaultEntityRepository<TEntity, TId>.GetQueryable
+  fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).GetQueryable
+  nameWithType: DefaultEntityRepository<TEntity, TId>.GetQueryable
+  nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).GetQueryable
 - uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.Include(System.Linq.IQueryable{`0},System.String)
   name: Include(IQueryable<TEntity>, String)
   href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Include_System_Linq_IQueryable__0__System_String_
@@ -2186,6 +2203,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).PageAsync
   nameWithType: DefaultEntityRepository<TEntity, TId>.PageAsync
   nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).PageAsync
+- uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.Select(System.Linq.IQueryable{`0},System.Collections.Generic.List{System.String})
+  name: Select(IQueryable<TEntity>, List<String>)
+  href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Select_System_Linq_IQueryable__0__System_Collections_Generic_List_System_String__
+  commentId: M:JsonApiDotNetCore.Data.DefaultEntityRepository`2.Select(System.Linq.IQueryable{`0},System.Collections.Generic.List{System.String})
+  name.vb: Select(IQueryable(Of TEntity), List(Of String))
+  fullName: JsonApiDotNetCore.Data.DefaultEntityRepository<TEntity, TId>.Select(System.Linq.IQueryable<TEntity>, System.Collections.Generic.List<System.String>)
+  fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).Select(System.Linq.IQueryable(Of TEntity), System.Collections.Generic.List(Of System.String))
+  nameWithType: DefaultEntityRepository<TEntity, TId>.Select(IQueryable<TEntity>, List<String>)
+  nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).Select(IQueryable(Of TEntity), List(Of String))
+- uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.Select*
+  name: Select
+  href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Select_
+  commentId: Overload:JsonApiDotNetCore.Data.DefaultEntityRepository`2.Select
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Data.DefaultEntityRepository<TEntity, TId>.Select
+  fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).Select
+  nameWithType: DefaultEntityRepository<TEntity, TId>.Select
+  nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).Select
 - uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.Sort(System.Linq.IQueryable{`0},System.Collections.Generic.List{JsonApiDotNetCore.Internal.Query.SortQuery})
   name: Sort(IQueryable<TEntity>, List<SortQuery>)
   href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Sort_System_Linq_IQueryable__0__System_Collections_Generic_List_JsonApiDotNetCore_Internal_Query_SortQuery__
@@ -2415,6 +2450,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).GetAsync
   nameWithType: IEntityReadRepository<TEntity, TId>.GetAsync
   nameWithType.vb: IEntityReadRepository(Of TEntity, TId).GetAsync
+- uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable
+  name: GetQueryable()
+  href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_GetQueryable
+  commentId: M:JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable
+  fullName: JsonApiDotNetCore.Data.IEntityReadRepository<TEntity, TId>.GetQueryable()
+  fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).GetQueryable()
+  nameWithType: IEntityReadRepository<TEntity, TId>.GetQueryable()
+  nameWithType.vb: IEntityReadRepository(Of TEntity, TId).GetQueryable()
+- uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable*
+  name: GetQueryable
+  href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_GetQueryable_
+  commentId: Overload:JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Data.IEntityReadRepository<TEntity, TId>.GetQueryable
+  fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).GetQueryable
+  nameWithType: IEntityReadRepository<TEntity, TId>.GetQueryable
+  nameWithType.vb: IEntityReadRepository(Of TEntity, TId).GetQueryable
 - uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.Include(System.Linq.IQueryable{`0},System.String)
   name: Include(IQueryable<TEntity>, String)
   href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_Include_System_Linq_IQueryable__0__System_String_
@@ -2451,6 +2503,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).PageAsync
   nameWithType: IEntityReadRepository<TEntity, TId>.PageAsync
   nameWithType.vb: IEntityReadRepository(Of TEntity, TId).PageAsync
+- uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.Select(System.Linq.IQueryable{`0},System.Collections.Generic.List{System.String})
+  name: Select(IQueryable<TEntity>, List<String>)
+  href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_Select_System_Linq_IQueryable__0__System_Collections_Generic_List_System_String__
+  commentId: M:JsonApiDotNetCore.Data.IEntityReadRepository`2.Select(System.Linq.IQueryable{`0},System.Collections.Generic.List{System.String})
+  name.vb: Select(IQueryable(Of TEntity), List(Of String))
+  fullName: JsonApiDotNetCore.Data.IEntityReadRepository<TEntity, TId>.Select(System.Linq.IQueryable<TEntity>, System.Collections.Generic.List<System.String>)
+  fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).Select(System.Linq.IQueryable(Of TEntity), System.Collections.Generic.List(Of System.String))
+  nameWithType: IEntityReadRepository<TEntity, TId>.Select(IQueryable<TEntity>, List<String>)
+  nameWithType.vb: IEntityReadRepository(Of TEntity, TId).Select(IQueryable(Of TEntity), List(Of String))
+- uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.Select*
+  name: Select
+  href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_Select_
+  commentId: Overload:JsonApiDotNetCore.Data.IEntityReadRepository`2.Select
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Data.IEntityReadRepository<TEntity, TId>.Select
+  fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).Select
+  nameWithType: IEntityReadRepository<TEntity, TId>.Select
+  nameWithType.vb: IEntityReadRepository(Of TEntity, TId).Select
 - uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.Sort(System.Linq.IQueryable{`0},System.Collections.Generic.List{JsonApiDotNetCore.Internal.Query.SortQuery})
   name: Sort(IQueryable<TEntity>, List<SortQuery>)
   href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_Sort_System_Linq_IQueryable__0__System_Collections_Generic_List_JsonApiDotNetCore_Internal_Query_SortQuery__
