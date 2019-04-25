@@ -294,6 +294,79 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_When_Targets_Already_Attached()
+        {
+            // arrange
+            var todoCollection = new TodoItemCollection();
+            todoCollection.TodoItems = new List<TodoItem>();
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            todoCollection.Owner = person;
+            todoCollection.Name = "PRE-ATTACH-TEST";
+            todoCollection.TodoItems.Add(todoItem);
+            _context.TodoItemCollections.Add(todoCollection);
+            _context.SaveChanges();
+
+            var newTodoItem1 = _todoItemFaker.Generate();
+            var newTodoItem2 = _todoItemFaker.Generate();
+            _context.AddRange(new TodoItem[] { newTodoItem1, newTodoItem2 });
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-collections",
+                    id = todoCollection.Id,
+                    attributes = new
+                    {
+                        name = todoCollection.Name
+                    },
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "todo-items", new
+                            {
+                                data = new object[]
+                                {
+                                    new { type = "todo-items", id = $"{newTodoItem1.Id}" },
+                                    new { type = "todo-items", id = $"{newTodoItem2.Id}" }
+                                }
+
+                            }
+                        },
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-collections/{todoCollection.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await client.SendAsync(request);
+            _context = _fixture.GetService<AppDbContext>();
+            var updatedTodoItems = _context.TodoItemCollections.AsNoTracking()
+                .Where(tic => tic.Id == todoCollection.Id)
+                .Include(tdc => tdc.TodoItems).SingleOrDefault().TodoItems;
+
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            /// we are expecting two, not three, because the request does 
+            /// a "complete replace".
+            Assert.Equal(2, updatedTodoItems.Count);
+        }
+
+        [Fact]
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_With_Overlap()
         {
             // arrange

@@ -29,18 +29,28 @@ namespace JsonApiDotNetCore.Extensions
         /// </summary>
         public static bool EntityIsTracked(this DbContext context, IIdentifiable entity)
         {
+            return GetTrackedEntity(context, entity) != null;
+        }
+
+        /// <summary>
+        /// Determines whether or not EF is already tracking an entity of the same Type and Id
+        /// and returns that entity.
+        /// </summary>
+        public static IIdentifiable GetTrackedEntity(this DbContext context, IIdentifiable entity)
+        {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-            
+
             var trackedEntries = context.ChangeTracker
                 .Entries()
-                .FirstOrDefault(entry => 
-                    entry.Entity.GetType() == entity.GetType() 
+                .FirstOrDefault(entry =>
+                    entry.Entity.GetType() == entity.GetType()
                     && ((IIdentifiable)entry.Entity).StringId == entity.StringId
                 );
 
-            return trackedEntries != null;
+            return (IIdentifiable)trackedEntries?.Entity;
         }
+
 
         /// <summary>
         /// Gets the current transaction or creates a new one.

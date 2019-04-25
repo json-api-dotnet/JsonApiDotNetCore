@@ -336,7 +336,6 @@ namespace JsonApiDotNetCore.Data
 
                 foreach (var relationship in _jsonApiContext.RelationshipsToUpdate)
                 {
-
                     if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasOneAttribute)))
                     {
                         relationship.Key.SetValue(oldEntity, relationship.Value);
@@ -344,7 +343,7 @@ namespace JsonApiDotNetCore.Data
                     if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasManyAttribute)))
                     {
                         await _context.Entry(oldEntity).Collection(relationship.Key.InternalRelationshipName).LoadAsync();
-                        var value = CheckForSelfReferingUpdate((IEnumerable<object>)relationship.Value, oldEntity);
+                        var value = PreventReattachment((IEnumerable<object>)relationship.Value);
                         relationship.Key.SetValue(oldEntity, value);
                     }
                 }
@@ -354,36 +353,21 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// In case a relationship is updated where the parent type and related 
-        /// are equal, we need to make sure we don't reattach the parent entity 
-        /// as this will cause entity tracking errors.
+        /// We need to make sure we're not re-attaching entities when assigning 
+        /// new relationship values. Entities may have been loaded in the change
+        /// tracker anywhere in the application beyond the control of
+        /// JsonApiDotNetCore.
         /// </summary>
         /// <returns>The interpolated related entity collection</returns>
         /// <param name="relatedEntities">Related entities.</param>
-        /// <param name="oldEntity">Old entity.</param>
-        object CheckForSelfReferingUpdate(IEnumerable<object> relatedEntities, TEntity oldEntity)
+        object PreventReattachment(IEnumerable<object> relatedEntities)
         {
             var relatedType = TypeHelper.GetTypeOfList(relatedEntities.GetType());
-            var list = new List<TEntity>();
-            bool refersSelf = false;
-            if (relatedType == typeof(TEntity)) 
-            {
-                foreach (TEntity e in relatedEntities)
-                {
-                    if (oldEntity.StringId == e.StringId)
-                    {
-                        list.Add(oldEntity);
-                        refersSelf = true;
-                    }
-                    else
-                    {
-                        list.Add(e);
-                    }
-                }
-            }
-            return refersSelf ? list : relatedEntities;
+            var replaced = relatedEntities.Cast<IIdentifiable>().Select(entity => _context.GetTrackedEntity(entity) ?? entity);
+            return TypeHelper.ConvertCollection(replaced, relatedType);
 
         }
+
 
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
