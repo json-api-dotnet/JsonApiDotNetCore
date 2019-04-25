@@ -2716,6 +2716,19 @@ references:
   fullName.vb: JsonApiDotNetCore.Extensions.DbContextExtensions.GetDbSet(Of T)(Microsoft.EntityFrameworkCore.DbContext)
   nameWithType: DbContextExtensions.GetDbSet<T>(DbContext)
   nameWithType.vb: DbContextExtensions.GetDbSet(Of T)(DbContext)
+- uid: JsonApiDotNetCore.Extensions.DbContextExtensions.GetTrackedEntity(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Models.IIdentifiable)
+  name: GetTrackedEntity(DbContext, IIdentifiable)
+  href: api/JsonApiDotNetCore.Extensions.DbContextExtensions.html#JsonApiDotNetCore_Extensions_DbContextExtensions_GetTrackedEntity_Microsoft_EntityFrameworkCore_DbContext_JsonApiDotNetCore_Models_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Extensions.DbContextExtensions.GetTrackedEntity(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Models.IIdentifiable)
+  fullName: JsonApiDotNetCore.Extensions.DbContextExtensions.GetTrackedEntity(Microsoft.EntityFrameworkCore.DbContext, JsonApiDotNetCore.Models.IIdentifiable)
+  nameWithType: DbContextExtensions.GetTrackedEntity(DbContext, IIdentifiable)
+- uid: JsonApiDotNetCore.Extensions.DbContextExtensions.GetTrackedEntity*
+  name: GetTrackedEntity
+  href: api/JsonApiDotNetCore.Extensions.DbContextExtensions.html#JsonApiDotNetCore_Extensions_DbContextExtensions_GetTrackedEntity_
+  commentId: Overload:JsonApiDotNetCore.Extensions.DbContextExtensions.GetTrackedEntity
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Extensions.DbContextExtensions.GetTrackedEntity
+  nameWithType: DbContextExtensions.GetTrackedEntity
 - uid: JsonApiDotNetCore.Extensions.DbContextExtensions.Set(Microsoft.EntityFrameworkCore.DbContext,System.Type)
   name: Set(DbContext, Type)
   href: api/JsonApiDotNetCore.Extensions.DbContextExtensions.html#JsonApiDotNetCore_Extensions_DbContextExtensions_Set_Microsoft_EntityFrameworkCore_DbContext_System_Type_
@@ -5328,6 +5341,19 @@ references:
   fullName.vb: JsonApiDotNetCore.Internal.TypeHelper.ConvertType(Of T)(System.Object)
   nameWithType: TypeHelper.ConvertType<T>(Object)
   nameWithType.vb: TypeHelper.ConvertType(Of T)(Object)
+- uid: JsonApiDotNetCore.Internal.TypeHelper.GetTypeOfList(System.Type)
+  name: GetTypeOfList(Type)
+  href: api/JsonApiDotNetCore.Internal.TypeHelper.html#JsonApiDotNetCore_Internal_TypeHelper_GetTypeOfList_System_Type_
+  commentId: M:JsonApiDotNetCore.Internal.TypeHelper.GetTypeOfList(System.Type)
+  fullName: JsonApiDotNetCore.Internal.TypeHelper.GetTypeOfList(System.Type)
+  nameWithType: TypeHelper.GetTypeOfList(Type)
+- uid: JsonApiDotNetCore.Internal.TypeHelper.GetTypeOfList*
+  name: GetTypeOfList
+  href: api/JsonApiDotNetCore.Internal.TypeHelper.html#JsonApiDotNetCore_Internal_TypeHelper_GetTypeOfList_
+  commentId: Overload:JsonApiDotNetCore.Internal.TypeHelper.GetTypeOfList
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Internal.TypeHelper.GetTypeOfList
+  nameWithType: TypeHelper.GetTypeOfList
 - uid: JsonApiDotNetCore.Middleware
   name: JsonApiDotNetCore.Middleware
   href: api/JsonApiDotNetCore.Middleware.html
