@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
+        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
         /// <example>
         /// Using an alternative foreign key:
@@ -20,21 +21,21 @@ namespace JsonApiDotNetCore.Models
         /// <code>
         /// public class Article : Identifiable 
         /// {
-        ///     [HasOne("author", withForiegnKey: nameof(AuthorKey)]
+        ///     [HasOne("author", withForeignKey: nameof(AuthorKey)]
         ///     public Author Author { get; set; }
         ///     public int AuthorKey { get; set; }
         /// }
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null)
-        : base(publicName, documentLinks, canInclude)
+        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null)
+        : base(publicName, documentLinks, canInclude, mappedBy)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
         }
 
         private readonly string _explicitIdentifiablePropertyName;
-
+        
         /// <summary>
         /// The independent resource identifier.
         /// </summary>

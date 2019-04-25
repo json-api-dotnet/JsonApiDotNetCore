@@ -6,15 +6,16 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude)
+        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude, string mappedBy)
         {
             PublicRelationshipName = publicName;
             DocumentLinks = documentLinks;
             CanInclude = canInclude;
+            EntityPropertyName = mappedBy;
         }
 
         public string PublicRelationshipName { get; internal set; }
-        public string InternalRelationshipName { get; internal set; }
+        public string InternalRelationshipName { get; internal set; } 
         
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
@@ -31,6 +32,7 @@ namespace JsonApiDotNetCore.Models
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
         public bool CanInclude { get; }
+        public string EntityPropertyName { get; }
 
         public bool TryGetHasOne(out HasOneAttribute result)
         {
@@ -55,10 +57,10 @@ namespace JsonApiDotNetCore.Models
         }
 
         public abstract void SetValue(object entity, object newValue);
-
+        
         public object GetValue(object entity) => entity
-            ?.GetType()
-            .GetProperty(InternalRelationshipName)
+            ?.GetType()?
+            .GetProperty(InternalRelationshipName)?
             .GetValue(entity);
 
         public override string ToString()
@@ -83,9 +85,9 @@ namespace JsonApiDotNetCore.Models
 
         /// <summary>
         /// The internal navigation property path to the related entity.
-        /// <summary>
+        /// </summary>
         /// <remarks>
-        /// In all cases except the HasManyThrough relationships, this will just be the <see cref"InternalRelationshipName" />.
+        /// In all cases except the HasManyThrough relationships, this will just be the <see cref="InternalRelationshipName" />.
         /// </remarks>
         public virtual string RelationshipPath => InternalRelationshipName;
     }

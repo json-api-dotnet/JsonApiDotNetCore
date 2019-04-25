@@ -40,6 +40,17 @@ namespace JsonApiDotNetCoreExample.Data
 
             modelBuilder.Entity<ArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
+
+
+            modelBuilder.Entity<TodoItem>()
+                .HasOne(t => t.DependentTodoItem);
+
+            modelBuilder.Entity<TodoItem>()
+                .HasMany(t => t.ChildrenTodoItems)
+                .WithOne(t => t.ParentTodoItem)
+                .HasForeignKey(t => t.ParentTodoItemId);
+
+
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }

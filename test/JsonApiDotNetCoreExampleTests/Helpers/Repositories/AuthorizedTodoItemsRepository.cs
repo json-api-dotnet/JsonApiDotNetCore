@@ -23,9 +23,9 @@ namespace JsonApiDotNetCoreExampleTests.Repositories
             _authService = authService;
         }
 
-        public override IQueryable<TodoItem> Get()
+        public override IQueryable<TodoItem> GetQueryable()
         {
-            return base.Get().Where(todoItem => todoItem.OwnerId == _authService.CurrentUserId);
+            return base.GetQueryable().Where(todoItem => todoItem.OwnerId == _authService.CurrentUserId);
         }
     }
 }

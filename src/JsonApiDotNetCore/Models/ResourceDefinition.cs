@@ -125,11 +125,13 @@ namespace JsonApiDotNetCore.Models
         /// instead of the default query behavior. A common use-case for this
         /// is including related resources and filtering on them.
         /// </summary>
+        ///
         /// <returns>
         /// A set of custom queries that will be applied instead of the default
         /// queries for the given key. Null will be returned if default behavior
         /// is desired.
         /// </returns>
+        ///
         /// <example>
         /// <code>
         /// protected override QueryFilters GetQueryFilters() =>  { 
@@ -159,7 +161,7 @@ namespace JsonApiDotNetCore.Models
         /// This is an alias type intended to simplify the implementation's
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
-        /// <summary>
+        /// </summary>
         public class QueryFilters : Dictionary<string, Func<IQueryable<T>, string, IQueryable<T>>> { }
 
         /// <summary>
@@ -205,7 +207,7 @@ namespace JsonApiDotNetCore.Models
         /// This is an alias type intended to simplify the implementation's
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
-        /// <summary>
+        /// </summary>
         public class PropertySortOrder : List<(Expression<Func<T, dynamic>>, SortDirection)> { }
     }
 }

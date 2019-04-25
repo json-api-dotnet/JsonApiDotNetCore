@@ -9,6 +9,42 @@ environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
   Data:DefaultConnection: "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=Password12!"
+  ACCESS_TOKEN:
+    secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
+
+# REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
+before_build:
+  - ps: |
+        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        {
+            git checkout $env:APPVEYOR_REPO_BRANCH -q
+            choco install docfx -y
+        }
+
+after_build:
+  - ps: |
+        CD ./docs
+        if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+        {
+            & docfx docfx.json
+            if ($lastexitcode -ne 0){
+              throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+            }
+            
+            git config --global credential.helper store
+            Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
+            git config --global user.email "jaredcnance@gmail.com"
+            git config --global user.name "Jared Nance"
+            git config --global core.autocrlf false
+            git config --global core.safecrlf false
+            git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
+            Copy-Item origin_site/.git _site -recurse
+            CD _site
+            git add -A 2>&1
+            git commit -m "CI Updates" -q
+            git push origin gh-pages -q
+            echo "Documentation updated successfully."
+        }
 
 pull_requests:
   do_not_increment_build_number: true

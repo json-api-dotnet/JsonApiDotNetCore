@@ -19,8 +19,9 @@ These are some steps you can take to help you understand what this project is an
 - [What is json:api and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/)
 - [The json:api specification](http://jsonapi.org/format/)
 - [Demo [Video]](https://youtu.be/KAMuo6K7VcE)
-- [Our documentation](https://json-api-dotnet.github.io)
+- [Our documentation](https://json-api-dotnet.github.io/JsonApiDotNetCore/)
 - [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)
+- [Embercasts: Full Stack Ember with ASP .NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
 
 ## Related Projects
 

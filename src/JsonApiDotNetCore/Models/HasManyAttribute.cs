@@ -11,6 +11,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="publicName">The relationship name as exposed by the API</param>
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
+        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
         /// <example>
         /// 
@@ -18,13 +19,13 @@ namespace JsonApiDotNetCore.Models
         /// public class Author : Identifiable 
         /// {
         ///     [HasMany("articles"]
-        ///     public virtual List<Article> Articles { get; set; }
+        ///     public virtual List&lt;Articl&gt; Articles { get; set; }
         /// }
         /// </code>
         /// 
         /// </example>
-        public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true)
-        : base(publicName, documentLinks, canInclude)
+        public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null)
+        : base(publicName, documentLinks, canInclude, mappedBy)
         { }
 
         /// <summary>

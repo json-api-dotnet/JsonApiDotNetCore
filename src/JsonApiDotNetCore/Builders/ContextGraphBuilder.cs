@@ -81,8 +81,10 @@ namespace JsonApiDotNetCore.Builders
         private bool _usesDbContext;
         private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
+        /// <inheritdoc />
         public Link DocumentLinks { get; set; } = Link.All;
 
+        /// <inheritdoc />
         public IResourceGraph Build()
         {
             // this must be done at build so that call order doesn't matter
@@ -139,6 +141,18 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var prop in properties)
             {
+                if (prop.Name == nameof(Identifiable.Id))
+                {
+                    var idAttr = new AttrAttribute()
+                    {
+                        PublicAttributeName = JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop),
+                        PropertyInfo = prop,
+                        InternalAttributeName = prop.Name
+                    };
+                    attributes.Add(idAttr);
+                    continue;
+                }
+
                 var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
                 if (attribute == null)
                     continue;
@@ -168,7 +182,7 @@ namespace JsonApiDotNetCore.Builders
                 attribute.Type = GetRelationshipType(attribute, prop);
                 attributes.Add(attribute);
 
-                if(attribute is HasManyThroughAttribute hasManyThroughAttribute) {
+                if (attribute is HasManyThroughAttribute hasManyThroughAttribute) {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
                     if(throughProperty == null)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
@@ -211,13 +225,8 @@ namespace JsonApiDotNetCore.Builders
             return attributes;
         }
 
-        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop)
-        {
-            if (relation.IsHasMany)
-                return prop.PropertyType.GetGenericArguments()[0];
-            else
-                return prop.PropertyType;
-        }
+        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
+            relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 

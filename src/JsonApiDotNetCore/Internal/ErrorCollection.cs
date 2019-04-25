@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -24,6 +26,27 @@ namespace JsonApiDotNetCore.Internal
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
+        }
+
+        public int GetErrorStatusCode()
+        {
+            var statusCodes = Errors
+                .Select(e => e.StatusCode)
+                .Distinct()
+                .ToList();
+
+            if (statusCodes.Count == 1)
+                return statusCodes[0];
+
+            return int.Parse(statusCodes.Max().ToString()[0] + "00");
+        }
+
+        public IActionResult AsActionResult()
+        {
+            return new ObjectResult(this)
+            {
+                StatusCode = GetErrorStatusCode()
+            };
         }
     }
 }
