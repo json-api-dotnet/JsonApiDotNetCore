@@ -296,6 +296,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_When_Targets_Already_Attached()
         {
+            // It is possible that entities we're creating relationships to
+            // have already been included in dbContext the application beyond control
+            // of JANDC. For example: a user may have been loaded when checking permissions
+            // in business logic in controllers. In this case,
+            // this user may not be reattached to the db context in the repository.
+
             // arrange
             var todoCollection = new TodoItemCollection();
             todoCollection.TodoItems = new List<TodoItem>();
