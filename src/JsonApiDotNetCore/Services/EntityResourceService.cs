@@ -108,8 +108,7 @@ namespace JsonApiDotNetCore.Services
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
-            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
-                entities = _entities.Select(entities, _jsonApiContext.QuerySet.Fields);
+            entities = _entities.Select(entities, _jsonApiContext.QuerySet?.Fields);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -243,7 +242,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.GetQueryable().Where(e => e.Id.Equals(id));
+            var query = _entities.Select(_entities.GetQueryable(), _jsonApiContext.QuerySet?.Fields).Where(e => e.Id.Equals(id));
 
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
