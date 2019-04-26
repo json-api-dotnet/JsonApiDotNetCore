@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Models
     /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer where T : class, IIdentifiable
+    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer<T> where T : class, IIdentifiable
     {
         private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;
@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.Models
 
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction actionSource)
         {
             return entities;
         }
