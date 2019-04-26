@@ -3,11 +3,6 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    //public interface IResourceHookContainer<T> : IResourceHookContainer, IResourceHookContainerBase<T> where T : class, IIdentifiable
-    //{
-
-    //}
-
     public interface IResourceHookContainer
     {
 
