@@ -148,9 +148,9 @@ If the key is present in a filter request, the supplied query will be used rathe
     // handles queries like: ?filter[was-active-on]=2018-10-15T01:25:52Z
     public override QueryFilters GetQueryFilters()
         =&gt; new QueryFilters {            
-            { &quot;was-active-on&quot;, (items, value) =&gt; DateTime.TryParse(value, out dateValue)
+            { &quot;was-active-on&quot;, (items, filter) =&gt; DateTime.TryParse(filter.Value, out dateValue)
                 ? items.Where(i =&gt; i.Expired == null || dateValue &lt; i.Expired)
-                : throw new JsonApiException(400, $&quot;&#39;{value}&#39; is not a valid date.&quot;)
+                : throw new JsonApiException(400, $&quot;&#39;{filter.Value}&#39; is not a valid date.&quot;)
             }
         };
 }
