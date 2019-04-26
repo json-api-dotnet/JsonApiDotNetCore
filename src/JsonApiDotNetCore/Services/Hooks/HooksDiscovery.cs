@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The implemented hooks for model.</returns>
         void DiscoverImplementedHooksForModel()
         {
-            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(IResourceHookContainer<TEntity>));
+            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(ResourceDefinition<TEntity>)).ToList();
             try
             {
                 Type targetType = derivedTypes.SingleOrDefault(); // multiple containers is not supported

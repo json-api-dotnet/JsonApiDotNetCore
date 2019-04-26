@@ -37,9 +37,7 @@ namespace UnitTests.ResourceHooks
             todoResourceMock.Verify(rd => rd.BeforeUpdate(todoList, It.IsAny<ResourceAction>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
 
-            todoResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
-            ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             ownerResourceMock.VerifyNoOtherCalls();
         }
 
@@ -57,10 +55,8 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
             ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
-            ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             ownerResourceMock.VerifyNoOtherCalls();
         }
         [Fact]
@@ -78,9 +74,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(todoList, It.IsAny<ResourceAction>()), Times.Once());
-            todoResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
-            ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             ownerResourceMock.VerifyNoOtherCalls();
         }
         [Fact]
@@ -97,9 +91,7 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
             // assert
-            todoResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             todoResourceMock.VerifyNoOtherCalls();
-            ownerResourceMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             ownerResourceMock.VerifyNoOtherCalls();
         }
     }

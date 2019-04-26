@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Models
     /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer<T> where T : class, IIdentifiable
+    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer where T : class, IIdentifiable
     {
         private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;
@@ -31,23 +31,12 @@ namespace JsonApiDotNetCore.Models
 
         private bool _requestCachedAttrsHaveBeenLoaded = false;
         private List<AttrAttribute> _requestCachedAttrs;
-        protected readonly ResourceHook[] _implementedHooks;
-
-        public ResourceDefinition(IHooksDiscovery<T> hooksDiscovery)
-        {
-            _graph = ResourceGraph.Instance;
-            _contextEntity = ResourceGraph.Instance.GetContextEntity(typeof(T));
-            _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
-            _implementedHooks = hooksDiscovery.ImplementedHooks;
-        }
 
         public ResourceDefinition()
         {
             _graph = ResourceGraph.Instance;
             _contextEntity = ResourceGraph.Instance.GetContextEntity(typeof(T));
             _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
-            _implementedHooks = new ResourceHook[0];
-
         }
 
         private bool InstanceOutputAttrsAreSpecified()
@@ -179,13 +168,7 @@ namespace JsonApiDotNetCore.Models
 
 
         /// <inheritdoc/>
-        public virtual bool ShouldExecuteHook(ResourceHook hook)
-        {
-            return _implementedHooks.Contains(hook);
-        }
-
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction actionSource)
+        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource)
         {
             return entities;
         }

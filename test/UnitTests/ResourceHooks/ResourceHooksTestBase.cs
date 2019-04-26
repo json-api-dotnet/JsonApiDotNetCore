@@ -28,7 +28,7 @@ namespace UnitTests.ResourceHooks
             todoItem.Owner = person;
             return todoList;
         }
-        protected (Mock<IJsonApiContext>, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>) 
+        protected (Mock<IJsonApiContext>, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>) 
         CreateTestObjects<TMain>(IHooksDiscovery<TMain> discovery = null)
             where TMain : class, IIdentifiable
 
@@ -40,14 +40,14 @@ namespace UnitTests.ResourceHooks
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
-            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, discovery);
             var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
-            var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, discovery, meta);
+            var hookExecutor = new ResourceHookExecutor(meta);
 
             return (context, hookExecutor, mainResource);
         }
 
-        protected  (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
+        protected  (Mock<IJsonApiContext> context, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
             CreateTestObjects<TMain, TNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TNested> nestedDiscovery = null
@@ -62,16 +62,16 @@ namespace UnitTests.ResourceHooks
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
-            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
             var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
-            var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
+            var hookExecutor = new ResourceHookExecutor(meta);
 
-            SetupProcessorFactoryForResourceDefinition(processorFactory, nestedResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, nestedResource.Object, nestedDiscovery);
 
             return (context, hookExecutor, mainResource, nestedResource);
         }
 
-        protected (Mock<IJsonApiContext> context, IResourceHookExecutor<TMain>, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TFirstNested>>, Mock<IResourceHookContainer<TSecondNested>>)
+        protected (Mock<IJsonApiContext> context, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TFirstNested>>, Mock<IResourceHookContainer<TSecondNested>>)
             CreateTestObjects<TMain, TFirstNested, TSecondNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
@@ -90,12 +90,12 @@ namespace UnitTests.ResourceHooks
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
-            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
             var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
-            var hookExecutor = new ResourceHookExecutor<TMain>(context.Object, mainDiscovery, meta);
+            var hookExecutor = new ResourceHookExecutor(meta);
 
-            SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object);
-            SetupProcessorFactoryForResourceDefinition(processorFactory, secondNestedResource.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object, firstNestedDiscovery);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, secondNestedResource.Object, secondNestedDiscovery);
 
             return (context, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }
@@ -157,10 +157,6 @@ namespace UnitTests.ResourceHooks
             resourceDefinition
                 .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()))
                 .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()))
-                .Returns<ResourceHook>((hook) => discovery.ImplementedHooks.Contains(hook))
-                .Verifiable();
         }
 
         private (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
@@ -173,12 +169,16 @@ namespace UnitTests.ResourceHooks
 
         private void SetupProcessorFactoryForResourceDefinition<TModel>(
             Mock<IGenericProcessorFactory> processorFactory,
-            IResourceHookContainer<TModel> modelResource)
+            IResourceHookContainer<TModel> modelResource,
+            IHooksDiscovery<TModel> discovery)
             where TModel : class, IIdentifiable
 
         {
             processorFactory.Setup(c => c.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
             .Returns(modelResource);
+
+            processorFactory.Setup(c => c.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
+            .Returns(discovery);
         }
     }
 }

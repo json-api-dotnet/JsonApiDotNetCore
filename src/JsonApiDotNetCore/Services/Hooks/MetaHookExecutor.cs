@@ -16,6 +16,7 @@ namespace JsonApiDotNetCore.Internal
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
         protected readonly Dictionary<Type, IResourceHookContainer> _hookContainers;
+        protected readonly Dictionary<Type, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
         protected Dictionary<Type, List<RelationshipProxy>> _meta;
 
@@ -28,6 +29,8 @@ namespace JsonApiDotNetCore.Internal
             _graph = graph;
             _meta = new Dictionary<Type, List<RelationshipProxy>>();
             _hookContainers = new Dictionary<Type, IResourceHookContainer>();
+            _hookDiscoveries = new Dictionary<Type, IHooksDiscovery>();
+
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
@@ -82,10 +85,21 @@ namespace JsonApiDotNetCore.Internal
 
             foreach (ResourceHook targetHook in targetHooks)
             {
-                if (container.ShouldExecuteHook(targetHook)) return container;
+                if (ShouldExecuteHook(targetEntityType, targetHook)) return container;
             }
             return null;
 
+        }
+
+        public bool ShouldExecuteHook(Type entityType, ResourceHook hook)
+        {
+
+            if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
+            {
+                discovery = _genericProcessorFactory.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), entityType);
+                _hookDiscoveries[entityType] = discovery;
+            }
+            return discovery.ImplementedHooks.Contains(hook);
         }
 
         /// <inheritdoc/>

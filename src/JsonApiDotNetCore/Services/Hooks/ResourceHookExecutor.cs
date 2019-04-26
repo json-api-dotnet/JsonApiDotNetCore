@@ -9,32 +9,15 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc/>
-    public class ResourceHookExecutor<TEntity> : IResourceHookExecutor<TEntity> where TEntity : class, IIdentifiable
+    public class ResourceHookExecutor : IResourceHookExecutor
     {
-        protected readonly ResourceHook[] _implementedHooks;
-        protected readonly IJsonApiContext _jsonApiContext;
-        protected readonly IGenericProcessorFactory _genericProcessorFactory;
-        protected readonly ResourceDefinition<TEntity> _resourceDefinition;
-        protected readonly IResourceGraph _graph;
-        protected readonly Type _entityType;
         protected readonly IMetaHookExecutor _meta;
         protected readonly ResourceAction[] _singleActions;
-        protected readonly Type _openContainerType;
         protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
 
-        public ResourceHookExecutor(
-            IJsonApiContext jsonApiContext,
-            IHooksDiscovery<TEntity> hooksConfiguration,
-            IMetaHookExecutor meta
-            )
+        public ResourceHookExecutor(IMetaHookExecutor meta)
         {
-            _genericProcessorFactory = jsonApiContext.GenericProcessorFactory;
-            _jsonApiContext = jsonApiContext;
-            _graph = _jsonApiContext.ResourceGraph;
             _meta = meta;
-            _implementedHooks = hooksConfiguration.ImplementedHooks;
-            _entityType = typeof(TEntity);
-            _openContainerType = typeof(ResourceDefinition<>);
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
             _singleActions = new ResourceAction[]
                 {
@@ -48,7 +31,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
             if (hookContainer != null)
@@ -59,7 +42,7 @@ namespace JsonApiDotNetCore.Services
                 entities = parsedEntities;
             }
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
+            _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return CallHook(container, ResourceHook.BeforeUpdate, new object[] { relatedEntities, actionSource });
@@ -70,7 +53,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterCreate(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
             if (hookContainer != null)
@@ -81,7 +64,7 @@ namespace JsonApiDotNetCore.Services
                 entities = parsedEntities;
             }
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
+            _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return CallHook(container, ResourceHook.AfterUpdate, new object[] { relatedEntities, actionSource });
@@ -92,7 +75,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeRead(ResourceAction actionSource, string stringId = null)
+        public virtual void BeforeRead<TEntity>(ResourceAction actionSource, string stringId = null) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(actionSource, stringId);
@@ -100,7 +83,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterRead(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual IEnumerable<TEntity> AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
             if (hookContainer != null)
@@ -111,13 +94,14 @@ namespace JsonApiDotNetCore.Services
                 entities = parsedEntities;
             }
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
+            _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
-                if (container.ShouldExecuteHook(ResourceHook.BeforeRead))
+                var targetType = TypeHelper.GetListInnerType((IEnumerable)relatedEntities);
+                if (_meta.ShouldExecuteHook(targetType, ResourceHook.BeforeRead))
                     CallHook(container, ResourceHook.BeforeRead, new object[] { actionSource, default(string) });
 
-                if (container.ShouldExecuteHook(ResourceHook.AfterRead))
+                if (_meta.ShouldExecuteHook(targetType, ResourceHook.AfterRead))
                 {
                     return CallHook(container, ResourceHook.AfterRead, new object[] { relatedEntities, actionSource });
                 }
@@ -128,7 +112,7 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
             if (hookContainer != null)
@@ -139,7 +123,7 @@ namespace JsonApiDotNetCore.Services
                 entities = parsedEntities;
             }
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.BeforeUpdate);
+            _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.BeforeUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return CallHook(container, ResourceHook.BeforeUpdate, new object[] { relatedEntities, actionSource });
@@ -150,7 +134,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterUpdate(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
             if (hookContainer != null)
@@ -161,7 +145,7 @@ namespace JsonApiDotNetCore.Services
                 entities = parsedEntities;
             }
 
-            _meta.UpdateMetaInformation(new Type[] { _entityType }, ResourceHook.AfterUpdate);
+            _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.AfterUpdate);
             BreadthFirstTraverse(entities, (container, relatedEntities) =>
             {
                 return CallHook(container, ResourceHook.AfterUpdate, new object[] { relatedEntities, actionSource });
@@ -172,7 +156,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeDelete(IEnumerable<TEntity> entities, ResourceAction actionSource)
+        public virtual void BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
             hookContainer?.BeforeDelete(entities, actionSource);
@@ -180,7 +164,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete(IEnumerable<TEntity> entities, bool succeeded, ResourceAction actionSource)
+        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, bool succeeded, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
             hookContainer?.AfterDelete(entities, succeeded, actionSource);
@@ -359,9 +343,9 @@ namespace JsonApiDotNetCore.Services
             var processedEntities = GetProcessedEntities(entityType);
             processedEntities.UnionWith(new HashSet<IIdentifiable>(entities));
         }
-        void RegisterProcessedEntities(IEnumerable<TEntity> entities)
+        void RegisterProcessedEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IIdentifiable
         {
-            RegisterProcessedEntities(entities, _entityType);
+            RegisterProcessedEntities(entities, typeof(TEntity));
         }
 
 

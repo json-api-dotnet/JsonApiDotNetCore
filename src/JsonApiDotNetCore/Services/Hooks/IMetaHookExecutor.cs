@@ -48,6 +48,14 @@ namespace JsonApiDotNetCore.Internal
         IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
 
         /// <summary>
+        /// Checks if the given hook is implemented on the given container
+        /// </summary>
+        /// <returns><c>true</c>, if the hook was implemented, <c>false</c> otherwise.</returns>
+        /// <param name="container">Container.</param>
+        /// <param name="hook">Hook.</param>
+        bool ShouldExecuteHook(Type targetType, ResourceHook hook);
+
+        /// <summary>
         /// For the types in <paramref name="nextLayerTypes"/>, given (a set of)
         /// <paramref name="hook"/>s,  retrieves the relationships from 
         /// ContextEntity and gets the resource definitions (hook containers) for

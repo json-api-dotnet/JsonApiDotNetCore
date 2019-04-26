@@ -8,7 +8,13 @@ namespace JsonApiDotNetCore.Services
     /// enums that represents which resource hooks have been implemented for that
     /// particular entity.
     /// </summary>
-    public interface IHooksDiscovery<TEntity> where TEntity : class, IIdentifiable
+    public interface IHooksDiscovery<TEntity> : IHooksDiscovery where TEntity : class, IIdentifiable
+    {
+
+    }
+
+
+    public interface IHooksDiscovery
     {
         /// <summary>
         /// A list of the implemented hooks for resource TEntity

@@ -50,7 +50,6 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
-        private readonly IResourceHookExecutor<TEntity> _hookExecutor;
 
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,

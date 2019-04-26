@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
-            IResourceHookExecutor<TResource> hookExecutor = null,
+            IResourceHookExecutor hookExecutor = null,
             ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
         { }
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            IResourceHookExecutor<TResource> hookExecutor = null,
+            IResourceHookExecutor hookExecutor = null,
             ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
         { }
@@ -44,12 +44,12 @@ namespace JsonApiDotNetCore.Services
         private readonly IEntityRepository<TEntity, TId> _entities;
         private readonly ILogger _logger;
         private readonly IResourceMapper _mapper;
-        private readonly IResourceHookExecutor<TEntity> _hookExecutor;
+        private readonly IResourceHookExecutor _hookExecutor;
 
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                IResourceHookExecutor<TEntity> hookExecutor,
+                IResourceHookExecutor hookExecutor,
                 ILoggerFactory loggerFactory = null)
         {
             // no mapper provided, TResource & TEntity must be the same type
@@ -79,6 +79,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
             var entity = MapIn(resource);
+
 
             entity = _hookExecutor == null ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
@@ -112,7 +113,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
-            _hookExecutor?.BeforeRead(ResourceAction.Get);
+            _hookExecutor?.BeforeRead<TEntity>(ResourceAction.Get);
             var entities = _entities.GetQueryable();
 
             entities = ApplySortAndFilterQuery(entities);
@@ -140,7 +141,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> GetAsync(TId id)
         {
 
-            _hookExecutor?.BeforeRead(ResourceAction.GetSingle, id.ToString());
+            _hookExecutor?.BeforeRead<TEntity>(ResourceAction.GetSingle, id.ToString());
             TEntity entity;
             if (ShouldIncludeRelationships())
             {
@@ -162,7 +163,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
 
-            _hookExecutor?.BeforeRead(ResourceAction.GetRelationship, id.ToString());
+            _hookExecutor?.BeforeRead<TEntity>(ResourceAction.GetRelationship, id.ToString());
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             entity = _hookExecutor == null ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
 

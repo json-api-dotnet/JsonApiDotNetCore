@@ -30,7 +30,6 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>());
             // assert
             resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()), Times.Once());
-            resourceDefinitionMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             resourceDefinitionMock.VerifyNoOtherCalls();
 
         }
@@ -44,7 +43,6 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.ShouldExecuteHook(It.IsAny<ResourceHook>()), Times.AtLeastOnce());
             resourceDefinitionMock.VerifyNoOtherCalls();
         }
     }
