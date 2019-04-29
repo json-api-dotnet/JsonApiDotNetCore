@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
@@ -88,6 +89,34 @@ namespace UnitTests.ResourceHooks
             todoResourceMock.Verify(rd => rd.AfterCreate(todoList, It.IsAny<ResourceAction>()), Times.Once());
             todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<ResourceAction>()), Times.Exactly(2));
             todoResourceMock.VerifyNoOtherCalls();
+        }
+
+
+        [Fact]
+        public void Fires_Nested_Hooks_When_Setting_Relationship_To_Null()
+        {
+            // arrange
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
+            var personDiscovery = SetDiscoverableHooks<Person>();
+
+            (var contextMock, var hookExecutor, var todoResourceMock,
+                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var todoList = CreateTodoWithOwner();
+
+            /// this represents the datastructure that would be received from the 
+            /// request body when removing a to-one relation. Note that an assigned
+            /// null cannot be distinguished from the default value as a result
+            /// of instantiation. This is what we're testing here.
+            todoList.First().Owner = null;
+
+            // act
+            hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
+            // assert
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(todoList, It.IsAny<ResourceAction>()), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
+
+            todoResourceMock.VerifyNoOtherCalls();
+            ownerResourceMock.VerifyNoOtherCalls();
         }
     }
 }

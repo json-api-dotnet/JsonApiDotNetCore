@@ -16,5 +16,4 @@
         PatchRelationship,
         Delete
     }
-
 }
