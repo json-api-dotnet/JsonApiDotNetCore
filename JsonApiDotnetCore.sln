@@ -204,6 +204,7 @@ Global
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Release|x86.ActiveCfg = Release|Any CPU
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Release|x86.Build.0 = Release|Any CPU
 		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
