@@ -11,11 +11,11 @@ namespace JsonApiDotNetCore.Services
     /// <inheritdoc/>
     public class ResourceHookExecutor : IResourceHookExecutor
     {
-        protected readonly IMetaHookExecutor _meta;
+        protected readonly IHookExecutorHelper _meta;
         protected readonly ResourceAction[] _singleActions;
         protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
 
-        public ResourceHookExecutor(IMetaHookExecutor meta)
+        public ResourceHookExecutor(IHookExecutorHelper meta)
         {
             _meta = meta;
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
@@ -234,6 +234,7 @@ namespace JsonApiDotNetCore.Services
 
                     // filter the retrieved related entities collection against the entities that were processed in previous iterations
                     var newEntitiesInTree = UniqueInTree(relatedEntities, proxy.TargetType);
+                    // need to support UpdateRelationCase here
                     if (!newEntitiesInTree.Any()) continue;
                     if (!relationshipsInCurrentLayer.ContainsKey(proxy.ParentType))
                     {

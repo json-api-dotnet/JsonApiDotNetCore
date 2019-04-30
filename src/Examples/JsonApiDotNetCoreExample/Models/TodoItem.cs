@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
 
-
+        public bool IsLocked { get; set; }
 
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }
@@ -42,6 +42,11 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("assignee")]
         public virtual Person Assignee { get; set; }
 
+
+        public int? MetaInformationId { get; set; }
+        [HasOne("meta-info")]
+        public virtual TodoItemMeta MetaInformation { get; set; }
+        
         [HasMany("stake-holders")]
         public virtual List<Person> StakeHolders { get; set; }
 

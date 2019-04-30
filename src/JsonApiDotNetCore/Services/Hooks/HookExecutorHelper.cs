@@ -9,8 +9,43 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.Internal
 {
 
+    // consider "partial enums", see last comment in 
+    // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
+
+    public class a_HookExecutionContext<TParent> where TParent : class, IIdentifiable
+    {
+
+        //  tell a hook if we're coming from Get(TId id) or full list Get(), or 
+        // 
+        public ResourceAction ServiceAction { get; set; } = ResourceAction.None; 
+        public bool IsRelationshipHook { get; set; } = false;
+        public TParent ParentEntity { get; set; } = null;
+
+    }
+
+    public class b_HookExecutionContext<TParent> where TParent : class, IIdentifiable
+    {
+        // consider "partial enums", see last comment in 
+        // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
+        public ResourceAction ServiceAction { get; set; } = ResourceAction.None;
+        public bool IsRelationshipHook { get; set; } = false;
+        public TParent ParentEntity { get; set; } = null;
+
+    }
+
+
+    public class HookExecutionContext<TParent> where TParent : class, IIdentifiable
+    {
+        // consider "partial enums", see last comment in 
+        // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
+        public ResourceAction ServiceAction { get; set; } = ResourceAction.None;
+        public bool IsRelationshipHook { get; set; } = false;
+        public TParent ParentEntity { get; set; } = null;
+
+    }
+
     /// <inheritdoc/>
-    public class MetaHookExecutor : IMetaHookExecutor
+    public class HookExecutorHelper : IHookExecutorHelper
     {
 
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
@@ -20,7 +55,7 @@ namespace JsonApiDotNetCore.Internal
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
         protected Dictionary<Type, List<RelationshipProxy>> _meta;
 
-        public MetaHookExecutor(
+        public HookExecutorHelper(
             IGenericProcessorFactory genericProcessorFactory,
             IResourceGraph graph
             )
@@ -134,8 +169,6 @@ namespace JsonApiDotNetCore.Internal
                 {
                     var relatedType = GetTargetTypeFromRelationship(attr);
 
-                    /// check for the related type if there are any hooks 
-                    /// implemented; if not we can skip to the next relationship
                     bool hasImplementedHooks = false;
                     foreach (ResourceHook targetHook in hooks)
                     {
@@ -145,6 +178,8 @@ namespace JsonApiDotNetCore.Internal
                             break;
                         }
                     }
+                    /// check for the related type if there are any hooks 
+                    /// implemented; if not we can skip to the next relationship
                     if (!hasImplementedHooks) continue;
 
                     /// If we already have detected relationships for the related 
@@ -158,6 +193,8 @@ namespace JsonApiDotNetCore.Internal
 
 
                     var identifier = CreateRelationshipIdentifier(attr, parentType);
+
+                    // should store on proxy if is UpdateRelationCase
                     var proxy = new RelationshipProxy(attr, relatedType, parentType, identifier);
 
                     /// we might already have covered for this relationship, like 

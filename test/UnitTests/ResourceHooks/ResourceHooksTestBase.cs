@@ -41,7 +41,7 @@ namespace UnitTests.ResourceHooks
 
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, discovery);
-            var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor(meta);
 
             return (context, hookExecutor, mainResource);
@@ -63,7 +63,7 @@ namespace UnitTests.ResourceHooks
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
-            var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor(meta);
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, nestedResource.Object, nestedDiscovery);
@@ -91,7 +91,7 @@ namespace UnitTests.ResourceHooks
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
-            var meta = new MetaHookExecutor(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor(meta);
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object, firstNestedDiscovery);

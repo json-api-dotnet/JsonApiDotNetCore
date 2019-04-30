@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Internal
     /// executor to call resource hooks.  It gets RelationshipAttributes, 
     /// ResourceHookContainers and figures out wether hooks are actually implemented.
     /// </summary>
-    public interface IMetaHookExecutor
+    public interface IHookExecutorHelper
     {
         /// <summary>
         /// Retrieves all the RelationshipProxies for a given entity. This method 

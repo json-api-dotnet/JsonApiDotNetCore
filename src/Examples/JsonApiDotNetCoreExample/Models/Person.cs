@@ -36,6 +36,7 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual PersonRole Role { get; set; } 
         public int? PersonRoleId { get; set; }
 
+
         [HasOne("stake-holder-todo-item")]
         public virtual TodoItem StakeHolderTodo { get; set; }
         public virtual int? StakeHolderTodoId { get; set; }

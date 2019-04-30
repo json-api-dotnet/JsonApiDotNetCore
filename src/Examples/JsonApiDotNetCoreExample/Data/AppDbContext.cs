@@ -25,6 +25,8 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithMany(p => p.TodoItems)
                 .HasForeignKey(t => t.OwnerId);
 
+
+
             modelBuilder.Entity<CourseStudentEntity>()
                 .HasKey(r => new { r.CourseId, r.StudentId });
 
@@ -53,6 +55,11 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(t => t.DependentTodoItem);
 
             modelBuilder.Entity<TodoItem>()
+                .HasOne(t => t.MetaInformation)
+                .WithOne(t => t.TodoItem)
+                .HasForeignKey<TodoItem>(t => t.MetaInformationId);
+
+            modelBuilder.Entity<TodoItem>()
                 .HasMany(t => t.ChildrenTodoItems)
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
@@ -74,5 +81,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<TodoItemMeta> TodoItemMetas { get; set; }
     }
 }
