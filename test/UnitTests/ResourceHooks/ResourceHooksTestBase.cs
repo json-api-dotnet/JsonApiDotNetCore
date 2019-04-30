@@ -50,7 +50,8 @@ namespace UnitTests.ResourceHooks
         protected  (Mock<IJsonApiContext> context, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
             CreateTestObjects<TMain, TNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
-            IHooksDiscovery<TNested> nestedDiscovery = null
+            IHooksDiscovery<TNested> nestedDiscovery = null,
+            Action<Mock<IJsonApiContext>> optionalMockAction = null 
             )
             where TMain : class, IIdentifiable
             where TNested : class, IIdentifiable
@@ -62,8 +63,11 @@ namespace UnitTests.ResourceHooks
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
+            optionalMockAction?.Invoke(context);
+
+
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
-            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance, context.Object);
             var hookExecutor = new ResourceHookExecutor(meta);
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, nestedResource.Object, nestedDiscovery);

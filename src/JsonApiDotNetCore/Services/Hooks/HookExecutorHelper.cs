@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Internal
     }
 
 
-    public class HookExecutionContext<TParent> where TParent : class, IIdentifiable
+    public class c_HookExecutionContext<TParent> where TParent : class, IIdentifiable
     {
         // consider "partial enums", see last comment in 
         // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
@@ -53,19 +53,21 @@ namespace JsonApiDotNetCore.Internal
         protected readonly Dictionary<Type, IResourceHookContainer> _hookContainers;
         protected readonly Dictionary<Type, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
+        protected readonly IJsonApiContext _context;
         protected Dictionary<Type, List<RelationshipProxy>> _meta;
 
         public HookExecutorHelper(
             IGenericProcessorFactory genericProcessorFactory,
-            IResourceGraph graph
+            IResourceGraph graph,
+            IJsonApiContext context = null
             )
         {
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
+            _context = context;
             _meta = new Dictionary<Type, List<RelationshipProxy>>();
             _hookContainers = new Dictionary<Type, IResourceHookContainer>();
             _hookDiscoveries = new Dictionary<Type, IHooksDiscovery>();
-
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
@@ -195,7 +197,9 @@ namespace JsonApiDotNetCore.Internal
                     var identifier = CreateRelationshipIdentifier(attr, parentType);
 
                     // should store on proxy if is UpdateRelationCase
-                    var proxy = new RelationshipProxy(attr, relatedType, parentType, identifier);
+                    var proxy = new RelationshipProxy(attr, relatedType, 
+                            parentType, identifier,
+                        (bool)_context?.RelationshipsToUpdate.Keys.Contains(attr));
 
                     /// we might already have covered for this relationship, like 
                     /// in a hierarchical self-refering nested structure 
@@ -309,14 +313,17 @@ namespace JsonApiDotNetCore.Internal
         public Type TargetType { get; private set; }
         public Type ParentType { get; private set; }
         public string RelationshipIdentifier { get; private set; }
+        public bool IsContextRelation { get; private set; }
 
         public RelationshipAttribute Attribute { get; set; }
-        public RelationshipProxy(RelationshipAttribute attr, Type relatedType, Type parentType, string identifier)
+        public RelationshipProxy(RelationshipAttribute attr, Type relatedType, 
+            Type parentType, string identifier, bool isContextRelation)
         {
             RelationshipIdentifier = identifier;
             ParentType = parentType;
             TargetType = relatedType;
             Attribute = attr;
+            IsContextRelation = isContextRelation;
             if (attr is HasManyThroughAttribute throughAttr)
             {
                 _isHasManyThrough = true;
@@ -326,6 +333,7 @@ namespace JsonApiDotNetCore.Internal
                 }
             }
         }
+
 
         /// <summary>
         /// Gets the relationship value for a given parent entity.

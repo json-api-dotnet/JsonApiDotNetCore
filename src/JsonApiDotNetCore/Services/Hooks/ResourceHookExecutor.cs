@@ -222,20 +222,20 @@ namespace JsonApiDotNetCore.Services
                 {
                     var relationshipValue = proxy.GetValue(currentLayerEntity);
                     // skip iteration if there is no relation assigned
-                    if (relationshipValue == null) continue;
+                    if (!proxy.IsContextRelation && relationshipValue == null) continue;
                     if (!(relationshipValue is IEnumerable<IIdentifiable> relatedEntities))
                     {
                         // in the case of a to-one relationship, the assigned value
                         // will not be a list. We therefore first wrap it in a list.
-                        var list = TypeHelper.CreateListFor(relationshipValue.GetType());
-                        list.Add(relationshipValue);
+                        var list = TypeHelper.CreateListFor(proxy.TargetType);
+                        if (relationshipValue != null ) list.Add(relationshipValue);
                         relatedEntities = (IEnumerable<IIdentifiable>)list;
                     }
 
                     // filter the retrieved related entities collection against the entities that were processed in previous iterations
                     var newEntitiesInTree = UniqueInTree(relatedEntities, proxy.TargetType);
-                    // need to support UpdateRelationCase here
-                    if (!newEntitiesInTree.Any()) continue;
+
+                    if (!proxy.IsContextRelation &&  !newEntitiesInTree.Any()) continue;
                     if (!relationshipsInCurrentLayer.ContainsKey(proxy.ParentType))
                     {
                         relationshipsInCurrentLayer[proxy.ParentType] = (new List<RelationshipProxy>() { proxy }, newEntitiesInTree);
@@ -302,8 +302,14 @@ namespace JsonApiDotNetCore.Services
                     }
                     var parsedEntities = tuple.Item2;
 
+
                     var relationshipValue = proxy.GetValue(currentLayerEntity);
-                    if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)
+
+                    if (relationshipValue == null)
+                    {
+                        proxy.SetValue(currentLayerEntity, null);
+                    }
+                    else if (relationshipValue is IEnumerable<IIdentifiable> relationshipCollection)
                     {
                         var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(parsedEntities), proxy.TargetType);
                         proxy.SetValue(currentLayerEntity, convertedCollection);
@@ -315,9 +321,11 @@ namespace JsonApiDotNetCore.Services
                             proxy.SetValue(currentLayerEntity, null);
                         }
                     }
+
                 }
             }
         }
+
 
         /// <summary>
         /// checks that the collection does not contain more than one item when

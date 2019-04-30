@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExample.Resources
             {
                 if (todo.IsLocked)
                 {
-                    throw new JsonApiException(401, "Not allowed update fields on locked todo item", new UnauthorizedAccessException());
+                    throw new JsonApiException(401, "Not allowed fields or relations of locked todo item", new UnauthorizedAccessException());
                 }
             }
 

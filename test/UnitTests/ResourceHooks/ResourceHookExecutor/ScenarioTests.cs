@@ -1,4 +1,5 @@
 ﻿using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
@@ -11,11 +12,12 @@ namespace UnitTests.ResourceHooks
 {
     public class ScenarioTests : ResourceHooksTestBase
     {
+        readonly IResourceGraph _graph;
         public ScenarioTests()
         {
             // Build() exposes the static ResourceGraphBuilder.Instance member, which 
             // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
+            _graph = new ResourceGraphBuilder()
                 .AddResource<TodoItem>()
                 .AddResource<Person>()
                 .Build();
@@ -96,6 +98,9 @@ namespace UnitTests.ResourceHooks
         public void Fires_Nested_Hooks_When_Setting_Relationship_To_Null()
         {
             // arrange
+            var attr = _graph.GetContextEntity(typeof(TodoItem)).Relationships.Single(r => r.PublicRelationshipName == "owner");
+
+
             var todoDiscovery = SetDiscoverableHooks<TodoItem>();
             var personDiscovery = SetDiscoverableHooks<Person>();
 
@@ -103,11 +108,15 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
+
+            contextMock.Setup(c => c.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
+
             /// this represents the datastructure that would be received from the 
             /// request body when removing a to-one relation. Note that an assigned
             /// null cannot be distinguished from the default value as a result
             /// of instantiation. This is what we're testing here.
             todoList.First().Owner = null;
+
 
             // act
             hookExecutor.BeforeUpdate(todoList, It.IsAny<ResourceAction>());
