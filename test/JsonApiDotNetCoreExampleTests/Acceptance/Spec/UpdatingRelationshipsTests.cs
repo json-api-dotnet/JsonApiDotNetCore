@@ -625,8 +625,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
         {
-
-
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var passport = new Passport();
@@ -635,8 +633,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person2 = _personFaker.Generate();
             context.People.AddRange(new List<Person>() { person1, person2 });
             await context.SaveChangesAsync();
-
-
 
             var content = new
             {
