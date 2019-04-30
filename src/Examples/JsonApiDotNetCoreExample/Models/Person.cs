@@ -38,6 +38,10 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
 
+        public int? PassportId { get; set; }
+        [HasOne("passport")]
+        public virtual Passport Passport { get; set; }
+
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
         {
             return new Dictionary<string, object> {

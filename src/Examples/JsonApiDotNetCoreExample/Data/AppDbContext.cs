@@ -50,6 +50,10 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
 
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Passport)
+                .WithOne(p => p.Person)
+                .HasForeignKey<Person>(p => p.PassportId);
 
         }
 
@@ -61,7 +65,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
-
         public DbSet<CourseEntity> Courses { get; set; }
         public DbSet<DepartmentEntity> Departments { get; set; }
         public DbSet<CourseStudentEntity> Registrations { get; set; }
@@ -69,5 +72,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Passport> Passports { get; set; }
     }
 }
