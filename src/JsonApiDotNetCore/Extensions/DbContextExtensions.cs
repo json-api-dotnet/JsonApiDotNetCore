@@ -14,6 +14,15 @@ namespace JsonApiDotNetCore.Extensions
         public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class 
             => context.Set<T>();
 
+        /// <summary>
+        /// Given a child entity and a relationship attribute between a parent 
+        /// entity to that child entity, attaches the entities on the inverse navigation
+        /// property to the dbContext.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="parentToChildAttribute">Parent to child relationship attribute.</param>
+        /// <param name="childEntity">Child entity.</param>
+        /// <typeparam name="TParent">The 1st type parameter.</typeparam>
         public static void LoadInverseNavigation<TParent>(
             this DbContext context,
             RelationshipAttribute parentToChildAttribute,
