@@ -345,7 +345,7 @@ namespace JsonApiDotNetCore.Data
                         {
                             /// we need to attach inverse relations to make sure
                             /// we're not violating any foreign key constraints 
-                            /// when implicitely removing pre-existing relations.
+                            /// when implicitly removing pre-existing relations.
                             /// See #502 for more info.
                             _context.LoadInverseNavigation<TEntity>(attr, pointer);
                         }
