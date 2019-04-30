@@ -109,13 +109,15 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
 
-            contextMock.Setup(c => c.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
 
             /// this represents the datastructure that would be received from the 
             /// request body when removing a to-one relation. Note that an assigned
             /// null cannot be distinguished from the default value as a result
-            /// of instantiation. This is what we're testing here.
+            /// of instantiation. We need to rely on JsonApiContext to be able to
+            /// recognise this. This is what we're testing here.
             todoList.First().Owner = null;
+            contextMock.Setup(c => c.RelationshipsToUpdate)
+                    .Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
 
 
             // act
