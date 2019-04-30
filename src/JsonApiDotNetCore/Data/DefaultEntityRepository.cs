@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
@@ -10,6 +11,7 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
@@ -338,6 +340,15 @@ namespace JsonApiDotNetCore.Data
                 {
                     if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasOneAttribute)))
                     {
+                        var attr = relationship.Key;
+                        if (_jsonApiContext.HasOneRelationshipPointers.Get().TryGetValue(attr, out var pointer) )
+                        {
+                            /// we need to attach inverse relations to make sure
+                            /// we're not violating any foreign key constraints 
+                            /// when implicitely removing pre-existing relations.
+                            /// See #502 for more info.
+                            _context.LoadInverseNavigation<TEntity>(attr, pointer);
+                        }
                         relationship.Key.SetValue(oldEntity, relationship.Value);
                     }
                     if ((relationship.Key.TypeId as Type).IsAssignableFrom(typeof(HasManyAttribute)))

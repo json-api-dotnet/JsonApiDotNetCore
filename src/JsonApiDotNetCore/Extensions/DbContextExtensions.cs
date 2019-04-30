@@ -14,6 +14,30 @@ namespace JsonApiDotNetCore.Extensions
         public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class 
             => context.Set<T>();
 
+        public static void LoadInverseNavigation<TParent>(
+            this DbContext context,
+            RelationshipAttribute parentToChildAttribute,
+            object childEntity) where TParent : class, IIdentifiable
+        {
+            var navigationMeta = context.Model
+                    .FindEntityType(typeof(TParent))
+                    .FindNavigation(parentToChildAttribute.InternalRelationshipName);
+            var inverseNavigationMeta = navigationMeta.FindInverse();
+            if (inverseNavigationMeta != null)
+            {
+                var inversePropertyType = inverseNavigationMeta.PropertyInfo.PropertyType;
+                var inversePropertyName = inverseNavigationMeta.Name;
+                var entityEntry = context.Entry(childEntity);
+                if (inversePropertyType.IsGenericType ) 
+                { // if generic, means we're dealing with a list
+                    entityEntry.Collection(inversePropertyName).Load();
+                } else
+                {
+                    entityEntry.Navigation(inversePropertyName).Load();
+                }
+            }
+        }
+
         /// <summary>
         /// Get the DbSet when the model type is unknown until runtime
         /// </summary>

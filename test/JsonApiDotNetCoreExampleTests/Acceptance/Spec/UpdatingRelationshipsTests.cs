@@ -634,6 +634,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.People.AddRange(new List<Person>() { person1, person2 });
             await context.SaveChangesAsync();
 
+            var passportId = person1.PassportId;
+
             var content = new
             {
                 data = new
@@ -644,7 +646,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{person1.PassportId}" }
+                                data = new { type = "passports", id = $"{passportId}" }
                             }
                         }
                     }
@@ -666,6 +668,62 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
+            var _person1 = context.People.AsNoTracking().Include(ppl => ppl.Passport).Single(ppl => ppl.Id == person1.Id);
+            var _person2 = context.People.AsNoTracking().Include(ppl => ppl.Passport).Single(ppl => ppl.Id == person2.Id);
+            Assert.Null(_person1.Passport);
+            Assert.Equal(passportId, _person2.PassportId);
+        }
+
+        [Fact]
+        public async Task Updating_ToMany_Relationship_With_Implicit_Remove()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var passport = new Passport();
+            var person1 = _personFaker.Generate();
+            person1.Passport = passport;
+            var person2 = _personFaker.Generate();
+            context.People.AddRange(new List<Person>() { person1, person2 });
+            await context.SaveChangesAsync();
+
+            var passportId = person1.PassportId;
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person2.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "passport", new
+                            {
+                                data = new { type = "passports", id = $"{passportId}" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person2.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            var _person1 = context.People.AsNoTracking().Include(ppl => ppl.Passport).Single(ppl => ppl.Id == person1.Id);
+            var _person2 = context.People.AsNoTracking().Include(ppl => ppl.Passport).Single(ppl => ppl.Id == person2.Id);
+            Assert.Null(_person1.Passport);
+            Assert.Equal(passportId, _person2.PassportId);
         }
     }
 }
