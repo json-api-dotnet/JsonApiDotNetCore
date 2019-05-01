@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -50,6 +51,9 @@ namespace JsonApiDotNetCore.Services
 
     }
 
+    /// <summary>
+    /// Relationship group entry.
+    /// </summary>
     public class RelationshipGroupEntry
     {
         public RelationshipProxy Relationship { get; private set;}
@@ -62,11 +66,14 @@ namespace JsonApiDotNetCore.Services
 
     }
 
+    /// <summary>
+    /// Related entities in current layer entry.
+    /// </summary>
     public class RelatedEntitiesInCurrentLayerEntry
     {
-        public DependentType DependentType { get; private set }
-        public HashSet<IIdentifiable> UniqueSet { get; private set }
-        public List<RelationshipGroupEntry> RelationshipGroups { get; private set }
+        public DependentType DependentType { get; private set; }
+        public HashSet<IIdentifiable> UniqueSet { get; private set; }
+        public List<RelationshipGroupEntry> RelationshipGroups { get; private set; }
 
         public RelatedEntitiesInCurrentLayerEntry(
             DependentType _dependentType,
@@ -85,14 +92,41 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class RelatedEntitiesInCurrentLayer
     {
-    
         private readonly Dictionary<DependentType, RelationshipGroups> _relationshipGroups;
         private readonly Dictionary<DependentType, HashSet<IIdentifiable>> _uniqueEntities;
         public RelatedEntitiesInCurrentLayer()
         {
             _relationshipGroups = new Dictionary<DependentType, RelationshipGroups>();
             _uniqueEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
+        }
 
+        /// <summary>
+        /// Gets the unique filtered set.
+        /// </summary>
+        /// <returns>The unique filtered set.</returns>
+        /// <param name="proxy">Proxy.</param>
+        public HashSet<IIdentifiable> GetUniqueFilteredSet(RelationshipProxy proxy)
+        {
+            var match = _uniqueEntities.Where(kvPair => kvPair.Key == proxy.DependentType);
+            return match.Any() ? match.Single().Value : null;
+        }
+
+        /// <summary>
+        /// Gets all unique entities.
+        /// </summary>
+        /// <returns>The all unique entities.</returns>
+        public List<IIdentifiable> GetAllUniqueEntities()
+        {
+            return _uniqueEntities.Values.SelectMany(hs => hs).ToList();
+        }
+
+        /// <summary>
+        /// Gets all dependent types.
+        /// </summary>
+        /// <returns>The all dependent types.</returns>
+        public List<Type> GetAllDependentTypes()
+        {
+            return _uniqueEntities.Keys.ToList();
         }
 
         /// <summary>
@@ -143,9 +177,9 @@ namespace JsonApiDotNetCore.Services
         private void AddToUnique(RelationshipProxy proxy, HashSet<IIdentifiable> newEntitiesInTree)
         {
             if (!proxy.IsContextRelation && !newEntitiesInTree.Any()) return;
-            if (!_uniqueEntities.TryGetValue(proxy.TargetType, out HashSet<IIdentifiable> uniqueSet))
+            if (!_uniqueEntities.TryGetValue(proxy.PrincipalType, out HashSet<IIdentifiable> uniqueSet))
             {
-                _uniqueEntities[proxy.TargetType] = newEntitiesInTree;
+                _uniqueEntities[proxy.PrincipalType] = newEntitiesInTree;
             }
             else
             {
@@ -155,7 +189,7 @@ namespace JsonApiDotNetCore.Services
 
         private void AddToRelationshipGroups(RelationshipProxy proxy, IEnumerable<IIdentifiable> relatedEntities)
         {
-            var key = proxy.TargetType; 
+            var key = proxy.PrincipalType; 
             if (!_relationshipGroups.TryGetValue(key, out RelationshipGroups groups ))
             {
                 groups = new RelationshipGroups(); 

@@ -204,13 +204,13 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeDelete(T entities, HookExecutionContext<T> context)
+        public virtual void BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context)
         {
             return;
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete(T entities, bool succeeded, HookExecutionContext<T> context)
+        public virtual void AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded)
         {
             return;
         }

@@ -24,24 +24,11 @@ namespace JsonApiDotNetCoreExample.Resources
 
             if (context.GetEntitiesForAffectedRelationship<Person>().Any( pair => pair.Key.InternalRelationshipName == "Author" ))
             {
-                throw new JsonApiException(401, "Not allowed to update author for any TodoItem", new UnauthorizedAccessException());
+                throw new JsonApiException(401, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
             }
 
-
-        }
-
-        public override IEnumerable<TodoItem> BeforeUpdate(IEnumerable<TodoItem> entities, ResourceAction actionSource)
-        {
-            foreach (var todo in entities)
-            {
-                if (todo.IsLocked)
-                {
-                    throw new JsonApiException(401, "Not allowed fields or relations of locked todo item", new UnauthorizedAccessException());
-                }
-            }
-
-            return entities;
+            // ignore any updates for items with ordinal bigger than 10 (for whatever reason).
+            return entitiesInBody.Where(td => td.Ordinal > 10);
         }
     }
-
 }

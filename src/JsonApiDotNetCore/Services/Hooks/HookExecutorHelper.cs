@@ -248,6 +248,11 @@ namespace JsonApiDotNetCore.Internal
                 throw new InvalidOperationException("Something is not right in the breadth first traversal of resource hook: " +
                     "trying to get meta information when no allowed hooks are set");
         }
+
+        public bool RequiresDatabaseDiff(IResourceHookContainer container, ResourceHook hook)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
@@ -273,8 +278,8 @@ namespace JsonApiDotNetCore.Internal
         /// For HasManyThrough it is either the ThroughProperty (when the jointable is 
         /// Identifiable) or it is the righthand side (when the jointable is not identifiable)
         /// </summary>
-        public Type TargetType { get; private set; }
-        public Type ParentType { get; private set; }
+        public Type DependentType { get; private set; }
+        public Type PrincipalType { get; private set; }
         public string RelationshipIdentifier { get; private set; }
         public bool IsContextRelation { get; private set; }
 
@@ -283,14 +288,14 @@ namespace JsonApiDotNetCore.Internal
             Type parentType, string identifier, bool isContextRelation)
         {
             RelationshipIdentifier = identifier;
-            ParentType = parentType;
-            TargetType = relatedType;
+            DependentType = parentType;
+            PrincipalType = relatedType;
             Attribute = attr;
             IsContextRelation = isContextRelation;
             if (attr is HasManyThroughAttribute throughAttr)
             {
                 _isHasManyThrough = true;
-                if (TargetType != throughAttr.ThroughType)
+                if (PrincipalType != throughAttr.ThroughType)
                 {
                     _skipJoinTable = true;
                 }
@@ -348,7 +353,7 @@ namespace JsonApiDotNetCore.Internal
                 if (!_skipJoinTable)
                 {
                     var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, TargetType));
+                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, PrincipalType));
                     return;
                 }
                 else
@@ -357,7 +362,7 @@ namespace JsonApiDotNetCore.Internal
                     var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
 
                     var filteredList = new List<object>();
-                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, TargetType);
+                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, PrincipalType);
                     foreach (var je in joinEntities)
                     {
 
