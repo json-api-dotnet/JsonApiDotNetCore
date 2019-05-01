@@ -42,7 +42,7 @@ namespace UnitTests.ResourceHooks
             var todoList = new List<TodoItem>() { todo };
             
             // act
-            hookExecutor.AfterCreate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
             // assert
             todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<HookExecutionContext<Person>>()), Times.Once());
@@ -63,7 +63,7 @@ namespace UnitTests.ResourceHooks
             todo.ChildrenTodoItems = new List<TodoItem> { todo };
             var todoList = new List<TodoItem>() { todo };
             // act
-            hookExecutor.AfterCreate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
             // assert
             todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
             todoResourceMock.VerifyNoOtherCalls();
@@ -86,7 +86,7 @@ namespace UnitTests.ResourceHooks
 
             var todoList = new List<TodoItem>() { rootTodo };
             // act
-            hookExecutor.AfterCreate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
             // assert
             todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
             todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Exactly(2));
@@ -121,7 +121,7 @@ namespace UnitTests.ResourceHooks
 
 
             // act
-            hookExecutor.BeforeUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch);
+            hookExecutor.BeforeUpdate(todoList, ResourceAction.Patch);
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<Person>>(), It.IsAny<HookExecutionContext<Person>>()), Times.Once());

@@ -30,7 +30,7 @@ namespace UnitTests.ResourceHooks
 
             var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.BeforeDelete(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Delete);
+            hookExecutor.BeforeDelete(todoList, ResourceAction.Delete);
 
             // assert
             resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
@@ -44,8 +44,9 @@ namespace UnitTests.ResourceHooks
             var discovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
+            var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.BeforeDelete(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Delete);
+            hookExecutor.BeforeDelete(todoList, ResourceAction.Delete);
 
             // assert
             resourceDefinitionMock.VerifyNoOtherCalls();

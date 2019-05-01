@@ -32,7 +32,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourceAction.Patch);
             // assert
 
             todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
@@ -53,7 +53,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourceAction.Patch);
             // assert
             todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Never());
             ownerResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<HookExecutionContext<Person>>()), Times.Once());
@@ -74,7 +74,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourceAction.Patch);
             // assert
             todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>()), Times.Once());
             ownerResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<Person>>(), It.IsAny<HookExecutionContext<Person>>()), Times.Never());
@@ -95,7 +95,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch);
+            hookExecutor.AfterUpdate(todoList, ResourceAction.Patch);
             // assert
             todoResourceMock.VerifyNoOtherCalls();
             ownerResourceMock.VerifyNoOtherCalls();

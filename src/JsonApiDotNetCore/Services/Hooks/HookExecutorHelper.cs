@@ -159,10 +159,9 @@ namespace JsonApiDotNetCore.Internal
 
                     var identifier = CreateRelationshipIdentifier(attr, parentType);
 
-
+                    var isContextRelation = _context?.RelationshipsToUpdate?.Keys.Contains(attr);
                     var proxy = new RelationshipProxy(attr, relatedType, 
-                            parentType, identifier,
-                        (bool)_context?.RelationshipsToUpdate.Keys.Contains(attr));
+                            parentType, identifier, isContextRelation != null && (bool)isContextRelation);
 
                     /// we might already have covered for this relationship, like 
                     /// in a hierarchical self-refering nested structure 

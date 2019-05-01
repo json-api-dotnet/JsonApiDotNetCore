@@ -5,15 +5,15 @@ namespace JsonApiDotNetCore.Services
 {
     public interface IEntityDiff<TEntity> where TEntity : class, IIdentifiable
     {
-        HashSet<TEntity> RequestEntities { get; }
+        IEnumerable<TEntity> RequestEntities { get; }
         IEnumerable<TEntity> DatabaseEntities { get; }
     }
 
     public class EntityDiff<TEntity> : IEntityDiff<TEntity> where TEntity : class, IIdentifiable
     {
-        public HashSet<TEntity> RequestEntities { get; private set; }
+        public IEnumerable<TEntity> RequestEntities { get; private set; }
         public IEnumerable<TEntity> DatabaseEntities { get; private set; }
-        public EntityDiff(HashSet<TEntity> requestEntities, IEnumerable<TEntity> databaseEntities)
+        public EntityDiff(IEnumerable<TEntity> requestEntities, IEnumerable<TEntity> databaseEntities)
         {
             RequestEntities = requestEntities;
             DatabaseEntities = databaseEntities;

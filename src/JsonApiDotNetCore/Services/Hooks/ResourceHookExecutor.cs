@@ -46,14 +46,14 @@ namespace JsonApiDotNetCore.Services
             }
 
             _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.BeforeUpdate);
-            BreadthFirstTraverse(entities, (container, entry) =>
+            BreadthFirstTraverse(entities, (container, uniqueSet, entry) =>
             {
 
                 //(var dbEntities, var context) = _meta.GetDatabaseDiff(hookContainer, ResourceHook.BeforeUpdate, relatedEntities);
                 object dbEntities = null;
 
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, dbEntities);
-                var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), entry.DependentType, entry.UniqueSet, dbEntities);
+                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, entry.RelationshipGroups);
+                var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), entry.DependentType, uniqueSet, null);
                 return CallHook(container, ResourceHook.BeforeUpdate, new object[] { diff, context });
             });
 
@@ -77,10 +77,10 @@ namespace JsonApiDotNetCore.Services
             }
 
             _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.AfterUpdate);
-            BreadthFirstTraverse(entities, (container, entry) =>
+            BreadthFirstTraverse(entities, (container, uniqueSet, entry) =>
             {
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource);
-                return CallHook(container, ResourceHook.AfterUpdate, new object[] { entry.UniqueSet, actionSource });
+                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, null);
+                return CallHook(container, ResourceHook.AfterUpdate, new object[] { uniqueSet, context });
             });
 
             FlushRegister();
@@ -110,19 +110,20 @@ namespace JsonApiDotNetCore.Services
             }
 
             _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, new ResourceHook[] { ResourceHook.AfterRead, ResourceHook.BeforeRead });
-            BreadthFirstTraverse(entities, (container, entry) =>
+            BreadthFirstTraverse(entities, (container, uniqueSet, entry) =>
             {
                 var dependentType = entry.DependentType;
                 if (_meta.ShouldExecuteHook(dependentType, ResourceHook.BeforeRead))
                 {
-                    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource);
+                    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, null);
+
                     CallHook(container, ResourceHook.BeforeRead, new object[] { context, default(string) });
                 }
 
                 if (_meta.ShouldExecuteHook(dependentType, ResourceHook.AfterRead))
                 {
-                    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource);
-                    return CallHook(container, ResourceHook.AfterRead, new object[] { entry.UniqueSet, context });
+                    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, null);
+                    return CallHook(container, ResourceHook.AfterRead, new object[] { uniqueSet, context });
                 }
                 return entry.UniqueSet;
             });
@@ -149,13 +150,13 @@ namespace JsonApiDotNetCore.Services
             }
 
             _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.BeforeUpdate);
-            BreadthFirstTraverse(entities, (container, entry) =>
+            BreadthFirstTraverse(entities, (container, uniqueSet, entry) =>
             {
 
                 // (var dbEntities, var context) = _meta.GetDatabaseDiff(hookContainer, ResourceHook.BeforeUpdate, relatedEntities);
                 object dbEntities = null;
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, dbEntities);
-                var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), entry.DependentType, entry.UniqueSet, dbEntities);
+                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, entry.RelationshipGroups);
+                var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), entry.DependentType, uniqueSet, null);
 
                 return CallHook(container, ResourceHook.BeforeUpdate, new object[] { diff, context });
             });
@@ -178,10 +179,10 @@ namespace JsonApiDotNetCore.Services
             }
 
             _meta.UpdateMetaInformation(new Type[] { typeof(TEntity) }, ResourceHook.AfterUpdate);
-            BreadthFirstTraverse(entities, (container, entry) =>
+            BreadthFirstTraverse(entities, (container, uniqueSet, entry) =>
             {
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource);
-                return CallHook(container, ResourceHook.AfterUpdate, new object[] { entry.UniqueSet, context });
+                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), entry.DependentType, actionSource, null);
+                return CallHook(container, ResourceHook.AfterUpdate, new object[] { uniqueSet, context });
             });
 
             FlushRegister();
@@ -216,7 +217,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="hookExecutionAction">Hook execution action.</param>
         void BreadthFirstTraverse(
             IEnumerable<IIdentifiable> currentLayer,
-            Func<IResourceHookContainer, RelatedEntitiesInCurrentLayerEntry, object> hookExecutionAction
+            Func<IResourceHookContainer, IList, RelatedEntitiesInCurrentLayerEntry, object> hookExecutionAction
             )
         {
             // for the entities in the current layer: get the collection of all related entities
@@ -285,7 +286,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="hookExecution">Hook execution method.</param>
         void ExecutionLoop(
             RelatedEntitiesInCurrentLayer relatedEntitiesInCurrentLayer,
-            Func<IResourceHookContainer, RelatedEntitiesInCurrentLayerEntry, object> hookExecution
+            Func<IResourceHookContainer, IList, RelatedEntitiesInCurrentLayerEntry, object> hookExecution
             )
         {
 
@@ -293,7 +294,7 @@ namespace JsonApiDotNetCore.Services
             {
                 var hookContainer = _meta.GetResourceHookContainer(entry.DependentType);
                 var castedUniqueSet = TypeHelper.ConvertCollection(entry.UniqueSet, entry.DependentType);
-                var filteredUniqueSet = ((IEnumerable)hookExecution(hookContainer, entry)).Cast<IIdentifiable>();
+                var filteredUniqueSet = ((IEnumerable)hookExecution(hookContainer, castedUniqueSet, entry)).Cast<IIdentifiable>();
                 filteredUniqueSet = new HashSet<IIdentifiable>(filteredUniqueSet);
                 entry.UniqueSet.IntersectWith(filteredUniqueSet);
             }

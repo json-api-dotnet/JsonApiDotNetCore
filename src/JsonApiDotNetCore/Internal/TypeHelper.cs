@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="type">The target type</param>
         public static IList CreateListFor(Type type)
         {
-            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type);
+            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type );
             return list;
 
         }
