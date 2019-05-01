@@ -11,9 +11,9 @@ namespace JsonApiDotNetCoreExample.Resources
     public class ArticleResource : ResourceDefinition<Article>
     {
 
-        public override IEnumerable<Article> AfterRead(IEnumerable<Article> entities, ResourceAction actionSource)
+        public override IEnumerable<Article> AfterRead(IEnumerable<Article> entities, HookExecutionContext<Article> context)
         {
-            if (actionSource == ResourceAction.GetSingle && entities.Single().Name == "Classified")
+            if (context.Pipeline == ResourceAction.GetSingle && entities.Single().Name == "Classified")
             {
                 throw new JsonApiException(401, "Not Allowed", new UnauthorizedAccessException());
             }

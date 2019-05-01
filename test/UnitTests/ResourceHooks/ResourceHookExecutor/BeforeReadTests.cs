@@ -30,9 +30,9 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(It.IsAny<ResourceAction>());
+            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), It.IsAny<string>()), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<TodoItem>>(), It.IsAny<string>()), Times.Once());
         }
     }
 }

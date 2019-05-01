@@ -74,6 +74,5 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<TodoItemMeta> TodoItemMetas { get; set; }
     }
 }

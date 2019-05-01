@@ -27,9 +27,9 @@ namespace UnitTests.ResourceHooks
             var discovery = SetDiscoverableHooks<TodoItem>();
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
             // act
-            hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>());
+            hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Delete, It.IsAny<bool>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<HookExecutionContext<TodoItem>>(), It.IsAny<bool>()), Times.Once());
             resourceDefinitionMock.VerifyNoOtherCalls();
 
         }
@@ -41,7 +41,7 @@ namespace UnitTests.ResourceHooks
             var discovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
             // act
-            hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>());
+            hookExecutor.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Delete, It.IsAny<bool>());
             // assert
             resourceDefinitionMock.VerifyNoOtherCalls();
         }

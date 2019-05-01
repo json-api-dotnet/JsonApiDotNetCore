@@ -63,18 +63,18 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<IEnumerable<Article>>(), It.IsAny<HookExecutionContext<Article>>()), Times.Once());
             articleResourceMock.VerifyNoOtherCalls();
 
-            joinResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            joinResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<IdentifiableArticleTag>>(), null), Times.Once());
+            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), It.IsAny<HookExecutionContext<IdentifiableArticleTag>>()), Times.Once());
             joinResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<Tag>>(), null), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<HookExecutionContext<Tag>>()), Times.Once());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -92,17 +92,17 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
             articleResourceMock.VerifyNoOtherCalls();
 
-            joinResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            joinResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<IdentifiableArticleTag>>(), null), Times.Once());
+            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), It.IsAny<HookExecutionContext<IdentifiableArticleTag>>()), Times.Once());
             joinResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<Tag>>(), null), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<HookExecutionContext<Tag>>()), Times.Once());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -120,16 +120,16 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
             articleResourceMock.VerifyNoOtherCalls();
 
-            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), It.IsAny<HookExecutionContext<IdentifiableArticleTag>>()), Times.Once());
             joinResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<ResourceAction>()), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<HookExecutionContext<Tag>>()), Times.Once());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -147,16 +147,16 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
             articleResourceMock.VerifyNoOtherCalls();
 
-            joinResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
+            joinResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<IdentifiableArticleTag>>(), null), Times.Once());
             joinResourceMock.VerifyNoOtherCalls();
 
-            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null), Times.Once());
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<Tag>>(), null), Times.Once());
             tagResourceMock.VerifyNoOtherCalls();
         }
 
@@ -174,10 +174,10 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<ResourceAction>()), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
             articleResourceMock.VerifyNoOtherCalls();
 
             joinResourceMock.VerifyNoOtherCalls();
@@ -198,7 +198,7 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.AfterRead(articles, It.IsAny<ResourceAction>());
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
             articleResourceMock.VerifyNoOtherCalls();

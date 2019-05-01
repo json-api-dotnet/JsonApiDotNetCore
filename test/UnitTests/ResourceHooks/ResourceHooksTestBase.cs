@@ -133,35 +133,36 @@ namespace UnitTests.ResourceHooks
             ) where TModel : class, IIdentifiable
         {
             resourceDefinition
-                .Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+               .Setup(rd => rd.BeforeCreate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
+               .Returns<EntityDiff<TModel>, HookExecutionContext<TModel>>((entityDiff, context) => entityDiff.RequestEntities)
+               .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
+                .Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Setup(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<TModel>>(), null))
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), null))
+                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
+                .Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
+                .Returns<EntityDiff<TModel>, HookExecutionContext<TModel>>((entityDiff, context) => entityDiff.RequestEntities)
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.BeforeUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
+                .Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TModel>, ResourceAction>((entities, action) => entities)
+                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<bool>(), It.IsAny<ResourceAction>()))
+                .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>(), It.IsAny<bool>()))
                 .Verifiable();
         }
+
 
         private (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
         {
