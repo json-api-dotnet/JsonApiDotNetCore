@@ -25,8 +25,6 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithMany(p => p.TodoItems)
                 .HasForeignKey(t => t.OwnerId);
 
-
-
             modelBuilder.Entity<CourseStudentEntity>()
                 .HasKey(r => new { r.CourseId, r.StudentId });
 
@@ -53,12 +51,7 @@ namespace JsonApiDotNetCoreExample.Data
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.DependentTodoItem);
-
-            modelBuilder.Entity<TodoItem>()
-                .HasOne(t => t.MetaInformation)
-                .WithOne(t => t.TodoItem)
-                .HasForeignKey<TodoItem>(t => t.MetaInformationId);
-
+                
             modelBuilder.Entity<TodoItem>()
                 .HasMany(t => t.ChildrenTodoItems)
                 .WithOne(t => t.ParentTodoItem)

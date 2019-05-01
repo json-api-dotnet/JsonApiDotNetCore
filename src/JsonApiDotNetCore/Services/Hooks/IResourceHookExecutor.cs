@@ -1,8 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
+
+    public class EntityDiff<TEntity> where TEntity : class, IIdentifiable
+    {
+        public HashSet<TEntity> RequestEntities { get; private set; }
+        public IEnumerable<TEntity> DatabaseEntities { get; private set; }
+        public EntityDiff(HashSet<TEntity> requestEntities, IEnumerable<TEntity> databaseEntities)
+        {
+            RequestEntities = requestEntities;
+            DatabaseEntities = databaseEntities;
+        }
+    }
+
+    public class HookExecutionContext<TDependent> where TDependent : class, IIdentifiable
+    {
+        public ResourceAction Pipeline { get; private set; }
+        private readonly List<RelationshipGroupEntry> _groups;
+        public HookExecutionContext(ResourceAction pipeline, List<RelationshipGroupEntry> relationshipGroups = null)
+        {
+            Pipeline = pipeline;
+            _groups = relationshipGroups;
+        }
+
+
+        public Dictionary<RelationshipAttribute, List<TDependent>> GetAllAffectedRelationships()
+        {
+            return _groups?.ToDictionary(rge => rge.Relationship.Attribute, rge => rge.Entities.Cast<TDependent>().ToList());
+        }
+
+        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesForAffectedRelationship<TPrincipal>() where TPrincipal : class, IIdentifiable
+        {
+            return GetEntitiesForAffectedRelationship(typeof(TPrincipal));
+        }
+
+        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesForAffectedRelationship(Type principalType)
+        {
+            return _groups?.Where(rge => rge.Relationship.ParentType == principalType)
+                .ToDictionary(rge => rge.Relationship.Attribute, rge => rge.Entities.Cast<TDependent>().ToList());
+
+        }
+    }
+
     public interface IResourceHookContainer
     {
 
@@ -21,7 +64,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The (adjusted) entities to be created</returns>
         /// <param name="entities">The entities to be created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction actionSource);
+        IEnumerable<T> BeforeCreate(EntityDiff<T> entityDiff, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed after creating an entity. Can be used eg. for publishing events.
@@ -31,7 +74,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities that were created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> AfterCreate(IEnumerable<T> entities, ResourceAction actionSource);
+        IEnumerable<T> AfterCreate(IEnumerable<T> entities, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed after before reading entities. Can be used eg. for logging, authorization.
@@ -45,7 +88,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The entities that result from the query</param>
         /// <param name="stringId">If the </param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        void BeforeRead(ResourceAction actionSource, string stringId = null);
+        void BeforeRead(HookExecutionContext<T> context, string stringId = null);
 
         /// <summary>
         /// A hook executed after reading entities. Can be used eg. for publishing events.
@@ -67,7 +110,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The (adjusted) entities that result from the query</returns>
         /// <param name="entities">The entities that result from the query</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction actionSource);
+        IEnumerable<T> AfterRead(IEnumerable<T> entities, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed before updating an entity. Can be used eg. for authorization.
@@ -80,7 +123,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The (adjusted) entities to be updated</returns>
         /// <param name="entities">The entities to be updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> BeforeUpdate(IEnumerable<T> entities, ResourceAction actionSource);
+        IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed after updating an entity. Can be used eg. for publishing an event.
@@ -90,14 +133,14 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities that were updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> AfterUpdate(IEnumerable<T> entities, ResourceAction actionSource);
+        IEnumerable<T> AfterUpdate(IEnumerable<T> entities, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for authorization.
         /// </summary>
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        void BeforeDelete(IEnumerable<T> entities, ResourceAction actionSource);
+        void BeforeDelete(T entity, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for publishing an event.
@@ -105,7 +148,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
-        void AfterDelete(IEnumerable<T> entities, bool succeeded, ResourceAction actionSource);
+        void AfterDelete(T entity, bool succeeded, HookExecutionContext<T> context);
     }
 
 

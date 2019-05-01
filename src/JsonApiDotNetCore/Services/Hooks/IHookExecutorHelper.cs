@@ -13,6 +13,16 @@ namespace JsonApiDotNetCore.Internal
     public interface IHookExecutorHelper
     {
         /// <summary>
+        /// Determines if the implemented <param name="hook"/> requires the 
+        /// EntityDiff parameter (in the hook execution) to have a populated
+        /// DatabaseEntities field.
+        /// </summary>
+        /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
+        /// <param name="container">Container.</param>
+        /// <param name="hook">Hook.</param>
+        bool RequiresDatabaseDiff(IResourceHookContainer container, ResourceHook hook);
+
+        /// <summary>
         /// Retrieves all the RelationshipProxies for a given entity. This method 
         /// is used by the HookExecutor when looping through the entities in a layer
         /// of the breadth first traversal.

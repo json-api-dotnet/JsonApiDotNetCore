@@ -42,11 +42,6 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("assignee")]
         public virtual Person Assignee { get; set; }
 
-
-        public int? MetaInformationId { get; set; }
-        [HasOne("meta-info")]
-        public virtual TodoItemMeta MetaInformation { get; set; }
-        
         [HasMany("stake-holders")]
         public virtual List<Person> StakeHolders { get; set; }
 

@@ -168,49 +168,49 @@ namespace JsonApiDotNetCore.Models
 
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction actionSource)
+        public virtual IEnumerable<T> BeforeCreate(EntityDiff<T> entityDiff, HookExecutionContext<T> context)
+        {
+            return entityDiff.RequestEntities;
+        }
+
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> AfterCreate(IEnumerable<T> entities, HookExecutionContext<T> context)
         {
             return entities;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterCreate(IEnumerable<T> entities, ResourceAction actionSource)
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual void BeforeRead(ResourceAction actionSource, string stringId = null)
+        public virtual void BeforeRead(HookExecutionContext<T> context, string stringId = null)
         {
             return;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction actionSource)
+        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, HookExecutionContext<T> context)
         {
             return entities;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(IEnumerable<T> entities, ResourceAction actionSource)
+        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, HookExecutionContext<T> context)
+        {
+            return entityDiff.RequestEntities;
+        }
+
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> AfterUpdate(IEnumerable<T> entities, HookExecutionContext<T> context)
         {
             return entities;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterUpdate(IEnumerable<T> entities, ResourceAction actionSource)
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual void BeforeDelete(IEnumerable<T> entities, ResourceAction actionSource)
+        public virtual void BeforeDelete(T entities, HookExecutionContext<T> context)
         {
             return;
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete(IEnumerable<T> entities, bool succeeded, ResourceAction actionSource)
+        public virtual void AfterDelete(T entities, bool succeeded, HookExecutionContext<T> context)
         {
             return;
         }

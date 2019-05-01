@@ -8,42 +8,6 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal
 {
-
-    // consider "partial enums", see last comment in 
-    // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
-
-    public class a_HookExecutionContext<TParent> where TParent : class, IIdentifiable
-    {
-
-        //  tell a hook if we're coming from Get(TId id) or full list Get(), or 
-        // 
-        public ResourceAction ServiceAction { get; set; } = ResourceAction.None; 
-        public bool IsRelationshipHook { get; set; } = false;
-        public TParent ParentEntity { get; set; } = null;
-
-    }
-
-    public class b_HookExecutionContext<TParent> where TParent : class, IIdentifiable
-    {
-        // consider "partial enums", see last comment in 
-        // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
-        public ResourceAction ServiceAction { get; set; } = ResourceAction.None;
-        public bool IsRelationshipHook { get; set; } = false;
-        public TParent ParentEntity { get; set; } = null;
-
-    }
-
-
-    public class c_HookExecutionContext<TParent> where TParent : class, IIdentifiable
-    {
-        // consider "partial enums", see last comment in 
-        // https://social.msdn.microsoft.com/Forums/en-US/6844289e-da66-4d71-b91e-6bb05d813535/having-a-quotpartial-enumquot-like-you-would-have-a-partial-class?forum=csharplanguage
-        public ResourceAction ServiceAction { get; set; } = ResourceAction.None;
-        public bool IsRelationshipHook { get; set; } = false;
-        public TParent ParentEntity { get; set; } = null;
-
-    }
-
     /// <inheritdoc/>
     public class HookExecutorHelper : IHookExecutorHelper
     {
@@ -193,10 +157,9 @@ namespace JsonApiDotNetCore.Internal
                         newKey = true;
                     }
 
-
                     var identifier = CreateRelationshipIdentifier(attr, parentType);
 
-                    // should store on proxy if is UpdateRelationCase
+
                     var proxy = new RelationshipProxy(attr, relatedType, 
                             parentType, identifier,
                         (bool)_context?.RelationshipsToUpdate.Keys.Contains(attr));

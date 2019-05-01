@@ -8,26 +8,27 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
-    //public class HookDiff<TEntity>
-    //{
-    //    public IEnumerable<TEntity> RequestEntities;
-    //    public IEnumerable<TEntity> DatabaseEntities;
-         
-    //}
-    //public interface IHookContext { }
-    //public class HookExecutionContext<TEntity> : IHookContext
-    //{
-    //    ResourceAction ServiceAction { get; set; }
-    //    private Dictionary<string, List<TEntity>> UpdatedRelations { get; set; }
-    //    //public IEnumerable<TEntity> DatabaseEntities;
-
-    //    //public List<IRelationship> GetUpdatedRelationships<TEntity>(TEntity entity);
-
-    //}
-
-
     public class TodoResource : ResourceDefinition<TodoItem>
     {
+
+        public override IEnumerable<TodoItem> BeforeUpdate(EntityDiff<TodoItem> entityDiff, HookExecutionContext<TodoItem> context)
+        {
+            var entitiesInBody = entityDiff.RequestEntities;
+            foreach (var todo in entitiesInBody)
+            {
+                if (todo.IsLocked)
+                {
+                    throw new JsonApiException(401, "Not allowed to update fields or relations of locked todo item", new UnauthorizedAccessException());
+                }
+            }
+
+            if (context.GetEntitiesForAffectedRelationship<Person>().Any( pair => pair.Key.InternalRelationshipName == "Author" ))
+            {
+                throw new JsonApiException(401, "Not allowed to update author for any TodoItem", new UnauthorizedAccessException());
+            }
+
+
+        }
 
         public override IEnumerable<TodoItem> BeforeUpdate(IEnumerable<TodoItem> entities, ResourceAction actionSource)
         {
