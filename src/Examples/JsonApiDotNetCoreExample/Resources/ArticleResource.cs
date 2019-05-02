@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (context.Pipeline == ResourceAction.GetSingle && entities.Single().Name == "Classified")
             {
-                throw new JsonApiException(401, "Not Allowed", new UnauthorizedAccessException());
+                throw new JsonApiException(403, "You are not allowed to see this article!", new UnauthorizedAccessException());
             }
             return entities.Where(t => t.Name != "This should be not be included");
         }
