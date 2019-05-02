@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -70,7 +69,7 @@ namespace JsonApiDotNetCore.Services
     /// <summary>
     /// Related entities in current layer entry.
     /// </summary>
-    public class RelatedEntitiesInCurrentLayerEntry
+    public class NodeInLayer
     {
         private readonly HashSet<IIdentifiable> _uniqueSet;
 
@@ -78,7 +77,7 @@ namespace JsonApiDotNetCore.Services
         public List<RelationshipGroupEntry> RelationshipGroups { get; private set; }
         public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, DependentType); } }
 
-        public RelatedEntitiesInCurrentLayerEntry(
+        public NodeInLayer(
             DependentType dependentType,
             HashSet<IIdentifiable> uniqueSet,
             List<RelationshipGroupEntry> relationshipGroups
@@ -99,11 +98,11 @@ namespace JsonApiDotNetCore.Services
     /// A helper class that represents all entities in the current layer that
     /// are being traversed for which hooks will be executed (see IResourceHookExecutor)
     /// </summary>
-    public class RelatedEntitiesInCurrentLayer
+    public class EntityTreeLayer
     {
         private readonly Dictionary<DependentType, RelationshipGroups> _relationshipGroups;
         private readonly Dictionary<DependentType, HashSet<IIdentifiable>> _uniqueEntities;
-        public RelatedEntitiesInCurrentLayer()
+        public EntityTreeLayer()
         {
             _relationshipGroups = new Dictionary<DependentType, RelationshipGroups>();
             _uniqueEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
@@ -116,7 +115,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="proxy">Proxy.</param>
         public HashSet<IIdentifiable> GetUniqueFilteredSet(RelationshipProxy proxy)
         {
-            var match = _uniqueEntities.Where(kvPair => kvPair.Key == proxy.DependentType);
+            var match = _uniqueEntities.Where(kvPair => kvPair.Key == proxy.PrincipalType);
             return match.Any() ? match.Single().Value : null;
         }
 
@@ -133,7 +132,7 @@ namespace JsonApiDotNetCore.Services
         /// Gets all dependent types.
         /// </summary>
         /// <returns>The all dependent types.</returns>
-        public List<Type> GetAllDependentTypes()
+        public List<DependentType> GetAllDependentTypes()
         {
             return _uniqueEntities.Keys.ToList();
         }
@@ -172,23 +171,23 @@ namespace JsonApiDotNetCore.Services
         /// Entries in this traversal iteration
         /// </summary>
         /// <returns>The entries.</returns>
-        public IEnumerable<RelatedEntitiesInCurrentLayerEntry> Entries()
+        public IEnumerable<NodeInLayer> Entries()
         {
             var dependentTypes = _uniqueEntities.Keys;
             foreach (var type in dependentTypes)
             {
                 var uniqueEntities = _uniqueEntities[type];
                 var relationshipGroups = _relationshipGroups[type].Entries();
-                yield return new RelatedEntitiesInCurrentLayerEntry(type, uniqueEntities, relationshipGroups);
+                yield return new NodeInLayer(type, uniqueEntities, relationshipGroups);
             }
         }
 
         private void AddToUnique(RelationshipProxy proxy, HashSet<IIdentifiable> newEntitiesInTree)
         {
             if (!proxy.IsContextRelation && !newEntitiesInTree.Any()) return;
-            if (!_uniqueEntities.TryGetValue(proxy.PrincipalType, out HashSet<IIdentifiable> uniqueSet))
+            if (!_uniqueEntities.TryGetValue(proxy.DependentType, out HashSet<IIdentifiable> uniqueSet))
             {
-                _uniqueEntities[proxy.PrincipalType] = newEntitiesInTree;
+                _uniqueEntities[proxy.DependentType] = newEntitiesInTree;
             }
             else
             {
@@ -198,7 +197,7 @@ namespace JsonApiDotNetCore.Services
 
         private void AddToRelationshipGroups(RelationshipProxy proxy, IEnumerable<IIdentifiable> relatedEntities)
         {
-            var key = proxy.PrincipalType; 
+            var key = proxy.DependentType; 
             if (!_relationshipGroups.TryGetValue(key, out RelationshipGroups groups ))
             {
                 groups = new RelationshipGroups(); 

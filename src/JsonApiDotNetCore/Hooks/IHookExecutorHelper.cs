@@ -66,26 +66,26 @@ namespace JsonApiDotNetCore.Internal
         bool ShouldExecuteHook(Type targetType, ResourceHook hook);
 
         /// <summary>
-        /// For the types in <paramref name="nextLayerTypes"/>, given (a set of)
+        /// For the types in <paramref name="nextEntityTreeLayerTypes"/>, given (a set of)
         /// <paramref name="hook"/>s,  retrieves the relationships from 
         /// ContextEntity and gets the resource definitions (hook containers) for
         /// these relationships. This information if required for the breadth first
         /// traversal of the next layer.
         /// </summary>
         /// <returns>The meta dict.</returns>
-        /// <param name="nextLayerTypes">Unique list of types to extract metadata from</param>
+        /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hook">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, ResourceHook hook = ResourceHook.None);
+        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, ResourceHook hook = ResourceHook.None);
         /// <summary>
-        /// For the types in <paramref name="nextLayerTypes"/>, given (a set of)
+        /// For the types in <paramref name="nextEntityTreeLayerTypes"/>, given (a set of)
         /// <paramref name="hooks"/>s,  retrieves the relationships from 
         /// ContextEntity and gets the resource definitions (hook containers) for
         /// these relationships. This information if required for the breadth first
         /// traversal of the next layer.
         /// </summary>
         /// <returns>The meta dict.</returns>
-        /// <param name="nextLayerTypes">Unique list of types to extract metadata from</param>
+        /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hooks">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextLayerTypes, IEnumerable<ResourceHook> hooks);
+        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, IEnumerable<ResourceHook> hooks);
     }
 }
