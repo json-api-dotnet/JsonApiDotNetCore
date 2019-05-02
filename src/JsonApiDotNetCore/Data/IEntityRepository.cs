@@ -1,9 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
+    public interface IGuidEntityRepository<TEntity>
+    : IEntityRepository<TEntity, Guid>
+    where TEntity : class, IIdentifiable<Guid>
+    { }
+
     public interface IEntityRepository<TEntity>
         : IEntityRepository<TEntity, int>
         where TEntity : class, IIdentifiable<int>
@@ -36,3 +40,5 @@ namespace JsonApiDotNetCore.Data
         void DetachRelationshipPointers(TEntity entity);
     }
 }
+
+

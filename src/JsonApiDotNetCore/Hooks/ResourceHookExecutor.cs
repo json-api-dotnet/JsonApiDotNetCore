@@ -36,8 +36,7 @@ namespace JsonApiDotNetCore.Services
             {
                 RegisterProcessedEntities(entities);
 
-                // (var dbEntities, var context) = _meta.GetDatabaseDiff(hookContainer, ResourceHook.BeforeCreate, entities);
-                HashSet<TEntity> dbEntities = null;
+                var dbEntities = _meta.GetDatabaseValues(hookContainer, entities, ResourceHook.BeforeCreate);
                 var context = new HookExecutionContext<TEntity>(actionSource);
                 var diff = new EntityDiff<TEntity>(new HashSet<TEntity>(entities), dbEntities);
                 var parsedEntities = hookContainer.BeforeCreate(diff, context);
@@ -49,9 +48,8 @@ namespace JsonApiDotNetCore.Services
             BreadthFirstTraverse(entities, (container, layerNode) =>
             {
 
-                //(var dbEntities, var context) = _meta.GetDatabaseDiff(hookContainer, ResourceHook.BeforeUpdate, relatedEntities);
-                object dbEntities = null;
-
+                var uniqueSet = layerNode.UniqueSet;
+                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate);
                 var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
                 var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), layerNode.DependentType, layerNode.UniqueSet, null);
                 return CallHook(container, ResourceHook.BeforeUpdate, new object[] { diff, context });
@@ -141,8 +139,7 @@ namespace JsonApiDotNetCore.Services
             {
                 RegisterProcessedEntities(entities);
 
-                // (var dbEntities, var context) = _meta.GetDatabaseDiff(hookContainer, ResourceHook.BeforeCreate, entities);
-                HashSet<TEntity> dbEntities = null;
+                var dbEntities = _meta.GetDatabaseValues(hookContainer, entities, ResourceHook.BeforeUpdate);
                 var context = new HookExecutionContext<TEntity>(actionSource);
                 var diff = new EntityDiff<TEntity>(new HashSet<TEntity>(entities), dbEntities);
                 var parsedEntities = hookContainer.BeforeUpdate(diff, context);
@@ -154,7 +151,7 @@ namespace JsonApiDotNetCore.Services
             BreadthFirstTraverse(entities, (container, layerNode) =>
             {
                 var uniqueSet = layerNode.UniqueSet;
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, ResourceHook.BeforeUpdate, uniqueSet);
+                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate);
                 var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
                 var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), layerNode.DependentType, uniqueSet, dbEntities);
 
@@ -335,11 +332,9 @@ namespace JsonApiDotNetCore.Services
                             proxy.SetValue(currentEntityTreeLayerEntity, null);
                         }
                     }
-
                 }
             }
         }
-
 
         /// <summary>
         /// checks that the collection does not contain more than one item when

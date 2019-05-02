@@ -8,12 +8,12 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
+
 namespace JsonApiDotNetCore.Internal
 {
     /// <inheritdoc/>
     public class HookExecutorHelper : IHookExecutorHelper
     {
-        public static readonly ResourceHook[] DbDiffCompatibleHooks = { ResourceHook.BeforeCreate, ResourceHook.BeforeUpdate };
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
         protected readonly Dictionary<Type, IResourceHookContainer> _hookContainers;
@@ -92,17 +92,6 @@ namespace JsonApiDotNetCore.Internal
             }
             return null;
 
-        }
-
-        public bool ShouldExecuteHook(Type entityType, ResourceHook hook)
-        {
-
-            if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
-            {
-                discovery = _genericProcessorFactory.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), entityType);
-                _hookDiscoveries[entityType] = discovery;
-            }
-            return discovery.ImplementedHooks.Contains(hook);
         }
 
         /// <inheritdoc/>
@@ -192,6 +181,58 @@ namespace JsonApiDotNetCore.Internal
             return UpdateMetaInformation(nextEntityTreeLayerTypes, targetHooks);
         }
 
+        /// <inheritdoc/>
+        public IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook)
+        {
+            var entityType = TypeHelper.GetListInnerType(entities);
+            if (ShouldIncludeDatabaseDiff(entityType, hook))
+            {
+
+                var idType = GetIdentifierType(entityType);
+
+                var parameterizedGetter = GetType()
+                        .GetMethod("GetValuesFromRepository", BindingFlags.NonPublic | BindingFlags.Instance)
+                        .MakeGenericMethod(entityType, idType);
+                var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
+                var ids = casted.Select(e => e.StringId);
+                return (IList)parameterizedGetter.Invoke(this, new object[] { ids });
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<TEntity> GetDatabaseValues<TEntity>(
+            IResourceHookContainer container,
+            IEnumerable<TEntity> entities,
+            ResourceHook hook) where TEntity : class, IIdentifiable
+        {
+            return (IEnumerable<TEntity>)GetDatabaseValues(container, (IList)entities, hook);
+        }
+
+        public bool ShouldIncludeDatabaseDiff(Type entityType, ResourceHook hook)
+        {
+            var discovery = GetHookDiscovery(entityType);
+
+            if (discovery.DatabaseDiffDisabledHooks.Contains(hook))
+            {
+                return false;
+            }
+            else if (discovery.DatabaseDiffEnabledHooks.Contains(hook))
+            {
+                return false;
+            }
+            else
+            {
+                return _context.Options.DatabaseValuesInDiffs;
+            }
+
+        }
+
+        public bool ShouldExecuteHook(Type entityType, ResourceHook hook)
+        {
+            var discovery = GetHookDiscovery(entityType);
+            return discovery.ImplementedHooks.Contains(hook);
+        }
 
         /// <summary>
         /// relationship attributes for the same relation are not the same object in memory, for some reason.
@@ -250,42 +291,30 @@ namespace JsonApiDotNetCore.Internal
                     "trying to get meta information when no allowed hooks are set");
         }
 
-
-        public IList GetDatabaseValues(IResourceHookContainer container, ResourceHook hook, IList entities)
+        protected IHooksDiscovery GetHookDiscovery(Type entityType)
         {
-            if (DatabaseDiffIsRequired(container, hook))
+            if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
             {
-                var entityType = TypeHelper.GetListInnerType(entities);
-                var idType = GetIdentifierType(entityType);
-
-                var parameterizedGetter = GetType()
-                        .GetMethod("GetValuesFromRepository", BindingFlags.NonPublic | BindingFlags.Instance)
-                        .MakeGenericMethod(entityType, idType);
-                var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-                var ids = casted.Select(e => e.StringId);
-
-                return (IList)parameterizedGetter.Invoke(this, new object[] { ids });
+                discovery = _genericProcessorFactory.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), entityType);
+                _hookDiscoveries[entityType] = discovery;
             }
-            return null;
+            return discovery;
         }
 
-        bool DatabaseDiffIsRequired(IResourceHookContainer container, ResourceHook hook)
-        {
-            // need to implement using attributes / JsonApiOptions
-            return DbDiffCompatibleHooks.Contains(hook);
-        }
-
-        Type GetIdentifierType(Type entityType)
+        protected Type GetIdentifierType(Type entityType)
         {
             return entityType.GetProperty("Id").PropertyType;
         }
 
-        IEnumerable<TEntity> GetValuesFromRepository<TEntity, TId>(IEnumerable<string> ids) where TEntity : class, IIdentifiable<TId>
+#pragma warning disable IDE0051 // Remove unused private members
+        protected IEnumerable<TEntity> GetValuesFromRepository<TEntity, TId>(IEnumerable<TId> ids) where TEntity : class, IIdentifiable<TId>
+#pragma warning restore IDE0051 // Remove unused private members
         {
-            //var repositoryType = typeof(IEntityReadRepository<>).MakeGenericType(TypeHelper.GetListInnerType(entities));
-            var repo  = _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(typeof(IEntityRepository<>), typeof(TEntity));
-            var dbEntities = repo.GetQueryable().Where(e => ids.Contains(e.StringId)).ToList();
+            var openType = typeof(TId) == typeof(Guid) ? typeof(IGuidEntityRepository<>) : typeof(IEntityRepository<>);
+            var repo  = _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(openType, typeof(TEntity));
+            var dbEntities = repo.GetQueryable().Where(e => ids.Contains(e.Id)).ToList();
             return dbEntities;
         }
+
     }
 }

@@ -38,10 +38,19 @@ namespace JsonApiDotNetCore.Configuration
         public static bool DisableErrorSource { get; set; }
 
         /// <summary>
-        /// Whether or not ResourceHooks are enabled. Default is set to 
-        /// <see langword="false"/> to ensure backward compatibility
+        /// Whether or not ResourceHooks are enabled. 
+        /// 
+        /// Default is set to <see langword="false"/> for backward compatibility.
         /// </summary>
         public bool EnableResourceHooks { get; set; } = false;
+
+        /// <summary>
+        /// Whether or not database values should be included by default
+        /// for resource hooks. Ignored if EnableResourceHooks is set false.
+        /// 
+        /// Defaults to <see langword="true"/>.
+        /// </summary>
+        public bool DatabaseValuesInDiffs { get; set; } = true;
 
         /// <summary>
         /// The base URL Namespace

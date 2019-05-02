@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Discovery;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -9,6 +10,8 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PersonResource : ResourceDefinition<Person>
     {
+
+        [DatabaseValuesInDiffs(false)]
         public override IEnumerable<Person> BeforeUpdate(EntityDiff<Person> entityDiff, HookExecutionContext<Person> context)
         {
             var entitiesInBody = entityDiff.RequestEntities;

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Hooks.Discovery;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
@@ -15,6 +17,9 @@ namespace JsonApiDotNetCore.Services
 
         /// <inheritdoc/>
         public ResourceHook[] ImplementedHooks { get; private set; }
+        public ResourceHook[] DatabaseDiffEnabledHooks { get; private set; }
+        public ResourceHook[] DatabaseDiffDisabledHooks { get; private set; }
+
 
         public HooksDiscovery()
         {
@@ -34,16 +39,30 @@ namespace JsonApiDotNetCore.Services
             var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(ResourceDefinition<TEntity>)).ToList();
             try
             {
+                var implementedHooks = new List<ResourceHook>();
+                var diffEnabledHooks = new List<ResourceHook>();
+                var diffDisabledHooks = new List<ResourceHook>();
                 Type targetType = derivedTypes.SingleOrDefault(); // multiple containers is not supported
                 if (targetType != null)
                 {
-                    ImplementedHooks = _allHooks.Where(h => targetType.GetMethod(h.ToString("G")).DeclaringType == targetType)
-                                                .ToArray();
+                    foreach (var hook in _allHooks)
+                    {
+                        var method = targetType.GetMethod(hook.ToString("G"));
+                        if (method.DeclaringType == targetType)
+                        {
+                            implementedHooks.Add(hook);
+                            var attr = method.GetCustomAttributes(true).OfType<DatabaseValuesInDiffs>().SingleOrDefault();
+                            if (attr != null)
+                            {
+                                var targetList = attr.IcludeDatabaseValues ? diffEnabledHooks : diffDisabledHooks;
+                                targetList.Add(hook);
+                            }
+                         }
+                    }
+
                 }
-                else
-                {
-                    ImplementedHooks = new ResourceHook[0];
-                }
+                ImplementedHooks = implementedHooks.ToArray();
+                DatabaseDiffEnabledHooks = diffEnabledHooks.ToArray();
             } catch (Exception e)
             {
                 throw new JsonApiSetupException($@"Incorrect resource hook setup. For a given model of type TEntity, 

@@ -14,6 +14,14 @@ namespace JsonApiDotNetCore.Internal
     public interface IHookExecutorHelper
     {
         /// <summary>
+        /// Shoulds the include database diff.
+        /// </summary>
+        /// <returns><c>true</c>, if include database diff was shoulded, <c>false</c> otherwise.</returns>
+        /// <param name="entityType">Entity type.</param>
+        /// <param name="hook">Hook.</param>
+        bool ShouldIncludeDatabaseDiff(Type entityType, ResourceHook hook);
+
+        /// <summary>
         /// Determines if the implemented <param name="hook"/> requires the 
         /// EntityDiff parameter (in the hook execution) to have a populated
         /// DatabaseEntities field.
@@ -21,7 +29,17 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
         /// <param name="container">Container.</param>
         /// <param name="hook">Hook.</param>
-        IList GetDatabaseValues(IResourceHookContainer container, ResourceHook hook, IList entities);
+        IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook);
+
+        /// <summary>
+        /// Determines if the implemented <param name="hook"/> requires the 
+        /// EntityDiff parameter (in the hook execution) to have a populated
+        /// DatabaseEntities field.
+        /// </summary>
+        /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
+        /// <param name="container">Container.</param>
+        /// <param name="hook">Hook.</param>
+        IEnumerable<TEntity> GetDatabaseValues<TEntity>(IResourceHookContainer container, IEnumerable<TEntity> entities, ResourceHook hook) where TEntity : class, IIdentifiable;
 
         /// <summary>
         /// Retrieves all the RelationshipProxies for a given entity. This method 

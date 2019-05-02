@@ -1,5 +1,6 @@
 
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
@@ -169,6 +170,7 @@ namespace UnitTests.ResourceHooks
             var processorFactory = new Mock<IGenericProcessorFactory>();
             var context = new Mock<IJsonApiContext>();
             context.Setup(c => c.GenericProcessorFactory).Returns(processorFactory.Object);
+            context.Setup(c => c.Options).Returns( new JsonApiOptions { DatabaseValuesInDiffs = false });
             return (context, processorFactory);
         }
 
