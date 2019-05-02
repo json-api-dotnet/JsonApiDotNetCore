@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Services
             {
 
                 var uniqueSet = layerNode.UniqueSet;
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate);
+                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate, layerNode.DependentType);
                 var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
                 var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), layerNode.DependentType, layerNode.UniqueSet, null);
                 return CallHook(container, ResourceHook.BeforeUpdate, new object[] { diff, context });
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCore.Services
             BreadthFirstTraverse(entities, (container, layerNode) =>
             {
                 var uniqueSet = layerNode.UniqueSet;
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate);
+                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate, layerNode.DependentType);
                 var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
                 var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), layerNode.DependentType, uniqueSet, dbEntities);
 

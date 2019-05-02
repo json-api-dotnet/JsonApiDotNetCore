@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Resources
     public class PersonResource : ResourceDefinition<Person>
     {
 
-        [DatabaseValuesInDiffs(false)]
+        //[DatabaseValuesInDiffs(false)]
         public override IEnumerable<Person> BeforeUpdate(EntityDiff<Person> entityDiff, HookExecutionContext<Person> context)
         {
             var entitiesInBody = entityDiff.RequestEntities;

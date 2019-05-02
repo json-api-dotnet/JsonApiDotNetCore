@@ -183,7 +183,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
         }
 

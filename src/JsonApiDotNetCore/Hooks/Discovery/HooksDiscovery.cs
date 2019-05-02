@@ -63,6 +63,7 @@ namespace JsonApiDotNetCore.Services
                 }
                 ImplementedHooks = implementedHooks.ToArray();
                 DatabaseDiffEnabledHooks = diffEnabledHooks.ToArray();
+                DatabaseDiffDisabledHooks = diffDisabledHooks.ToArray();
             } catch (Exception e)
             {
                 throw new JsonApiSetupException($@"Incorrect resource hook setup. For a given model of type TEntity, 

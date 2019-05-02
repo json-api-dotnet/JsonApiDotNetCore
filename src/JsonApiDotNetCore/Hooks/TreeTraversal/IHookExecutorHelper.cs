@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
         /// <param name="container">Container.</param>
         /// <param name="hook">Hook.</param>
-        IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook);
+        IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook, Type entityType);
 
         /// <summary>
         /// Determines if the implemented <param name="hook"/> requires the 

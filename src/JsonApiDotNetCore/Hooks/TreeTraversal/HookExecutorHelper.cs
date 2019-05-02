@@ -182,19 +182,17 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <inheritdoc/>
-        public IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook)
+        public IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook, Type entityType)
         {
-            var entityType = TypeHelper.GetListInnerType(entities);
             if (ShouldIncludeDatabaseDiff(entityType, hook))
             {
-
                 var idType = GetIdentifierType(entityType);
 
                 var parameterizedGetter = GetType()
                         .GetMethod("GetValuesFromRepository", BindingFlags.NonPublic | BindingFlags.Instance)
                         .MakeGenericMethod(entityType, idType);
                 var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-                var ids = casted.Select(e => e.StringId);
+                var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
                 return (IList)parameterizedGetter.Invoke(this, new object[] { ids });
             }
             return null;
@@ -206,7 +204,7 @@ namespace JsonApiDotNetCore.Internal
             IEnumerable<TEntity> entities,
             ResourceHook hook) where TEntity : class, IIdentifiable
         {
-            return (IEnumerable<TEntity>)GetDatabaseValues(container, (IList)entities, hook);
+            return (IEnumerable<TEntity>)GetDatabaseValues(container, (IList)entities, hook, typeof(TEntity));
         }
 
         public bool ShouldIncludeDatabaseDiff(Type entityType, ResourceHook hook)

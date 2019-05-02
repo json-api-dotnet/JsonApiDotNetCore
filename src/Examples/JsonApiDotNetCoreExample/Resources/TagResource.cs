@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
