@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -71,18 +72,26 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class RelatedEntitiesInCurrentLayerEntry
     {
+        private readonly HashSet<IIdentifiable> _uniqueSet;
+
         public DependentType DependentType { get; private set; }
-        public HashSet<IIdentifiable> UniqueSet { get; private set; }
         public List<RelationshipGroupEntry> RelationshipGroups { get; private set; }
+        public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, DependentType); } }
 
         public RelatedEntitiesInCurrentLayerEntry(
-            DependentType _dependentType,
-            HashSet<IIdentifiable> _uniqueSet,
-            List<RelationshipGroupEntry> _relationshipGroups
+            DependentType dependentType,
+            HashSet<IIdentifiable> uniqueSet,
+            List<RelationshipGroupEntry> relationshipGroups
         ) {
-            DependentType = _dependentType;
-            UniqueSet = _uniqueSet;
-            RelationshipGroups = _relationshipGroups;
+            _uniqueSet = uniqueSet;
+            DependentType = dependentType;
+            RelationshipGroups = relationshipGroups;
+        }
+
+        public void UpdateUniqueSet( IEnumerable filteredUniqueSet)
+        {
+            var casted = new HashSet<IIdentifiable>(filteredUniqueSet.Cast<IIdentifiable>());
+            _uniqueSet.IntersectWith(casted);
         }
     }
 
