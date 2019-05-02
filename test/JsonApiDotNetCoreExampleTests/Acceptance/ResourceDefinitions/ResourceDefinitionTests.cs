@@ -258,7 +258,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
             Assert.DoesNotContain(toBeExcluded, body);
         }
-
         /// <summary>
         /// In the Cascade Permission Error tests, we ensure that  all the relevant 
         /// entities are provided in the hook definitions. In this case, 
@@ -271,25 +270,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var lockedTodo = _todoItemFaker.Generate();
-            lockedTodo.IsLocked = true;
-            var meta = new TodoItemMeta();
-            lockedTodo.MetaInformation = new TodoItemMeta();
-            context.TodoItems.AddRange(lockedTodo);
+            var lockedPerson = _personFaker.Generate();
+            lockedPerson.IsLocked = true;
+            var passport = new Passport();
+            lockedPerson.Passport = passport;
+            context.People.AddRange(lockedPerson);
             await context.SaveChangesAsync();
 
-            var unlockedTodo = _todoItemFaker.Generate();
+            var unlockedPerson = _personFaker.Generate();
 
             var content = new
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "people",
                     relationships = new Dictionary<string, object>
                     {
-                        { "meta-info", new
+                        { "passport", new
                             {
-                                data = new { type = "todo-item-metas", id = $"{meta.Id}" }
+                                data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
                             }
                         }
                     }
@@ -297,7 +296,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/people";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -319,13 +318,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var lockedTodo = _todoItemFaker.Generate();
-            lockedTodo.IsLocked = true;
-            var meta = new TodoItemMeta();
-            lockedTodo.MetaInformation = new TodoItemMeta();
-            context.TodoItems.AddRange(lockedTodo);
-            var unlockedTodo = _todoItemFaker.Generate();
-            context.TodoItems.Add(unlockedTodo);
+            var lockedPerson = _personFaker.Generate();
+            lockedPerson.IsLocked = true;
+            var passport = new Passport();
+            lockedPerson.Passport = passport;
+            context.People.AddRange(lockedPerson);
+            var unlockedPerson = _personFaker.Generate();
+            context.People.Add(unlockedPerson);
             await context.SaveChangesAsync();
 
 
@@ -333,13 +332,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
-                    type = "todo-items",
-                    id = unlockedTodo.Id,
+                    type = "people",
+                    id = unlockedPerson.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "meta-info", new
+                        { "passport", new
                             {
-                                data = new { type = "todo-item-metas", id = $"{meta.Id}" }
+                                data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
                             }
                         }
                     }
@@ -347,7 +346,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{unlockedTodo.Id}";
+            var route = $"/api/v1/people/{unlockedPerson.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -368,15 +367,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            var lockedTodo = _todoItemFaker.Generate();
-            lockedTodo.IsLocked = true;
-            var meta = new TodoItemMeta();
-            lockedTodo.MetaInformation = new TodoItemMeta();
-            context.TodoItems.AddRange(lockedTodo);
+            var lockedPerson = _personFaker.Generate();
+            lockedPerson.IsLocked = true;
+            var passport = new Passport();
+            lockedPerson.Passport = passport;
+            context.People.AddRange(lockedPerson);
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/todo-item-metas/{lockedTodo.MetaInformationId}";
+            var route = $"/api/v1/passports/{lockedPerson.PassportId}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -516,7 +515,5 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
         }
-
-
     }
 }

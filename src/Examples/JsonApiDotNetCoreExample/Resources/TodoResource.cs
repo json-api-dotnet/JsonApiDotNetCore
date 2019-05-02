@@ -22,13 +22,14 @@ namespace JsonApiDotNetCoreExample.Resources
                 }
             }
 
-            if (context.GetEntitiesForAffectedRelationship<Person>().Any( pair => pair.Key.InternalRelationshipName == "Author" ))
+            var relationshipsToPerson = context.GetEntitiesForAffectedRelationship<Person>();
+            if (relationshipsToPerson != null && relationshipsToPerson.Any(pair => pair.Key.InternalRelationshipName == "Author"))
             {
                 throw new JsonApiException(401, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
             }
 
-            // ignore any updates for items with ordinal bigger than 10 (for whatever reason).
-            return entitiesInBody.Where(td => td.Ordinal > 10);
+            // ignore any updates for items with ordinal bigger than 1000 (for whatever reason).
+            return entitiesInBody.Where(td => td.Ordinal < 1000);
         }
     }
 }

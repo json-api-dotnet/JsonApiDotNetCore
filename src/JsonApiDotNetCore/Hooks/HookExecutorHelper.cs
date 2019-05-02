@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Internal
 
 
         /// <inheritdoc/>
-        public IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable currentLayerEntity)
+        public IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable currentEntityTreeLayerEntity)
         {
             foreach (Type metaKey in _meta.Keys)
             {
@@ -45,11 +45,11 @@ namespace JsonApiDotNetCore.Internal
 
                 foreach (var proxy in proxies)
                 {
-                    /// because currentLayer is not type-homogeneous (which is 
+                    /// because currentEntityTreeLayer is not type-homogeneous (which is 
                     /// why we need to use IIdentifiable for the list type of 
                     /// that layer), we need to check if relatedType is really 
                     /// related to parentType. We do this through comparison of Metakey
-                    string identifier = CreateRelationshipIdentifier(proxy.Attribute, currentLayerEntity.GetType());
+                    string identifier = CreateRelationshipIdentifier(proxy.Attribute, currentEntityTreeLayerEntity.GetType());
                     if (proxy.RelationshipIdentifier != identifier) continue;
                     yield return proxy;
                 }
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc/>
         public Dictionary<Type, List<RelationshipProxy>>
             UpdateMetaInformation(
-            IEnumerable<Type> nextLayerTypes,
+            IEnumerable<Type> nextEntityTreeLayerTypes,
             IEnumerable<ResourceHook> hooks)
         {
 
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Internal
             }
 
 
-            foreach (Type parentType in nextLayerTypes)
+            foreach (Type parentType in nextEntityTreeLayerTypes)
             {
                 var contextEntity = _graph.GetContextEntity(parentType);
                 foreach (RelationshipAttribute attr in contextEntity.Relationships)
@@ -183,11 +183,11 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc/>
         public Dictionary<Type, List<RelationshipProxy>>
             UpdateMetaInformation(
-            IEnumerable<Type> nextLayerTypes,
+            IEnumerable<Type> nextEntityTreeLayerTypes,
             ResourceHook hook = ResourceHook.None)
         {
             var targetHooks = (hook == ResourceHook.None) ? _targetedHooksForRelatedEntities : new List<ResourceHook> { hook };
-            return UpdateMetaInformation(nextLayerTypes, targetHooks);
+            return UpdateMetaInformation(nextEntityTreeLayerTypes, targetHooks);
         }
 
 
@@ -287,17 +287,14 @@ namespace JsonApiDotNetCore.Internal
             Type parentType, string identifier, bool isContextRelation)
         {
             RelationshipIdentifier = identifier;
-            DependentType = parentType;
-            PrincipalType = relatedType;
+            PrincipalType = parentType;
+            DependentType = relatedType;
             Attribute = attr;
             IsContextRelation = isContextRelation;
             if (attr is HasManyThroughAttribute throughAttr)
             {
                 _isHasManyThrough = true;
-                if (PrincipalType != throughAttr.ThroughType)
-                {
-                    _skipJoinTable = true;
-                }
+                _skipJoinTable |= DependentType != throughAttr.ThroughType;
             }
         }
 
@@ -352,7 +349,7 @@ namespace JsonApiDotNetCore.Internal
                 if (!_skipJoinTable)
                 {
                     var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, PrincipalType));
+                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, DependentType));
                     return;
                 }
                 else
@@ -361,7 +358,7 @@ namespace JsonApiDotNetCore.Internal
                     var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
 
                     var filteredList = new List<object>();
-                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, PrincipalType);
+                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, DependentType);
                     foreach (var je in joinEntities)
                     {
 
@@ -378,7 +375,5 @@ namespace JsonApiDotNetCore.Internal
             }
             Attribute.SetValue(entity, value);
         }
-
     }
-
 }

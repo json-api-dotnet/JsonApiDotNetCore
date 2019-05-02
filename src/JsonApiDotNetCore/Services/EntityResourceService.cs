@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Services
             var entity = MapIn(resource);
 
 
-            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
 
 
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.Services
 
             }
 
-            entity = _hookExecutor == null ? entity : _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Services
             /// entities.ToList() will execute the query. In the future, when EF
             /// Core #1833 is suported, we will support for filtered include 
             /// prior to executing the query
-            entities = _hookExecutor == null ? entities : _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get).AsQueryable();
+            entities = IsNull(_hookExecutor, entities) ? entities : _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get).AsQueryable();
 
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Services
                 entity = await _entities.GetAsync(id);
             }
 
-            entity = _hookExecutor == null ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
             return MapOut(entity);
         }
 
@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor?.BeforeRead<TEntity>(ResourceAction.GetRelationship, id.ToString());
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
-            entity = _hookExecutor == null ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
 
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
@@ -191,10 +191,9 @@ namespace JsonApiDotNetCore.Services
             var entity = MapIn(resource);
 
 
-            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
             entity = await _entities.UpdateAsync(id, entity);
-
-            entity = _hookExecutor == null ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -228,9 +227,9 @@ namespace JsonApiDotNetCore.Services
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
-            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
-            entity = _hookExecutor == null ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
 
             relationship.Type = relationshipType;
         }
@@ -299,6 +298,16 @@ namespace JsonApiDotNetCore.Services
                 value = await _entities.FirstOrDefaultAsync(query);
 
             return value;
+        }
+
+
+        private bool IsNull(params object[] values)
+        {
+            foreach (var val in values)
+            {
+                if (val == null) return true;
+            }
+            return false;
         }
 
         private bool ShouldIncludeRelationships()

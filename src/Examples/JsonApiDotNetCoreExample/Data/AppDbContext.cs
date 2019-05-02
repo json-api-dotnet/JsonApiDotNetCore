@@ -47,7 +47,8 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<Person>()
                 .HasOne(t => t.StakeHolderTodo)
                 .WithMany(t => t.StakeHolders)
-                .HasForeignKey(t => t.StakeHolderTodoId);
+                .HasForeignKey(t => t.StakeHolderTodoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.DependentTodoItem);
@@ -56,6 +57,11 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasMany(t => t.ChildrenTodoItems)
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
+
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Passport)
+                .WithOne(p => p.Person)
+                .HasForeignKey<Person>(p => p.PassportId);
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
