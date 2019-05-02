@@ -314,8 +314,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task Cascade_Permission_Error__Updating_ToOne_Relationship()
         {
-
-
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var lockedPerson = _personFaker.Generate();

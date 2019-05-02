@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -20,7 +21,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
         /// <param name="container">Container.</param>
         /// <param name="hook">Hook.</param>
-        bool RequiresDatabaseDiff(IResourceHookContainer container, ResourceHook hook);
+        IList GetDatabaseValues(IResourceHookContainer container, ResourceHook hook, IList entities);
 
         /// <summary>
         /// Retrieves all the RelationshipProxies for a given entity. This method 

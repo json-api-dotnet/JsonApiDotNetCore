@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -11,7 +13,7 @@ namespace JsonApiDotNetCore.Internal
     /// <inheritdoc/>
     public class HookExecutorHelper : IHookExecutorHelper
     {
-
+        public static readonly ResourceHook[] DbDiffCompatibleHooks = { ResourceHook.BeforeCreate, ResourceHook.BeforeUpdate };
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
         protected readonly Dictionary<Type, IResourceHookContainer> _hookContainers;
@@ -248,132 +250,42 @@ namespace JsonApiDotNetCore.Internal
                     "trying to get meta information when no allowed hooks are set");
         }
 
-        public bool RequiresDatabaseDiff(IResourceHookContainer container, ResourceHook hook)
+
+        public IList GetDatabaseValues(IResourceHookContainer container, ResourceHook hook, IList entities)
         {
-            throw new NotImplementedException();
-        }
-    }
-
-
-    /// <summary>
-    /// Internal class used for resource hook execution. Not intended for developer use.
-    /// 
-    /// A wrapper for RelationshipAttribute with an abstraction layer that works on the 
-    /// getters and setters of relationships. These are different in the case of 
-    /// HasMany vs HasManyThrough, and HasManyThrough.
-    /// It also depends on if the jointable entity
-    /// (eg ArticleTags) is identifiable (in which case we will traverse through 
-    /// it and fire hooks for it, if defined) or not (in which case we skip 
-    /// ArticleTags and go directly to Tags.
-    /// </summary>
-    public class RelationshipProxy
-    {
-        readonly bool _isHasManyThrough;
-        readonly bool _skipJoinTable;
-
-        /// <summary>
-        /// The target type for this relationship attribute. 
-        /// For HasOne has HasMany this is trivial: just the righthand side.
-        /// For HasManyThrough it is either the ThroughProperty (when the jointable is 
-        /// Identifiable) or it is the righthand side (when the jointable is not identifiable)
-        /// </summary>
-        public Type DependentType { get; private set; }
-        public Type PrincipalType { get; private set; }
-        public string RelationshipIdentifier { get; private set; }
-        public bool IsContextRelation { get; private set; }
-
-        public RelationshipAttribute Attribute { get; set; }
-        public RelationshipProxy(RelationshipAttribute attr, Type relatedType, 
-            Type parentType, string identifier, bool isContextRelation)
-        {
-            RelationshipIdentifier = identifier;
-            PrincipalType = parentType;
-            DependentType = relatedType;
-            Attribute = attr;
-            IsContextRelation = isContextRelation;
-            if (attr is HasManyThroughAttribute throughAttr)
+            if (DatabaseDiffIsRequired(container, hook))
             {
-                _isHasManyThrough = true;
-                _skipJoinTable |= DependentType != throughAttr.ThroughType;
+                var entityType = TypeHelper.GetListInnerType(entities);
+                var idType = GetIdentifierType(entityType);
+
+                var parameterizedGetter = GetType()
+                        .GetMethod("GetValuesFromRepository", BindingFlags.NonPublic | BindingFlags.Instance)
+                        .MakeGenericMethod(entityType, idType);
+                var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
+                var ids = casted.Select(e => e.StringId);
+
+                return (IList)parameterizedGetter.Invoke(this, new object[] { ids });
             }
+            return null;
         }
 
-
-        /// <summary>
-        /// Gets the relationship value for a given parent entity.
-        /// Internally knows how to do this depending on the type of RelationshipAttribute
-        /// that this RelationshipProxy encapsulates.
-        /// </summary>
-        /// <returns>The relationship value.</returns>
-        /// <param name="entity">Parent entity.</param>
-        public object GetValue(IIdentifiable entity)
+        bool DatabaseDiffIsRequired(IResourceHookContainer container, ResourceHook hook)
         {
-            if (_isHasManyThrough)
-            {
-                var throughAttr = (HasManyThroughAttribute)Attribute;
-                if (!_skipJoinTable)
-                {
-                    return throughAttr.ThroughProperty.GetValue(entity);
-                }
-                else
-                {
-                    var collection = new List<IIdentifiable>();
-                    var joinEntities = (IList)throughAttr.ThroughProperty.GetValue(entity);
-                    if (joinEntities == null) return null;
-
-                    foreach (var joinEntity in joinEntities)
-                    {
-                        var rightEntity = (IIdentifiable)throughAttr.RightProperty.GetValue(joinEntity);
-                        if (rightEntity == null) continue;
-                        collection.Add(rightEntity);
-                    }
-                    return collection;
-
-                }
-
-            }
-            return Attribute.GetValue(entity);
+            // need to implement using attributes / JsonApiOptions
+            return DbDiffCompatibleHooks.Contains(hook);
         }
 
-        /// <summary>
-        /// Set the relationship value for a given parent entity.
-        /// Internally knows how to do this depending on the type of RelationshipAttribute
-        /// that this RelationshipProxy encapsulates.
-        /// </summary>
-        /// <returns>The relationship value.</returns>
-        /// <param name="entity">Parent entity.</param>
-        public void SetValue(IIdentifiable entity, object value)
+        Type GetIdentifierType(Type entityType)
         {
-            if (_isHasManyThrough)
-            {
-                if (!_skipJoinTable)
-                {
-                    var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, DependentType));
-                    return;
-                }
-                else
-                {
-                    var throughAttr = (HasManyThroughAttribute)Attribute;
-                    var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
+            return entityType.GetProperty("Id").PropertyType;
+        }
 
-                    var filteredList = new List<object>();
-                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, DependentType);
-                    foreach (var je in joinEntities)
-                    {
-
-                        if (rightEntities.Contains(throughAttr.RightProperty.GetValue(je)))
-                        {
-                            filteredList.Add(je);
-                        }
-                    }
-
-                    throughAttr.ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(filteredList, throughAttr.ThroughType));
-                    return;
-                }
-
-            }
-            Attribute.SetValue(entity, value);
+        IEnumerable<TEntity> GetValuesFromRepository<TEntity, TId>(IEnumerable<string> ids) where TEntity : class, IIdentifiable<TId>
+        {
+            //var repositoryType = typeof(IEntityReadRepository<>).MakeGenericType(TypeHelper.GetListInnerType(entities));
+            var repo  = _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(typeof(IEntityRepository<>), typeof(TEntity));
+            var dbEntities = repo.GetQueryable().Where(e => ids.Contains(e.StringId)).ToList();
+            return dbEntities;
         }
     }
 }
