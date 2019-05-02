@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -7,92 +6,6 @@ using DependentType = System.Type;
 
 namespace JsonApiDotNetCore.Services
 {
-
-    /// <summary>
-    /// A helper class that, for a given dependent type, stores all affected
-    /// entities grouped by the relationship by which these entities are included
-    /// in the traversal tree.
-    /// </summary>
-    public class RelationshipGroups
-    {
-        private readonly Dictionary<string, RelationshipGroupEntry> _entitiesByRelationship;
-        public RelationshipGroups()
-        {
-            _entitiesByRelationship = new Dictionary<string, RelationshipGroupEntry>();
-        }
-
-        /// <summary>
-        /// Add the specified proxy and relatedEntities.
-        /// </summary>
-        /// <param name="proxy">Proxy.</param>
-        /// <param name="relatedEntities">Related entities.</param>
-        public void Add(RelationshipProxy proxy, IEnumerable<IIdentifiable> relatedEntities)
-        {
-            var key = proxy.RelationshipIdentifier;
-            if (!_entitiesByRelationship.TryGetValue(key, out var entitiesWithRelationship))
-            {
-                entitiesWithRelationship = new RelationshipGroupEntry(proxy, new HashSet<IIdentifiable>(relatedEntities));
-                _entitiesByRelationship[key] = entitiesWithRelationship;
-            }
-            else 
-            {
-                entitiesWithRelationship.Entities.Union(new HashSet<IIdentifiable>(relatedEntities));
-            }
-        }
-
-        /// <summary>
-        /// Entries in this instance.
-        /// </summary>
-        /// <returns>The entries.</returns>
-        public List<RelationshipGroupEntry> Entries()
-        {
-            return _entitiesByRelationship.Select(kvPair => kvPair.Value).ToList();
-        }
-
-    }
-
-    /// <summary>
-    /// Relationship group entry.
-    /// </summary>
-    public class RelationshipGroupEntry
-    {
-        public RelationshipProxy Relationship { get; private set;}
-        public HashSet<IIdentifiable> Entities { get; private set; }
-        public RelationshipGroupEntry(RelationshipProxy relationship, HashSet<IIdentifiable> entities)
-        {
-            Relationship = relationship;
-            Entities = entities;
-        }
-
-    }
-
-    /// <summary>
-    /// Related entities in current layer entry.
-    /// </summary>
-    public class NodeInLayer
-    {
-        private readonly HashSet<IIdentifiable> _uniqueSet;
-
-        public DependentType DependentType { get; private set; }
-        public List<RelationshipGroupEntry> RelationshipGroups { get; private set; }
-        public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, DependentType); } }
-
-        public NodeInLayer(
-            DependentType dependentType,
-            HashSet<IIdentifiable> uniqueSet,
-            List<RelationshipGroupEntry> relationshipGroups
-        ) {
-            _uniqueSet = uniqueSet;
-            DependentType = dependentType;
-            RelationshipGroups = relationshipGroups;
-        }
-
-        public void UpdateUniqueSet( IEnumerable filteredUniqueSet)
-        {
-            var casted = new HashSet<IIdentifiable>(filteredUniqueSet.Cast<IIdentifiable>());
-            _uniqueSet.IntersectWith(casted);
-        }
-    }
 
     /// <summary>
     /// A helper class that represents all entities in the current layer that

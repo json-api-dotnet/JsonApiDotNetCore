@@ -46,5 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Hooks\" />
+    <Folder Include="Hooks\TreeTraversal\" />
   </ItemGroup>
 </Project>
