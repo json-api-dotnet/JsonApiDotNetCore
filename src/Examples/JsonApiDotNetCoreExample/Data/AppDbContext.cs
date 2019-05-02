@@ -47,7 +47,8 @@ namespace JsonApiDotNetCoreExample.Data
             modelBuilder.Entity<Person>()
                 .HasOne(t => t.StakeHolderTodo)
                 .WithMany(t => t.StakeHolders)
-                .HasForeignKey(t => t.StakeHolderTodoId);
+                .HasForeignKey(t => t.StakeHolderTodoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(t => t.DependentTodoItem);
