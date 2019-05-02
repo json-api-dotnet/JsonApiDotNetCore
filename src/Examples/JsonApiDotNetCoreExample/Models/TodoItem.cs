@@ -11,6 +11,8 @@ namespace JsonApiDotNetCoreExample.Models
             GuidProperty = Guid.NewGuid();
         }
 
+        public bool IsLocked { get; set; }
+
         [Attr("description")]
         public string Description { get; set; }
 
@@ -29,8 +31,6 @@ namespace JsonApiDotNetCoreExample.Models
 
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
-
-        public bool IsLocked { get; set; }
 
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }

@@ -56,6 +56,11 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasMany(t => t.ChildrenTodoItems)
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
+
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Passport)
+                .WithOne(p => p.Person)
+                .HasForeignKey<Person>(p => p.PassportId);
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }

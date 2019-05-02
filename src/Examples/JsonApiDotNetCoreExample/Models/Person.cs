@@ -13,6 +13,8 @@ namespace JsonApiDotNetCoreExample.Models
 
     public class Person : Identifiable, IHasMeta
     {
+        public bool IsLocked { get; set; }
+
         [Attr("first-name")]
         public string FirstName { get; set; }
 
@@ -24,7 +26,6 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
-
 
         [HasMany("assigned-todo-items")]
         public virtual List<TodoItem> AssignedTodoItems { get; set; }
@@ -43,6 +44,10 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
+
+        public int? PassportId { get; set; }
+        [HasOne("passport")]
+        public virtual Passport Passport { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
         {

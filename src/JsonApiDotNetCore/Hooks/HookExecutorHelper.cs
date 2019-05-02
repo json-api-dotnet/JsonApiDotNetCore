@@ -375,7 +375,5 @@ namespace JsonApiDotNetCore.Internal
             }
             Attribute.SetValue(entity, value);
         }
-
     }
-
 }

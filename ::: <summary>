@@ -227,9 +227,9 @@ namespace JsonApiDotNetCore.Services
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
-            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = _hookExecutor == null ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
 
             relationship.Type = relationshipType;
         }
