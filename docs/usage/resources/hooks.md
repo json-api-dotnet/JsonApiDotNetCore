@@ -16,13 +16,20 @@ For every CRUD operation on a resource, a `Before` and `After` hook is available
 * [BeforeDelete](https://www.link-to-generated-api-spec.com)
 * [AfterDelete](https://www.link-to-generated-api-spec.com)
 
-These hooks, if defined, are executed by the `EntityResourceService`.
+These hooks, if defined, are executed by the `EntityResourceService`. 
 
 Sometimes multiple hooks are involved for a single CRUD operation. For example, if we`create` a new `Article` and simultaneously set a relationship to an existing `Author`,  then hooks for both `Article`  and `Author` are fired:  
 * the `BeforeCreate` and `AfterCreate`  hooks for `Article` 
 * the `BeforeUpdate ` and `AfterUpdate` hooks for `Author`
 
 For more information about involved hooks per CRUD operation, see below.
+
+# TODO
+
+* Tidy up the structure for easy learning
+* Edge cases should be explained
+* what CANT I do?
+* Explanation of being forward looking
 
 ## Hooks involved per CRUD action
 The hooks are executed by the `EntityResourceService` are different per method. Here is an overview of which hooks are involved in which scenario.
@@ -163,7 +170,6 @@ public class ArticleResource : ResourceDefinition<Article>
 
 public class TagResource : ResourceDefinition<Tag>
 {
-   public TagResource(IHooksDiscovery<Tag> hooks = null) : base(hooks) { }
    public override void BeforeRead(ResourceAction actionSource, string stringId = null)
    {
        Console.WriteLine("Tag BeforeRead executed!")
@@ -179,34 +185,56 @@ public class TagResource : ResourceDefinition<Tag>
 To illustrate how these hooks will operate, consider a dataset of 3 articles at the "root level" with 6 unique tags at the "child" (8 in total because tags with id 2 and 3 occur twice), as schematically represented by the following JSON object:
 
 ```json
-[
-   {
-      "id": 1,
+[  
+   {  
+      "id":1,
       "articleName":"classified",
-      "tags":[{"id": 1,
-            "label":"secret" },
-         {  "id": 2,
-            "label":"public" },
-         {  "id": 3,
-            "label":"public"}]
+      "tags":[  
+         {  
+            "id":1,
+            "label":"secret"
+         },
+         {  
+            "id":2,
+            "label":"public"
+         },
+         {  
+            "id":3,
+            "label":"public"
+         }
+      ]
    },
-   {
-      "id": 2,
+   {  
+      "id":2,
       "articleName":"some name",
-      "tags":[{"id": 4,
-            "label":"secret" },
-         {  "id": 5,
-            "label":"public" },
-         {  "id": 6,
-            "label":"public"}]
+      "tags":[  
+         {  
+            "id":4,
+            "label":"secret"
+         },
+         {  
+            "id":5,
+            "label":"public"
+         },
+         {  
+            "id":6,
+            "label":"public"
+         }
+      ]
    },
-   {
-      "id": 3,
+   {  
+      "id":3,
       "articleName":"another name",
-      "tags":[{"id": 2,
-            "label":"public" },
-         {  "id": 5,
-            "label":"public"}]
+      "tags":[  
+         {  
+            "id":2,
+            "label":"public"
+         },
+         {  
+            "id":5,
+            "label":"public"
+         }
+      ]
    }
 ]
 ```
@@ -223,6 +251,7 @@ The hooks in the above example will result in the following:
     * it will remove tag with id 4 from the dataset
 
 The following order of `Console.WriteLine( ... )` statements would be observed:
+
 ```bash
 Article BeforeRead executed!
 Article AfterRead executed!
@@ -233,22 +262,34 @@ Tag AfterRead executed!
 following dataset would be the result:
 
 ```json
-[
-   {
+[  
+   {  
       "id":"2",
       "articleName":"some name",
-      "tags":[{"id":5,
-            "label":"public"},
-         {  "id":6,
-            "label":"public"}]
+      "tags":[  
+         {  
+            "id":5,
+            "label":"public"
+         },
+         {  
+            "id":6,
+            "label":"public"
+         }
+      ]
    },
-   {
+   {  
       "id":"3",
       "articleName":"another name",
-      "tags":[{"id":2,
-            "label":"public"},
-         {  "id":5,
-            "label":"public"}]
+      "tags":[  
+         {  
+            "id":2,
+            "label":"public"
+         },
+         {  
+            "id":5,
+            "label":"public"
+         }
+      ]
    }
 ]
 ```
@@ -287,7 +328,6 @@ In the case of `many-to-many` it is possible to define hooks for the `Through` t
     {
         public int ArticleId { get; set; }
         public Article Article { get; set; }
-
         public int TagId { get; set; }
         public Tag Tag { get; set; }
     }
@@ -299,11 +339,9 @@ must be changed to the version below that inherits from `Identifiable` and uses 
      public int ArticleId { get; set; }
      [HasOne("article")]
      public Article Article { get; set; }
-
      public int TagId { get; set; }
      [HasOne("Tag")]
      public Tag Tag { get; set; }
-
      public string SomeMetaData { get; set; }
  }
 ```
@@ -312,8 +350,6 @@ Then hooks can be defined as follows:
 ```c#
 public class ArticleTagResource : ResourceDefinition<IdentifiableArticleTag>
 {
-    public ArticleResource(IHooksDiscovery<IdentifiableArticleTag> hooks = null) : base(hooks) { }
-
     public override void BeforeRead(ResourceAction actionSource, string stringId = null)
     {
         Console.WriteLine("IdentifiableArticleTag BeforeRead executed!")
