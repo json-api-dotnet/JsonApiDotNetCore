@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Services
         /// relationship pointers to persist the relationship.
         /// 
         /// The expected use case is POST-ing or PATCH-ing an entity with HasMany 
-        /// relaitonships:
+        /// relationships:
         /// <code>
         /// {
         ///    "data": {

@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
+            IJsonApiOptions optionsFetcher,
             ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, loggerFactory)
         { }
@@ -28,8 +30,9 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            ILoggerFactory loggerFactory = null) :
-            base(jsonApiContext, entityRepository, loggerFactory)
+            IJsonApiOptions apiOptions,
+            ILoggerFactory loggerFactory = null)
+            : base(jsonApiContext, entityRepository, apiOptions, loggerFactory)
         { }
     }
 
@@ -39,6 +42,7 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IJsonApiContext _jsonApiContext;
+        private readonly IJsonApiOptions _options;
         private readonly IEntityRepository<TEntity, TId> _entities;
         private readonly ILogger _logger;
         private readonly IResourceMapper _mapper;
@@ -46,26 +50,25 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                ILoggerFactory loggerFactory = null)
+                IJsonApiOptions apiOptions,
+                ILoggerFactory loggerFactory = null) : this(jsonApiContext,entityRepository,apiOptions,loggerFactory, null)
         {
             // no mapper provided, TResource & TEntity must be the same type
             if (typeof(TResource) != typeof(TEntity))
             {
                 throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
             }
-
-            _jsonApiContext = jsonApiContext;
-            _entities = entityRepository;
-            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
 
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
+                IJsonApiOptions options,
                 ILoggerFactory loggerFactory,
                 IResourceMapper mapper)
         {
             _jsonApiContext = jsonApiContext;
+            _options = options;
             _entities = entityRepository;
             _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
             _mapper = mapper;
@@ -82,7 +85,7 @@ namespace JsonApiDotNetCore.Services
             // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
             if (ShouldIncludeRelationships())
             {
-                if(_entities is IEntityFrameworkRepository<TEntity> efRepository)
+                if (_entities is IEntityFrameworkRepository<TEntity> efRepository)
                     efRepository.DetachRelationshipPointers(entity);
 
                 return await GetWithRelationshipsAsync(entity.Id);
@@ -105,7 +108,8 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
-            if (_jsonApiContext.Options.IncludeTotalRecordCount)
+
+            if (_options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
             entities = _entities.Select(entities, _jsonApiContext.QuerySet?.Fields);
