@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Services
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
                 IJsonApiOptions apiOptions,
-                ILoggerFactory loggerFactory = null) : this(jsonApiContext,entityRepository,apiOptions,loggerFactory, null)
+                ILoggerFactory loggerFactory = null) : this(jsonApiContext, entityRepository, apiOptions, loggerFactory, null)
         {
             // no mapper provided, TResource & TEntity must be the same type
             if (typeof(TResource) != typeof(TEntity))
@@ -106,11 +106,14 @@ namespace JsonApiDotNetCore.Services
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
+            {
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
-
+            }
 
             if (_options.IncludeTotalRecordCount)
+            {
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
+            }
 
             entities = _entities.Select(entities, _jsonApiContext.QuerySet?.Fields);
 

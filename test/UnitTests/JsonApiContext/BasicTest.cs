@@ -41,7 +41,10 @@ namespace UnitTests.JsonApiContext
             // Arrange
             var jacMock = FetchContextMock();
             var loggerMock = new Mock<ILoggerFactory>();
-            var jsonApiOptionsMock = new Mock<IJsonApiOptions>();
+            var jsonApiOptionsMock = new JsonApiOptions
+            {
+                IncludeTotalRecordCount = false
+            };
             var repositoryMock = new Mock<IEntityRepository<Article>>();
 
             var service = new CustomArticleService(jacMock.Object, repositoryMock.Object, jsonApiOptionsMock.Object, loggerMock.Object);
