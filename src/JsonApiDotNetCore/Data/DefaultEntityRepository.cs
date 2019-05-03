@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Data
 {
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
-
+        private readonly IEntityType _entityMetaType;
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver
@@ -60,6 +61,8 @@ namespace JsonApiDotNetCore.Data
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _entityMetaType = _context.Model
+                .FindEntityType(typeof(TEntity));
         }
 
         public DefaultEntityRepository(
@@ -75,6 +78,9 @@ namespace JsonApiDotNetCore.Data
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _resourceDefinition = resourceDefinition;
+
+            _entityMetaType = _context.Model
+                .FindEntityType(typeof(TEntity));
         }
 
 
@@ -217,6 +223,30 @@ namespace JsonApiDotNetCore.Data
                 hasManyRelationship.Key.SetValue(entity, null);
             }
         }
+
+        /// <summary>
+        /// the constraint means it can be a to one or  to many, but not hasmanythrough
+        /// </summary>
+        /// <returns><c>true</c>, if inverse was attached, <c>false</c> otherwise.</returns>
+        /// <param name="entity">Entity.</param>
+        /// <param name="relationship">Relationship.</param>
+        /// <typeparam name="TRelationAttr">The 1st type parameter.</typeparam>
+        public virtual bool AttachInverse(TEntity entity, RelationshipAttribute relationship)
+        {
+
+            if (relationship is HasManyThroughAttribute) return false;
+            INavigation inverseNavigation = _entityMetaType.FindNavigation(relationship.InternalRelationshipName).FindInverse();
+            if (inverseNavigation != null)
+            {
+                var entityEntry = _context.Entry(entity);
+                entityEntry.Navigation(inverseNavigation.Name).Load();
+                return true;
+            }
+            return false;
+
+        }
+
+
 
         /// <summary>
         /// This is used to allow creation of HasMany relationships when the

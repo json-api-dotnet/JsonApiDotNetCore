@@ -215,6 +215,12 @@ namespace JsonApiDotNetCore.Models
             return;
         }
 
+        /// <inheritdoc/>
+        public virtual void ImplicitUpdateRelationship(IEnumerable<T> entities, RelationshipAttribute affectedRelationship)
+        {
+            return;
+        }
+
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
         /// method signature.

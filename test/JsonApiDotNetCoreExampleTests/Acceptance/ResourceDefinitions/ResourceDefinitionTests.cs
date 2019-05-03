@@ -352,7 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();

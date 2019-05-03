@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreExample.Resources
     public class TodoResource : ResourceDefinition<TodoItem>
     {
 
-        //[DatabaseValuesInDiffs(false)]
+        [DatabaseValuesInDiffs(false)]
         public override IEnumerable<TodoItem> BeforeUpdate(EntityDiff<TodoItem> entityDiff, HookExecutionContext<TodoItem> context)
         {
             var entitiesInBody = entityDiff.RequestEntities;
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExample.Resources
             }
 
             // ignore any updates for items with ordinal bigger than 1000 (for whatever reason).
-            return entitiesInBody.Where(td => td.Ordinal < 1000);
+            return entitiesInBody.Where(td => td.Ordinal <= 1000);
         }
     }
 }

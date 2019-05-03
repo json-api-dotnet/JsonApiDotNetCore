@@ -107,6 +107,13 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
         void AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded);
+
+        /// <summary>
+        /// TODO: WRITE ME
+        /// </summary>
+        /// <param name="entities">The entities subjected to an implicit update</param>
+        /// <param name="context">The pipeline from which the hook was called</param>
+        void ImplicitUpdateRelationship(IEnumerable<T> entities, RelationshipAttribute affectedRelationship);
     }
 
 

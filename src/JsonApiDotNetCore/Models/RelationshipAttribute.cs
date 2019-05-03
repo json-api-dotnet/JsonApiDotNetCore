@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Models

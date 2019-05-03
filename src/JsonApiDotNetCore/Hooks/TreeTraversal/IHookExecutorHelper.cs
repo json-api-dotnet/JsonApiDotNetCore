@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <returns>The relationship proxies related to the particular entity</returns>
         /// <param name="entity">The entity of intrest in breadth first traversal</param>
-        IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable entity);
+        IEnumerable<RelationshipProxy> GetRelationshipsToType(Type principalType);
 
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 
@@ -106,5 +106,6 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hooks">The target resource hook types</param>
         Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, IEnumerable<ResourceHook> hooks);
+        IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship);
     }
 }

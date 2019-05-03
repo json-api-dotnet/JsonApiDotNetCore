@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCore.Services
     /// A helper class that represents all entities in the current layer that
     /// are being traversed for which hooks will be executed (see IResourceHookExecutor)
     /// </summary>
-    public class EntityTreeLayer
+    public class EntityTreeLayer : IEnumerable<NodeInLayer>
     {
         private readonly Dictionary<DependentType, RelationshipGroups> _relationshipGroups;
         private readonly Dictionary<DependentType, HashSet<IIdentifiable>> _uniqueEntities;
@@ -84,16 +85,7 @@ namespace JsonApiDotNetCore.Services
         /// Entries in this traversal iteration
         /// </summary>
         /// <returns>The entries.</returns>
-        public IEnumerable<NodeInLayer> Entries()
-        {
-            var dependentTypes = _uniqueEntities.Keys;
-            foreach (var type in dependentTypes)
-            {
-                var uniqueEntities = _uniqueEntities[type];
-                var relationshipGroups = _relationshipGroups[type].Entries();
-                yield return new NodeInLayer(type, uniqueEntities, relationshipGroups);
-            }
-        }
+
 
         private void AddToUnique(RelationshipProxy proxy, HashSet<IIdentifiable> newEntitiesInTree)
         {
@@ -117,6 +109,22 @@ namespace JsonApiDotNetCore.Services
                 _relationshipGroups[key] = groups;
             }
             groups.Add(proxy, relatedEntities);
+        }
+
+        public IEnumerator<NodeInLayer> GetEnumerator()
+        {
+            var dependentTypes = _uniqueEntities.Keys;
+            foreach (var type in dependentTypes)
+            {
+                var uniqueEntities = _uniqueEntities[type];
+                var relationshipGroups = _relationshipGroups[type].Entries();
+                yield return new NodeInLayer(type, uniqueEntities, relationshipGroups);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

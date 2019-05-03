@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using PrincipalType = System.Type;
+using DependentType = System.Type;
 
 
 namespace JsonApiDotNetCore.Internal
@@ -16,11 +18,11 @@ namespace JsonApiDotNetCore.Internal
     {
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
-        protected readonly Dictionary<Type, IResourceHookContainer> _hookContainers;
-        protected readonly Dictionary<Type, IHooksDiscovery> _hookDiscoveries;
+        protected readonly Dictionary<DependentType, IResourceHookContainer> _hookContainers;
+        protected readonly Dictionary<DependentType, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
         protected readonly IJsonApiContext _context;
-        protected Dictionary<Type, List<RelationshipProxy>> _meta;
+        protected Dictionary<PrincipalType, List<RelationshipProxy>> _meta;
 
         public HookExecutorHelper(
             IGenericProcessorFactory genericProcessorFactory,
@@ -31,17 +33,17 @@ namespace JsonApiDotNetCore.Internal
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
             _context = context;
-            _meta = new Dictionary<Type, List<RelationshipProxy>>();
-            _hookContainers = new Dictionary<Type, IResourceHookContainer>();
-            _hookDiscoveries = new Dictionary<Type, IHooksDiscovery>();
+            _meta = new Dictionary<PrincipalType, List<RelationshipProxy>>();
+            _hookContainers = new Dictionary<DependentType, IResourceHookContainer>();
+            _hookDiscoveries = new Dictionary<DependentType, IHooksDiscovery>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
 
         /// <inheritdoc/>
-        public IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable currentEntityTreeLayerEntity)
+        public IEnumerable<RelationshipProxy> GetRelationshipsToType(PrincipalType principalType)
         {
-            foreach (Type metaKey in _meta.Keys)
+            foreach (PrincipalType metaKey in _meta.Keys)
             {
                 List<RelationshipProxy> proxies = _meta[metaKey];
 
@@ -51,7 +53,7 @@ namespace JsonApiDotNetCore.Internal
                     /// why we need to use IIdentifiable for the list type of 
                     /// that layer), we need to check if relatedType is really 
                     /// related to parentType. We do this through comparison of Metakey
-                    string identifier = CreateRelationshipIdentifier(proxy.Attribute, currentEntityTreeLayerEntity.GetType());
+                    string identifier = CreateRelationshipIdentifier(proxy.Attribute, principalType);
                     if (proxy.RelationshipIdentifier != identifier) continue;
                     yield return proxy;
                 }
@@ -60,16 +62,16 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <inheritdoc/>
-        public IResourceHookContainer GetResourceHookContainer(Type targetEntityType, ResourceHook hook = ResourceHook.None)
+        public IResourceHookContainer GetResourceHookContainer(DependentType dependentType, ResourceHook hook = ResourceHook.None)
         {
             /// checking the cache if we have a reference for the requested container, 
             /// regardless of the hook we will use it for. If the value is null, 
             /// it means there was no implementation IResourceHookContainer at all, 
             /// so we need not even bother.
-            if (!_hookContainers.TryGetValue(targetEntityType, out IResourceHookContainer container))
+            if (!_hookContainers.TryGetValue(dependentType, out IResourceHookContainer container))
             {
-                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), targetEntityType));
-                _hookContainers[targetEntityType] = container;
+                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), dependentType));
+                _hookContainers[dependentType] = container;
             }
             if (container == null) return container;
 
@@ -88,7 +90,7 @@ namespace JsonApiDotNetCore.Internal
 
             foreach (ResourceHook targetHook in targetHooks)
             {
-                if (ShouldExecuteHook(targetEntityType, targetHook)) return container;
+                if (ShouldExecuteHook(dependentType, targetHook)) return container;
             }
             return null;
 
@@ -101,9 +103,9 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <inheritdoc/>
-        public Dictionary<Type, List<RelationshipProxy>>
+        public Dictionary<DependentType, List<RelationshipProxy>>
             UpdateMetaInformation(
-            IEnumerable<Type> nextEntityTreeLayerTypes,
+            IEnumerable<PrincipalType> previousLayerTypes,
             IEnumerable<ResourceHook> hooks)
         {
 
@@ -119,17 +121,17 @@ namespace JsonApiDotNetCore.Internal
             }
 
 
-            foreach (Type parentType in nextEntityTreeLayerTypes)
+            foreach (PrincipalType principalType in previousLayerTypes)
             {
-                var contextEntity = _graph.GetContextEntity(parentType);
+                var contextEntity = _graph.GetContextEntity(principalType);
                 foreach (RelationshipAttribute attr in contextEntity.Relationships)
                 {
-                    var relatedType = GetTargetTypeFromRelationship(attr);
+                    DependentType dependentType = GetDependentTypeFromRelationship(attr);
 
                     bool hasImplementedHooks = false;
                     foreach (ResourceHook targetHook in hooks)
                     {
-                        if (GetResourceHookContainer(relatedType, targetHook) != null)
+                        if (GetResourceHookContainer(dependentType, targetHook) != null)
                         {
                             hasImplementedHooks = true;
                             break;
@@ -142,17 +144,17 @@ namespace JsonApiDotNetCore.Internal
                     /// If we already have detected relationships for the related 
                     /// type in previous iterations, use that list
                     bool newKey = false;
-                    if (!_meta.TryGetValue(relatedType, out List<RelationshipProxy> proxies))
+                    if (!_meta.TryGetValue(dependentType, out List<RelationshipProxy> proxies))
                     {
                         proxies = new List<RelationshipProxy>();
                         newKey = true;
                     }
 
-                    var identifier = CreateRelationshipIdentifier(attr, parentType);
+                    var identifier = CreateRelationshipIdentifier(attr, principalType);
 
                     var isContextRelation = _context?.RelationshipsToUpdate?.Keys.Contains(attr);
-                    var proxy = new RelationshipProxy(attr, relatedType, 
-                            parentType, identifier, isContextRelation != null && (bool)isContextRelation);
+                    var proxy = new RelationshipProxy(attr, dependentType,
+                            principalType, identifier, isContextRelation != null && (bool)isContextRelation);
 
                     /// we might already have covered for this relationship, like 
                     /// in a hierarchical self-refering nested structure 
@@ -163,7 +165,7 @@ namespace JsonApiDotNetCore.Internal
                     }
                     if (newKey && proxies.Any())
                     {
-                        _meta[relatedType] = proxies;
+                        _meta[dependentType] = proxies;
                     }
                 }
             }
@@ -172,13 +174,13 @@ namespace JsonApiDotNetCore.Internal
 
 
         /// <inheritdoc/>
-        public Dictionary<Type, List<RelationshipProxy>>
+        public Dictionary<DependentType, List<RelationshipProxy>>
             UpdateMetaInformation(
-            IEnumerable<Type> nextEntityTreeLayerTypes,
+            IEnumerable<PrincipalType> previousLayerTypes,
             ResourceHook hook = ResourceHook.None)
         {
             var targetHooks = (hook == ResourceHook.None) ? _targetedHooksForRelatedEntities : new List<ResourceHook> { hook };
-            return UpdateMetaInformation(nextEntityTreeLayerTypes, targetHooks);
+            return UpdateMetaInformation(previousLayerTypes, targetHooks);
         }
 
         /// <inheritdoc/>
@@ -188,15 +190,30 @@ namespace JsonApiDotNetCore.Internal
             {
                 var idType = GetIdentifierType(entityType);
 
-                var parameterizedGetter = GetType()
-                        .GetMethod("GetValuesFromRepository", BindingFlags.NonPublic | BindingFlags.Instance)
+                var parameterizedGetWhere = GetType()
+                        .GetMethod("GetWhere", BindingFlags.NonPublic | BindingFlags.Instance)
                         .MakeGenericMethod(entityType, idType);
                 var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
                 var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
-                return (IList)parameterizedGetter.Invoke(this, new object[] { ids });
+                return (IList)parameterizedGetWhere.Invoke(this, new object[] { ids });
             }
             return null;
         }
+
+        /// <inheritdoc/>
+        public IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship )
+        {
+            var idType = GetIdentifierType(relationship.DependentType);
+            var parameterizedAttachInverse = GetType()
+                .GetMethod("AttachInverse", BindingFlags.NonPublic | BindingFlags.Instance)
+                .MakeGenericMethod(relationship.DependentType, idType);
+
+            parameterizedAttachInverse.Invoke(this, new object[] { affectedEntities, relationship.Attribute });
+
+            return null;
+        }
+
+
 
         /// <inheritdoc/>
         public IEnumerable<TEntity> GetDatabaseValues<TEntity>(
@@ -207,7 +224,7 @@ namespace JsonApiDotNetCore.Internal
             return (IEnumerable<TEntity>)GetDatabaseValues(container, (IList)entities, hook, typeof(TEntity));
         }
 
-        public bool ShouldIncludeDatabaseDiff(Type entityType, ResourceHook hook)
+        public bool ShouldIncludeDatabaseDiff(DependentType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
 
@@ -226,7 +243,7 @@ namespace JsonApiDotNetCore.Internal
 
         }
 
-        public bool ShouldExecuteHook(Type entityType, ResourceHook hook)
+        public bool ShouldExecuteHook(DependentType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
             return discovery.ImplementedHooks.Contains(hook);
@@ -239,7 +256,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The meta key.</returns>
         /// <param name="attr">Relationship attribute</param>
         /// <param name="parentType">Parent type.</param>
-        protected string CreateRelationshipIdentifier(RelationshipAttribute attr, Type parentType)
+        protected string CreateRelationshipIdentifier(RelationshipAttribute attr, PrincipalType principalType)
         {
             string relationType;
             string rightHandIdentifier;
@@ -258,7 +275,7 @@ namespace JsonApiDotNetCore.Internal
                 relationType = "has-one";
                 rightHandIdentifier = attr.RelationshipPath;
             }
-            return $"{parentType.Name} {relationType} {rightHandIdentifier}";
+            return $"{principalType.Name} {relationType} {rightHandIdentifier}";
         }
 
         /// <summary>
@@ -269,7 +286,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <returns>The target type for traversal</returns>
         /// <param name="attr">Relationship attribute</param>
-        protected Type GetTargetTypeFromRelationship(RelationshipAttribute attr)
+        protected DependentType GetDependentTypeFromRelationship(RelationshipAttribute attr)
         {
             if (attr is HasManyThroughAttribute throughAttr)
             {
@@ -304,14 +321,27 @@ namespace JsonApiDotNetCore.Internal
             return entityType.GetProperty("Id").PropertyType;
         }
 
-#pragma warning disable IDE0051 // Remove unused private members
-        protected IEnumerable<TEntity> GetValuesFromRepository<TEntity, TId>(IEnumerable<TId> ids) where TEntity : class, IIdentifiable<TId>
-#pragma warning restore IDE0051 // Remove unused private members
+        protected IEnumerable<TEntity> GetWhere<TEntity, TId>(IEnumerable<TId> ids) where TEntity : class, IIdentifiable<TId>
         {
-            var openType = typeof(TId) == typeof(Guid) ? typeof(IGuidEntityRepository<>) : typeof(IEntityRepository<>);
-            var repo  = _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(openType, typeof(TEntity));
+            var repo = GetRepository<TEntity, TId>();
             var dbEntities = repo.GetQueryable().Where(e => ids.Contains(e.Id)).ToList();
             return dbEntities;
+        }
+
+        protected void AttachInverse<TEntity, TId>(IEnumerable<IIdentifiable> entities, RelationshipAttribute attr) where TEntity : class, IIdentifiable<TId>
+        {
+            var repo = GetRepository<TEntity, TId>();
+            foreach (var e in entities)
+            {
+                repo.AttachInverse((TEntity)e, attr);
+            }
+        }
+
+        IEntityReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>
+        {
+            var openType = typeof(TId) == typeof(Guid) ? typeof(IGuidEntityRepository<>) : typeof(IEntityRepository<>);
+            return _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(openType, typeof(TEntity));
+
         }
 
     }

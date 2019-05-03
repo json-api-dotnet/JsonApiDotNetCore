@@ -14,7 +14,8 @@
         BeforeUpdate,
         AfterUpdate,
         BeforeDelete,
-        AfterDelete
+        AfterDelete,
+        ImplicitUpdateRelationship
     }
 
 }
