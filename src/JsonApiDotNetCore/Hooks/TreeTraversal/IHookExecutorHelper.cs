@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The meta dict.</returns>
         /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hook">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, ResourceHook hook = ResourceHook.None);
+        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, ResourceHook hook = ResourceHook.None);
         /// <summary>
         /// For the types in <paramref name="nextEntityTreeLayerTypes"/>, given (a set of)
         /// <paramref name="hooks"/>s,  retrieves the relationships from 
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The meta dict.</returns>
         /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hooks">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, IEnumerable<ResourceHook> hooks);
+        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, IEnumerable<ResourceHook> hooks);
         IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship);
     }
 }

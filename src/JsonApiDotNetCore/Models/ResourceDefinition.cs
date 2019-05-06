@@ -204,15 +204,15 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context)
         {
-            return;
+            return entities;
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded)
+        public virtual IEnumerable<T> AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded)
         {
-            return;
+            return entities;
         }
 
         /// <inheritdoc/>
@@ -266,9 +266,6 @@ namespace JsonApiDotNetCore.Models
 
             return null;
         }
-
-
-
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's

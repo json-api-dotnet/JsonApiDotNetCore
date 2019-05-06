@@ -304,11 +304,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
         }
 
         [Fact]
@@ -356,7 +356,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
         }
 
@@ -377,11 +377,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
         }
 
@@ -409,8 +409,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                             {
                                 data = new object[]
                                 {
-                                    new { type = "people", id = $"{persons[0].Id}" },
-                                    new { type = "people", id = $"{persons[1].Id}" }
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
                                 }
 
                             }
@@ -420,7 +420,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todo-items/{unlockedTodo.Id}";
+            var route = $"/api/v1/todo-items";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -428,11 +428,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
         }
 
         [Fact]
@@ -461,8 +461,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                             {
                                 data = new object[]
                                 {
-                                    new { type = "people", id = $"{persons[0].Id}" },
-                                    new { type = "people", id = $"{persons[1].Id}" }
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
                                 }
 
                             }
@@ -480,13 +480,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
 
             // were unrelating a persons from a locked todo, so this should be unauthorized
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
         }
 
@@ -503,15 +503,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/people/{persons[0].Id}";
+            var route = $"/api/v1/people/{lockedTodo.StakeHolders[0].Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.Client.GetAsync(route);
+            var response = await _fixture.Client.SendAsync(request);
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Unauthorized == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
         }
     }
 }

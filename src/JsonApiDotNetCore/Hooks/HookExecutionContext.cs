@@ -8,9 +8,9 @@ namespace JsonApiDotNetCore.Services
     public interface IHookExecutionContext<TDependent> where TDependent : class, IIdentifiable
     {
         ResourceAction Pipeline { get; }
-        Dictionary<RelationshipAttribute, List<TDependent>> GetAllAffectedRelationships();
-        Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesForAffectedRelationship<TPrincipal>() where TPrincipal : class, IIdentifiable;
-        Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesForAffectedRelationship(Type principalType);
+        Dictionary<RelationshipAttribute, List<TDependent>> AffectedRelationships();
+        Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith<TPrincipal>() where TPrincipal : class, IIdentifiable;
+        Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith(Type principalType);
     }
 
     public class HookExecutionContext<TDependent> : IHookExecutionContext<TDependent> where TDependent : class, IIdentifiable
@@ -24,17 +24,17 @@ namespace JsonApiDotNetCore.Services
         }
 
 
-        public Dictionary<RelationshipAttribute, List<TDependent>> GetAllAffectedRelationships()
+        public Dictionary<RelationshipAttribute, List<TDependent>> AffectedRelationships()
         {
             return _groups?.ToDictionary(rge => rge.Relationship.Attribute, rge => rge.Entities.Cast<TDependent>().ToList());
         }
 
-        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesForAffectedRelationship<TPrincipal>() where TPrincipal : class, IIdentifiable
+        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith<TPrincipal>() where TPrincipal : class, IIdentifiable
         {
-            return GetEntitiesForAffectedRelationship(typeof(TPrincipal));
+            return GetEntitiesRelatedWith(typeof(TPrincipal));
         }
 
-        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesForAffectedRelationship(Type principalType)
+        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith(Type principalType)
         {
             return _groups?.Where(rge => rge.Relationship.PrincipalType == principalType)
                 .ToDictionary(rge => rge.Relationship.Attribute, rge => rge.Entities.Cast<TDependent>().ToList());

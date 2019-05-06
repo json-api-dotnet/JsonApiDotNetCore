@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
@@ -40,7 +41,6 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 RegisterProcessedEntities(entities);
-
                 var dbEntities = _meta.GetDatabaseValues(hookContainer, entities, ResourceHook.BeforeCreate);
                 var context = new HookExecutionContext<TEntity>(actionSource);
                 var diff = new EntityDiff<TEntity>(new HashSet<TEntity>(entities), dbEntities);
@@ -51,7 +51,6 @@ namespace JsonApiDotNetCore.Services
 
             BreadthFirstTraverse(entities, (container, layerNode) =>
             {
-
                 var uniqueSet = layerNode.UniqueSet;
                 var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate, layerNode.DependentType);
                 var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
@@ -185,21 +184,53 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
-            var context = new HookExecutionContext<TEntity>(actionSource);
-            hookContainer?.BeforeDelete(entities, context);
+            if (hookContainer != null)
+            {
+                RegisterProcessedEntities(entities);
+                var context = new HookExecutionContext<TEntity>(actionSource);
+                var parsedEntities = hookContainer.BeforeDelete(entities, context);
+                ValidateHookResponse(parsedEntities, actionSource);
+                entities = parsedEntities;
+            }
+
+            // need to call the goddamn hooks implicithook here
+            //foreach (RelationshipProxy relationship in affectedRelations)
+            //{
+            //    _meta.GetResourceHookContainer(relationship.DependentType)
+            //    IList inverseEntities = _meta.GetInverseEntities(entities, relationship);
+
+            //    CallHook(container, ResourceHook.ImplicitUpdateRelationship, new object[] { inverseEntities, relationship.Attribute });
+            //}
+
+
+            //CallHook(principalContainer, ResourceHook.ImplicitUpdateRelationship, new object[] { inverseEntities, relationship.Attribute });
+
+            //BreadthFirstTraverse(entities, (container, layerNode) =>
+            //{
+            //    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, null);
+            //    return CallHook(container, ResourceHook.AfterUpdate, new object[] { layerNode.UniqueSet, context });
+            //}, ResourceHook.BeforeUpdate);
+
             FlushRegister();
+            return entities;
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
-            var context = new HookExecutionContext<TEntity>(actionSource);
-            hookContainer?.AfterDelete(entities, context, succeeded);
+            if (hookContainer != null)
+            {
+                var context = new HookExecutionContext<TEntity>(actionSource);
+                var parsedEntities = hookContainer.AfterDelete(entities, context, succeeded);
+                ValidateHookResponse(entities, actionSource);
+                entities = parsedEntities;
+            }
             FlushRegister();
+            return entities;
         }
 
         /// <summary>
@@ -216,15 +247,17 @@ namespace JsonApiDotNetCore.Services
             params ResourceHook[] targetHooks
             )
         {
+
             if (!previousLayerEntities.Any()) return;
             var previousLayerTypes = new HashSet<Type>(previousLayerEntities.Select(e => e.GetType()));
+
             _meta.UpdateMetaInformation(previousLayerTypes, targetHooks);
 
             /// for the entities in the previous layer, extract the current layer
             /// entities by parsing the populated relationships.
             var currentLayer = ExtractionLoop(previousLayerEntities);
 
-            if (currentLayer.Any()) return;
+            if (!currentLayer.Any()) return;
 
             // for the unique set of entities in that collection, execute the hooks
             ExecutionLoop(currentLayer, hookExecutionAction);
@@ -272,12 +305,12 @@ namespace JsonApiDotNetCore.Services
 
                 foreach (RelationshipProxy relationship in affectedRelations)
                 {
-                    var affectedEntities = currentLayer.GetUniqueFilteredSet(relationship);
-                    IList inverseEntities = _meta.GetInverseEntities(affectedEntities, relationship);
+                    var entitiesByRelation = currentLayer.SingleOrDefault(node => node.DependentType == relationship.DependentType)?.RelationshipGroups;
+                    if (entitiesByRelation == null) continue;
+                    var affectedEntities = entitiesByRelation.SingleOrDefault(e => e.Relationship.Attribute.Equals(relationship.Attribute))?.Entities;
 
-                    /// figure out if we even know how to get inverse related
-                    /// iterate over affectedEntities, get inverse related
-                    /// fire hook for inverse related
+                    if (affectedEntities == null) continue;
+                    IList inverseEntities = _meta.GetInverseEntities(affectedEntities, relationship);
 
                     CallHook(principalContainer, ResourceHook.ImplicitUpdateRelationship, new object[] { inverseEntities, relationship.Attribute });
                 }
@@ -365,7 +398,7 @@ namespace JsonApiDotNetCore.Services
                     /// if there are no related entities included for 
                     /// currentEntityTreeLayerEntity for this relation, then this key will 
                     /// not exist, and we may continue to the next.
-                    var parsedEntities = relatedEntitiesInCurrentEntityTreeLayer.GetUniqueFilteredSet(proxy);
+                    var parsedEntities = relatedEntitiesInCurrentEntityTreeLayer.GetUniqueFilteredSet(proxy.PrincipalType);
                     if (parsedEntities == null) continue;
 
                     var actualValue = proxy.GetValue(previousLayerEntity);
@@ -463,7 +496,7 @@ namespace JsonApiDotNetCore.Services
             // note that some of the hooks return "void". When these hooks, the 
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.
-            return (IEnumerable)method.Invoke(container, arguments);
+            return (IEnumerable)ThrowJsonApiExceptionOnError( () => method.Invoke(container, arguments));
         }
 
         /// <summary>
@@ -474,6 +507,18 @@ namespace JsonApiDotNetCore.Services
         void FlushRegister()
         {
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
+        }
+
+        object ThrowJsonApiExceptionOnError(Func<object> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (TargetInvocationException tie)
+            {
+                throw tie.InnerException;
+            }
         }
     }
 }

@@ -51,7 +51,6 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
-        private readonly IEntityType _entityMetaType;
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver
@@ -61,8 +60,6 @@ namespace JsonApiDotNetCore.Data
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
-            _entityMetaType = _context.Model
-                .FindEntityType(typeof(TEntity));
         }
 
         public DefaultEntityRepository(
@@ -78,9 +75,6 @@ namespace JsonApiDotNetCore.Data
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _resourceDefinition = resourceDefinition;
-
-            _entityMetaType = _context.Model
-                .FindEntityType(typeof(TEntity));
         }
 
 
@@ -231,18 +225,25 @@ namespace JsonApiDotNetCore.Data
         /// <param name="entity">Entity.</param>
         /// <param name="relationship">Relationship.</param>
         /// <typeparam name="TRelationAttr">The 1st type parameter.</typeparam>
-        public virtual bool AttachInverse(TEntity entity, RelationshipAttribute relationship)
+        public virtual TPrincipal AttachInverse<TPrincipal>(TEntity entity, RelationshipAttribute relationship) where TPrincipal : class, IIdentifiable<int>
         {
+            if (relationship is HasManyThroughAttribute) return null;
 
-            if (relationship is HasManyThroughAttribute) return false;
-            INavigation inverseNavigation = _entityMetaType.FindNavigation(relationship.InternalRelationshipName).FindInverse();
+            var entityMeta = _context.Model.FindEntityType(typeof(TPrincipal));
+            INavigation inverseNavigation = entityMeta.FindNavigation(relationship.InternalRelationshipName).FindInverse();
+
             if (inverseNavigation != null)
             {
-                var entityEntry = _context.Entry(entity);
-                entityEntry.Navigation(inverseNavigation.Name).Load();
-                return true;
+                //TODO: need to make sure we're not reattaching 
+                entity = (TEntity)((IEnumerable<object>)PreventReattachment(new List<TEntity> { entity })).Single();
+                var entityEntry = _context.Attach(entity);
+                entityEntry.Reload(); // TODO: we should only reload if the involved foreign key value is null.
+                entityEntry.Reference(inverseNavigation.Name).Load();
+
+                return (TPrincipal)inverseNavigation.PropertyInfo.GetValue(entity);
+
             }
-            return false;
+            return null;
 
         }
 

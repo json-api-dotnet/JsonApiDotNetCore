@@ -17,7 +17,5 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             return entities.Where(t => t.Name != "This should be not be included");
         }
-
-
     }
 }

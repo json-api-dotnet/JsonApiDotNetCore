@@ -46,7 +46,8 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual TodoItem UnIncludeableItem { get; set; }
 
         public int? PassportId { get; set; }
-        [HasOne("passport")]
+
+        [HasOne("passport", inverseNavigationProperty: "Person")]
         public virtual Passport Passport { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)

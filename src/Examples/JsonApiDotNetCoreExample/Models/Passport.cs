@@ -5,7 +5,9 @@ namespace JsonApiDotNetCoreExample.Models
     public class Passport : Identifiable
     {
         public virtual int? SocialSecurityNumber { get; set; }
-        [HasOne("person")]
+
+
+        [HasOne("person", inverseNavigationProperty: "Passport")]
         public virtual Person Person { get; set; }
     }
 }

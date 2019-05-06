@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        void BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for publishing an event.
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
-        void AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded);
+        IEnumerable<T> AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded);
 
         /// <summary>
         /// TODO: WRITE ME
@@ -224,7 +224,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        void BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable;
+        IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable;
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for publishing an event.
@@ -232,6 +232,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
-        void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable;
+        IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable;
     }
 }

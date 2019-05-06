@@ -4,6 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using DependentType = System.Type;
+using PrincipalType = System.Type;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -27,9 +28,9 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <returns>The unique filtered set.</returns>
         /// <param name="proxy">Proxy.</param>
-        public HashSet<IIdentifiable> GetUniqueFilteredSet(RelationshipProxy proxy)
+        public HashSet<IIdentifiable> GetUniqueFilteredSet(PrincipalType principalType)
         {
-            var match = _uniqueEntities.Where(kvPair => kvPair.Key == proxy.PrincipalType);
+            var match = _uniqueEntities.Where(kvPair => kvPair.Key == principalType);
             return match.Any() ? match.Single().Value : null;
         }
 

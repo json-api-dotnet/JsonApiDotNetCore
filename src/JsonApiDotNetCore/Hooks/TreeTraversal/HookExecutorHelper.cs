@@ -206,11 +206,10 @@ namespace JsonApiDotNetCore.Internal
             var idType = GetIdentifierType(relationship.DependentType);
             var parameterizedAttachInverse = GetType()
                 .GetMethod("AttachInverse", BindingFlags.NonPublic | BindingFlags.Instance)
-                .MakeGenericMethod(relationship.DependentType, idType);
+                .MakeGenericMethod(relationship.DependentType, idType, relationship.PrincipalType);
 
-            parameterizedAttachInverse.Invoke(this, new object[] { affectedEntities, relationship.Attribute });
+            return (IList)parameterizedAttachInverse.Invoke(this, new object[] { affectedEntities, relationship });
 
-            return null;
         }
 
 
@@ -328,13 +327,13 @@ namespace JsonApiDotNetCore.Internal
             return dbEntities;
         }
 
-        protected void AttachInverse<TEntity, TId>(IEnumerable<IIdentifiable> entities, RelationshipAttribute attr) where TEntity : class, IIdentifiable<TId>
+        protected List<TPrincipal> AttachInverse<TEntity, TId, TPrincipal>(IEnumerable<IIdentifiable> entities, RelationshipProxy relationship)
+            where TEntity : class, IIdentifiable<TId>
+            where TPrincipal : class, IIdentifiable<int>
         {
             var repo = GetRepository<TEntity, TId>();
-            foreach (var e in entities)
-            {
-                repo.AttachInverse((TEntity)e, attr);
-            }
+
+            return entities.Select(e => repo.AttachInverse<TPrincipal>((TEntity)e, relationship.Attribute)).Where(e => e != null).ToList();
         }
 
         IEntityReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>

@@ -12,5 +12,10 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             return base.BeforeUpdate(entityDiff, context);
         }
+
+        public override IEnumerable<Passport> BeforeDelete(IEnumerable<Passport> entities, HookExecutionContext<Passport> context)
+        {
+            return base.BeforeDelete(entities, context);
+        }
     }
 }
