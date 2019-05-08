@@ -1,192 +1,184 @@
-//using JsonApiDotNetCore.Builders;
-//using JsonApiDotNetCore.Models;
-//using JsonApiDotNetCore.Services;
-//using JsonApiDotNetCoreExample.Models;
-//using Moq;
-//using System.Collections.Generic;
-//using System.Linq;
-//using Xunit;
-//using Bogus;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
+using JsonApiDotNetCoreExample.Models;
+using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
+using Bogus;
 
-//namespace UnitTests.ResourceHooks
-//{
-//    public class ManyToMany_AfterReadTests : ResourceHooksTestBase
-//    {
-//        public ManyToMany_AfterReadTests()
-//        {
-//            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-//            // is consumed by ResourceDefinition class.
-//            new ResourceGraphBuilder()
-//                .AddResource<Article>()
-//                .AddResource<Tag>()
-//                .Build();
-//        }
+namespace UnitTests.ResourceHooks
+{
+    public class ManyToMany_AfterReadTests : ResourceHooksTestBase
+    {
+        public ManyToMany_AfterReadTests()
+        {
+            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
+            // is consumed by ResourceDefinition class.
+            new ResourceGraphBuilder()
+                .AddResource<Article>()
+                .AddResource<Tag>()
+                .Build();
+        }
 
-//        (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
-//        {
-//            var tagsSubset = new Faker<Tag>().Generate(3).ToList();
-//            var joinsSubSet = new Faker<ArticleTag>().Generate(3).ToList();
-//            var articleTagsSubset = new Article() { ArticleTags = joinsSubSet };
-//            for (int i = 0; i < 3; i++)
-//            {
-//                joinsSubSet[i].Article = articleTagsSubset;
-//                joinsSubSet[i].Tag = tagsSubset[i];
-//            }
+        (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
+        {
+            var tagsSubset = new Faker<Tag>().Generate(3).ToList();
+            var joinsSubSet = new Faker<ArticleTag>().Generate(3).ToList();
+            var articleTagsSubset = new Article() { ArticleTags = joinsSubSet };
+            for (int i = 0; i < 3; i++)
+            {
+                joinsSubSet[i].Article = articleTagsSubset;
+                joinsSubSet[i].Tag = tagsSubset[i];
+            }
 
-//            var allTags = new Faker<Tag>().Generate(3).ToList().Concat(tagsSubset).ToList();
-//            var completeJoin = new Faker<ArticleTag>().Generate(6).ToList();
+            var allTags = new Faker<Tag>().Generate(3).ToList().Concat(tagsSubset).ToList();
+            var completeJoin = new Faker<ArticleTag>().Generate(6).ToList();
 
-//            var articleWithAllTags = new Article() { ArticleTags = completeJoin };
+            var articleWithAllTags = new Article() { ArticleTags = completeJoin };
 
-//            for (int i = 0; i < 6; i++)
-//            {
-//                completeJoin[i].Article = articleWithAllTags;
-//                completeJoin[i].Tag = allTags[i];
-//            }
+            for (int i = 0; i < 6; i++)
+            {
+                completeJoin[i].Article = articleWithAllTags;
+                completeJoin[i].Tag = allTags[i];
+            }
 
-//            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
+            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
 
-//            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
-//            return (articles, allJoins, allTags);
-//        }
+            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            return (articles, allJoins, allTags);
+        }
 
-
-//        [Fact]
-//        public void AfterRead()
-//        {
-//            // arrange
-//            var articleDiscovery = SetDiscoverableHooks<Article>();
-//            var tagDiscovery = SetDiscoverableHooks<Tag>();
-
-
-
-//            (var contextMock, var hookExecutor, var articleResourceMock,
-//                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-
-//            (var articles, var joins, var tags) = CreateDummyData();
-
-//            // act
-//            hookExecutor.AfterRead(articles, ResourceAction.Get);
-
-//            // assert
-//            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
-//            articleResourceMock.VerifyNoOtherCalls();
-
-//            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<Tag>>(), null), Times.Once());
-//            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<HookExecutionContext<Tag>>()), Times.Once());
-//            tagResourceMock.VerifyNoOtherCalls();
-//        }
+        [Fact]
+        public void AfterRead()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>();
+            var tagDiscovery = SetDiscoverableHooks<Tag>();
 
 
 
-//        [Fact]
-//        public void AfterRead_Without_Parent_Hook_Implemented()
-//        {
-//            // arrange
-//            var articleDiscovery = SetDiscoverableHooks<Article>(new ResourceHook[0]);
-//            var tagDiscovery = SetDiscoverableHooks<Tag>();
+            (var contextMock, var hookExecutor, var articleResourceMock,
+                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-//            (var contextMock, var hookExecutor, var articleResourceMock,
-//                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+            (var articles, var joins, var tags) = CreateDummyData();
 
-//            (var articles, var joins, var tags) = CreateDummyData();
+            // act
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
-//            // act
-//            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            // assert
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
 
-//            // assert
-//            articleResourceMock.VerifyNoOtherCalls();
-//            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<Tag>>(), null), Times.Once());
-//            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<HookExecutionContext<Tag>>()), Times.Once());
-//            tagResourceMock.VerifyNoOtherCalls();
-//        }
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), false, null), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
+            VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
+        }
 
-//        [Fact]
-//        public void AfterRead_Without_Children_Before_Hooks_Implemented()
-//        {
-//            // arrange
-//            var articleDiscovery = SetDiscoverableHooks<Article>();
-//            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[] { ResourceHook.AfterRead });
+        [Fact]
+        public void AfterRead_Without_Parent_Hook_Implemented()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>(new ResourceHook[0]);
+            var tagDiscovery = SetDiscoverableHooks<Tag>();
 
-//            (var contextMock, var hookExecutor, var articleResourceMock,
-//                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+            (var contextMock, var hookExecutor, var articleResourceMock,
+                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-//            (var articles, var joins, var tags) = CreateDummyData();
+            (var articles, var joins, var tags) = CreateDummyData();
 
-//            // act
-//            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            // act
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
-//            // assert
-//            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
-//            articleResourceMock.VerifyNoOtherCalls();
+            // assert
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), false, null), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
+            VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
+        }
 
-//            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), It.IsAny<HookExecutionContext<Tag>>()), Times.Once());
-//            tagResourceMock.VerifyNoOtherCalls();
-//        }
+        [Fact]
+        public void AfterRead_Without_Children_Before_Hooks_Implemented()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>();
+            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[] { ResourceHook.AfterRead });
 
-//        [Fact]
-//        public void AfterRead_Without_Children_After_Hooks_Implemented()
-//        {
-//            // arrange
-//            var articleDiscovery = SetDiscoverableHooks<Article>();
-//            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[] { ResourceHook.BeforeRead });
+            (var contextMock, var hookExecutor, var articleResourceMock,
+                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-//            (var contextMock, var hookExecutor, var articleResourceMock,
-//             var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+            (var articles, var joins, var tags) = CreateDummyData();
 
-//            (var articles, var joins, var tags) = CreateDummyData();
+            // act
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
-//            // act
-//            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            // assert
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
 
-//            // assert
-//            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
-//            articleResourceMock.VerifyNoOtherCalls();
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
+            VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
+        }
 
-//            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<Tag>>(), null), Times.Once());
-//            tagResourceMock.VerifyNoOtherCalls();
-//        }
+        [Fact]
+        public void AfterRead_Without_Children_After_Hooks_Implemented()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>();
+            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[] { ResourceHook.BeforeRead });
 
-//        [Fact]
-//        public void AfterRead_Without_Any_Children_Hooks_Implemented()
-//        {
-//            // arrange
-//            var articleDiscovery = SetDiscoverableHooks<Article>();
-//            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[0]);
+            (var contextMock, var hookExecutor, var articleResourceMock,
+             var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-//            (var contextMock, var hookExecutor, var articleResourceMock,
-//                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+            (var articles, var joins, var tags) = CreateDummyData();
 
-//            (var articles, var joins, var tags) = CreateDummyData();
+            // act
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
-//            // act
-//            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            // assert
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
 
-//            // assert
-//            articleResourceMock.Verify(rd => rd.AfterRead(articles, It.IsAny<HookExecutionContext<Article>>()), Times.Once());
-//            articleResourceMock.VerifyNoOtherCalls();
-//            tagResourceMock.VerifyNoOtherCalls();
-//        }
+            tagResourceMock.Verify(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), false, null), Times.Once());
+            VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
+        }
 
-//        [Fact]
-//        public void AfterRead_Without_Any_Hook_Implemented()
-//        {
-//            // arrange
-//            var articleDiscovery = SetDiscoverableHooks<Article>(new ResourceHook[0]);
-//            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[0]);
+        [Fact]
+        public void AfterRead_Without_Any_Children_Hooks_Implemented()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>();
+            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[0]);
 
-//            (var contextMock, var hookExecutor, var articleResourceMock,
-//                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+            (var contextMock, var hookExecutor, var articleResourceMock,
+                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-//            (var articles, var joins, var tags) = CreateDummyData();
+            (var articles, var joins, var tags) = CreateDummyData();
 
-//            // act
-//            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            // act
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
 
-//            // assert
-//            articleResourceMock.VerifyNoOtherCalls();
-//            tagResourceMock.VerifyNoOtherCalls();
-//        }
-//    }
-//}
+            // assert
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
+            VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
+        }
+
+        [Fact]
+        public void AfterRead_Without_Any_Hook_Implemented()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>(new ResourceHook[0]);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[0]);
+
+            (var contextMock, var hookExecutor, var articleResourceMock,
+                var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+
+            (var articles, var joins, var tags) = CreateDummyData();
+
+            // act
+            hookExecutor.AfterRead(articles, ResourceAction.Get);
+
+            VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
+
+            // assert
+        }
+    }
+}
 
