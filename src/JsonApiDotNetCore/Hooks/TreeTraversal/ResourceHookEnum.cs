@@ -15,7 +15,8 @@
         AfterUpdate,
         BeforeDelete,
         AfterDelete,
-        ImplicitUpdateRelationship
+        BeforeUpdateRelationship,
+        AfterUpdateRelationship
     }
 
 }

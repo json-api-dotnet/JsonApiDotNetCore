@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -8,6 +9,32 @@ using PrincipalType = System.Type;
 
 namespace JsonApiDotNetCore.Services
 {
+    public class EntityTreeLayerFactory
+    {
+        private readonly IHookExecutorHelper _meta;
+        private readonly IResourceGraph _graph;
+        private readonly Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
+
+
+        public EntityTreeLayerFactory(IHookExecutorHelper meta, IResourceGraph graph, Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
+        {
+            _meta = meta;
+            _graph = graph;
+            _processedEntities = processedEntities;
+        }
+
+        public EntityTreeLayer CreateLayer(EntityTreeLayer currentLayer)
+        {
+            var nextLayer = new EntityTreeLayer(currentLayer, _meta, _graph, _processedEntities);
+            return nextLayer;
+        }
+
+        public EntityTreeLayer CreateLayer(IEnumerable<IIdentifiable> currentLayerEntities)
+        {
+            var layer = new EntityTreeLayer(currentLayerEntities, _meta, _graph, _processedEntities);
+            return layer;
+        }
+    }
 
     /// <summary>
     /// A helper class that represents all entities in the current layer that
@@ -15,13 +42,167 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class EntityTreeLayer : IEnumerable<NodeInLayer>
     {
-        private readonly Dictionary<DependentType, RelationshipGroups> _relationshipGroups;
-        private readonly Dictionary<DependentType, HashSet<IIdentifiable>> _uniqueEntities;
-        public EntityTreeLayer()
+        private readonly IHookExecutorHelper _meta;
+        private readonly IResourceGraph _graph;
+
+        private readonly Dictionary<PrincipalType, HashSet<IIdentifiable>> _processedEntities;
+        private readonly Dictionary<PrincipalType, HashSet<IIdentifiable>> _uniqueEntities;
+        private readonly Dictionary<RelationshipAttribute, RelationshipProxy> _relationshipProxies;
+        private readonly Dictionary<RelationshipProxy, List<IIdentifiable>> _currentEntitiesByRelationship;
+        private readonly Dictionary<RelationshipProxy, List<IIdentifiable>> _previousEntitiesByRelationship;
+
+
+
+        public bool IsRootLayer { get; private set; }
+
+        public EntityTreeLayer(
+            IEnumerable<IIdentifiable> currentLayerEntities,
+            IHookExecutorHelper meta, 
+            IResourceGraph graph, 
+            Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
         {
-            _relationshipGroups = new Dictionary<DependentType, RelationshipGroups>();
-            _uniqueEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
+            IsRootLayer = true;
+            _meta = meta;
+            _graph = graph;
+            _relationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
+            _processedEntities = processedEntities;
+            _uniqueEntities = new Dictionary<PrincipalType, HashSet<IIdentifiable>>();
+
+
+            ProcessEntities(currentLayerEntities);
         }
+
+
+        public EntityTreeLayer(
+            EntityTreeLayer currentLayer,
+            IHookExecutorHelper meta, 
+            IResourceGraph graph, 
+            Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
+        {
+            IsRootLayer = false;
+            _meta = meta;
+            _graph = graph;
+            _relationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
+            _processedEntities = processedEntities;
+            _uniqueEntities = new Dictionary<PrincipalType, HashSet<IIdentifiable>>();
+
+            _currentEntitiesByRelationship = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+            _previousEntitiesByRelationship = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+            ExtractEntities(currentLayer);
+        }
+
+
+        void ExtractEntities(EntityTreeLayer previousLayer)
+        {
+            var currentLayerEntities = new List<IIdentifiable>();
+            foreach (var node in previousLayer)
+            {
+                var entities = node.UniqueSet;
+                var relationships = previousLayer.GetRelationships(node.PrincipalType);
+                foreach (IIdentifiable principalEntity in entities)
+                {
+                    foreach (var proxy in relationships)
+                    {
+                        var relationshipValue = proxy.GetValue(principalEntity);
+                        // skip this relationship if it's not populated
+                        if (!proxy.IsContextRelation && relationshipValue == null) continue;
+                        if (!(relationshipValue is IEnumerable<IIdentifiable> dependentEntities))
+                        {
+                            // in the case of a to-one relationship, the assigned value
+                            // will not be a list. We therefore first wrap it in a list.
+                            var list = TypeHelper.CreateListFor(proxy.DependentType);
+                            if (relationshipValue != null) list.Add(relationshipValue);
+                            dependentEntities = (IEnumerable<IIdentifiable>)list;
+                        }
+                        currentLayerEntities.AddRange(dependentEntities);
+                        AddToDependentGroups(proxy, dependentEntities);
+                        AddToPrincipalGroups(proxy, principalEntity);
+                    }
+                }
+            }
+            ProcessEntities(currentLayerEntities);
+        }
+
+        public void ProcessEntities(IEnumerable<IIdentifiable> currentLayerEntities)
+        {
+            var incomingEntitiesByType = currentLayerEntities.GroupBy(e => e.GetType()).ToDictionary(g => g.Key, g => new HashSet<IIdentifiable>(g));
+
+            foreach ( var group in incomingEntitiesByType)
+            {
+                var principalType = group.Key;
+                var incomingEntities = group.Value;
+                var uniqueEntities = UniqueInTree(incomingEntities, principalType);
+
+                //if (!uniqueEntities.Any()) continue; TODO check this: setting relation from [ .. ] to null ?
+
+                if (!_uniqueEntities.TryGetValue(principalType, out HashSet<IIdentifiable> entities))
+                {
+                    _uniqueEntities[principalType] = new HashSet<IIdentifiable> { };
+                }
+                entities.UnionWith(uniqueEntities);
+
+                var contextEntity = _graph.GetContextEntity(principalType);
+                foreach (RelationshipAttribute attr in contextEntity.Relationships)
+                {
+                    if (!_relationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
+                    {
+                        DependentType dependentType = GetDependentTypeFromRelationship(attr);
+                        var isContextRelation = false;
+                        var proxy = new RelationshipProxy(attr, dependentType,
+                                principalType, isContextRelation != null && (bool)isContextRelation);
+                    }
+                }
+
+            }
+        }
+
+
+        public List<RelationshipProxy> GetRelationships(PrincipalType principal)
+        {
+            return _relationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == principal).ToList();
+        }
+
+        /// <summary>
+        /// Registers the processed entities in the dictionary grouped by type
+        /// </summary>
+        /// <param name="entities">Entities to register</param>
+        /// <param name="entityType">Entity type.</param>
+        void RegisterProcessedEntities(IEnumerable<IIdentifiable> entities, Type entityType)
+        {
+            var processedEntities = GetProcessedEntities(entityType);
+            processedEntities.UnionWith(new HashSet<IIdentifiable>(entities));
+        }
+
+
+        /// <summary>
+        /// Gets the processed entities for a given type, instantiates the collection if new.
+        /// </summary>
+        /// <returns>The processed entities.</returns>
+        /// <param name="entityType">Entity type.</param>
+        HashSet<IIdentifiable> GetProcessedEntities(Type entityType)
+        {
+            if (!_processedEntities.TryGetValue(entityType, out HashSet<IIdentifiable> processedEntities))
+            {
+                processedEntities = new HashSet<IIdentifiable>();
+                _processedEntities[entityType] = processedEntities;
+            }
+            return processedEntities;
+        }
+
+        /// <summary>
+        /// Using the register of processed entities, determines the unique and new
+        /// entities with respect to previous iterations.
+        /// </summary>
+        /// <returns>The in tree.</returns>
+        /// <param name="entities">Entities.</param>
+        /// <param name="entityType">Entity type.</param>
+        HashSet<IIdentifiable> UniqueInTree(IEnumerable<IIdentifiable> entities, Type entityType)
+        {
+            var newEntities = new HashSet<IIdentifiable>(entities.Except(GetProcessedEntities(entityType)));
+            RegisterProcessedEntities(entities, entityType);
+            return newEntities;
+        }
+
 
         /// <summary>
         /// Gets the unique filtered set.
@@ -62,64 +243,19 @@ namespace JsonApiDotNetCore.Services
             return _uniqueEntities.Any();
         }
 
-        /// <summary>
-        /// Stores the entities in of the current layer by keeping track of
-        /// all the unique entities (for a given dependent type) and keeping
-        /// track of the various relationships that are involved with these 
-        /// entities, see RelationshipGroups.
-        /// </summary>
-        /// <param name="relatedEntities">Related entities.</param>
-        /// <param name="proxy">Proxy.</param>
-        /// <param name="newEntitiesInTree">New entities in tree.</param>
-        public void Add(
-            IEnumerable<IIdentifiable> relatedEntities,
-            RelationshipProxy proxy,
-            HashSet<IIdentifiable> newEntitiesInTree
-        )
-        {
-            // the unique set is used to 
-            AddToUnique(proxy, newEntitiesInTree);
-            AddToRelationshipGroups(proxy, relatedEntities);
-        }
-
-        /// <summary>
-        /// Entries in this traversal iteration
-        /// </summary>
-        /// <returns>The entries.</returns>
 
 
-        private void AddToUnique(RelationshipProxy proxy, HashSet<IIdentifiable> newEntitiesInTree)
-        {
-            if (!proxy.IsContextRelation && !newEntitiesInTree.Any()) return;
-            if (!_uniqueEntities.TryGetValue(proxy.DependentType, out HashSet<IIdentifiable> uniqueSet))
-            {
-                _uniqueEntities[proxy.DependentType] = newEntitiesInTree;
-            }
-            else
-            {
-                uniqueSet.UnionWith(newEntitiesInTree);
-            }
-        }
-
-        private void AddToRelationshipGroups(RelationshipProxy proxy, IEnumerable<IIdentifiable> relatedEntities)
-        {
-            var key = proxy.DependentType; 
-            if (!_relationshipGroups.TryGetValue(key, out RelationshipGroups groups ))
-            {
-                groups = new RelationshipGroups(); 
-                _relationshipGroups[key] = groups;
-            }
-            groups.Add(proxy, relatedEntities);
-        }
 
         public IEnumerator<NodeInLayer> GetEnumerator()
         {
-            var dependentTypes = _uniqueEntities.Keys;
-            foreach (var type in dependentTypes)
+            var principalTypes = _uniqueEntities.Keys;
+            foreach (PrincipalType principal in principalTypes)
             {
-                var uniqueEntities = _uniqueEntities[type];
-                var relationshipGroups = _relationshipGroups[type].Entries();
-                yield return new NodeInLayer(type, uniqueEntities, relationshipGroups);
+                var relationships = GetRelationships(principal);
+                var uniqueEntities = _uniqueEntities[principal];
+                var currentLayerByRelationship = _currentEntitiesByRelationship.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
+                var previousLayerByRelationship = _previousEntitiesByRelationship.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
+                yield return new NodeInLayer(principal, uniqueEntities, currentLayerByRelationship, previousLayerByRelationship, relationships, IsRootLayer);
             }
         }
 
@@ -127,6 +263,52 @@ namespace JsonApiDotNetCore.Services
         {
             return GetEnumerator();
         }
+
+
+        private void AddToDependentGroups(RelationshipProxy proxy, IEnumerable<IIdentifiable> entities)
+        {
+            AddToRelationshipGroup(_currentEntitiesByRelationship, proxy, entities);
+
+        }
+
+        private void AddToPrincipalGroups(RelationshipProxy proxy, params IIdentifiable[] entities)
+        {
+            AddToRelationshipGroup(_previousEntitiesByRelationship, proxy, entities);
+        }
+
+
+        private void AddToRelationshipGroup(Dictionary<RelationshipProxy, List<IIdentifiable>> target, RelationshipProxy proxy, IEnumerable<IIdentifiable> newEntities)
+        {
+            if (!target.TryGetValue(proxy, out List<IIdentifiable> entities))
+            {
+                entities = new List<IIdentifiable>();
+                target[proxy] = entities;
+            }
+            entities.AddRange(newEntities);
+        }
+
+        /// <summary>
+        /// Gets the type from relationship attribute. If the attribute is 
+        /// HasManyThrough, and the jointable entity is identifiable, then the target
+        /// type is the joinentity instead of the righthand side, because hooks might be 
+        /// implemented for the jointable entity.
+        /// </summary>
+        /// <returns>The target type for traversal</returns>
+        /// <param name="attr">Relationship attribute</param>
+        protected Type GetDependentTypeFromRelationship(RelationshipAttribute attr)
+        {
+            if (attr is HasManyThroughAttribute throughAttr)
+            {
+                if (typeof(IIdentifiable).IsAssignableFrom(throughAttr.ThroughType))
+                {
+                    return throughAttr.ThroughType;
+                }
+                return attr.Type;
+            }
+            return attr.Type;
+        }
+
+
     }
 }
 

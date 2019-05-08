@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Internal
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
             _context = context;
-            _meta = new Dictionary<PrincipalType, List<RelationshipProxy>>();
+            _meta = new Dictionary<DependentType, List<RelationshipProxy>>();
             _hookContainers = new Dictionary<DependentType, IResourceHookContainer>();
             _hookDiscoveries = new Dictionary<DependentType, IHooksDiscovery>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Internal
                     /// that layer), we need to check if relatedType is really 
                     /// related to parentType. We do this through comparison of Metakey
                     string identifier = CreateRelationshipIdentifier(proxy.Attribute, principalType);
-                    if (proxy.RelationshipIdentifier != identifier) continue;
+                    //if (proxy.RelationshipIdentifier != identifier) continue;
                     yield return proxy;
                 }
 
@@ -102,126 +102,121 @@ namespace JsonApiDotNetCore.Internal
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
 
-        /// <inheritdoc/>
-        public Dictionary<DependentType, List<RelationshipProxy>>
-            UpdateMetaInformation(
-            IEnumerable<PrincipalType> previousLayerTypes,
-            IEnumerable<ResourceHook> hooks)
-        {
+        ///// <inheritdoc/>
+        //public Dictionary<DependentType, List<RelationshipProxy>>
+        //    UpdateMetaInformation(
+        //    IEnumerable<PrincipalType> previousLayerTypes,
+        //    IEnumerable<ResourceHook> hooks)
+        //{
 
-            if (hooks == null || !hooks.Any())
-            {
-                CheckForTargetHookExistence();
-                hooks = _targetedHooksForRelatedEntities;
-            }
-            else
-            {
-                if (!_targetedHooksForRelatedEntities.Any())
-                    _targetedHooksForRelatedEntities.AddRange(hooks);
-            }
-
-
-            foreach (PrincipalType principalType in previousLayerTypes)
-            {
-                var contextEntity = _graph.GetContextEntity(principalType);
-                foreach (RelationshipAttribute attr in contextEntity.Relationships)
-                {
-                    DependentType dependentType = GetDependentTypeFromRelationship(attr);
-
-                    bool hasImplementedHooks = false;
-                    foreach (ResourceHook targetHook in hooks)
-                    {
-                        if (GetResourceHookContainer(dependentType, targetHook) != null)
-                        {
-                            hasImplementedHooks = true;
-                            break;
-                        }
-                    }
-                    /// check for the related type if there are any hooks 
-                    /// implemented; if not we can skip to the next relationship
-                    if (!hasImplementedHooks) continue;
-
-                    /// If we already have detected relationships for the related 
-                    /// type in previous iterations, use that list
-                    bool newKey = false;
-                    if (!_meta.TryGetValue(dependentType, out List<RelationshipProxy> proxies))
-                    {
-                        proxies = new List<RelationshipProxy>();
-                        newKey = true;
-                    }
-
-                    var identifier = CreateRelationshipIdentifier(attr, principalType);
-
-                    var isContextRelation = _context?.RelationshipsToUpdate?.Keys.Contains(attr);
-                    var proxy = new RelationshipProxy(attr, dependentType,
-                            principalType, identifier, isContextRelation != null && (bool)isContextRelation);
-
-                    /// we might already have covered for this relationship, like 
-                    /// in a hierarchical self-refering nested structure 
-                    /// (eg folders).
-                    if (!proxies.Select( p => p.RelationshipIdentifier).Contains(proxy.RelationshipIdentifier))
-                    {
-                        proxies.Add(proxy);
-                    }
-                    if (newKey && proxies.Any())
-                    {
-                        _meta[dependentType] = proxies;
-                    }
-                }
-            }
-            return _meta;
-        }
+        //    if (hooks == null || !hooks.Any())
+        //    {
+        //        CheckForTargetHookExistence();
+        //        hooks = _targetedHooksForRelatedEntities;
+        //    }
+        //    else
+        //    {
+        //        if (!_targetedHooksForRelatedEntities.Any())
+        //            _targetedHooksForRelatedEntities.AddRange(hooks);
+        //    }
 
 
-        /// <inheritdoc/>
-        public Dictionary<DependentType, List<RelationshipProxy>>
-            UpdateMetaInformation(
-            IEnumerable<PrincipalType> previousLayerTypes,
-            ResourceHook hook = ResourceHook.None)
-        {
-            var targetHooks = (hook == ResourceHook.None) ? _targetedHooksForRelatedEntities : new List<ResourceHook> { hook };
-            return UpdateMetaInformation(previousLayerTypes, targetHooks);
-        }
+        //    foreach (PrincipalType principalType in previousLayerTypes)
+        //    {
+        //        var contextEntity = _graph.GetContextEntity(principalType);
+        //        foreach (RelationshipAttribute attr in contextEntity.Relationships)
+        //        {
+        //            DependentType dependentType = GetDependentTypeFromRelationship(attr);
 
-        /// <inheritdoc/>
-        public IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook, Type entityType)
-        {
-            if (ShouldIncludeDatabaseDiff(entityType, hook))
-            {
-                var idType = GetIdentifierType(entityType);
+        //            bool hasImplementedHooks = false;
+        //            foreach (ResourceHook targetHook in hooks)
+        //            {
+        //                if (GetResourceHookContainer(dependentType, targetHook) != null)
+        //                {
+        //                    hasImplementedHooks = true;
+        //                    break;
+        //                }
+        //            }
+        //            /// check for the related type if there are any hooks 
+        //            /// implemented; if not we can skip to the next relationship
+        //            if (!hasImplementedHooks) continue;
 
-                var parameterizedGetWhere = GetType()
-                        .GetMethod("GetWhere", BindingFlags.NonPublic | BindingFlags.Instance)
-                        .MakeGenericMethod(entityType, idType);
-                var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-                var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
-                return (IList)parameterizedGetWhere.Invoke(this, new object[] { ids });
-            }
-            return null;
-        }
+        //            /// If we already have detected relationships for the related 
+        //            /// type in previous iterations, use that list
+        //            bool newKey = false;
+        //            if (!_meta.TryGetValue(dependentType, out List<RelationshipProxy> proxies))
+        //            {
+        //                proxies = new List<RelationshipProxy>();
+        //                newKey = true;
+        //            }
+
+        //            var identifier = CreateRelationshipIdentifier(attr, principalType);
+
+        //            var isContextRelation = _context?.RelationshipsToUpdate?.Keys.Contains(attr);
+        //            var proxy = new RelationshipProxy(attr, dependentType,
+        //                    principalType, identifier, isContextRelation != null && (bool)isContextRelation);
+
+        //            /// we might already have covered for this relationship, like 
+        //            /// in a hierarchical self-refering nested structure 
+        //            /// (eg folders).
+        //            if (!proxies.Select( p => p.RelationshipIdentifier).Contains(proxy.RelationshipIdentifier))
+        //            {
+        //                proxies.Add(proxy);
+        //            }
+        //            if (newKey && proxies.Any())
+        //            {
+        //                _meta[dependentType] = proxies;
+        //            }
+        //        }
+        //    }
+        //    return _meta;
+        //}
+
+
+        ///// <inheritdoc/>
+        //public Dictionary<DependentType, List<RelationshipProxy>>
+        //    UpdateMetaInformation(
+        //    IEnumerable<PrincipalType> previousLayerTypes,
+        //    ResourceHook hook = ResourceHook.None)
+        //{
+        //    var targetHooks = (hook == ResourceHook.None) ? _targetedHooksForRelatedEntities : new List<ResourceHook> { hook };
+        //    return UpdateMetaInformation(previousLayerTypes, targetHooks);
+        //}
 
         /// <inheritdoc/>
-        public IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship )
+        public IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, PrincipalType principal)
         {
-            var idType = GetIdentifierType(relationship.DependentType);
-            var parameterizedAttachInverse = GetType()
-                .GetMethod("AttachInverse", BindingFlags.NonPublic | BindingFlags.Instance)
-                .MakeGenericMethod(relationship.DependentType, idType, relationship.PrincipalType);
-
-            return (IList)parameterizedAttachInverse.Invoke(this, new object[] { affectedEntities, relationship });
+            var paths = relationships.Select(p => p.Attribute.RelationshipPath).ToArray();
+            var idType = GetIdentifierType(principal);
+            var parameterizedGetWhere = GetType()
+                    .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
+                    .MakeGenericMethod(principal, idType);
+            var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
+            var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
+            return (IList)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
 
         }
 
+        ///// <inheritdoc/>
+        //public IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship )
+        //{
+        //    var idType = GetIdentifierType(relationship.DependentType);
+        //    var parameterizedAttachInverse = GetType()
+        //        .GetMethod("AttachInverse", BindingFlags.NonPublic | BindingFlags.Instance)
+        //        .MakeGenericMethod(relationship.DependentType, idType, relationship.PrincipalType);
+        //    return (IList)parameterizedAttachInverse.Invoke(this, new object[] { affectedEntities, relationship });
+        //}
 
 
-        /// <inheritdoc/>
-        public IEnumerable<TEntity> GetDatabaseValues<TEntity>(
-            IResourceHookContainer container,
-            IEnumerable<TEntity> entities,
-            ResourceHook hook) where TEntity : class, IIdentifiable
-        {
-            return (IEnumerable<TEntity>)GetDatabaseValues(container, (IList)entities, hook, typeof(TEntity));
-        }
+
+        ///// <inheritdoc/>
+        //public IEnumerable<TEntity> ShouldLoadDbValues<TEntity>(
+        //    IResourceHookContainer container,
+        //    IEnumerable<TEntity> entities,
+        //    ResourceHook hook) where TEntity : class, IIdentifiable
+        //{
+        //    return (IEnumerable<TEntity>)GetDatabaseValues(container, (IList)entities, hook, typeof(TEntity));
+        //}
 
         public bool ShouldIncludeDatabaseDiff(DependentType entityType, ResourceHook hook)
         {
@@ -320,11 +315,14 @@ namespace JsonApiDotNetCore.Internal
             return entityType.GetProperty("Id").PropertyType;
         }
 
-        protected IEnumerable<TEntity> GetWhere<TEntity, TId>(IEnumerable<TId> ids) where TEntity : class, IIdentifiable<TId>
+        protected IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, string[] relationshipPaths) where TEntity : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TEntity, TId>();
-            var dbEntities = repo.GetQueryable().Where(e => ids.Contains(e.Id)).ToList();
-            return dbEntities;
+            var query = repo.GetQueryable().Where(e => ids.Contains(e.Id));
+            foreach (var path in relationshipPaths){
+                query = query.Include(path);
+            }
+            return query.ToList();
         }
 
         protected List<TPrincipal> AttachInverse<TEntity, TId, TPrincipal>(IEnumerable<IIdentifiable> entities, RelationshipProxy relationship)
@@ -343,5 +341,29 @@ namespace JsonApiDotNetCore.Internal
 
         }
 
+        public bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook, DependentType entityType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dictionary<DependentType, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<DependentType> previousLayerTypes, ResourceHook hook = ResourceHook.None)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dictionary<DependentType, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<DependentType> previousLayerTypes, IEnumerable<ResourceHook> hooks)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

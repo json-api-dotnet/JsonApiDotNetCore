@@ -12,43 +12,43 @@ namespace JsonApiDotNetCoreExample.Resources
     public class TodoResource : ResourceDefinition<TodoItem>
     {
 
-        [DatabaseValuesInDiffs(false)]
-        public override IEnumerable<TodoItem> BeforeUpdate(EntityDiff<TodoItem> entityDiff, HookExecutionContext<TodoItem> context)
-        {
-            var dbEntities = entityDiff.DatabaseEntities;
-            DoesNotTouchLocked(dbEntities);
+        //[DatabaseValuesInDiffs(false)]
+        //public override IEnumerable<TodoItem> BeforeUpdate(EntityDiff<TodoItem> entityDiff, HookExecutionContext<TodoItem> context)
+        //{
+        //    var dbEntities = entityDiff.DatabaseEntities;
+        //    DoesNotTouchLocked(dbEntities);
 
-            var relationshipsToPerson = context.GetEntitiesRelatedWith<Person>();
-            if (relationshipsToPerson != null && relationshipsToPerson.Any(pair => pair.Key.InternalRelationshipName == "Author"))
-            {
-                throw new JsonApiException(401, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
-            }
+        //    var relationshipsToPerson = context.GetEntitiesRelatedWith<Person>();
+        //    if (relationshipsToPerson != null && relationshipsToPerson.Any(pair => pair.Key.InternalRelationshipName == "Author"))
+        //    {
+        //        throw new JsonApiException(401, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
+        //    }
 
-            // ignore any updates for items with ordinal bigger than 1000 (for whatever reason).
-            return entityDiff.RequestEntities.Where(td => td.Ordinal <= 1000);
-        }
-
-
-        public override void ImplicitUpdateRelationship(IEnumerable<TodoItem> entities, RelationshipAttribute affectedRelationship)
-        {
-            DoesNotTouchLocked(entities);
-        }
+        //    // ignore any updates for items with ordinal bigger than 1000 (for whatever reason).
+        //    return entityDiff.RequestEntities.Where(td => td.Ordinal <= 1000);
+        //}
 
 
-        public override IEnumerable<TodoItem> BeforeDelete(IEnumerable<TodoItem> entities, HookExecutionContext<TodoItem> context)
-        {
-            return base.BeforeDelete(entities, context);
-        }
+        //public override void ImplicitUpdateRelationship(IEnumerable<TodoItem> entities, RelationshipAttribute affectedRelationship)
+        //{
+        //    DoesNotTouchLocked(entities);
+        //}
 
-        private void DoesNotTouchLocked(IEnumerable<TodoItem> entities)
-        {
-            foreach (var person in entities ?? Enumerable.Empty<TodoItem>())
-            {
-                if (person.IsLocked)
-                {
-                    throw new JsonApiException(403, "Not allowed to update fields or relations of locked todo item", new UnauthorizedAccessException());
-                }
-            }
-        }
+
+        //public override IEnumerable<TodoItem> BeforeDelete(IEnumerable<TodoItem> entities, HookExecutionContext<TodoItem> context)
+        //{
+        //    return base.BeforeDelete(entities, context);
+        //}
+
+        //private void DoesNotTouchLocked(IEnumerable<TodoItem> entities)
+        //{
+        //    foreach (var person in entities ?? Enumerable.Empty<TodoItem>())
+        //    {
+        //        if (person.IsLocked)
+        //        {
+        //            throw new JsonApiException(403, "Not allowed to update fields or relations of locked todo item", new UnauthorizedAccessException());
+        //        }
+        //    }
+        //}
     }
 }

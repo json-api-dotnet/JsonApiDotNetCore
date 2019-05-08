@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using PrincipalType = System.Type;
+
 
 namespace JsonApiDotNetCore.Services
 {
@@ -26,62 +28,35 @@ namespace JsonApiDotNetCore.Services
             ResourceHook.BeforeUpdate,
             ResourceHook.BeforeDelete
         };
+        protected readonly EntityTreeLayerFactory _layerFactory;
         protected readonly IHookExecutorHelper _meta;
+        protected readonly IJsonApiContext _context;
+        private readonly IResourceGraph _graph;
         protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
-        public ResourceHookExecutor(IHookExecutorHelper meta)
+
+
+        public ResourceHookExecutor(
+            IHookExecutorHelper meta,
+            IJsonApiContext context,
+            IResourceGraph graph
+            )
         {
             _meta = meta;
+            _context = context;
+            _graph = graph;
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
+            _layerFactory = new EntityTreeLayerFactory(meta, null, _processedEntities);
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
-            if (hookContainer != null)
-            {
-                RegisterProcessedEntities(entities);
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, entities, ResourceHook.BeforeCreate);
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var diff = new EntityDiff<TEntity>(new HashSet<TEntity>(entities), dbEntities);
-                var parsedEntities = hookContainer.BeforeCreate(diff, context);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
-
-            BreadthFirstTraverse(entities, (container, layerNode) =>
-            {
-                var uniqueSet = layerNode.UniqueSet;
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate, layerNode.DependentType);
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
-                var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), layerNode.DependentType, layerNode.UniqueSet, null);
-                return CallHook(container, ResourceHook.BeforeUpdate, new object[] { diff, context });
-            }, ResourceHook.BeforeUpdate);
-
-            FlushRegister();
             return entities;
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
-            if (hookContainer != null)
-            {
-                RegisterProcessedEntities(entities);
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var parsedEntities = hookContainer.AfterCreate(entities, context);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
-
-            BreadthFirstTraverse(entities, (container, layerNode) =>
-            {
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, null);
-                return CallHook(container, ResourceHook.AfterUpdate, new object[] { layerNode.UniqueSet, context });
-            }, ResourceHook.AfterUpdate);
-
-            FlushRegister();
             return entities;
         }
 
@@ -89,72 +64,57 @@ namespace JsonApiDotNetCore.Services
         public virtual void BeforeRead<TEntity>(ResourceAction actionSource, string stringId = null) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
-            var context = new HookExecutionContext<TEntity>(actionSource);
-            hookContainer?.BeforeRead(context, stringId);
-            FlushRegister();
+            hookContainer?.BeforeRead(actionSource, false, stringId);
+
+            var contextEntity = _graph.GetContextEntity(typeof(TEntity));
+            var calledContainers = new List<Type>() { typeof(TEntity) };
+            foreach (var relationshipPath in _context.IncludedRelationships)
+            {
+                // TODO: Get rid of nested boolean and calledContainers, add BeforeReadRelation hook
+                RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), actionSource, calledContainers);
+            }
+
+
         }
+
+        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction actionSource, List<Type> calledContainers)
+        {
+            var target = relationshipChain.First();
+            var relationship = contextEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == target);
+            if (relationship == null)
+            {
+                throw new JsonApiException(400, $"Invalid relationship {target} on {contextEntity.EntityName}",
+                    $"{contextEntity.EntityName} does not have a relationship named {target}");
+            }
+
+            if (!calledContainers.Contains(relationship.Type))
+            {
+                calledContainers.Add(relationship.Type);
+                var container = _meta.GetResourceHookContainer(relationship.Type, ResourceHook.BeforeRead);
+                if (container != null)
+                {
+                    CallHook(container, ResourceHook.BeforeRead, new object[] { actionSource, true, null });
+                }
+            }
+            relationshipChain.RemoveAt(0);
+            if (relationshipChain.Any())
+            {
+
+                RecursiveBeforeRead(_graph.GetContextEntity(relationship.Type), relationshipChain, actionSource, calledContainers);
+            }
+
+        }
+
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
-            if (hookContainer != null)
-            {
-                RegisterProcessedEntities(entities);
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var parsedEntities = hookContainer.AfterRead(entities, context);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
-
-            BreadthFirstTraverse(entities, (container, layerNode) =>
-            {
-                var dependentType = layerNode.DependentType;
-                if (_meta.ShouldExecuteHook(dependentType, ResourceHook.BeforeRead))
-                {
-                    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, null);
-
-                    CallHook(container, ResourceHook.BeforeRead, new object[] { context, default(string) });
-                }
-
-                var uniqueSet = layerNode.UniqueSet;
-                if (_meta.ShouldExecuteHook(dependentType, ResourceHook.AfterRead))
-                {
-                    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, null);
-                    return CallHook(container, ResourceHook.AfterRead, new object[] { uniqueSet, context });
-                }
-                return uniqueSet;
-            }, ResourceHook.AfterRead, ResourceHook.BeforeRead);
-
-            FlushRegister();
             return entities;
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
-            if (hookContainer != null)
-            {
-                RegisterProcessedEntities(entities);
-
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, entities, ResourceHook.BeforeUpdate);
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var diff = new EntityDiff<TEntity>(new HashSet<TEntity>(entities), dbEntities);
-                var parsedEntities = hookContainer.BeforeUpdate(diff, context);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
-
-            BreadthFirstTraverse(entities, (container, layerNode) =>
-            {
-                var uniqueSet = layerNode.UniqueSet;
-                var dbEntities = _meta.GetDatabaseValues(hookContainer, uniqueSet, ResourceHook.BeforeUpdate, layerNode.DependentType);
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, layerNode.RelationshipGroups);
-                var diff = TypeHelper.CreateInstanceOfOpenType(typeof(EntityDiff<>), layerNode.DependentType, uniqueSet, dbEntities);
-
-                return CallHook(container, ResourceHook.BeforeUpdate, new object[] { diff, context });
-            }, ResourceHook.BeforeUpdate);
 
             FlushRegister();
             return entities;
@@ -163,261 +123,23 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
-            if (hookContainer != null)
-            {
-                RegisterProcessedEntities(entities);
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var parsedEntities = hookContainer.AfterUpdate(entities, context);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
-
-            BreadthFirstTraverse(entities, (container, layerNode) =>
-            {
-                var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, null);
-                return CallHook(container, ResourceHook.AfterUpdate, new object[] { layerNode.UniqueSet, context });
-            }, ResourceHook.AfterUpdate);
-
-            FlushRegister();
             return entities;
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
-            if (hookContainer != null)
-            {
-                RegisterProcessedEntities(entities);
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var parsedEntities = hookContainer.BeforeDelete(entities, context);
-                ValidateHookResponse(parsedEntities, actionSource);
-                entities = parsedEntities;
-            }
-
-            // need to call the goddamn hooks implicithook here
-            //foreach (RelationshipProxy relationship in affectedRelations)
-            //{
-            //    _meta.GetResourceHookContainer(relationship.DependentType)
-            //    IList inverseEntities = _meta.GetInverseEntities(entities, relationship);
-
-            //    CallHook(container, ResourceHook.ImplicitUpdateRelationship, new object[] { inverseEntities, relationship.Attribute });
-            //}
-
-
-            //CallHook(principalContainer, ResourceHook.ImplicitUpdateRelationship, new object[] { inverseEntities, relationship.Attribute });
-
-            //BreadthFirstTraverse(entities, (container, layerNode) =>
-            //{
-            //    var context = TypeHelper.CreateInstanceOfOpenType(typeof(HookExecutionContext<>), layerNode.DependentType, actionSource, null);
-            //    return CallHook(container, ResourceHook.AfterUpdate, new object[] { layerNode.UniqueSet, context });
-            //}, ResourceHook.BeforeUpdate);
-
-            FlushRegister();
             return entities;
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
-            if (hookContainer != null)
-            {
-                var context = new HookExecutionContext<TEntity>(actionSource);
-                var parsedEntities = hookContainer.AfterDelete(entities, context, succeeded);
-                ValidateHookResponse(entities, actionSource);
-                entities = parsedEntities;
-            }
-            FlushRegister();
+        
             return entities;
         }
 
-        /// <summary>
-        /// Fires the hooks for related (nested) entities.
-        /// Performs a recursive, forward-looking breadth first traversal 
-        /// through the entitis in <paramref name="currentEntityTreeLayer"/> and fires the 
-        /// associated resource hooks 
-        /// </summary>
-        /// <param name="currentEntityTreeLayer">Current layer.</param>
-        /// <param name="hookExecutionAction">Hook execution action.</param>
-        void BreadthFirstTraverse(
-            IEnumerable<IIdentifiable> previousLayerEntities,
-            Func<IResourceHookContainer, NodeInLayer, IEnumerable> hookExecutionAction,
-            params ResourceHook[] targetHooks
-            )
-        {
 
-            if (!previousLayerEntities.Any()) return;
-            var previousLayerTypes = new HashSet<Type>(previousLayerEntities.Select(e => e.GetType()));
-
-            _meta.UpdateMetaInformation(previousLayerTypes, targetHooks);
-
-            /// for the entities in the previous layer, extract the current layer
-            /// entities by parsing the populated relationships.
-            var currentLayer = ExtractionLoop(previousLayerEntities);
-
-            if (!currentLayer.Any()) return;
-
-            // for the unique set of entities in that collection, execute the hooks
-            ExecutionLoop(currentLayer, hookExecutionAction);
-            // for the entities in the current layer: reassign relationships where needed.
-            AssignmentLoop(previousLayerEntities, currentLayer);
-
-            if (ShouldCheckForImplicitUpdates(targetHooks))
-                ImplicitUpdateLoop(currentLayer, previousLayerTypes);
-
-            var currentLayerEntities = currentLayer.GetAllUniqueEntities();
-            BreadthFirstTraverse(currentLayerEntities, hookExecutionAction, targetHooks);
-
-        }
-
-
-        /// <summary>
-        /// Checks if the current resource hook in this traversal might result in a 
-        /// implicit relationship update.
-        /// </summary>
-        /// <returns>A boolean indiciating whether or not the hook should be fired</returns>
-        /// <param name="targetHooks">Target hooks.</param>
-        bool ShouldCheckForImplicitUpdates(ResourceHook[] targetHooks)
-        {
-            return targetHooks.Intersect(ImplicitUpdateHooks).Any();
-        }
-
-        /// <summary>
-        /// If the resource hook that is fired in this traversal is one that 
-        /// could trigger an implicit update, check if the ImplicitUpdateRelationship
-        /// hook is implemented, and if so, handle implicit updates.
-        /// </summary>
-        /// <param name="currentLayer">Current layer entities.</param>
-        /// <param name="uniqueTypesInLayer">Unique types in layer.</param>
-        void ImplicitUpdateLoop(EntityTreeLayer currentLayer, HashSet<Type> typesInPreviousLayer)
-        {
-            foreach (var principalEntiyType in typesInPreviousLayer)
-            {
-                var principalContainer = _meta.GetResourceHookContainer(principalEntiyType, ResourceHook.ImplicitUpdateRelationship);
-                /// if the ImplicitUpdateRelationship hook is not implemented, we don't 
-                /// have to worry about any of this.
-                if (principalContainer == null) return;
-
-                // this will include 1:1 and 1:n relationships attrs to entities in the current layer
-                var affectedRelations = _meta.GetRelationshipsToType(principalEntiyType).Where(dt => !(dt.Attribute is HasManyThroughAttribute));
-
-                foreach (RelationshipProxy relationship in affectedRelations)
-                {
-                    var entitiesByRelation = currentLayer.SingleOrDefault(node => node.DependentType == relationship.DependentType)?.RelationshipGroups;
-                    if (entitiesByRelation == null) continue;
-                    var affectedEntities = entitiesByRelation.SingleOrDefault(e => e.Relationship.Attribute.Equals(relationship.Attribute))?.Entities;
-
-                    if (affectedEntities == null) continue;
-                    IList inverseEntities = _meta.GetInverseEntities(affectedEntities, relationship);
-
-                    CallHook(principalContainer, ResourceHook.ImplicitUpdateRelationship, new object[] { inverseEntities, relationship.Attribute });
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Iterates through the entities in the current layer. This layer can be inhomogeneous.
-        /// For each of these entities: gets all related entity  for which we want to 
-        /// execute a hook (target entities), this is defined in MetaInfo.
-        /// Grouped per relation, stores these target in relationshipsInCurrentEntityTreeLayer
-        /// </summary>
-        /// <returns>Hook targets for current layer.</returns>
-        /// <param name="currentEntityTreeLayer">Current layer.</param>
-        EntityTreeLayer ExtractionLoop(
-        IEnumerable<IIdentifiable> previousLayerEntities
-        )
-        {
-            var currentLayer = new EntityTreeLayer();
-            foreach (IIdentifiable entity in previousLayerEntities)
-            {
-                var principalType = entity.GetType();
-                foreach (RelationshipProxy proxy in _meta.GetRelationshipsToType(principalType))
-                {
-                    // for every (unique) entity, we get the relationships that
-                    // will bring us the entities for the current layer
-                    var relationshipValue = proxy.GetValue(entity);
-                    // skip this relationship if it's not populated
-                    if (!proxy.IsContextRelation && relationshipValue == null) continue;
-                    if (!(relationshipValue is IEnumerable<IIdentifiable> currentLayerEntities))
-                    {
-                        // in the case of a to-one relationship, the assigned value
-                        // will not be a list. We therefore first wrap it in a list.
-                        var list = TypeHelper.CreateListFor(proxy.DependentType);
-                        if (relationshipValue != null) list.Add(relationshipValue);
-                        currentLayerEntities = (IEnumerable<IIdentifiable>)list;
-                    }
-                    // filter the retrieved current layer entities against
-                    // the entities that were processed in previous layers, i.e. 
-                    // against the set of unique entities in the entire past tree.
-                    var newEntitiesInTree = UniqueInTree(currentLayerEntities, proxy.DependentType);
-                    currentLayer.Add(currentLayerEntities, proxy, newEntitiesInTree);
-                }
-            }
-            return currentLayer;
-        }
-
-        /// <summary>
-        /// Executes the hooks for every key in relationshipsInCurrentEntityTreeLayer,
-        /// </summary>
-        /// <param name="relationshipsInCurrentEntityTreeLayer">Hook targets for current layer.</param>
-        /// <param name="hookExecution">Hook execution method.</param>
-        void ExecutionLoop(
-            EntityTreeLayer currentLayer,
-            Func<IResourceHookContainer, NodeInLayer, IEnumerable> hookExecution
-            )
-        {
-            foreach (NodeInLayer layerNode in currentLayer)
-            {
-                var hookContainer = _meta.GetResourceHookContainer(layerNode.DependentType);
-                var filteredUniqueSet = hookExecution(hookContainer, layerNode);
-                layerNode.UpdateUniqueSet(filteredUniqueSet);
-            }
-        }
-
-        /// <summary>
-        /// When this method is called, the values in relationshipsInCurrentEntityTreeLayer
-        /// will contain a subset compared to in the DoExtractionLoop call.
-        /// We now need to iterate through currentEntityTreeLayer again and remove any of 
-        /// their related entities that do not occur in relationshipsInCurrentEntityTreeLayer
-        /// </summary>
-        /// <param name="currentEntityTreeLayer">Entities in current layer.</param>
-        /// <param name="relationshipsInCurrentEntityTreeLayer">Hook targets for current layer.</param>
-        void AssignmentLoop(
-            IEnumerable<IIdentifiable> previousLayerEntities,
-            EntityTreeLayer relatedEntitiesInCurrentEntityTreeLayer
-            )
-        {
-            foreach (IIdentifiable previousLayerEntity in previousLayerEntities)
-            {
-                var principalType = previousLayerEntity.GetType();
-                foreach (RelationshipProxy proxy in _meta.GetRelationshipsToType(principalType))
-                {
-                    /// if there are no related entities included for 
-                    /// currentEntityTreeLayerEntity for this relation, then this key will 
-                    /// not exist, and we may continue to the next.
-                    var parsedEntities = relatedEntitiesInCurrentEntityTreeLayer.GetUniqueFilteredSet(proxy.PrincipalType);
-                    if (parsedEntities == null) continue;
-
-                    var actualValue = proxy.GetValue(previousLayerEntity);
-
-                    if (actualValue is IEnumerable<IIdentifiable> relationshipCollection)
-                    {
-                        var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(parsedEntities), proxy.DependentType);
-                        proxy.SetValue(previousLayerEntity, convertedCollection);
-                    }
-                    else if (actualValue is IIdentifiable relationshipSingle)
-                    {
-                        if (!parsedEntities.Contains(actualValue))
-                        {
-                            proxy.SetValue(previousLayerEntity, null);
-                        }
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// checks that the collection does not contain more than one item when
@@ -496,7 +218,7 @@ namespace JsonApiDotNetCore.Services
             // note that some of the hooks return "void". When these hooks, the 
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.
-            return (IEnumerable)ThrowJsonApiExceptionOnError( () => method.Invoke(container, arguments));
+            return (IEnumerable)ThrowJsonApiExceptionOnError(() => method.Invoke(container, arguments));
         }
 
         /// <summary>

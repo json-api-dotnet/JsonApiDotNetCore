@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The entities that result from the query</param>
         /// <param name="stringId">If the </param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        void BeforeRead(HookExecutionContext<T> context, string stringId = null);
+        void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null);
 
         /// <summary>
         /// A hook executed after reading entities. Can be used eg. for publishing events.
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The (adjusted) entities that result from the query</returns>
         /// <param name="entities">The entities that result from the query</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> AfterRead(IEnumerable<T> entities, HookExecutionContext<T> context);
+        IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction pipeline, bool nestedHook = false);
 
         /// <summary>
         /// A hook executed before updating an entity. Can be used eg. for authorization.
@@ -115,7 +115,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="context">The pipeline from which the hook was called</param>
         void ImplicitUpdateRelationship(IEnumerable<T> entities, RelationshipAttribute affectedRelationship);
     }
-
 
 
     /// <summary>
@@ -233,5 +232,20 @@ namespace JsonApiDotNetCore.Services
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
         IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable;
+    }
+
+
+
+    public interface IResourceHookContainerNew<T> : IResourceHookContainer where T : class, IIdentifiable
+    {
+        void BeforeRead(HookExecutionContext<T> context, string stringId = null);
+        IEnumerable<T> AfterRead(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeCreate(IEnumerable<T> entitiesFromRequest, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeUpdateRelationship(IEnumerable<T> entities, HookExecutionContext<T> context);
+        IEnumerable<T> AfterCreate(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
+        IEnumerable<T> AfterUpdate(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeDelete(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
+        IEnumerable<T> AfterDelete(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context, bool succeeded);
     }
 }

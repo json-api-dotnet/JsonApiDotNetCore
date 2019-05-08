@@ -180,13 +180,13 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeRead(HookExecutionContext<T> context, string stringId = null)
+        public virtual void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null)
         {
             return;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction pipeline, bool nestedHook = false)
         {
             return entities;
         }

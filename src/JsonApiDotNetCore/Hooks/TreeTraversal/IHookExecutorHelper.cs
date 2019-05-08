@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if include database diff was shoulded, <c>false</c> otherwise.</returns>
         /// <param name="entityType">Entity type.</param>
         /// <param name="hook">Hook.</param>
-        bool ShouldIncludeDatabaseDiff(Type entityType, ResourceHook hook);
+        bool ShouldLoadDbValues(Type entityType, ResourceHook hook);
 
         /// <summary>
         /// Determines if the implemented <param name="hook"/> requires the 
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
         /// <param name="container">Container.</param>
         /// <param name="hook">Hook.</param>
-        IEnumerable<TEntity> GetDatabaseValues<TEntity>(IResourceHookContainer container, IEnumerable<TEntity> entities, ResourceHook hook) where TEntity : class, IIdentifiable;
+
 
         /// <summary>
         /// Retrieves all the RelationshipProxies for a given entity. This method 
@@ -107,5 +107,6 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="hooks">The target resource hook types</param>
         Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, IEnumerable<ResourceHook> hooks);
         IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship);
+        IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type principal);
     }
 }
