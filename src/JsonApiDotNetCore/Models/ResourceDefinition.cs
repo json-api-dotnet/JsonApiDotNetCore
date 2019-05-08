@@ -198,7 +198,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdateRelation(IEnumerable<T> entities, IUpdatedRelationshipHelper<T> relationshipHelper)
+        public virtual IEnumerable<T> BeforeUpdateRelation(IEnumerable<T> entities, ResourceAction pipeline, IUpdatedRelationshipHelper<T> relationshipHelper)
         {
             return entities;
         }

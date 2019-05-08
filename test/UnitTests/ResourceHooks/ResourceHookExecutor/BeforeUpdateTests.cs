@@ -35,7 +35,7 @@ namespace UnitTests.ResourceHooks
 
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TodoItem>>(), ResourceAction.Patch), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<Person>>(), ResourceAction.Patch), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelation(It.IsAny<IEnumerable<Person>>(), ResourceAction.Patch, It.IsAny<IUpdatedRelationshipHelper<Person>>()), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -53,7 +53,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourceAction.Patch);
 
             // assert
-            ownerResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<Person>>(), ResourceAction.Patch), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelation(It.IsAny<IEnumerable<Person>>(), ResourceAction.Patch, It.IsAny<IUpdatedRelationshipHelper<Person>>()), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 

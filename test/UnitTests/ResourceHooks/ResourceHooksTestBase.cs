@@ -153,6 +153,10 @@ namespace UnitTests.ResourceHooks
                 .Returns<EntityDiff<TModel>, ResourceAction>((entityDiff, context) => entityDiff.RequestEntities)
                 .Verifiable();
             resourceDefinition
+                .Setup(rd => rd.BeforeUpdateRelation(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<IUpdatedRelationshipHelper<TModel>>()))
+                .Returns<IEnumerable<TModel>, ResourceAction, IUpdatedRelationshipHelper<TModel>>((entities, context, helper) => entities)
+                .Verifiable();
+            resourceDefinition
                 .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
                 .Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
                 .Verifiable();
