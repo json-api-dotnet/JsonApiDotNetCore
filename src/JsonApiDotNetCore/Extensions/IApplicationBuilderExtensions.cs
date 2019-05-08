@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Extensions
 
             if (useMvc)
                 app.UseMvc();
-
+                
             return app;
         }
 

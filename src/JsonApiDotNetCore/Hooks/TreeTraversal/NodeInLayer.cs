@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using DependentType = System.Type;
+
 
 namespace JsonApiDotNetCore.Services
 {
@@ -14,20 +15,31 @@ namespace JsonApiDotNetCore.Services
     {
         private readonly HashSet<IIdentifiable> _uniqueSet;
 
-        public DependentType DependentType { get; private set; }
-        public List<RelationshipGroupEntry> RelationshipGroups { get; private set; }
-        public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, DependentType); } }
+        public bool IsRootLayerNode { get; private set; }
+        public Dictionary<RelationshipProxy, List<IIdentifiable>> RelationshipGroups { get; private set; }
+        public Dictionary<RelationshipProxy, List<IIdentifiable>> OriginEntities { get; private set; }
+        public List<RelationshipProxy> Relationships { get; private set; }
+        public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, EntityType); } }
+        public Type EntityType { get; internal set; }
 
         public NodeInLayer(
-            DependentType dependentType,
+            Type principalType,
             HashSet<IIdentifiable> uniqueSet,
-            List<RelationshipGroupEntry> relationshipGroups
+            Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByRelationship,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> originEntities,
+            List<RelationshipProxy> relationships,
+            bool isRootLayerNode
         )
         {
             _uniqueSet = uniqueSet;
-            DependentType = dependentType;
-            RelationshipGroups = relationshipGroups;
+            EntityType = principalType;
+            RelationshipGroups = entitiesByRelationship;
+            OriginEntities = originEntities;
+            Relationships = relationships;
+            IsRootLayerNode = isRootLayerNode;
         }
+
+
 
         public void UpdateUniqueSet(IEnumerable filteredUniqueSet)
         {

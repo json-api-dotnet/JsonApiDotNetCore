@@ -43,7 +43,7 @@ namespace UnitTests.ResourceHooks
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, discovery);
             var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
-            var hookExecutor = new ResourceHookExecutor(meta);
+            var hookExecutor = new ResourceHookExecutor(meta, context.Object, ResourceGraph.Instance);
 
             return (context, hookExecutor, mainResource);
         }
@@ -69,7 +69,7 @@ namespace UnitTests.ResourceHooks
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
             var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance, context.Object);
-            var hookExecutor = new ResourceHookExecutor(meta);
+            var hookExecutor = new ResourceHookExecutor(meta, context.Object, ResourceGraph.Instance);
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, nestedResource.Object, nestedDiscovery);
 
@@ -97,7 +97,7 @@ namespace UnitTests.ResourceHooks
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery);
             var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
-            var hookExecutor = new ResourceHookExecutor(meta);
+            var hookExecutor = new ResourceHookExecutor(meta, context.Object, ResourceGraph.Instance);
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object, firstNestedDiscovery);
             SetupProcessorFactoryForResourceDefinition(processorFactory, secondNestedResource.Object, secondNestedDiscovery);
@@ -142,11 +142,11 @@ namespace UnitTests.ResourceHooks
                 .Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.BeforeRead(It.IsAny<HookExecutionContext<TModel>>(), null))
+                .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), It.IsAny<bool>(), It.IsAny<string>()))
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
-                .Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
+                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<bool>()))
+                .Returns<IEnumerable<TModel>, ResourceAction, bool>((entities, context, nested) => entities)
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
@@ -187,6 +187,15 @@ namespace UnitTests.ResourceHooks
             processorFactory.Setup(c => c.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
             .Returns(discovery);
         }
+
+        protected void VerifyNoOtherCalls(params dynamic[] resourceMocks)
+        {
+            foreach (var mock in resourceMocks)
+            {
+                mock.VerifyNoOtherCalls();
+            }
+        }
+
     }
 }
 

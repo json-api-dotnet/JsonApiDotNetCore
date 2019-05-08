@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if include database diff was shoulded, <c>false</c> otherwise.</returns>
         /// <param name="entityType">Entity type.</param>
         /// <param name="hook">Hook.</param>
-        bool ShouldIncludeDatabaseDiff(Type entityType, ResourceHook hook);
+        bool ShouldLoadDbValues(Type entityType, ResourceHook hook);
 
         /// <summary>
         /// Determines if the implemented <param name="hook"/> requires the 
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
         /// <param name="container">Container.</param>
         /// <param name="hook">Hook.</param>
-        IEnumerable<TEntity> GetDatabaseValues<TEntity>(IResourceHookContainer container, IEnumerable<TEntity> entities, ResourceHook hook) where TEntity : class, IIdentifiable;
+
 
         /// <summary>
         /// Retrieves all the RelationshipProxies for a given entity. This method 
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <returns>The relationship proxies related to the particular entity</returns>
         /// <param name="entity">The entity of intrest in breadth first traversal</param>
-        IEnumerable<RelationshipProxy> GetMetaEntries(IIdentifiable entity);
+        IEnumerable<RelationshipProxy> GetRelationshipsToType(Type principalType);
 
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The meta dict.</returns>
         /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hook">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, ResourceHook hook = ResourceHook.None);
+        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, ResourceHook hook = ResourceHook.None);
         /// <summary>
         /// For the types in <paramref name="nextEntityTreeLayerTypes"/>, given (a set of)
         /// <paramref name="hooks"/>s,  retrieves the relationships from 
@@ -105,6 +105,8 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The meta dict.</returns>
         /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
         /// <param name="hooks">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> nextEntityTreeLayerTypes, IEnumerable<ResourceHook> hooks);
+        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, IEnumerable<ResourceHook> hooks);
+        IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship);
+        IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type principal);
     }
 }

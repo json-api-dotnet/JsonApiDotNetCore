@@ -12,6 +12,8 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class RelationshipGroups
     {
+
+
         private readonly Dictionary<string, RelationshipGroupEntry> _entitiesByRelationship;
         public RelationshipGroups()
         {
@@ -25,16 +27,16 @@ namespace JsonApiDotNetCore.Services
         /// <param name="relatedEntities">Related entities.</param>
         public void Add(RelationshipProxy proxy, IEnumerable<IIdentifiable> relatedEntities)
         {
-            var key = proxy.RelationshipIdentifier;
-            if (!_entitiesByRelationship.TryGetValue(key, out var entitiesWithRelationship))
-            {
-                entitiesWithRelationship = new RelationshipGroupEntry(proxy, new HashSet<IIdentifiable>(relatedEntities));
-                _entitiesByRelationship[key] = entitiesWithRelationship;
-            }
-            else
-            {
-                entitiesWithRelationship.Entities.Union(new HashSet<IIdentifiable>(relatedEntities));
-            }
+            //var key = proxy.RelationshipIdentifier;
+            //if (!_entitiesByRelationship.TryGetValue(key, out var entitiesWithRelationship))
+            //{
+            //    entitiesWithRelationship = new RelationshipGroupEntry(proxy, new HashSet<IIdentifiable>(relatedEntities));
+            //    _entitiesByRelationship[key] = entitiesWithRelationship;
+            //}
+            //else
+            //{
+            //    entitiesWithRelationship.Entities.Union(new HashSet<IIdentifiable>(relatedEntities));
+            //}
         }
 
         /// <summary>

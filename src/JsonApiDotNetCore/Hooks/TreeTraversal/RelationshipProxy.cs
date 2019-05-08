@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Internal
 {
     /// <summary>
-    /// Internal class used for resource hook execution. Not intended for developer use.
+    /// A class used internally for resource hook execution. Not intended for developer use.
     /// 
     /// A wrapper for RelationshipAttribute with an abstraction layer that works on the 
     /// getters and setters of relationships. These are different in the case of 
@@ -15,6 +15,8 @@ namespace JsonApiDotNetCore.Internal
     /// (eg ArticleTags) is identifiable (in which case we will traverse through 
     /// it and fire hooks for it, if defined) or not (in which case we skip 
     /// ArticleTags and go directly to Tags.
+    /// 
+    /// TODO: We can consider moving fields like DependentType and PrincipalType 
     /// </summary>
     public class RelationshipProxy
     {
@@ -29,14 +31,14 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public Type DependentType { get; private set; }
         public Type PrincipalType { get; private set; }
-        public string RelationshipIdentifier { get; private set; }
+        //public string RelationshipIdentifier { get; private set; }
         public bool IsContextRelation { get; private set; }
 
         public RelationshipAttribute Attribute { get; set; }
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType,
-            Type parentType, string identifier, bool isContextRelation)
+            Type parentType, bool isContextRelation)
         {
-            RelationshipIdentifier = identifier;
+            //RelationshipIdentifier = identifier;
             PrincipalType = parentType;
             DependentType = relatedType;
             Attribute = attr;

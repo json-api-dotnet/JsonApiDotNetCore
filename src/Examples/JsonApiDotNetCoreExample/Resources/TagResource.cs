@@ -8,16 +8,9 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TagResource : ResourceDefinition<Tag>
     {
-        public override void BeforeRead(HookExecutionContext<Tag> context, string stringId = null)
-        {
-            return;
-        }
-
-        public override IEnumerable<Tag> AfterRead(IEnumerable<Tag> entities, HookExecutionContext<Tag> context)
+        public override IEnumerable<Tag> AfterRead(IEnumerable<Tag> entities, ResourceAction pipeline, bool nestedHook = false)
         {
             return entities.Where(t => t.Name != "This should be not be included");
         }
-
-
     }
 }

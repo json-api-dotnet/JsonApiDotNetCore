@@ -180,13 +180,13 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeRead(HookExecutionContext<T> context, string stringId = null)
+        public virtual void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null)
         {
             return;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction pipeline, bool nestedHook = false)
         {
             return entities;
         }
@@ -204,13 +204,19 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context)
         {
-            return;
+            return entities;
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded)
+        public virtual IEnumerable<T> AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded)
+        {
+            return entities;
+        }
+
+        /// <inheritdoc/>
+        public virtual void ImplicitUpdateRelationship(IEnumerable<T> entities, RelationshipAttribute affectedRelationship)
         {
             return;
         }
@@ -260,9 +266,6 @@ namespace JsonApiDotNetCore.Models
 
             return null;
         }
-
-
-
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's

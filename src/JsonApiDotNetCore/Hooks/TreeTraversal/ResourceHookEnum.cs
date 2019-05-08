@@ -15,6 +15,8 @@
         AfterUpdate,
         BeforeDelete,
         AfterDelete
+        //BeforeUpdateRelationship,
+        //AfterUpdateRelationship
     }
 
 }
