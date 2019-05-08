@@ -165,7 +165,6 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
         {
-
             FlushRegister();
             return entities;
         }

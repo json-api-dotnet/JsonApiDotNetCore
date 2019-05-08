@@ -5,21 +5,21 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public interface IHookExecutionContext<TDependent> where TDependent : class, IIdentifiable
+    public class HookExecutionContext<TEntity> { }
+
+
+    public interface IUpdatedRelationshipHelper<TDependent> where TDependent : class, IIdentifiable
     {
-        ResourceAction Pipeline { get; }
         Dictionary<RelationshipAttribute, List<TDependent>> AffectedRelationships();
         Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith<TPrincipal>() where TPrincipal : class, IIdentifiable;
         Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith(Type principalType);
     }
 
-    public class HookExecutionContext<TDependent> : IHookExecutionContext<TDependent> where TDependent : class, IIdentifiable
+    public class UpdatedRelationshipHelper<TDependent> : IUpdatedRelationshipHelper<TDependent> where TDependent : class, IIdentifiable
     {
-        public ResourceAction Pipeline { get; private set; }
         private readonly List<RelationshipGroupEntry> _groups;
-        public HookExecutionContext(ResourceAction pipeline, List<RelationshipGroupEntry> relationshipGroups = null)
+        public UpdatedRelationshipHelper(List<RelationshipGroupEntry> relationshipGroups)
         {
-            Pipeline = pipeline;
             _groups = relationshipGroups;
         }
 

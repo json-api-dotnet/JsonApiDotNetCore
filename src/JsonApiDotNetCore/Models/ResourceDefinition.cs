@@ -192,9 +192,15 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline)
         {
             return entityDiff.RequestEntities;
+        }
+
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> BeforeUpdateRelation(IEnumerable<T> entities, IUpdatedRelationshipHelper<T> relationshipHelper)
+        {
+            return entities;
         }
 
         /// <inheritdoc/>

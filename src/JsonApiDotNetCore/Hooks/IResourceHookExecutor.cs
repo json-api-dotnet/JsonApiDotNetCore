@@ -81,7 +81,8 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The (adjusted) entities to be updated</returns>
         /// <param name="entities">The entities to be updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline);
+        IEnumerable<T> BeforeUpdateRelation(IEnumerable<T> entities, IUpdatedRelationshipHelper<T> relationshipHelper);
 
         /// <summary>
         /// A hook executed after updating an entity. Can be used eg. for publishing an event.
