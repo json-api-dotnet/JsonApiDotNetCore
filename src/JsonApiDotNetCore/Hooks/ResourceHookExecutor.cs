@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Services
             _context = context;
             _graph = graph;
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
-            _layerFactory = new EntityTreeLayerFactory(meta, null, _processedEntities);
+            _layerFactory = new EntityTreeLayerFactory(meta, graph, _processedEntities);
         }
 
         /// <inheritdoc/>
@@ -107,9 +107,56 @@ namespace JsonApiDotNetCore.Services
 
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
+            var layer = _layerFactory.CreateLayer(entities);
+            var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
+            var filteredUniqueEntities = hookContainer?.AfterRead(uniqueEntities, pipeline, false);
+            entities = entities.Intersect(filteredUniqueEntities);
+            var nextLayer = _layerFactory.CreateLayer(layer);
+            RecursiveAfterRead(nextLayer, pipeline);
+            FlushRegister();
             return entities;
+        }
+
+        void RecursiveAfterRead(EntityTreeLayer currentLayer, ResourceAction pipeline)
+        {
+            foreach (NodeInLayer node in currentLayer)
+            {
+                var entityType = node.EntityType;
+                var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.AfterRead);
+                if (hookContainer == null) continue;
+
+                var filteredUniqueSet = CallHook(hookContainer, ResourceHook.AfterRead, new object[] { node.UniqueSet, pipeline, true }).Cast<IIdentifiable>();
+
+                var hashSetUnique = new HashSet<IIdentifiable>(filteredUniqueSet);
+                foreach (var originRelationship in node.OriginEntities)
+                {
+                    var proxy = originRelationship.Key;
+                    var previousEntities = originRelationship.Value;
+                    foreach (var prevEntity in previousEntities)
+                    {
+                        var actualValue = proxy.GetValue(prevEntity);
+
+                        if (actualValue is IEnumerable<IIdentifiable> relationshipCollection)
+                        {
+                            var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(hashSetUnique), entityType);
+                            proxy.SetValue(prevEntity, convertedCollection);
+                        }
+                        else if (actualValue is IIdentifiable relationshipSingle)
+                        {
+                            if (!hashSetUnique.Contains(actualValue))
+                            {
+                                proxy.SetValue(prevEntity, null);
+                            }
+                        }
+                    }
+                }
+
+            }
+            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
+            if (nextLayer.Any()) RecursiveAfterRead(nextLayer, pipeline);
         }
 
         /// <inheritdoc/>
@@ -135,7 +182,7 @@ namespace JsonApiDotNetCore.Services
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable
         {
-        
+
             return entities;
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using PrincipalType = System.Type;
+
 
 namespace JsonApiDotNetCore.Services
 {
@@ -16,16 +16,14 @@ namespace JsonApiDotNetCore.Services
         private readonly HashSet<IIdentifiable> _uniqueSet;
 
         public bool IsRootLayerNode { get; private set; }
-        public PrincipalType PrincipalType { get; private set; }
         public Dictionary<RelationshipProxy, List<IIdentifiable>> RelationshipGroups { get; private set; }
         public Dictionary<RelationshipProxy, List<IIdentifiable>> OriginEntities { get; private set; }
         public List<RelationshipProxy> Relationships { get; private set; }
-        public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, PrincipalType); } }
-
-        public PrincipalType EntityType { get; internal set; }
+        public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, EntityType); } }
+        public Type EntityType { get; internal set; }
 
         public NodeInLayer(
-            PrincipalType principalType,
+            Type principalType,
             HashSet<IIdentifiable> uniqueSet,
             Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByRelationship,
             Dictionary<RelationshipProxy, List<IIdentifiable>> originEntities,
@@ -34,7 +32,7 @@ namespace JsonApiDotNetCore.Services
         )
         {
             _uniqueSet = uniqueSet;
-            PrincipalType = principalType;
+            EntityType = principalType;
             RelationshipGroups = entitiesByRelationship;
             OriginEntities = originEntities;
             Relationships = relationships;
