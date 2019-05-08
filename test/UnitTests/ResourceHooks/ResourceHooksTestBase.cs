@@ -1,4 +1,5 @@
 
+using Bogus;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
@@ -12,20 +13,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace UnitTests.ResourceHooks
 {
 
     public class ResourceHooksTestBase
     {
+        protected readonly Faker<Person> _personFaker;
+        protected readonly Faker<TodoItem> _todoFaker;
+        protected readonly Faker<Tag> _tagFaker;
+        protected readonly Faker<Article> _articleFaker;
+        protected readonly Faker<ArticleTag> _articleTagFaker;
+        protected readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
+        public ResourceHooksTestBase()
+        {
+            _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.StringId = f.UniqueIndex.ToString());
+            _personFaker = new Faker<Person>().Rules((f, i) => i.StringId = f.UniqueIndex.ToString());
 
+            _articleFaker = new Faker<Article>().Rules((f, i) => i.StringId = f.UniqueIndex.ToString());
+            _articleTagFaker = new Faker<ArticleTag>();
+            _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.StringId = f.UniqueIndex.ToString());
+            _tagFaker = new Faker<Tag>().Rules((f, i) => i.StringId = f.UniqueIndex.ToString());
+        }
 
         protected List<TodoItem> CreateTodoWithOwner()
         {
-            var todoItem = new TodoItem();
+            var todoItem = _todoFaker.Generate();
+            var person = _personFaker.Generate();
             var todoList = new List<TodoItem>() { todoItem };
-            var person = new Person() { AssignedTodoItems = todoList };
+            person.AssignedTodoItems = todoList;
             todoItem.Owner = person;
             return todoList;
         }

@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Services
     /// <inheritdoc/>
     public class ResourceHookExecutor : IResourceHookExecutor
     {
+        public static readonly IdentifiableComparer Comparer = new IdentifiableComparer();
         public static readonly ResourceAction[] SingleActions =
         {
             ResourceAction.GetSingle,
@@ -49,35 +50,35 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
             return entities;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
             return entities;
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeRead<TEntity>(ResourceAction actionSource, string stringId = null) where TEntity : class, IIdentifiable
+        public virtual void BeforeRead<TEntity>(ResourceAction pipeline, string stringId = null) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
-            hookContainer?.BeforeRead(actionSource, false, stringId);
+            hookContainer?.BeforeRead(pipeline, false, stringId);
 
             var contextEntity = _graph.GetContextEntity(typeof(TEntity));
             var calledContainers = new List<Type>() { typeof(TEntity) };
             foreach (var relationshipPath in _context.IncludedRelationships)
             {
                 // TODO: Get rid of nested boolean and calledContainers, add BeforeReadRelation hook
-                RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), actionSource, calledContainers);
+                RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), pipeline, calledContainers);
             }
 
 
         }
 
-        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction actionSource, List<Type> calledContainers)
+        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction pipeline, List<Type> calledContainers)
         {
             var target = relationshipChain.First();
             var relationship = contextEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == target);
@@ -93,14 +94,14 @@ namespace JsonApiDotNetCore.Services
                 var container = _meta.GetResourceHookContainer(relationship.Type, ResourceHook.BeforeRead);
                 if (container != null)
                 {
-                    CallHook(container, ResourceHook.BeforeRead, new object[] { actionSource, true, null });
+                    CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
                 }
             }
             relationshipChain.RemoveAt(0);
             if (relationshipChain.Any())
             {
 
-                RecursiveBeforeRead(_graph.GetContextEntity(relationship.Type), relationshipChain, actionSource, calledContainers);
+                RecursiveBeforeRead(_graph.GetContextEntity(relationship.Type), relationshipChain, pipeline, calledContainers);
             }
 
         }
@@ -115,7 +116,7 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 var filteredUniqueEntities = hookContainer?.AfterRead(uniqueEntities, pipeline, false);
-                entities = entities.Intersect(filteredUniqueEntities);
+                entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
             }
             var nextLayer = _layerFactory.CreateLayer(layer);
             RecursiveAfterRead(nextLayer, pipeline);
@@ -144,12 +145,12 @@ namespace JsonApiDotNetCore.Services
 
                         if (actualValue is IEnumerable<IIdentifiable> relationshipCollection)
                         {
-                            var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(hashSetUnique), entityType);
+                            var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(hashSetUnique, Comparer), entityType);
                             proxy.SetValue(prevEntity, convertedCollection);
                         }
                         else if (actualValue is IIdentifiable relationshipSingle)
                         {
-                            if (!hashSetUnique.Contains(actualValue))
+                            if (!hashSetUnique.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, Comparer).Any());
                             {
                                 proxy.SetValue(prevEntity, null);
                             }
@@ -163,26 +164,35 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
-        {
-            FlushRegister();
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
             return entities;
         }
 
+        private IEnumerable<TEntity> LoadDbValues<TEntity>(Type entityType, IEnumerable<TEntity> entities, List<RelationshipProxy> relationships, ResourceHook hook)
+        {
+            List<TEntity> dbValues = null;
+            if (_meta.ShouldLoadDbValues(entityType, hook))
+            {
+                //dbValues = _meta.LoadDbValues(entities, relationships, entityType);
+            }
+            return dbValues ?? Enumerable.Empty<TEntity>();
+        }
+
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
             return entities;
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        {
+            return entities;
+        }
+
+        /// <inheritdoc/>
+        public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
         {
 
             return entities;
@@ -195,13 +205,13 @@ namespace JsonApiDotNetCore.Services
         /// relevant (eg AfterRead from GetSingle pipeline).
         /// </summary>
         /// <param name="returnedList"> The collection returned from the hook</param>
-        /// <param name="actionSource">The pipeine from which the hook was fired</param>
-        protected void ValidateHookResponse(object returnedList, ResourceAction actionSource = 0)
+        /// <param name="pipeline">The pipeine from which the hook was fired</param>
+        protected void ValidateHookResponse(object returnedList, ResourceAction pipeline = 0)
         {
-            if (actionSource != ResourceAction.None && SingleActions.Contains(actionSource) && ((IEnumerable)returnedList).Cast<object>().Count() > 1)
+            if (pipeline != ResourceAction.None && SingleActions.Contains(pipeline) && ((IEnumerable)returnedList).Cast<object>().Count() > 1)
             {
                 throw new ApplicationException("The returned collection from this hook may only contain one item in the case of the" +
-                    actionSource.ToString() + "pipeline");
+                    pipeline.ToString() + "pipeline");
             }
         }
 

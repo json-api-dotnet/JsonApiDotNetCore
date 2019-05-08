@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entityType">Entity type.</param>
         HashSet<IIdentifiable> UniqueInTree(IEnumerable<IIdentifiable> entities, Type entityType)
         {
-            var newEntities = new HashSet<IIdentifiable>(entities.Except(GetProcessedEntities(entityType)));
+            var newEntities = new HashSet<IIdentifiable>(entities.Except(GetProcessedEntities(entityType), ResourceHookExecutor.Comparer));
             return newEntities;
         }
 

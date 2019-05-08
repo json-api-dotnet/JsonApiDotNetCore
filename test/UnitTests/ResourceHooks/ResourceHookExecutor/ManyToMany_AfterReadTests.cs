@@ -24,19 +24,21 @@ namespace UnitTests.ResourceHooks
 
         (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
         {
-            var tagsSubset = new Faker<Tag>().Generate(3).ToList();
-            var joinsSubSet = new Faker<ArticleTag>().Generate(3).ToList();
-            var articleTagsSubset = new Article() { ArticleTags = joinsSubSet };
+            var tagsSubset = _tagFaker.Generate(3).ToList();
+            var joinsSubSet = _articleTagFaker.Generate(3).ToList();
+            var articleTagsSubset = _articleFaker.Generate();
+            articleTagsSubset.ArticleTags = joinsSubSet;
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
 
-            var allTags = new Faker<Tag>().Generate(3).ToList().Concat(tagsSubset).ToList();
-            var completeJoin = new Faker<ArticleTag>().Generate(6).ToList();
+            var allTags = _tagFaker.Generate(3).ToList().Concat(tagsSubset).ToList();
+            var completeJoin = _articleTagFaker.Generate(6).ToList();
 
-            var articleWithAllTags = new Article() { ArticleTags = completeJoin };
+            var articleWithAllTags = _articleFaker.Generate();
+            articleWithAllTags.ArticleTags = completeJoin;
 
             for (int i = 0; i < 6; i++)
             {

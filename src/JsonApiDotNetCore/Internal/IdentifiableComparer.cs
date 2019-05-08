@@ -3,21 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JsonApiDotNetCore.Hooks.Comparer
+namespace JsonApiDotNetCore.Internal
 {
     /// <summary>
     /// Compares `IIdentifiable` with each other based on ID
     /// </summary>
     /// <typeparam name="TEntity">The type to compare</typeparam>
-    public class IdentifiableComparer<TEntity> : IEqualityComparer<TEntity> where TEntity : IIdentifiable<int>
+    public class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {
-        public bool Equals(TEntity x, TEntity y)
+        public bool Equals(IIdentifiable x, IIdentifiable y)
         {
-            return x.Id == y.Id;
+            return x.StringId == y.StringId;
         }
-        public int GetHashCode(TEntity obj)
+        public int GetHashCode(IIdentifiable obj)
         {
-            return obj.Id;
+            return obj.StringId.GetHashCode();
         }
     }
 }
