@@ -112,8 +112,11 @@ namespace JsonApiDotNetCore.Services
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
             var layer = _layerFactory.CreateLayer(entities);
             var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-            var filteredUniqueEntities = hookContainer?.AfterRead(uniqueEntities, pipeline, false);
-            entities = entities.Intersect(filteredUniqueEntities);
+            if (hookContainer != null)
+            {
+                var filteredUniqueEntities = hookContainer?.AfterRead(uniqueEntities, pipeline, false);
+                entities = entities.Intersect(filteredUniqueEntities);
+            }
             var nextLayer = _layerFactory.CreateLayer(layer);
             RecursiveAfterRead(nextLayer, pipeline);
             FlushRegister();

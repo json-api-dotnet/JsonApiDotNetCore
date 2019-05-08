@@ -113,9 +113,13 @@ namespace JsonApiDotNetCore.Services
                             if (relationshipValue != null) list.Add(relationshipValue);
                             dependentEntities = (IEnumerable<IIdentifiable>)list;
                         }
-                        currentLayerEntities.AddRange(dependentEntities);
-                        AddToDependentGroups(proxy, dependentEntities);
-                        AddToPrincipalGroups(proxy, principalEntity);
+
+                        if (UniqueInTree(dependentEntities, proxy.DependentType).Any())
+                        {
+                            currentLayerEntities.AddRange(dependentEntities);
+                            AddToDependentGroups(proxy, dependentEntities);
+                            AddToPrincipalGroups(proxy, principalEntity);
+                        }
                     }
                 }
             }
@@ -131,8 +135,7 @@ namespace JsonApiDotNetCore.Services
                 var principalType = group.Key;
                 var incomingEntities = group.Value;
                 var uniqueEntities = UniqueInTree(incomingEntities, principalType);
-
-                //if (!uniqueEntities.Any()) continue; TODO check this: setting relation from [ .. ] to null ?
+                RegisterProcessedEntities(uniqueEntities, principalType);
 
                 if (!_uniqueEntities.TryGetValue(principalType, out HashSet<IIdentifiable> entities))
                 {
@@ -201,7 +204,6 @@ namespace JsonApiDotNetCore.Services
         HashSet<IIdentifiable> UniqueInTree(IEnumerable<IIdentifiable> entities, Type entityType)
         {
             var newEntities = new HashSet<IIdentifiable>(entities.Except(GetProcessedEntities(entityType)));
-            RegisterProcessedEntities(entities, entityType);
             return newEntities;
         }
 

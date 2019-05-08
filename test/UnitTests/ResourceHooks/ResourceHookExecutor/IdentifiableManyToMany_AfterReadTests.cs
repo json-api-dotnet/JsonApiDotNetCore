@@ -66,10 +66,9 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<IEnumerable<Article>>(), ResourceAction.Get, true), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
             joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), ResourceAction.Get, true), Times.Once());
             tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
-
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
         }
 
@@ -90,35 +89,9 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-
-            joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), ResourceAction.Get, true), Times.Once());
-
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
-            VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
-        }
-
-        [Fact]
-        public void AfterRead_Without_Children_Before_Hooks_Implemented()
-        {
-            // arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>();
-            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(new ResourceHook[] { ResourceHook.AfterRead });
-            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[] { ResourceHook.AfterRead });
-
-            (var contextMock, var hookExecutor, var articleResourceMock,
-                var joinResourceMock, var tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
-
-            (var articles, var joins, var tags) = CreateDummyData();
-
-            // act
-            hookExecutor.AfterRead(articles, ResourceAction.Get);
-
-            // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, true), Times.Once());
             joinResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), ResourceAction.Get, true), Times.Once());
             tagResourceMock.Verify(rd => rd.AfterRead(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
-
         }
 
         [Fact]
@@ -126,8 +99,8 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var articleDiscovery = SetDiscoverableHooks<Article>();
-            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(new ResourceHook[] { ResourceHook.BeforeRead });
-            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[] { ResourceHook.BeforeRead });
+            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(new ResourceHook[0]);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(new ResourceHook[0]);
 
             (var contextMock, var hookExecutor, var articleResourceMock,
                 var joinResourceMock, var tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
@@ -138,10 +111,8 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, true), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
-
-
         }
 
         [Fact]
@@ -161,9 +132,8 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterRead(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, true), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(articles, ResourceAction.Get, false), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
-
         }
 
         [Fact]
