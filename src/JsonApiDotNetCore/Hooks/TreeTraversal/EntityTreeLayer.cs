@@ -257,9 +257,9 @@ namespace JsonApiDotNetCore.Services
             {
                 var relationships = GetRelationships(principal);
                 var uniqueEntities = _uniqueEntities[principal];
-                //var currentLayerByRelationship = _currentEntitiesByRelationship.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
+                var currentLayerByRelationship = _currentEntitiesByRelationship?.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
                 var previousLayerByRelationship = _previousEntitiesByRelationship?.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
-                yield return new NodeInLayer(principal, uniqueEntities, null, previousLayerByRelationship, relationships, IsRootLayer);
+                yield return new NodeInLayer(principal, uniqueEntities, currentLayerByRelationship, previousLayerByRelationship, relationships, IsRootLayer);
             }
         }
 

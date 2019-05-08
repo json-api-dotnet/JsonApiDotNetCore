@@ -125,13 +125,17 @@ namespace UnitTests.ResourceHooks
         protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks = null)
             where TEntity : class, IIdentifiable
         {
-            implementedHooks = implementedHooks ?? Enum.GetValues(typeof(ResourceHook))
+            var allHooks = Enum.GetValues(typeof(ResourceHook))
                             .Cast<ResourceHook>()
                             .Where(h => h != ResourceHook.None)
-                            .ToArray();
+                            .ToArray(); ;
+            implementedHooks = implementedHooks ?? allHooks;
             var mock = new Mock<IHooksDiscovery<TEntity>>();
             mock.Setup(discovery => discovery.ImplementedHooks)
                 .Returns(implementedHooks);
+            mock.Setup(discovery => discovery.DatabaseDiffDisabledHooks)
+                .Returns(allHooks);
+
             return mock.Object;
         }
 
@@ -170,7 +174,7 @@ namespace UnitTests.ResourceHooks
                 .Returns<EntityDiff<TModel>, ResourceAction>((entityDiff, context) => entityDiff.RequestEntities)
                 .Verifiable();
             resourceDefinition
-                .Setup(rd => rd.BeforeUpdateRelation(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<IUpdatedRelationshipHelper<TModel>>()))
+                .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<IUpdatedRelationshipHelper<TModel>>()))
                 .Returns<IEnumerable<TModel>, ResourceAction, IUpdatedRelationshipHelper<TModel>>((entities, context, helper) => entities)
                 .Verifiable();
             resourceDefinition

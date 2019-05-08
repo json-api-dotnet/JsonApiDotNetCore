@@ -13,43 +13,7 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public interface IHookExecutorHelper
     {
-        /// <summary>
-        /// Shoulds the include database diff.
-        /// </summary>
-        /// <returns><c>true</c>, if include database diff was shoulded, <c>false</c> otherwise.</returns>
-        /// <param name="entityType">Entity type.</param>
-        /// <param name="hook">Hook.</param>
-        bool ShouldLoadDbValues(Type entityType, ResourceHook hook);
-
-        /// <summary>
-        /// Determines if the implemented <param name="hook"/> requires the 
-        /// EntityDiff parameter (in the hook execution) to have a populated
-        /// DatabaseEntities field.
-        /// </summary>
-        /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
-        /// <param name="container">Container.</param>
-        /// <param name="hook">Hook.</param>
-        IList GetDatabaseValues(IResourceHookContainer container, IList entities, ResourceHook hook, Type entityType);
-
-        /// <summary>
-        /// Determines if the implemented <param name="hook"/> requires the 
-        /// EntityDiff parameter (in the hook execution) to have a populated
-        /// DatabaseEntities field.
-        /// </summary>
-        /// <returns><c>true</c>, if enabled<c>false</c> otherwise.</returns>
-        /// <param name="container">Container.</param>
-        /// <param name="hook">Hook.</param>
-
-
-        /// <summary>
-        /// Retrieves all the RelationshipProxies for a given entity. This method 
-        /// is used by the HookExecutor when looping through the entities in a layer
-        /// of the breadth first traversal.
-        /// </summary>
-        /// <returns>The relationship proxies related to the particular entity</returns>
-        /// <param name="entity">The entity of intrest in breadth first traversal</param>
-        IEnumerable<RelationshipProxy> GetRelationshipsToType(Type principalType);
-
+     
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if 
         /// the ResourceDefinition has an implementation for the hook
@@ -83,30 +47,14 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="container">Container.</param>
         /// <param name="hook">Hook.</param>
         bool ShouldExecuteHook(Type targetType, ResourceHook hook);
+        /// <summary>
+        /// Shoulds the include database diff.
+        /// </summary>
+        /// <returns><c>true</c>, if include database diff was shoulded, <c>false</c> otherwise.</returns>
+        /// <param name="entityType">Entity type.</param>
+        /// <param name="hook">Hook.</param>
+        bool ShouldLoadDbValues(Type entityType, ResourceHook hook);
 
-        /// <summary>
-        /// For the types in <paramref name="nextEntityTreeLayerTypes"/>, given (a set of)
-        /// <paramref name="hook"/>s,  retrieves the relationships from 
-        /// ContextEntity and gets the resource definitions (hook containers) for
-        /// these relationships. This information if required for the breadth first
-        /// traversal of the next layer.
-        /// </summary>
-        /// <returns>The meta dict.</returns>
-        /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
-        /// <param name="hook">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, ResourceHook hook = ResourceHook.None);
-        /// <summary>
-        /// For the types in <paramref name="nextEntityTreeLayerTypes"/>, given (a set of)
-        /// <paramref name="hooks"/>s,  retrieves the relationships from 
-        /// ContextEntity and gets the resource definitions (hook containers) for
-        /// these relationships. This information if required for the breadth first
-        /// traversal of the next layer.
-        /// </summary>
-        /// <returns>The meta dict.</returns>
-        /// <param name="nextEntityTreeLayerTypes">Unique list of types to extract metadata from</param>
-        /// <param name="hooks">The target resource hook types</param>
-        Dictionary<Type, List<RelationshipProxy>> UpdateMetaInformation(IEnumerable<Type> previousLayerTypes, IEnumerable<ResourceHook> hooks);
-        IList GetInverseEntities(IEnumerable<IIdentifiable> affectedEntities, RelationshipProxy relationship);
-        IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type principal);
+        IList LoadDbValues (IList entities, List<RelationshipProxy> relationships, Type entityType);
     }
 }

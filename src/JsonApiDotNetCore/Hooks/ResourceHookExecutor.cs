@@ -133,50 +133,102 @@ namespace JsonApiDotNetCore.Services
                 if (hookContainer == null) continue;
 
                 var filteredUniqueSet = CallHook(hookContainer, ResourceHook.AfterRead, new object[] { node.UniqueSet, pipeline, true }).Cast<IIdentifiable>();
-
-                var hashSetUnique = new HashSet<IIdentifiable>(filteredUniqueSet);
-                foreach (var originRelationship in node.OriginEntities)
-                {
-                    var proxy = originRelationship.Key;
-                    var previousEntities = originRelationship.Value;
-                    foreach (var prevEntity in previousEntities)
-                    {
-                        var actualValue = proxy.GetValue(prevEntity);
-
-                        if (actualValue is IEnumerable<IIdentifiable> relationshipCollection)
-                        {
-                            var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(hashSetUnique, Comparer), entityType);
-                            proxy.SetValue(prevEntity, convertedCollection);
-                        }
-                        else if (actualValue is IIdentifiable relationshipSingle)
-                        {
-                            if (!hashSetUnique.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, Comparer).Any());
-                            {
-                                proxy.SetValue(prevEntity, null);
-                            }
-                        }
-                    }
-                }
+                Reassign(node, new HashSet<IIdentifiable>(filteredUniqueSet));
 
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
             if (nextLayer.Any()) RecursiveAfterRead(nextLayer, pipeline);
         }
 
+        private void Reassign(NodeInLayer node, HashSet<IIdentifiable> filteredEntities)
+        {
+            var principalType = node.EntityType;
+            foreach (var originRelationship in node.OriginEntities)
+            {
+                var proxy = originRelationship.Key;
+                var previousEntities = originRelationship.Value;
+                foreach (var prevEntity in previousEntities)
+                {
+                    var actualValue = proxy.GetValue(prevEntity);
+
+                    if (actualValue is IEnumerable<IIdentifiable> relationshipCollection)
+                    {
+                        var convertedCollection = TypeHelper.ConvertCollection(relationshipCollection.Intersect(filteredEntities, Comparer), principalType);
+                        proxy.SetValue(prevEntity, convertedCollection);
+                    }
+                    else if (actualValue is IIdentifiable relationshipSingle)
+                    {
+                        if (!filteredEntities.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, Comparer).Any())
+                        {
+                            proxy.SetValue(prevEntity, null);
+                        }
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
+            var layer = _layerFactory.CreateLayer(entities);
+            if (hookContainer != null)
+            {
+                List<RelationshipProxy> relationships = layer.GetRelationships(typeof(TEntity));
+                List<TEntity> uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>().ToList();
+                IEnumerable<TEntity> dbValues = (IEnumerable<TEntity>)LoadDbValues(uniqueEntities, relationships, typeof(TEntity), ResourceHook.BeforeUpdate);
+
+                var diff = new EntityDiff<TEntity>(uniqueEntities, dbValues);
+                IEnumerable<TEntity> filteredUniqueEntities = hookContainer?.BeforeUpdate(diff, pipeline);
+                entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>().ToList();
+
+
+            }
+            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
+            
+
+            foreach (NodeInLayer node in nextLayer)
+            {
+                var nestedHookcontainer = _meta.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeUpdate);
+                if (nestedHookcontainer != null)
+                {
+                    IList hookTargetValues = LoadDbValues(node.UniqueSet, node.Relationships, node.EntityType, ResourceHook.BeforeUpdateRelationship);
+
+                    IList implicitlyAffected = LoadImplicitlyAffected(node, ResourceHook.BeforeUpdateRelationship);
+                    hookTargetValues = hookTargetValues ?? node.UniqueSet;
+                    var entitiesByAffectedRelationship = node.RelationshipGroups;
+                    var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, entitiesByAffectedRelationship);
+                    var filteredEntities = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { hookTargetValues, pipeline, relationshipHelper }).Cast<IIdentifiable>();
+                    Reassign(node, new HashSet<IIdentifiable>(filteredEntities));
+                }
+            }
+            FlushRegister();
             return entities;
         }
 
-        private IEnumerable<TEntity> LoadDbValues<TEntity>(Type entityType, IEnumerable<TEntity> entities, List<RelationshipProxy> relationships, ResourceHook hook)
+        private IList LoadImplicitlyAffected(NodeInLayer node, ResourceHook hook)
         {
-            List<TEntity> dbValues = null;
+            IList entities = node.UniqueSet;
+            List<RelationshipProxy> relationship = node.Relationships;
+            Type entityType = node.EntityType;
+
             if (_meta.ShouldLoadDbValues(entityType, hook))
             {
-                //dbValues = _meta.LoadDbValues(entities, relationships, entityType);
+                var list = _meta.LoadDbValues(entities, relationships, entityType) ?? new List<IIdentifiable>();
+                return TypeHelper.ConvertCollection((IEnumerable<object>)list, entityType);
             }
-            return dbValues ?? Enumerable.Empty<TEntity>();
+            return null;
+        }
+
+        private IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type entityType, ResourceHook hook)
+        {
+            if (_meta.ShouldLoadDbValues(entityType, hook))
+            {
+                var list = _meta.LoadDbValues(entities, relationships, entityType) ?? new List<IIdentifiable>();
+                return TypeHelper.ConvertCollection((IEnumerable<object>)list, entityType);
+            }
+            return null;
+
         }
 
         /// <inheritdoc/>
