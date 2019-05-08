@@ -45,7 +45,6 @@
     <PackageReference Include="docfx.console" Version="2.33.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Hooks\" />
     <Folder Include="Hooks\TreeTraversal\" />
     <Folder Include="Hooks\Discovery\" />
   </ItemGroup>

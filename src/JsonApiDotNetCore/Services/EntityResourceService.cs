@@ -151,9 +151,12 @@ namespace JsonApiDotNetCore.Services
             {
                 entity = await _entities.GetAsync(id);
             }
-
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
+            if(!IsNull(_hookExecutor, entity))
+            {
+                entity = _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
+            }
             return MapOut(entity);
+
         }
 
         // triggered by route /articles/1/relationships/{relationshipName}
