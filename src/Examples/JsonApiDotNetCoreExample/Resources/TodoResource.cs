@@ -11,6 +11,14 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TodoResource : ResourceDefinition<TodoItem>
     {
+        public override void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null)
+        {
+            if (stringId == "1337")
+            {
+                throw new JsonApiException(403, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
+            }
+        }
+
 
         //[DatabaseValuesInDiffs(false)]
         //public override IEnumerable<TodoItem> BeforeUpdate(EntityDiff<TodoItem> entityDiff, HookExecutionContext<TodoItem> context)

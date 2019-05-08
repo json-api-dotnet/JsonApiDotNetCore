@@ -160,6 +160,38 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(newPassword, dbUser.Password);
         }
 
+        [Fact]
+        public async Task Unauthorized_TodoItem()
+        {
+            // Arrange
+            var route = $"/api/v1/todo-items/1337";
+            var httpMethod = new HttpMethod("GET");
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+        }
+
+        [Fact]
+        public async Task Unauthorized_Passport()
+        {
+            // Arrange
+            var route = $"/api/v1/people/1?include=passport";
+            var httpMethod = new HttpMethod("GET");
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+        }
+
         //[Fact]
         //public async Task Unauthorized_Article()
         //{
