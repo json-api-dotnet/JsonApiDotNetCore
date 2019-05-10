@@ -39,6 +39,7 @@ namespace JsonApiDotNetCore.Data
         /// </remarks>
         void DetachRelationshipPointers(TEntity entity);
     }
+
 }
 
 

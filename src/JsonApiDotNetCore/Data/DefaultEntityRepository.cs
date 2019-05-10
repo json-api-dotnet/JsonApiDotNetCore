@@ -399,7 +399,6 @@ namespace JsonApiDotNetCore.Data
             var relatedType = TypeHelper.GetTypeOfList(relatedEntities.GetType());
             var replaced = relatedEntities.Cast<IIdentifiable>().Select(entity => _context.GetTrackedEntity(entity) ?? entity);
             return TypeHelper.ConvertCollection(replaced, relatedType);
-
         }
 
 
@@ -447,7 +446,7 @@ namespace JsonApiDotNetCore.Data
             // variables mutated in recursive loop
             // TODO: make recursive method
             string internalRelationshipPath = null;
-            var entity = _jsonApiContext.RequestEntity;
+            var entity = _jsonApiContext.ResourceGraph.GetContextEntity(typeof(TEntity));
             for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];

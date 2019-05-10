@@ -168,9 +168,9 @@ namespace JsonApiDotNetCore.Models
 
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(EntityDiff<T> entityDiff, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction pipeline)
         {
-            return entityDiff.RequestEntities;
+            return entities;
         }
 
         /// <inheritdoc/>
@@ -197,11 +197,6 @@ namespace JsonApiDotNetCore.Models
             return entityDiff.RequestEntities;
         }
 
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdateRelationship(IEnumerable<T> entities, ResourceAction pipeline, IUpdatedRelationshipHelper<T> relationshipHelper)
-        {
-            return entities;
-        }
 
         /// <inheritdoc/>
         public virtual IEnumerable<T> AfterUpdate(IEnumerable<T> entities, HookExecutionContext<T> context)
@@ -210,7 +205,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context)
+        public virtual IEnumerable<T> BeforeDelete(IEnumerable<T> entities, ResourceAction pipeline)
         {
             return entities;
         }
@@ -221,11 +216,16 @@ namespace JsonApiDotNetCore.Models
             return entities;
         }
 
-        /// <inheritdoc/>
-        public virtual void ImplicitUpdateRelationship(IEnumerable<T> entities, RelationshipAttribute affectedRelationship)
+        public IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline)
+        {
+            return ids;
+        }
+
+        public void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline)
         {
             return;
         }
+
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's

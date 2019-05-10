@@ -39,28 +39,6 @@ namespace JsonApiDotNetCore.Internal
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
-
-        /// <inheritdoc/>
-        public IEnumerable<RelationshipProxy> GetRelationshipsToType(PrincipalType principalType)
-        {
-            foreach (PrincipalType metaKey in _meta.Keys)
-            {
-                List<RelationshipProxy> proxies = _meta[metaKey];
-
-                foreach (var proxy in proxies)
-                {
-                    /// because currentEntityTreeLayer is not type-homogeneous (which is 
-                    /// why we need to use IIdentifiable for the list type of 
-                    /// that layer), we need to check if relatedType is really 
-                    /// related to parentType. We do this through comparison of Metakey
-                    string identifier = CreateRelationshipIdentifier(proxy.Attribute, principalType);
-                    //if (proxy.RelationshipIdentifier != identifier) continue;
-                    yield return proxy;
-                }
-
-            }
-        }
-
         /// <inheritdoc/>
         public IResourceHookContainer GetResourceHookContainer(DependentType dependentType, ResourceHook hook = ResourceHook.None)
         {
@@ -113,8 +91,8 @@ namespace JsonApiDotNetCore.Internal
                     .MakeGenericMethod(entityType, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
             var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
-            return (IList)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
-
+            var values = (IList)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
+            return values;
         }
 
         public bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
@@ -140,35 +118,6 @@ namespace JsonApiDotNetCore.Internal
         {
             var discovery = GetHookDiscovery(entityType);
             return discovery.ImplementedHooks.Contains(hook);
-        }
-
-        /// <summary>
-        /// relationship attributes for the same relation are not the same object in memory, for some reason.
-        /// This identifier provides a way to compare.
-        /// </summary>
-        /// <returns>The meta key.</returns>
-        /// <param name="attr">Relationship attribute</param>
-        /// <param name="parentType">Parent type.</param>
-        protected string CreateRelationshipIdentifier(RelationshipAttribute attr, PrincipalType principalType)
-        {
-            string relationType;
-            string rightHandIdentifier;
-            if (attr is HasManyThroughAttribute manyThroughAttr)
-            {
-                relationType = "has-many-through";
-                rightHandIdentifier = manyThroughAttr.ThroughProperty.Name;
-            }
-            else if (attr is HasManyAttribute manyAttr)
-            {
-                relationType = "has-many";
-                rightHandIdentifier = manyAttr.RelationshipPath;
-            }
-            else
-            {
-                relationType = "has-one";
-                rightHandIdentifier = attr.RelationshipPath;
-            }
-            return $"{principalType.Name} {relationType} {rightHandIdentifier}";
         }
 
         /// <summary>

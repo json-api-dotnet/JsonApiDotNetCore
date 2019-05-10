@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>The (adjusted) entities to be created</returns>
         /// <param name="entities">The entities to be created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> BeforeCreate(EntityDiff<T> entityDiff, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction pipeline);
 
         /// <summary>
         /// A hook executed after creating an entity. Can be used eg. for publishing events.
@@ -82,7 +82,12 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline);
-        IEnumerable<T> BeforeUpdateRelationship(IEnumerable<T> entities, ResourceAction pipeline, IUpdatedRelationshipHelper<T> relationshipHelper);
+        IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline);
+
+
+        void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline);
+
+
 
         /// <summary>
         /// A hook executed after updating an entity. Can be used eg. for publishing an event.
@@ -99,7 +104,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> BeforeDelete(IEnumerable<T> entities, HookExecutionContext<T> context);
+        IEnumerable<T> BeforeDelete(IEnumerable<T> entities, ResourceAction pipeline);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for publishing an event.
@@ -109,12 +114,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
         IEnumerable<T> AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded);
 
-        /// <summary>
-        /// TODO: WRITE ME
-        /// </summary>
-        /// <param name="entities">The entities subjected to an implicit update</param>
-        /// <param name="context">The pipeline from which the hook was called</param>
-        void ImplicitUpdateRelationship(IEnumerable<T> entities, RelationshipAttribute affectedRelationship);
     }
 
 
@@ -249,4 +248,6 @@ namespace JsonApiDotNetCore.Services
         IEnumerable<T> BeforeDelete(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
         IEnumerable<T> AfterDelete(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context, bool succeeded);
     }
+
+
 }

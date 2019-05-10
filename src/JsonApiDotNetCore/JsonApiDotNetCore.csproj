@@ -44,9 +44,4 @@
   <ItemGroup Condition="'$(GenerateDocumentation)' == 'true'">
     <PackageReference Include="docfx.console" Version="2.33.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hooks\TreeTraversal\" />
-    <Folder Include="Hooks\Discovery\" />
-    <Folder Include="Hooks\Comparer\" />
-  </ItemGroup>
 </Project>

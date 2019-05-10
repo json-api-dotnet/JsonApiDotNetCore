@@ -13,11 +13,11 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class NodeInLayer
     {
-        private readonly HashSet<IIdentifiable> _uniqueSet;
+        private HashSet<IIdentifiable> _uniqueSet;
 
         public bool IsRootLayerNode { get; private set; }
-        public Dictionary<RelationshipProxy, List<IIdentifiable>> RelationshipGroups { get; private set; }
-        public Dictionary<RelationshipProxy, List<IIdentifiable>> OriginEntities { get; private set; }
+        public Dictionary<RelationshipProxy, List<IIdentifiable>> EntitiesByRelationships { get; private set; }
+        public Dictionary<RelationshipProxy, List<IIdentifiable>> PrincipalEntitiesByRelationships { get; private set; }
         public List<RelationshipProxy> Relationships { get; private set; }
         public IList UniqueSet { get { return TypeHelper.ConvertCollection(_uniqueSet, EntityType); } }
         public Type EntityType { get; internal set; }
@@ -25,16 +25,16 @@ namespace JsonApiDotNetCore.Services
         public NodeInLayer(
             Type principalType,
             HashSet<IIdentifiable> uniqueSet,
-            Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByRelationship,
-            Dictionary<RelationshipProxy, List<IIdentifiable>> originEntities,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByRelationships,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> principalEntitiesByRelationships,
             List<RelationshipProxy> relationships,
             bool isRootLayerNode
         )
         {
             _uniqueSet = uniqueSet;
             EntityType = principalType;
-            RelationshipGroups = entitiesByRelationship;
-            OriginEntities = originEntities;
+            EntitiesByRelationships = entitiesByRelationships;
+            PrincipalEntitiesByRelationships = principalEntitiesByRelationships;
             Relationships = relationships;
             IsRootLayerNode = isRootLayerNode;
         }
@@ -43,8 +43,11 @@ namespace JsonApiDotNetCore.Services
 
         public void UpdateUniqueSet(IEnumerable filteredUniqueSet)
         {
-            var casted = new HashSet<IIdentifiable>(filteredUniqueSet.Cast<IIdentifiable>());
-            _uniqueSet.IntersectWith(casted);
+            var casted = filteredUniqueSet.Cast<IIdentifiable>().ToList();
+            _uniqueSet = new HashSet<IIdentifiable>(_uniqueSet.Intersect(casted, ResourceHookExecutor.Comparer));
+
+            EntitiesByRelationships = EntitiesByRelationships.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Intersect(casted, ResourceHookExecutor.Comparer).ToList());
+
         }
     }
 }

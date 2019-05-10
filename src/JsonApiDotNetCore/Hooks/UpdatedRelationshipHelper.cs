@@ -11,7 +11,6 @@ namespace JsonApiDotNetCore.Services
 
     public interface IUpdatedRelationshipHelper<TDependent> where TDependent : class, IIdentifiable
     {
-        Dictionary<RelationshipAttribute, List<TDependent>> AffectedRelationships();
         Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith<TPrincipal>() where TPrincipal : class, IIdentifiable;
         Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith(Type principalType);
     }
@@ -19,6 +18,9 @@ namespace JsonApiDotNetCore.Services
     public class UpdatedRelationshipHelper<TDependent> : IUpdatedRelationshipHelper<TDependent> where TDependent : class, IIdentifiable
     {
         private readonly Dictionary<RelationshipProxy, List<TDependent>> _groups;
+        public Dictionary<RelationshipAttribute, List<TDependent>> ImplicitUpdates { get; }
+
+
         public UpdatedRelationshipHelper(Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByAffectedRelationship)
         {
             _groups = entitiesByAffectedRelationship.ToDictionary(p => p.Key, p => p.Value.Cast<TDependent>().ToList());
@@ -38,5 +40,6 @@ namespace JsonApiDotNetCore.Services
         {
             return _groups?.Where( p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key.Attribute, p => p.Value);
         }
+
     }
 }

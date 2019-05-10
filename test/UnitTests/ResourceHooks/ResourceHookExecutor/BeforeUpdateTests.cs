@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
@@ -35,7 +36,7 @@ namespace UnitTests.ResourceHooks
 
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TodoItem>>(), ResourceAction.Patch), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<Person>>(), ResourceAction.Patch, It.IsAny<IUpdatedRelationshipHelper<Person>>()), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<string>>(), It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -53,7 +54,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourceAction.Patch);
 
             // assert
-            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<Person>>(), ResourceAction.Patch, It.IsAny<IUpdatedRelationshipHelper<Person>>()), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<string>>(), It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
