@@ -257,19 +257,24 @@ namespace JsonApiDotNetCore.Services
                         Reassign(node);
                     }
                 }
-                nestedHookcontainer = _meta.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeImplicitUpdateRelationship);
-                if (nestedHookcontainer != null)
+
+                if (pipeline != ResourceAction.Create)
                 {
-                    var uniqueEntities = node.UniqueSet.Cast<IIdentifiable>().ToList();
-                    var entityType = node.EntityType;
-                    Dictionary<RelationshipProxy, List<IIdentifiable>> relationships = node.PrincipalEntitiesByRelationships;
-                    Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(relationships, uniqueEntities);
-                    if (implicitlyAffectedDependents.Any())
+                    nestedHookcontainer = _meta.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeImplicitUpdateRelationship);
+                    if (nestedHookcontainer != null)
                     {
-                        var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, implicitlyAffectedDependents);
-                        CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+                        var uniqueEntities = node.UniqueSet.Cast<IIdentifiable>().ToList();
+                        var entityType = node.EntityType;
+                        Dictionary<RelationshipProxy, List<IIdentifiable>> relationships = node.PrincipalEntitiesByRelationships;
+                        Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(relationships, uniqueEntities);
+                        if (implicitlyAffectedDependents.Any())
+                        {
+                            var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, implicitlyAffectedDependents);
+                            CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+                        }
                     }
                 }
+
 
 
                 if (node.EntitiesByRelationships.Any())
