@@ -16,6 +16,9 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnException(ExceptionContext context)
         {
+            if (context.HttpContext.Request.Headers[Constants.AcceptHeader] != Constants.ContentType)
+                return;
+
             _logger?.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
 
             var jsonApiException = JsonApiExceptionFactory.GetException(context.Exception);
