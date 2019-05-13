@@ -13,9 +13,9 @@ namespace JsonApiDotNetCore.Formatters
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            var contentTypeString = context.HttpContext.Request.ContentType;
+            var acceptString = context.HttpContext.Request.Headers["Accept"];
 
-            return string.IsNullOrEmpty(contentTypeString) || contentTypeString == Constants.ContentType;
+            return acceptString == Constants.ContentType;
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
