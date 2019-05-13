@@ -51,6 +51,11 @@ namespace JsonApiDotNetCore.Services
                         if (method.DeclaringType == targetType)
                         {
                             implementedHooks.Add(hook);
+                            if (hook == ResourceHook.BeforeImplicitUpdateRelationship)
+                            {
+                                diffEnabledHooks.Add(hook);
+                                continue;
+                            }
                             var attr = method.GetCustomAttributes(true).OfType<DatabaseValuesInDiffs>().SingleOrDefault();
                             if (attr != null)
                             {
@@ -62,8 +67,8 @@ namespace JsonApiDotNetCore.Services
 
                 }
                 ImplementedHooks = implementedHooks.ToArray();
-                DatabaseDiffEnabledHooks = diffEnabledHooks.ToArray();
                 DatabaseDiffDisabledHooks = diffDisabledHooks.ToArray();
+                DatabaseDiffEnabledHooks = diffEnabledHooks.ToArray();
             } catch (Exception e)
             {
                 throw new JsonApiSetupException($@"Incorrect resource hook setup. For a given model of type TEntity, 

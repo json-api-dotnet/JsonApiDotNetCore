@@ -34,9 +34,9 @@ namespace UnitTests.ResourceHooks
         protected readonly Faker<Article> _articleFaker;
         protected readonly Faker<ArticleTag> _articleTagFaker;
         protected readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
+        protected readonly Faker<Passport> _passportFaker;
         public ResourceHooksTestBase()
         {
-
             AllHooks = Enum.GetValues(typeof(ResourceHook))
                 .Cast<ResourceHook>()
                 .Where(h => h != ResourceHook.None)
@@ -51,6 +51,8 @@ namespace UnitTests.ResourceHooks
             _articleTagFaker = new Faker<ArticleTag>();
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _tagFaker = new Faker<Tag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+
+            _passportFaker = new Faker<Passport>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
         }
 
         protected List<TodoItem> CreateTodoWithOwner()
@@ -85,7 +87,6 @@ namespace UnitTests.ResourceHooks
             CreateTestObjects<TMain, TNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TNested> nestedDiscovery = null,
-            Action<Mock<IJsonApiContext>> optionalMockAction = null,
             DbContextOptions<AppDbContext> repoDbContextOptions = null
             )
             where TMain : class, IIdentifiable<int>
@@ -97,8 +98,6 @@ namespace UnitTests.ResourceHooks
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
-
-            optionalMockAction?.Invoke(context);
 
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
@@ -116,7 +115,8 @@ namespace UnitTests.ResourceHooks
             CreateTestObjects<TMain, TFirstNested, TSecondNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
-            IHooksDiscovery<TSecondNested> secondNestedDiscovery = null
+            IHooksDiscovery<TSecondNested> secondNestedDiscovery = null,
+            DbContextOptions<AppDbContext> repoDbContextOptions = null
             )
             where TMain : class, IIdentifiable<int>
             where TFirstNested : class, IIdentifiable<int>
@@ -130,12 +130,14 @@ namespace UnitTests.ResourceHooks
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
 
-            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery, context.Object);
+            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+
+            SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery, context.Object, dbContext);
             var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
             var hookExecutor = new ResourceHookExecutor(meta, context.Object, ResourceGraph.Instance);
 
-            SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object, firstNestedDiscovery, context.Object);
-            SetupProcessorFactoryForResourceDefinition(processorFactory, secondNestedResource.Object, secondNestedDiscovery, context.Object);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object, firstNestedDiscovery, context.Object, dbContext);
+            SetupProcessorFactoryForResourceDefinition(processorFactory, secondNestedResource.Object, secondNestedDiscovery, context.Object, dbContext);
 
             return (context, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }
@@ -207,6 +209,9 @@ namespace UnitTests.ResourceHooks
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>(), It.IsAny<bool>()))
+                .Verifiable();
+            resourceDefinition
+                .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
                 .Verifiable();
         }
 

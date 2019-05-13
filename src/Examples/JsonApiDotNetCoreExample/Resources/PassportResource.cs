@@ -18,5 +18,25 @@ namespace JsonApiDotNetCoreExample.Resources
 
             }
         }
+
+        public override void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<Passport> relationshipHelper, ResourceAction pipeline)
+        {
+            relationshipHelper.GetEntitiesRelatedWith<Person>()
+                        .ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
+
+        }
+
+        private void DoesNotTouchLockedPassports(IEnumerable<Passport> entities)
+        {
+            foreach (var entity in entities ?? Enumerable.Empty<Passport>())
+            {
+                if (entity.IsLocked)
+                {
+                    throw new JsonApiException(403, "Not allowed to update fields or relations of locked persons", new UnauthorizedAccessException());
+                }
+            }
+        }
+
     }
+
 }

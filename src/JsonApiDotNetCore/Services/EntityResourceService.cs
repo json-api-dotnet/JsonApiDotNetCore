@@ -105,9 +105,9 @@ namespace JsonApiDotNetCore.Services
         {
 
             var entity = await _entities.GetAsync(id);
-            _hookExecutor?.BeforeDelete(AsList(entity), ResourceAction.Delete);
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourceAction.Delete);
             var succeeded = await _entities.DeleteAsync(entity);
-            _hookExecutor?.AfterDelete(AsList(entity), ResourceAction.Delete, succeeded);
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourceAction.Delete, succeeded);
             return succeeded;
         }
 

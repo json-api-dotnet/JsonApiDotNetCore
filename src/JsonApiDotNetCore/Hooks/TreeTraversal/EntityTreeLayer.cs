@@ -13,11 +13,17 @@ namespace JsonApiDotNetCore.Services
     {
         private readonly IHookExecutorHelper _meta;
         private readonly IResourceGraph _graph;
+        private readonly IJsonApiContext _context;
         private readonly Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
 
 
-        public EntityTreeLayerFactory(IHookExecutorHelper meta, IResourceGraph graph, Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
+        public EntityTreeLayerFactory(
+            IHookExecutorHelper meta, 
+            IResourceGraph graph, 
+            IJsonApiContext context,
+            Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
         {
+            _context = context;
             _meta = meta;
             _graph = graph;
             _processedEntities = processedEntities;
@@ -25,13 +31,13 @@ namespace JsonApiDotNetCore.Services
 
         public EntityTreeLayer CreateLayer(EntityTreeLayer currentLayer)
         {
-            var nextLayer = new EntityTreeLayer(currentLayer, _meta, _graph, _processedEntities);
+            var nextLayer = new EntityTreeLayer(currentLayer, _meta, _graph, _context, _processedEntities);
             return nextLayer;
         }
 
         public EntityTreeLayer CreateLayer(IEnumerable<IIdentifiable> currentLayerEntities)
         {
-            var layer = new EntityTreeLayer(currentLayerEntities, _meta, _graph, _processedEntities);
+            var layer = new EntityTreeLayer(currentLayerEntities, _meta, _graph, _context, _processedEntities);
             return layer;
         }
     }
@@ -42,10 +48,11 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class EntityTreeLayer : IEnumerable<NodeInLayer>
     {
-        static readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
+        private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
 
         private readonly IHookExecutorHelper _meta;
         private readonly IResourceGraph _graph;
+        private readonly IJsonApiContext _context;
 
         private readonly Dictionary<PrincipalType, HashSet<IIdentifiable>> _processedEntities;
         private readonly Dictionary<PrincipalType, HashSet<IIdentifiable>> _uniqueEntities;
@@ -59,15 +66,16 @@ namespace JsonApiDotNetCore.Services
         public EntityTreeLayer(
             IEnumerable<IIdentifiable> currentLayerEntities,
             IHookExecutorHelper meta, 
-            IResourceGraph graph, 
+            IResourceGraph graph,
+            IJsonApiContext context,
             Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
         {
             IsRootLayer = true;
             _meta = meta;
             _graph = graph;
+            _context = context;
             _processedEntities = processedEntities;
             _uniqueEntities = new Dictionary<PrincipalType, HashSet<IIdentifiable>>();
-
 
             ProcessEntities(currentLayerEntities);
         }
@@ -76,12 +84,14 @@ namespace JsonApiDotNetCore.Services
         public EntityTreeLayer(
             EntityTreeLayer currentLayer,
             IHookExecutorHelper meta, 
-            IResourceGraph graph, 
+            IResourceGraph graph,
+            IJsonApiContext context,
             Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
         {
             IsRootLayer = false;
             _meta = meta;
             _graph = graph;
+            _context = context;
             _processedEntities = processedEntities;
             _uniqueEntities = new Dictionary<PrincipalType, HashSet<IIdentifiable>>();
 
@@ -114,7 +124,7 @@ namespace JsonApiDotNetCore.Services
                             dependentEntities = (IEnumerable<IIdentifiable>)list;
                         }
 
-                        if (UniqueInTree(dependentEntities, proxy.DependentType).Any())
+                        if (proxy.IsContextRelation || UniqueInTree(dependentEntities, proxy.DependentType).Any())
                         {
                             currentLayerEntities.AddRange(dependentEntities);
                             AddToDependentGroups(proxy, dependentEntities);
@@ -128,6 +138,7 @@ namespace JsonApiDotNetCore.Services
 
         public void ProcessEntities(IEnumerable<IIdentifiable> currentLayerEntities)
         {
+            // lege dict aanmaken hier voor wanneer relationship naar null wordt gezet.
             var incomingEntitiesByType = currentLayerEntities.GroupBy(e => e.GetType()).ToDictionary(g => g.Key, g => new HashSet<IIdentifiable>(g));
 
             foreach ( var group in incomingEntitiesByType)
@@ -150,7 +161,7 @@ namespace JsonApiDotNetCore.Services
                     if (!RelationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
                     {
                         DependentType dependentType = GetDependentTypeFromRelationship(attr);
-                        var isContextRelation = false;
+                        var isContextRelation = _context.RelationshipsToUpdate?.ContainsKey(attr);
                         var proxy = new RelationshipProxy(attr, dependentType,
                                 principalType, isContextRelation != null && (bool)isContextRelation);
                         RelationshipProxies[attr] = proxy;
@@ -252,14 +263,23 @@ namespace JsonApiDotNetCore.Services
 
         public IEnumerator<NodeInLayer> GetEnumerator()
         {
-            var principalTypes = _uniqueEntities.Keys;
-            foreach (PrincipalType principal in principalTypes)
+            List<DependentType> types = null;
+            if (_currentEntitiesByRelationship != null && _currentEntitiesByRelationship.Any())
             {
-                var relationships = GetRelationships(principal);
-                var uniqueEntities = _uniqueEntities[principal];
-                var currentLayerByRelationship = _currentEntitiesByRelationship?.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
-                var previousLayerByRelationship = _previousEntitiesByRelationship?.Where(p => p.Key.DependentType == principal).ToDictionary(p => p.Key, p => p.Value);
-                yield return new NodeInLayer(principal, uniqueEntities, currentLayerByRelationship, previousLayerByRelationship, relationships, IsRootLayer);
+                types = _currentEntitiesByRelationship.Select(kvp => kvp.Key.DependentType).ToList();
+            } else
+            {
+                types = _uniqueEntities.Keys.ToList();
+            }
+            foreach (PrincipalType dependent in types)
+            {
+                var relationships = GetRelationships(dependent);
+                if (!_uniqueEntities.TryGetValue(dependent, out HashSet<IIdentifiable> uniqueEntities)) {
+                    uniqueEntities = new HashSet<IIdentifiable>();
+                }
+                var currentLayerByRelationship = _currentEntitiesByRelationship?.Where(p => p.Key.DependentType == dependent).ToDictionary(p => p.Key, p => p.Value);
+                var previousLayerByRelationship = _previousEntitiesByRelationship?.Where(p => p.Key.DependentType == dependent).ToDictionary(p => p.Key, p => p.Value);
+                yield return new NodeInLayer(dependent, uniqueEntities, currentLayerByRelationship, previousLayerByRelationship, relationships, IsRootLayer);
             }
         }
 

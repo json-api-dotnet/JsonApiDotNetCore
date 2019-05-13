@@ -84,10 +84,7 @@ namespace JsonApiDotNetCore.Services
         IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline);
         IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline);
 
-
         void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline);
-
-
 
         /// <summary>
         /// A hook executed after updating an entity. Can be used eg. for publishing an event.
@@ -234,20 +231,6 @@ namespace JsonApiDotNetCore.Services
         IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable;
     }
 
-
-
-    public interface IResourceHookContainerNew<T> : IResourceHookContainer where T : class, IIdentifiable
-    {
-        void BeforeRead(HookExecutionContext<T> context, string stringId = null);
-        IEnumerable<T> AfterRead(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
-        IEnumerable<T> BeforeCreate(IEnumerable<T> entitiesFromRequest, HookExecutionContext<T> context);
-        IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, HookExecutionContext<T> context);
-        IEnumerable<T> BeforeUpdateRelationship(IEnumerable<T> entities, HookExecutionContext<T> context);
-        IEnumerable<T> AfterCreate(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
-        IEnumerable<T> AfterUpdate(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
-        IEnumerable<T> BeforeDelete(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context);
-        IEnumerable<T> AfterDelete(IEnumerable<T> entitiesInDb, HookExecutionContext<T> context, bool succeeded);
-    }
 
 
 }

@@ -62,9 +62,15 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(p => p.Passport)
                 .WithOne(p => p.Person)
                 .HasForeignKey<Person>(p => p.PassportId);
+
+            modelBuilder.Entity<Passport>()
+                .HasOne(p => p.Person)
+                .WithOne(p => p.Passport)
+                .HasForeignKey<Person>(p => p.PassportId);
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<Passport> Passports { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
         public DbSet<CamelCasedModel> CamelCasedModels { get; set; }

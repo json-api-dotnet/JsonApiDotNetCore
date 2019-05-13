@@ -1,5 +1,6 @@
 ﻿using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
@@ -68,7 +69,7 @@ namespace UnitTests.ResourceHooks
                 Times.Once());
 
             ownerResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
-                It.Is<IUpdatedRelationshipHelper<Person>>( rh => PersonCheck(lastName + lastName, rh)),
+                It.Is<IUpdatedRelationshipHelper<Person>>(rh => PersonCheck(lastName + lastName, rh)),
                 ResourceAction.Patch),
                 Times.Once());
 
@@ -77,7 +78,37 @@ namespace UnitTests.ResourceHooks
 
 
         [Fact]
-        public void BeforeUpdate_Without_Parent_Hook_Implemented() 
+        public void BeforeUpdate_Deleting_Relationship() // TODO l=3 implicit needs to be tested here too
+        {
+
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
+            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
+            (var contextMock, var hookExecutor, var todoResourceMock,
+                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
+
+            var attr = ResourceGraph.Instance.GetContextEntity(typeof(TodoItem)).Relationships.Single(r => r.PublicRelationshipName == "owner");
+            contextMock.Setup(c => c.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
+
+            // act
+            var todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
+            hookExecutor.BeforeUpdate(todoList, ResourceAction.Patch);
+
+
+            // assert
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<EntityDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourceAction.Patch), Times.Once());
+
+
+            ownerResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
+                It.Is<IUpdatedRelationshipHelper<Person>>(rh => PersonCheck(lastName + lastName, rh)),
+                ResourceAction.Patch),
+                Times.Once());
+
+            VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
+        }
+
+
+        [Fact]
+        public void BeforeUpdate_Without_Parent_Hook_Implemented()
         {
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
             var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);

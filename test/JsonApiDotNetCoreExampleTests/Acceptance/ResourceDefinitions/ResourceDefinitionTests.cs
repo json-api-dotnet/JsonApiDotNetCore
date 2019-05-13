@@ -297,125 +297,174 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         ///// also a check for the lockedTodo, because we're implicitly updating 
         ///// its foreign key.
         ///// </summary>
-        //[Fact]
-        //public async Task Cascade_Permission_Error__Create_ToOne_Relationship()
-        //{
-        //    // Arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    var lockedPerson = _personFaker.Generate();
-        //    lockedPerson.IsLocked = true;
-        //    var passport = new Passport();
-        //    lockedPerson.Passport = passport;
-        //    context.People.AddRange(lockedPerson);
-        //    await context.SaveChangesAsync();
+        [Fact]
+        public async Task Cascade_Permission_Error__Create_ToOne_Relationship()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var lockedPerson = _personFaker.Generate();
+            lockedPerson.IsLocked = true;
+            var passport = new Passport();
+            lockedPerson.Passport = passport;
+            context.People.AddRange(lockedPerson);
+            await context.SaveChangesAsync();
 
-        //    var unlockedPerson = _personFaker.Generate();
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "passport", new
+                            {
+                                data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
+                            }
+                        }
+                    }
+                }
+            };
 
-        //    var content = new
-        //    {
-        //        data = new
-        //        {
-        //            type = "people",
-        //            relationships = new Dictionary<string, object>
-        //            {
-        //                { "passport", new
-        //                    {
-        //                        data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    };
+            var httpMethod = new HttpMethod("POST");
+            var route = $"/api/v1/people";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    var httpMethod = new HttpMethod("POST");
-        //    var route = $"/api/v1/people";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-        //    string serializedContent = JsonConvert.SerializeObject(content);
-        //    request.Content = new StringContent(serializedContent);
-        //    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        //    // Act
-        //    var response = await _fixture.Client.SendAsync(request);
+            // Assert
 
-        //    // Assert
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-        //}
-
-        //[Fact]
-        //public async Task Cascade_Permission_Error__Updating_ToOne_Relationship()
-        //{
-        //    // Arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    var lockedPerson = _personFaker.Generate();
-        //    lockedPerson.IsLocked = true;
-        //    var passport = new Passport();
-        //    lockedPerson.Passport = passport;
-        //    context.People.AddRange(lockedPerson);
-        //    var unlockedPerson = _personFaker.Generate();
-        //    context.People.Add(unlockedPerson);
-        //    await context.SaveChangesAsync();
+            // should throw 403 in PersonResource implicit hook
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+        }
 
 
-        //    var content = new
-        //    {
-        //        data = new
-        //        {
-        //            type = "people",
-        //            id = unlockedPerson.Id,
-        //            relationships = new Dictionary<string, object>
-        //            {
-        //                { "passport", new
-        //                    {
-        //                        data = new { type = "passports", id = $"{lockedPerson.Passport.Id}" }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    };
+        [Fact]
+        public async Task Cascade_Permission_Error__Updating_ToOne_Relationship()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var person = _personFaker.Generate();
+            var passport = new Passport() { IsLocked = true };
+            person.Passport = passport;
+            context.People.AddRange(person);
+            var newPassport = new Passport() { };
+            context.Passports.Add(newPassport);
+            await context.SaveChangesAsync();
 
-        //    var httpMethod = new HttpMethod("PATCH");
-        //    var route = $"/api/v1/people/{unlockedPerson.Id}";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "passport", new
+                            {
+                                data = new { type = "passports", id = $"{newPassport.Id}" }
+                            }
+                        }
+                    }
+                }
+            };
 
-        //    string serializedContent = JsonConvert.SerializeObject(content);
-        //    request.Content = new StringContent(serializedContent);
-        //    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // Act
-        //    var response = await _fixture.Client.SendAsync(request);
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-        //    // Assert
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        //}
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-        //[Fact]
-        //public async Task Cascade_Permission_Error__Delete_ToOne_Relationship()
-        //{
-        //    // Arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    var lockedPerson = _personFaker.Generate();
-        //    lockedPerson.IsLocked = true;
-        //    var passport = new Passport();
-        //    lockedPerson.Passport = passport;
-        //    context.People.AddRange(lockedPerson);
-        //    await context.SaveChangesAsync();
+        }
 
-        //    var httpMethod = new HttpMethod("DELETE");
-        //    var route = $"/api/v1/passports/{lockedPerson.PassportId}";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+        [Fact]
+        public async Task Cascade_Permission_Error__Updating_ToOne_Relationship_Deletion()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var person = _personFaker.Generate();
+            var passport = new Passport() { IsLocked = true };
+            person.Passport = passport;
+            context.People.AddRange(person);
+            var newPassport = new Passport() { };
+            context.Passports.Add(newPassport);
+            await context.SaveChangesAsync();
 
-        //    // Act
-        //    var response = await _fixture.Client.SendAsync(request);
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "passport", new
+                            {
+                                data = (object)null
+                            }
+                        }
+                    }
+                }
+            };
 
-        //    // Assert
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //}
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+        }
+
+
+
+        [Fact]
+        public async Task Cascade_Permission_Error__Delete_ToOne_Relationship()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var lockedPerson = _personFaker.Generate();
+            lockedPerson.IsLocked = true;
+            var passport = new Passport();
+            lockedPerson.Passport = passport;
+            context.People.AddRange(lockedPerson);
+            await context.SaveChangesAsync();
+
+            var httpMethod = new HttpMethod("DELETE");
+            var route = $"/api/v1/passports/{lockedPerson.PassportId}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+        }
+
+
 
         //[Fact]
         //public async Task Cascade_Permission_Error__Create_ToMany_Relationship()

@@ -25,8 +25,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>();
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, NoHooks);
+            var personDiscovery = SetDiscoverableHooks<Person>(AllHooksNoImplicit, NoHooks);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
@@ -44,8 +44,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_Without_Parent_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-            var personDiscovery = SetDiscoverableHooks<Person>();
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
+            var personDiscovery = SetDiscoverableHooks<Person>(AllHooksNoImplicit, NoHooks);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
@@ -62,8 +62,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_Without_Child_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>(new ResourceHook[0]);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, NoHooks);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
@@ -81,8 +81,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_Without_Any_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-            var personDiscovery = SetDiscoverableHooks<Person>(new ResourceHook[0]);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();

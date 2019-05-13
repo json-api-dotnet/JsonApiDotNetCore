@@ -6,6 +6,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using PrincipalType = System.Type;
+using DependentType = System.Type;
 
 
 namespace JsonApiDotNetCore.Services
@@ -46,7 +47,7 @@ namespace JsonApiDotNetCore.Services
             _context = context;
             _graph = graph;
             _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
-            _layerFactory = new EntityTreeLayerFactory(meta, graph, _processedEntities);
+            _layerFactory = new EntityTreeLayerFactory(meta, graph, _context, _processedEntities);
         }
 
         /// <inheritdoc/>
@@ -202,6 +203,40 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
+        /// <inheritdoc/>
+        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        {
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
+            var layer = _layerFactory.CreateLayer(entities);
+            List<RelationshipProxy> relationships = layer.GetRelationships(typeof(TEntity));
+            if (hookContainer != null)
+            {
+                List<TEntity> uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>().ToList();
+                IEnumerable<TEntity> filteredUniqueEntities = hookContainer.BeforeDelete(uniqueEntities, pipeline);
+                entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>().ToList();
+            }
+
+            var relationshipsByDependentType = relationships.GroupBy(proxy => proxy.DependentType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
+
+            foreach (var group in relationshipsByDependentType)
+            {
+                var dependentType = group.Key;
+                var nestedHookcontainer = _meta.GetResourceHookContainer(dependentType, ResourceHook.BeforeImplicitUpdateRelationship);
+                if (nestedHookcontainer == null) continue;
+                var implicitlyAffectedRelationships = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+                var castedEntities = entities.Cast<IIdentifiable>().ToList();
+                group.Value.ForEach(proxy => implicitlyAffectedRelationships.Add(proxy, castedEntities));
+                Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(implicitlyAffectedRelationships);
+                var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), dependentType, implicitlyAffectedDependents);
+                CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+            }
+
+            FlushRegister();
+            return entities;
+
+        }
+
+
         private void BeforeUpdateRelationship(ResourceAction pipeline, EntityTreeLayer layer)
         {
             foreach (NodeInLayer node in layer)
@@ -210,37 +245,42 @@ namespace JsonApiDotNetCore.Services
                 if (nestedHookcontainer != null)
                 {
                     IEnumerable<IIdentifiable> uniqueEntities = node.UniqueSet.Cast<IIdentifiable>();
-                    var uniqueIds = uniqueEntities.Select(e => e.StringId);
-                    IEnumerable<IIdentifiable> dbValues = LoadDbValues(node.UniqueSet, node.Relationships, node.EntityType, ResourceHook.BeforeUpdateRelationship)?.Cast<IIdentifiable>();
-                    Dictionary<RelationshipProxy, List<IIdentifiable>> dependentsByRelationships = node.EntitiesByRelationships;
+                    if (uniqueEntities.Any())
+                    {
+                        var uniqueIds = uniqueEntities.Select(e => e.StringId);
+                        IEnumerable<IIdentifiable> dbValues = LoadDbValues(node.UniqueSet, node.Relationships, node.EntityType, ResourceHook.BeforeUpdateRelationship)?.Cast<IIdentifiable>();
+                        Dictionary<RelationshipProxy, List<IIdentifiable>> dependentsByRelationships = node.EntitiesByRelationships;
 
-
-                    var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, dependentsByRelationships);
-                    var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { uniqueIds, relationshipHelper, pipeline }).Cast<string>();
-                    var allowedUniqueEntities = uniqueEntities.Where(ue => allowedIds.Contains(ue.StringId));
-                    node.UpdateUniqueSet(allowedUniqueEntities);
-                    Reassign(node);
+                        var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, dependentsByRelationships);
+                        var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { uniqueIds, relationshipHelper, pipeline }).Cast<string>();
+                        var allowedUniqueEntities = uniqueEntities.Where(ue => allowedIds.Contains(ue.StringId));
+                        node.UpdateUniqueSet(allowedUniqueEntities);
+                        Reassign(node);
+                    }
                 }
                 nestedHookcontainer = _meta.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeImplicitUpdateRelationship);
                 if (nestedHookcontainer != null)
                 {
-                    Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(node, ResourceHook.BeforeImplicitUpdateRelationship);
-                    var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, implicitlyAffectedDependents);
-                    CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+                    var uniqueEntities = node.UniqueSet.Cast<IIdentifiable>().ToList();
+                    var entityType = node.EntityType;
+                    Dictionary<RelationshipProxy, List<IIdentifiable>> relationships = node.PrincipalEntitiesByRelationships;
+                    Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(relationships, uniqueEntities);
+                    if (implicitlyAffectedDependents.Any())
+                    {
+                        var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, implicitlyAffectedDependents);
+                        CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+                    }
                 }
 
             }
         }
 
-        private Dictionary<RelationshipProxy, List<IIdentifiable>> LoadImplicitlyAffected(NodeInLayer node, ResourceHook hook)
+        private Dictionary<RelationshipProxy, List<IIdentifiable>> LoadImplicitlyAffected(
+            Dictionary<RelationshipProxy, List<IIdentifiable>> relationships, List<IIdentifiable> dependentEntities = null)
         {
-            List<IIdentifiable> dependentEntities = node.UniqueSet.Cast<IIdentifiable>().ToList();
-            Type entityType = node.EntityType;
 
-            //if (_meta.ShouldLoadDbValues(entityType, hook))
-            //{
-            var implicitlyAffected = new Dictionary<RelationshipProxy, HashSet<IIdentifiable>>();
-            node.PrincipalEntitiesByRelationships.Where(p => !(p.Key.Attribute is HasManyThroughAttribute)).ToList().ForEach(kvp =>
+            var implicitlyAffected = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+            relationships.Where(p => !(p.Key.Attribute is HasManyThroughAttribute)).ToList().ForEach(kvp =>
             {
                 var relationship = kvp.Key;
                 var principalEntities = kvp.Value;
@@ -248,23 +288,35 @@ namespace JsonApiDotNetCore.Services
                 var includedPrincipals = _meta.LoadDbValues(principalEntities, new List<RelationshipProxy>() { relationship }, principalEntityType).Cast<IIdentifiable>().ToList();
                 foreach (var e in includedPrincipals)
                 {
-                    var dbDependentEntity = (IIdentifiable)relationship.GetValue(e);
-                    if (dbDependentEntity != null && !dependentEntities.Any(de => de.StringId == e.StringId))
+                    IList dbDependentEntityList = null;
+                    var relationshipValue = relationship.GetValue(e);
+                    if (!(relationshipValue is IList))
                     {
-                        if (!implicitlyAffected.TryGetValue(relationship, out HashSet<IIdentifiable> affected))
+                        dbDependentEntityList = TypeHelper.CreateListFor(relationship.DependentType);
+                        if (relationshipValue != null) dbDependentEntityList.Add(relationshipValue);
+                    } else
+                    {
+                        dbDependentEntityList = (IList)relationshipValue;
+                    }
+                    var dbDependentEntityListCasted = dbDependentEntityList.Cast<IIdentifiable>().ToList();
+                    if (dependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(dependentEntities, Comparer).ToList();
+
+                    if (dbDependentEntityListCasted.Any())
+                    {
+                        if (!implicitlyAffected.TryGetValue(relationship, out List<IIdentifiable> affected))
                         {
-                            affected = new HashSet<IIdentifiable>();
+                            affected = new List<IIdentifiable>();
                             implicitlyAffected[relationship] = affected;
                         }
-                        affected.Add(dbDependentEntity);
+                        affected.AddRange(dbDependentEntityListCasted);
                     }
                 }
             });
-
-            return implicitlyAffected.ToDictionary( kvp => kvp.Key, kvp => kvp.Value.ToList());
-            //}
-            //return null;
+            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => new HashSet<IIdentifiable>(kvp.Value).ToList());
         }
+
+
+
 
 
 
@@ -284,25 +336,7 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
-        {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
-            var layer = _layerFactory.CreateLayer(entities);
-            if (hookContainer != null)
-            {
-                List<RelationshipProxy> relationships = layer.GetRelationships(typeof(TEntity));
-                IEnumerable<TEntity> uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-                IEnumerable<TEntity> dbValues = (IEnumerable<TEntity>)LoadDbValues((IList)uniqueEntities.ToList(), relationships, typeof(TEntity), ResourceHook.BeforeDelete);
-                IEnumerable<TEntity> filteredUniqueEntities = hookContainer.BeforeDelete(dbValues ?? uniqueEntities, pipeline);
-                entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>().ToList();
-            }
-            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
-            BeforeUpdateRelationship(pipeline, nextLayer);
-            FlushRegister();
-            return entities;
 
-        }
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
@@ -327,51 +361,6 @@ namespace JsonApiDotNetCore.Services
                     pipeline.ToString() + "pipeline");
             }
         }
-
-        /// <summary>
-        /// Registers the processed entities in the dictionary grouped by type
-        /// </summary>
-        /// <param name="entities">Entities to register</param>
-        /// <param name="entityType">Entity type.</param>
-        void RegisterProcessedEntities(IEnumerable<IIdentifiable> entities, Type entityType)
-        {
-            var processedEntities = GetProcessedEntities(entityType);
-            processedEntities.UnionWith(new HashSet<IIdentifiable>(entities));
-        }
-        void RegisterProcessedEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IIdentifiable
-        {
-            RegisterProcessedEntities(entities, typeof(TEntity));
-        }
-
-        /// <summary>
-        /// Gets the processed entities for a given type, instantiates the collection if new.
-        /// </summary>
-        /// <returns>The processed entities.</returns>
-        /// <param name="entityType">Entity type.</param>
-        HashSet<IIdentifiable> GetProcessedEntities(Type entityType)
-        {
-            if (!_processedEntities.TryGetValue(entityType, out HashSet<IIdentifiable> processedEntities))
-            {
-                processedEntities = new HashSet<IIdentifiable>();
-                _processedEntities[entityType] = processedEntities;
-            }
-            return processedEntities;
-        }
-
-        /// <summary>
-        /// Using the register of processed entities, determines the unique and new
-        /// entities with respect to previous iterations.
-        /// </summary>
-        /// <returns>The in tree.</returns>
-        /// <param name="entities">Entities.</param>
-        /// <param name="entityType">Entity type.</param>
-        HashSet<IIdentifiable> UniqueInTree(IEnumerable<IIdentifiable> entities, Type entityType)
-        {
-            var newEntities = new HashSet<IIdentifiable>(entities.Except(GetProcessedEntities(entityType)));
-            RegisterProcessedEntities(entities, entityType);
-            return newEntities;
-        }
-
 
         /// <summary>
         /// A method that reflectively calls a resource hook.
