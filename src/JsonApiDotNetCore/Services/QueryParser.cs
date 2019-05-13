@@ -18,11 +18,11 @@ namespace JsonApiDotNetCore.Services
     public class QueryParser : IQueryParser
     {
         private readonly IControllerContext _controllerContext;
-        private readonly JsonApiOptions _options;
+        private readonly IJsonApiOptions _options;
 
         public QueryParser(
             IControllerContext controllerContext,
-            JsonApiOptions options)
+            IJsonApiOptions options)
         {
             _controllerContext = controllerContext;
             _options = options;

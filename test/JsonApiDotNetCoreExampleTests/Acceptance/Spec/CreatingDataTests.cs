@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -78,6 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // act
             var response = await client.SendAsync(request);
+            var sdfsd = await response.Content.ReadAsStringAsync();
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);

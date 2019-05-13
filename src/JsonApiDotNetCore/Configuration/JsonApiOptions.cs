@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Global options
     /// </summary>
-    public class JsonApiOptions
+    public class JsonApiOptions : IJsonApiOptions
     {
         /// <summary>
         /// Provides an interface for formatting resource names by convention

@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Services
         public JsonApiContext(
             IResourceGraph resourceGraph,
             IHttpContextAccessor httpContextAccessor,
-            JsonApiOptions options,
+            IJsonApiOptions options,
             IMetaBuilder metaBuilder,
             IGenericProcessorFactory genericProcessorFactory,
             IQueryParser queryParser,
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Services
             _controllerContext = controllerContext;
         }
 
-        public JsonApiOptions Options { get; set; }
+        public IJsonApiOptions Options { get; set; }
         public IResourceGraph ResourceGraph { get; set; }
         [Obsolete("Use the proxied member IControllerContext.RequestEntity instead.")]
         public ContextEntity RequestEntity { get => _controllerContext.RequestEntity; set => _controllerContext.RequestEntity = value; }

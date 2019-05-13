@@ -160,7 +160,10 @@ namespace JsonApiDotNetCore.Data
             AttachRelationships(entity);
             _dbSet.Add(entity);
 
+
+
             await _context.SaveChangesAsync();
+
 
             return entity;
         }

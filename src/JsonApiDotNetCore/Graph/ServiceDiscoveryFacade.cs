@@ -152,8 +152,11 @@ namespace JsonApiDotNetCore.Graph
 
         private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
         {
+    
             foreach(var serviceInterface in  ServiceInterfaces)
                 RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
+
+   
         }
 
         /// <summary>
@@ -174,16 +177,30 @@ namespace JsonApiDotNetCore.Graph
             foreach(var serviceInterface in  RepositoryInterfaces)
                 RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
         }
-
+        public int i = 0;
         private void RegisterServiceImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
+
+
+
+            if (resourceDescriptor.IdType == typeof(Guid) && interfaceType.GetTypeInfo().GenericTypeParameters.Length == 1)
+            {
+                return ;
+            }
             var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
                 ? new [] { resourceDescriptor.ResourceType, resourceDescriptor.IdType }
                 : new [] { resourceDescriptor.ResourceType };
 
             var service = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
+            if(service.implementation?.Name == "CustomArticleService" && genericArguments[0].Name != "Article")
+            {
+                
+                service = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
+            }
             if (service.implementation != null)
+            {
                 _services.AddScoped(service.registrationInterface, service.implementation);
+            }
         }
     }
 }

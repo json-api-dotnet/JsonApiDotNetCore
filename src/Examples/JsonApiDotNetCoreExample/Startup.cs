@@ -7,6 +7,9 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using System.ComponentModel.Design;
+using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -43,7 +46,10 @@ namespace JsonApiDotNetCoreExample
                 mvcBuilder,
                 discovery => discovery.AddCurrentAssembly());
 
-            return services.BuildServiceProvider();
+            var serviceProvider =  services.BuildServiceProvider();
+
+
+            return serviceProvider;
         }
 
         public virtual void Configure(
@@ -53,9 +59,8 @@ namespace JsonApiDotNetCoreExample
             AppDbContext context)
         {
             context.Database.EnsureCreated();
-
             loggerFactory.AddConsole(Config.GetSection("Logging"));
-
+            var serviceProvider = app.ApplicationServices;
             app.UseJsonApi();
         }
 

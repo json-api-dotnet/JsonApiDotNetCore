@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Graph
         private static Dictionary<Assembly, Type[]> _typeCache = new Dictionary<Assembly, Type[]>();
         private static Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
 
-        
+
         /// <summary>
         /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
         /// Returns the status and the resultant id type, either `(true, Type)` OR `(false, null)`
@@ -48,10 +48,10 @@ namespace JsonApiDotNetCore.Graph
         /// <summary>
         /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
         /// </summary>
-        public static IEnumerable<ResourceDescriptor> GetIdentifableTypes(Assembly assembly) 
+        public static IEnumerable<ResourceDescriptor> GetIdentifableTypes(Assembly assembly)
             => (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
                     ? FindIdentifableTypes(assembly)
-                    :  _identifiableTypeCache[assembly];
+                    : _identifiableTypeCache[assembly];
 
         private static IEnumerable<ResourceDescriptor> FindIdentifableTypes(Assembly assembly)
         {
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Graph
 
             foreach (var type in assembly.GetTypes())
             {
-                if (TryGetResourceDescriptor(type, out var descriptor)) 
+                if (TryGetResourceDescriptor(type, out var descriptor))
                 {
                     descriptors.Add(descriptor);
                     yield return descriptor;
@@ -77,15 +77,15 @@ namespace JsonApiDotNetCore.Graph
         internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
         {
             var possible = GetIdType(type);
-            if (possible.isJsonApiResource) {
+            if (possible.isJsonApiResource)
+            {
                 descriptor = new ResourceDescriptor(type, possible.idType);
                 return true;
-            }                
-            
+            }
+
             descriptor = ResourceDescriptor.Empty;
             return false;
         }
-
         /// <summary>
         /// Get all implementations of the generic interface
         /// </summary>
@@ -99,11 +99,11 @@ namespace JsonApiDotNetCore.Graph
         /// </example>
         public static (Type implementation, Type registrationInterface) GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterfaceType, params Type[] genericInterfaceArguments)
         {
-            if(assembly == null) throw new ArgumentNullException(nameof(assembly));
-            if(openGenericInterfaceType == null) throw new ArgumentNullException(nameof(openGenericInterfaceType));
-            if(genericInterfaceArguments == null) throw new ArgumentNullException(nameof(genericInterfaceArguments));
-            if(genericInterfaceArguments.Length == 0) throw new ArgumentException("No arguments supplied for the generic interface.", nameof(genericInterfaceArguments));
-            if(openGenericInterfaceType.IsGenericType == false) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterfaceType));
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+            if (openGenericInterfaceType == null) throw new ArgumentNullException(nameof(openGenericInterfaceType));
+            if (genericInterfaceArguments == null) throw new ArgumentNullException(nameof(genericInterfaceArguments));
+            if (genericInterfaceArguments.Length == 0) throw new ArgumentException("No arguments supplied for the generic interface.", nameof(genericInterfaceArguments));
+            if (openGenericInterfaceType.IsGenericType == false) throw new ArgumentException("Requested type is not a generic type.", nameof(openGenericInterfaceType));
 
             foreach (var type in assembly.GetTypes())
             {
@@ -113,7 +113,8 @@ namespace JsonApiDotNetCore.Graph
                     if (interfaceType.IsGenericType)
                     {
                         var genericTypeDefinition = interfaceType.GetGenericTypeDefinition();
-                        if(genericTypeDefinition == openGenericInterfaceType.GetGenericTypeDefinition()) {
+                        if (interfaceType.GetGenericArguments().First() == genericInterfaceArguments.First() &&genericTypeDefinition == openGenericInterfaceType.GetGenericTypeDefinition())
+                        {
                             return (
                                 type,
                                 genericTypeDefinition.MakeGenericType(genericInterfaceArguments)
@@ -157,7 +158,7 @@ namespace JsonApiDotNetCore.Graph
         {
             foreach (var type in assembly.GetTypes())
             {
-                if(inheritedType.IsAssignableFrom(type))
+                if (inheritedType.IsAssignableFrom(type))
                     yield return type;
             }
         }

@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Services
 {
     public interface IJsonApiApplication
     {
-        JsonApiOptions Options { get; set; }
+        IJsonApiOptions Options { get; set; }
         IResourceGraph ResourceGraph { get; set; }
     }
 

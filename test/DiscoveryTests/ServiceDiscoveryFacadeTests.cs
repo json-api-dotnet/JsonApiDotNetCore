@@ -1,8 +1,10 @@
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,7 +76,10 @@ namespace DiscoveryTests
         {
             private static IEntityRepository<TestModel> _repo = new Mock<IEntityRepository<TestModel>>().Object;
             private static IJsonApiContext _jsonApiContext = new  Mock<IJsonApiContext>().Object;
-            public TestModelService() : base(_jsonApiContext, _repo) { }
+            private static IJsonApiOptions _jsonApiOptions = new Mock<IJsonApiOptions>().Object;
+            private static IQueryManager _queryManager = new Mock<IQueryManager>().Object;
+            private static IPageManager _pageManager = new Mock<IPageManager>().Object;
+            public TestModelService() : base(_jsonApiContext, _repo, _jsonApiOptions, _queryManager, _pageManager) { }
         }
 
         public class TestModelRepository : DefaultEntityRepository<TestModel>

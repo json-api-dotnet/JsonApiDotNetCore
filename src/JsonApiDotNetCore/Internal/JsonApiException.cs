@@ -25,6 +25,12 @@ namespace JsonApiDotNetCore.Internal
         : base(message)
             => _errors.Add(new Error(statusCode, message, detail, GetMeta(), source));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="statusCode">the integer status code to throw</param>
+        /// <param name="message"></param>
+        /// <param name="source"></param>
         public JsonApiException(int statusCode, string message, string source = null)
         : base(message)
             => _errors.Add(new Error(statusCode, message, null, GetMeta(), source));

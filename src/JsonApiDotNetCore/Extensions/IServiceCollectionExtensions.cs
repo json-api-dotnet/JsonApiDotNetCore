@@ -10,6 +10,8 @@ using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
+using JsonApiDotNetCore.Managers;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
@@ -64,7 +66,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             var config = new JsonApiOptions();
             configureOptions(config);
-
+            
             if(autoDiscover != null)
             {
                 var facade = new ServiceDiscoveryFacade(services, config.ResourceGraphBuilder);
@@ -110,7 +112,9 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             if (jsonApiOptions.EnableOperations)
+            {
                 AddOperationServices(services);
+            }
 
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
@@ -136,7 +140,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
-            services.AddSingleton(jsonApiOptions);
+            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
+            services.AddTransient<IPageManager,PageManager>();
             services.AddSingleton(jsonApiOptions.ResourceGraph);
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -156,6 +161,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
             // services.AddScoped<IActionFilter, TypeMatchFilter>();
+            services.AddScoped<IQueryManager, QueryManager>();
         }
 
         private static void AddOperationServices(IServiceCollection services)

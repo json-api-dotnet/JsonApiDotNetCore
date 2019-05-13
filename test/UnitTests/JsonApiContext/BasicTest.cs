@@ -12,47 +12,75 @@ using JsonApiDotNetCoreExample.Services;
 using JsonApiDotNetCore.Data;
 using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
+using System.Net;
+using JsonApiDotNetCore.Managers.Contracts;
 
-namespace UnitTests.JsonApiContext
+namespace UnitTests.Services
 {
-    public class BasicTest
+    public class EntityResourceServiceMore
     {
         [Fact]
-        public async Task CanTestController()
+        public async Task TestCanGetAll()
         {
-            // Arrange
-            var jsonApiContext = new Mock<IJsonApiContext>();
-            var serviceMock = new Mock<IResourceService<Article>>();
-            var controller = new ArticlesController(jsonApiContext.Object,serviceMock.Object);
 
-            // Act 
-            var result = await controller.GetAsync();
-
-            // Assert
-            var okResult =  Assert.IsType<OkObjectResult>(result);
-            var value = okResult.Value as IEnumerable<Article>;
-
-            Assert.NotNull(value);
         }
 
+        /// <summary>
+        /// we expect the service layer to give use a 404 if there is no entity returned
+        /// </summary>
+        /// <returns></returns>
         [Fact]
-        public async Task CanTestService()
+        public async Task GetAsync_Throw404OnNoEntityFound()
         {
             // Arrange
             var jacMock = FetchContextMock();
             var loggerMock = new Mock<ILoggerFactory>();
-            var jsonApiOptionsMock = new JsonApiOptions
+            var jsonApiOptions = new JsonApiOptions
             {
                 IncludeTotalRecordCount = false
-            };
+            } as IJsonApiOptions;
             var repositoryMock = new Mock<IEntityRepository<Article>>();
+            var queryManagerMock = new Mock<IQueryManager>();
+            var pageManagerMock = new Mock<IPageManager>();
+            var service = new CustomArticleService(jacMock.Object, repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, loggerMock.Object);
 
-            var service = new CustomArticleService(jacMock.Object, repositoryMock.Object, jsonApiOptionsMock.Object, loggerMock.Object);
-            // Act
-            var result = await service.GetAsync();
+            // Act / Assert
+            var toExecute = new Func<Task>(() =>
+            {
+                return service.GetAsync(4);
+            });
+            var exception = await Assert.ThrowsAsync<JsonApiException>(toExecute);
+            Assert.Equal(404, exception.GetStatusCode());
+        }
 
-            // Assert
-            Assert.NotNull(result);
+        /// <summary>
+        /// we expect the service layer to give use a 404 if there is no entity returned
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetAsync_ShouldThrow404OnNoEntityFoundWithRelationships()
+        {
+            // Arrange
+            var jacMock = FetchContextMock();
+            var loggerMock = new Mock<ILoggerFactory>();
+            var jsonApiOptions = new JsonApiOptions
+            {
+                IncludeTotalRecordCount = false
+            } as IJsonApiOptions;
+            var repositoryMock = new Mock<IEntityRepository<Article>>();
+            var queryManagerMock = new Mock<IQueryManager>();
+            var pageManagerMock = new Mock<IPageManager>();
+            queryManagerMock.Setup(qm => qm.GetRelationships()).Returns(new List<string>() { "cookies" });
+            var service = new CustomArticleService(jacMock.Object, repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, loggerMock.Object);
+
+            // Act / Assert
+            var toExecute = new Func<Task>(() =>
+            {
+                return service.GetAsync(4);
+            });
+            var exception = await Assert.ThrowsAsync<JsonApiException>(toExecute);
+            Assert.Equal(404, exception.GetStatusCode());
         }
 
         public Mock<IJsonApiContext> FetchContextMock()

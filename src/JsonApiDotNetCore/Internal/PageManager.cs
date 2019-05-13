@@ -1,10 +1,11 @@
 using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class PageManager
+    public class PageManager : IPageManager
     {
         public int? TotalRecords { get; set; }
         public int PageSize { get; set; }

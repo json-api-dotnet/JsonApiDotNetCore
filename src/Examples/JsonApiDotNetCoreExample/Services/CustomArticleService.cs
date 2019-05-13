@@ -1,6 +1,7 @@
 
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
@@ -17,8 +18,10 @@ namespace JsonApiDotNetCoreExample.Services
             IJsonApiContext jsonApiContext,
             IEntityRepository<Article> repository,
             IJsonApiOptions jsonApiOptions,
+            IQueryManager queryManager,
+            IPageManager pageManager,
             ILoggerFactory loggerFactory
-        ) : base(jsonApiContext, repository, jsonApiOptions, loggerFactory)
+        ) : base(jsonApiContext, repository, jsonApiOptions, queryManager, pageManager, loggerFactory)
         { }
 
         public override async Task<Article> GetAsync(int id)
