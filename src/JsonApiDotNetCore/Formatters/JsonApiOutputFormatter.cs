@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Formatters
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            var acceptString = context.HttpContext.Request.Headers["Accept"];
+            var acceptString = context.HttpContext.Request.Headers[Constants.AcceptHeader];
 
             return acceptString == Constants.ContentType;
         }
