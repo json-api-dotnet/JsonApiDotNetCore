@@ -57,7 +57,6 @@ namespace JsonApiDotNetCore.Services
             var layer = _layerFactory.CreateLayer(entities);
             if (hookContainer != null)
             {
-                List<RelationshipProxy> relationships = layer.GetRelationships(typeof(TEntity));
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 IEnumerable<TEntity> filteredUniqueEntities = hookContainer.BeforeCreate(uniqueEntities, pipeline);
                 entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>().ToList();
@@ -272,7 +271,29 @@ namespace JsonApiDotNetCore.Services
                     }
                 }
 
+
+                if (node.EntitiesByRelationships.Any())
+                {
+                    var entityType = node.EntitiesByRelationships.First().Key.PrincipalType;
+                    nestedHookcontainer = _meta.GetResourceHookContainer(entityType, ResourceHook.BeforeImplicitUpdateRelationship);
+                    if (nestedHookcontainer != null)
+                    {
+                        var inverseRelationships = node.EntitiesByRelationships.ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+                        Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(inverseRelationships);
+                        if (implicitlyAffectedDependents.Any())
+                        {
+                            var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), entityType, implicitlyAffectedDependents);
+                            CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline });
+                        }
+                    }
+                }
             }
+        }
+
+        private RelationshipProxy GetInverseRelationship(RelationshipProxy proxy)
+        {
+            var attr = _graph.GetContextEntity(proxy.DependentType).Relationships.Single(r => r.InternalRelationshipName == proxy.Attribute.InverseNavigation);
+            return new RelationshipProxy(attr, proxy.PrincipalType, proxy.DependentType, false);
         }
 
         private Dictionary<RelationshipProxy, List<IIdentifiable>> LoadImplicitlyAffected(

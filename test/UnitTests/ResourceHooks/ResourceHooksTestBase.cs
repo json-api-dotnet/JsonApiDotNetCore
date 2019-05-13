@@ -55,6 +55,16 @@ namespace UnitTests.ResourceHooks
             _passportFaker = new Faker<Passport>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
         }
 
+        protected List<TodoItem> CreateTodoWithToOnePerson()
+        {
+            var todoItem = _todoFaker.Generate();
+            var person = _personFaker.Generate();
+            var todoList = new List<TodoItem>() { todoItem };
+            person.ToOneTodoItem = todoItem;
+            todoItem.ToOnePerson = person;
+            return todoList;
+        }
+
         protected List<TodoItem> CreateTodoWithOwner()
         {
             var todoItem = _todoFaker.Generate();

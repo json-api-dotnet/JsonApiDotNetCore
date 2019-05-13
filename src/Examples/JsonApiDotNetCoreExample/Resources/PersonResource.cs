@@ -11,19 +11,9 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PersonResource : ResourceDefinition<Person>
     {
-
-        //[DatabaseValuesInDiffs(false)]
-        //public override IEnumerable<Person> BeforeUpdate(EntityDiff<Person> entityDiff, HookExecutionContext<Person> context)
-        //{
-        //    var entitiesInDb = entityDiff.DatabaseEntities;
-        //    DoesNotTouchLockedPeople(entitiesInDb);
-        //    return entityDiff.RequestEntities;
-        //}
-
         public override IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<Person> relationshipHelper, ResourceAction pipeline)
         {
-            relationshipHelper.GetEntitiesRelatedWith<Passport>()
-            .ToList().ForEach(kvp => DoesNotTouchLockedPeople(kvp.Value));
+            BeforeImplicitUpdateRelationship(relationshipHelper, pipeline);
             return ids;
         }
 
@@ -33,16 +23,6 @@ namespace JsonApiDotNetCoreExample.Resources
                         .ToList().ForEach(kvp => DoesNotTouchLockedPeople(kvp.Value));
 
         }
-
-        //public override void ImplicitUpdateRelationship(IEnumerable<Person> entities, RelationshipAttribute affectedRelationship)
-        //{
-        //    DoesNotTouchLockedPeople(entities);
-        //}
-
-        //public override IEnumerable<Person> BeforeDelete(IEnumerable<Person> entities, HookExecutionContext<Person> context)
-        //{
-        //    return base.BeforeDelete(entities, context);
-        //}
 
         private void DoesNotTouchLockedPeople(IEnumerable<Person> entities)
         {

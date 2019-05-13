@@ -32,18 +32,25 @@ namespace UnitTests.ResourceHooks
                 .AddResource<Person>()
                 .Build();
 
-            todoList = CreateTodoWithOwner();
+            todoList = CreateTodoWithToOnePerson();
 
             var todoId = todoList[0].Id;
-            var _personId = todoList[0].Owner.Id;
+            var _personId = todoList[0].ToOnePerson.Id;
             personId = _personId.ToString();
             var _implicitPersonId = (_personId + 10000);
             implicitPersonId = _implicitPersonId.ToString();
+
+            var implicitTodo = _todoFaker.Generate();
+            implicitTodo.Id = implicitTodo.Id + 1000;
+            implicitTodo.ToOnePersonId = _personId;
+            implicitTodo.Description = description + description;
+
             options = InitInMemoryDb(context =>
             {
                 context.Set<Person>().Add(new Person { Id = _personId, LastName = lastName });
                 context.Set<Person>().Add(new Person { Id = _implicitPersonId, LastName = lastName + lastName });
-                context.Set<TodoItem>().Add(new TodoItem { Id = todoId, OwnerId = _implicitPersonId, Description = description });
+                context.Set<TodoItem>().Add(new TodoItem { Id = todoId, ToOnePersonId = _implicitPersonId, Description = description });
+                context.Set<TodoItem>().Add(implicitTodo);
                 context.SaveChanges();
             });
         }
@@ -73,6 +80,11 @@ namespace UnitTests.ResourceHooks
                 ResourceAction.Patch),
                 Times.Once());
 
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
+                It.Is<IUpdatedRelationshipHelper<TodoItem>>( rh => TodoCheck(rh, description + description)),
+                ResourceAction.Patch),
+                Times.Once());
+
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -86,7 +98,7 @@ namespace UnitTests.ResourceHooks
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            var attr = ResourceGraph.Instance.GetContextEntity(typeof(TodoItem)).Relationships.Single(r => r.PublicRelationshipName == "owner");
+            var attr = ResourceGraph.Instance.GetContextEntity(typeof(TodoItem)).Relationships.Single(r => r.PublicRelationshipName == "one-to-one-person");
             contextMock.Setup(c => c.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
 
             // act
@@ -215,6 +227,11 @@ namespace UnitTests.ResourceHooks
             var dbCheck = diff.DatabaseEntities.Single().Description == checksum;
             var reqCheck = diff.RequestEntities.Single().Description == null;
             return (dbCheck && reqCheck);
+        }
+
+        private bool TodoCheck(IUpdatedRelationshipHelper<TodoItem> rh, string checksum)
+        {
+            return rh.GetEntitiesRelatedWith<Person>().Single().Value.First().Description == checksum;
         }
 
         private bool PersonIdCheck(IEnumerable<string> ids, string checksum)

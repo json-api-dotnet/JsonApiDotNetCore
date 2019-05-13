@@ -42,6 +42,11 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("assignee")]
         public virtual Person Assignee { get; set; }
 
+        [HasOne("one-to-one-person", inverseNavigationProperty: "ToOneTodoItem")]
+        public virtual Person ToOnePerson { get; set; }
+        public virtual int? ToOnePersonId { get; set; }
+
+
         [HasMany("stake-holders")]
         public virtual List<Person> StakeHolders { get; set; }
 

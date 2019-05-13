@@ -337,9 +337,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var response = await _fixture.Client.SendAsync(request);
 
             // Assert
-
-            // should throw 403 in PersonResource implicit hook
             var body = await response.Content.ReadAsStringAsync();
+            // should throw 403 in PersonResource implicit hook
             Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
         }
 
