@@ -283,7 +283,7 @@ namespace JsonApiDotNetCore.Services
                     nestedHookcontainer = _meta.GetResourceHookContainer(entityType, ResourceHook.BeforeImplicitUpdateRelationship);
                     if (nestedHookcontainer != null)
                     {
-                        var inverseRelationships = node.EntitiesByRelationships.ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+                        var inverseRelationships = node.EntitiesByRelationships.Where( kvp => kvp.Key.Attribute.InverseNavigation != null).ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
                         Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(inverseRelationships);
                         if (implicitlyAffectedDependents.Any())
                         {
@@ -297,6 +297,7 @@ namespace JsonApiDotNetCore.Services
 
         private RelationshipProxy GetInverseRelationship(RelationshipProxy proxy)
         {
+            // moet supporten dat als er geen inverse prop is, hij m overslaat
             var attr = _graph.GetContextEntity(proxy.DependentType).Relationships.Single(r => r.InternalRelationshipName == proxy.Attribute.InverseNavigation);
             return new RelationshipProxy(attr, proxy.PrincipalType, proxy.DependentType, false);
         }

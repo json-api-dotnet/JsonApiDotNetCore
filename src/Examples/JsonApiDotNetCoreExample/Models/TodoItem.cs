@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual int? ToOnePersonId { get; set; }
 
 
-        [HasMany("stake-holders")]
+        [HasMany("stake-holders", inverseNavigationProperty: "StakeHolderTodo")]
         public virtual List<Person> StakeHolders { get; set; }
 
         [HasOne("collection")]

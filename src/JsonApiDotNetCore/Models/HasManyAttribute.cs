@@ -24,8 +24,8 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null)
-        : base(publicName, documentLinks, canInclude, mappedBy)
+        public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null, string inverseNavigationProperty = null)
+        : base(publicName, documentLinks, canInclude, mappedBy, inverseNavigationProperty)
         { }
 
         /// <summary>

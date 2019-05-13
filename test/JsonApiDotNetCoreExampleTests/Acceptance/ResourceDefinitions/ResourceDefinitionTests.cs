@@ -465,133 +465,132 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
 
 
-        //[Fact]
-        //public async Task Cascade_Permission_Error__Create_ToMany_Relationship()
-        //{
-        //    // Arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    var persons = _personFaker.Generate(2).ToList();
-        //    var lockedTodo = _todoItemFaker.Generate();
-        //    lockedTodo.IsLocked = true;
-        //    lockedTodo.StakeHolders = persons;
-        //    context.TodoItems.Add(lockedTodo);
-        //    await context.SaveChangesAsync();
-        //    var unlockedTodo = _todoItemFaker.Generate();
+        [Fact]
+        public async Task Cascade_Permission_Error__Create_ToMany_Relationship()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var persons = _personFaker.Generate(2).ToList();
+            var lockedTodo = _todoItemFaker.Generate();
+            lockedTodo.IsLocked = true;
+            lockedTodo.StakeHolders = persons;
+            context.TodoItems.Add(lockedTodo);
+            await context.SaveChangesAsync();
 
-        //    var content = new
-        //    {
-        //        data = new
-        //        {
-        //            type = "todo-items",
-        //            relationships = new Dictionary<string, object>
-        //            {
-        //                { "stake-holders", new
-        //                    {
-        //                        data = new object[]
-        //                        {
-        //                            new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
-        //                            new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
-        //                        }
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "stake-holders", new
+                            {
+                                data = new object[]
+                                {
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
+                                }
 
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    };
+                            }
+                        }
+                    }
+                }
+            };
 
-        //    var httpMethod = new HttpMethod("POST");
-        //    var route = $"/api/v1/todo-items";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var httpMethod = new HttpMethod("POST");
+            var route = $"/api/v1/todo-items";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    string serializedContent = JsonConvert.SerializeObject(content);
-        //    request.Content = new StringContent(serializedContent);
-        //    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-        //    // Act
-        //    var response = await _fixture.Client.SendAsync(request);
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        //    // Assert
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-        //}
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+        }
 
-        //[Fact]
-        //public async Task Cascade_Permission_Error__Updating_ToMany_Relationship()
-        //{
-        //    // Arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    var persons = _personFaker.Generate(2).ToList();
-        //    var lockedTodo = _todoItemFaker.Generate();
-        //    lockedTodo.IsLocked = true;
-        //    lockedTodo.StakeHolders = persons;
-        //    context.TodoItems.Add(lockedTodo);
-        //    var unlockedTodo = _todoItemFaker.Generate();
-        //    context.TodoItems.Add(unlockedTodo);
-        //    await context.SaveChangesAsync();
+        [Fact]
+        public async Task Cascade_Permission_Error__Updating_ToMany_Relationship()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var persons = _personFaker.Generate(2).ToList();
+            var lockedTodo = _todoItemFaker.Generate();
+            lockedTodo.IsLocked = true;
+            lockedTodo.StakeHolders = persons;
+            context.TodoItems.Add(lockedTodo);
+            var unlockedTodo = _todoItemFaker.Generate();
+            context.TodoItems.Add(unlockedTodo);
+            await context.SaveChangesAsync();
 
-        //    var content = new
-        //    {
-        //        data = new
-        //        {
-        //            type = "todo-items",
-        //            id = unlockedTodo.Id,
-        //            relationships = new Dictionary<string, object>
-        //            {
-        //                { "stake-holders", new
-        //                    {
-        //                        data = new object[]
-        //                        {
-        //                            new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
-        //                            new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
-        //                        }
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    id = unlockedTodo.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "stake-holders", new
+                            {
+                                data = new object[]
+                                {
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[0].Id}" },
+                                    new { type = "people", id = $"{lockedTodo.StakeHolders[1].Id}" }
+                                }
 
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    };
+                            }
+                        }
+                    }
+                }
+            };
 
-        //    var httpMethod = new HttpMethod("PATCH");
-        //    var route = $"/api/v1/todo-items/{unlockedTodo.Id}";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/todo-items/{unlockedTodo.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    string serializedContent = JsonConvert.SerializeObject(content);
-        //    request.Content = new StringContent(serializedContent);
-        //    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-        //    // Act
-        //    var response = await _fixture.Client.SendAsync(request);
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        //    // Assert
-        //    var body = await response.Content.ReadAsStringAsync();
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
 
-        //    // were unrelating a persons from a locked todo, so this should be unauthorized
-        //    Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            // were unrelating a persons from a locked todo, so this should be unauthorized
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-        //}
+        }
 
-        //[Fact]
-        //public async Task Cascade_Permission_Error__Delete_ToMany_Relationship()
-        //{
-        //    // Arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    var persons = _personFaker.Generate(2).ToList();
-        //    var lockedTodo = _todoItemFaker.Generate();
-        //    lockedTodo.IsLocked = true;
-        //    lockedTodo.StakeHolders = persons;
-        //    context.TodoItems.Add(lockedTodo);
-        //    await context.SaveChangesAsync();
+        [Fact]
+        public async Task Cascade_Permission_Error__Delete_ToMany_Relationship()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var persons = _personFaker.Generate(2).ToList();
+            var lockedTodo = _todoItemFaker.Generate();
+            lockedTodo.IsLocked = true;
+            lockedTodo.StakeHolders = persons;
+            context.TodoItems.Add(lockedTodo);
+            await context.SaveChangesAsync();
 
-        //    var httpMethod = new HttpMethod("DELETE");
-        //    var route = $"/api/v1/people/{lockedTodo.StakeHolders[0].Id}";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var httpMethod = new HttpMethod("DELETE");
+            var route = $"/api/v1/people/{lockedTodo.StakeHolders[0].Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // Act
-        //    var response = await _fixture.Client.SendAsync(request);
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        //    // Assert
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-        //}
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+        }
     }
 }
