@@ -123,6 +123,7 @@ namespace JsonApiDotNetCore.Services
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 var filteredUniqueEntities = hookContainer?.AfterRead(uniqueEntities, pipeline, false);
+                // this is not updating unique entities internally!!!!  say [a_1, a_2] => [a_1], then nested hooks for relations of a_2 are still being fired
                 entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
             }
             var nextLayer = _layerFactory.CreateLayer(layer);
@@ -349,7 +350,7 @@ namespace JsonApiDotNetCore.Services
 
 
         /// <inheritdoc/>
-        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
+        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, bool succeeded) where TEntity : class, IIdentifiable
         {
 
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
