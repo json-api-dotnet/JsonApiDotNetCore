@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual int? SocialSecurityNumber { get; set; }
         public virtual bool IsLocked { get; set; } 
 
-        [HasOne("person", inverseNavigationProperty: "Passport")]
+        [HasOne("person")]
         public virtual Person Person { get; set; }
     }
 }

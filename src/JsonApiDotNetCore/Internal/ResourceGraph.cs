@@ -177,5 +177,11 @@ namespace JsonApiDotNetCore.Internal
                 .SingleOrDefault(a => a.InternalAttributeName == internalAttributeName)?
                 .PublicAttributeName;
         }
+
+        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
+        {
+            if (relationship.InverseNavigation == null) return null;
+            var attr = GetContextEntity(relationship.DependentType).Relationships.SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
+        }
     }
 }

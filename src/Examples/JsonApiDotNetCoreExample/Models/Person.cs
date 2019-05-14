@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExample.Models
 
         public int? PassportId { get; set; }
 
-        [HasOne("passport", inverseNavigationProperty: "Person")]
+        [HasOne("passport")]
         public virtual Passport Passport { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)

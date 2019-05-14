@@ -42,12 +42,12 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("assignee")]
         public virtual Person Assignee { get; set; }
 
-        [HasOne("one-to-one-person", inverseNavigationProperty: "ToOneTodoItem")]
+        [HasOne("one-to-one-person")]
         public virtual Person ToOnePerson { get; set; }
         public virtual int? ToOnePersonId { get; set; }
 
 
-        [HasMany("stake-holders", inverseNavigationProperty: "StakeHolderTodo")]
+        [HasMany("stake-holders")]
         public virtual List<Person> StakeHolders { get; set; }
 
         [HasOne("collection")]

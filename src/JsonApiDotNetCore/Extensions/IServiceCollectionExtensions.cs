@@ -163,6 +163,7 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
             }
 
+            services.AddScoped<IInverseRelationships, InverseRelationships>();
         }
 
         private static void AddOperationServices(IServiceCollection services)
