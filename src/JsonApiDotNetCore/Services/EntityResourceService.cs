@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.Services
 
             }
 
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.Create).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Services
             var entity = await _entities.GetAsync(id);
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourceAction.Delete);
             var succeeded = await _entities.DeleteAsync(entity);
-            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourceAction.Delete, succeeded);
+            //if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourceAction.Delete, succeeded);
             return succeeded;
         }
 
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCore.Services
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
             entity = await _entities.UpdateAsync(id, entity);
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.Patch).SingleOrDefault();
 
             return MapOut(entity);
         }
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCore.Services
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
 
             relationship.Type = relationshipType;
         }

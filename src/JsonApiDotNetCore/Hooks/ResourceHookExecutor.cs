@@ -69,12 +69,6 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
         public virtual void BeforeRead<TEntity>(ResourceAction pipeline, string stringId = null) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
@@ -148,7 +142,6 @@ namespace JsonApiDotNetCore.Services
                 var filteredUniqueSet = CallHook(hookContainer, ResourceHook.AfterRead, new object[] { node.UniqueSet, pipeline, true }).Cast<IIdentifiable>();
                 node.UpdateUniqueSet(filteredUniqueSet);
                 Reassign(node);
-
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
             if (nextLayer.Any()) RecursiveAfterRead(nextLayer, pipeline);
@@ -226,8 +219,11 @@ namespace JsonApiDotNetCore.Services
                 var castedEntities = entities.Cast<IIdentifiable>().ToList();
                 group.Value.ForEach(proxy => implicitlyAffectedRelationships.Add(proxy, castedEntities));
                 Dictionary<RelationshipProxy, List<IIdentifiable>> implicitlyAffectedDependents = LoadImplicitlyAffected(implicitlyAffectedRelationships);
-                var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), dependentType, implicitlyAffectedDependents);
-                CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+                if (implicitlyAffectedDependents.Any())
+                {
+                    var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), dependentType, implicitlyAffectedDependents);
+                    CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+                }
             }
 
             FlushRegister();
@@ -274,8 +270,6 @@ namespace JsonApiDotNetCore.Services
                         }
                     }
                 }
-
-
 
                 if (node.EntitiesByRelationships.Any())
                 {
@@ -343,10 +337,6 @@ namespace JsonApiDotNetCore.Services
         }
 
 
-
-
-
-
         private IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type entityType, ResourceHook hook)
         {
             if (_meta.ShouldLoadDbValues(entityType, hook))
@@ -357,20 +347,57 @@ namespace JsonApiDotNetCore.Services
             return null;
         }
 
+
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
         {
-            return entities;
+
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
+            var layer = _layerFactory.CreateLayer(entities);
+            if (hookContainer != null)
+            {
+                var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
+                hookContainer?.AfterDelete(uniqueEntities, succeeded);
+            }
+            FlushRegister();
         }
 
 
 
-        /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
-        {
+        ///// <inheritdoc/>
+        //public virtual IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        //{
+        //    var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
+        //    var layer = _layerFactory.CreateLayer(entities);
+        //    if (hookContainer != null)
+        //    {
+        //        var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
+        //        var filteredUniqueEntities = hookContainer?.AfterUpdate(uniqueEntities, pipeline);
+        //        entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
+        //    }
+        //    RecursiveAfterRead(layer, pipeline);
+        //    FlushRegister();
+        //    return entities;
+        //}
 
-            return entities;
-        }
+
+        /// <inheritdoc/>
+        //public virtual IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        //{
+        //    var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
+        //    var layer = _layerFactory.CreateLayer(entities);
+        //    if (hookContainer != null)
+        //    {
+        //        var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
+        //        var filteredUniqueEntities = hookContainer?.AfterCreate(uniqueEntities, pipeline);
+        //        entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
+        //    }
+        //    EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
+        //    RecursiveAfterRead(nextLayer, pipeline);
+
+        //    FlushRegister();
+        //    return entities;
+        //}
 
 
 

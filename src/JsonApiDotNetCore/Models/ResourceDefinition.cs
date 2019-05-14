@@ -211,9 +211,8 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded)
+        public virtual void AfterDelete(IEnumerable<T> entities, bool succeeded)
         {
-            return entities;
         }
 
         public virtual IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline)

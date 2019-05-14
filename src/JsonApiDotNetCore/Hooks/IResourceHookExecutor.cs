@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities that were created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> AfterCreate(IEnumerable<T> entities, HookExecutionContext<T> context);
+        //IEnumerable<T> AfterCreate(IEnumerable<T> entities, ResourceAction pipeline);
 
         /// <summary>
         /// A hook executed after before reading entities. Can be used eg. for logging, authorization.
@@ -82,7 +82,10 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline);
+
         IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline);
+
+
 
         void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline);
 
@@ -94,7 +97,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities that were updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<T> AfterUpdate(IEnumerable<T> entities, HookExecutionContext<T> context);
+        //IEnumerable<T> AfterUpdate(IEnumerable<T> entities, ResourceAction pipeline);
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for authorization.
@@ -109,7 +112,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
-        IEnumerable<T> AfterDelete(IEnumerable<T> entities, HookExecutionContext<T> context, bool succeeded);
+        void AfterDelete(IEnumerable<T> entities, bool succeeded);
 
     }
 
@@ -154,7 +157,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities that were created</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable;
+        //IEnumerable<TEntity> AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable;
 
         /// <summary>
         /// A hook executed after before reading entities. Can be used eg. for logging, authorization.
@@ -213,7 +216,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities">The entities that were updated</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
-        IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable;
+        //IEnumerable<TEntity> AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource) where TEntity : class, IIdentifiable;
 
         /// <summary>
         /// A hook executed before deleting an entity. Can be used eg. for authorization.
@@ -228,7 +231,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="entities">The entities to be deleted</param>
         /// <param name="actionSource">The pipeline from which the hook was called</param>
         /// <param name="succeeded">A boolean to indicate whether the deletion was succesful</param>
-        IEnumerable<TEntity> AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction actionSource, bool succeeded) where TEntity : class, IIdentifiable;
+        void AfterDelete<TEntity>(IEnumerable<TEntity> entities, bool succeeded) where TEntity : class, IIdentifiable;
     }
 
 
