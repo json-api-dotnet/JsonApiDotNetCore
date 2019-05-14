@@ -162,8 +162,7 @@ namespace JsonApiDotNetCore.Services
                     {
                         DependentType dependentType = GetDependentTypeFromRelationship(attr);
                         var isContextRelation = _context.RelationshipsToUpdate?.ContainsKey(attr);
-                        var proxy = new RelationshipProxy(attr, dependentType,
-                                principalType, isContextRelation != null && (bool)isContextRelation);
+                        var proxy = new RelationshipProxy(attr, dependentType, isContextRelation != null && (bool)isContextRelation);
                         RelationshipProxies[attr] = proxy;
 
                     }
@@ -327,9 +326,9 @@ namespace JsonApiDotNetCore.Services
                 {
                     return throughAttr.ThroughType;
                 }
-                return attr.Type;
+                return attr.DependentType;
             }
-            return attr.Type;
+            return attr.DependentType;
         }
 
 

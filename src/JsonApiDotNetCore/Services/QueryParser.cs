@@ -193,10 +193,10 @@ namespace JsonApiDotNetCore.Services
             {
                 if (relationship != default)
                 {
-                    var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.Type);
+                    var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.DependentType);
                     var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
                     if(attr == null)
-                        throw new JsonApiException(400, $"'{relationship.Type.Name}' does not contain '{field}'.");
+                        throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
 
                     // e.g. "Owner.Name"
                     includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);

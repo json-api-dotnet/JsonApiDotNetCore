@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Services
                 .Relationships
                 .FirstOrDefault(r => r.Is(relationshipName));
 
-            var relationshipType = relationship.Type;
+            var relationshipType = relationship.DependentType;
 
             // update relationship type with internalname
             var entityProperty = typeof(TEntity).GetProperty(relationship.InternalRelationshipName);
@@ -224,6 +224,7 @@ namespace JsonApiDotNetCore.Services
                     $"could not be found on entity.");
             }
 
+            /// Why are we changing this value on the attribute and setting it back below? This feels very hacky
             relationship.Type = relationship.IsHasMany
                 ? entityProperty.PropertyType.GetGenericArguments()[0]
                 : entityProperty.PropertyType;

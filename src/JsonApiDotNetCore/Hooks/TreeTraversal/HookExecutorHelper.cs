@@ -136,9 +136,9 @@ namespace JsonApiDotNetCore.Internal
                 {
                     return throughAttr.ThroughType;
                 }
-                return attr.Type;
+                return attr.DependentType;
             }
-            return attr.Type;
+            return attr.DependentType;
         }
 
         protected void CheckForTargetHookExistence()

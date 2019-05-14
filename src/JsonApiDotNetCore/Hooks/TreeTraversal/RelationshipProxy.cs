@@ -30,16 +30,14 @@ namespace JsonApiDotNetCore.Internal
         /// Identifiable) or it is the righthand side (when the jointable is not identifiable)
         /// </summary>
         public Type DependentType { get; private set; }
-        public Type PrincipalType { get; private set; }
+        public Type PrincipalType { get { return Attribute.PrincipalType; } }
         //public string RelationshipIdentifier { get; private set; }
         public bool IsContextRelation { get; private set; }
 
         public RelationshipAttribute Attribute { get; set; }
-        public RelationshipProxy(RelationshipAttribute attr, Type relatedType,
-            Type parentType, bool isContextRelation)
+        public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)
         {
             //RelationshipIdentifier = identifier;
-            PrincipalType = parentType;
             DependentType = relatedType;
             Attribute = attr;
             IsContextRelation = isContextRelation;

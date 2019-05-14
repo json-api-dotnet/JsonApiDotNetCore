@@ -33,7 +33,7 @@ namespace UnitTests.ResourceHooks
         public class DummyResourceDefinition : ResourceDefinition<Dummy>
         {
             public override IEnumerable<Dummy> BeforeDelete(IEnumerable<Dummy> entities, ResourceAction pipeline) { return entities; }
-            public override IEnumerable<Dummy> AfterDelete(IEnumerable<Dummy> entities, HookExecutionContext<Dummy> context, bool succeeded) { return entities; }
+            public override void AfterDelete(IEnumerable<Dummy> entities, bool succeeded) {  }
         }
     }
 }

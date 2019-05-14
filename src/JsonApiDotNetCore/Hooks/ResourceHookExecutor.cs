@@ -95,10 +95,10 @@ namespace JsonApiDotNetCore.Services
                     $"{contextEntity.EntityName} does not have a relationship named {target}");
             }
 
-            if (!calledContainers.Contains(relationship.Type))
+            if (!calledContainers.Contains(relationship.DependentType))
             {
-                calledContainers.Add(relationship.Type);
-                var container = _meta.GetResourceHookContainer(relationship.Type, ResourceHook.BeforeRead);
+                calledContainers.Add(relationship.DependentType);
+                var container = _meta.GetResourceHookContainer(relationship.DependentType, ResourceHook.BeforeRead);
                 if (container != null)
                 {
                     CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Services
             if (relationshipChain.Any())
             {
 
-                RecursiveBeforeRead(_graph.GetContextEntity(relationship.Type), relationshipChain, pipeline, calledContainers);
+                RecursiveBeforeRead(_graph.GetContextEntity(relationship.DependentType), relationshipChain, pipeline, calledContainers);
             }
 
         }
@@ -201,7 +201,6 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
             var layer = _layerFactory.CreateLayer(entities);
-            List<RelationshipProxy> relationships = layer.GetRelationships(typeof(TEntity));
             if (hookContainer != null)
             {
                 List<TEntity> uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>().ToList();
@@ -209,6 +208,7 @@ namespace JsonApiDotNetCore.Services
                 entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>().ToList();
             }
 
+            List<RelationshipProxy> relationships = layer.GetRelationships(typeof(TEntity));
             var relationshipsByDependentType = relationships.GroupBy(proxy => proxy.DependentType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
 
             foreach (var group in relationshipsByDependentType)
@@ -294,7 +294,7 @@ namespace JsonApiDotNetCore.Services
         {
             // moet supporten dat als er geen inverse prop is, hij m overslaat
             var attr = _graph.GetContextEntity(proxy.DependentType).Relationships.Single(r => r.InternalRelationshipName == proxy.Attribute.InverseNavigation);
-            return new RelationshipProxy(attr, proxy.PrincipalType, proxy.DependentType, false);
+            return new RelationshipProxy(attr, proxy.PrincipalType, false);
         }
 
         private Dictionary<RelationshipProxy, List<IIdentifiable>> LoadImplicitlyAffected(

@@ -411,7 +411,7 @@ namespace JsonApiDotNetCore.Data
             // of the property...
             var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
                 ? hasManyThrough.ThroughType
-                : relationship.Type;
+                : relationship.DependentType;
 
             var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
@@ -467,7 +467,7 @@ namespace JsonApiDotNetCore.Data
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
 
                 if (i < relationshipChain.Length)
-                    entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
+                    entity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.DependentType);
             }
 
             return entities.Include(internalRelationshipPath);

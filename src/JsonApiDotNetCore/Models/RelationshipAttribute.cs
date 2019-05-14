@@ -18,6 +18,7 @@ namespace JsonApiDotNetCore.Models
         public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
 
+
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
@@ -28,7 +29,28 @@ namespace JsonApiDotNetCore.Models
         /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
         /// </code>
         /// </example>
-        public Type Type { get; internal set; }
+        [Obsolete("Use property DependentType")]
+        public Type Type { get { return DependentType; } internal set { DependentType = value; } }
+
+        /// <summary>
+        /// The related entity type. This does not necessarily match the navigation property type.
+        /// In the case of a HasMany relationship, this value will be the generic argument type.
+        /// 
+        /// The technical language as used in EF Core is used here (dependent vs principal).
+        /// </summary>
+        /// 
+        /// <example>
+        /// <code>
+        /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
+        /// </code>
+        /// </example>
+        public Type DependentType { get; internal set; }
+
+        /// <summary>
+        /// The parent entity type. The technical language as used in EF Core is used here (dependent vs principal).
+        /// </summary>
+        public Type PrincipalType { get; internal set; }
+
         public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
         public Link DocumentLinks { get; } = Link.All;
