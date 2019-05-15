@@ -47,8 +47,6 @@ namespace JsonApiDotNetCore.Services
             _layerFactory = new EntityTreeLayerFactory(meta, graph, _context);
         }
 
-
-
         public virtual void BeforeRead<TEntity>(ResourceAction pipeline, string stringId = null) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
@@ -227,6 +225,7 @@ namespace JsonApiDotNetCore.Services
                 /// this is not updating unique entities internally!!!!  say [a_1, a_2] => [a_1], 
                 /// then nested hooks for relations of a_2 are still being fired
                 entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
+                ValidateHookResponse(entities);
             }
             var nextLayer = _layerFactory.CreateLayer(layer);
             RecursiveOnReturn(nextLayer, pipeline);
@@ -311,7 +310,7 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-                hookContainer?.AfterCreate(uniqueEntities, pipeline);
+                hookContainer.AfterCreate(uniqueEntities, pipeline);
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
 
@@ -324,7 +323,7 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-                hookContainer?.AfterUpdate(uniqueEntities, pipeline);
+                hookContainer.AfterUpdate(uniqueEntities, pipeline);
             }
         }
 
@@ -420,12 +419,12 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="returnedList"> The collection returned from the hook</param>
         /// <param name="pipeline">The pipeine from which the hook was fired</param>
-        protected void ValidateHookResponse(object returnedList, ResourceAction pipeline = 0)
+        void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourceAction pipeline = 0)
         {
-            if (pipeline != ResourceAction.None && SingleActions.Contains(pipeline) && ((IEnumerable)returnedList).Cast<object>().Count() > 1)
+            if (pipeline == ResourceAction.GetSingle && returnedList.Count() > 1)
             {
-                throw new ApplicationException("The returned collection from this hook may only contain one item in the case of the" +
-                    pipeline.ToString() + "pipeline");
+                throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the" +
+                    pipeline.ToString("G") + "pipeline");
             }
         }
 
