@@ -31,13 +31,11 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public Type DependentType { get; private set; }
         public Type PrincipalType { get { return Attribute.PrincipalType; } }
-        //public string RelationshipIdentifier { get; private set; }
         public bool IsContextRelation { get; private set; }
 
         public RelationshipAttribute Attribute { get; set; }
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)
         {
-            //RelationshipIdentifier = identifier;
             DependentType = relatedType;
             Attribute = attr;
             IsContextRelation = isContextRelation;
@@ -47,7 +45,6 @@ namespace JsonApiDotNetCore.Internal
                 _skipJoinTable |= DependentType != throughAttr.ThroughType;
             }
         }
-
 
         /// <summary>
         /// Gets the relationship value for a given parent entity.
@@ -117,11 +114,9 @@ namespace JsonApiDotNetCore.Internal
                             filteredList.Add(je);
                         }
                     }
-
                     throughAttr.ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(filteredList, throughAttr.ThroughType));
                     return;
                 }
-
             }
             Attribute.SetValue(entity, value);
         }

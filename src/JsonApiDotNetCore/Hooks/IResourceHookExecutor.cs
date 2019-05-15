@@ -3,11 +3,9 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-
     public interface IResourceHookContainer { }
 
     public interface IResourceHookContainer<T> : IBeforeHooks<T>, IAfterHooks<T>, IOnHooks<T>, IResourceHookContainer where T : class, IIdentifiable { }
-
 
     public interface IAfterHooks<T> where T : class, IIdentifiable
     {
@@ -32,7 +30,6 @@ namespace JsonApiDotNetCore.Services
     {
         IEnumerable<T> OnReturn(IEnumerable<T> entities, ResourceAction pipeline);
     }
-
 
     public interface IResourceHookExecutor : IBeforeExecutor, IAfterExecutor, IOnExecutor { }
 
