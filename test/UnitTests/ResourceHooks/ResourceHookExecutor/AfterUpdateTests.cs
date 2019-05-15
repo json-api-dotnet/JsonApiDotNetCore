@@ -8,7 +8,7 @@
 
 //namespace UnitTests.ResourceHooks
 //{
-//    public class AfterUpdateTests : ResourceHooksTestBase
+//    public class AfterUpdateTests : HooksTestsSetup
 //    {
 //        public AfterUpdateTests()
 //        {

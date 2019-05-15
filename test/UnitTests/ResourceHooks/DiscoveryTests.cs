@@ -1,7 +1,5 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Models;
 using System.Collections.Generic;
 using Xunit;
 
@@ -9,16 +7,6 @@ namespace UnitTests.ResourceHooks
 {
     public class DiscoveryTests
     {
-        public DiscoveryTests()
-        {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .Build();
-        }
-
         [Fact]
         public void Hook_Discovery()
         {
@@ -33,7 +21,7 @@ namespace UnitTests.ResourceHooks
         public class DummyResourceDefinition : ResourceDefinition<Dummy>
         {
             public override IEnumerable<Dummy> BeforeDelete(IEnumerable<Dummy> entities, ResourceAction pipeline) { return entities; }
-            public override void AfterDelete(IEnumerable<Dummy> entities, bool succeeded) {  }
+            public override void AfterDelete(IEnumerable<Dummy> entities, ResourceAction pipeline, bool succeeded) {  }
         }
     }
 }

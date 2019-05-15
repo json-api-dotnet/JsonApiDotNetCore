@@ -10,19 +10,8 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class ScenarioTests : ResourceHooksTestBase
+    public class ScenarioTests : HooksTestsSetup
     {
-        readonly IResourceGraph _graph;
-        public ScenarioTests()
-        {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            _graph = new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .Build();
-        }
-
         //[Fact]
         //public void Entity_Has_Multiple_Relations_To_Same_Type()
         //{

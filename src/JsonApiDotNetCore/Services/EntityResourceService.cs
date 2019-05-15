@@ -97,7 +97,11 @@ namespace JsonApiDotNetCore.Services
 
             }
 
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.Create).SingleOrDefault();
+            if (!IsNull(_hookExecutor, entity))
+            {
+                _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Get).SingleOrDefault();
+            }
 
             return MapOut(entity);
         }
@@ -107,7 +111,7 @@ namespace JsonApiDotNetCore.Services
             var entity = await _entities.GetAsync(id);
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourceAction.Delete);
             var succeeded = await _entities.DeleteAsync(entity);
-            //if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourceAction.Delete, succeeded);
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourceAction.Delete, succeeded);
             return succeeded;
         }
 
@@ -121,17 +125,17 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
 
-            /// entities.ToList() will execute the query. In the future, when EF
-            /// Core #1833 is suported, we will support for filtered include 
-            /// prior to executing the query
-            entities = IsNull(_hookExecutor, entities) ? entities : _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get).AsQueryable();
+            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
+                entities = _entities.Select(entities, _jsonApiContext.QuerySet.Fields);
 
+            if (!IsNull(_hookExecutor, entities))
+            {
+                _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get);
+                entities = _hookExecutor.OnReturn(entities, ResourceAction.Get).AsQueryable();
+            }
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
-
-            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
-                entities = _entities.Select(entities, _jsonApiContext.QuerySet.Fields);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -153,7 +157,8 @@ namespace JsonApiDotNetCore.Services
             }
             if(!IsNull(_hookExecutor, entity))
             {
-                entity = _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle).SingleOrDefault();
+                _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Get).SingleOrDefault();
             }
             return MapOut(entity);
 
@@ -168,7 +173,12 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor?.BeforeRead<TEntity>(ResourceAction.GetRelationship, id.ToString());
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
+            if (!IsNull(_hookExecutor, entity))
+            {
+                // TODO: should not fire after read for L=0
+                _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Get).SingleOrDefault();
+            }
 
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
@@ -196,7 +206,12 @@ namespace JsonApiDotNetCore.Services
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.Patch).SingleOrDefault();
             entity = await _entities.UpdateAsync(id, entity);
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            if (!IsNull(_hookExecutor, entity))
+            {
+                // TODO: should not fire after read for L=0
+                _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Patch).SingleOrDefault();
+            }
 
             return MapOut(entity);
         }
@@ -233,7 +248,7 @@ namespace JsonApiDotNetCore.Services
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
-            entity = IsNull(_hookExecutor, entity) ? entity : _hookExecutor.AfterRead(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch);
 
             relationship.Type = relationshipType;
         }

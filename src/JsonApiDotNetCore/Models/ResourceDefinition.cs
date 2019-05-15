@@ -167,63 +167,19 @@ namespace JsonApiDotNetCore.Models
         public virtual QueryFilters GetQueryFilters() => null;
 
 
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction pipeline)
-        {
-            return entities;
-        }
+        public virtual void AfterCreate(IEnumerable<T> entities, ResourceAction pipeline) { }
+        public virtual void AfterRead(IEnumerable<T> entities, ResourceAction pipeline, bool isRelated = false) { }
+        public virtual void AfterUpdate(IEnumerable<T> entities, ResourceAction pipeline) { }
+        public virtual void AfterDelete(IEnumerable<T> entities, ResourceAction pipeline, bool succeeded) { }
+        public virtual void AfterUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
+        public virtual IEnumerable<T> BeforeCreate(IEnumerable<T> entities, ResourceAction pipeline) { return entities; }
+        public virtual void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null) { }
+        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline) { return entityDiff.RequestEntities; }
+        public virtual IEnumerable<T> BeforeDelete(IEnumerable<T> entities, ResourceAction pipeline) { return entities; }
+        public virtual IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { return ids; }
+        public virtual void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
+        public virtual IEnumerable<T> OnReturn(IEnumerable<T> entities, ResourceAction pipeline) { return entities; }
 
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterCreate(IEnumerable<T> entities, HookExecutionContext<T> context)
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null)
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterRead(IEnumerable<T> entities, ResourceAction pipeline, bool nestedHook = false)
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline)
-        {
-            return entityDiff.RequestEntities;
-        }
-
-
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> AfterUpdate(IEnumerable<T> entities, HookExecutionContext<T> context)
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeDelete(IEnumerable<T> entities, ResourceAction pipeline)
-        {
-            return entities;
-        }
-
-        /// <inheritdoc/>
-        public virtual void AfterDelete(IEnumerable<T> entities, bool succeeded)
-        {
-        }
-
-        public virtual IEnumerable<string> BeforeUpdateRelationship(IEnumerable<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline)
-        {
-            return ids;
-        }
-
-        public virtual void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline)
-        {
-            return;
-        }
 
 
         /// <summary>

@@ -1,6 +1,4 @@
-﻿using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+﻿using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
@@ -8,18 +6,8 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeCreateTests : ResourceHooksTestBase
+    public class BeforeCreateTests : HooksTestsSetup
     {
-        public BeforeCreateTests()
-        {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .Build();
-        }
-
         [Fact]
         public void BeforeCreate()
         {

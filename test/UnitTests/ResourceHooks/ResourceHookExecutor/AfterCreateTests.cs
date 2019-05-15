@@ -8,18 +8,8 @@
 
 //namespace UnitTests.ResourceHooks
 //{
-//    public class AfterCreateTests : ResourceHooksTestBase
+//    public class AfterCreateTests : HooksTestsSetup
 //    {
-//        public AfterCreateTests()
-//        {
-//            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-//            // is consumed by ResourceDefinition class.
-//            new ResourceGraphBuilder()
-//                .AddResource<TodoItem>()
-//                .AddResource<Person>()
-//                .Build();
-//        }
-
 //        [Fact]
 //        public void AfterCreate()
 //        {

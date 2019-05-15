@@ -1,5 +1,4 @@
-﻿using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Services;
+﻿using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,21 +10,12 @@ using Xunit;
 namespace UnitTests.ResourceHooks
 {
 
-    public class BeforeDelete_WithDbValues_Tests : ResourceHooksTestBase
+    public class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly DbContextOptions<AppDbContext> options;
         private readonly Person person;
         public BeforeDelete_WithDbValues_Tests()
         {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .AddResource<Passport>()
-                .Build();
-
-
             person = _personFaker.Generate();
             var todo1 = _todoFaker.Generate();
             var todo2 = _todoFaker.Generate();

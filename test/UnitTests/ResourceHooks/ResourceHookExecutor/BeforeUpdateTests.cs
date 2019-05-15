@@ -1,26 +1,13 @@
-﻿using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+﻿using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeUpdateTests : ResourceHooksTestBase
+    public class BeforeUpdateTests : HooksTestsSetup
     {
-        public BeforeUpdateTests()
-        {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .Build();
-        }
-
         [Fact]
         public void BeforeUpdate()
         {

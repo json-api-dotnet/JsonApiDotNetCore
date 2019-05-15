@@ -9,21 +9,17 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample.Resources;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace UnitTests.ResourceHooks
 {
-
-    public class ResourceHooksTestBase
+    public class HooksDummyData
     {
-
         protected ResourceHook[] AllHooks;
         protected ResourceHook[] NoHooks = new ResourceHook[0];
         protected ResourceHook[] AllHooksNoImplicit;
@@ -35,12 +31,21 @@ namespace UnitTests.ResourceHooks
         protected readonly Faker<ArticleTag> _articleTagFaker;
         protected readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
         protected readonly Faker<Passport> _passportFaker;
-        public ResourceHooksTestBase()
+        public HooksDummyData()
         {
+            new ResourceGraphBuilder()
+                .AddResource<TodoItem>()
+                .AddResource<Person>()
+                .AddResource<Passport>()
+                .AddResource<Article>()
+                .AddResource<IdentifiableArticleTag>()
+                .AddResource<Tag>()
+                .Build();
+
             AllHooks = Enum.GetValues(typeof(ResourceHook))
-                .Cast<ResourceHook>()
-                .Where(h => h != ResourceHook.None)
-                .ToArray();
+            .Cast<ResourceHook>()
+            .Where(h => h != ResourceHook.None)
+            .ToArray();
 
             AllHooksNoImplicit = AllHooks.Where(h => h != ResourceHook.BeforeImplicitUpdateRelationship).ToArray();
 
@@ -74,10 +79,72 @@ namespace UnitTests.ResourceHooks
             todoItem.Owner = person;
             return todoList;
         }
+
+        protected (List<Article>, List<ArticleTag>, List<Tag>) CreateManyToManyData()
+        {
+            var tagsSubset = _tagFaker.Generate(3).ToList();
+            var joinsSubSet = _articleTagFaker.Generate(3).ToList();
+            var articleTagsSubset = _articleFaker.Generate();
+            articleTagsSubset.ArticleTags = joinsSubSet;
+            for (int i = 0; i < 3; i++)
+            {
+                joinsSubSet[i].Article = articleTagsSubset;
+                joinsSubSet[i].Tag = tagsSubset[i];
+            }
+
+            var allTags = _tagFaker.Generate(3).ToList().Concat(tagsSubset).ToList();
+            var completeJoin = _articleTagFaker.Generate(6).ToList();
+
+            var articleWithAllTags = _articleFaker.Generate();
+            articleWithAllTags.ArticleTags = completeJoin;
+
+            for (int i = 0; i < 6; i++)
+            {
+                completeJoin[i].Article = articleWithAllTags;
+                completeJoin[i].Tag = allTags[i];
+            }
+
+            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
+
+            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            return (articles, allJoins, allTags);
+        }
+
+        protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()
+        {
+            var tagsSubset = _tagFaker.Generate(3).ToList();
+            var joinsSubSet = _identifiableArticleTagFaker.Generate(3).ToList();
+            var articleTagsSubset = _articleFaker.Generate();
+            articleTagsSubset.IdentifiableArticleTags = joinsSubSet;
+            for (int i = 0; i < 3; i++)
+            {
+                joinsSubSet[i].Article = articleTagsSubset;
+                joinsSubSet[i].Tag = tagsSubset[i];
+            }
+            var allTags = _tagFaker.Generate(3).ToList().Concat(tagsSubset).ToList();
+            var completeJoin = _identifiableArticleTagFaker.Generate(6).ToList();
+
+            var articleWithAllTags = _articleFaker.Generate();
+            articleWithAllTags.IdentifiableArticleTags = joinsSubSet;
+
+            for (int i = 0; i < 6; i++)
+            {
+                completeJoin[i].Article = articleWithAllTags;
+                completeJoin[i].Tag = allTags[i];
+            }
+
+            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
+            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            return (articles, allJoins, allTags);
+        }
+
+    }
+
+    public class HooksTestsSetup : HooksDummyData
+    {
         protected (Mock<IJsonApiContext>, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>)
         CreateTestObjects<TMain>(IHooksDiscovery<TMain> discovery = null)
-            where TMain : class, IIdentifiable<int>
-
+        where TMain : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
             var mainResource = CreateResourceDefinition(discovery);
@@ -94,13 +161,13 @@ namespace UnitTests.ResourceHooks
         }
 
         protected (Mock<IJsonApiContext> context, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
-            CreateTestObjects<TMain, TNested>(
-            IHooksDiscovery<TMain> mainDiscovery = null,
-            IHooksDiscovery<TNested> nestedDiscovery = null,
-            DbContextOptions<AppDbContext> repoDbContextOptions = null
-            )
-            where TMain : class, IIdentifiable<int>
-            where TNested : class, IIdentifiable<int>
+        CreateTestObjects<TMain, TNested>(
+        IHooksDiscovery<TMain> mainDiscovery = null,
+        IHooksDiscovery<TNested> nestedDiscovery = null,
+        DbContextOptions<AppDbContext> repoDbContextOptions = null
+        )
+        where TMain : class, IIdentifiable<int>
+        where TNested : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
             var mainResource = CreateResourceDefinition(mainDiscovery);
@@ -122,15 +189,15 @@ namespace UnitTests.ResourceHooks
         }
 
         protected (Mock<IJsonApiContext> context, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TFirstNested>>, Mock<IResourceHookContainer<TSecondNested>>)
-            CreateTestObjects<TMain, TFirstNested, TSecondNested>(
-            IHooksDiscovery<TMain> mainDiscovery = null,
-            IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
-            IHooksDiscovery<TSecondNested> secondNestedDiscovery = null,
-            DbContextOptions<AppDbContext> repoDbContextOptions = null
-            )
-            where TMain : class, IIdentifiable<int>
-            where TFirstNested : class, IIdentifiable<int>
-            where TSecondNested : class, IIdentifiable<int>
+        CreateTestObjects<TMain, TFirstNested, TSecondNested>(
+        IHooksDiscovery<TMain> mainDiscovery = null,
+        IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
+        IHooksDiscovery<TSecondNested> secondNestedDiscovery = null,
+        DbContextOptions<AppDbContext> repoDbContextOptions = null
+        )
+        where TMain : class, IIdentifiable<int>
+        where TFirstNested : class, IIdentifiable<int>
+        where TSecondNested : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
             var mainResource = CreateResourceDefinition(mainDiscovery);
@@ -153,12 +220,12 @@ namespace UnitTests.ResourceHooks
         }
 
         protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks = null, params ResourceHook[] enableDbValuesHooks)
-            where TEntity : class, IIdentifiable<int>
+        where TEntity : class, IIdentifiable<int>
         {
             implementedHooks = implementedHooks ?? AllHooks;
             var mock = new Mock<IHooksDiscovery<TEntity>>();
             mock.Setup(discovery => discovery.ImplementedHooks)
-                .Returns(implementedHooks);
+            .Returns(implementedHooks);
 
             if (!enableDbValuesHooks.Any())
             {
@@ -166,69 +233,80 @@ namespace UnitTests.ResourceHooks
                 .Returns(AllHooksNoImplicit);
             }
             mock.Setup(discovery => discovery.DatabaseDiffEnabledHooks)
-                .Returns( new ResourceHook[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
+            .Returns(new ResourceHook[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
 
             return mock.Object;
         }
 
-        private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
-            <TModel>(IHooksDiscovery<TModel> discovery
-            )
-            where TModel : class, IIdentifiable<int>
+        protected void VerifyNoOtherCalls(params dynamic[] resourceMocks)
         {
-            var resourceDefinition = new Mock<IResourceHookContainer<TModel>>();
-            MockHooks(resourceDefinition, discovery);
-            return resourceDefinition;
+            foreach (var mock in resourceMocks)
+            {
+                mock.VerifyNoOtherCalls();
+            }
         }
 
-        private void MockHooks<TModel>(
-            Mock<IResourceHookContainer<TModel>> resourceDefinition,
-            IHooksDiscovery<TModel> discovery
-            ) where TModel : class, IIdentifiable<int>
+        protected DbContextOptions<AppDbContext> InitInMemoryDb(Action<DbContext> seeder)
         {
-            resourceDefinition
-               .Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-               .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
-               .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), It.IsAny<bool>(), It.IsAny<string>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<bool>()))
-                .Returns<IEnumerable<TModel>, ResourceAction, bool>((entities, context, nested) => entities)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<EntityDiff<TModel>, ResourceAction>((entityDiff, context) => entityDiff.RequestEntities)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<string>>(), It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<string>, IUpdatedRelationshipHelper<TModel>, ResourceAction>((ids, context, helper) => ids)
-                .Verifiable();
- 
-            resourceDefinition
-                .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
-                .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<bool>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
-                .Verifiable();
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase(databaseName: "repository_mock")
+            .Options;
 
-            //resourceDefinition
-            //.Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
-            //.Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
-            //.Verifiable();
-            //resourceDefinition
-            //.Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<HookExecutionContext<TModel>>()))
-            //.Returns<IEnumerable<TModel>, HookExecutionContext<TModel>>((entities, context) => entities)
-            //.Verifiable();
+            using (var context = new AppDbContext(options))
+            {
+                seeder(context);
+                ResolveInverseRelationships(context);
+            }
+            return options;
         }
 
+        void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
+        {
+            resourceDefinition
+            .Setup(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+            .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), It.IsAny<bool>(), It.IsAny<string>()))
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<ResourceAction>()))
+            .Returns<EntityDiff<TModel>, ResourceAction>((entityDiff, context) => entityDiff.RequestEntities)
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+            .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<string>>(), It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
+            .Returns<IEnumerable<string>, IUpdatedRelationshipHelper<TModel>, ResourceAction>((ids, context, helper) => ids)
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
+            .Verifiable();
 
-        private (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
+            resourceDefinition
+            .Setup(rd => rd.OnReturn(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+            .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
+            .Verifiable();
+
+            resourceDefinition
+            .Setup(rd => rd.AfterCreate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.AfterRead(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<bool>()))
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>()))
+            .Verifiable();
+            resourceDefinition
+            .Setup(rd => rd.AfterDelete(It.IsAny<IEnumerable<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<bool>()))
+            .Verifiable();
+
+
+        }
+
+        (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
         {
             var processorFactory = new Mock<IGenericProcessorFactory>();
             var context = new Mock<IJsonApiContext>();
@@ -239,14 +317,14 @@ namespace UnitTests.ResourceHooks
             return (context, processorFactory);
         }
 
-        private void SetupProcessorFactoryForResourceDefinition<TModel>(
-            Mock<IGenericProcessorFactory> processorFactory,
-            IResourceHookContainer<TModel> modelResource,
-            IHooksDiscovery<TModel> discovery,
-            IJsonApiContext apiContext,
-            AppDbContext dbContext = null
-            )
-            where TModel : class, IIdentifiable<int>
+        void SetupProcessorFactoryForResourceDefinition<TModel>(
+        Mock<IGenericProcessorFactory> processorFactory,
+        IResourceHookContainer<TModel> modelResource,
+        IHooksDiscovery<TModel> discovery,
+        IJsonApiContext apiContext,
+        AppDbContext dbContext = null
+        )
+        where TModel : class, IIdentifiable<int>
         {
             processorFactory.Setup(c => c.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
             .Returns(modelResource);
@@ -261,30 +339,16 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        protected DbContextOptions<AppDbContext> InitInMemoryDb(Action<DbContext> seeder)
-        {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: "repository_mock")
-            .Options;
-
-            using (var context = new AppDbContext(options))
-            {
-                seeder(context);
-            }
-            return options;
-        }
-
-
-        protected IEntityRepository<TModel, int> CreateTestRepository<TModel>(
-            AppDbContext dbContext,
-            IJsonApiContext apiContext
-            ) where TModel : class, IIdentifiable<int>
+        IEntityRepository<TModel, int> CreateTestRepository<TModel>(
+        AppDbContext dbContext,
+        IJsonApiContext apiContext
+        ) where TModel : class, IIdentifiable<int>
         {
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
             return new DefaultEntityRepository<TModel, int>(apiContext, resolver);
         }
 
-        private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
+        IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
@@ -292,14 +356,20 @@ namespace UnitTests.ResourceHooks
             return mock.Object;
         }
 
-        protected void VerifyNoOtherCalls(params dynamic[] resourceMocks)
+        void ResolveInverseRelationships(AppDbContext context)
         {
-            foreach (var mock in resourceMocks)
-            {
-                mock.VerifyNoOtherCalls();
-            }
+            new InverseRelationships(ResourceGraph.Instance, new DbContextResolver<AppDbContext>(context)).Resolve();
         }
 
+        Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
+        <TModel>(IHooksDiscovery<TModel> discovery
+        )
+        where TModel : class, IIdentifiable<int>
+        {
+            var resourceDefinition = new Mock<IResourceHookContainer<TModel>>();
+            MockHooks(resourceDefinition);
+            return resourceDefinition;
+        }
     }
 }
 

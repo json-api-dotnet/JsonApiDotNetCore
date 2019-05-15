@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -7,20 +6,8 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeReadTests : ResourceHooksTestBase
+    public class BeforeReadTests : HooksTestsSetup
     {
-        public BeforeReadTests()
-        {
-
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .AddResource<Passport>()
-                .Build();
-        }
-
         [Fact]
         public void BeforeRead()
         {

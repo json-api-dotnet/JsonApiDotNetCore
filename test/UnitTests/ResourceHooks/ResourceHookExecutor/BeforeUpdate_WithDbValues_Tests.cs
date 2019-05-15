@@ -1,20 +1,17 @@
-﻿using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal;
+﻿using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeUpdate_WithDbValues_Tests : ResourceHooksTestBase
+    public class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly string description = "DESCRIPTION";
         private readonly string lastName = "NAME";
@@ -25,13 +22,6 @@ namespace UnitTests.ResourceHooks
 
         public BeforeUpdate_WithDbValues_Tests()
         {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .Build();
-
             todoList = CreateTodoWithToOnePerson();
 
             var todoId = todoList[0].Id;
@@ -41,7 +31,7 @@ namespace UnitTests.ResourceHooks
             implicitPersonId = _implicitPersonId.ToString();
 
             var implicitTodo = _todoFaker.Generate();
-            implicitTodo.Id = implicitTodo.Id + 1000;
+            implicitTodo.Id += 1000;
             implicitTodo.ToOnePersonId = _personId;
             implicitTodo.Description = description + description;
 
@@ -56,9 +46,8 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
-        public void BeforeUpdate() // TODO l=3 implicit needs to be tested here too
+        public void BeforeUpdate()
         {
-
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
             var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
             (var contextMock, var hookExecutor, var todoResourceMock,

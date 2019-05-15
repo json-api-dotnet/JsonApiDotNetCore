@@ -1,5 +1,3 @@
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -8,18 +6,8 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class AfterDeleteTests : ResourceHooksTestBase
+    public class AfterDeleteTests : HooksTestsSetup
     {
-        public AfterDeleteTests()
-        {
-            // Build() exposes the static ResourceGraphBuilder.Instance member, which 
-            // is consumed by ResourceDefinition class.
-            new ResourceGraphBuilder()
-                .AddResource<TodoItem>()
-                .AddResource<Person>()
-                .Build();
-        }
-
         [Fact]
         public void AfterDelete()
         {
@@ -29,9 +17,9 @@ namespace UnitTests.ResourceHooks
 
             var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.AfterDelete(todoList, It.IsAny<bool>());
+            hookExecutor.AfterDelete(todoList, ResourceAction.Delete, It.IsAny<bool>());
             // assert
-            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<bool>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Delete, It.IsAny<bool>()), Times.Once());
             resourceDefinitionMock.VerifyNoOtherCalls();
 
         }
@@ -45,7 +33,7 @@ namespace UnitTests.ResourceHooks
 
             var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.AfterDelete(todoList, It.IsAny<bool>());
+            hookExecutor.AfterDelete(todoList, ResourceAction.Delete, It.IsAny<bool>());
             // assert
             resourceDefinitionMock.VerifyNoOtherCalls();
         }
