@@ -164,10 +164,10 @@ namespace JsonApiDotNetCore.Services
 
         }
 
-        // triggered by route /articles/1/relationships/{relationshipName}
+        // triggered by GET /articles/1/relationships/{relationshipName}
         public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName) => await GetRelationshipAsync(id, relationshipName);
 
-        // triggered by route /articles/1/{relationshipName}
+        // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
 
@@ -175,7 +175,6 @@ namespace JsonApiDotNetCore.Services
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (!IsNull(_hookExecutor, entity))
             {
-                // TODO: should not fire after read for L=0
                 _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
             }
@@ -216,6 +215,7 @@ namespace JsonApiDotNetCore.Services
             return MapOut(entity);
         }
 
+        // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<ResourceObject> relationships)
         {
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
@@ -248,7 +248,7 @@ namespace JsonApiDotNetCore.Services
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourceAction.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
-            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.Patch);
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourceAction.PatchRelationship);
 
             relationship.Type = relationshipType;
         }

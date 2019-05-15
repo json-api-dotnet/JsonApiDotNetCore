@@ -33,6 +33,26 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
+        public void OnReturn_GetRelationship()
+        {
+            // arrange
+            var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
+            var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(targetHooks, DisableDbValues);
+            var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
+            (var contextMock, var hookExecutor, var articleResourceMock,
+                var joinResourceMock, var tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+            (var articles, var joins, var tags) = CreateIdentifiableManyToManyData();
+
+            // act
+            hookExecutor.OnReturn(articles, ResourceAction.GetRelationship);
+
+            // assert
+            joinResourceMock.Verify(rd => rd.OnReturn(It.Is<IEnumerable<IdentifiableArticleTag>>((collection) => !collection.Except(joins).Any()), ResourceAction.GetRelationship), Times.Once());
+            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.GetRelationship), Times.Once());
+            VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
+        }
+
+        [Fact]
         public void OnReturn_Without_Parent_Hook_Implemented()
         {
             // arrange

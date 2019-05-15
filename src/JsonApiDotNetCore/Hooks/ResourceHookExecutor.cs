@@ -200,7 +200,7 @@ namespace JsonApiDotNetCore.Services
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.OnReturn);
             var layer = _layerFactory.CreateLayer(entities);
-            if (hookContainer != null)
+            if (hookContainer != null && pipeline != ResourceAction.GetRelationship)
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 var filteredUniqueEntities = hookContainer.OnReturn(uniqueEntities, pipeline);
