@@ -20,6 +20,8 @@ namespace JsonApiDotNetCore.Services
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
 
+        private delegate void TraverseDelegate(IResourceHookContainer container, NodeInLayer node, ResourceAction pipeline);
+
         public ResourceHookExecutor(
             IHookExecutorHelper meta,
             IJsonApiContext context,
@@ -41,7 +43,6 @@ namespace JsonApiDotNetCore.Services
             var calledContainers = new List<Type>() { typeof(TEntity) };
             foreach (var relationshipPath in _context.IncludedRelationships)
             {
-                // TODO: Get rid of nested boolean and calledContainers, add BeforeReadRelation hook
                 RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), pipeline, calledContainers);
             }
         }
@@ -209,25 +210,14 @@ namespace JsonApiDotNetCore.Services
                 entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
                 ValidateHookResponse(entities);
             }
-            var nextLayer = _layerFactory.CreateLayer(layer);
-            RecursiveOnReturn(nextLayer, pipeline);
-            return entities;
-        }
 
-        void RecursiveOnReturn(EntityTreeLayer currentLayer, ResourceAction pipeline)
-        {
-            foreach (NodeInLayer node in currentLayer)
+            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.OnReturn, (container, node) =>
             {
-                var entityType = node.EntityType;
-                var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.OnReturn);
-                if (hookContainer == null) continue;
-
-                var filteredUniqueSet = CallHook(hookContainer, ResourceHook.OnReturn, new object[] { node.UniqueSet, pipeline }).Cast<IIdentifiable>();
+                var filteredUniqueSet = CallHook(container, ResourceHook.OnReturn, new object[] { node.UniqueSet, pipeline }).Cast<IIdentifiable>();
                 node.UpdateUniqueSet(filteredUniqueSet);
                 Reassign(node);
-            }
-            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
-            if (nextLayer.Any()) RecursiveOnReturn(nextLayer, pipeline);
+            });
+            return entities;
         }
 
         void Reassign(NodeInLayer node)
@@ -267,22 +257,11 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer.AfterRead(uniqueEntities, pipeline);
             }
-            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
-            RecursiveAfterRead(nextLayer, pipeline);
-        }
 
-        void RecursiveAfterRead(EntityTreeLayer currentLayer, ResourceAction pipeline)
-        {
-            foreach (NodeInLayer node in currentLayer)
-            {
-                var entityType = node.EntityType;
-                var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.AfterRead);
-                if (hookContainer == null) continue;
-
-                CallHook(hookContainer, ResourceHook.AfterRead, new object[] { node.UniqueSet, pipeline, true });
-            }
-            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
-            if (nextLayer.Any()) RecursiveAfterRead(nextLayer, pipeline);
+            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterRead, (container, node) => 
+            { 
+                CallHook(container, ResourceHook.AfterRead, new object[] { node.UniqueSet, pipeline, true });
+            });
         }
 
         public virtual void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
@@ -294,9 +273,9 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer.AfterCreate(uniqueEntities, pipeline);
             }
-            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
-            AfterUpdateRelationship(nextLayer, pipeline);
+            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterUpdateRelationship, (container, node) => FireAfterUpdateRelationship(container, node, pipeline));
         }
+
 
         public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
@@ -307,22 +286,26 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer.AfterUpdate(uniqueEntities, pipeline);
             }
-            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
-            AfterUpdateRelationship(nextLayer, pipeline);
+            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterUpdateRelationship, (container, node) => FireAfterUpdateRelationship(container, node, pipeline));
         }
 
-        void AfterUpdateRelationship(EntityTreeLayer currentLayer, ResourceAction pipeline)
+        void Traverse(EntityTreeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, NodeInLayer> action)
         {
             foreach (NodeInLayer node in currentLayer)
             {
                 var entityType = node.EntityType;
-                var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.AfterUpdateRelationship);
+                var hookContainer = _meta.GetResourceHookContainer(entityType, target);
                 if (hookContainer == null) continue;
-                var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, node.EntitiesByRelationships);
-                CallHook(hookContainer, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
+                action(hookContainer, node);
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
-            if (nextLayer.Any()) AfterUpdateRelationship(nextLayer, pipeline);
+            if (nextLayer.Any()) Traverse(nextLayer, target, action);
+        }
+
+        private void FireAfterUpdateRelationship(IResourceHookContainer container, NodeInLayer node, ResourceAction pipeline)
+        {
+            var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, node.EntitiesByRelationships);
+            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
         }
 
         public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
