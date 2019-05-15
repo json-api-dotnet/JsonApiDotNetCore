@@ -13,6 +13,9 @@ namespace UnitTests.ResourceHooks
 {
     public class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
     {
+        private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeUpdate, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
+        private readonly ResourceHook[] targetHooksNoImplicit = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
+
         private readonly string description = "DESCRIPTION";
         private readonly string lastName = "NAME";
         private readonly string implicitPersonId;
@@ -49,8 +52,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -80,8 +83,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_Deleting_Relationship()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
             var attr = ResourceGraph.Instance.GetContextEntity(typeof(TodoItem)).Relationships.Single(r => r.PublicRelationshipName == "one-to-one-person");
@@ -105,8 +108,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_Without_Parent_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -130,8 +133,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_Without_Child_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
-            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -151,8 +154,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_NoImplicit()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, new ResourceHook[] { ResourceHook.BeforeUpdate });
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooksNoImplicit, new ResourceHook[] { ResourceHook.BeforeUpdateRelationship });
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, ResourceHook.BeforeUpdate );
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship );
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -173,8 +176,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_NoImplicit_Without_Parent_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooksNoImplicit, new ResourceHook[] { ResourceHook.BeforeUpdateRelationship });
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship );
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -194,8 +197,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_NoImplicit_Without_Child_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, new ResourceHook[] { ResourceHook.BeforeUpdate });
-            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, ResourceHook.BeforeUpdate);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 

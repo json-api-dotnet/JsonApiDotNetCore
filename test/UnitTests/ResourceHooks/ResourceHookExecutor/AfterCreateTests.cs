@@ -10,6 +10,8 @@
 //{
 //    public class AfterCreateTests : HooksTestsSetup
 //    {
+//        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterCreate };
+
 //        [Fact]
 //        public void AfterCreate()
 //        {

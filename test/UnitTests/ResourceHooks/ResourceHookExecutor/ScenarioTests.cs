@@ -16,8 +16,8 @@ namespace UnitTests.ResourceHooks
         //public void Entity_Has_Multiple_Relations_To_Same_Type()
         //{
         //    // arrange
-        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, NoHooks);
-        //    var personDiscovery = SetDiscoverableHooks<Person>(AllHooksNoImplicit, NoHooks);
+        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, NoHooks);
+        //    var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, NoHooks);
 
         //    (var contextMock, var hookExecutor, var todoResourceMock,
         //        var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
@@ -44,7 +44,7 @@ namespace UnitTests.ResourceHooks
         //public void Entity_Has_Cyclic_Relations()
         //{
         //    // arrange
-        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, NoHooks);
+        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, NoHooks);
 
         //    (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);            
         //    var todo = new TodoItem();
@@ -62,7 +62,7 @@ namespace UnitTests.ResourceHooks
         //public void Entity_Has_Nested_Cyclic_Relations()
         //{
         //    // arrange
-        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, NoHooks);
+        //    var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, NoHooks);
 
         //    (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
         //    var rootTodo = new TodoItem();

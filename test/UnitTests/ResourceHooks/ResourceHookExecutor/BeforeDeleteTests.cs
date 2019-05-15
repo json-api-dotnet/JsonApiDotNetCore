@@ -6,14 +6,15 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-
     public class BeforeDeleteTests : HooksTestsSetup
     {
+        private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeDelete };
+
         [Fact]
         public void BeforeDelete()
         {
             // arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(AllHooksNoImplicit, NoHooks);
+            var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();
@@ -29,7 +30,7 @@ namespace UnitTests.ResourceHooks
         public void BeforeDelete_Without_Any_Hook_Implemented()
         {
             // arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, NoHooks);
+            var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();

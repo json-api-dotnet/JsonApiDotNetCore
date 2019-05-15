@@ -260,7 +260,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
             var layer = _layerFactory.CreateLayer(entities);
             if (hookContainer != null)
             {

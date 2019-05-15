@@ -20,10 +20,9 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksDummyData
     {
-        protected ResourceHook[] AllHooks;
         protected ResourceHook[] NoHooks = new ResourceHook[0];
-        protected ResourceHook[] AllHooksNoImplicit;
-        protected ResourceHook[] EnableDbValuesEverywhere = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
+        protected ResourceHook[] EnableDbValues = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
+        protected ResourceHook[] DisableDbValues = new ResourceHook[0];
         protected readonly Faker<Person> _personFaker;
         protected readonly Faker<TodoItem> _todoFaker;
         protected readonly Faker<Tag> _tagFaker;
@@ -41,13 +40,6 @@ namespace UnitTests.ResourceHooks
                 .AddResource<IdentifiableArticleTag>()
                 .AddResource<Tag>()
                 .Build();
-
-            AllHooks = Enum.GetValues(typeof(ResourceHook))
-            .Cast<ResourceHook>()
-            .Where(h => h != ResourceHook.None)
-            .ToArray();
-
-            AllHooksNoImplicit = AllHooks.Where(h => h != ResourceHook.BeforeImplicitUpdateRelationship).ToArray();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
@@ -219,10 +211,9 @@ namespace UnitTests.ResourceHooks
             return (context, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }
 
-        protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks = null, params ResourceHook[] enableDbValuesHooks)
+        protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks, params ResourceHook[] enableDbValuesHooks)
         where TEntity : class, IIdentifiable<int>
         {
-            implementedHooks = implementedHooks ?? AllHooks;
             var mock = new Mock<IHooksDiscovery<TEntity>>();
             mock.Setup(discovery => discovery.ImplementedHooks)
             .Returns(implementedHooks);
@@ -230,7 +221,7 @@ namespace UnitTests.ResourceHooks
             if (!enableDbValuesHooks.Any())
             {
                 mock.Setup(discovery => discovery.DatabaseDiffDisabledHooks)
-                .Returns(AllHooksNoImplicit);
+                .Returns(enableDbValuesHooks);
             }
             mock.Setup(discovery => discovery.DatabaseDiffEnabledHooks)
             .Returns(new ResourceHook[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());

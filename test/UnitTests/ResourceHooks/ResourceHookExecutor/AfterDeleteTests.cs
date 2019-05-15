@@ -8,11 +8,12 @@ namespace UnitTests.ResourceHooks
 {
     public class AfterDeleteTests : HooksTestsSetup
     {
+        readonly ResourceHook[] targetHooks = { ResourceHook.AfterDelete };
         [Fact]
         public void AfterDelete()
         {
             // arrange
-            var discovery = SetDiscoverableHooks<TodoItem>();
+            var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();
@@ -28,7 +29,7 @@ namespace UnitTests.ResourceHooks
         public void AfterDelete_Without_Any_Hook_Implemented()
         {
             // arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
+            var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();

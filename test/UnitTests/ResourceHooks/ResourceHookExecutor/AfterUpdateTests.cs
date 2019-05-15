@@ -10,6 +10,7 @@
 //{
 //    public class AfterUpdateTests : HooksTestsSetup
 //    {
+//        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterUpdate };
 //        public AfterUpdateTests()
 //        {
 //            // Build() exposes the static ResourceGraphBuilder.Instance member, which 

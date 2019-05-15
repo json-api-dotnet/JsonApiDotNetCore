@@ -11,6 +11,8 @@ namespace UnitTests.ResourceHooks
 {
     public class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
     {
+        private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeDelete, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
+
         private readonly DbContextOptions<AppDbContext> options;
         private readonly Person person;
         public BeforeDelete_WithDbValues_Tests()
@@ -34,9 +36,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeDelete()
         {
             // arrange
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
-            var passportDiscovery = SetDiscoverableHooks<Passport>(AllHooks, EnableDbValuesEverywhere);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, EnableDbValues);
             (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
                 var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
 
@@ -55,9 +57,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeDelete_No_Parent_Hooks()
         {
             // arrange
-            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, NoHooks);
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
-            var passportDiscovery = SetDiscoverableHooks<Passport>(AllHooks, EnableDbValuesEverywhere);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, EnableDbValues);
             (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
                 var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
 
@@ -75,9 +77,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeDelete_No_Children_Hooks()
         {
             // arrange
-            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
-            var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
                 var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
 

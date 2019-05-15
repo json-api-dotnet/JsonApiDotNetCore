@@ -8,13 +8,14 @@ namespace UnitTests.ResourceHooks
 {
     public class BeforeReadTests : HooksTestsSetup
     {
+        private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeRead };
+
         [Fact]
         public void BeforeRead()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>();
-
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todoList = CreateTodoWithOwner();
 
@@ -31,8 +32,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeReadWithInclusion()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>();
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
@@ -53,9 +54,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeReadWithNestedInclusion()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>();
-            var passportDiscovery = SetDiscoverableHooks<Passport>();
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
@@ -78,9 +79,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeReadWithNestedInclusion_No_Parent_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-            var personDiscovery = SetDiscoverableHooks<Person>();
-            var passportDiscovery = SetDiscoverableHooks<Passport>();
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
@@ -101,9 +102,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeReadWithNestedInclusion_No_Child_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>(new ResourceHook[0]);
-            var passportDiscovery = SetDiscoverableHooks<Passport>();
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
@@ -124,9 +125,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeReadWithNestedInclusion_No_Grandchild_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>();
-            var personDiscovery = SetDiscoverableHooks<Person>();
-            var passportDiscovery = SetDiscoverableHooks<Passport>(new ResourceHook[0]);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
@@ -148,9 +149,9 @@ namespace UnitTests.ResourceHooks
         public void BeforeReadWithNestedInclusion_Without_Any_Hook_Implemented()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(new ResourceHook[0]);
-            var personDiscovery = SetDiscoverableHooks<Person>(new ResourceHook[0]);
-            var passportDiscovery = SetDiscoverableHooks<Passport>(new ResourceHook[0]);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
