@@ -9,7 +9,6 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-
     public class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly DbContextOptions<AppDbContext> options;
@@ -29,7 +28,6 @@ namespace UnitTests.ResourceHooks
                 context.Set<Person>().Add(person);
                 context.SaveChanges();
             });
-
         }
 
         [Fact]
@@ -53,9 +51,8 @@ namespace UnitTests.ResourceHooks
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
-
         [Fact]
-        public void BeforeDelete_NoParentHook()
+        public void BeforeDelete_No_Parent_Hooks()
         {
             // arrange
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, NoHooks);
@@ -74,6 +71,25 @@ namespace UnitTests.ResourceHooks
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
+        [Fact]
+        public void BeforeDelete_No_Children_Hooks()
+        {
+            // arrange
+            var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks);
+            var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks);
+            (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
+                var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+
+            var todoList = CreateTodoWithOwner();
+            // act
+            hookExecutor.BeforeDelete(new List<Person> { person }, ResourceAction.Delete);
+
+            // assert
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
+            VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
+        }
+
         private bool CheckImplicitTodos(IUpdatedRelationshipHelper<TodoItem> rh)
         {
             var todos = rh.GetEntitiesRelatedWith<Person>().ToList();
@@ -85,7 +101,6 @@ namespace UnitTests.ResourceHooks
             var passports = rh.GetEntitiesRelatedWith<Person>().Single().Value;
             return passports.Count == 1;
         }
-
     }
 }
 
