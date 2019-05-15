@@ -14,29 +14,30 @@ namespace JsonApiDotNetCore.Services
         private readonly IHookExecutorHelper _meta;
         private readonly IResourceGraph _graph;
         private readonly IJsonApiContext _context;
-        private readonly Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
+        private Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
 
 
         public EntityTreeLayerFactory(
             IHookExecutorHelper meta, 
             IResourceGraph graph, 
-            IJsonApiContext context,
-            Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
+            IJsonApiContext context)
         {
             _context = context;
             _meta = meta;
             _graph = graph;
-            _processedEntities = processedEntities;
         }
 
+        // nested
         public EntityTreeLayer CreateLayer(EntityTreeLayer currentLayer)
         {
             var nextLayer = new EntityTreeLayer(currentLayer, _meta, _graph, _context, _processedEntities);
             return nextLayer;
         }
 
+        // root
         public EntityTreeLayer CreateLayer(IEnumerable<IIdentifiable> currentLayerEntities)
         {
+            _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
             var layer = new EntityTreeLayer(currentLayerEntities, _meta, _graph, _context, _processedEntities);
             return layer;
         }
@@ -60,9 +61,6 @@ namespace JsonApiDotNetCore.Services
         private readonly Dictionary<RelationshipProxy, List<IIdentifiable>> _previousEntitiesByRelationship;
 
 
-
-        public bool IsRootLayer { get; private set; }
-
         public EntityTreeLayer(
             IEnumerable<IIdentifiable> currentLayerEntities,
             IHookExecutorHelper meta, 
@@ -70,7 +68,6 @@ namespace JsonApiDotNetCore.Services
             IJsonApiContext context,
             Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
         {
-            IsRootLayer = true;
             _meta = meta;
             _graph = graph;
             _context = context;
@@ -88,7 +85,6 @@ namespace JsonApiDotNetCore.Services
             IJsonApiContext context,
             Dictionary<Type, HashSet<IIdentifiable>> processedEntities)
         {
-            IsRootLayer = false;
             _meta = meta;
             _graph = graph;
             _context = context;
@@ -278,7 +274,7 @@ namespace JsonApiDotNetCore.Services
                 }
                 var currentLayerByRelationship = _currentEntitiesByRelationship?.Where(p => p.Key.DependentType == dependent).ToDictionary(p => p.Key, p => p.Value);
                 var previousLayerByRelationship = _previousEntitiesByRelationship?.Where(p => p.Key.DependentType == dependent).ToDictionary(p => p.Key, p => p.Value);
-                yield return new NodeInLayer(dependent, uniqueEntities, currentLayerByRelationship, previousLayerByRelationship, relationships, IsRootLayer);
+                yield return new NodeInLayer(dependent, uniqueEntities, currentLayerByRelationship, previousLayerByRelationship, relationships);
             }
         }
 

@@ -15,7 +15,6 @@ namespace JsonApiDotNetCore.Services
     {
         private HashSet<IIdentifiable> _uniqueSet;
 
-        public bool IsRootLayerNode { get; private set; }
         public Dictionary<RelationshipProxy, List<IIdentifiable>> EntitiesByRelationships { get; private set; }
         public Dictionary<RelationshipProxy, List<IIdentifiable>> PrincipalEntitiesByRelationships { get; private set; }
         public List<RelationshipProxy> Relationships { get; private set; }
@@ -27,8 +26,7 @@ namespace JsonApiDotNetCore.Services
             HashSet<IIdentifiable> uniqueSet,
             Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByRelationships,
             Dictionary<RelationshipProxy, List<IIdentifiable>> principalEntitiesByRelationships,
-            List<RelationshipProxy> relationships,
-            bool isRootLayerNode
+            List<RelationshipProxy> relationships
         )
         {
             _uniqueSet = uniqueSet;
@@ -36,7 +34,6 @@ namespace JsonApiDotNetCore.Services
             EntitiesByRelationships = entitiesByRelationships;
             PrincipalEntitiesByRelationships = principalEntitiesByRelationships;
             Relationships = relationships;
-            IsRootLayerNode = isRootLayerNode;
         }
 
 

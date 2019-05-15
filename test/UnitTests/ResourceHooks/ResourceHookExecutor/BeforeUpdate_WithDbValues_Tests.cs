@@ -81,7 +81,6 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_Deleting_Relationship() // TODO l=3 implicit needs to be tested here too
         {
-
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(AllHooks, EnableDbValuesEverywhere);
             var personDiscovery = SetDiscoverableHooks<Person>(AllHooks, EnableDbValuesEverywhere);
             (var contextMock, var hookExecutor, var todoResourceMock,

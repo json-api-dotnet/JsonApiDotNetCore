@@ -34,8 +34,6 @@ namespace JsonApiDotNetCore.Services
         protected readonly IHookExecutorHelper _meta;
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
-        protected Dictionary<Type, HashSet<IIdentifiable>> _processedEntities;
-
 
         public ResourceHookExecutor(
             IHookExecutorHelper meta,
@@ -46,8 +44,7 @@ namespace JsonApiDotNetCore.Services
             _meta = meta;
             _context = context;
             _graph = graph;
-            _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
-            _layerFactory = new EntityTreeLayerFactory(meta, graph, _context, _processedEntities);
+            _layerFactory = new EntityTreeLayerFactory(meta, graph, _context);
         }
 
 
@@ -64,8 +61,6 @@ namespace JsonApiDotNetCore.Services
                 // TODO: Get rid of nested boolean and calledContainers, add BeforeReadRelation hook
                 RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), pipeline, calledContainers);
             }
-
-
         }
 
         void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction pipeline, List<Type> calledContainers)
@@ -111,7 +106,6 @@ namespace JsonApiDotNetCore.Services
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
             BeforeUpdateRelationship(pipeline, nextLayer);
-            FlushRegister();
             return entities;
         }
 
@@ -128,7 +122,6 @@ namespace JsonApiDotNetCore.Services
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
 
             BeforeUpdateRelationship(pipeline, nextLayer);
-            FlushRegister();
             return entities;
         }
 
@@ -219,26 +212,24 @@ namespace JsonApiDotNetCore.Services
                 }
             }
 
-            FlushRegister();
             return entities;
 
         }
 
         public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
+            var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.OnReturn);
             var layer = _layerFactory.CreateLayer(entities);
             if (hookContainer != null)
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-                var filteredUniqueEntities = hookContainer?.OnReturn(uniqueEntities, pipeline);
+                var filteredUniqueEntities = hookContainer.OnReturn(uniqueEntities, pipeline);
                 /// this is not updating unique entities internally!!!!  say [a_1, a_2] => [a_1], 
                 /// then nested hooks for relations of a_2 are still being fired
                 entities = entities.Intersect(filteredUniqueEntities, Comparer).Cast<TEntity>();
             }
             var nextLayer = _layerFactory.CreateLayer(layer);
             RecursiveOnReturn(nextLayer, pipeline);
-            FlushRegister();
             return entities;
         }
 
@@ -247,7 +238,7 @@ namespace JsonApiDotNetCore.Services
             foreach (NodeInLayer node in currentLayer)
             {
                 var entityType = node.EntityType;
-                var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.AfterRead);
+                var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.OnReturn);
                 if (hookContainer == null) continue;
 
                 var filteredUniqueSet = CallHook(hookContainer, ResourceHook.OnReturn, new object[] { node.UniqueSet, pipeline }).Cast<IIdentifiable>();
@@ -286,7 +277,6 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-
         public virtual void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
             var hookContainer = _meta.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
@@ -294,11 +284,10 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-                hookContainer?.AfterRead(uniqueEntities, pipeline);
+                hookContainer.AfterRead(uniqueEntities, pipeline);
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
             RecursiveAfterRead(nextLayer, pipeline);
-            FlushRegister();
         }
 
         void RecursiveAfterRead(EntityTreeLayer currentLayer, ResourceAction pipeline)
@@ -326,9 +315,7 @@ namespace JsonApiDotNetCore.Services
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
 
-            FlushRegister();
         }
-
 
         public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
@@ -339,7 +326,6 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer?.AfterUpdate(uniqueEntities, pipeline);
             }
-            FlushRegister();
         }
 
         void AfterUpdateRelationship(EntityTreeLayer currentLayer, ResourceAction pipeline)
@@ -363,9 +349,8 @@ namespace JsonApiDotNetCore.Services
             if (hookContainer != null)
             {
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
-                hookContainer?.AfterDelete(uniqueEntities, pipeline, succeeded);
+                hookContainer.AfterDelete(uniqueEntities, pipeline, succeeded);
             }
-            FlushRegister();
         }
 
 
@@ -429,11 +414,6 @@ namespace JsonApiDotNetCore.Services
         }
 
 
-
-
-
-
-
         /// <summary>
         /// checks that the collection does not contain more than one item when
         /// relevant (eg AfterRead from GetSingle pipeline).
@@ -467,16 +447,6 @@ namespace JsonApiDotNetCore.Services
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.
             return (IEnumerable)ThrowJsonApiExceptionOnError(() => method.Invoke(container, arguments));
-        }
-
-        /// <summary>
-        /// We need to flush the list of processed entities because typically
-        /// the hook executor will be caled twice per service pipeline (eg BeforeCreate
-        /// and AfterCreate).
-        /// </summary>
-        void FlushRegister()
-        {
-            _processedEntities = new Dictionary<Type, HashSet<IIdentifiable>>();
         }
 
         object ThrowJsonApiExceptionOnError(Func<object> action)

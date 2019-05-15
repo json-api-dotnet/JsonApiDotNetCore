@@ -144,8 +144,8 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> GetAsync(TId id)
         {
-
-            _hookExecutor?.BeforeRead<TEntity>(ResourceAction.GetSingle, id.ToString());
+            var pipeline = ResourceAction.GetSingle;
+            _hookExecutor?.BeforeRead<TEntity>(pipeline, id.ToString());
             TEntity entity;
             if (ShouldIncludeRelationships())
             {
@@ -157,8 +157,8 @@ namespace JsonApiDotNetCore.Services
             }
             if(!IsNull(_hookExecutor, entity))
             {
-                _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle);
-                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Get).SingleOrDefault();
+                _hookExecutor.AfterRead(AsList(entity), pipeline);
+                entity = _hookExecutor.OnReturn(AsList(entity), pipeline).SingleOrDefault();
             }
             return MapOut(entity);
 
@@ -176,8 +176,8 @@ namespace JsonApiDotNetCore.Services
             if (!IsNull(_hookExecutor, entity))
             {
                 // TODO: should not fire after read for L=0
-                _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetSingle);
-                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Get).SingleOrDefault();
+                _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
             }
 
 
