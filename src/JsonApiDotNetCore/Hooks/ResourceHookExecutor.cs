@@ -15,21 +15,6 @@ namespace JsonApiDotNetCore.Services
     public class ResourceHookExecutor : IResourceHookExecutor
     {
         public static readonly IdentifiableComparer Comparer = new IdentifiableComparer();
-        public static readonly ResourceAction[] SingleActions =
-        {
-            ResourceAction.GetSingle,
-            ResourceAction.Create,
-            ResourceAction.Delete,
-            ResourceAction.Patch,
-            ResourceAction.GetRelationship,
-            ResourceAction.PatchRelationship
-        };
-        public static readonly ResourceHook[] ImplicitUpdateHooks =
-        {
-            ResourceHook.BeforeCreate,
-            ResourceHook.BeforeUpdate,
-            ResourceHook.BeforeDelete
-        };
         protected readonly EntityTreeLayerFactory _layerFactory;
         protected readonly IHookExecutorHelper _meta;
         protected readonly IJsonApiContext _context;
@@ -209,7 +194,6 @@ namespace JsonApiDotNetCore.Services
                     CallHook(nestedHookcontainer, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
                 }
             }
-
             return entities;
 
         }
@@ -351,9 +335,6 @@ namespace JsonApiDotNetCore.Services
                 hookContainer.AfterDelete(uniqueEntities, pipeline, succeeded);
             }
         }
-
-
-
 
         RelationshipProxy GetInverseRelationship(RelationshipProxy proxy)
         {
