@@ -19,7 +19,6 @@ namespace UnitTests.ResourceHooks
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var articleResourceMock,
                 var tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-
             (var articles, var joins, var tags) = CreateManyToManyData();
 
             // act

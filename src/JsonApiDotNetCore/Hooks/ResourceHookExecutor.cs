@@ -295,7 +295,7 @@ namespace JsonApiDotNetCore.Services
                 hookContainer.AfterCreate(uniqueEntities, pipeline);
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
-
+            AfterUpdateRelationship(nextLayer, pipeline);
         }
 
         public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
@@ -307,6 +307,8 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer.AfterUpdate(uniqueEntities, pipeline);
             }
+            EntityTreeLayer nextLayer = _layerFactory.CreateLayer(layer);
+            AfterUpdateRelationship(nextLayer, pipeline);
         }
 
         void AfterUpdateRelationship(EntityTreeLayer currentLayer, ResourceAction pipeline)
@@ -316,7 +318,8 @@ namespace JsonApiDotNetCore.Services
                 var entityType = node.EntityType;
                 var hookContainer = _meta.GetResourceHookContainer(entityType, ResourceHook.AfterUpdateRelationship);
                 if (hookContainer == null) continue;
-                CallHook(hookContainer, ResourceHook.AfterUpdateRelationship, new object[] { node.UniqueSet, pipeline });
+                var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, node.EntitiesByRelationships);
+                CallHook(hookContainer, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
             }
             EntityTreeLayer nextLayer = _layerFactory.CreateLayer(currentLayer);
             if (nextLayer.Any()) AfterUpdateRelationship(nextLayer, pipeline);

@@ -9,20 +9,21 @@ namespace UnitTests.ResourceHooks
     public class AfterDeleteTests : HooksTestsSetup
     {
         readonly ResourceHook[] targetHooks = { ResourceHook.AfterDelete };
+
         [Fact]
         public void AfterDelete()
         {
             // arrange
             var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
-
             var todoList = CreateTodoWithOwner();
+
             // act
             hookExecutor.AfterDelete(todoList, ResourceAction.Delete, It.IsAny<bool>());
+
             // assert
             resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Delete, It.IsAny<bool>()), Times.Once());
-            resourceDefinitionMock.VerifyNoOtherCalls();
-
+            VerifyNoOtherCalls(resourceDefinitionMock);
         }
 
         [Fact]
@@ -31,12 +32,13 @@ namespace UnitTests.ResourceHooks
             // arrange
             var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
-
             var todoList = CreateTodoWithOwner();
+
             // act
             hookExecutor.AfterDelete(todoList, ResourceAction.Delete, It.IsAny<bool>());
+
             // assert
-            resourceDefinitionMock.VerifyNoOtherCalls();
+            VerifyNoOtherCalls(resourceDefinitionMock);
         }
     }
 }

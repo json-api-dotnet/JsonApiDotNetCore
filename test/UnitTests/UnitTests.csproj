@@ -20,4 +20,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Read\" />
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Create\" />
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Update\" />
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Delete\" />
+  </ItemGroup>
 </Project>
