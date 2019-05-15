@@ -253,15 +253,12 @@ namespace JsonApiDotNetCore.Services
             return _uniqueEntities.Any();
         }
 
-
-
-
         public IEnumerator<NodeInLayer> GetEnumerator()
         {
             List<DependentType> types = null;
             if (_currentEntitiesByRelationship != null && _currentEntitiesByRelationship.Any())
             {
-                types = _currentEntitiesByRelationship.Select(kvp => kvp.Key.DependentType).ToList();
+                types = _currentEntitiesByRelationship.Select(kvp => kvp.Key.DependentType).Distinct().ToList();
             } else
             {
                 types = _uniqueEntities.Keys.ToList();
