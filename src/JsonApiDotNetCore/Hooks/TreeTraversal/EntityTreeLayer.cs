@@ -160,10 +160,8 @@ namespace JsonApiDotNetCore.Services
                         var isContextRelation = _context.RelationshipsToUpdate?.ContainsKey(attr);
                         var proxy = new RelationshipProxy(attr, dependentType, isContextRelation != null && (bool)isContextRelation);
                         RelationshipProxies[attr] = proxy;
-
                     }
                 }
-
             }
         }
 

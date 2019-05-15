@@ -8,9 +8,34 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <summary>
-    /// Related entities in current layer entry.
-    /// </summary>
+
+    internal interface IResourceHooksNode
+    {
+         Type EntityType { get; }
+         IList UniqueEntities { get; }
+
+    }
+
+    internal class RootNode<TEntity> : IResourceHooksNode where TEntity : class, IIdentifiable
+    {
+        public HashSet<TEntity> _uniqueEntities; 
+        public Type EntityType { get; internal set; }
+        public IList UniqueEntities { get { return (IList)_uniqueEntities; } }
+
+        public RootNode(IEnumerable<TEntity> uniqueEntities)
+        {
+            EntityType = typeof(TEntity);
+            _uniqueEntities = new HashSet<TEntity>(uniqueEntities);
+        }
+
+        public  void UpdateUniqueEntities(IEnumerable updated)
+        {
+            var casted = updated.Cast<TEntity>().ToList();
+            var intersected = _uniqueEntities.Intersect(casted, ResourceHookExecutor.Comparer).Cast<TEntity>();
+            _uniqueEntities = new HashSet<TEntity>(intersected);
+        }
+    }
+
     public class NodeInLayer
     {
         private HashSet<IIdentifiable> _uniqueSet;
@@ -35,8 +60,6 @@ namespace JsonApiDotNetCore.Services
             PrincipalEntitiesByRelationships = principalEntitiesByRelationships;
             Relationships = relationships;
         }
-
-
 
         public void UpdateUniqueSet(IEnumerable filteredUniqueSet)
         {

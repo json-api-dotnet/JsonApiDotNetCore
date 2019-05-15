@@ -20,13 +20,8 @@ namespace JsonApiDotNetCore.Services
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
 
-        private delegate void TraverseDelegate(IResourceHookContainer container, NodeInLayer node, ResourceAction pipeline);
 
-        public ResourceHookExecutor(
-            IHookExecutorHelper meta,
-            IJsonApiContext context,
-            IResourceGraph graph
-            )
+        public ResourceHookExecutor(IHookExecutorHelper meta, IJsonApiContext context, IResourceGraph graph)
         {
             _meta = meta;
             _context = context;
@@ -40,14 +35,14 @@ namespace JsonApiDotNetCore.Services
             hookContainer?.BeforeRead(pipeline, false, stringId);
 
             var contextEntity = _graph.GetContextEntity(typeof(TEntity));
-            var calledContainers = new List<Type>() { typeof(TEntity) };
+            var calledContainers = new List<PrincipalType>() { typeof(TEntity) };
             foreach (var relationshipPath in _context.IncludedRelationships)
             {
                 RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), pipeline, calledContainers);
             }
         }
 
-        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction pipeline, List<Type> calledContainers)
+        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction pipeline, List<PrincipalType> calledContainers)
         {
             var target = relationshipChain.First();
             var relationship = contextEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == target);
@@ -273,7 +268,7 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer.AfterCreate(uniqueEntities, pipeline);
             }
-            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterUpdateRelationship, (container, node) => FireAfterUpdateRelationship(container, node, pipeline));
+            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterUpdateRelationship, (container, node) => AfterUpdateRelationship(container, node, pipeline));
         }
 
 
@@ -286,7 +281,7 @@ namespace JsonApiDotNetCore.Services
                 var uniqueEntities = layer.GetAllUniqueEntities().Cast<TEntity>();
                 hookContainer.AfterUpdate(uniqueEntities, pipeline);
             }
-            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterUpdateRelationship, (container, node) => FireAfterUpdateRelationship(container, node, pipeline));
+            Traverse(_layerFactory.CreateLayer(layer), ResourceHook.AfterUpdateRelationship, (container, node) => AfterUpdateRelationship(container, node, pipeline));
         }
 
         void Traverse(EntityTreeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, NodeInLayer> action)
@@ -302,7 +297,7 @@ namespace JsonApiDotNetCore.Services
             if (nextLayer.Any()) Traverse(nextLayer, target, action);
         }
 
-        private void FireAfterUpdateRelationship(IResourceHookContainer container, NodeInLayer node, ResourceAction pipeline)
+        private void AfterUpdateRelationship(IResourceHookContainer container, NodeInLayer node, ResourceAction pipeline)
         {
             var relationshipHelper = TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), node.EntityType, node.EntitiesByRelationships);
             CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
