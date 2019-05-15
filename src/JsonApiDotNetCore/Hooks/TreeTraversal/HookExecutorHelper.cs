@@ -178,7 +178,6 @@ namespace JsonApiDotNetCore.Internal
         {
             var openType = typeof(TId) == typeof(Guid) ? typeof(IGuidEntityRepository<>) : typeof(IEntityRepository<>);
             return _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(openType, typeof(TEntity));
-
         }
 
     }

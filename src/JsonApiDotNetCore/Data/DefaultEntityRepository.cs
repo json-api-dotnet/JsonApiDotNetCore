@@ -36,6 +36,28 @@ namespace JsonApiDotNetCore.Data
         { }
     }
 
+    public class DefaultGuidEntityRepository<TEntity>
+    : DefaultEntityRepository<TEntity, Guid>,
+    IGuidEntityRepository<TEntity>
+    where TEntity : class, IIdentifiable<Guid>
+    {
+        public DefaultGuidEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver
+            )
+        : base(jsonApiContext, contextResolver)
+        { }
+
+        public DefaultGuidEntityRepository(
+            ILoggerFactory loggerFactory,
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver
+            )
+        : base(loggerFactory, jsonApiContext, contextResolver)
+        { }
+    }
+
+
     /// <summary>
     /// Provides a default repository implementation and is responsible for
     /// abstracting any EF Core APIs away from the service layer.

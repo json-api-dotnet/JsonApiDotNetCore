@@ -113,6 +113,7 @@ namespace JsonApiDotNetCore.Extensions
                 AddOperationServices(services);
 
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
+            services.AddScoped(typeof(IGuidEntityRepository<>), typeof(DefaultGuidEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
             services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));

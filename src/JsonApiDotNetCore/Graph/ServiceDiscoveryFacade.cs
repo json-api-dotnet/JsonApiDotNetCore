@@ -40,10 +40,13 @@ namespace JsonApiDotNetCore.Graph
 
         internal static HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
             typeof(IEntityRepository<>),
+            typeof(IGuidEntityRepository<>),
             typeof(IEntityRepository<,>),
             typeof(IEntityWriteRepository<>),
+            typeof(IGuidEntityWriteRepository<>),
             typeof(IEntityWriteRepository<,>),
             typeof(IEntityReadRepository<>),
+            typeof(IGuidEntityReadRepository<>),
             typeof(IEntityReadRepository<,>)
         };
 

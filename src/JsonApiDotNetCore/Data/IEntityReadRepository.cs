@@ -12,6 +12,11 @@ namespace JsonApiDotNetCore.Data
        where TEntity : class, IIdentifiable<int>
     { }
 
+    public interface IGuidEntityReadRepository<TEntity>
+       : IEntityReadRepository<TEntity, Guid>
+       where TEntity : class, IIdentifiable<Guid>
+    { }
+
     public interface IEntityReadRepository<TEntity, in TId>
         where TEntity : class, IIdentifiable<TId>
     {
@@ -27,7 +32,7 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Apply fields to the provided queryable
         /// </summary>
-        IQueryable<TEntity> Select(IQueryable<TEntity> entities,List<string> fields);
+        IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields);
 
         /// <summary>
         /// Include a relationship in the query

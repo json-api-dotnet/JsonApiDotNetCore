@@ -71,7 +71,6 @@ namespace JsonApiDotNetCore.Services
 
                 RecursiveBeforeRead(_graph.GetContextEntity(relationship.DependentType), relationshipChain, pipeline, calledContainers);
             }
-
         }
 
         public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
@@ -195,7 +194,6 @@ namespace JsonApiDotNetCore.Services
                 }
             }
             return entities;
-
         }
 
         public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
@@ -382,7 +380,6 @@ namespace JsonApiDotNetCore.Services
             return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => new HashSet<IIdentifiable>(kvp.Value).ToList());
         }
 
-
         IList LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type entityType, ResourceHook hook)
         {
             if (_meta.ShouldLoadDbValues(entityType, hook))
@@ -392,7 +389,6 @@ namespace JsonApiDotNetCore.Services
             }
             return null;
         }
-
 
         /// <summary>
         /// checks that the collection does not contain more than one item when
