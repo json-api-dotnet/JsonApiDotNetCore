@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Models
             IsImmutable = isImmutable;
             IsFilterable = isFilterable;
             IsSortable = isSortable;
+
         }
 
         /// <summary>
