@@ -404,6 +404,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
+            var nowOffset = new DateTimeOffset();
             var content = new
             {
                 data = new
@@ -413,7 +414,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "description", todoItem.Description },
                         { "ordinal", todoItem.Ordinal },
-                        { "created-date", todoItem.CreatedDate }
+                        { "created-date", todoItem.CreatedDate },
+                        { "offset-date", nowOffset }
                     },
                     relationships = new
                     {
@@ -446,6 +448,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(nowOffset.ToString("yyyy-MM-ddTHH:mm:ssK"), deserializedBody.OffsetDate?.ToString("yyyy-MM-ddTHH:mm:ssK"));
             Assert.Null(deserializedBody.AchievedDate);
         }
 
