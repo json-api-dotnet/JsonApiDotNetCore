@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Internal.Query
             FilteredAttribute = Attribute;
         }
 
-        [Obsolete("Use " + nameof(BaseAttrQuery.Attribute) + " insetad.")]
+        [Obsolete("Use " + nameof(BaseAttrQuery.Attribute) + " instead.")]
         public AttrAttribute FilteredAttribute { get; set; }
     }
 }
