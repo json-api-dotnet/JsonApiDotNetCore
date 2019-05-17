@@ -15,15 +15,12 @@ namespace JsonApiDotNetCoreExample.Resources
             if (pipeline == ResourceAction.GetSingle && nestedHook)
             {
                 throw new JsonApiException(403, "Not allowed to include passports on individual people", new UnauthorizedAccessException());
-
             }
         }
 
         public override void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<Passport> relationshipHelper, ResourceAction pipeline)
         {
-            relationshipHelper.GetEntitiesRelatedWith<Person>()
-                        .ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
-
+            relationshipHelper.EntitiesRelatedTo<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
         }
 
         private void DoesNotTouchLockedPassports(IEnumerable<Passport> entities)
@@ -36,7 +33,5 @@ namespace JsonApiDotNetCoreExample.Resources
                 }
             }
         }
-
     }
-
 }

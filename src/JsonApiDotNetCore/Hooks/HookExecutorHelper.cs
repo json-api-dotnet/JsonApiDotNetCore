@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Extensions;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCore.Internal
 {
     /// <inheritdoc/>
-    public class HookExecutorHelper : IHookExecutorHelper
+    internal class HookExecutorHelper : IHookExecutorHelper
     {
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
@@ -81,9 +82,12 @@ namespace JsonApiDotNetCore.Internal
         }
 
 
-        /// <inheritdoc/>
-        public IList  LoadDbValues(IList entities, List<RelationshipProxy> relationships, Type entityType)
+
+
+        public IEnumerable LoadDbValues(DependentType entityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
         {
+            if (!ShouldLoadDbValues(entityType, hook)) return null;
+
             var paths = relationships.Select(p => p.Attribute.RelationshipPath).ToArray();
             var idType = GetIdentifierType(entityType);
             var parameterizedGetWhere = GetType()
@@ -91,11 +95,19 @@ namespace JsonApiDotNetCore.Internal
                     .MakeGenericMethod(entityType, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
             var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
-            var values = (IList)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
+            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
             return values;
         }
 
-        public bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
+        public HashSet<TEntity> LoadDbValues<TEntity>(IEnumerable<TEntity> entities, ResourceHook hook, params RelationshipProxy[] relationships) where TEntity : class, IIdentifiable
+        {
+            var dbValues = LoadDbValues(typeof(TEntity), entities, hook, relationships)?.Cast<TEntity>();
+            if (dbValues == null) return null;
+            return new HashSet<TEntity>(dbValues);
+        }
+
+
+        bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
 
@@ -114,41 +126,21 @@ namespace JsonApiDotNetCore.Internal
 
         }
 
-        public bool ShouldExecuteHook(DependentType entityType, ResourceHook hook)
+        bool ShouldExecuteHook(DependentType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
             return discovery.ImplementedHooks.Contains(hook);
         }
 
-        /// <summary>
-        /// Gets the type from relationship attribute. If the attribute is 
-        /// HasManyThrough, and the jointable entity is identifiable, then the target
-        /// type is the joinentity instead of the righthand side, because hooks might be 
-        /// implemented for the jointable entity.
-        /// </summary>
-        /// <returns>The target type for traversal</returns>
-        /// <param name="attr">Relationship attribute</param>
-        protected DependentType GetDependentTypeFromRelationship(RelationshipAttribute attr)
-        {
-            if (attr is HasManyThroughAttribute throughAttr)
-            {
-                if (typeof(IIdentifiable).IsAssignableFrom(throughAttr.ThroughType))
-                {
-                    return throughAttr.ThroughType;
-                }
-                return attr.DependentType;
-            }
-            return attr.DependentType;
-        }
 
-        protected void CheckForTargetHookExistence()
+        void CheckForTargetHookExistence()
         {
             if (!_targetedHooksForRelatedEntities.Any())
                 throw new InvalidOperationException("Something is not right in the breadth first traversal of resource hook: " +
                     "trying to get meta information when no allowed hooks are set");
         }
 
-        protected IHooksDiscovery GetHookDiscovery(Type entityType)
+        IHooksDiscovery GetHookDiscovery(Type entityType)
         {
             if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
             {
@@ -158,26 +150,78 @@ namespace JsonApiDotNetCore.Internal
             return discovery;
         }
 
-        protected Type GetIdentifierType(Type entityType)
+        Type GetIdentifierType(Type entityType)
         {
             return entityType.GetProperty("Id").PropertyType;
         }
 
-        protected IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, string[] relationshipPaths) where TEntity : class, IIdentifiable<TId>
+        IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, string[] relationshipPaths) where TEntity : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TEntity, TId>();
             var query = repo.GetQueryable().Where(e => ids.Contains(e.Id));
-            foreach (var path in relationshipPaths){
+            foreach (var path in relationshipPaths)
+            {
                 query = query.Include(path);
             }
             return query.ToList();
         }
 
-
         IEntityReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>
         {
             var openType = typeof(TId) == typeof(Guid) ? typeof(IGuidEntityRepository<>) : typeof(IEntityRepository<>);
             return _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(openType, typeof(TEntity));
+        }
+
+
+        public Dictionary<RelationshipProxy, IEnumerable> LoadImplicitlyAffected(
+            Dictionary<RelationshipProxy, IEnumerable> principalEntitiesByRelation,
+            IEnumerable existingDependentEntities = null)
+        {
+            var implicitlyAffected = new Dictionary<RelationshipProxy, IEnumerable>();
+            foreach (var kvp in principalEntitiesByRelation)
+            {
+                if (IsHasManyThrough(kvp, out var principals, out var relationship)) continue;
+                var includedPrincipals = LoadDbValues(relationship.PrincipalType, principals, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
+
+                foreach (IIdentifiable ip in includedPrincipals)
+                {
+                    IList dbDependentEntityList = null;
+                    var relationshipValue = relationship.GetValue(ip);
+                    if (!(relationshipValue is IEnumerable))
+                    {
+                        dbDependentEntityList = TypeHelper.CreateListFor(relationship.DependentType);
+                        if (relationshipValue != null) dbDependentEntityList.Add(relationshipValue);
+                    }
+                    else
+                    {
+                        dbDependentEntityList = (IList)relationshipValue;
+                    }
+                    var dbDependentEntityListCasted = dbDependentEntityList.Cast<IIdentifiable>().ToList();
+                    if (existingDependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(existingDependentEntities.Cast<IIdentifiable>(), ResourceHookExecutor.Comparer).ToList();
+
+                    if (dbDependentEntityListCasted.Any())
+                    {
+                        if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
+                        {
+                            affected = TypeHelper.CreateListFor(relationship.DependentType);
+                            implicitlyAffected[relationship] = affected;
+                        }
+                        ((IList)affected).AddRange(dbDependentEntityListCasted);
+                    }
+                }
+            }
+
+            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        }
+
+        bool IsHasManyThrough(KeyValuePair<RelationshipProxy, IEnumerable> kvp,
+            out IEnumerable entities,
+            out RelationshipProxy proxy)
+        {
+            proxy = kvp.Key;
+            entities = (kvp.Value);
+            return (kvp.Key.Attribute is HasManyThroughAttribute);
         }
     }
 }

@@ -80,10 +80,8 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
 
-
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourceAction.Create).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
-
 
             // this ensures relationships get reloaded from the database if they have
             // been requested
@@ -96,18 +94,15 @@ namespace JsonApiDotNetCore.Services
                 entity = await GetWithRelationshipsAsync(entity.Id);
 
             }
-
             if (!IsNull(_hookExecutor, entity))
             {
                 _hookExecutor.AfterCreate(AsList(entity), ResourceAction.Create);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.Get).SingleOrDefault();
             }
-
             return MapOut(entity);
         }
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-
             var entity = await _entities.GetAsync(id);
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourceAction.Delete);
             var succeeded = await _entities.DeleteAsync(entity);
@@ -130,8 +125,9 @@ namespace JsonApiDotNetCore.Services
 
             if (!IsNull(_hookExecutor, entities))
             {
-                _hookExecutor.AfterRead(entities.ToList(), ResourceAction.Get);
-                entities = _hookExecutor.OnReturn(entities, ResourceAction.Get).AsQueryable();
+                var result = entities.ToList();
+                _hookExecutor.AfterRead(result, ResourceAction.Get);
+                entities = _hookExecutor.OnReturn(result, ResourceAction.Get).AsQueryable();
             }
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
@@ -178,7 +174,6 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterRead(AsList(entity), ResourceAction.GetRelationship);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourceAction.GetRelationship).SingleOrDefault();
             }
-
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
@@ -348,9 +343,9 @@ namespace JsonApiDotNetCore.Services
                 ? resource as TEntity
                 : _mapper.Map<TEntity>(resource);
 
-        private TEntity[] AsList(TEntity entity)
+        private List<TEntity> AsList(TEntity entity)
         {
-            return new TEntity[] { entity };
+            return new List<TEntity> { entity };
         }
     }
 }

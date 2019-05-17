@@ -30,8 +30,8 @@ namespace UnitTests.ResourceHooks
             hookExecutor.OnReturn(todoList, ResourceAction.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create), Times.Once());
-            ownerResourceMock.Verify(rd => rd.OnReturn(It.IsAny<IEnumerable<Person>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Once());
+            ownerResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Person>>(), ResourceAction.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -50,7 +50,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.OnReturn(todoList, ResourceAction.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock);
         }
 
@@ -60,20 +60,21 @@ namespace UnitTests.ResourceHooks
             // arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
-            var rootTodo = new TodoItem();
-            var child = new TodoItem { ParentTodoItem = rootTodo };
+            var rootTodo = new TodoItem() { Id = 1 };
+            var child = new TodoItem { ParentTodoItem = rootTodo, Id = 2 };
             rootTodo.ChildrenTodoItems = new List<TodoItem> { child };
-            var grandChild = new TodoItem() { ParentTodoItem = child };
+            var grandChild = new TodoItem() { ParentTodoItem = child, Id = 3 };
             child.ChildrenTodoItems = new List<TodoItem> { grandChild };
-            var greatGrandChild = new TodoItem() { ParentTodoItem = grandChild };
-            greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo }; ;
+            var greatGrandChild = new TodoItem() { ParentTodoItem = grandChild, Id = 4 };
+            grandChild.ChildrenTodoItems = new List<TodoItem> { greatGrandChild }; 
+            greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo }; 
             var todoList = new List<TodoItem>() { rootTodo };
 
             // act
             hookExecutor.OnReturn(todoList, ResourceAction.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create), Times.Once);
+            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Exactly(4));
             VerifyNoOtherCalls(todoResourceMock);
         }
     }

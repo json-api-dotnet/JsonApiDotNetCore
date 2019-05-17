@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Internal
                     foreach (var attr in ce.Relationships)
                     {
                         if (attr is HasManyThroughAttribute) continue;
-                        INavigation inverseNavigation = meta.FindNavigation(attr.InternalRelationshipName).FindInverse();
+                        INavigation inverseNavigation = meta.FindNavigation(attr.InternalRelationshipName)?.FindInverse();
                         attr.InverseNavigation = inverseNavigation?.Name;
                     }
                 }

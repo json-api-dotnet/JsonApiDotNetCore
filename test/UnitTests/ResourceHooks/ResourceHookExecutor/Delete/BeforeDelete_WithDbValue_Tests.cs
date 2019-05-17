@@ -47,7 +47,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourceAction.Delete);
 
             // assert
-            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IUpdatedRelationshipHelper<TodoItem>>( rh => CheckImplicitTodos(rh) ), ResourceAction.Delete), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IUpdatedRelationshipHelper<Passport>>( rh => CheckImplicitPassports(rh) ), ResourceAction.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
@@ -88,19 +88,19 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourceAction.Delete);
 
             // assert
-            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEnumerable<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
         private bool CheckImplicitTodos(IUpdatedRelationshipHelper<TodoItem> rh)
         {
-            var todos = rh.GetEntitiesRelatedWith<Person>().ToList();
+            var todos = rh.EntitiesRelatedTo<Person>().ToList();
             return todos.Count == 2;
         }
 
         private bool CheckImplicitPassports(IUpdatedRelationshipHelper<Passport> rh)
         {
-            var passports = rh.GetEntitiesRelatedWith<Person>().Single().Value;
+            var passports = rh.EntitiesRelatedTo<Person>().Single().Value;
             return passports.Count == 1;
         }
     }

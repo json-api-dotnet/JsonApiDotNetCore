@@ -20,8 +20,8 @@ namespace UnitTests.ResourceHooks
         public class Dummy : Identifiable { }
         public class DummyResourceDefinition : ResourceDefinition<Dummy>
         {
-            public override IEnumerable<Dummy> BeforeDelete(IEnumerable<Dummy> entities, ResourceAction pipeline) { return entities; }
-            public override void AfterDelete(IEnumerable<Dummy> entities, ResourceAction pipeline, bool succeeded) {  }
+            public override IEnumerable<Dummy> BeforeDelete(HashSet<Dummy> entities, ResourceAction pipeline) { return entities; }
+            public override void AfterDelete(HashSet<Dummy> entities, ResourceAction pipeline, bool succeeded) {  }
         }
     }
 }

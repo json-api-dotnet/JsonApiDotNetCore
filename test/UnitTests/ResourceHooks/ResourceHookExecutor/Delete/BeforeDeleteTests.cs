@@ -22,7 +22,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(todoList, ResourceAction.Delete);
 
             // assert
-            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEnumerable<TodoItem>>(), It.IsAny<ResourceAction>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<TodoItem>>(), It.IsAny<ResourceAction>()), Times.Once());
             resourceDefinitionMock.VerifyNoOtherCalls();
         }
 

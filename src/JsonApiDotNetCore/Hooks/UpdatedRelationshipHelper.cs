@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -6,40 +7,37 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
-    public class HookExecutionContext<TEntity> { }
+    public interface IUpdatedRelationshipHelper { }
 
-
-    public interface IUpdatedRelationshipHelper<TDependent> where TDependent : class, IIdentifiable
+    public interface IUpdatedRelationshipHelper<TDependent> : IUpdatedRelationshipHelper where TDependent : class, IIdentifiable
     {
-        Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith<TPrincipal>() where TPrincipal : class, IIdentifiable;
-        Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith(Type principalType);
+        Dictionary<RelationshipAttribute, HashSet<TDependent>> AllEntitiesByRelation { get; }
+        Dictionary<RelationshipAttribute, HashSet<TDependent>> EntitiesRelatedTo<TPrincipal>() where TPrincipal : class, IIdentifiable;
+        Dictionary<RelationshipAttribute, HashSet<TDependent>> EntitiesRelatedTo(Type principalType);
     }
 
     public class UpdatedRelationshipHelper<TDependent> : IUpdatedRelationshipHelper<TDependent> where TDependent : class, IIdentifiable
     {
-        private readonly Dictionary<RelationshipProxy, List<TDependent>> _groups;
-        public Dictionary<RelationshipAttribute, List<TDependent>> ImplicitUpdates { get; }
+        private readonly Dictionary<RelationshipProxy, HashSet<TDependent>> _groups;
+        public Dictionary<RelationshipAttribute, HashSet<TDependent>> ImplicitUpdates { get; }
 
-
-        public UpdatedRelationshipHelper(Dictionary<RelationshipProxy, List<IIdentifiable>> entitiesByAffectedRelationship)
+        public Dictionary<RelationshipAttribute, HashSet<TDependent>> AllEntitiesByRelation
         {
-            _groups = entitiesByAffectedRelationship.ToDictionary(p => p.Key, p => p.Value.Cast<TDependent>().ToList());
+            get { return _groups?.ToDictionary(p => p.Key.Attribute, p => p.Value); }
+        }
+        public UpdatedRelationshipHelper(Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships)
+        {
+            _groups = prevLayerRelationships.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependent>((IEnumerable<TDependent>)kvp.Value));
         }
 
-        public Dictionary<RelationshipAttribute, List<TDependent>> AffectedRelationships()
+        public Dictionary<RelationshipAttribute, HashSet<TDependent>> EntitiesRelatedTo<TPrincipal>() where TPrincipal : class, IIdentifiable
         {
-            return _groups.ToDictionary( p => p.Key.Attribute, p => p.Value);
+            return EntitiesRelatedTo(typeof(TPrincipal));
         }
 
-        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith<TPrincipal>() where TPrincipal : class, IIdentifiable
+        public Dictionary<RelationshipAttribute, HashSet<TDependent>> EntitiesRelatedTo(Type principalType)
         {
-            return GetEntitiesRelatedWith(typeof(TPrincipal));
+            return _groups?.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key.Attribute, p => p.Value);
         }
-
-        public Dictionary<RelationshipAttribute, List<TDependent>> GetEntitiesRelatedWith(Type principalType)
-        {
-            return _groups?.Where( p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key.Attribute, p => p.Value);
-        }
-
     }
 }

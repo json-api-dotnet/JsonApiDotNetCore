@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExample.Resources
 
         public override void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<TodoItem> relationshipHelper, ResourceAction pipeline)
         {
-            List<TodoItem> todos = relationshipHelper.GetEntitiesRelatedWith<Person>().SelectMany(kvp => kvp.Value).ToList();
+            List<TodoItem> todos = relationshipHelper.EntitiesRelatedTo<Person>().SelectMany(kvp => kvp.Value).ToList();
             DoesNotTouchLocked(todos);
         }
 

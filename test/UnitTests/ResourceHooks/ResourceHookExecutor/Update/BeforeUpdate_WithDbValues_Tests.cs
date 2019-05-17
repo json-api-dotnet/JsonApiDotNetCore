@@ -63,7 +63,7 @@ namespace UnitTests.ResourceHooks
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<EntityDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourceAction.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
-                It.Is<IEnumerable<string>>(ids => PersonIdCheck(ids, personId)),
+                It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IUpdatedRelationshipHelper<Person>>(),
                 ResourceAction.Patch),
                 Times.Once());
@@ -118,7 +118,7 @@ namespace UnitTests.ResourceHooks
 
             // assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
-                It.Is<IEnumerable<string>>(ids => PersonIdCheck(ids, personId)),
+                It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IUpdatedRelationshipHelper<Person>>(),
                 ResourceAction.Patch),
                 Times.Once());
@@ -165,7 +165,7 @@ namespace UnitTests.ResourceHooks
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<EntityDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourceAction.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
-                It.Is<IEnumerable<string>>(ids => PersonIdCheck(ids, personId)),
+                It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IUpdatedRelationshipHelper<Person>>(),
                 ResourceAction.Patch),
                 Times.Once());
@@ -186,7 +186,7 @@ namespace UnitTests.ResourceHooks
 
             // assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
-                It.Is<IEnumerable<string>>(ids => PersonIdCheck(ids, personId)),
+                It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IUpdatedRelationshipHelper<Person>>(),
                 ResourceAction.Patch),
                 Times.Once());
@@ -219,7 +219,7 @@ namespace UnitTests.ResourceHooks
 
         private bool TodoCheck(IUpdatedRelationshipHelper<TodoItem> rh, string checksum)
         {
-            return rh.GetEntitiesRelatedWith<Person>().Single().Value.First().Description == checksum;
+            return rh.EntitiesRelatedTo<Person>().Single().Value.First().Description == checksum;
         }
 
         private bool PersonIdCheck(IEnumerable<string> ids, string checksum)
@@ -229,8 +229,7 @@ namespace UnitTests.ResourceHooks
 
         private bool PersonCheck(string checksum, IUpdatedRelationshipHelper<Person> helper)
         {
-
-            var entries = helper.GetEntitiesRelatedWith<TodoItem>();
+            var entries = helper.EntitiesRelatedTo<TodoItem>();
             return entries.Single().Value.Single().LastName == checksum;
         }
     }

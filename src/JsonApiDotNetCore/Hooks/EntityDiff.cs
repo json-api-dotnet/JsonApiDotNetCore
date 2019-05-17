@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {
     public interface IEntityDiff<TEntity> where TEntity : class, IIdentifiable
     {
-        IEnumerable<TEntity> RequestEntities { get; }
-        IEnumerable<TEntity> DatabaseEntities { get; }
+        HashSet<TEntity> RequestEntities { get; }
+        HashSet<TEntity> DatabaseEntities { get; }
     }
 
     public class EntityDiff<TEntity> : IEntityDiff<TEntity> where TEntity : class, IIdentifiable
     {
-        public IEnumerable<TEntity> RequestEntities { get; private set; }
-        public IEnumerable<TEntity> DatabaseEntities { get; private set; }
-        public EntityDiff(IEnumerable<TEntity> requestEntities, IEnumerable<TEntity> databaseEntities)
+        public HashSet<TEntity> RequestEntities { get; private set; }
+        public HashSet<TEntity> DatabaseEntities { get; private set; }
+        public EntityDiff(IEnumerable requestEntities, IEnumerable databaseEntities)
         {
-            RequestEntities = requestEntities;
-            DatabaseEntities = databaseEntities;
+            RequestEntities = (HashSet<TEntity>)requestEntities;
+            DatabaseEntities = (HashSet<TEntity>)databaseEntities;
         }
     }
 }

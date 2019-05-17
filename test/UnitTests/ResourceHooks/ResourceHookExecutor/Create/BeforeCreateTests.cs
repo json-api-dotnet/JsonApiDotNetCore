@@ -24,8 +24,8 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<string>>(), It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -43,8 +43,8 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create), Times.Never());
-            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<IEnumerable<string>>(), It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Never());
+            ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
         [Fact]
@@ -61,7 +61,7 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
         [Fact]

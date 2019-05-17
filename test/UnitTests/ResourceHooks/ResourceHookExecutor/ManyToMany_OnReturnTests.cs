@@ -55,8 +55,8 @@ namespace UnitTests.ResourceHooks
             hookExecutor.OnReturn(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.OnReturn(articles, ResourceAction.Get), Times.Once());
-            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get), Times.Once());
+            articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourceAction.Get), Times.Once());
+            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -74,7 +74,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.OnReturn(articles, ResourceAction.Get);
 
             // asser
-            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<IEnumerable<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get), Times.Once());
+            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -92,7 +92,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.OnReturn(articles, ResourceAction.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.OnReturn(articles, ResourceAction.Get), Times.Once());
+            articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourceAction.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 

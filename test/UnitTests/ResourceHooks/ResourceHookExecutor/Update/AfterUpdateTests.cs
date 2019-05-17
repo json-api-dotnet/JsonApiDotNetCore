@@ -24,7 +24,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterUpdate(todoList, ResourceAction.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -61,7 +61,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterUpdate(todoList, ResourceAction.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<IEnumerable<TodoItem>>(), ResourceAction.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.AfterUpdate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
