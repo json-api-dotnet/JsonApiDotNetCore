@@ -166,20 +166,35 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
-
+        /// <inheritdoc/>
         public virtual void AfterCreate(HashSet<T> entities, ResourceAction pipeline) { }
+        /// <inheritdoc/>
         public virtual void AfterRead(HashSet<T> entities, ResourceAction pipeline, bool isIncluded = false) { }
+        /// <inheritdoc/>
         public virtual void AfterUpdate(HashSet<T> entities, ResourceAction pipeline) { }
+        /// <inheritdoc/>
         public virtual void AfterDelete(HashSet<T> entities, ResourceAction pipeline, bool succeeded) { }
+        /// <inheritdoc/>
         public virtual void AfterUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
+        /// <inheritdoc/>
         public virtual IEnumerable<T> BeforeCreate(HashSet<T> entities, ResourceAction pipeline) { return entities; }
-        public virtual void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null) { }
+        /// <inheritdoc/>
+        public virtual void BeforeRead(ResourceAction pipeline, bool isIncluded = false, string stringId = null) { }
+        /// <inheritdoc/>
         public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline) { return entityDiff.RequestEntities; }
+        /// <inheritdoc/>
         public virtual IEnumerable<T> BeforeDelete(HashSet<T> entities, ResourceAction pipeline) { return entities; }
+        /// <inheritdoc/>
         public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { return ids; }
+        /// <inheritdoc/>
         public virtual void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
+        /// <summary>
+        /// Ons the return.
+        /// </summary>
+        /// <returns>The return.</returns>
+        /// <param name="entities">Entities.</param>
+        /// <param name="pipeline">Pipeline.</param>
         public virtual IEnumerable<T> OnReturn(HashSet<T> entities, ResourceAction pipeline) { return entities; }
-
 
 
         /// <summary>

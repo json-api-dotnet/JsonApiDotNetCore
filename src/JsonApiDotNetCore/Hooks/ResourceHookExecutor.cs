@@ -193,13 +193,6 @@ namespace JsonApiDotNetCore.Hooks
             Traverse(_traversalHelper.CreateNextLayer(currentLayer.ToList()), target, action);
         }
 
-
-        void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourceAction pipeline)
-        {
-            var relationshipHelper = CreateRelationshipHelper(node.EntityType, node.RelationshipsFromPreviousLayer.GetDependentEntities());
-            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
-        }
-
         /// <summary>
         /// Recursively goes through the included relationships from JsonApiContext,
         /// translates them to the corresponding hook containers and fires the 
@@ -231,7 +224,6 @@ namespace JsonApiDotNetCore.Hooks
                 RecursiveBeforeRead(_graph.GetContextEntity(relationship.DependentType), relationshipChain, pipeline, calledContainers);
             }
         }
-
 
         /// <summary>
         /// Fires the nested before hooks. For example consider the case when
@@ -371,11 +363,6 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
-        HashSet<string> GetIds(IEnumerable entities)
-        {
-            return new HashSet<string>(entities.Cast<IIdentifiable>().Select(e => e.StringId));
-        }
-
         /// <summary>
         /// Fitler the source set by removing the entities with id that are not 
         /// in <paramref name="allowedIds"/>.
@@ -391,6 +378,17 @@ namespace JsonApiDotNetCore.Hooks
         RelationshipProxy GetInverseRelationship(RelationshipProxy proxy)
         {
             return new RelationshipProxy(_graph.GetInverseRelationship(proxy.Attribute), proxy.PrincipalType, false);
+        }
+
+        void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourceAction pipeline)
+        {
+            var relationshipHelper = CreateRelationshipHelper(node.EntityType, node.RelationshipsFromPreviousLayer.GetDependentEntities());
+            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
+        }
+
+        HashSet<string> GetIds(IEnumerable entities)
+        {
+            return new HashSet<string>(entities.Cast<IIdentifiable>().Select(e => e.StringId));
         }
     }
 }

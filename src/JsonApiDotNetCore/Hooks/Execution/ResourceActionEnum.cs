@@ -14,6 +14,9 @@
         Create,
         Patch,
         PatchRelationship,
-        Delete
+        Delete,
+        BulkCreate,
+        BulkPatch,
+        BulkDelete
     }
 }
