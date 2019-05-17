@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
@@ -30,7 +30,11 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
 
-
+        [Attr("calculated-value")]
+        public string CalculatedValue
+        {
+            get => "joe";
+        }
 
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }

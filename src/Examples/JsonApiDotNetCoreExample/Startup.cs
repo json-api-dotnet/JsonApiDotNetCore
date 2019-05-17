@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExample
                 }, 
                 mvcBuilder,
                 discovery => discovery.AddCurrentAssembly());
-
+ 
             return services.BuildServiceProvider();
         }
 
