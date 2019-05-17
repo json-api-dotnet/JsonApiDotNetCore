@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr("calculated-value")]
+        [Attr("calculated-value", isImmutable: true)]
         public string CalculatedValue
         {
             get => "joe";

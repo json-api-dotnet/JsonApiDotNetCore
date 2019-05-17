@@ -10,12 +10,12 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
 {
+    /// <inheritdoc />
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly ILogger<JsonApiReader> _logger;
-
 
         public JsonApiReader(IJsonApiDeSerializer deSerializer, IJsonApiContext jsonApiContext, ILoggerFactory loggerFactory)
         {
@@ -37,13 +37,21 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
 
-                var model = _jsonApiContext.IsRelationshipPath ?
-                    _deSerializer.DeserializeRelationship(body) :
-                    _deSerializer.Deserialize(body);
+                object model =null;
+
+                if (_jsonApiContext.IsRelationshipPath)
+                {
+                    model = _deSerializer.DeserializeRelationship(body);
+                }
+                else
+                {
+                    model = _deSerializer.Deserialize(body);
+                }
 
                 if (model == null)
+                {
                     _logger?.LogError("An error occurred while de-serializing the payload");
-
+                }
                 return InputFormatterResult.SuccessAsync(model);
             }
             catch (Exception ex)

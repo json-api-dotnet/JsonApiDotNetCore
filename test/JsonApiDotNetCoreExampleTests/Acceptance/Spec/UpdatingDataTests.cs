@@ -70,6 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(422, Convert.ToInt32(response.StatusCode));
         }
 
