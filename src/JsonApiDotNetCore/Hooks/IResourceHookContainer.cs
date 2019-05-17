@@ -30,5 +30,4 @@ namespace JsonApiDotNetCore.Hooks
     {
         IEnumerable<T> OnReturn(HashSet<T> entities, ResourceAction pipeline);
     }
-
 }
