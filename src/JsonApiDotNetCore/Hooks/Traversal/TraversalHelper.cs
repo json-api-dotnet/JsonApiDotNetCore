@@ -69,13 +69,13 @@ namespace JsonApiDotNetCore.Hooks
 
         IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(DependentType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
-            var casted = TypeHelper.ConvertCollection(relationshipsFromPrev, relationshipsFromPrev.First().GetType());
+            var casted = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
             return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { casted });
         }
 
         IRelationshipGroup CreateRelationsipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> principalEntities, List<IIdentifiable> dependentEntities)
         {
-            var dependentEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, TypeHelper.ConvertCollection(dependentEntities, thisLayerType));
+            var dependentEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, dependentEntities.Cast(thisLayerType));
             return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
                 thisLayerType,
                 new object[] { proxy, new HashSet<IIdentifiable>(principalEntities), dependentEntitiesHashed });
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Hooks
             foreach (var kvp in dependentsGrouped)
             {
                 var type = kvp.Key.DependentType;
-                var list = TypeHelper.ConvertCollection(kvp.Value, type);
+                var list = kvp.Value.Cast(type);
                 processEntities.MakeGenericMethod(type).Invoke(this, new object[] { list });
             }
 

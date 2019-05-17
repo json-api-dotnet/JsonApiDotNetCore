@@ -95,7 +95,7 @@ namespace JsonApiDotNetCore.Internal
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityType, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-            var ids = TypeHelper.ConvertListType(casted.Select(e => e.StringId).ToList(), idType);
+            var ids = casted.Select(e => e.StringId).Cast(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
             return values;
         }

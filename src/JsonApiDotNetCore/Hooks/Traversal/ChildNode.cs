@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using DependentType = System.Type;
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCore.Hooks
 
                     if (currentValue is IEnumerable<IIdentifiable> relationshipCollection)
                     {
-                        var newValue = TypeHelper.ConvertCollection(relationshipCollection.Intersect(unique, ResourceHookExecutor.Comparer), proxy.DependentType);
+                        var newValue = relationshipCollection.Intersect(unique, ResourceHookExecutor.Comparer).Cast(proxy.DependentType);
                         proxy.SetValue(principal, newValue);
                     }
                     else if (currentValue is IIdentifiable relationshipSingle)

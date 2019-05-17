@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
@@ -96,7 +97,7 @@ namespace JsonApiDotNetCore.Internal
                 if (!_skipJoinTable)
                 {
                     var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(list, DependentType));
+                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, list.Cast(DependentType));
                     return;
                 }
                 else
@@ -105,16 +106,16 @@ namespace JsonApiDotNetCore.Internal
                     var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
 
                     var filteredList = new List<object>();
-                    var rightEntities = TypeHelper.ConvertCollection((IEnumerable<object>)value, DependentType);
+                    var rightEntities = ((IEnumerable<object>)value).Cast(DependentType);
                     foreach (var je in joinEntities)
                     {
 
-                        if (rightEntities.Contains(throughAttr.RightProperty.GetValue(je)))
+                        if (((IList)rightEntities).Contains(throughAttr.RightProperty.GetValue(je)))
                         {
                             filteredList.Add(je);
                         }
                     }
-                    throughAttr.ThroughProperty.SetValue(entity, TypeHelper.ConvertCollection(filteredList, throughAttr.ThroughType));
+                    throughAttr.ThroughProperty.SetValue(entity, filteredList.Cast(throughAttr.ThroughType));
                     return;
                 }
             }
