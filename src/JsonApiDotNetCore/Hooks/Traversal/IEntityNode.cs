@@ -2,7 +2,7 @@
 using JsonApiDotNetCore.Internal;
 using DependentType = System.Type;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
     internal interface IEntityNode
     {

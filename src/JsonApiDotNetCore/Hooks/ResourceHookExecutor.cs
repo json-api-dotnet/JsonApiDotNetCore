@@ -7,9 +7,9 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
+using JsonApiDotNetCore.Services;
 
-
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
     internal class ResourceHookExecutor : IResourceHookExecutor

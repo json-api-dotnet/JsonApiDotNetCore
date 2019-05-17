@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Hooks.Discovery;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
     /// <summary>
     /// The default implementation for IHooksDiscovery

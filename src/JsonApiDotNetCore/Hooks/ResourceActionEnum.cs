@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Services
+﻿namespace JsonApiDotNetCore.Hooks
 {
     /// <summary>
     /// An enum that represents the initiator of a resource hook. Eg, when BeforeCreate()

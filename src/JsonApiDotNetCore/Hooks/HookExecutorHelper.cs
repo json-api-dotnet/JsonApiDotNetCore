@@ -6,7 +6,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Extensions;
 using PrincipalType = System.Type;
 using DependentType = System.Type;

@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Services
+﻿namespace JsonApiDotNetCore.Hooks
 {
 
     /// <summary>

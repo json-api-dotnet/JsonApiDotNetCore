@@ -2,7 +2,7 @@
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
     internal interface IRelationshipGroup
     {

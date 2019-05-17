@@ -1,6 +1,6 @@
 ﻿using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
 
     /// <summary>

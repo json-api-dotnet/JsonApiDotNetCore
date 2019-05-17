@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using DependentType = System.Type;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
     internal class ChildNode<TEntity> : IEntityNode where TEntity : class, IIdentifiable
     {

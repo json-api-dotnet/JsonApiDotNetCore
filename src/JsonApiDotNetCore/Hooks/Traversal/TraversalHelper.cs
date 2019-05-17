@@ -6,10 +6,11 @@ using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using DependentType = System.Type;
 using PrincipalType = System.Type;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Hooks
 {
     internal class TraversalHelper
     {

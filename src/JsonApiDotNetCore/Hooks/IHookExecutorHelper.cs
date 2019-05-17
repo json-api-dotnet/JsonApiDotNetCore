@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Hooks;
 
 namespace JsonApiDotNetCore.Internal
 {
