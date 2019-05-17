@@ -1,12 +1,12 @@
 using System;
 namespace JsonApiDotNetCore.Hooks.Discovery
 {
-    public class DatabaseValuesInDiffs : Attribute
+    public class IncludeDatabaseValues : Attribute
     {
-        public readonly bool IcludeDatabaseValues;
-        public DatabaseValuesInDiffs(bool includeDatabaseValues = true)
+        public readonly bool value;
+        public IncludeDatabaseValues(bool mode = true)
         {
-            IcludeDatabaseValues = includeDatabaseValues;
+            value = mode;
         }
     }
 }

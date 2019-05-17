@@ -56,10 +56,10 @@ namespace JsonApiDotNetCore.Hooks
                                 diffEnabledHooks.Add(hook);
                                 continue;
                             }
-                            var attr = method.GetCustomAttributes(true).OfType<DatabaseValuesInDiffs>().SingleOrDefault();
+                            var attr = method.GetCustomAttributes(true).OfType<IncludeDatabaseValues>().SingleOrDefault();
                             if (attr != null)
                             {
-                                var targetList = attr.IcludeDatabaseValues ? diffEnabledHooks : diffDisabledHooks;
+                                var targetList = attr.value ? diffEnabledHooks : diffDisabledHooks;
                                 targetList.Add(hook);
                             }
                          }
