@@ -70,13 +70,11 @@ namespace JsonApiDotNetCore.Hooks
 
         public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeUpdate);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
                 var dbValues = _executorHelper.LoadDbValues((IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, node.RelationshipsToNextLayer);
                 var diff = new EntityDiff<TEntity>(node.UniqueEntities, dbValues);
-                IEnumerable<TEntity> updated = hookContainer.BeforeUpdate(diff, pipeline);
+                IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -87,14 +85,13 @@ namespace JsonApiDotNetCore.Hooks
 
         public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeCreate);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.BeforeCreate, entities, out var container, out var node))
             {
-                IEnumerable<TEntity> updated = hookContainer.BeforeCreate((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                IEnumerable<TEntity> updated = container.BeforeCreate((HashSet<TEntity>)node.UniqueEntities, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
+
             BeforeUpdateRelationship(pipeline, _traversalHelper.CreateNextLayer(node));
             return entities;
         }
@@ -161,15 +158,12 @@ namespace JsonApiDotNetCore.Hooks
 
         public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeDelete);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
             {
-                IEnumerable<TEntity> updated = hookContainer.BeforeDelete((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                IEnumerable<TEntity> updated = container.BeforeDelete((HashSet<TEntity>)node.UniqueEntities, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
-
 
             foreach (var implicitTargets in node.RelationshipsToNextLayerByType())
             {
@@ -179,27 +173,19 @@ namespace JsonApiDotNetCore.Hooks
             return entities;
         }
 
-        private object GroupByDependent<TEntity>(RelationshipProxy[] relationships, IEnumerable<TEntity> entities) where TEntity : class, IIdentifiable
-        {
-            return relationships.GroupBy(proxy => proxy.DependentType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
-
-        }
-
         public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.OnReturn);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null && pipeline != ResourceAction.GetRelationship)
+            if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourceAction.GetRelationship)
             {
-                IEnumerable<TEntity> updated = hookContainer.OnReturn((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                IEnumerable<TEntity> updated = container.OnReturn((HashSet<TEntity>)node.UniqueEntities, pipeline);
                 ValidateHookResponse(updated);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
 
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (container, nextNode) =>
+            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
-                var filteredUniqueSet = CallHook(container, ResourceHook.OnReturn, new object[] { nextNode.UniqueEntities, pipeline });
+                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueEntities, pipeline });
                 nextNode.UpdateUnique(filteredUniqueSet);
                 nextNode.Reassign();
             });
@@ -208,39 +194,39 @@ namespace JsonApiDotNetCore.Hooks
 
         public virtual void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.AfterRead);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.AfterRead, entities, out var container, out var node))
             {
-                hookContainer.AfterRead((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                container.AfterRead((HashSet<TEntity>)node.UniqueEntities, pipeline);
             }
 
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (container, nextNode) =>
+            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
             {
-                CallHook(container, ResourceHook.AfterRead, new object[] { nextNode.UniqueEntities, pipeline, true });
+                CallHook(nextContainer, ResourceHook.AfterRead, new object[] { nextNode.UniqueEntities, pipeline, true });
             });
         }
 
         public virtual void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.AfterCreate);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.AfterCreate, entities, out var container, out var node))
             {
-                hookContainer.AfterCreate((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                container.AfterCreate((HashSet<TEntity>)node.UniqueEntities, pipeline);
             }
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterUpdateRelationship, (container, nextNode) => AfterUpdateRelationship(container, nextNode, pipeline));
+
+            Traverse(_traversalHelper.CreateNextLayer(node),
+                ResourceHook.AfterUpdateRelationship,
+                (nextContainer, nextNode) => AfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
         public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.AfterUpdate);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.AfterUpdate, entities, out var container, out var node))
             {
-                hookContainer.AfterUpdate((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                container.AfterUpdate((HashSet<TEntity>)node.UniqueEntities, pipeline);
             }
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterUpdateRelationship, (container, nextNode) => AfterUpdateRelationship(container, nextNode, pipeline));
+
+            Traverse(_traversalHelper.CreateNextLayer(node),
+                ResourceHook.AfterUpdateRelationship,
+                (nextContainer, nextNode) => AfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
         void Traverse(EntityChildLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IEntityNode> action)
@@ -265,11 +251,9 @@ namespace JsonApiDotNetCore.Hooks
 
         public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.AfterDelete);
-            var node = _traversalHelper.CreateRootNode(entities);
-            if (hookContainer != null)
+            if (GetHook(ResourceHook.AfterDelete, entities, out var container, out var node))
             {
-                hookContainer.AfterDelete((HashSet<TEntity>)node.UniqueEntities, pipeline, succeeded);
+                container.AfterDelete((HashSet<TEntity>)node.UniqueEntities, pipeline, succeeded);
             }
         }
 
@@ -288,6 +272,14 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
+        bool GetHook<TEntity>(ResourceHook target, IEnumerable<TEntity> entities,
+            out IResourceHookContainer<TEntity> container,
+            out RootNode<TEntity> node) where TEntity : class, IIdentifiable
+        {
+            node = _traversalHelper.CreateRootNode(entities);
+            container = _executorHelper.GetResourceHookContainer<TEntity>(target);
+            return container != null;
+        }
 
         IEnumerable CallHook(IResourceHookContainer container, ResourceHook hook, object[] arguments)
         {
@@ -326,7 +318,7 @@ namespace JsonApiDotNetCore.Hooks
 
         void ReplaceWithDbValues(Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
         {
-            foreach ( var key in prevLayerRelationships.Keys.ToList())
+            foreach (var key in prevLayerRelationships.Keys.ToList())
             {
                 var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.DependentType);
                 prevLayerRelationships[key] = replaced;
