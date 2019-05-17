@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;

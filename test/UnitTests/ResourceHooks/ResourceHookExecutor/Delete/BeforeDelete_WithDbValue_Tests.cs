@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Services;
+﻿using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;

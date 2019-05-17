@@ -1,6 +1,6 @@
-﻿using JsonApiDotNetCore.Internal;
+﻿using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +18,6 @@ namespace UnitTests.ResourceHooks
 
         private readonly string description = "DESCRIPTION";
         private readonly string lastName = "NAME";
-        private readonly string implicitPersonId;
         private readonly string personId;
         private readonly List<TodoItem> todoList;
         private readonly DbContextOptions<AppDbContext> options;
@@ -31,7 +30,6 @@ namespace UnitTests.ResourceHooks
             var _personId = todoList[0].ToOnePerson.Id;
             personId = _personId.ToString();
             var _implicitPersonId = (_personId + 10000);
-            implicitPersonId = _implicitPersonId.ToString();
 
             var implicitTodo = _todoFaker.Generate();
             implicitTodo.Id += 1000;
@@ -64,7 +62,7 @@ namespace UnitTests.ResourceHooks
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<EntityDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourceAction.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
+                It.Is<IUpdatedRelationshipHelper<Person>>(rh => PersonCheck(lastName, rh)),
                 ResourceAction.Patch),
                 Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
@@ -91,8 +89,8 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
 
             // act
-            var todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
-            hookExecutor.BeforeUpdate(todoList, ResourceAction.Patch);
+            var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
+            hookExecutor.BeforeUpdate(_todoList, ResourceAction.Patch);
 
             // assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<EntityDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourceAction.Patch), Times.Once());
@@ -119,7 +117,7 @@ namespace UnitTests.ResourceHooks
             // assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
+                It.Is<IUpdatedRelationshipHelper<Person>>(rh => PersonCheck(lastName, rh)),
                 ResourceAction.Patch),
                 Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
@@ -187,7 +185,7 @@ namespace UnitTests.ResourceHooks
             // assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
+                It.Is<IUpdatedRelationshipHelper<Person>>(rh => PersonCheck(lastName, rh)),
                 ResourceAction.Patch),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);

@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Models;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -19,7 +20,6 @@ namespace JsonApiDotNetCore.Hooks
         internal readonly IHookExecutorHelper _executorHelper;
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
-
 
         public ResourceHookExecutor(IHookExecutorHelper helper, IJsonApiContext context, IResourceGraph graph)
         {
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Hooks
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
                         var dbValues = _executorHelper.LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
-                        var relationshipHelper = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities());
+                        var relationshipHelper = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
                         var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), relationshipHelper, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
                         node.UpdateUnique(updated);
@@ -310,11 +310,28 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
-        IUpdatedRelationshipHelper CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships)
+        /// <summary>
+        /// Helper method to instantiate UpdatedRelationshipHelper for a given <paramref name="entityType"/>
+        /// If <paramref name="dbValues"/> are included, the values of the entries in <paramref name="prevLayerRelationships"/> need to be replaced with these values.
+        /// </summary>
+        /// <returns>The relationship helper.</returns>
+        /// <param name="entityType">Entity type.</param>
+        /// <param name="prevLayerRelationships">Previous layer relationships.</param>
+        /// <param name="dbValues">Db values.</param>
+        IUpdatedRelationshipHelper CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
+            if (dbValues != null) ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
             return (IUpdatedRelationshipHelper)TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), entityType, prevLayerRelationships);
         }
 
+        void ReplaceWithDbValues(Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
+        {
+            foreach ( var key in prevLayerRelationships.Keys.ToList())
+            {
+                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.DependentType);
+                prevLayerRelationships[key] = replaced;
+            }
+        }
 
         HashSet<string> GetIds(IEnumerable entities)
         {

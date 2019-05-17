@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;

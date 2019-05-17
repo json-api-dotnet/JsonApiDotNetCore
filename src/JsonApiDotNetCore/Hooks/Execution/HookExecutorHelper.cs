@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Extensions;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
 using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal
 {

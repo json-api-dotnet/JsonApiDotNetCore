@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Hooks;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

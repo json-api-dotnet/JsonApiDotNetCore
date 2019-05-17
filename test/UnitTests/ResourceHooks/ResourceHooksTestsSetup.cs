@@ -1,4 +1,3 @@
-
 using Bogus;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
@@ -7,6 +6,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
