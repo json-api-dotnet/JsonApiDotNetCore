@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models.Resources;
@@ -8,10 +9,11 @@ namespace ResourceEntitySeparationExample.Controllers
     public class CoursesController : JsonApiController<CourseResource>
     {
         public CoursesController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<CourseResource, int> resourceService,
             ILoggerFactory loggerFactory)
-            : base(jsonApiContext, resourceService, loggerFactory)
+            : base(jsonApiOptions, jsonApiContext, resourceService, loggerFactory)
         { }
     }
 }

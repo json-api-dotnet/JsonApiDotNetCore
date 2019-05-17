@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,10 @@ namespace JsonApiDotNetCore.Controllers
     : JsonApiQueryController<T, int> where T : class, IIdentifiable<int>
     {
         public JsonApiQueryController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService)
-            : base(jsonApiContext, resourceService)
+            : base(jsonApiOptions, jsonApiContext, resourceService)
         { }
     }
 
@@ -19,9 +21,10 @@ namespace JsonApiDotNetCore.Controllers
     : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiQueryController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
-        : base(jsonApiContext, resourceService)
+        : base(jsonApiOptions, jsonApiContext, resourceService)
         { }
 
         [HttpGet]

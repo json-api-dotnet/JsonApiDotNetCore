@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -13,17 +14,20 @@ namespace JsonApiDotNetCore.Controllers
         where T : class, IIdentifiable<int>
     {
         public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService
-        ) : base(jsonApiContext, resourceService) { }
+        ) : base(jsonApiOptions, jsonApiContext, resourceService) { }
 
         public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceQueryService<T, int> queryService = null,
             IResourceCmdService<T, int> cmdService = null
-        ) : base(jsonApiContext, queryService, cmdService) { }
+        ) : base(jsonApiOptions, jsonApiContext, queryService, cmdService) { }
 
         public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IGetAllService<T, int> getAll = null,
             IGetByIdService<T, int> getById = null,
@@ -33,7 +37,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<T, int> update = null,
             IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null
-        ) : base(jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+        ) : base(jsonApiOptions, jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
     }
 
     public class BaseJsonApiController<T, TId>
@@ -48,12 +52,15 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IUpdateService<T, TId> _update;
         private readonly IUpdateRelationshipService<T, TId> _updateRelationships;
         private readonly IDeleteService<T, TId> _delete;
+        private readonly IJsonApiOptions _jsonApiOptions;
         private readonly IJsonApiContext _jsonApiContext;
 
         public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         {
+            _jsonApiOptions = jsonApiOptions;
             _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _getAll = resourceService;
             _getById = resourceService;
@@ -66,10 +73,12 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceQueryService<T, TId> queryService = null,
             IResourceCmdService<T, TId> cmdService = null)
         {
+            _jsonApiOptions = jsonApiOptions;
             _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _getAll = queryService;
             _getById = queryService;
@@ -82,6 +91,7 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
@@ -92,6 +102,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateRelationshipService<T, TId> updateRelationships = null,
             IDeleteService<T, TId> delete = null)
         {
+            _jsonApiOptions = jsonApiOptions;
             _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _getAll = getAll;
             _getById = getById;
@@ -106,28 +117,27 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetAsync()
         {
             if (_getAll == null) throw Exceptions.UnSupportedRequestMethod;
-
             var entities = await _getAll.GetAsync();
-
             return Ok(entities);
         }
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
             if (_getById == null) throw Exceptions.UnSupportedRequestMethod;
-
             var entity = await _getById.GetAsync(id);
-
             if (entity == null)
+            {
                 return NotFound();
-
+            }
             return Ok(entity);
         }
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
-            if (_getRelationships == null) throw Exceptions.UnSupportedRequestMethod;
-
+            if (_getRelationships == null)
+            {
+                throw Exceptions.UnSupportedRequestMethod;
+            }
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
                 return NotFound();
@@ -138,9 +148,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
             if (_getRelationship == null) throw Exceptions.UnSupportedRequestMethod;
-
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
-
             return Ok(relationship);
         }
 
@@ -152,11 +160,13 @@ namespace JsonApiDotNetCore.Controllers
             if (entity == null)
                 return UnprocessableEntity();
 
-            if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
+            if (!_jsonApiOptions.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
                 return Forbidden();
 
-            if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ResourceGraph));
+            if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelStateExtensions.ConvertToErrorCollection<T>(ModelState, _jsonApiContext.ResourceGraph));
+            }
 
             entity = await _create.CreateAsync(entity);
 
@@ -170,8 +180,10 @@ namespace JsonApiDotNetCore.Controllers
             if (entity == null)
                 return UnprocessableEntity();
 
-            if (_jsonApiContext.Options.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(_jsonApiContext.ResourceGraph));
+            if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelStateExtensions.ConvertToErrorCollection<T>(ModelState, _jsonApiContext.ResourceGraph));
+            }
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 

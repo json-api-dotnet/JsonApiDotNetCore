@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Extensions
 
             return collection;
         }
-        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState, IResourceGraph resourceGraph)
+        public static ErrorCollection ConvertToErrorCollection<T>(ModelStateDictionary modelState, IResourceGraph resourceGraph)
         {
             ErrorCollection collection = new ErrorCollection();
             foreach (var entry in modelState)
