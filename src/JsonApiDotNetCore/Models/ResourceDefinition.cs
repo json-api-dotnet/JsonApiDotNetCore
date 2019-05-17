@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.Models
 
 
         public virtual void AfterCreate(HashSet<T> entities, ResourceAction pipeline) { }
-        public virtual void AfterRead(HashSet<T> entities, ResourceAction pipeline, bool isRelated = false) { }
+        public virtual void AfterRead(HashSet<T> entities, ResourceAction pipeline, bool isIncluded = false) { }
         public virtual void AfterUpdate(HashSet<T> entities, ResourceAction pipeline) { }
         public virtual void AfterDelete(HashSet<T> entities, ResourceAction pipeline, bool succeeded) { }
         public virtual void AfterUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
