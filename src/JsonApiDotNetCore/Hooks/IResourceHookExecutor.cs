@@ -9,9 +9,16 @@ namespace JsonApiDotNetCore.Hooks
     /// in <see cref="ResourceDefinition{T}"/>. see methods in 
     /// <see cref="IBeforeExecutor"/>, <see cref="IAfterExecutor"/> and 
     /// <see cref="IOnExecutor"/> for more information.
-    /// </summary>^
+    /// 
+    /// Uses <see cref="TraversalHelper"/> for traversal of nested entity data structures.
+    /// Uses <see cref="HookExecutorHelper"/> for retrieving meta data about hooks, 
+    /// fetching database values and performing other recurring internal operations.
+    /// </summary>
     public interface IResourceHookExecutor : IBeforeExecutor, IAfterExecutor, IOnExecutor { }
 
+    /// <summary>
+    /// Wrapper interface for all Before execution methods.
+    /// </summary>
     public interface IBeforeExecutor
     {
         /// <summary>
@@ -81,6 +88,9 @@ namespace JsonApiDotNetCore.Hooks
         IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
     }
 
+    /// <summary>
+    /// Wrapper interface for all After execution methods.
+    /// </summary>
     public interface IAfterExecutor
     {
         /// <summary>
@@ -131,6 +141,9 @@ namespace JsonApiDotNetCore.Hooks
         void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable;
     }
 
+    /// <summary>
+    /// Wrapper interface for all On execution methods.
+    /// </summary>
     public interface IOnExecutor
     {
         /// <summary>

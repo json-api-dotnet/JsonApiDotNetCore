@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Hooks
 {
     /// <summary>
     /// A class used internally for resource hook execution. Not intended for developer use.

@@ -13,7 +13,7 @@ using DependentType = System.Type;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Services;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
     internal class HookExecutorHelper : IHookExecutorHelper

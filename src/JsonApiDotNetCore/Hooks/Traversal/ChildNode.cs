@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using DependentType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
+    /// <inheritdoc />
     internal class ChildNode<TEntity> : IEntityNode where TEntity : class, IIdentifiable
     {
-
+        /// <inheritdoc />
         public DependentType EntityType { get; private set; }
+        /// <inheritdoc />
         public RelationshipProxy[] RelationshipsToNextLayer { get; set; }
+        /// <inheritdoc />
         public IEnumerable UniqueEntities
         {
             get
@@ -20,6 +22,8 @@ namespace JsonApiDotNetCore.Hooks
                 return new HashSet<TEntity>(_relationshipsFromPreviousLayer.SelectMany(rfpl => rfpl.DependentEntities));
             }
         }
+
+        /// <inheritdoc />
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer
         {
             get
@@ -37,7 +41,8 @@ namespace JsonApiDotNetCore.Hooks
             _relationshipsFromPreviousLayer = prevLayerRelationships;
         }
 
-        public void UpdateUnique(IEnumerable updated)
+        /// <inheritdoc />
+       public void UpdateUnique(IEnumerable updated)
         {
             List<TEntity> casted = updated.Cast<TEntity>().ToList();
             foreach (var rpfl in _relationshipsFromPreviousLayer)
@@ -46,6 +51,7 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
+        /// <inheritdoc />
         public void Reassign(IEnumerable updated = null)
         {
             var unique = (HashSet<TEntity>)UniqueEntities;

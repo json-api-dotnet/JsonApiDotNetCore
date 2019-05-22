@@ -2,11 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
 {
+
+    /// <summary>
+    /// The root node class of the breadth-first-traversal of entity data structures
+    /// as performed by the <see cref="ResourceHookExecutor"/>
+    /// </summary>
     internal class RootNode<TEntity> : IEntityNode where TEntity : class, IIdentifiable
     {
         private HashSet<TEntity> _uniqueEntities;
@@ -20,11 +24,17 @@ namespace JsonApiDotNetCore.Hooks
                     .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p, p => UniqueEntities));
         }
 
+        /// <summary>
+        /// The current layer entities grouped by affected relationship to the next layer
+        /// </summary>
         public Dictionary<RelationshipProxy, IEnumerable> PrincipalsToNextLayer()
         {
             return RelationshipsToNextLayer.ToDictionary(p => p, p => UniqueEntities);
         }
 
+        /// <summary>
+        /// The root node does not have a parent layer and therefore does not have any relationships to any previous layer
+        /// </summary>
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer { get { return null; } }
 
         public RootNode(IEnumerable<TEntity> uniqueEntities, RelationshipProxy[] relationships)
@@ -34,6 +44,10 @@ namespace JsonApiDotNetCore.Hooks
             RelationshipsToNextLayer = relationships;
         }
 
+        /// <summary>
+        /// Update the internal list of affected entities. 
+        /// </summary>
+        /// <param name="updated">Updated.</param>
         public void UpdateUnique(IEnumerable updated)
         {
             var casted = updated.Cast<TEntity>().ToList();

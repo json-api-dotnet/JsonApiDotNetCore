@@ -1,5 +1,5 @@
 using System;
-namespace JsonApiDotNetCore.Hooks.Discovery
+namespace JsonApiDotNetCore.Hooks
 {
     public class IncludeDatabaseValues : Attribute
     {

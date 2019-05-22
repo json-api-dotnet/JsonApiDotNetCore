@@ -1,52 +1,82 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
-
 namespace JsonApiDotNetCore.Hooks
 {
+    /// <summary>
+    /// Not meant for public usage. Used internally in the <see cref="ResourceHookExecutor"/>
+    /// </summary>
     public interface IResourceHookContainer { }
 
+    /// <summary>
+    /// Implement this interface to implement business logic hooks on <see cref="ResourceDefinition{T}"/>.
+    /// </summary>
     public interface IResourceHookContainer<TEntity> : IBeforeHooks<TEntity>, IAfterHooks<TEntity>, IOnHooks<TEntity>, IResourceHookContainer where TEntity : class, IIdentifiable { }
 
+    /// <summary>
+    /// Wrapper interface for all After hooks.
+    /// </summary>
     public interface IAfterHooks<TEntity> where TEntity : class, IIdentifiable
     {
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just after creation of entities of type <typeparamref name="TEntity"/>.
         /// <para />
-        /// If along with the created entities there were also updated relationships, 
-        /// this is reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
-        /// hook is also fired.
+        /// If relationships were created with the created entities, this will
+        /// be reflected by the corresponding NavigationProperty being set. 
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IUpdatedRelationshipHelper{T}, ResourceAction)"/>
+        /// hook is fired after the execution of this hook.
         /// </summary>
         /// <returns>The transformed entity set</returns>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         void AfterCreate(HashSet<TEntity> entities, ResourceAction pipeline);
+        /// <summary>
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
+        /// layer just after reading entities of type <typeparamref name="TEntity"/>.
+        /// </summary>
+        /// <param name="entities">The unique set of affected entities.</param>
+        /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
+        /// <param name="isIncluded">A boolean to indicate whether the entities in this hook execution are the main entities of the request, 
+        /// or if they were included as a relationship</param>
         void AfterRead(HashSet<TEntity> entities, ResourceAction pipeline, bool isIncluded = false);
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
-        /// layer just after creation of entities of type <typeparamref name="TEntity"/>.
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
+        /// layer just after updating entities of type <typeparamref name="TEntity"/>.
         /// <para />
-        /// If along with the created entities there were also updated relationships, 
-        /// this is reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
-        /// hook is also fired.
+        /// If relationships were updated with the updated entities, this will
+        /// be reflected by the corresponding NavigationProperty being set. 
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IUpdatedRelationshipHelper{T}, ResourceAction"/>
+        /// hook is fired after the execution of this hook.
         /// </summary>
-        /// <returns>The transformed entity set</returns>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         void AfterUpdate(HashSet<TEntity> entities, ResourceAction pipeline);
+        /// <summary>
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
+        /// layer just after deletion of entities of type <typeparamref name="TEntity"/>.
+        /// </summary>
+        /// <param name="entities">The unique set of affected entities.</param>
+        /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
+        /// <param name="succeeded">If set to <c>true</c> if the deletion was succeeded in the repository layer.</param>
         void AfterDelete(HashSet<TEntity> entities, ResourceAction pipeline, bool succeeded);
+        /// <summary>
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> layer
+        /// just after a relationship was updated.
+        /// </summary>
+        /// <param name="relationshipHelper">Relationship helper.</param>
+        /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         void AfterUpdateRelationship(IUpdatedRelationshipHelper<TEntity> relationshipHelper, ResourceAction pipeline);
     }
 
+    /// <summary>
+    /// Wrapper interface for all Before hooks.
+    /// </summary>
     public interface IBeforeHooks<TEntity> where TEntity : class, IIdentifiable
     {
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before creation of entities of type <typeparamref name="TEntity"/>.
         /// <para />
         /// For the <see cref="ResourceAction.Create"/> pipeline, <paramref name="entities"/> 
@@ -58,17 +88,17 @@ namespace JsonApiDotNetCore.Hooks
         /// pipeline will not be executed for the omitted entities. The returned 
         /// set may also contain custom changes of the properties on the entities.
         /// <para />
-        /// If along with the to be created entities there are also relationships
-        /// to be created, this is reflected by the corresponding NavigationProperty
-        /// being set. For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
-        /// hook is also fired.
+        /// If new relationships are to be created with the to-be-created entities,
+        /// this will be reflected by the corresponding NavigationProperty being set. 
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
+        /// hook is fired after the execution of this hook.
         /// </summary>
         /// <returns>The transformed entity set</returns>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         IEnumerable<TEntity> BeforeCreate(HashSet<TEntity> entities, ResourceAction pipeline);
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before reading entities of type <typeparamref name="TEntity"/>.
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
@@ -76,7 +106,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="stringId">The string id of the requested entity, in the case of <see cref="ResourceAction.GetSingle"/></param>
         void BeforeRead(ResourceAction pipeline, bool isIncluded = false, string stringId = null);
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before updating entities of type <typeparamref name="TEntity"/>.
         /// <para />
         /// For the <see cref="ResourceAction.Patch"/> pipeline, the
@@ -85,14 +115,15 @@ namespace JsonApiDotNetCore.Hooks
         /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
-        /// of <paramref name="entities"/>, in which case the operation of the 
-        /// pipeline will not be executed for the omitted entities. The returned 
-        /// set may also contain custom changes of the properties on the entities.
+        /// of the <see cref="EntityDiff{TEntity}.RequestEntities"/> property in parameter <paramref name="entityDiff"/>, 
+        /// in which case the operation of the  pipeline will not be executed 
+        /// for the omitted entities. The returned set may also contain custom 
+        /// changes of the properties on the entities.
         /// <para />
-        /// If along with the to be created entities there are also relationships
-        /// to be created, this is reflected by the corresponding NavigationProperty
-        /// being set. For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
-        /// hook is also fired.
+        /// If new relationships are to be created with the to-be-updated entities,
+        /// this will be reflected by the corresponding NavigationProperty being set. 
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
+        /// hook is fired after the execution of this hook.
         /// <para />
         /// If by the creation of these relationships, any other relationships (eg
         /// in the case of an already populated one-to-one relationship) are implicitly 
@@ -104,7 +135,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         IEnumerable<TEntity> BeforeUpdate(EntityDiff<TEntity> entityDiff, ResourceAction pipeline);
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before deleting entities of type <typeparamref name="TEntity"/>.
         /// <para />
         /// For the <see cref="ResourceAction.Delete"/> pipeline,
@@ -116,11 +147,6 @@ namespace JsonApiDotNetCore.Hooks
         /// of <paramref name="entities"/>, in which case the operation of the 
         /// pipeline will not be executed for the omitted entities.
         /// <para />
-        /// If along with the to be created entities there are also relationships
-        /// to be created, this is reflected by the corresponding NavigationProperty
-        /// being set. For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
-        /// hook is also fired.
-        /// <para />
         /// If by the deletion of these entities any other entities are affected 
         /// implicitly by the removal of their relationships (eg
         /// in the case of an one-to-one relationship), the <see cref="ResourceDefinition{T}.BeforeImplicitUpdateRelationship"/>
@@ -131,16 +157,18 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         IEnumerable<TEntity> BeforeDelete(HashSet<TEntity> entities, ResourceAction pipeline);
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before updating relationships to entities of type <typeparamref name="TEntity"/>.
         /// <para />
-        /// This hook is fired when a set of entities in the <see cref="ResourceAction.Create"/>
-        /// or <see cref="ResourceAction.Patch"/> pipeline, a relationship is created
-        /// to entities of type <typeparamref name="TEntity"/>.
+        /// This hook is fired when a relationship is created to entities of type 
+        /// <typeparamref name="TEntity"/> from a dependent pipeline (<see cref="ResourceAction.Create"/>
+        /// or <see cref="ResourceAction.Patch"/>). For example, If an Article was created
+        /// and its author relationship was set to an existing Person, this hook will be fired
+        /// for that particular Person.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of <paramref name="ids"/>, in which case the operation of the 
-        /// pipeline will not be executed for the entities with the omitted ids.
+        /// pipeline will not be executed for any entity whose id was omitted
         /// <para />
         /// </summary>
         /// <returns>The transformed set of ids</returns>
@@ -149,8 +177,15 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="relationshipHelper">A helper that groups the entities by the affected relationship</param>
         IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IUpdatedRelationshipHelper<TEntity> relationshipHelper, ResourceAction pipeline);
         /// <summary>
-        /// Implement this hook to run logic in the <see cref=" EntityResourceService{T}"/> 
+        /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before implicitly updating relationships to entities of type <typeparamref name="TEntity"/>.
+        /// <para />
+        /// This hook is fired when a relationship to entities of type 
+        /// <typeparamref name="TEntity"/> is implicitly affected from a dependent pipeline (<see cref="ResourceAction.Patch"/>
+        /// or <see cref="ResourceAction.Delete"/>). For example, if an Article was updated
+        /// by setting its author relationship (one-to-one) to an existing Person, 
+        /// and by this the relationship to a different Person was implicitly removed, 
+        /// this hook will be fired for the latter Person.
         /// <para />
         /// See <see cref="ResourceDefinition{T}.BeforeUpdate"/> for information about
         /// when this hook is fired.
@@ -162,6 +197,9 @@ namespace JsonApiDotNetCore.Hooks
         void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<TEntity> relationshipHelper, ResourceAction pipeline);
     }
 
+    /// <summary>
+    /// Wrapper interface for all on hooks.
+    /// </summary>
     public interface IOnHooks<TEntity> where TEntity : class, IIdentifiable
     {
         /// <summary>

@@ -1,14 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
 {
+    /// <summary>
+    /// A helper class for mapping relationships between a current and previous layer
+    /// </summary>
    internal interface IRelationshipsFromPreviousLayer
     {
+        /// <summary>
+        /// Grouped by relationship to the previous layer, gets all the entities of the current layer
+        /// </summary>
+        /// <returns>The dependent entities.</returns>
         Dictionary<RelationshipProxy, IEnumerable> GetDependentEntities();
+        /// <summary>
+        /// Grouped by relationship to the previous layer, gets all the entities of the previous layer
+        /// </summary>
+        /// <returns>The dependent entities.</returns>
         Dictionary<RelationshipProxy, IEnumerable> GetPrincipalEntities();
     }
 

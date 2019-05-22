@@ -12,11 +12,28 @@ using PrincipalType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
+    /// <summary>
+    /// A helper class used by the <see cref="ResourceHookExecutor"/> to traverse through
+    /// entity data structures (trees), allowing for a breadth-first-traversal
+    /// 
+    /// It creates nodes for each layer. 
+    /// Typically, the first layer is homogeneous (all entities have the same type),
+    /// and further nodes can be mixed.
+    /// 
+    /// </summary>
     internal class TraversalHelper
     {
         private readonly IResourceGraph _graph;
         private readonly IJsonApiContext _context;
+        /// <summary>
+        /// Keeps track of which entities has already been traversed through, to prevent
+        /// infinite loops in eg cyclic data structures.
+        /// </summary>
         private Dictionary<DependentType, HashSet<IIdentifiable>> _processedEntities;
+        /// <summary>
+        /// A mapper from <see cref="RelationshipAttribute"/> to <see cref="RelationshipProxy"/>. 
+        /// See the latter for more details.
+        /// </summary>
         private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
 
         public TraversalHelper(
@@ -27,6 +44,14 @@ namespace JsonApiDotNetCore.Hooks
             _graph = graph;
         }
 
+        /// <summary>
+        /// Creates a root node for breadth-first-traversal. Note that typically, in
+        /// JADNC, the root layer will be homogeneous. Also, because it is the first layer,
+        /// there can be no relationships to previous layers, only to next layers.
+        /// </summary>
+        /// <returns>The root node.</returns>
+        /// <param name="rootEntities">Root entities.</param>
+        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
         public RootNode<TEntity> CreateRootNode<TEntity>(IEnumerable<TEntity> rootEntities) where TEntity : class, IIdentifiable
         {
             _processedEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
@@ -35,16 +60,31 @@ namespace JsonApiDotNetCore.Hooks
             return new RootNode<TEntity>(uniqueEntities, relationshipsToNextLayer);
         }
 
+        /// <summary>
+        /// Create the first layer after the root layer (based on the root node)
+        /// </summary>
+        /// <returns>The next layer.</returns>
+        /// <param name="rootNode">Root node.</param>
         public EntityChildLayer CreateNextLayer(IEntityNode rootNode)
         {
             return CreateNextLayer(new IEntityNode[] { rootNode });
         }
 
+        /// <summary>
+        /// Create a next layer from any previous layer
+        /// </summary>
+        /// <returns>The next layer.</returns>
+        /// <param name="nodes">Nodes.</param>
         public EntityChildLayer CreateNextLayer(IEnumerable<IEntityNode> nodes)
         {
+            /// first extract entities by parsing populated relationships in the entities
+            /// of previous layer
             (var dependents, var principals) = ExtractEntities(nodes);
+
+            /// group them conveniently so we can make ChildNodes of them
             var dependentsGrouped = GroupByDependentTypeOfRelationship(dependents);
 
+            /// convert the groups into child nodes
             var nextNodes = dependentsGrouped.Select(entry =>
             {
                 var nextNodeType = entry.Key;
@@ -58,34 +98,20 @@ namespace JsonApiDotNetCore.Hooks
                 return CreateNodeInstance(nextNodeType, GetRelationships(nextNodeType), relationshipsToPreviousLayer);
             }).ToList();
 
+            /// wrap the child nodes in a EntityChildLayer
             return new EntityChildLayer(nextNodes);
         }
 
-        IEntityNode CreateNodeInstance(DependentType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
-        {
-            IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
-            return (IEntityNode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
-        }
-
-        IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(DependentType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
-        {
-            var casted = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
-            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { casted });
-        }
-
-        IRelationshipGroup CreateRelationsipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> principalEntities, List<IIdentifiable> dependentEntities)
-        {
-            var dependentEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, dependentEntities.Cast(thisLayerType));
-            return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
-                thisLayerType,
-                new object[] { proxy, new HashSet<IIdentifiable>(principalEntities), dependentEntitiesHashed });
-        }
 
         Dictionary<DependentType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByDependentTypeOfRelationship(Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
         {
             return relationships.GroupBy(kvp => kvp.Key.DependentType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
         }
 
+        /// <summary>
+        /// Extracts the entities for the current layer by going through all populated relationships
+        /// of the (principal entities of the previous layer.
+        /// </summary>
         (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<IEntityNode> principalNodes)
         {
             var currentLayerEntities = new List<IIdentifiable>();
@@ -134,11 +160,22 @@ namespace JsonApiDotNetCore.Hooks
             return (principalsGrouped, dependentsGrouped);
         }
 
+        /// <summary>
+        /// Get all relationships known in the current tree traversal from a 
+        /// principal type to any dependent type
+        /// </summary>
+        /// <returns>The relationships.</returns>
         RelationshipProxy[] GetRelationships(PrincipalType principal)
         {
             return RelationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == principal).ToArray();
         }
 
+        /// <summary>
+        /// Registers the entities as "seen" in the tree traversal, extracts any new <see cref="RelationshipProxy"/>s from it.
+        /// </summary>
+        /// <returns>The entities.</returns>
+        /// <param name="incomingEntities">Incoming entities.</param>
+        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
         HashSet<TEntity> ProcessEntities<TEntity>(IEnumerable<TEntity> incomingEntities) where TEntity : class, IIdentifiable
         {
             Type type = typeof(TEntity);
@@ -159,14 +196,6 @@ namespace JsonApiDotNetCore.Hooks
             return newEntities;
         }
 
-        private DependentType GetTypeOfList<TEntity>(IEnumerable<TEntity> incomingEntities) where TEntity : class, IIdentifiable
-        {
-            if (typeof(TEntity) == typeof(IIdentifiable))
-            {
-                return incomingEntities.First().GetType();
-            }
-            return typeof(TEntity);
-        }
 
         /// <summary>
         /// Registers the processed entities in the dictionary grouped by type
@@ -232,6 +261,35 @@ namespace JsonApiDotNetCore.Hooks
                 target[proxy] = entities;
             }
             entities.AddRange(newEntities);
+        }
+
+        /// <summary>
+        /// Reflective helper method to create an instance of <see cref="ChildNode{TEntity}"/>;
+        /// </summary>
+        IEntityNode CreateNodeInstance(DependentType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        {
+            IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
+            return (IEntityNode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
+        }
+
+        /// <summary>
+        /// Reflective helper method to create an instance of <see cref="RelationshipsFromPreviousLayer{TDependent}"/>;
+        /// </summary>
+        IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(DependentType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        {
+            var casted = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
+            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { casted });
+        }
+
+        /// <summary>
+        /// Reflective helper method to create an instance of <see cref="RelationshipGroup{TDependent}"/>;
+        /// </summary>
+        IRelationshipGroup CreateRelationsipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> principalEntities, List<IIdentifiable> dependentEntities)
+        {
+            var dependentEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, dependentEntities.Cast(thisLayerType));
+            return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
+                thisLayerType,
+                new object[] { proxy, new HashSet<IIdentifiable>(principalEntities), dependentEntitiesHashed });
         }
     }
 
