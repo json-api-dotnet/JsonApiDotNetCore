@@ -25,9 +25,9 @@ namespace JsonApiDotNetCore.Hooks
         {
             get { return _groups?.ToDictionary(p => p.Key.Attribute, p => p.Value); }
         }
-        public UpdatedRelationshipHelper(Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships)
+        public UpdatedRelationshipHelper(Dictionary<RelationshipProxy, IEnumerable> relationships)
         {
-            _groups = prevLayerRelationships.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependent>((IEnumerable<TDependent>)kvp.Value));
+            _groups = relationships.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependent>((IEnumerable<TDependent>)kvp.Value));
         }
 
         public Dictionary<RelationshipAttribute, HashSet<TDependent>> EntitiesRelatedTo<TPrincipal>() where TPrincipal : class, IIdentifiable

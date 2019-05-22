@@ -12,14 +12,18 @@ namespace JsonApiDotNetCore.Hooks
         private HashSet<TEntity> _uniqueEntities;
         public Type EntityType { get; internal set; }
         public IEnumerable UniqueEntities { get { return _uniqueEntities; } }
-
         public RelationshipProxy[] RelationshipsToNextLayer { get; private set; }
-        public IEnumerable<Dictionary<RelationshipProxy, IEnumerable>> RelationshipsToNextLayerByType()
+        public Dictionary<Type, Dictionary<RelationshipProxy, IEnumerable>> PrincipalsToNextLayerByType()
         {
-            return RelationshipsToNextLayer.GroupBy(proxy => proxy.DependentType)
-                 .Select(gdc => gdc.ToDictionary(p => p, p => UniqueEntities));
+            return RelationshipsToNextLayer
+                    .GroupBy(proxy => proxy.DependentType)
+                    .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p, p => UniqueEntities));
         }
 
+        public Dictionary<RelationshipProxy, IEnumerable> PrincipalsToNextLayer()
+        {
+            return RelationshipsToNextLayer.ToDictionary(p => p, p => UniqueEntities);
+        }
 
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer { get { return null; } }
 

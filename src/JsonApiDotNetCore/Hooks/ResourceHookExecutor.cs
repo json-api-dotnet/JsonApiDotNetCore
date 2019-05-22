@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Hooks
             if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
                 var dbValues = _executorHelper.LoadDbValues((IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, node.RelationshipsToNextLayer);
-                var diff = new EntityDiff<TEntity>(node.UniqueEntities, dbValues);
+                var diff = new EntityDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -82,9 +82,10 @@ namespace JsonApiDotNetCore.Hooks
                 node.Reassign(entities);
             }
 
-            foreach (var implicitTargets in node.RelationshipsToNextLayerByType())
+            foreach (var entry in node.PrincipalsToNextLayerByType())
             {
-                var dependentType = implicitTargets.First().Key.DependentType;
+                var dependentType = entry.Key;
+                var implicitTargets = entry.Value;
                 FireForAffectedImplicits(dependentType, implicitTargets, pipeline);
             }
             return entities;
