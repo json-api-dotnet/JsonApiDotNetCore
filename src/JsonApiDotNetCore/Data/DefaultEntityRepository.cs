@@ -78,18 +78,8 @@ namespace JsonApiDotNetCore.Data
             _resourceDefinition = resourceDefinition;
         }
 
-
-        
-        public virtual IQueryable<TEntity> Get()
-        {
-            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
-                return _dbSet.Select(_jsonApiContext.QuerySet?.Fields);
-
-            return _dbSet;
-        }
-
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> GetQueryable() 
+        public virtual IQueryable<TEntity> Get()
             => _dbSet;
 
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
@@ -140,7 +130,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await Select(GetQueryable(), _jsonApiContext.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await Select(Get(), _jsonApiContext.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         /// <inheritdoc />
@@ -148,7 +138,7 @@ namespace JsonApiDotNetCore.Data
         {
             _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var includedSet = Include(Select(GetQueryable(), _jsonApiContext.QuerySet?.Fields), relationshipName);
+            var includedSet = Include(Select(Get(), _jsonApiContext.QuerySet?.Fields), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;
