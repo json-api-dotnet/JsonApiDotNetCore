@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore.Internal;
 

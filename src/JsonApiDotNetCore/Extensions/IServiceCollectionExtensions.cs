@@ -161,7 +161,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
             // services.AddScoped<IActionFilter, TypeMatchFilter>();
-            services.AddScoped<IQueryManager, QueryManager>();
+            services.AddScoped<IRequestManager, RequestManager>();
+            services.AddScoped<ILinkBuilder, LinkBuilder>();
         }
 
         private static void AddOperationServices(IServiceCollection services)

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -12,6 +14,8 @@ namespace JsonApiDotNetCore.Builders
     /// <inheritdoc />
     public class DocumentBuilder : IDocumentBuilder
     {
+        private readonly IRequestManager _requestManager;
+        private readonly IPageManager _pageManager;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IResourceGraph _resourceGraph;
         private readonly IRequestMeta _requestMeta;
@@ -20,10 +24,14 @@ namespace JsonApiDotNetCore.Builders
 
         public DocumentBuilder(
             IJsonApiContext jsonApiContext,
+            IPageManager pageManager,
+            IRequestManager requestManager,
             IRequestMeta requestMeta = null,
             IDocumentBuilderOptionsProvider documentBuilderOptionsProvider = null,
             IScopedServiceProvider scopedServiceProvider = null)
         {
+            _requestManager = requestManager;
+            _pageManager = pageManager;
             _jsonApiContext = jsonApiContext;
             _resourceGraph = jsonApiContext.ResourceGraph;
             _requestMeta = requestMeta;
@@ -44,7 +52,9 @@ namespace JsonApiDotNetCore.Builders
             };
 
             if (ShouldIncludePageLinks(contextEntity))
-                document.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
+            {
+                document.Links = _pageManager.GetPageLinks();
+            }
 
             document.Included = AppendIncludedObject(document.Included, contextEntity, entity);
 
@@ -66,7 +76,9 @@ namespace JsonApiDotNetCore.Builders
             };
 
             if (ShouldIncludePageLinks(contextEntity))
-                documents.Links = _jsonApiContext.PageManager.GetPageLinks(new LinkBuilder(_jsonApiContext));
+            {
+                documents.Links = _pageManager.GetPageLinks();
+            }
 
             foreach (var entity in enumeratedEntities)
             {
@@ -80,7 +92,7 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<string, object> GetMeta(IIdentifiable entity)
         {
             var builder = _jsonApiContext.MetaBuilder;
-            if (_jsonApiContext.Options.IncludeTotalRecordCount && _jsonApiContext.PageManager.TotalRecords != null)
+            if (_jsonApiContext.Options.IncludeTotalRecordCount && _pageManager.TotalRecords != null)
                 builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
 
             if (_requestMeta != null)
@@ -146,9 +158,9 @@ namespace JsonApiDotNetCore.Builders
         {
             return OmitNullValuedAttribute(attr, attributeValue) == false
                     && attr.InternalAttributeName != nameof(Identifiable.Id)
-                   && ((_jsonApiContext.QuerySet == null
-                       || _jsonApiContext.QuerySet.Fields.Count == 0)
-                       || _jsonApiContext.QuerySet.Fields.Contains(relationship != null ?
+                   && ((_requestManager.QuerySet == null
+                       || _requestManager.QuerySet.Fields.Count == 0)
+                       || _requestManager.QuerySet.Fields.Contains(relationship != null ?
                             $"{relationship.InternalRelationshipName}.{attr.InternalAttributeName}" :
                             attr.InternalAttributeName));
         }
@@ -171,39 +183,39 @@ namespace JsonApiDotNetCore.Builders
 
         private RelationshipData GetRelationshipData(RelationshipAttribute attr, ContextEntity contextEntity, IIdentifiable entity)
         {
-            var linkBuilder = new LinkBuilder(_jsonApiContext);
+            //var linkBuilder = new LinkBuilder(_documentBuilderOptions,_requestManager);
 
             var relationshipData = new RelationshipData();
 
-            if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(Link.None) == false && attr.DocumentLinks.HasFlag(Link.None) == false)
-            {
-                relationshipData.Links = new Links();
-                if (attr.DocumentLinks.HasFlag(Link.Self))
-                    relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
+            //if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(Link.None) == false && attr.DocumentLinks.HasFlag(Link.None) == false)
+            //{
+            //    relationshipData.Links = new Links();
+            //    if (attr.DocumentLinks.HasFlag(Link.Self))
+            //        relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
 
-                if (attr.DocumentLinks.HasFlag(Link.Related))
-                    relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
-            }
+            //    if (attr.DocumentLinks.HasFlag(Link.Related))
+            //        relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
+            //}
 
-            // this only includes the navigation property, we need to actually check the navigation property Id
-            var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(entity, attr);
-            if (navigationEntity == null)
-                relationshipData.SingleData = attr.IsHasOne
-                    ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
-                    : null;
-            else if (navigationEntity is IEnumerable)
-                relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
-            else
-                relationshipData.SingleData = GetRelationship(navigationEntity);
+            //// this only includes the navigation property, we need to actually check the navigation property Id
+            //var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(entity, attr);
+            //if (navigationEntity == null)
+            //    relationshipData.SingleData = attr.IsHasOne
+            //        ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
+            //        : null;
+            //else if (navigationEntity is IEnumerable)
+            //    relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
+            //else
+            //    relationshipData.SingleData = GetRelationship(navigationEntity);
 
             return relationshipData;
         }
 
         private List<ResourceObject> GetIncludedEntities(List<ResourceObject> included, ContextEntity rootContextEntity, IIdentifiable rootResource)
         {
-            if (_jsonApiContext.IncludedRelationships != null)
+            if (_jsonApiContext.RequestManager.IncludedRelationships != null)
             {
-                foreach (var relationshipName in _jsonApiContext.IncludedRelationships)
+                foreach (var relationshipName in _jsonApiContext.RequestManager.IncludedRelationships)
                 {
                     var relationshipChain = relationshipName.Split('.');
 

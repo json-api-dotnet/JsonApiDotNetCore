@@ -1,6 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -16,7 +20,7 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext)
+        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext, IResourceGraph resourceGraph, IRequestManager requestManager, IJsonApiOptions options )
         {
             if (IsValid(context))
             {
@@ -25,8 +29,65 @@ namespace JsonApiDotNetCore.Middleware
                 // since the JsonApiContext is using field initializers
                 // Need to work on finding a better solution.
                 jsonApiContext.BeginOperation();
+                ContextEntity contextEntityCurrent = GetCurrentEntity(context.Request.Path, resourceGraph);
+                requestManager.SetContextEntity(contextEntityCurrent);
+                requestManager.BasePath = GetBasePath(context, options, contextEntityCurrent?.EntityName);
                 await _next(context);
             }
+        }
+
+        private string GetBasePath(HttpContext context, IJsonApiOptions options, string entityName)
+        {
+            var r = context.Request;
+            if (options.RelativeLinks)
+            {
+                return GetNamespaceFromPath(r.Path, entityName);
+            }
+            else
+            {
+                return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
+            }
+        }
+        internal static string GetNamespaceFromPath(string path, string entityName)
+        {
+            var entityNameSpan = entityName.AsSpan();
+            var pathSpan = path.AsSpan();
+            const char delimiter = '/';
+            for (var i = 0; i < pathSpan.Length; i++)
+            {
+                if (pathSpan[i].Equals(delimiter))
+                {
+                    var nextPosition = i + 1;
+                    if (pathSpan.Length > i + entityNameSpan.Length)
+                    {
+                        var possiblePathSegment = pathSpan.Slice(nextPosition, entityNameSpan.Length);
+                        if (entityNameSpan.SequenceEqual(possiblePathSegment))
+                        {
+                            // check to see if it's the last position in the string
+                            //   or if the next character is a /
+                            var lastCharacterPosition = nextPosition + entityNameSpan.Length;
+
+                            if (lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition].Equals(delimiter))
+                            {
+                                return pathSpan.Slice(0, i).ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
+        /// <summary>
+        /// Gets the current entity that we need for serialization and deserialization.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="resourceGraph"></param>
+        /// <returns></returns>
+        private ContextEntity GetCurrentEntity(PathString path, IResourceGraph resourceGraph)
+        {
+            var typeString = path.ToString().Split('/')[1];
+            return resourceGraph.GetEntityType(typeString);
         }
 
         private static bool IsValid(HttpContext context)

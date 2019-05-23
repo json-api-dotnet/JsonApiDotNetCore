@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;

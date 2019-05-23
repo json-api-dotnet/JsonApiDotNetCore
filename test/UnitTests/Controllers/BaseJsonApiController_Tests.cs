@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace UnitTests
 {
@@ -337,7 +338,9 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IUpdateRelationshipService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, delete: null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, 
+                
+                _jsonApiContextMock.Object, delete: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));

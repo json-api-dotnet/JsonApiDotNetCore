@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
@@ -26,76 +26,80 @@ namespace UnitTests.Services
         [Fact]
         public void Can_Get_Guid_QueryValue()
         {
-            // arrange
-            const string key = "SomeId";
-            var value = Guid.NewGuid();
-            var querySet = new QuerySet
-            {
-                Filters = new List<FilterQuery> {
-                    new FilterQuery(key, value.ToString(), "eq")
-                }
-            };
+            //// arrange
+            //const string key = "SomeId";
+            //var value = Guid.NewGuid();
+            //var querySet = new QuerySet
+            //{
+            //    Filters = new List<FilterQuery> {
+            //        new FilterQuery(key, value.ToString(), "eq")
+            //    }
+            //};
 
-            _contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
-            var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
+            //_contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
-            // act
-            var success = service.TryGetValue<Guid>("SomeId", out Guid result);
+            //var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
 
-            // assert
-            Assert.True(success);
-            Assert.Equal(value, result);
+            //// act
+            //var success = service.TryGetValue<Guid>("SomeId", out Guid result);
+
+            //// assert
+            //Assert.True(success);
+            //Assert.Equal(value, result);
+            Assert.True(false);
         }
 
         [Fact]
         public void GetRequired_Throws_If_Not_Present()
         {
             // arrange
-            const string key = "SomeId";
-            var value = Guid.NewGuid();
+            //const string key = "SomeId";
+            //var value = Guid.NewGuid();
 
-            var querySet = new QuerySet
-            {
-                Filters = new List<FilterQuery> {
-                    new FilterQuery(key, value.ToString(), "eq")
-                }
-            };
+            //var querySet = new QuerySet
+            //{
+            //    Filters = new List<FilterQuery> {
+            //        new FilterQuery(key, value.ToString(), "eq")
+            //    }
+            //};
 
-            _contextMock.Setup(c => c.QuerySet).Returns(querySet);
+            //_contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
-            var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
+            //var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
 
-            // act
-            var exception = Assert.Throws<JsonApiException>(() => service.GetRequired<Guid>("Invalid"));
+            //// act
+            //var exception = Assert.Throws<JsonApiException>(() => service.GetRequired<Guid>("Invalid"));
 
-            // assert
-            Assert.Equal(422, exception.GetStatusCode());
+            //// assert
+            //Assert.Equal(422, exception.GetStatusCode());
+            Assert.True(false);
         }
 
         [Fact]
         public void GetRequired_Does_Not_Throw_If_Present()
         {
             // arrange
-            const string key = "SomeId";
-            var value = Guid.NewGuid();
+            //const string key = "SomeId";
+            //var value = Guid.NewGuid();
 
-            var querySet = new QuerySet
-            {
-                Filters = new List<FilterQuery> {
-                    new FilterQuery(key, value.ToString(), "eq")
-                }
-            };
+            //var querySet = new QuerySet
+            //{
+            //    Filters = new List<FilterQuery> {
+            //        new FilterQuery(key, value.ToString(), "eq")
+            //    }
+            //};
 
-            _contextMock.Setup(c => c.QuerySet).Returns(querySet);
+            //_contextMock.Setup(c => c.QuerySet).Returns(querySet);
 
-            var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
+            //var service = new QueryAccessor(_contextMock.Object, _loggerMock.Object);
 
-            // act
-            var result = service.GetRequired<Guid>("SomeId");
+            //// act
+            //var result = service.GetRequired<Guid>("SomeId");
 
-            // assert
-            Assert.Equal(value, result);
+            //// assert
+            //Assert.Equal(value, result);
+            Assert.True(false);
         }
     }
 }

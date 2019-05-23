@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Services
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
             IJsonApiOptions options,
-            IQueryManager queryManager,
+            IRequestManager queryManager,
             IPageManager pageManager,
             ILoggerFactory loggerFactory = null) :
             base(jsonApiContext, entityRepository, options, queryManager, pageManager, loggerFactory)
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Services
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
             IJsonApiOptions apiOptions,
-            IQueryManager queryManager,
+            IRequestManager queryManager,
             IPageManager pageManager,
             ILoggerFactory loggerFactory = null)
             : base(jsonApiContext, entityRepository, apiOptions, queryManager, pageManager, loggerFactory)
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IPageManager _pageManager;
-        private readonly IQueryManager _queryManager;
+        private readonly IRequestManager _queryManager;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IJsonApiOptions _options;
         private readonly IEntityRepository<TEntity, TId> _repository;
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Services
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
                 IJsonApiOptions apiOptions,
-                IQueryManager queryManager,
+                IRequestManager queryManager,
                 IPageManager pageManager,
                 ILoggerFactory loggerFactory = null) : this(jsonApiContext, entityRepository, apiOptions, null, queryManager, pageManager, loggerFactory )
         {
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Services
                 IEntityRepository<TEntity, TId> entityRepository,
                 IJsonApiOptions options,
                 IResourceMapper mapper,
-                IQueryManager queryManager,
+                IRequestManager queryManager,
                 IPageManager pageManager,
                 ILoggerFactory loggerFactory)
         {
@@ -131,15 +131,15 @@ namespace JsonApiDotNetCore.Services
 
             if (AreRelationshipsIncluded())
             {
-                entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
+                entities = IncludeRelationships(entities, _jsonApiContext.RequestManager.QuerySet.IncludedRelationships);
             }
 
             if (_options.IncludeTotalRecordCount)
             {
-                _jsonApiContext.PageManager.TotalRecords = await _repository.CountAsync(entities);
+                _pageManager.TotalRecords = await _repository.CountAsync(entities);
             }
 
-            entities = _repository.Select(entities, _jsonApiContext.QuerySet?.Fields);
+            entities = _repository.Select(entities, _jsonApiContext.RequestManager.QuerySet?.Fields);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entities);
@@ -235,8 +235,7 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TEntity> entities)
         {
-            var pageManager = _jsonApiContext.PageManager;
-            if (!pageManager.IsPaginated)
+            if (!_pageManager.IsPaginated)
             {
                 var allEntities = await _repository.ToListAsync(entities);
                 return (typeof(TResource) == typeof(TEntity)) ? allEntities as IEnumerable<TResource> :
@@ -245,20 +244,20 @@ namespace JsonApiDotNetCore.Services
 
             if (_logger?.IsEnabled(LogLevel.Information) == true)
             {
-                _logger?.LogInformation($"Applying paging query. Fetching page {pageManager.CurrentPage} " +
-                    $"with {pageManager.PageSize} entities");
+                _logger?.LogInformation($"Applying paging query. Fetching page {_pageManager.CurrentPage} " +
+                    $"with {_pageManager.PageSize} entities");
             }
 
-            var pagedEntities = await _repository.PageAsync(entities, pageManager.PageSize, pageManager.CurrentPage);
+            var pagedEntities = await _repository.PageAsync(entities, _pageManager.PageSize, _pageManager.CurrentPage);
 
             return MapOut(pagedEntities);
         }
 
         protected virtual IQueryable<TEntity> ApplySortAndFilterQuery(IQueryable<TEntity> entities)
         {
-            var query = _jsonApiContext.QuerySet;
+            var query = _jsonApiContext.RequestManager.QuerySet;
 
-            if (_jsonApiContext.QuerySet == null)
+            if (_jsonApiContext.RequestManager.QuerySet == null)
                 return entities;
 
             if (query.Filters.Count > 0)
@@ -278,7 +277,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns></returns>
         protected virtual IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
         {
-            _jsonApiContext.IncludedRelationships = relationships;
+            _jsonApiContext.RequestManager.IncludedRelationships = relationships;
 
             foreach (var r in relationships)
             {

@@ -43,20 +43,23 @@ namespace JsonApiDotNetCore.Controllers
             IDeleteService<T, int> delete = null
         ) : base(jsonApiOptions, jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
 
-        public JsonApiController(IJsonApiOptions jsonApiOptions, IJsonApiContext jsonApiContext, IResourceService<T> resourceService, ILoggerFactory loggerFactory)
+        public JsonApiController(IJsonApiOptions jsonApiOptions,
+                                 IJsonApiContext jsonApiContext,
+                                 IResourceService<T> resourceService,
+                                 ILoggerFactory loggerFactory)
             : base(jsonApiOptions, jsonApiContext, resourceService, loggerFactory)
         {
-        } 
+        }
     }
 
-    public class JsonApiController<T, TId>  : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public class JsonApiController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService,
-            ILoggerFactory loggerFactory) 
-        : base(jsonApiOptions, jsonApiContext, resourceService)
+            ILoggerFactory loggerFactory)
+        : base(jsonApiOptions, jsonApiContext, resourceService, resourceService)
         { }
 
         public JsonApiController(
@@ -99,7 +102,9 @@ namespace JsonApiDotNetCore.Controllers
 
         [HttpPatch("{id}")]
         public override async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
-            => await base.PatchAsync(id, entity);
+        {
+            return await base.PatchAsync(id, entity);
+        }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipsAsync(

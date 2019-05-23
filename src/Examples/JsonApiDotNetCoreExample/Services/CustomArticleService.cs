@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Services
             IJsonApiContext jsonApiContext,
             IEntityRepository<Article> repository,
             IJsonApiOptions jsonApiOptions,
-            IQueryManager queryManager,
+            IRequestManager queryManager,
             IPageManager pageManager,
             ILoggerFactory loggerFactory
         ) : base(jsonApiContext, repository, jsonApiOptions, queryManager, pageManager, loggerFactory)

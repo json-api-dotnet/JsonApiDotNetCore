@@ -7,6 +7,12 @@ namespace JsonApiDotNetCore.Internal
 {
     public class PageManager : IPageManager
     {
+        private ILinkBuilder _linkBuilder;
+
+        public PageManager(ILinkBuilder linkBuilder)
+        {
+            _linkBuilder = linkBuilder;
+        }
         public int? TotalRecords { get; set; }
         public int PageSize { get; set; }
         public int DefaultPageSize { get; set; }
@@ -14,7 +20,7 @@ namespace JsonApiDotNetCore.Internal
         public bool IsPaginated => PageSize > 0;
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
-        public RootLinks GetPageLinks(LinkBuilder linkBuilder)
+        public RootLinks GetPageLinks()
         {
             if (ShouldIncludeLinksObject())
                 return null;
@@ -22,16 +28,16 @@ namespace JsonApiDotNetCore.Internal
             var rootLinks = new RootLinks();
 
             if (CurrentPage > 1)
-                rootLinks.First = linkBuilder.GetPageLink(1, PageSize);
+                rootLinks.First = _linkBuilder.GetPageLink(1, PageSize);
 
             if (CurrentPage > 1)
-                rootLinks.Prev = linkBuilder.GetPageLink(CurrentPage - 1, PageSize);
+                rootLinks.Prev = _linkBuilder.GetPageLink(CurrentPage - 1, PageSize);
 
             if (CurrentPage < TotalPages)
-                rootLinks.Next = linkBuilder.GetPageLink(CurrentPage + 1, PageSize);
+                rootLinks.Next = _linkBuilder.GetPageLink(CurrentPage + 1, PageSize);
 
             if (TotalPages > 0)
-                rootLinks.Last = linkBuilder.GetPageLink(TotalPages, PageSize);
+                rootLinks.Last = _linkBuilder.GetPageLink(TotalPages, PageSize);
 
             return rootLinks;
         }

@@ -17,6 +17,7 @@ using JsonApiDotNetCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace UnitTests.Extensions
 {

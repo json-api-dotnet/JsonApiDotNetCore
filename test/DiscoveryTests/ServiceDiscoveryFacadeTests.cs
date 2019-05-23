@@ -77,7 +77,7 @@ namespace DiscoveryTests
             private static IEntityRepository<TestModel> _repo = new Mock<IEntityRepository<TestModel>>().Object;
             private static IJsonApiContext _jsonApiContext = new  Mock<IJsonApiContext>().Object;
             private static IJsonApiOptions _jsonApiOptions = new Mock<IJsonApiOptions>().Object;
-            private static IQueryManager _queryManager = new Mock<IQueryManager>().Object;
+            private static IRequestManager _queryManager = new Mock<IRequestManager>().Object;
             private static IPageManager _pageManager = new Mock<IPageManager>().Object;
             public TestModelService() : base(_jsonApiContext, _repo, _jsonApiOptions, _queryManager, _pageManager) { }
         }

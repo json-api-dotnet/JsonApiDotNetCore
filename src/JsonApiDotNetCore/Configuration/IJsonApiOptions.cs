@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 

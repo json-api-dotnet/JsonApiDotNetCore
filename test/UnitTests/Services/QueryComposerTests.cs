@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using Moq;
 using Xunit;
@@ -25,13 +26,14 @@ namespace UnitTests.Services
             filters.Add(filter);
             querySet.Filters = filters;
 
-            _jsonApiContext
+            var rmMock = new Mock<IRequestManager>();
+            rmMock
                 .Setup(m => m.QuerySet)
                 .Returns(querySet);
 
             var queryComposer = new QueryComposer();
             // act
-            var filterString = queryComposer.Compose(_jsonApiContext.Object);
+            var filterString = queryComposer.Compose(rmMock.Object);
             // assert
             Assert.Equal("&filter[attribute]=eq:value", filterString);
         }
@@ -47,14 +49,15 @@ namespace UnitTests.Services
             filters.Add(filter);
             filters.Add(filter2);
             querySet.Filters = filters;
-
-            _jsonApiContext
+            var rmMock = new Mock<IRequestManager>();
+            rmMock
                 .Setup(m => m.QuerySet)
                 .Returns(querySet);
 
+
             var queryComposer = new QueryComposer();
             // act
-            var filterString = queryComposer.Compose(_jsonApiContext.Object);
+            var filterString = queryComposer.Compose(rmMock.Object);
             // assert
             Assert.Equal("&filter[attribute]=le:value&filter[attribute2]=value2", filterString);
         }
@@ -65,13 +68,15 @@ namespace UnitTests.Services
             // arrange
             var querySet = new QuerySet();
 
-            _jsonApiContext
+            var rmMock = new Mock<IRequestManager>();
+            rmMock
                 .Setup(m => m.QuerySet)
                 .Returns(querySet);
 
             var queryComposer = new QueryComposer();
-            // act
-            var filterString = queryComposer.Compose(_jsonApiContext.Object);
+            // Act
+
+            var filterString = queryComposer.Compose(rmMock.Object);
             // assert
             Assert.Equal("", filterString);
         }

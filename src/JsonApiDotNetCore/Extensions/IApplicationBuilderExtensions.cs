@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

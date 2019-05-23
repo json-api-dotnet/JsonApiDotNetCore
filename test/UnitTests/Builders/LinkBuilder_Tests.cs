@@ -21,28 +21,29 @@ namespace UnitTests
             string host, string path, bool isRelative, string expectedPath)
         {
             // arrange
-            const string resource = "articles";
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
-            {
-                RelativeLinks = isRelative
-            });
+            //const string resource = "articles";
+            //var jsonApiContextMock = new Mock<IJsonApiContext>();
+            //jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions
+            //{
+            //    RelativeLinks = isRelative
+            //});
 
-            var requestMock = new Mock<HttpRequest>();
-            requestMock.Setup(m => m.Scheme).Returns(scheme);
-            requestMock.Setup(m => m.Host).Returns(new HostString(host));
-            requestMock.Setup(m => m.Path).Returns(new PathString(path));
+            //var requestMock = new Mock<HttpRequest>();
+            //requestMock.Setup(m => m.Scheme).Returns(scheme);
+            //requestMock.Setup(m => m.Host).Returns(new HostString(host));
+            //requestMock.Setup(m => m.Path).Returns(new PathString(path));
 
-            var contextMock = new Mock<HttpContext>();
-            contextMock.Setup(m => m.Request).Returns(requestMock.Object);
+            //var contextMock = new Mock<HttpContext>();
+            //contextMock.Setup(m => m.Request).Returns(requestMock.Object);
 
-            var linkBuilder = new LinkBuilder(jsonApiContextMock.Object);
+            //var linkBuilder = new LinkBuilder(jsonApiContextMock.Object);
 
-            // act
-            var basePath = linkBuilder.GetBasePath(contextMock.Object, resource);
+            //// act
+            //var basePath = linkBuilder.GetBasePath(contextMock.Object, resource);
 
-            // assert
-            Assert.Equal(expectedPath, basePath);
+            //// assert
+            //Assert.Equal(expectedPath, basePath);
+            Assert.False(true);
         }
     }
 }
