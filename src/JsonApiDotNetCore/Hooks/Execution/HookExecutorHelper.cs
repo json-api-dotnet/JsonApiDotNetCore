@@ -6,12 +6,12 @@ using System.Reflection;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Extensions;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -73,7 +73,6 @@ namespace JsonApiDotNetCore.Hooks
                 if (ShouldExecuteHook(dependentType, targetHook)) return container;
             }
             return null;
-
         }
 
         /// <inheritdoc/>
@@ -81,9 +80,6 @@ namespace JsonApiDotNetCore.Hooks
         {
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
-
-
-
 
         public IEnumerable LoadDbValues(DependentType entityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
         {

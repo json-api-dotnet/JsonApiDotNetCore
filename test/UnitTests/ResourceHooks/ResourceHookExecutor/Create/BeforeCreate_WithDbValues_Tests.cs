@@ -51,18 +51,18 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             // act
-            hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
+            hookExecutor.BeforeCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Create), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
-                ResourceAction.Create),
+                It.IsAny<IAffectedRelationships<Person>>(),
+                ResourcePipeline.Create),
                 Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
-                It.Is<IUpdatedRelationshipHelper<TodoItem>>(rh => TodoCheck(rh, description + description)),
-                ResourceAction.Create),
+                It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheck(rh, description + description)),
+                ResourcePipeline.Create),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -77,13 +77,13 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             // act
-            hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
+            hookExecutor.BeforeCreate(todoList, ResourcePipeline.Create);
 
             // assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
-                ResourceAction.Create),
+                It.IsAny<IAffectedRelationships<Person>>(),
+                ResourcePipeline.Create),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -98,13 +98,13 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             // act
-            hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
+            hookExecutor.BeforeCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Create), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
-                It.Is<IUpdatedRelationshipHelper<TodoItem>>(rh => TodoCheck(rh, description + description)),
-                ResourceAction.Create),
+                It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheck(rh, description + description)),
+                ResourcePipeline.Create),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -119,14 +119,14 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             // act
-            hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
+            hookExecutor.BeforeCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Create), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
-                ResourceAction.Create),
+                It.IsAny<IAffectedRelationships<Person>>(),
+                ResourcePipeline.Create),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -141,13 +141,13 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             // act
-            hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
+            hookExecutor.BeforeCreate(todoList, ResourcePipeline.Create);
 
             // assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
-                It.IsAny<IUpdatedRelationshipHelper<Person>>(),
-                ResourceAction.Create),
+                It.IsAny<IAffectedRelationships<Person>>(),
+                ResourcePipeline.Create),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -162,10 +162,10 @@ namespace UnitTests.ResourceHooks
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             // act
-            hookExecutor.BeforeCreate(todoList, ResourceAction.Create);
+            hookExecutor.BeforeCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -174,9 +174,9 @@ namespace UnitTests.ResourceHooks
             return entities.Single().Description == checksum;
         }
 
-        private bool TodoCheck(IUpdatedRelationshipHelper<TodoItem> rh, string checksum)
+        private bool TodoCheck(IAffectedRelationships<TodoItem> rh, string checksum)
         {
-            return rh.EntitiesRelatedTo<Person>().Single().Value.First().Description == checksum;
+            return rh.GetByRelationship<Person>().Single().Value.First().Description == checksum;
         }
 
         private bool PersonIdCheck(IEnumerable<string> ids, string checksum)
@@ -184,10 +184,10 @@ namespace UnitTests.ResourceHooks
             return ids.Single() == checksum;
         }
 
-        private bool PersonCheck(string checksum, IUpdatedRelationshipHelper<Person> helper)
+        private bool PersonCheck(string checksum, IAffectedRelationships<Person> helper)
         {
 
-            var entries = helper.EntitiesRelatedTo<TodoItem>();
+            var entries = helper.GetByRelationship<TodoItem>();
             return entries.Single().Value.Single().LastName == checksum;
         }
     }

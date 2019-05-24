@@ -21,9 +21,9 @@ namespace UnitTests.ResourceHooks
 
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>());
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, false, null), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, false, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock);
 
         }
@@ -43,10 +43,10 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner", "assignee", "stake-holders" });
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, false, null), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, false, null), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -66,11 +66,11 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, false, null), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, false, null), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }
 
@@ -91,10 +91,10 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
-            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }
 
@@ -114,10 +114,10 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, false, null), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, false, null), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }
 
@@ -137,10 +137,10 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, false, null), Times.Once());
-            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourceAction.Get, true, null), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, false, null), Times.Once());
+            ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Read, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }
 
@@ -161,7 +161,7 @@ namespace UnitTests.ResourceHooks
             contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
-            hookExecutor.BeforeRead<TodoItem>(ResourceAction.Get);
+            hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Read);
             // assert
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }

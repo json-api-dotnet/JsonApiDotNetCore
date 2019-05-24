@@ -5,12 +5,12 @@
     /// is called from EntityResourceService.GetAsync(TId id), it will be called
     /// with parameter pipeline = ResourceAction.GetSingle.
     /// </summary>
-    public enum ResourceAction
+    public enum ResourcePipeline
     {
         None,
-        Get,
-        GetSingle,
-        GetRelationship,
+        Read,
+        ReadSingle,
+        ReadRelationship,
         Create,
         Patch,
         PatchRelationship,

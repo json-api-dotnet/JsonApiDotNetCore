@@ -254,44 +254,44 @@ namespace UnitTests.ResourceHooks
         void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
         {
             resourceDefinition
-            .Setup(rd => rd.BeforeCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>()))
-            .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
+            .Setup(rd => rd.BeforeCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeRead(It.IsAny<ResourceAction>(), It.IsAny<bool>(), It.IsAny<string>()))
+            .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<ResourceAction>()))
-            .Returns<EntityDiff<TModel>, ResourceAction>((entityDiff, context) => entityDiff.RequestEntities)
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<EntityDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.RequestEntities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>()))
-            .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
+            .Setup(rd => rd.BeforeDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
-            .Returns<IEnumerable<string>, IUpdatedRelationshipHelper<TModel>, ResourceAction>((ids, context, helper) => ids)
+            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IAffectedRelationships<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<IEnumerable<string>, IAffectedRelationships<TModel>, ResourcePipeline>((ids, context, helper) => ids)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<TModel>>(), It.IsAny<ResourceAction>()))
-            .Verifiable();
-
-            resourceDefinition
-            .Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>()))
-            .Returns<IEnumerable<TModel>, ResourceAction>((entities, context) => entities)
+            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IAffectedRelationships<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
 
             resourceDefinition
-            .Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>()))
+            .Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
+            .Verifiable();
+
+            resourceDefinition
+            .Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.AfterRead(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<bool>()))
+            .Setup(rd => rd.AfterRead(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.AfterUpdate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>()))
+            .Setup(rd => rd.AfterUpdate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.AfterDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourceAction>(), It.IsAny<bool>()))
+            .Setup(rd => rd.AfterDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>()))
             .Verifiable();
 
 

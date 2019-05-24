@@ -167,34 +167,29 @@ namespace JsonApiDotNetCore.Models
         public virtual QueryFilters GetQueryFilters() => null;
 
         /// <inheritdoc/>
-        public virtual void AfterCreate(HashSet<T> entities, ResourceAction pipeline) { }
+        public virtual void AfterCreate(HashSet<T> entities, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual void AfterRead(HashSet<T> entities, ResourceAction pipeline, bool isIncluded = false) { }
+        public virtual void AfterRead(HashSet<T> entities, ResourcePipeline pipeline, bool isIncluded = false) { }
         /// <inheritdoc/>
-        public virtual void AfterUpdate(HashSet<T> entities, ResourceAction pipeline) { }
+        public virtual void AfterUpdate(HashSet<T> entities, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual void AfterDelete(HashSet<T> entities, ResourceAction pipeline, bool succeeded) { }
+        public virtual void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         /// <inheritdoc/>
-        public virtual void AfterUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
+        public virtual void AfterUpdateRelationship(IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(HashSet<T> entities, ResourceAction pipeline) { return entities; }
+        public virtual IEnumerable<T> BeforeCreate(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
         /// <inheritdoc/>
-        public virtual void BeforeRead(ResourceAction pipeline, bool isIncluded = false, string stringId = null) { }
+        public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourceAction pipeline) { return entityDiff.RequestEntities; }
+        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourcePipeline pipeline) { return entityDiff.RequestEntities; }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeDelete(HashSet<T> entities, ResourceAction pipeline) { return entities; }
+        public virtual IEnumerable<T> BeforeDelete(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
         /// <inheritdoc/>
-        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { return ids; }
+        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { return ids; }
         /// <inheritdoc/>
-        public virtual void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<T> relationshipHelper, ResourceAction pipeline) { }
-        /// <summary>
-        /// Ons the return.
-        /// </summary>
-        /// <returns>The return.</returns>
-        /// <param name="entities">Entities.</param>
-        /// <param name="pipeline">Pipeline.</param>
-        public virtual IEnumerable<T> OnReturn(HashSet<T> entities, ResourceAction pipeline) { return entities; }
+        public virtual void BeforeImplicitUpdateRelationship(IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { }
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> OnReturn(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
 
 
         /// <summary>

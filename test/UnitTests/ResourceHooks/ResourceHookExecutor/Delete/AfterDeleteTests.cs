@@ -19,10 +19,10 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterDelete(todoList, ResourceAction.Delete, It.IsAny<bool>());
+            hookExecutor.AfterDelete(todoList, ResourcePipeline.Delete, It.IsAny<bool>());
 
             // assert
-            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Delete, It.IsAny<bool>()), Times.Once());
+            resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Delete, It.IsAny<bool>()), Times.Once());
             VerifyNoOtherCalls(resourceDefinitionMock);
         }
 
@@ -35,7 +35,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterDelete(todoList, ResourceAction.Delete, It.IsAny<bool>());
+            hookExecutor.AfterDelete(todoList, ResourcePipeline.Delete, It.IsAny<bool>());
 
             // assert
             VerifyNoOtherCalls(resourceDefinitionMock);

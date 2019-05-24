@@ -21,11 +21,11 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Once());
-            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Create), Times.Once());
+            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IAffectedRelationships<Person>>(), ResourcePipeline.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -40,10 +40,10 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IUpdatedRelationshipHelper<Person>>(), ResourceAction.Create), Times.Once());
+            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IAffectedRelationships<Person>>(), ResourcePipeline.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -58,10 +58,10 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourcePipeline.Create);
 
             // assert
-            todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<HashSet<TodoItem>>(), ResourceAction.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Create), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -76,7 +76,7 @@ namespace UnitTests.ResourceHooks
             var todoList = CreateTodoWithOwner();
 
             // act
-            hookExecutor.AfterCreate(todoList, ResourceAction.Create);
+            hookExecutor.AfterCreate(todoList, ResourcePipeline.Create);
 
             // assert
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);

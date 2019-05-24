@@ -11,9 +11,9 @@ namespace JsonApiDotNetCore.Hooks
     /// where the <see cref="IEntityDiff{TEntity}.DatabaseEntities"/> reflects what is the current state in the database.
     /// 
     /// Any relationships that are updated can be retrieved via the methods implemented on 
-    /// <see cref="IUpdatedRelationshipHelper{TDependent}"/>.
+    /// <see cref="IAffectedRelationships{TDependent}"/>.
     /// </summary>
-    public interface IEntityDiff<TEntity> : IUpdatedRelationshipHelper<TEntity> where TEntity : class, IIdentifiable
+    public interface IEntityDiff<TEntity> : IAffectedRelationships<TEntity> where TEntity : class, IIdentifiable
     {
         HashSet<TEntity> RequestEntities { get; }
         HashSet<TEntity> DatabaseEntities { get; }

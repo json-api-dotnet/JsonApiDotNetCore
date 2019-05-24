@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
         /// <summary>
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
         /// <para />
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="stringId">StringId of the requested entity in the case of 
         /// <see cref="EntityResourceService{X, Y, Z}.GetAsync(Z)"/>.</param>
         /// <typeparam name="TEntity">The type of the request entity</typeparam>
-        void BeforeRead<TEntity>(ResourceAction pipeline, string stringId = null) where TEntity : class, IIdentifiable;
+        void BeforeRead<TEntity>(ResourcePipeline pipeline, string stringId = null) where TEntity : class, IIdentifiable;
         /// <summary>
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="EntityResourceService{T}"/>.
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
         /// <summary>
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="EntityResourceService{T}"/>.
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
         /// <summary>
         /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
         /// <para />
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
         /// <summary>
         /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
         /// <para />
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
         /// <summary>
         /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
         /// <para />
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable;
+        void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline, bool succeeded) where TEntity : class, IIdentifiable;
     }
 
     /// <summary>
@@ -156,6 +156,6 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TEntity">The type of the root entities</typeparam>
-        IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable;
+        IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable;
     }
 }

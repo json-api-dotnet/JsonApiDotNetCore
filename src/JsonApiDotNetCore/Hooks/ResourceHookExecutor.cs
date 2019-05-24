@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeRead<TEntity>(ResourceAction pipeline, string stringId = null) where TEntity : class, IIdentifiable
+        public virtual void BeforeRead<TEntity>(ResourcePipeline pipeline, string stringId = null) where TEntity : class, IIdentifiable
         {
             var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeCreate, entities, out var container, out var node))
             {
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
             {
@@ -92,9 +92,9 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourceAction.GetRelationship)
+            if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourcePipeline.ReadRelationship)
             {
                 IEnumerable<TEntity> updated = container.OnReturn((HashSet<TEntity>)node.UniqueEntities, pipeline);
                 ValidateHookResponse(updated);
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterRead, entities, out var container, out var node))
             {
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterCreate, entities, out var container, out var node))
             {
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterUpdate, entities, out var container, out var node))
             {
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourceAction pipeline, bool succeeded) where TEntity : class, IIdentifiable
+        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline, bool succeeded) where TEntity : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterDelete, entities, out var container, out var node))
             {
@@ -199,7 +199,7 @@ namespace JsonApiDotNetCore.Hooks
         /// translates them to the corresponding hook containers and fires the 
         /// BeforeRead hook (if implemented)
         /// </summary>
-        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourceAction pipeline, List<PrincipalType> calledContainers)
+        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourcePipeline pipeline, List<PrincipalType> calledContainers)
         {
             var target = relationshipChain.First();
             var relationship = contextEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == target);
@@ -233,7 +233,7 @@ namespace JsonApiDotNetCore.Hooks
         /// fired for o2, and the BeforeImplicitUpdateRelationship hook should be fired for
         /// o2 and then too for a2.
         /// </summary>
-        void FireNestedBeforeUpdateHooks(ResourceAction pipeline, EntityChildLayer layer)
+        void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, EntityChildLayer layer)
         {
             foreach (IEntityNode node in layer)
             {
@@ -247,8 +247,8 @@ namespace JsonApiDotNetCore.Hooks
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
                         var dbValues = _executorHelper.LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
-                        var relationshipHelper = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
-                        var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), relationshipHelper, pipeline }).Cast<string>();
+                        var resourcesByRelationship = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
+                        var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
                         node.UpdateUnique(updated);
                         node.Reassign();
@@ -257,7 +257,7 @@ namespace JsonApiDotNetCore.Hooks
 
                 // fire the BeforeImplicitUpdateRelationship hook for o1
                 var implicitPrincipalTargets = node.RelationshipsFromPreviousLayer.GetPrincipalEntities();
-                if (pipeline != ResourceAction.Create && implicitPrincipalTargets.Any())
+                if (pipeline != ResourcePipeline.Create && implicitPrincipalTargets.Any())
                 {
                     FireForAffectedImplicits(entityType, implicitPrincipalTargets, pipeline, uniqueEntities);
                 }
@@ -276,14 +276,14 @@ namespace JsonApiDotNetCore.Hooks
         /// Given a source of entities, gets the implicitly affected entities 
         /// from the database and calls the BeforeImplicitUpdateRelationship hook.
         /// </summary>
-        void FireForAffectedImplicits(Type entityType, Dictionary<RelationshipProxy, IEnumerable> implicitsTarget, ResourceAction pipeline, IEnumerable existingImplicitEntities = null)
+        void FireForAffectedImplicits(Type entityType, Dictionary<RelationshipProxy, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitEntities = null)
         {
             var container = _executorHelper.GetResourceHookContainer(entityType, ResourceHook.BeforeImplicitUpdateRelationship);
             if (container == null) return;
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitEntities);
             if (!implicitAffected.Any()) return;
-            var relationshipHelper = CreateRelationshipHelper(entityType, implicitAffected);
-            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { relationshipHelper, pipeline, });
+            var resourcesByRelationship = CreateRelationshipHelper(entityType, implicitAffected);
+            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
         }
 
         /// <summary>
@@ -292,9 +292,9 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="returnedList"> The collection returned from the hook</param>
         /// <param name="pipeline">The pipeine from which the hook was fired</param>
-        void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourceAction pipeline = 0)
+        void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourcePipeline pipeline = 0)
         {
-            if (pipeline == ResourceAction.GetSingle && returnedList.Count() > 1)
+            if (pipeline == ResourcePipeline.ReadSingle && returnedList.Count() > 1)
             {
                 throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the" +
                     pipeline.ToString("G") + "pipeline");
@@ -345,10 +345,10 @@ namespace JsonApiDotNetCore.Hooks
         /// If <paramref name="dbValues"/> are included, the values of the entries in <paramref name="prevLayerRelationships"/> need to be replaced with these values.
         /// </summary>
         /// <returns>The relationship helper.</returns>
-        IUpdatedRelationshipHelper CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
+        IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
             if (dbValues != null) ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IUpdatedRelationshipHelper)TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), entityType, prevLayerRelationships);
+            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), entityType, prevLayerRelationships);
         }
 
         /// <summary>
@@ -381,10 +381,10 @@ namespace JsonApiDotNetCore.Hooks
             return new RelationshipProxy(_graph.GetInverseRelationship(proxy.Attribute), proxy.PrincipalType, false);
         }
 
-        void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourceAction pipeline)
+        void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourcePipeline pipeline)
         {
-            var relationshipHelper = CreateRelationshipHelper(node.EntityType, node.RelationshipsFromPreviousLayer.GetDependentEntities());
-            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { relationshipHelper, pipeline });
+            var resourcesByRelationship = CreateRelationshipHelper(node.EntityType, node.RelationshipsFromPreviousLayer.GetDependentEntities());
+            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { resourcesByRelationship, pipeline });
         }
 
         HashSet<string> GetIds(IEnumerable entities)

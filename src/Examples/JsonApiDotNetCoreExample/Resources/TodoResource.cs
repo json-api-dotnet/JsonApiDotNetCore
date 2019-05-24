@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Hooks.Discovery;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
@@ -11,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TodoResource : ResourceDefinition<TodoItem>
     {
-        public override void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null)
+        public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {
             if (stringId == "1337")
             {
@@ -19,9 +18,9 @@ namespace JsonApiDotNetCoreExample.Resources
             }
         }
 
-        public override void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<TodoItem> relationshipHelper, ResourceAction pipeline)
+        public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<TodoItem> resourcesByRelationship, ResourcePipeline pipeline)
         {
-            List<TodoItem> todos = relationshipHelper.EntitiesRelatedTo<Person>().SelectMany(kvp => kvp.Value).ToList();
+            List<TodoItem> todos = resourcesByRelationship.GetByRelationship<Person>().SelectMany(kvp => kvp.Value).ToList();
             DoesNotTouchLocked(todos);
         }
 

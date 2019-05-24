@@ -22,11 +22,11 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateManyToManyData();
 
             // act
-            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            hookExecutor.AfterRead(articles, ResourcePipeline.Read);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<HashSet<Article>>(), ResourceAction.Get, false), Times.Once());
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<HashSet<Article>>(), ResourcePipeline.Read, false), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Read, true), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -41,10 +41,10 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateManyToManyData();
 
             // act
-            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            hookExecutor.AfterRead(articles, ResourcePipeline.Read);
 
             // assert
-            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourceAction.Get, true), Times.Once());
+            tagResourceMock.Verify(rd => rd.AfterRead(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Read, true), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -59,10 +59,10 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateManyToManyData();
 
             // act
-            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            hookExecutor.AfterRead(articles, ResourcePipeline.Read);
 
             // assert
-            articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<HashSet<Article>>(), ResourceAction.Get, false), Times.Once());
+            articleResourceMock.Verify(rd => rd.AfterRead(It.IsAny<HashSet<Article>>(), ResourcePipeline.Read, false), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -77,7 +77,7 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateManyToManyData();
 
             // act
-            hookExecutor.AfterRead(articles, ResourceAction.Get);
+            hookExecutor.AfterRead(articles, ResourcePipeline.Read);
 
             // assert
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);

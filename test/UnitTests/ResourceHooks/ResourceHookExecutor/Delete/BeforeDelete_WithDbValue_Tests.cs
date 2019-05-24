@@ -44,12 +44,12 @@ namespace UnitTests.ResourceHooks
 
             var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.BeforeDelete(new List<Person> { person }, ResourceAction.Delete);
+            hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
             // assert
-            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IUpdatedRelationshipHelper<TodoItem>>( rh => CheckImplicitTodos(rh) ), ResourceAction.Delete), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IUpdatedRelationshipHelper<Passport>>( rh => CheckImplicitPassports(rh) ), ResourceAction.Delete), Times.Once());
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<TodoItem>>( rh => CheckImplicitTodos(rh) ), ResourcePipeline.Delete), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<Passport>>( rh => CheckImplicitPassports(rh) ), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
@@ -65,11 +65,11 @@ namespace UnitTests.ResourceHooks
 
             var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.BeforeDelete(new List<Person> { person }, ResourceAction.Delete);
+            hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IUpdatedRelationshipHelper<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourceAction.Delete), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IUpdatedRelationshipHelper<Passport>>(rh => CheckImplicitPassports(rh)), ResourceAction.Delete), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
@@ -85,22 +85,22 @@ namespace UnitTests.ResourceHooks
 
             var todoList = CreateTodoWithOwner();
             // act
-            hookExecutor.BeforeDelete(new List<Person> { person }, ResourceAction.Delete);
+            hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
             // assert
-            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<Person>>(), It.IsAny<ResourceAction>()), Times.Once());
+            personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<HashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
-        private bool CheckImplicitTodos(IUpdatedRelationshipHelper<TodoItem> rh)
+        private bool CheckImplicitTodos(IAffectedRelationships<TodoItem> rh)
         {
-            var todos = rh.EntitiesRelatedTo<Person>().ToList();
+            var todos = rh.GetByRelationship<Person>().ToList();
             return todos.Count == 2;
         }
 
-        private bool CheckImplicitPassports(IUpdatedRelationshipHelper<Passport> rh)
+        private bool CheckImplicitPassports(IAffectedRelationships<Passport> rh)
         {
-            var passports = rh.EntitiesRelatedTo<Person>().Single().Value;
+            var passports = rh.GetByRelationship<Person>().Single().Value;
             return passports.Count == 1;
         }
     }

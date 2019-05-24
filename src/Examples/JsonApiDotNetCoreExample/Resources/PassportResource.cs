@@ -10,17 +10,17 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PassportResource : ResourceDefinition<Passport>
     {
-        public override void BeforeRead(ResourceAction pipeline, bool nestedHook = false, string stringId = null)
+        public override void BeforeRead(ResourcePipeline pipeline, bool nestedHook = false, string stringId = null)
         {
-            if (pipeline == ResourceAction.GetSingle && nestedHook)
+            if (pipeline == ResourcePipeline.ReadSingle && nestedHook)
             {
                 throw new JsonApiException(403, "Not allowed to include passports on individual people", new UnauthorizedAccessException());
             }
         }
 
-        public override void BeforeImplicitUpdateRelationship(IUpdatedRelationshipHelper<Passport> relationshipHelper, ResourceAction pipeline)
+        public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Passport> resourcesByRelationship, ResourcePipeline pipeline)
         {
-            relationshipHelper.EntitiesRelatedTo<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
+            resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
         }
 
         private void DoesNotTouchLockedPassports(IEnumerable<Passport> entities)
