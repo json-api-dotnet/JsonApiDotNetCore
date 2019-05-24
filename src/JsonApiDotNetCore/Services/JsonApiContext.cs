@@ -42,10 +42,12 @@ namespace JsonApiDotNetCore.Services
         }
 
         public IJsonApiOptions Options { get; set; }
+        [Obsolete("Please use the standalone `IResourceGraph`")]
         public IResourceGraph ResourceGraph { get; set; }
         [Obsolete("Use the proxied member IControllerContext.RequestEntity instead.")]
         public ContextEntity RequestEntity { get => _controllerContext.RequestEntity; set => _controllerContext.RequestEntity = value; }
 
+        [Obsolete("Please us the IRequestManager")]
         public QuerySet QuerySet { get; set; }
         public bool IsRelationshipData { get; set; }
         public bool IsRelationshipPath { get; private set; }
@@ -61,9 +63,12 @@ namespace JsonApiDotNetCore.Services
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
         public HasManyRelationshipPointers HasManyRelationshipPointers { get; private set; } = new HasManyRelationshipPointers();
         public HasOneRelationshipPointers HasOneRelationshipPointers { get; private set; } = new HasOneRelationshipPointers();
+        [Obsolete("Please use the standalone Requestmanager")]
         public IRequestManager RequestManager { get; set; }
         IPageManager IJsonApiContext.PageManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+
+        [Obsolete("This is no longer necessary")]
         public IJsonApiContext ApplyContext<T>(object controller)
         {
             if (controller == null)

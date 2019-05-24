@@ -7,6 +7,10 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
+    internal class ControllerMapping
+    {
+
+    }
     /// <summary>
     ///  keeps track of all the models/resources defined in JADNC
     /// </summary>
@@ -14,6 +18,10 @@ namespace JsonApiDotNetCore.Internal
     {
         internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
+        
+
+
+        [Obsolete("please instantiate properly")]
         internal static IResourceGraph Instance { get; set; }
 
         public ResourceGraph() { }

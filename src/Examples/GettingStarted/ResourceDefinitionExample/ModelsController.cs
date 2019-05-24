@@ -1,6 +1,6 @@
-using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 
 namespace GettingStarted.ResourceDefinitionExample
@@ -9,9 +9,9 @@ namespace GettingStarted.ResourceDefinitionExample
     {
         public ModelsController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<Model> resourceService)
-          : base(jsonApiOptions, jsonApiContext, resourceService)
+          : base(jsonApiOptions, resourceGraph, resourceService)
         { }
     }
 }

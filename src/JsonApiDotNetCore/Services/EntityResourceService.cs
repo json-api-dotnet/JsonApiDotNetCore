@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IPageManager _pageManager;
-        private readonly IRequestManager _queryManager;
+        private readonly IRequestManager _requestManager;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IJsonApiOptions _options;
         private readonly IEntityRepository<TEntity, TId> _repository;
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
                 ILoggerFactory loggerFactory)
         {
             _pageManager = pageManager;
-            _queryManager = queryManager;
+            _requestManager = queryManager;
             _jsonApiContext = jsonApiContext;
             _options = options;
             _repository = entityRepository;
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Services
             // this ensures relationships get reloaded from the database if they have
             // been requested
             // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
-            if (AreRelationshipsIncluded())
+            if (ShouldRelationshipsBeIncluded())
             {
                 if (_repository is IEntityFrameworkRepository<TEntity> efRepository)
                     efRepository.DetachRelationshipPointers(entity);
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Services
 
             entities = ApplySortAndFilterQuery(entities);
 
-            if (AreRelationshipsIncluded())
+            if (ShouldRelationshipsBeIncluded())
             {
                 entities = IncludeRelationships(entities, _jsonApiContext.RequestManager.QuerySet.IncludedRelationships);
             }
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCore.Services
         {
             
             TResource resource;
-            if (AreRelationshipsIncluded())
+            if (ShouldRelationshipsBeIncluded())
             {
                 resource = await GetWithRelationshipsAsync(id);
             }
@@ -270,7 +270,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// actually include the relationships
+        /// Actually include the relationships
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="relationships"></param>
@@ -294,17 +294,17 @@ namespace JsonApiDotNetCore.Services
         /// <returns></returns>
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
-            var fields = _queryManager.GetFields();
+            var fields = _requestManager.GetFields();
             var query = _repository.Select(_repository.GetQueryable(), fields).Where(e => e.Id.Equals(id));
 
-            _queryManager.GetRelationships().ForEach(r =>
+            _requestManager.GetRelationships().ForEach(r =>
             {
                 query = _repository.Include(query, r);
             });
 
             TEntity value;
             // https://github.com/aspnet/EntityFrameworkCore/issues/6573
-            if(_queryManager.GetFields()?.Count() > 0)
+            if(_requestManager.GetFields()?.Count() > 0)
             {
                 value = query.FirstOrDefault();
             }
@@ -319,9 +319,9 @@ namespace JsonApiDotNetCore.Services
         /// Should the relationships be included?
         /// </summary>
         /// <returns></returns>
-        private bool AreRelationshipsIncluded()
+        private bool ShouldRelationshipsBeIncluded()
         {
-            return _queryManager.GetRelationships()?.Count() > 0;
+            return _requestManager.GetRelationships()?.Count() > 0;
 
         }
         /// <summary>

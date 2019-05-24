@@ -4,6 +4,7 @@ using System.Text;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
@@ -20,6 +21,8 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// </example>
         string BasePath { get; set; }
         QuerySet QuerySet { get; set; }
+        IQueryCollection FullQuerySet { get; set; }
+
         /// <summary>
         /// Gets the relationships as set in the query parameters
         /// </summary>

@@ -18,7 +18,7 @@ namespace UnitTests
         {
             [Attr("test-attribute")] public string TestAttribute { get; set; }
         }
-        private Mock<IJsonApiContext> _jsonApiContextMock = new Mock<IJsonApiContext>();
+        private Mock<IResourceGraph> _resourceGraph = new Mock<IResourceGraph>();
         private Mock<IResourceGraph> _resourceGraphMock = new Mock<IResourceGraph>();
 
         [Fact]
@@ -26,14 +26,14 @@ namespace UnitTests
         {
             // arrange
             var serviceMock = new Mock<IGetAllService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getAll: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getAll: serviceMock.Object);
 
             // act
             await controller.GetAsync();
 
             // assert
             serviceMock.Verify(m => m.GetAsync(), Times.Once);
-            VerifyApplyContext();
+           
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace UnitTests
         {
             // arrange
             var serviceMock = new Mock<IGetAllService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync());
@@ -56,14 +56,14 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IGetByIdService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getById: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getById: serviceMock.Object);
 
             // act
             await controller.GetAsync(id);
 
             // assert
             serviceMock.Verify(m => m.GetAsync(id), Times.Once);
-            VerifyApplyContext();
+          
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IGetByIdService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getById: null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getById: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync(id));
@@ -87,14 +87,13 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IGetRelationshipsService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getRelationships: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getRelationships: serviceMock.Object);
 
             // act
             await controller.GetRelationshipsAsync(id, string.Empty);
 
             // assert
             serviceMock.Verify(m => m.GetRelationshipsAsync(id, string.Empty), Times.Once);
-            VerifyApplyContext();
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IGetRelationshipsService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getRelationships: null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getRelationships: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipsAsync(id, string.Empty));
@@ -118,14 +117,13 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IGetRelationshipService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getRelationship: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getRelationship: serviceMock.Object);
 
             // act
             await controller.GetRelationshipAsync(id, string.Empty);
 
             // assert
             serviceMock.Verify(m => m.GetRelationshipAsync(id, string.Empty), Times.Once);
-            VerifyApplyContext();
         }
 
         [Fact]
@@ -134,7 +132,7 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IGetRelationshipService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, getRelationship: null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, getRelationship: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipAsync(id, string.Empty));
@@ -150,16 +148,16 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
-            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions());
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, update: serviceMock.Object);
+            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
+     
+
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions(), _resourceGraph.Object, update: serviceMock.Object);
 
             // act
             await controller.PatchAsync(id, resource);
 
             // assert
             serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Once);
-            VerifyApplyContext();
         }
 
         [Fact]
@@ -169,16 +167,15 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
-            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = false });
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, update: serviceMock.Object);
+            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
+
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions(), _resourceGraph.Object, update: serviceMock.Object);
 
             // act
             var response = await controller.PatchAsync(id, resource);
 
             // assert
             serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Once);
-            VerifyApplyContext();
             Assert.IsNotType<BadRequestObjectResult>(response);
         }
 
@@ -189,11 +186,10 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            _jsonApiContextMock.SetupGet(a => a.ResourceGraph).Returns(_resourceGraphMock.Object);
             _resourceGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
-            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
-            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions{ValidateModelState = true});
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, update: serviceMock.Object);
+//            _resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
+
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions { ValidateModelState = true }, _resourceGraph.Object, update: serviceMock.Object);
             controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
 
             // act
@@ -211,7 +207,7 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, update: null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, update: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
@@ -226,9 +222,9 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
-            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions());
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, create: serviceMock.Object);
+//            _resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
+
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions(), _resourceGraph.Object, create: serviceMock.Object);
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
             controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext {HttpContext = new DefaultHttpContext()};
 
@@ -237,7 +233,6 @@ namespace UnitTests
 
             // assert
             serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
-            VerifyApplyContext();
         }
 
         [Fact]
@@ -246,9 +241,9 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
-            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = false });
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, create: serviceMock.Object);
+            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
+            //_resourceGraph.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = false });
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions { ValidateModelState = false }, _resourceGraph.Object, create: serviceMock.Object);
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
             controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
 
@@ -257,7 +252,6 @@ namespace UnitTests
 
             // assert
             serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
-            VerifyApplyContext();
             Assert.IsNotType<BadRequestObjectResult>(response);
         }
 
@@ -267,11 +261,11 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            _jsonApiContextMock.SetupGet(a => a.ResourceGraph).Returns(_resourceGraphMock.Object);
+            //_resourceGraph.SetupGet(a => a.ResourceGraph).Returns(_resourceGraphMock.Object);
             _resourceGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
-            _jsonApiContextMock.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_jsonApiContextMock.Object);
-            _jsonApiContextMock.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = true });
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, create: serviceMock.Object);
+            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
+            //_resourceGraph.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = true });
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions { ValidateModelState = false }, _resourceGraph.Object, create: serviceMock.Object);
             controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
 
             // act
@@ -290,14 +284,13 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateRelationshipService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, updateRelationships: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, updateRelationships: serviceMock.Object);
 
             // act
             await controller.PatchRelationshipsAsync(id, string.Empty, null);
 
             // assert
             serviceMock.Verify(m => m.UpdateRelationshipsAsync(id, string.Empty, null), Times.Once);
-            VerifyApplyContext();
         }
 
         [Fact]
@@ -306,7 +299,7 @@ namespace UnitTests
             // arrange
             const int id = 0;
             var serviceMock = new Mock<IUpdateRelationshipService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, updateRelationships: null);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, updateRelationships: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
@@ -322,14 +315,13 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IDeleteService<Resource>>();
-            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _jsonApiContextMock.Object, delete: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, _resourceGraph.Object, delete: serviceMock.Object);
 
             // Act
             await controller.DeleteAsync(id);
 
             // Assert
             serviceMock.Verify(m => m.DeleteAsync(id), Times.Once);
-            VerifyApplyContext();
         }
 
         [Fact]
@@ -340,7 +332,7 @@ namespace UnitTests
             var serviceMock = new Mock<IUpdateRelationshipService<Resource>>();
             var controller = new BaseJsonApiController<Resource>(new Mock<IJsonApiOptions>().Object, 
                 
-                _jsonApiContextMock.Object, delete: null);
+                _resourceGraph.Object, delete: null);
 
             // act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));
@@ -349,7 +341,6 @@ namespace UnitTests
             Assert.Equal(405, exception.GetStatusCode());
         }
 
-        private void VerifyApplyContext()
-         => _jsonApiContextMock.Verify(m => m.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>()), Times.Once);
+
     }
 }

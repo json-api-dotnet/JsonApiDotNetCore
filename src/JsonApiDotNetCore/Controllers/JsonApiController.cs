@@ -27,6 +27,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
             IGetAllService<T, int> getAll = null,
             IGetByIdService<T, int> getById = null,
             IGetRelationshipService<T, int> getRelationship = null,
@@ -35,7 +36,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<T, int> update = null,
             IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null
-        ) : base(jsonApiOptions, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+        ) : base(jsonApiOptions, resourceGraph, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
 
 
     }
@@ -52,6 +53,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
             IGetRelationshipService<T, TId> getRelationship = null,
@@ -60,7 +62,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<T, TId> update = null,
             IUpdateRelationshipService<T, TId> updateRelationships = null,
             IDeleteService<T, TId> delete = null
-        ) : base(jsonApiOptions, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+        ) : base(jsonApiOptions, resourceGraph, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();

@@ -11,6 +11,11 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <summary>
+    /// Can be overwritten to help you out during testing
+    /// 
+    /// This sets all necessary paaramters relating to the HttpContext for JADNC
+    /// </summary>
     public class RequestMiddleware
     {
         private readonly RequestDelegate _next;
@@ -20,8 +25,14 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext, IResourceGraph resourceGraph, IRequestManager requestManager, IJsonApiOptions options)
+        public async Task Invoke(HttpContext context,
+                                 IJsonApiContext jsonApiContext,
+                                 IResourceGraph resourceGraph,
+                                 IRequestManager requestManager,
+                                 IQueryParser queryParser,
+                                 IJsonApiOptions options)
         {
+            
             if (IsValid(context))
             {
                 // HACK: this currently results in allocation of
@@ -32,7 +43,24 @@ namespace JsonApiDotNetCore.Middleware
                 ContextEntity contextEntityCurrent = GetCurrentEntity(context.Request.Path, resourceGraph, options);
                 requestManager.SetContextEntity(contextEntityCurrent);
                 requestManager.BasePath = GetBasePath(context, options, contextEntityCurrent?.EntityName);
+                //Handle all querySet
+                HandleUriParameters(context, queryParser, requestManager);
+                
                 await _next(context);
+            }
+        }
+        /// <summary>
+        /// Parses the uri, and helps you out
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="requestManager"></param>
+        protected void HandleUriParameters(HttpContext context, IQueryParser queryParser, IRequestManager requestManager)
+        {
+            if (context.Request.Query.Count > 0)
+            {
+                //requestManager.FullQuerySet = context.Request.Query;
+                requestManager.QuerySet = queryParser.Parse(context.Request.Query);
+                requestManager.IncludedRelationships = requestManager.QuerySet.IncludedRelationships;
             }
         }
 

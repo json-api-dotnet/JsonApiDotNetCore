@@ -217,7 +217,7 @@ namespace JsonApiDotNetCore.Builders
 
         private List<ResourceObject> GetIncludedEntities(List<ResourceObject> included, ContextEntity rootContextEntity, IIdentifiable rootResource)
         {
-            if (_jsonApiContext.RequestManager.IncludedRelationships != null)
+            if (_requestManager.IncludedRelationships != null)
             {
                 foreach (var relationshipName in _jsonApiContext.RequestManager.IncludedRelationships)
                 {

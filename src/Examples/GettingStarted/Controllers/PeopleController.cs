@@ -1,6 +1,7 @@
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 
 namespace GettingStarted
@@ -8,10 +9,10 @@ namespace GettingStarted
     public class PeopleController : JsonApiController<Person>
     {
         public PeopleController(
-            IJsonApiOptions jsonApiOptions, 
-            IJsonApiContext jsonApiContext,
+            IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
             IResourceService<Person> resourceService)
-          : base(jsonApiOptions,jsonApiContext, resourceService)
+          : base(jsonApiOptions, resourceGraph, resourceService)
         { }
     }
 }

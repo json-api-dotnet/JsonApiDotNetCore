@@ -12,6 +12,7 @@ namespace JsonApiDotNetCore.Managers
     {
 
         private ContextEntity _contextEntity;
+        private IQueryParser _queryParser;
 
         public string BasePath { get; set; }
         public List<string> IncludedRelationships { get; set; }
