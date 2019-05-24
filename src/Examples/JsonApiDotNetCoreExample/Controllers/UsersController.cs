@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
@@ -10,10 +11,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public UsersController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<User> resourceService,
             ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, jsonApiContext, resourceService, loggerFactory)
+            : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory)
         { }
     }
 }

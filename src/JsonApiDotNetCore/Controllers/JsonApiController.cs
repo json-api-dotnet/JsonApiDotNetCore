@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,22 +18,15 @@ namespace JsonApiDotNetCore.Controllers
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<T, int> resourceService,
-            ILoggerFactory loggerFactory)
-            : base(jsonApiOptions, jsonApiContext, resourceService, loggerFactory)
+            ILoggerFactory loggerFactory = null
+           )
+            : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory)
         { }
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
-            IResourceService<T, int> resourceService)
-            : base(jsonApiOptions, jsonApiContext, resourceService)
-        { }
-
-        public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IGetAllService<T, int> getAll = null,
             IGetByIdService<T, int> getById = null,
             IGetRelationshipService<T, int> getRelationship = null,
@@ -41,37 +35,23 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<T, int> update = null,
             IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null
-        ) : base(jsonApiOptions, jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+        ) : base(jsonApiOptions, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
 
-        public JsonApiController(IJsonApiOptions jsonApiOptions,
-                                 IJsonApiContext jsonApiContext,
-                                 IResourceService<T> resourceService,
-                                 ILoggerFactory loggerFactory)
-            : base(jsonApiOptions, jsonApiContext, resourceService, loggerFactory)
-        {
-        }
+
     }
 
     public class JsonApiController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<T, TId> resourceService,
-            ILoggerFactory loggerFactory)
-        : base(jsonApiOptions, jsonApiContext, resourceService, resourceService)
+            ILoggerFactory loggerFactory = null)
+            : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory = null)
         { }
 
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
-            IResourceService<T, TId> resourceService)
-        : base(jsonApiOptions, jsonApiContext, resourceService)
-        { }
-
-        public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
             IGetRelationshipService<T, TId> getRelationship = null,
@@ -80,7 +60,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<T, TId> update = null,
             IUpdateRelationshipService<T, TId> updateRelationships = null,
             IDeleteService<T, TId> delete = null
-        ) : base(jsonApiOptions, jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+        ) : base(jsonApiOptions, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();

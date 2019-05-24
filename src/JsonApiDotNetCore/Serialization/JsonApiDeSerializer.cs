@@ -184,9 +184,15 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (var attr in contextEntity.Relationships)
             {
-                entity = attr.IsHasOne
-                    ? SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, contextEntity, relationships, included)
-                    : SetHasManyRelationship(entity, entityProperties, (HasManyAttribute)attr, contextEntity, relationships, included);
+                if (attr.IsHasOne)
+                {
+                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, contextEntity, relationships, included);
+                }
+                else
+                {
+                    SetHasManyRelationship(entity, entityProperties, (HasManyAttribute)attr, contextEntity, relationships, included);
+                }
+
             }
 
             return entity;
@@ -215,14 +221,14 @@ namespace JsonApiDotNetCore.Serialization
             SetHasOneNavigationPropertyValue(entity, attr, rio, included);
 
             // recursive call ...
-            if(included != null) 
+            if (included != null)
             {
                 var navigationPropertyValue = attr.GetValue(entity);
                 var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.Type);
-                if(navigationPropertyValue != null && resourceGraphEntity != null)
+                if (navigationPropertyValue != null && resourceGraphEntity != null)
                 {
                     var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
-                    if(includedResource != null) 
+                    if (includedResource != null)
                         SetRelationships(navigationPropertyValue, resourceGraphEntity, includedResource.Relationships, included);
                 }
             }
@@ -283,7 +289,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                if(relationshipData.IsHasMany == false || relationshipData.ManyData == null)
+                if (relationshipData.IsHasMany == false || relationshipData.ManyData == null)
                     return entity;
 
                 var relatedResources = relationshipData.ManyData.Select(r =>

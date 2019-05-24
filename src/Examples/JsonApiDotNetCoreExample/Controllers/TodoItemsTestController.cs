@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
@@ -13,10 +14,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         protected AbstractTodoItemsController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<T, int> service,
             ILoggerFactory loggerFactory)
-            : base(jsonApiOptions, jsonApiContext, service, loggerFactory)
+            : base(jsonApiOptions, resourceGraph, service, loggerFactory)
         { }
     }
 
@@ -25,10 +26,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public TodoItemsTestController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<TodoItem> service,
             ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, jsonApiContext, service, loggerFactory)
+            : base(jsonApiOptions, resourceGraph, service, loggerFactory)
         { }
     }
 }

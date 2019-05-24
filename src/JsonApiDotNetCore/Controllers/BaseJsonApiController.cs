@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
@@ -18,14 +19,13 @@ namespace JsonApiDotNetCore.Controllers
             IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService
-        ) : base(jsonApiOptions, jsonApiContext, resourceService, resourceService) { }
+        ) : base(jsonApiOptions, resourceService, resourceService) { }
 
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IResourceQueryService<T, int> queryService = null,
             IResourceCmdService<T, int> cmdService = null
-        ) : base(jsonApiOptions, jsonApiContext, queryService, cmdService) { }
+        ) : base(jsonApiOptions, queryService, cmdService) { }
 
 
         public BaseJsonApiController(
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Controllers
             IUpdateService<T, int> update = null,
             IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null
-        ) : base(jsonApiOptions, jsonApiContext, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+        ) : base(jsonApiOptions, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
     }
 
     public class BaseJsonApiController<T, TId>
@@ -54,14 +54,24 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IUpdateService<T, TId> _update;
         private readonly IUpdateRelationshipService<T, TId> _updateRelationships;
         private readonly IDeleteService<T, TId> _delete;
+        private readonly ILogger<BaseJsonApiController<T, TId>> _logger;
         private readonly IJsonApiOptions _jsonApiOptions;
         private readonly IResourceGraph _resourceGraph;
 
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceGraph resourceGraphManager,
-            IResourceService<T, TId> resourceService)
+            IResourceService<T, TId> resourceService,
+            ILoggerFactory loggerFactory)
         {
+            if(loggerFactory != null)
+            {
+                _logger = loggerFactory.CreateLogger<BaseJsonApiController<T, TId>>();
+            }
+            else
+            {
+                _logger = new Logger<BaseJsonApiController<T, TId>>(new LoggerFactory());
+            }
             _jsonApiOptions = jsonApiOptions;
             _resourceGraph = resourceGraphManager;
             _getAll = resourceService;
@@ -76,7 +86,6 @@ namespace JsonApiDotNetCore.Controllers
 
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IResourceQueryService<T, TId> queryService = null,
             IResourceCmdService<T, TId> cmdService = null)
         {
@@ -93,7 +102,6 @@ namespace JsonApiDotNetCore.Controllers
 
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IGetAllService<T, TId> getAll = null,
             IGetByIdService<T, TId> getById = null,
             IGetRelationshipService<T, TId> getRelationship = null,

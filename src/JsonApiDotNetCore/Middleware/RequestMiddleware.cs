@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext, IResourceGraph resourceGraph, IRequestManager requestManager, IJsonApiOptions options )
+        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext, IResourceGraph resourceGraph, IRequestManager requestManager, IJsonApiOptions options)
         {
             if (IsValid(context))
             {
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Middleware
                 // since the JsonApiContext is using field initializers
                 // Need to work on finding a better solution.
                 jsonApiContext.BeginOperation();
-                ContextEntity contextEntityCurrent = GetCurrentEntity(context.Request.Path, resourceGraph);
+                ContextEntity contextEntityCurrent = GetCurrentEntity(context.Request.Path, resourceGraph, options);
                 requestManager.SetContextEntity(contextEntityCurrent);
                 requestManager.BasePath = GetBasePath(context, options, contextEntityCurrent?.EntityName);
                 await _next(context);
@@ -84,9 +84,11 @@ namespace JsonApiDotNetCore.Middleware
         /// <param name="context"></param>
         /// <param name="resourceGraph"></param>
         /// <returns></returns>
-        private ContextEntity GetCurrentEntity(PathString path, IResourceGraph resourceGraph)
+        private ContextEntity GetCurrentEntity(PathString path, IResourceGraph resourceGraph, IJsonApiOptions options)
         {
-            var typeString = path.ToString().Split('/')[1];
+            var pathSplit = path.ToString().Replace($"{options.Namespace}/", "").Split('/');
+
+            var typeString = pathSplit[1];
             return resourceGraph.GetEntityType(typeString);
         }
 

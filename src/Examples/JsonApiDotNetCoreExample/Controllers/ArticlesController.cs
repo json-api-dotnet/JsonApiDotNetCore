@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 
@@ -9,9 +10,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public ArticlesController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
+            IResourceGraph resourceGraph,
             IResourceService<Article> resourceService) 
-            : base(jsonApiOptions, jsonApiContext, resourceService)
+            : base(jsonApiOptions, resourceGraph, resourceService)
         { }
     }
 }

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Controllers
             IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
-        : base(jsonApiOptions, jsonApiContext, resourceService)
+        : base(jsonApiOptions, resourceService)
         { }
 
         [HttpGet]

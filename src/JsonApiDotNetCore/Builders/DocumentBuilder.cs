@@ -183,30 +183,34 @@ namespace JsonApiDotNetCore.Builders
 
         private RelationshipData GetRelationshipData(RelationshipAttribute attr, ContextEntity contextEntity, IIdentifiable entity)
         {
-            //var linkBuilder = new LinkBuilder(_documentBuilderOptions,_requestManager);
+            var linkBuilder = new LinkBuilder(_jsonApiContext.Options,_requestManager);
 
             var relationshipData = new RelationshipData();
 
-            //if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(Link.None) == false && attr.DocumentLinks.HasFlag(Link.None) == false)
-            //{
-            //    relationshipData.Links = new Links();
-            //    if (attr.DocumentLinks.HasFlag(Link.Self))
-            //        relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
+            if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(Link.None) == false && attr.DocumentLinks.HasFlag(Link.None) == false)
+            {
+                relationshipData.Links = new Links();
+                if (attr.DocumentLinks.HasFlag(Link.Self))
+                {
+                    relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
+                }
 
-            //    if (attr.DocumentLinks.HasFlag(Link.Related))
-            //        relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
-            //}
+                if (attr.DocumentLinks.HasFlag(Link.Related))
+                {
+                    relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
+                }
+            }
 
-            //// this only includes the navigation property, we need to actually check the navigation property Id
-            //var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(entity, attr);
-            //if (navigationEntity == null)
-            //    relationshipData.SingleData = attr.IsHasOne
-            //        ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
-            //        : null;
-            //else if (navigationEntity is IEnumerable)
-            //    relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
-            //else
-            //    relationshipData.SingleData = GetRelationship(navigationEntity);
+            // this only includes the navigation property, we need to actually check the navigation property Id
+            var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(entity, attr);
+            if (navigationEntity == null)
+                relationshipData.SingleData = attr.IsHasOne
+                    ? GetIndependentRelationshipIdentifier((HasOneAttribute)attr, entity)
+                    : null;
+            else if (navigationEntity is IEnumerable)
+                relationshipData.ManyData = GetRelationships((IEnumerable<object>)navigationEntity);
+            else
+                relationshipData.SingleData = GetRelationship(navigationEntity);
 
             return relationshipData;
         }
