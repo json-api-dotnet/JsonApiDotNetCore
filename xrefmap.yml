@@ -2150,23 +2150,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).GetAsync
   nameWithType: DefaultEntityRepository<TEntity, TId>.GetAsync
   nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).GetAsync
-- uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable
-  name: GetQueryable()
-  href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_GetQueryable
-  commentId: M:JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable
-  fullName: JsonApiDotNetCore.Data.DefaultEntityRepository<TEntity, TId>.GetQueryable()
-  fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).GetQueryable()
-  nameWithType: DefaultEntityRepository<TEntity, TId>.GetQueryable()
-  nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).GetQueryable()
-- uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable*
-  name: GetQueryable
-  href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_GetQueryable_
-  commentId: Overload:JsonApiDotNetCore.Data.DefaultEntityRepository`2.GetQueryable
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Data.DefaultEntityRepository<TEntity, TId>.GetQueryable
-  fullName.vb: JsonApiDotNetCore.Data.DefaultEntityRepository(Of TEntity, TId).GetQueryable
-  nameWithType: DefaultEntityRepository<TEntity, TId>.GetQueryable
-  nameWithType.vb: DefaultEntityRepository(Of TEntity, TId).GetQueryable
 - uid: JsonApiDotNetCore.Data.DefaultEntityRepository`2.Include(System.Linq.IQueryable{`0},System.String)
   name: Include(IQueryable<TEntity>, String)
   href: api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Include_System_Linq_IQueryable__0__System_String_
@@ -2450,23 +2433,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).GetAsync
   nameWithType: IEntityReadRepository<TEntity, TId>.GetAsync
   nameWithType.vb: IEntityReadRepository(Of TEntity, TId).GetAsync
-- uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable
-  name: GetQueryable()
-  href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_GetQueryable
-  commentId: M:JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable
-  fullName: JsonApiDotNetCore.Data.IEntityReadRepository<TEntity, TId>.GetQueryable()
-  fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).GetQueryable()
-  nameWithType: IEntityReadRepository<TEntity, TId>.GetQueryable()
-  nameWithType.vb: IEntityReadRepository(Of TEntity, TId).GetQueryable()
-- uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable*
-  name: GetQueryable
-  href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_GetQueryable_
-  commentId: Overload:JsonApiDotNetCore.Data.IEntityReadRepository`2.GetQueryable
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Data.IEntityReadRepository<TEntity, TId>.GetQueryable
-  fullName.vb: JsonApiDotNetCore.Data.IEntityReadRepository(Of TEntity, TId).GetQueryable
-  nameWithType: IEntityReadRepository<TEntity, TId>.GetQueryable
-  nameWithType.vb: IEntityReadRepository(Of TEntity, TId).GetQueryable
 - uid: JsonApiDotNetCore.Data.IEntityReadRepository`2.Include(System.Linq.IQueryable{`0},System.String)
   name: Include(IQueryable<TEntity>, String)
   href: api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html#JsonApiDotNetCore_Data_IEntityReadRepository_2_Include_System_Linq_IQueryable__0__System_String_
