@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Services
             IEntityRepository<TResource, TId> entityRepository,
             ILoggerFactory loggerFactory = null, 
             IResourceHookExecutor hookExecutor = null) :
-            base(jsonApiContext, entityRepository, loggerFactory, hookExecutor)
+            base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
         { }
     }
 
@@ -48,10 +48,10 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceHookExecutor _hookExecutor;
 
         public EntityResourceService(
-                IJsonApiContext jsonApiContext,
-                IEntityRepository<TEntity, TId> entityRepository,
-                ILoggerFactory loggerFactory = null,
-                IResourceHookExecutor hookExecutor = null)
+        IJsonApiContext jsonApiContext,
+        IEntityRepository<TEntity, TId> entityRepository,
+        IResourceHookExecutor hookExecutor,
+        ILoggerFactory loggerFactory = null)
         {
             // no mapper provided, TResource & TEntity must be the same type
             if (typeof(TResource) != typeof(TEntity))
@@ -62,6 +62,22 @@ namespace JsonApiDotNetCore.Services
             _jsonApiContext = jsonApiContext;
             _entities = entityRepository;
             _hookExecutor = hookExecutor;
+            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+        }
+
+        public EntityResourceService(
+                IJsonApiContext jsonApiContext,
+                IEntityRepository<TEntity, TId> entityRepository,
+                ILoggerFactory loggerFactory = null)
+        {
+            // no mapper provided, TResource & TEntity must be the same type
+            if (typeof(TResource) != typeof(TEntity))
+            {
+                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
+            }
+
+            _jsonApiContext = jsonApiContext;
+            _entities = entityRepository;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
         }
 
