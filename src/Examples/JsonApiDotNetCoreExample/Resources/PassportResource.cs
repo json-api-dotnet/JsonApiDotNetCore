@@ -10,6 +10,10 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PassportResource : ResourceDefinition<Passport>
     {
+        public PassportResource(IResourceGraph graph) : base(graph)
+        {
+        }
+
         public override void BeforeRead(ResourcePipeline pipeline, bool nestedHook = false, string stringId = null)
         {
             if (pipeline == ResourcePipeline.ReadSingle && nestedHook)

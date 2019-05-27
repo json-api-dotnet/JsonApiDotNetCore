@@ -10,6 +10,10 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TodoResource : ResourceDefinition<TodoItem>
     {
+        public TodoResource(IResourceGraph graph) : base(graph)
+        {
+        }
+
         public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {
             if (stringId == "1337")

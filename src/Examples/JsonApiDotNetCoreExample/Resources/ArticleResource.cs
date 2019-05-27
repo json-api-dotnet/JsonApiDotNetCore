@@ -12,6 +12,8 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class ArticleResource : ResourceDefinition<Article>
     {
+        public ArticleResource(IResourceGraph graph) : base(graph) { }
+
         public override IEnumerable<Article> OnReturn(HashSet<Article> entities, ResourcePipeline pipeline)
         {
             if (pipeline == ResourcePipeline.ReadSingle && entities.Single().Name == "Classified")

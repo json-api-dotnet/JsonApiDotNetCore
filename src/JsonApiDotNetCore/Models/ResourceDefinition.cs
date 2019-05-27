@@ -25,17 +25,15 @@ namespace JsonApiDotNetCore.Models
     /// <typeparam name="T">The resource type</typeparam>
     public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer<T> where T : class, IIdentifiable
     {
-        private readonly IResourceGraph _graph;
         private readonly ContextEntity _contextEntity;
         internal readonly bool _instanceAttrsAreSpecified;
 
         private bool _requestCachedAttrsHaveBeenLoaded = false;
         private List<AttrAttribute> _requestCachedAttrs;
 
-        public ResourceDefinition()
+        public ResourceDefinition(IResourceGraph graph)
         {
-            _graph = ResourceGraph.Instance;
-            _contextEntity = ResourceGraph.Instance.GetContextEntity(typeof(T));
+            _contextEntity = graph.GetContextEntity(typeof(T));
             _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
         }
 
@@ -214,9 +212,9 @@ namespace JsonApiDotNetCore.Models
         ///     };
         /// </code>
         /// </example>
-        protected virtual PropertySortOrder GetDefaultSortOrder() => null;
+        public virtual PropertySortOrder GetDefaultSortOrder() => null;
 
-        internal List<(AttrAttribute, SortDirection)> DefaultSort()
+        public List<(AttrAttribute, SortDirection)> DefaultSort()
         {
             var defaultSortOrder = GetDefaultSortOrder();
             if (defaultSortOrder != null && defaultSortOrder.Count > 0)

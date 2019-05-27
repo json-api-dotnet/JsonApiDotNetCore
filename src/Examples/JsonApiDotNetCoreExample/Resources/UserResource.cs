@@ -3,11 +3,16 @@ using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
+        public UserResource(IResourceGraph graph) : base(graph)
+        {
+        }
+
         protected override List<AttrAttribute> OutputAttrs()
             => Remove(user => user.Password);
 

@@ -10,6 +10,10 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PersonResource : ResourceDefinition<Person>
     {
+        public PersonResource(IResourceGraph graph) : base(graph)
+        {
+        }
+
         public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
         {
             BeforeImplicitUpdateRelationship(resourcesByRelationship, pipeline);
