@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourcePipeline.ReadRelationship)
+            if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourcePipeline.GetRelationship)
             {
                 IEnumerable<TEntity> updated = container.OnReturn((HashSet<TEntity>)node.UniqueEntities, pipeline);
                 ValidateHookResponse(updated);
@@ -257,7 +257,7 @@ namespace JsonApiDotNetCore.Hooks
 
                 // fire the BeforeImplicitUpdateRelationship hook for o1
                 var implicitPrincipalTargets = node.RelationshipsFromPreviousLayer.GetPrincipalEntities();
-                if (pipeline != ResourcePipeline.Create && implicitPrincipalTargets.Any())
+                if (pipeline != ResourcePipeline.Post && implicitPrincipalTargets.Any())
                 {
                     FireForAffectedImplicits(entityType, implicitPrincipalTargets, pipeline, uniqueEntities);
                 }
@@ -294,7 +294,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="pipeline">The pipeine from which the hook was fired</param>
         void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourcePipeline pipeline = 0)
         {
-            if (pipeline == ResourcePipeline.ReadSingle && returnedList.Count() > 1)
+            if (pipeline == ResourcePipeline.GetSingle && returnedList.Count() > 1)
             {
                 throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the" +
                     pipeline.ToString("G") + "pipeline");

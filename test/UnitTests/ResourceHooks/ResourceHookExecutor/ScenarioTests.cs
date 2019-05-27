@@ -27,11 +27,11 @@ namespace UnitTests.ResourceHooks
             var todoList = new List<TodoItem>() { todo };
 
             // act
-            hookExecutor.OnReturn(todoList, ResourcePipeline.Create);
+            hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Create), Times.Once());
-            ownerResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Person>>(), ResourcePipeline.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
+            ownerResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -47,10 +47,10 @@ namespace UnitTests.ResourceHooks
             var todoList = new List<TodoItem>() { todo };
 
             // act
-            hookExecutor.OnReturn(todoList, ResourcePipeline.Create);
+            hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Create), Times.Once());
+            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock);
         }
 
@@ -71,10 +71,10 @@ namespace UnitTests.ResourceHooks
             var todoList = new List<TodoItem>() { rootTodo };
 
             // act
-            hookExecutor.OnReturn(todoList, ResourcePipeline.Create);
+            hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Create), Times.Exactly(4));
+            todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Exactly(4));
             VerifyNoOtherCalls(todoResourceMock);
         }
     }

@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
 
-            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Create).SingleOrDefault();
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
 
             // this ensures relationships get reloaded from the database if they have
@@ -113,8 +113,8 @@ namespace JsonApiDotNetCore.Services
             }
             if (!IsNull(_hookExecutor, entity))
             {
-                _hookExecutor.AfterCreate(AsList(entity), ResourcePipeline.Create);
-                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Read).SingleOrDefault();
+                _hookExecutor.AfterCreate(AsList(entity), ResourcePipeline.Post);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Get).SingleOrDefault();
             }
             return MapOut(entity);
         }
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
-            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.Read);
+            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.Get);
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
@@ -145,8 +145,8 @@ namespace JsonApiDotNetCore.Services
             if (!IsNull(_hookExecutor, entities))
             {
                 var result = entities.ToList();
-                _hookExecutor.AfterRead(result, ResourcePipeline.Read);
-                entities = _hookExecutor.OnReturn(result, ResourcePipeline.Read).AsQueryable();
+                _hookExecutor.AfterRead(result, ResourcePipeline.Get);
+                entities = _hookExecutor.OnReturn(result, ResourcePipeline.Get).AsQueryable();
             }
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> GetAsync(TId id)
         {
-            var pipeline = ResourcePipeline.ReadSingle;
+            var pipeline = ResourcePipeline.GetSingle;
             _hookExecutor?.BeforeRead<TEntity>(pipeline, id.ToString());
             TEntity entity;
             if (ShouldIncludeRelationships())
@@ -186,12 +186,12 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
 
-            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.ReadRelationship, id.ToString());
+            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.GetRelationship, id.ToString());
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (!IsNull(_hookExecutor, entity))
             {
-                _hookExecutor.AfterRead(AsList(entity), ResourcePipeline.ReadRelationship);
-                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.ReadRelationship).SingleOrDefault();
+                _hookExecutor.AfterRead(AsList(entity), ResourcePipeline.GetRelationship);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.GetRelationship).SingleOrDefault();
             }
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,

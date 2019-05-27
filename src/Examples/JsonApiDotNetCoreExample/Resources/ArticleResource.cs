@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExample.Resources
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> entities, ResourcePipeline pipeline)
         {
-            if (pipeline == ResourcePipeline.ReadSingle && entities.Single().Name == "Classified")
+            if (pipeline == ResourcePipeline.GetSingle && entities.Single().Name == "Classified")
             {
                 throw new JsonApiException(403, "You are not allowed to see this article!", new UnauthorizedAccessException());
             }

@@ -8,14 +8,14 @@
     public enum ResourcePipeline
     {
         None,
-        Read,
-        ReadSingle,
-        ReadRelationship,
-        Create,
+        Get,
+        GetSingle,
+        GetRelationship,
+        Post,
         Patch,
         PatchRelationship,
         Delete,
-        BulkCreate,
+        BulkPost,
         BulkPatch,
         BulkDelete
     }

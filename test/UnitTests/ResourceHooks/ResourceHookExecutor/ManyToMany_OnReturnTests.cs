@@ -52,11 +52,11 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.OnReturn(articles, ResourcePipeline.Read);
+            hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourcePipeline.Read), Times.Once());
-            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Read), Times.Once());
+            articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourcePipeline.Get), Times.Once());
+            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -71,10 +71,10 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.OnReturn(articles, ResourcePipeline.Read);
+            hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
             // asser
-            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Read), Times.Once());
+            tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -89,10 +89,10 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.OnReturn(articles, ResourcePipeline.Read);
+            hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
             // assert
-            articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourcePipeline.Read), Times.Once());
+            articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourcePipeline.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
 
@@ -108,7 +108,7 @@ namespace UnitTests.ResourceHooks
             (var articles, var joins, var tags) = CreateDummyData();
 
             // act
-            hookExecutor.OnReturn(articles, ResourcePipeline.Read);
+            hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
             // assert
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);

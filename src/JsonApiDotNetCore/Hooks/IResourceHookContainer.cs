@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before creation of entities of type <typeparamref name="TEntity"/>.
         /// <para />
-        /// For the <see cref="ResourcePipeline.Create"/> pipeline, <paramref name="entities"/> 
+        /// For the <see cref="ResourcePipeline.Post"/> pipeline, <paramref name="entities"/> 
         /// will typically contain one entry. For <see cref="ResourcePipeline.BulkCreate"/>, 
         /// <paramref name="entities"/> can contain multiple entities.
         /// <para />
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="isIncluded">Indicates whether the to be queried entities are the main request entities or if they were included</param>
-        /// <param name="stringId">The string id of the requested entity, in the case of <see cref="ResourcePipeline.ReadSingle"/></param>
+        /// <param name="stringId">The string id of the requested entity, in the case of <see cref="ResourcePipeline.GetSingle"/></param>
         void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Hooks
         /// layer just before updating relationships to entities of type <typeparamref name="TEntity"/>.
         /// <para />
         /// This hook is fired when a relationship is created to entities of type 
-        /// <typeparamref name="TEntity"/> from a dependent pipeline (<see cref="ResourcePipeline.Create"/>
+        /// <typeparamref name="TEntity"/> from a dependent pipeline (<see cref="ResourcePipeline.Post"/>
         /// or <see cref="ResourcePipeline.Patch"/>). For example, If an Article was created
         /// and its author relationship was set to an existing Person, this hook will be fired
         /// for that particular Person.
