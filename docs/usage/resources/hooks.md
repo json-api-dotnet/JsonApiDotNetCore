@@ -1,13 +1,3 @@
-@milosloub  @wisepotato.
-
-New hooks API is pretty much finished. Below is the usage guide, can also be found in the docs.  Time for a re-review.
-
-Let us focus first on the discussion of the usage / hooks API / backward compatiblity related stuff. 
-
-As soon as we're totally aligned with respect to this, we can quibble about internals: at this point any changes internally should not affect the interfaces/hooks API, therefore shouldn't be breaking
-
-
-
 # Resource Hooks
 This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`.
 
