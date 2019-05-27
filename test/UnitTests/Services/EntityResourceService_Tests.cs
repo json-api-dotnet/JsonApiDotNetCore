@@ -73,6 +73,6 @@ namespace UnitTests.Services
         }
 
         private EntityResourceService<TodoItem> GetService() =>
-            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, null, _loggerFactory);
+            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, _loggerFactory, null);
     }
 }
