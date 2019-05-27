@@ -75,12 +75,12 @@ namespace JsonApiDotNetCore.Services
                 IEntityRepository<TEntity, TId> entityRepository,
                 IJsonApiOptions options,
                 IResourceMapper mapper,
-                IRequestManager queryManager,
+                IRequestManager requestManager,
                 IPageManager pageManager,
                 ILoggerFactory loggerFactory)
         {
             _pageManager = pageManager;
-            _requestManager = queryManager;
+            _requestManager = requestManager;
             _jsonApiContext = jsonApiContext;
             _options = options;
             _repository = entityRepository;

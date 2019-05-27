@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 
@@ -8,10 +9,22 @@ namespace JsonApiDotNetCore.Internal
     public class PageManager : IPageManager
     {
         private ILinkBuilder _linkBuilder;
+        private IJsonApiOptions _options;
 
-        public PageManager(ILinkBuilder linkBuilder)
+        public PageManager(ILinkBuilder linkBuilder, IJsonApiOptions options, IRequestManager requestManager)
         {
             _linkBuilder = linkBuilder;
+            _options = options;
+            if (requestManager.QuerySet != null)
+            {
+                PageSize = requestManager.QuerySet?.PageQuery.PageSize !=  null ? requestManager.QuerySet.PageQuery.PageSize : _options.DefaultPageSize;
+            }
+            else
+            {
+                PageSize = _options.DefaultPageSize;
+            }
+
+            DefaultPageSize = _options.DefaultPageSize;
         }
         public int? TotalRecords { get; set; }
         public int PageSize { get; set; }

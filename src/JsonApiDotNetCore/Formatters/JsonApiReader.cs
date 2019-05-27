@@ -12,14 +12,14 @@ namespace JsonApiDotNetCore.Formatters
 {
     public class JsonApiReader : IJsonApiReader
     {
-        private readonly IJsonApiDeSerializer _deSerializer;
+        private readonly IJsonApiDeSerializer _deserializer;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly ILogger<JsonApiReader> _logger;
 
 
         public JsonApiReader(IJsonApiDeSerializer deSerializer, IJsonApiContext jsonApiContext, ILoggerFactory loggerFactory)
         {
-            _deSerializer = deSerializer;
+            _deserializer = deSerializer;
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
@@ -37,9 +37,15 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
 
-                var model = _jsonApiContext.IsRelationshipPath ?
-                    _deSerializer.DeserializeRelationship(body) :
-                    _deSerializer.Deserialize(body);
+                object model;
+                if (_jsonApiContext.RequestManager.IsRelationshipPath)
+                {
+                    model = _deserializer.DeserializeRelationship(body);
+                }
+                else
+                {
+                    model = _deserializer.Deserialize(body);
+                }
 
                 if (model == null)
                     _logger?.LogError("An error occurred while de-serializing the payload");

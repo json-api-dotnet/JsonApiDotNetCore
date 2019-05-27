@@ -4,10 +4,8 @@ namespace JsonApiDotNetCore.Internal.Query
 {
     public class AttrSortQuery : BaseAttrQuery
     {
-        public AttrSortQuery(
-            IJsonApiContext jsonApiContext,
-            SortQuery sortQuery)
-            :base(jsonApiContext, sortQuery)
+        public AttrSortQuery(IJsonApiContext jsonApiContext,SortQuery sortQuery)
+            :base(jsonApiContext.RequestManager,jsonApiContext.ResourceGraph, sortQuery)
         {
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{sortQuery.Attribute}' is not a valid attribute.");

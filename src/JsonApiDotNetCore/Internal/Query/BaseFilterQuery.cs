@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public BaseFilterQuery(
             IJsonApiContext jsonApiContext,
             FilterQuery filterQuery)
-        : base(jsonApiContext, filterQuery)
+        : base(jsonApiContext.RequestManager, jsonApiContext.ResourceGraph, filterQuery)
         {
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);

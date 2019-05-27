@@ -110,8 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
             var route = $"/custom/route/todo-items/{todoItem.Id}";
 
@@ -119,8 +118,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act & assert
+            // Act
             var response = await client.SendAsync(request);
+
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();

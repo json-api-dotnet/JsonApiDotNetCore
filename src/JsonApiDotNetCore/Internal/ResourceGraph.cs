@@ -7,8 +7,13 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    internal class ControllerMapping
+    public class ControllerModelMap
     {
+        public Type Controller;
+        public Type Model;
+        public string Path { get; set; }
+
+        
 
     }
     /// <summary>
@@ -19,12 +24,13 @@ namespace JsonApiDotNetCore.Internal
         internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
         
-
+        internal List<ControllerModelMap> ControllerModelMap { get; set; }
 
         [Obsolete("please instantiate properly")]
         internal static IResourceGraph Instance { get; set; }
 
         public ResourceGraph() { }
+        [Obsolete("Use new one")]
         public ResourceGraph(List<ContextEntity> entities, bool usesDbContext)
         {
             Entities = entities;
@@ -38,12 +44,15 @@ namespace JsonApiDotNetCore.Internal
             return Entities.Where(e => e.EntityName == entityName).FirstOrDefault();
         }
 
+
+
         // eventually, this is the planned public constructor
         // to avoid breaking changes, we will be leaving the original constructor in place
         // until the context graph validation process is completed
         // you can track progress on this issue here: https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170
-        internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults)
+        internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults, List<ControllerModelMap> controllerContexts)
         {
+            ControllerModelMap = controllerContexts;
             Entities = entities;
             UsesDbContext = usesDbContext;
             ValidationResults = validationResults;
@@ -125,6 +134,32 @@ namespace JsonApiDotNetCore.Internal
                 .PublicAttributeName;
         }
 
+        public ControllerModelMap GetControllerMap(string path)
+        {
+            var limitedContexts = ControllerModelMap.Where(cc => cc.Path != null);
+            foreach(var cc in limitedContexts)
+            {
+                if (path.Contains(cc.Path))
+                {
+                    return cc;
+                }
+            }
+            return null;
+        }
 
+        public ContextEntity GetEntityBasedOnPath(string pathParsed)
+        {
+            // Check if there is a custom controller registered
+            var controllerHelper = GetControllerMap(pathParsed);
+            if (controllerHelper != null)
+            {
+                return GetContextEntity(controllerHelper.Model);
+            }
+
+            var pathSplit = pathParsed.Split('/').ToList();
+
+
+            return GetContextEntity(pathSplit[0]);
+        }
     }
 }

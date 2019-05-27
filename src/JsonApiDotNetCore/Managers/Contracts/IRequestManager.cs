@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Services;
@@ -24,6 +25,10 @@ namespace JsonApiDotNetCore.Managers.Contracts
         IQueryCollection FullQuerySet { get; set; }
 
         /// <summary>
+        /// If the request is on the `{id}/relationships/{relationshipName}` route
+        /// </summary>
+        bool IsRelationshipPath { get; set; }
+        /// <summary>
         /// Gets the relationships as set in the query parameters
         /// </summary>
         /// <returns></returns>
@@ -40,5 +45,7 @@ namespace JsonApiDotNetCore.Managers.Contracts
         void SetContextEntity(ContextEntity contextEntityCurrent);
 
         ContextEntity GetContextEntity();
+        QueryParams DisabledQueryParams { get; set; }
+
     }
 }

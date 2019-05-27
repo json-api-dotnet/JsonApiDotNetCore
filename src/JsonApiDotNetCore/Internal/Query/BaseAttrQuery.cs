@@ -1,3 +1,5 @@
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using System;
@@ -12,24 +14,19 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public abstract class BaseAttrQuery
     {
-        private readonly IJsonApiContext _jsonApiContext;
+        private readonly IRequestManager _requestManager;
+        private readonly IResourceGraph _resourceGraph;
 
-        public BaseAttrQuery(IJsonApiContext jsonApiContext, BaseQuery baseQuery)
+        public BaseAttrQuery(IRequestManager requestManager, IResourceGraph resourceGraph, BaseQuery baseQuery)
         {
-            _jsonApiContext = jsonApiContext ?? throw new ArgumentNullException(nameof(jsonApiContext));
-
-            if(_jsonApiContext.RequestEntity == null) 
-                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_jsonApiContext.RequestEntity)} cannot be null. "
-                    + "This property contains the ResourceGraph node for the requested entity. "
-                    + "If this is a unit test, you need to mock this member. "
-                    + "See this issue to check the current status of improved test guidelines: "
-                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(jsonApiContext));
+            _requestManager = requestManager ?? throw new ArgumentNullException(nameof(requestManager));
+            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
             
-            if(_jsonApiContext.ResourceGraph == null) 
-                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_jsonApiContext.ResourceGraph)} cannot be null. "
+            if(_resourceGraph == null) 
+                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_resourceGraph)} cannot be null. "
                     + "If this is a unit test, you need to construct a graph containing the resources being tested. "
                     + "See this issue to check the current status of improved test guidelines: "
-                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(jsonApiContext));
+                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(requestManager));
             
             if (baseQuery.IsAttributeOfRelationship)
             {
@@ -56,16 +53,19 @@ namespace JsonApiDotNetCore.Internal.Query
         }
 
         private AttrAttribute GetAttribute(string attribute)
-            => _jsonApiContext.RequestEntity.Attributes.FirstOrDefault(attr => attr.Is(attribute));
+        {
+            return _requestManager.GetContextEntity().Attributes.FirstOrDefault(attr => attr.Is(attribute));
+        }
 
         private RelationshipAttribute GetRelationship(string propertyName)
-            => _jsonApiContext.RequestEntity.Relationships.FirstOrDefault(r => r.Is(propertyName));
+        {
+            return _requestManager.GetContextEntity().Relationships.FirstOrDefault(r => r.Is(propertyName));
+        }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
-            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationship.Type);
-            return relatedContextEntity.Attributes
-              .FirstOrDefault(a => a.Is(attribute));
+            var relatedContextEntity = _resourceGraph.GetContextEntity(relationship.Type);
+            return relatedContextEntity.Attributes.FirstOrDefault(a => a.Is(attribute));
         }
     }
 }

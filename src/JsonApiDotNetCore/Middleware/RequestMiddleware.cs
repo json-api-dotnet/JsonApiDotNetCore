@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
@@ -32,7 +33,6 @@ namespace JsonApiDotNetCore.Middleware
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
         {
-            
             if (IsValid(context))
             {
                 // HACK: this currently results in allocation of
@@ -45,7 +45,10 @@ namespace JsonApiDotNetCore.Middleware
                 requestManager.BasePath = GetBasePath(context, options, contextEntityCurrent?.EntityName);
                 //Handle all querySet
                 HandleUriParameters(context, queryParser, requestManager);
-                
+                requestManager.IsRelationshipPath = PathIsRelationship(context.Request.Path.Value);
+                // BACKWARD COMPATIBILITY for v4  will be removed in v5
+                jsonApiContext.RequestManager = requestManager;
+                jsonApiContext.PageManager = new PageManager(new LinkBuilder(options, requestManager), options, requestManager);
                 await _next(context);
             }
         }
@@ -63,7 +66,39 @@ namespace JsonApiDotNetCore.Middleware
                 requestManager.IncludedRelationships = requestManager.QuerySet.IncludedRelationships;
             }
         }
+        internal static bool PathIsRelationship(string requestPath)
+        {
+            // while(!Debugger.IsAttached) { Thread.Sleep(1000); }
+            const string relationships = "relationships";
+            const char pathSegmentDelimiter = '/';
 
+            var span = requestPath.AsSpan();
+
+            // we need to iterate over the string, from the end,
+            // checking whether or not the 2nd to last path segment
+            // is "relationships"
+            // -2 is chosen in case the path ends with '/'
+            for (var i = requestPath.Length - 2; i >= 0; i--)
+            {
+                // if there are not enough characters left in the path to 
+                // contain "relationships"
+                if (i < relationships.Length)
+                    return false;
+
+                // we have found the first instance of '/'
+                if (span[i] == pathSegmentDelimiter)
+                {
+                    // in the case of a "relationships" route, the next
+                    // path segment will be "relationships"
+                    return (
+                        span.Slice(i - relationships.Length, relationships.Length)
+                            .SequenceEqual(relationships.AsSpan())
+                    );
+                }
+            }
+
+            return false;
+        }
         private string GetBasePath(HttpContext context, IJsonApiOptions options, string entityName)
         {
             var r = context.Request;
@@ -114,10 +149,13 @@ namespace JsonApiDotNetCore.Middleware
         /// <returns></returns>
         private ContextEntity GetCurrentEntity(PathString path, IResourceGraph resourceGraph, IJsonApiOptions options)
         {
-            var pathSplit = path.ToString().Replace($"{options.Namespace}/", "").Split('/');
+            var pathParsed = path.ToString().Replace($"{options.Namespace}/", "");
+            if(pathParsed[0] == '/')
+            {
+                pathParsed = pathParsed.Substring(1);
+            }
+            return resourceGraph.GetEntityBasedOnPath(pathParsed);
 
-            var typeString = pathSplit[1];
-            return resourceGraph.GetEntityType(typeString);
         }
 
         private static bool IsValid(HttpContext context)

@@ -65,7 +65,6 @@ namespace JsonApiDotNetCore.Services
         public HasOneRelationshipPointers HasOneRelationshipPointers { get; private set; } = new HasOneRelationshipPointers();
         [Obsolete("Please use the standalone Requestmanager")]
         public IRequestManager RequestManager { get; set; }
-        IPageManager IJsonApiContext.PageManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 
         [Obsolete("This is no longer necessary")]
@@ -87,7 +86,6 @@ namespace JsonApiDotNetCore.Services
                 IncludedRelationships = QuerySet.IncludedRelationships;
             }
 
-            //PageManager = GetPageManager();
             IsRelationshipPath = PathIsRelationship(context.Request.Path.Value);
 
             return this;

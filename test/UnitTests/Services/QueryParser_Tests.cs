@@ -3,6 +3,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -14,12 +15,12 @@ namespace UnitTests.Services
 {
     public class QueryParser_Tests
     {
-        private readonly Mock<IControllerContext> _controllerContextMock;
+        private readonly Mock<IRequestManager> _requestMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
 
         public QueryParser_Tests()
         {
-            _controllerContextMock = new Mock<IControllerContext>();
+            _requestMock = new Mock<IRequestManager>();
             _queryCollectionMock = new Mock<IQueryCollection>();
         }
 
@@ -35,11 +36,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.None));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.None);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -61,11 +62,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.None));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.None);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -88,11 +89,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.None));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.None);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -114,11 +115,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.Filter));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.Filter);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -139,11 +140,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.Sort));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.Sort);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -164,11 +165,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.Include));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.Include);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -189,11 +190,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.Page));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.Page);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -214,11 +215,11 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.GetControllerAttribute<DisableQueryAttribute>())
-                .Returns(new DisableQueryAttribute(QueryParams.Fields));
+            _requestMock
+                .Setup(m => m.DisabledQueryParams)
+                .Returns(QueryParams.Fields);
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -241,8 +242,8 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.RequestEntity)
+            _requestMock
+                .Setup(m => m.GetContextEntity())
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
@@ -256,7 +257,7 @@ namespace UnitTests.Services
                     Relationships = new List<RelationshipAttribute>()
                 });
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
@@ -281,8 +282,8 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            _controllerContextMock
-                .Setup(m => m.RequestEntity)
+            _requestMock
+                .Setup(m => m.GetContextEntity())
                 .Returns(new ContextEntity
                 {
                     EntityName = type,
@@ -290,7 +291,7 @@ namespace UnitTests.Services
                     Relationships = new List<RelationshipAttribute>()
                 });
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act , assert
             var ex = Assert.Throws<JsonApiException>(() => queryParser.Parse(_queryCollectionMock.Object));
@@ -312,7 +313,7 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             if (shouldThrow)
@@ -342,7 +343,7 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // act
             if (shouldThrow)

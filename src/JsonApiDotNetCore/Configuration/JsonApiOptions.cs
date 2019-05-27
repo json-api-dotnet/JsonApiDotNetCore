@@ -77,6 +77,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The graph of all resources exposed by this application.
         /// </summary>
+        [Obsolete("Use the standalone resourcegraph")]
         public IResourceGraph ResourceGraph { get; set; }
 
         /// <summary>

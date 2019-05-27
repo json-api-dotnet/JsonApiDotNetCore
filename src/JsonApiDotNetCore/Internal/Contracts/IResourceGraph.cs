@@ -83,5 +83,8 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// Was built against an EntityFrameworkCore DbContext ?
         /// </summary>
         bool UsesDbContext { get; }
+
+
+        ContextEntity GetEntityBasedOnPath(string pathParsed);
     }
 }

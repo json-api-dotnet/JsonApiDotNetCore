@@ -15,6 +15,7 @@ namespace JsonApiDotNetCore.Services
     public interface IJsonApiApplication
     {
         IJsonApiOptions Options { get; set; }
+        [Obsolete("Use standalone resourcegraph")]
         IResourceGraph ResourceGraph { get; set; }
     }
 
@@ -139,7 +140,9 @@ namespace JsonApiDotNetCore.Services
 
     public interface IJsonApiContext : IJsonApiRequest
     {
+        [Obsolete("Use standalone IRequestManager")]
         IRequestManager RequestManager { get; set; }
+        [Obsolete("Use standalone IPageManager")]
         IPageManager PageManager { get; set; }
         IJsonApiContext ApplyContext<T>(object controller);
         IMetaBuilder MetaBuilder { get; set; }

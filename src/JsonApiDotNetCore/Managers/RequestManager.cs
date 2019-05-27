@@ -1,7 +1,9 @@
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,6 +20,9 @@ namespace JsonApiDotNetCore.Managers
         public List<string> IncludedRelationships { get; set; }
         public QuerySet QuerySet { get; set; }
         public PageManager PageManager { get; set; }
+        public IQueryCollection FullQuerySet { get; set; }
+        public QueryParams DisabledQueryParams { get; set; }
+        public bool IsRelationshipPath { get; set; }
 
 
         public List<string> GetFields()

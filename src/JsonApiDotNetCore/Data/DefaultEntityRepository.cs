@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace JsonApiDotNetCore.Data
         IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
+        private readonly IRequestManager _requestManager;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
         private readonly ILogger _logger;
@@ -57,6 +59,7 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver,
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
+            _requestManager = jsonApiContext.RequestManager;
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
@@ -70,6 +73,8 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver,
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
+            _requestManager = jsonApiContext.RequestManager;
+
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
@@ -79,7 +84,7 @@ namespace JsonApiDotNetCore.Data
         }
 
 
-        
+
         public virtual IQueryable<TEntity> Get()
         {
             if (_jsonApiContext.RequestManager.QuerySet?.Fields != null && _jsonApiContext.RequestManager.QuerySet.Fields.Count > 0)
@@ -89,7 +94,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> GetQueryable() 
+        public virtual IQueryable<TEntity> GetQueryable()
             => _dbSet;
 
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
@@ -112,7 +117,23 @@ namespace JsonApiDotNetCore.Data
                 }
             }
 
-            return entities.Filter(_jsonApiContext, filterQuery);
+            return FilterEntities(entities, filterQuery);
+        }
+
+        public IQueryable<TEntity> FilterEntities(IQueryable<TEntity> entities, FilterQuery filterQuery)
+        {
+            if (filterQuery == null)
+            {
+                return entities;
+            }
+
+            // Relationship.Attribute
+            if (filterQuery.IsAttributeOfRelationship)
+            {
+                return entities.Filter(new RelatedAttrFilterQuery(_jsonApiContext, filterQuery));
+            }
+
+            return entities.Filter(new AttrFilterQuery(_jsonApiContext, filterQuery));
         }
 
         /// <inheritdoc />
@@ -245,7 +266,7 @@ namespace JsonApiDotNetCore.Data
                 foreach (var pointer in pointers)
                 {
                     if (_context.EntityIsTracked(pointer as IIdentifiable) == false)
-                    _context.Entry(pointer).State = EntityState.Unchanged;
+                        _context.Entry(pointer).State = EntityState.Unchanged;
                 }
             }
         }
@@ -407,7 +428,7 @@ namespace JsonApiDotNetCore.Data
             // variables mutated in recursive loop
             // TODO: make recursive method
             string internalRelationshipPath = null;
-            var entity = _jsonApiContext.RequestEntity;
+            var entity = _requestManager.GetContextEntity();
             for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];
