@@ -99,19 +99,8 @@ namespace JsonApiDotNetCore.Data
             _resourceDefinition = resourceDefinition;
         }
 
-
-        
-        public virtual IQueryable<TEntity> Get()
-        {
-            var entities = (IQueryable<TEntity>)_dbSet;
-            if (_jsonApiContext.QuerySet?.Fields != null && _jsonApiContext.QuerySet.Fields.Count > 0)
-                return entities.Select(_jsonApiContext.QuerySet?.Fields);
-
-            return entities;
-        }
-
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> GetQueryable() 
+        public virtual IQueryable<TEntity> Get()
             => _dbSet;
 
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
@@ -130,7 +119,7 @@ namespace JsonApiDotNetCore.Data
                 var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
                 if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
                 {
-                    return defaultQueryFilter(entities, filterQuery.Value);
+                    return defaultQueryFilter(entities, filterQuery);
                 }
             }
             return entities.Filter(_jsonApiContext, filterQuery);
@@ -161,7 +150,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await GetQueryable().SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await Select(Get(), _jsonApiContext.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         /// <inheritdoc />
@@ -169,7 +158,7 @@ namespace JsonApiDotNetCore.Data
         {
             _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
 
-            var includedSet = Include(GetQueryable(), relationshipName);
+            var includedSet = Include(Select(Get(), _jsonApiContext.QuerySet?.Fields), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
 
             return result;

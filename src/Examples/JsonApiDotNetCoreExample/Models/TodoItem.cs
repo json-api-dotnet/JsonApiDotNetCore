@@ -28,10 +28,13 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("achieved-date", isFilterable: false, isSortable: false)]
         public DateTime? AchievedDate { get; set; }
 
-
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
 
+
+        [Attr("offset-date")]
+        public DateTimeOffset? OffsetDate { get; set; }
+ 
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }
         public Guid? CollectionId { get; set; }

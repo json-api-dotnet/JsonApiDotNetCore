@@ -114,15 +114,17 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.Read);
-            var entities = _entities.GetQueryable();
+            var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
+                
+            if (_jsonApiContext.Options.IncludeTotalRecordCount)
+                _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
 
-            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
-                entities = _entities.Select(entities, _jsonApiContext.QuerySet.Fields);
+            entities = _entities.Select(entities, _jsonApiContext.QuerySet?.Fields);
 
             if (!IsNull(_hookExecutor, entities))
             {
@@ -298,7 +300,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TEntity> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.GetQueryable().Where(e => e.Id.Equals(id));
+            var query = _entities.Select(_entities.Get(), _jsonApiContext.QuerySet?.Fields).Where(e => e.Id.Equals(id));
 
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {

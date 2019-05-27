@@ -113,9 +113,9 @@ public class ItemResource : ResourceDefinition<Item>
     // handles queries like: ?filter[was-active-on]=2018-10-15T01:25:52Z
     public override QueryFilters GetQueryFilters()
         => new QueryFilters {            
-            { "was-active-on", (items, value) => DateTime.TryParse(value, out dateValue)
+            { "was-active-on", (items, filter) => DateTime.TryParse(filter.Value, out dateValue)
                 ? items.Where(i => i.Expired == null || dateValue < i.Expired)
-                : throw new JsonApiException(400, $"'{value}' is not a valid date.")
+                : throw new JsonApiException(400, $"'{filter.Value}' is not a valid date.")
             }
         };
 }
