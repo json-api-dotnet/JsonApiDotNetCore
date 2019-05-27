@@ -1,3 +1,12 @@
+@milosloub  @wisepotato.
+
+New hooks API is pretty much finished. Below is the usage guide, can also be found in the docs.  Time for a re-review.
+
+Let us focus first on the discussion of the usage / hooks API / backward compatiblity related stuff. 
+
+As soon as we're totally aligned with respect to this, we can quibble about internals: at this point any changes internally should not affect the interfaces/hooks API, therefore shouldn't be breaking
+
+
 
 # Resource Hooks
 This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`.
@@ -14,14 +23,14 @@ Understanding the semantics will be helpful in identifying which hooks on `Resou
 2.  [**Hook execution overview**](#hook-execution-overview)
 A table overview of all pipelines and involved hooks
 3.  [**Examples: basic usage**](#examples-basic-usage)
-   1. [**Most minimal example**](#most-minimal-example)
-   2. [**Logging**](#logging)
-   3. [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
+	 * [**Most minimal example**](#most-minimal-example)
+	 * [**Logging**](#logging)
+	 * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
 5.  [**Examples: advanced usage**](#examples-advanced-usage)
-   1. [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
-   2. [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
-   3. [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
-   4. [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
+	 * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
+	 * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
+	 * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
+	 * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
 
 
 # 1. Semantics: pipelines, actions and hooks
@@ -34,7 +43,7 @@ The different execution flows within the RSL that may be intercepted can be iden
 * **Get**: reading a resource (triggered by the endpoint `GET /my-resource`).
 * **GetSingle**: reading a single resource (triggered by the endpoint `GET /my-resource/1`).
 
-See the [ResourcePipeline](www.will-add-link-later.com) enum for a full list of available pipelines.
+See the [ResourcePipeline](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/feat/%23477/src/JsonApiDotNetCore/Hooks/Execution/ResourcePipelineEnum.cs) enum for a full list of available pipelines.
 
 ## Actions
 Each pipeline is associated with a set of **actions** that work on resources and their relationships. These actions reflect the associated database operations that is performed by JsonApiDotNetCore (in the Repository Layer). Typically, the RSL will execute some service-layer-related code, then invoke the Repository Layer which will perform these actions, after which the execution returns to the RSL. 
@@ -88,7 +97,7 @@ As mentioned in the previous section, some actions are shared across hooks. One 
 
 Any return content can be intercepted and transformed as desired by implementing the `ResourceDefintion<TEntity>.OnReturn` hook which intercepts the `return` action. For this action, there is no distinction between a `Before` and `After` hook, because no code after a `return` statement can be evaluated. Note that the `return` action can work on *main resources as well as nested resources*, see  [this example below](#transforming-data-with-onreturn).
 <br><br>
-For an overview of all pipelines, hooks and actions, see the table below, and for more detailed information about the available hooks, see the [IResourceHookContainer<T>](www.will-add-link-later.com) interface.
+For an overview of all pipelines, hooks and actions, see the table below, and for more detailed information about the available hooks, see the [IResourceHookContainer<T>](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/ab1f96d8255532461da47d290c5440b9e7e6a4a5/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs) interface.
 
 # 2. Hook execution overview
 
