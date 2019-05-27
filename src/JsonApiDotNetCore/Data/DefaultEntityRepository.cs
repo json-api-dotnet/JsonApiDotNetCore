@@ -495,7 +495,7 @@ namespace JsonApiDotNetCore.Data
         {
             if (pageNumber >= 0)
             {
-                // the IQueryable returned from ApplyResourceDefinitionLogic is sometimes consumed here.
+                // the IQueryable returned from the hook executor is sometimes consumed here.
                 // In this case, it does not support .ToListAsync(), so we use the method below.
                 return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
             }
