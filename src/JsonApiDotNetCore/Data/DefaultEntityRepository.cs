@@ -463,7 +463,7 @@ namespace JsonApiDotNetCore.Data
             // variables mutated in recursive loop
             // TODO: make recursive method
             string internalRelationshipPath = null;
-            var entity = _jsonApiContext.ResourceGraph.GetContextEntity(typeof(TEntity));
+            var entity = _jsonApiContext.RequestEntity;
             for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];
