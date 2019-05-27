@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Services
             IEntityRepository<TResource> entityRepository,
             IResourceHookExecutor hookExecutor = null,
             ILoggerFactory loggerFactory = null) :
-            base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
+            base(jsonApiContext, entityRepository, loggerFactory, hookExecutor)
         { }
     }
 
@@ -30,8 +30,8 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            IResourceHookExecutor hookExecutor = null,
-            ILoggerFactory loggerFactory = null) :
+            ILoggerFactory loggerFactory = null, 
+            IResourceHookExecutor hookExecutor = null) :
             base(jsonApiContext, entityRepository, loggerFactory, hookExecutor)
         { }
     }

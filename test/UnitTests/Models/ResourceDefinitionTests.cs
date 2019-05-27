@@ -124,8 +124,7 @@ namespace UnitTests.Models
             => new QueryFilters {
                 { "is-active", (query, value) => query.Select(x => x) }
             };
-
-        protected override PropertySortOrder GetDefaultSortOrder()
+        public override PropertySortOrder GetDefaultSortOrder()
             => new PropertySortOrder {
                 (t => t.Prop, SortDirection.Ascending)
             };
