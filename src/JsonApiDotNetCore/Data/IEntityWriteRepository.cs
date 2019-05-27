@@ -26,7 +26,6 @@ namespace JsonApiDotNetCore.Data
 
         Task<bool> DeleteAsync(TEntity entity);
 
-        [Obsolete("Use overload DeleteAsync(TEntity entity) instead")]
         Task<bool> DeleteAsync(TId id);
     }
 }
