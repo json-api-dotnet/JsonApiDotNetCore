@@ -19,6 +19,7 @@ namespace JsonApiDotNetCoreExample.Resources
           };
         }
 
+
         private IQueryable<User> FirstCharacterFilter(IQueryable<User> users, FilterQuery filterQuery)
         {
           switch(filterQuery.Operation)

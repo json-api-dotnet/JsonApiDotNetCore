@@ -22,17 +22,19 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null
             )
-        : base(jsonApiContext, contextResolver)
+        : base(jsonApiContext, contextResolver, resourceDefinition)
         { }
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver, 
+            ResourceDefinition<TEntity> resourceDefinition = null
             )
-        : base(loggerFactory, jsonApiContext, contextResolver)
+        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
         { }
     }
 
@@ -51,9 +53,10 @@ namespace JsonApiDotNetCore.Data
         public DefaultGuidEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null
             )
-        : base(loggerFactory, jsonApiContext, contextResolver)
+        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
         { }
     }
 
@@ -75,13 +78,15 @@ namespace JsonApiDotNetCore.Data
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null
             )
         {
             _context = contextResolver.GetContext();
             _dbSet = contextResolver.GetDbSet<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
+            _resourceDefinition = resourceDefinition;
         }
 
         public DefaultEntityRepository(
@@ -122,6 +127,7 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
+            var x = _genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), typeof(TEntity));
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 

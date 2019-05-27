@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Hooks
         IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, string[] relationshipPaths) where TEntity : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TEntity, TId>();
-            var query = repo.GetQueryable().Where(e => ids.Contains(e.Id));
+            var query = repo.Get().Where(e => ids.Contains(e.Id));
             foreach (var path in relationshipPaths)
             {
                 query = query.Include(path);
