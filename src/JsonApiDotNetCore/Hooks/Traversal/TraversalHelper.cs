@@ -185,6 +185,7 @@ namespace JsonApiDotNetCore.Hooks
             var contextEntity = _graph.GetContextEntity(type);
             foreach (RelationshipAttribute attr in contextEntity.Relationships)
             {
+                if (!attr.CanInclude) continue;
                 if (!RelationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
