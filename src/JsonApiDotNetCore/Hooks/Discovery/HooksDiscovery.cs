@@ -36,7 +36,8 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The implemented hooks for model.</returns>
         void DiscoverImplementedHooksForModel()
         {
-            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, typeof(ResourceDefinition<TEntity>)).ToList();
+            Type parameterizedResourceDefinition = typeof(ResourceDefinition<TEntity>);
+            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, parameterizedResourceDefinition).ToList();
             try
             {
                 var implementedHooks = new List<ResourceHook>();
@@ -48,7 +49,7 @@ namespace JsonApiDotNetCore.Hooks
                     foreach (var hook in _allHooks)
                     {
                         var method = targetType.GetMethod(hook.ToString("G"));
-                        if (method.DeclaringType == targetType)
+                        if (method.DeclaringType != parameterizedResourceDefinition)
                         {
                             implementedHooks.Add(hook);
                             if (hook == ResourceHook.BeforeImplicitUpdateRelationship)

@@ -34,14 +34,14 @@ namespace UnitTests.ResourceHooks
         public abstract class ResourceDefintionBase<T> : ResourceDefinition<T> where T : class, IIdentifiable
         {
             protected ResourceDefintionBase(IResourceGraph graph) : base(graph) { }
+
+            public override IEnumerable<T> BeforeDelete(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+            public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
 
         public class AnotherDummyResourceDefinition : ResourceDefintionBase<AnotherDummy>
         {
             public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<Dummy>().Build()) { }
-
-            public override IEnumerable<AnotherDummy> BeforeDelete(HashSet<AnotherDummy> entities, ResourcePipeline pipeline) { return entities; }
-            public override void AfterDelete(HashSet<AnotherDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
         [Fact]
         public void Hook_Discovery_With_Inheritance()
