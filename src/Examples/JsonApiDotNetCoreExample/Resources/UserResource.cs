@@ -9,9 +9,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph graph) : base(graph)
-        {
-        }
+        public UserResource(IResourceGraph graph) : base(graph) { }
 
         protected override List<AttrAttribute> OutputAttrs()
             => Remove(user => user.Password);
@@ -23,7 +21,6 @@ namespace JsonApiDotNetCoreExample.Resources
             { "first-character", (users, queryFilter) => FirstCharacterFilter(users, queryFilter) }
           };
         }
-
 
         private IQueryable<User> FirstCharacterFilter(IQueryable<User> users, FilterQuery filterQuery)
         {

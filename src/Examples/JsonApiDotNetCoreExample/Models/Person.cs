@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Models
         public Person Person { get; set; }
     }
 
-    public class Person : Identifiable, IHasMeta
+    public class Person : Identifiable, IHasMeta, IIsLockable
     {
         public bool IsLocked { get; set; }
 
