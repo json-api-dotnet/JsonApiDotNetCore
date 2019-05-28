@@ -215,13 +215,14 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
         {
             var entity = MapIn(resource);
-
+            // why is entity passed along to UpdateAsync if it is never used internally??
+            // I think we should just set the id on the request-parsed entity and pass that along to the repo.
+            entity.Id = id;
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             entity = await _entities.UpdateAsync(id, entity);
             if (!IsNull(_hookExecutor, entity))
             {
-                // TODO: should not fire after read for L=0
                 _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.Patch);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             }

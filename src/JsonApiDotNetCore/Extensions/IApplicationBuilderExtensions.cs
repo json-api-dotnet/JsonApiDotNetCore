@@ -22,8 +22,11 @@ namespace JsonApiDotNetCore.Extensions
             if (useMvc)
                 app.UseMvc();
 
-            var inverseRelationshipResolver = app.ApplicationServices.GetService<IInverseRelationships>();
-            inverseRelationshipResolver?.Resolve();
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
+                inverseRelationshipResolver?.Resolve();
+            }
 
             return app;
         }

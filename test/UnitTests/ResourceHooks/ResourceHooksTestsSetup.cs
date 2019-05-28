@@ -302,7 +302,7 @@ namespace UnitTests.ResourceHooks
             var processorFactory = new Mock<IGenericProcessorFactory>();
             var context = new Mock<IJsonApiContext>();
             context.Setup(c => c.GenericProcessorFactory).Returns(processorFactory.Object);
-            context.Setup(c => c.Options).Returns(new JsonApiOptions { DatabaseValuesInDiffs = false });
+            context.Setup(c => c.Options).Returns(new JsonApiOptions { LoadDatabaseValues = false });
             context.Setup(c => c.ResourceGraph).Returns(ResourceGraph.Instance);
 
             return (context, processorFactory);

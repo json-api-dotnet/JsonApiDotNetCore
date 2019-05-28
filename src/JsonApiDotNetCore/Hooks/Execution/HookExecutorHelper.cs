@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Hooks
             }
             else
             {
-                return _context.Options.DatabaseValuesInDiffs;
+                return _context.Options.LoadDatabaseValues;
             }
 
         }

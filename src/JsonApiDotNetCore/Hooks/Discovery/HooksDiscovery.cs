@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Hooks
                                 diffEnabledHooks.Add(hook);
                                 continue;
                             }
-                            var attr = method.GetCustomAttributes(true).OfType<IncludeDatabaseValues>().SingleOrDefault();
+                            var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValues>().SingleOrDefault();
                             if (attr != null)
                             {
                                 var targetList = attr.value ? diffEnabledHooks : diffDisabledHooks;
