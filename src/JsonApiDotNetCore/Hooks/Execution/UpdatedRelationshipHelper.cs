@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Gets a dictionary of all entities grouped by affected relationship.
         /// </summary>
-        Dictionary<RelationshipAttribute, HashSet<TDependent>> GetAll { get; }
+        Dictionary<RelationshipAttribute, HashSet<TDependent>> All { get; }
         /// <summary>
         /// Gets a dictionary of all entities that have an affected relationship to type <typeparamref name="TPrincipal"/>
         /// </summary>
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly Dictionary<RelationshipProxy, HashSet<TDependent>> _groups;
 
-        public Dictionary<RelationshipAttribute, HashSet<TDependent>> GetAll
+        public Dictionary<RelationshipAttribute, HashSet<TDependent>> All
         {
             get { return _groups?.ToDictionary(p => p.Key.Attribute, p => p.Value); }
         }
