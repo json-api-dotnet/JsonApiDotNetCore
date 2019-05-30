@@ -1,3 +1,4 @@
+
 # Resource Hooks
 This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`.
 
@@ -13,14 +14,15 @@ Understanding the semantics will be helpful in identifying which hooks on `Resou
 2.  [**Hook execution overview**](#hook-execution-overview)
 A table overview of all pipelines and involved hooks
 3.  [**Examples: basic usage**](#examples-basic-usage)
-	 * [**Most minimal example**](#most-minimal-example)
-	 * [**Logging**](#logging)
-	 * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
+   * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
+   * [**Logging**](#logging)
+   * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
+   * [**Loading database values**](#loading-database-values)
 5.  [**Examples: advanced usage**](#examples-advanced-usage)
-	 * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
-	 * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
-	 * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
-	 * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
+   * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
+   * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
+   * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
+   * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
 
 
 # 1. Semantics: pipelines, actions and hooks
@@ -168,8 +170,26 @@ This table below shows the involved hooks per pipeline.
 
 # 3. Examples: basic usage
 
-## Most minimal example
-The simplest example does not require much explanation. This hook would triggered by any default JsonApiDotNetCore API route for `Article`.
+## Getting started: most minimal example
+To use resource hooks, you are required to turn them on in your `startup.cs` configuration
+
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddJsonApi<ApiDbContext>(
+        options =>
+        {
+            options.EnableResourceHooks = true; // default is false
+            options.LoadDatabaseValues = false; // default is true
+        }
+    );
+    ...
+}
+```
+For this example, we may set `LoadDatabaseValues` to `false`. See the [Loading database values](#loading-database-values) example for more information about this option.
+
+The simplest case of resource hooks we can then implement should not require a lot of explanation.  This hook would triggered by any default JsonApiDotNetCore API route for `Article`.
 ```c#
 public class ArticleResource : ResourceDefinition<Article>
 {
@@ -293,6 +313,94 @@ public class PersonResource : ResourceDefinition<Person>
 }
 ```
 Note that not only anonymous people will be excluded when directly performing a `GET /people`, but also when included through relationships, like `GET /articles?include=author,reviewers`. Simultaneously, `if` condition that checks for `ResourcePipeline.Get` in the `PersonResource` ensures we still get expected responses from the API when eg. creating a person with `WantsPrivacy` set to true.
+
+## Loading database values
+When a hook is executed for a particular resource, JsonApiDotNetCore can load the corresponding database values and provide them in the hooks. This can be useful for eg. 
+ * having a diff between a previous and new state of a resource (for example when updating a resource)
+ * performing authorization rules based on the property of a resource.
+ 
+For example, consider a scenario in with the following two requirements: 
+* We need to log all updates on resources revealing their old and new value.
+* We need to check if the property `IsLocked` is set is `true`, and if so, cancel the operation.
+  
+ Consider an `Article` with title *Hello there* and API user trying to update the the title of this article to *Bye bye*.  The above requirements could be implemented as follows
+```c#
+public class ArticleResource : ResourceDefinition<Article>
+{
+    private readonly ILogger _logger;
+    private readonly IJsonApiContext _context;
+    public constructor ArticleResource(ILogger logger, IJsonApiContext context)
+    {
+        _logger = logger;
+        _context = context;  
+    } 
+
+    public override IEnumerable<Article> BeforeUpdate(EntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+    {
+        // PropertyGetter is a helper class that takes care of accessing the values on an instance of Article using reflection.
+        var getter = new PropertyGetter<Article>();
+
+        entityDiff.RequestEntities.ForEach( requestEntity => 
+        {
+
+            var databaseEntity = entityDiff.DatabaseEntities.Single( e => e.Id == a.Id);
+
+            if (databaseEntity.IsLocked) throw new JsonApiException(403, "Forbidden: this article is locked!")
+
+            foreach (var attr in _context.AttributesToUpdate)
+            {
+                var oldValue = getter(databaseEntity, attr);
+                var newValue = getter(requestEntity, attr);
+
+                _logger.LogAttributeUpdate(oldValue, newValue)
+            }
+        });
+        return entityDiff.RequestEntities;
+    }
+}
+```
+
+Note that database values are turned on by default. They can be turned of globally by configuring the startup as follows:
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddJsonApi<ApiDbContext>(
+        options =>
+        {
+            options.LoadDatabaseValues = false; // default is true
+        }
+    );
+    ...
+}
+```
+
+The global setting can be used together with toggling the option on and off on the level of individual hooks using the `LoadDatabaseValues` attribute:
+```c#
+public class ArticleResource : ResourceDefinition<Article>
+{
+  [LoadDatabaseValues(true)]
+    public override IEnumerable<Article> BeforeUpdate(EntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+    {
+      ....
+  }
+  
+  [LoadDatabaseValues(false)] 
+    public override IEnumerable<string> BeforeUpdateRelationships(HashSet<string>  ids,  IAffectedRelationships<Article>  resourcesByRelationship,  ResourcePipeline  pipeline)
+    {
+      // the entities stored in the IAffectedRelationships<Article> instance 
+      // are plain resource identifier objects when LoadDatabaseValues is turned off,
+      // or objects loaded from the database when LoadDatabaseValues is turned on.
+     ....
+  }
+}
+```
+
+Note that there are some hooks that the  `LoadDatabaseValues` option and attribute does not affect. The only hooks that are affected are:
+* `BeforeUpdate`
+* `BeforeUpdateRelationship`
+
+
 
 # 3. Examples: advanced usage
 
