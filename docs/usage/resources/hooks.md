@@ -9,7 +9,7 @@ By implementing resource hooks on a `ResourceDefintion<T>`, it is possible to in
 * Transformation of the served data
 
 This usage guide covers the following sections
-1.  [**Semantics: pipelines, actions and hooks**](#semantics-pipelines-actions-and-hooks).
+1.  [**Semantics: pipelines, actions and hooks**](#semantics-pipelines-actions-and-hooks)
 Understanding the semantics will be helpful in identifying which hooks on `ResourceDefinition<T>` you need to implement for your use-case.
 2.  [**Basic usage**](#basic-usage)
       * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
