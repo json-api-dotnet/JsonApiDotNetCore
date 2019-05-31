@@ -1,6 +1,6 @@
 
 # Resource Hooks
-This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`.
+This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`. For a quick start, jump right to the [Getting started: most minimal example](#getting-started-most-minimal-example) section.
 
 By implementing resource hooks on a `ResourceDefintion<T>`, it is possible to intercept the execution of the **Resource Service Layer** (RSL) in various ways. This enables the developer to conveniently define business logic without having to override the RSL. It can be used to implement e.g.
 * Authorization
@@ -11,19 +11,18 @@ By implementing resource hooks on a `ResourceDefintion<T>`, it is possible to in
 This usage guide covers the following sections
 1.  [**Semantics: pipelines, actions and hooks**](#semantics-pipelines-actions-and-hooks).
 Understanding the semantics will be helpful in identifying which hooks on `ResourceDefinition<T>` you need to implement for your use-case.
-2.  [**Hook execution overview**](#hook-execution-overview)
-A table overview of all pipelines and involved hooks
-3.  [**Examples: basic usage**](#examples-basic-usage)
+2.  [**Basic usage**](#basic-usage)
       * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
       * [**Logging**](#logging)
       * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
       * [**Loading database values**](#loading-database-values)
-5.  [**Examples: advanced usage**](#examples-advanced-usage)
+3.  [**Advanced usage**](#advanced-usage)
       * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
       * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
       * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
       * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
-
+4.  [**Hook execution overview**](#hook-execution-overview)
+  A table overview of all pipelines and involved hooks
 
 # 1. Semantics: pipelines, actions and hooks
 
@@ -91,84 +90,7 @@ Any return content can be intercepted and transformed as desired by implementing
 <br><br>
 For an overview of all pipelines, hooks and actions, see the table below, and for more detailed information about the available hooks, see the [IResourceHookContainer<T>](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/ab1f96d8255532461da47d290c5440b9e7e6a4a5/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs) interface.
 
-# 2. Hook execution overview
-
-
-This table below shows the involved hooks per pipeline. 
-<table>
-  <tr>
-    <th rowspan="2">Pipeline</th>
-    <th colspan="5"><span style="font-style:italic">Execution Flow</span></th>
-  </tr>
-  <tr>
-    <td align="center"><b>Before Hooks</b></td>
-    <td align="center" colspan="2"><b>Repository Actions</td>
-    <td align="center"><b>After Hooks</td>
-    <td align="center"><b>OnReturn</td>
-  </tr>
-  <tr>
-    <td>Get</td>
-    <td align="center">BeforeRead</td>
-    <td align="center" colspan="2" rowspan="3">read</td>
-    <td align="center">AfterRead</td>
-    <td align="center">✅</td>
-  </tr>
-  <tr>
-    <td>GetSingle</td>
-    <td align="center">BeforeRead</td>
-    <td align="center">AfterRead</td>
-    <td align="center">✅</td>
-  </tr>
-  <tr>
-    <td>GetRelationship</td>
-    <td align="center">BeforeRead</td>
-    <td align="center">AfterRead</td>
-    <td align="center">✅</td>
-  </tr>
-  <tr>
-    <td>Post</td>
-    <td align="center">BeforeCreate</td>
-    <td align="center" colspan="2">create<br>update relationship</td>
-    <td align="center">AfterCreate</td>
-    <td align="center">✅</td>
-  </tr>
-  <tr>
-    <td>Patch</td>
-    <td align="center">BeforeUpdate<br>BeforeUpdateRelationship<br>BeforeImplicitUpdateRelationship</td>
-    <td align="center" colspan="2">update<br>update relationship<br>implicit update relationship</td>
-    <td align="center">AfterUpdate<br>AfterUpdateRelationship</td>
-    <td align="center">✅</td>
-  </tr>
-  <tr>
-    <td>PatchRelationship</td>
-    <td align="center">BeforeUpdate<br>BeforeUpdateRelationship</td>
-    <td align="center" colspan="2">update<br>update relationship<br>implicit update relationship</td>
-    <td align="center">AfterUpdate<br>AfterUpdateRelationship</td>
-    <td align="center">❌</td>
-  </tr>
-  <tr>
-    <td>Delete</td>
-    <td align="center">BeforeDelete</td>
-    <td align="center" colspan="2">delete<br>implicit update relationship</td>
-    <td align="center">AfterDelete</td>
-    <td align="center">❌</td>
-  </tr>
-  <tr>
-    <td>BulkPost</td>
-    <td colspan="5" align="center"><i>Not yet supported</i></td>
-  </tr>
-  <tr>
-    <td>BulkPatch</td>
-    <td colspan="5" align="center"><i>Not yet supported</i></td>
-  </tr>
-  <tr>
-    <td>BulkDelete</td>
-    <td colspan="5" align="center"><i>Not yet supported</i></td>
-  </tr>
-</table>
-
-
-# 3. Examples: basic usage
+# 2. Basic usage
 
 ## Getting started: most minimal example
 To use resource hooks, you are required to turn them on in your `startup.cs` configuration
@@ -402,7 +324,7 @@ Note that there are some hooks that the  `LoadDatabaseValues` option and attribu
 
 
 
-# 3. Examples: advanced usage
+# 3. Advanced usage
 
 ## Simple authorization: explicitly affected resources
 Resource hooks can be used to easily implement authorization in your application.  As an example, consider the case in which an API user is not allowed to see anonymous people, which is reflected by the `Anonymous` property on `Person`  being set to true`true`.  The API should handle this as follows:
@@ -619,3 +541,79 @@ Then, for the same request `GET /articles?include=tags`, the order of execution 
 And the included collection of tags per article will only contain tags that were added less than two weeks ago.
 
 Note that the introduced inheritance and added relationship attributes does not further affect the many-to-many relationship internally.
+
+# 4. Hook execution overview
+
+
+This table below shows the involved hooks per pipeline. 
+<table>
+  <tr>
+    <th rowspan="2">Pipeline</th>
+    <th colspan="5"><span style="font-style:italic">Execution Flow</span></th>
+  </tr>
+  <tr>
+    <td align="center"><b>Before Hooks</b></td>
+    <td align="center" colspan="2"><b>Repository Actions</td>
+    <td align="center"><b>After Hooks</td>
+    <td align="center"><b>OnReturn</td>
+  </tr>
+  <tr>
+    <td>Get</td>
+    <td align="center">BeforeRead</td>
+    <td align="center" colspan="2" rowspan="3">read</td>
+    <td align="center">AfterRead</td>
+    <td align="center">✅</td>
+  </tr>
+  <tr>
+    <td>GetSingle</td>
+    <td align="center">BeforeRead</td>
+    <td align="center">AfterRead</td>
+    <td align="center">✅</td>
+  </tr>
+  <tr>
+    <td>GetRelationship</td>
+    <td align="center">BeforeRead</td>
+    <td align="center">AfterRead</td>
+    <td align="center">✅</td>
+  </tr>
+  <tr>
+    <td>Post</td>
+    <td align="center">BeforeCreate</td>
+    <td align="center" colspan="2">create<br>update relationship</td>
+    <td align="center">AfterCreate</td>
+    <td align="center">✅</td>
+  </tr>
+  <tr>
+    <td>Patch</td>
+    <td align="center">BeforeUpdate<br>BeforeUpdateRelationship<br>BeforeImplicitUpdateRelationship</td>
+    <td align="center" colspan="2">update<br>update relationship<br>implicit update relationship</td>
+    <td align="center">AfterUpdate<br>AfterUpdateRelationship</td>
+    <td align="center">✅</td>
+  </tr>
+  <tr>
+    <td>PatchRelationship</td>
+    <td align="center">BeforeUpdate<br>BeforeUpdateRelationship</td>
+    <td align="center" colspan="2">update<br>update relationship<br>implicit update relationship</td>
+    <td align="center">AfterUpdate<br>AfterUpdateRelationship</td>
+    <td align="center">❌</td>
+  </tr>
+  <tr>
+    <td>Delete</td>
+    <td align="center">BeforeDelete</td>
+    <td align="center" colspan="2">delete<br>implicit update relationship</td>
+    <td align="center">AfterDelete</td>
+    <td align="center">❌</td>
+  </tr>
+  <tr>
+    <td>BulkPost</td>
+    <td colspan="5" align="center"><i>Not yet supported</i></td>
+  </tr>
+  <tr>
+    <td>BulkPatch</td>
+    <td colspan="5" align="center"><i>Not yet supported</i></td>
+  </tr>
+  <tr>
+    <td>BulkDelete</td>
+    <td colspan="5" align="center"><i>Not yet supported</i></td>
+  </tr>
+</table>
