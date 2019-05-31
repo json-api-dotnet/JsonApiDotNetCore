@@ -14,15 +14,15 @@ Understanding the semantics will be helpful in identifying which hooks on `Resou
 2.  [**Hook execution overview**](#hook-execution-overview)
 A table overview of all pipelines and involved hooks
 3.  [**Examples: basic usage**](#examples-basic-usage)
-   * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
-   * [**Logging**](#logging)
-   * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
-   * [**Loading database values**](#loading-database-values)
+      * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
+      * [**Logging**](#logging)
+      * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
+      * [**Loading database values**](#loading-database-values)
 5.  [**Examples: advanced usage**](#examples-advanced-usage)
-   * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
-   * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
-   * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
-   * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
+      * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
+      * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
+      * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
+      * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
 
 
 # 1. Semantics: pipelines, actions and hooks
