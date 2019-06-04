@@ -48,9 +48,9 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not database values should be included by default
         /// for resource hooks. Ignored if EnableResourceHooks is set false.
         /// 
-        /// Defaults to <see langword="true"/>.
+        /// Defaults to <see langword="false"/>.
         /// </summary>
-        public bool LoadDatabaseValues { get; set; } = true;
+        public bool LoadDatabaseValues { get; set; } = false;
 
         /// <summary>
         /// The base URL Namespace

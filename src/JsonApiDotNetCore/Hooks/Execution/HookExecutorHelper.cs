@@ -106,6 +106,8 @@ namespace JsonApiDotNetCore.Hooks
 
         bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
         {
+            if (hook == ResourceHook.BeforeImplicitUpdateRelationship) return true;
+
             var discovery = GetHookDiscovery(entityType);
 
             if (discovery.DatabaseDiffDisabledHooks.Contains(hook))
