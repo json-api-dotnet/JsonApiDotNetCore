@@ -103,7 +103,7 @@ public void ConfigureServices(IServiceCollection services)
         options =>
         {
             options.EnableResourceHooks = true; // default is false
-            options.LoadDatabaseValues = false; // default is true
+            options.LoadDatabaseValues = false; // default is false
         }
     );
     ...
@@ -290,7 +290,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddJsonApi<ApiDbContext>(
         options =>
         {
-            options.LoadDatabaseValues = false; // default is true
+            options.LoadDatabaseValues = false; // default is false
         }
     );
     ...
