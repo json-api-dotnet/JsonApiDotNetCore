@@ -81,15 +81,15 @@ namespace JsonApiDotNetCore.Hooks
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
 
-        public IEnumerable LoadDbValues(DependentType entityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
+        public IEnumerable LoadDbValues(PrincipalType repositoryEntityType, Type affectedHookEntityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
         {
-            if (!ShouldLoadDbValues(entityType, hook)) return null;
+            if (!ShouldLoadDbValues(affectedHookEntityType, hook)) return null;
 
             var paths = relationships.Select(p => p.Attribute.RelationshipPath).ToArray();
-            var idType = GetIdentifierType(entityType);
+            var idType = GetIdentifierType(repositoryEntityType);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
-                    .MakeGenericMethod(entityType, idType);
+                    .MakeGenericMethod(repositoryEntityType, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
             var ids = casted.Select(e => e.StringId).Cast(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
@@ -98,7 +98,8 @@ namespace JsonApiDotNetCore.Hooks
 
         public HashSet<TEntity> LoadDbValues<TEntity>(IEnumerable<TEntity> entities, ResourceHook hook, params RelationshipProxy[] relationships) where TEntity : class, IIdentifiable
         {
-            var dbValues = LoadDbValues(typeof(TEntity), entities, hook, relationships)?.Cast<TEntity>();
+            var entityType = typeof(TEntity);
+            var dbValues = LoadDbValues(entityType, entityType, entities, hook, relationships)?.Cast<TEntity>();
             if (dbValues == null) return null;
             return new HashSet<TEntity>(dbValues);
         }
@@ -106,8 +107,6 @@ namespace JsonApiDotNetCore.Hooks
 
         bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
         {
-            if (hook == ResourceHook.BeforeImplicitUpdateRelationship) return true;
-
             var discovery = GetHookDiscovery(entityType);
 
             if (discovery.DatabaseDiffDisabledHooks.Contains(hook))
@@ -122,7 +121,6 @@ namespace JsonApiDotNetCore.Hooks
             {
                 return _context.Options.LoadDatabaseValues;
             }
-
         }
 
         bool ShouldExecuteHook(DependentType entityType, ResourceHook hook)
@@ -180,7 +178,7 @@ namespace JsonApiDotNetCore.Hooks
             foreach (var kvp in principalEntitiesByRelation)
             {
                 if (IsHasManyThrough(kvp, out var principals, out var relationship)) continue;
-                var includedPrincipals = LoadDbValues(relationship.PrincipalType, principals, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
+                var includedPrincipals = LoadDbValues(relationship.PrincipalType, relationship.DependentType, principals, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
 
                 foreach (IIdentifiable ip in includedPrincipals)
                 {

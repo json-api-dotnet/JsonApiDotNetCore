@@ -246,7 +246,7 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
-                        var dbValues = _executorHelper.LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
+                        var dbValues = _executorHelper.LoadDbValues(entityType, entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
                         var resourcesByRelationship = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
                         var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
@@ -276,13 +276,13 @@ namespace JsonApiDotNetCore.Hooks
         /// Given a source of entities, gets the implicitly affected entities 
         /// from the database and calls the BeforeImplicitUpdateRelationship hook.
         /// </summary>
-        void FireForAffectedImplicits(Type entityType, Dictionary<RelationshipProxy, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitEntities = null)
+        void FireForAffectedImplicits(Type entityTypeToInclude, Dictionary<RelationshipProxy, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitEntities = null)
         {
-            var container = _executorHelper.GetResourceHookContainer(entityType, ResourceHook.BeforeImplicitUpdateRelationship);
+            var container = _executorHelper.GetResourceHookContainer(entityTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
             if (container == null) return;
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitEntities);
             if (!implicitAffected.Any()) return;
-            var resourcesByRelationship = CreateRelationshipHelper(entityType, implicitAffected);
+            var resourcesByRelationship = CreateRelationshipHelper(entityTypeToInclude, implicitAffected);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
         }
 

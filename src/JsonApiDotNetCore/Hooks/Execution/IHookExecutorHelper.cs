@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// For a set of entities, loads current values from the database
         /// </summary>
-        IEnumerable LoadDbValues(Type entityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships);
+        IEnumerable LoadDbValues(Type repositoryEntityType, Type affectedHookEntityType,  IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships);
         /// <summary>
         /// For a set of entities, loads current values from the database
         /// </summary>
