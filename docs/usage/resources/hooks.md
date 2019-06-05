@@ -364,7 +364,9 @@ Let's consider an authorization scenario for which we are required to implement 
 * The author of article `Old Article` is person `Alice`.
 * The author of article `New Article` is person `Bob`.
 
-Now let's consider an API user that tries to update `New Article` by setting its author to `Alice`. First to all, we wish to authorize this operation by the verifying permissions related to the resources that are **explicity affected**  by it:
+Now let's consider an API user that tries to update `New Article` by setting its author to `Alice`. The request would look something like `PATCH /articles/{NewArticleId}` with a body containing a reference to `Alice`.
+
+First to all, we wish to authorize this operation by the verifying permissions related to the resources that are **explicity affected**  by it:
 1. Is the API user allowed to update `New Article`?
 2. Is the API user allowed to update `Alice`?
 
