@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Hooks
         HashSet<TEntity> DatabaseEntities { get; }
     }
 
-    public class EntityDiff<TEntity> : UpdatedRelationshipHelper<TEntity>, IEntityDiff<TEntity> where TEntity : class, IIdentifiable
+    public class EntityDiff<TEntity> : AffectedRelationships<TEntity>, IEntityDiff<TEntity> where TEntity : class, IIdentifiable
     {
         public HashSet<TEntity> RequestEntities { get; private set; }
         public HashSet<TEntity> DatabaseEntities { get; private set; }

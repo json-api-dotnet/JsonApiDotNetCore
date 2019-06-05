@@ -343,14 +343,14 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Helper method to instantiate UpdatedRelationshipHelper for a given <paramref name="entityType"/>
+        /// Helper method to instantiate AffectedRelationships for a given <paramref name="entityType"/>
         /// If <paramref name="dbValues"/> are included, the values of the entries in <paramref name="prevLayerRelationships"/> need to be replaced with these values.
         /// </summary>
         /// <returns>The relationship helper.</returns>
         IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
             if (dbValues != null) ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(UpdatedRelationshipHelper<>), entityType, prevLayerRelationships);
+            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, prevLayerRelationships);
         }
 
         /// <summary>
