@@ -12,11 +12,6 @@ namespace JsonApiDotNetCore.Data
        where TEntity : class, IIdentifiable<int>
     { }
 
-    public interface IGuidEntityReadRepository<TEntity>
-       : IEntityReadRepository<TEntity, Guid>
-       where TEntity : class, IIdentifiable<Guid>
-    { }
-
     public interface IEntityReadRepository<TEntity, in TId>
         where TEntity : class, IIdentifiable<TId>
     {

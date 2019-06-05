@@ -3,10 +3,6 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
-    public interface IGuidEntityRepository<TEntity>
-    : IEntityRepository<TEntity, Guid>
-    where TEntity : class, IIdentifiable<Guid>
-    { }
      
     public interface IEntityRepository<TEntity>
         : IEntityRepository<TEntity, int>

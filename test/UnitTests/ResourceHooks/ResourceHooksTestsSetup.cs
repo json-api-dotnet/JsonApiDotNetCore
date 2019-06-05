@@ -325,12 +325,12 @@ namespace UnitTests.ResourceHooks
 
             if (dbContext != null)
             {
-                var repo = CreateTestRepository<TModel>(dbContext, apiContext);
-                processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityRepository<>), typeof(TModel))).Returns(repo);
+                IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, apiContext);
+                processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
             }
         }
 
-        IEntityRepository<TModel, int> CreateTestRepository<TModel>(
+        IEntityReadRepository<TModel, int> CreateTestRepository<TModel>(
         AppDbContext dbContext,
         IJsonApiContext apiContext
         ) where TModel : class, IIdentifiable<int>
