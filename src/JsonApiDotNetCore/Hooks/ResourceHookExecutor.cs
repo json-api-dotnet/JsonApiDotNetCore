@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
-                var dbValues = _executorHelper.LoadDbValues((IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, node.RelationshipsToNextLayer);
+                var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, node.RelationshipsToNextLayer);
                 var diff = new EntityDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
@@ -57,6 +57,7 @@ namespace JsonApiDotNetCore.Hooks
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
             return entities;
         }
+
 
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
@@ -77,7 +78,8 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
             {
-                IEnumerable<TEntity> updated = container.BeforeDelete((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                var targetEntities = (LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, node.RelationshipsToNextLayer) ?? node.UniqueEntities);
+                IEnumerable<TEntity> updated = container.BeforeDelete((HashSet<TEntity>)targetEntities, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -246,7 +248,7 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
-                        var dbValues = _executorHelper.LoadDbValues(entityType, entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
+                        var dbValues = LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
                         var resourcesByRelationship = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
                         var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
@@ -379,6 +381,12 @@ namespace JsonApiDotNetCore.Hooks
         RelationshipProxy GetInverseRelationship(RelationshipProxy proxy)
         {
             return new RelationshipProxy(_graph.GetInverseRelationship(proxy.Attribute), proxy.PrincipalType, false);
+        }
+
+        IEnumerable LoadDbValues(Type containerEntityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipProxy[] relationshipsToNextLayer) 
+        {
+            if (!_executorHelper.ShouldLoadDbValues(containerEntityType, targetHook)) return null;
+            return _executorHelper.LoadDbValues(containerEntityType, uniqueEntities, targetHook, relationshipsToNextLayer);
         }
 
         void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourcePipeline pipeline)

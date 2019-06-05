@@ -10,7 +10,6 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Data
 {
@@ -378,22 +377,14 @@ namespace JsonApiDotNetCore.Data
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
+
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            return await DeleteAsync(await GetAsync(id));
-          
-        }
-
-        public virtual async Task<bool> DeleteAsync(TEntity entity)
-        {
-            if (entity == null)
-                return false;
-
-
+            var entity = await GetAsync(id);
+            if (entity == null) return false;
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
-
             return true;
         }
 

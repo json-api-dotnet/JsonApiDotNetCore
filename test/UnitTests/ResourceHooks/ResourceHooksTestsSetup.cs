@@ -146,7 +146,7 @@ namespace UnitTests.ResourceHooks
 
             // wiring up the mocked GenericProcessorFactory to return the correct resource definition
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, discovery, context.Object);
-            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance, context.Object);
             var hookExecutor = new ResourceHookExecutor(meta, context.Object, ResourceGraph.Instance);
 
             return (context, hookExecutor, mainResource);
@@ -202,7 +202,7 @@ namespace UnitTests.ResourceHooks
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, mainResource.Object, mainDiscovery, context.Object, dbContext);
-            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance);
+            var meta = new HookExecutorHelper(context.Object.GenericProcessorFactory, ResourceGraph.Instance, context.Object);
             var hookExecutor = new ResourceHookExecutor(meta, context.Object, ResourceGraph.Instance);
 
             SetupProcessorFactoryForResourceDefinition(processorFactory, firstNestedResource.Object, firstNestedDiscovery, context.Object, dbContext);
@@ -220,10 +220,10 @@ namespace UnitTests.ResourceHooks
 
             if (!enableDbValuesHooks.Any())
             {
-                mock.Setup(discovery => discovery.DatabaseDiffDisabledHooks)
+                mock.Setup(discovery => discovery.DatabaseValuesDisabledHooks)
                 .Returns(enableDbValuesHooks);
             }
-            mock.Setup(discovery => discovery.DatabaseDiffEnabledHooks)
+            mock.Setup(discovery => discovery.DatabaseValuesEnabledHooks)
             .Returns(new ResourceHook[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
 
             return mock.Object;

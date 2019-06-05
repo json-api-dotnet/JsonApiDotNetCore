@@ -19,8 +19,6 @@ namespace JsonApiDotNetCore.Data
 
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
 
-        Task<bool> DeleteAsync(TEntity entity);
-
         Task<bool> DeleteAsync(TId id);
     }
 }

@@ -52,5 +52,52 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
+
+
+        public class YetAnotherDummy : Identifiable { }
+        public class YetAnotherDummyResourceDefinition : ResourceDefinition<YetAnotherDummy>
+        {
+            public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<YetAnotherDummy>().Build()) { }
+
+            public override IEnumerable<YetAnotherDummy> BeforeDelete(HashSet<YetAnotherDummy> entities, ResourcePipeline pipeline) { return entities; }
+
+            [LoadDatabaseValues(false)]
+            public override void AfterDelete(HashSet<YetAnotherDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
+        }
+        [Fact]
+        public void LoadDatabaseValues_Attribute_Not_Allowed()
+        {
+            //  assert
+            Assert.Throws<JsonApiSetupException>(() =>
+            {
+                // arrange & act
+                var hookConfig = new HooksDiscovery<YetAnotherDummy>();
+            });
+
+        }
+
+        public class DoubleDummy : Identifiable { }
+        public class DoubleDummyResourceDefinition1 : ResourceDefinition<DoubleDummy>
+        {
+            public DoubleDummyResourceDefinition1() : base(new ResourceGraphBuilder().AddResource<DoubleDummy>().Build()) { }
+
+            public override IEnumerable<DoubleDummy> BeforeDelete(HashSet<DoubleDummy> entities, ResourcePipeline pipeline) { return entities; }
+        }
+        public class DoubleDummyResourceDefinition2 : ResourceDefinition<DoubleDummy>
+        {
+            public DoubleDummyResourceDefinition2() : base(new ResourceGraphBuilder().AddResource<DoubleDummy>().Build()) { }
+
+            public override void AfterDelete(HashSet<DoubleDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
+        }
+        [Fact]
+        public void Multiple_Implementations_Of_ResourceDefinitions()
+        {
+            //  assert
+            Assert.Throws<JsonApiSetupException>(() =>
+            {
+                // arrange & act
+                var hookConfig = new HooksDiscovery<DoubleDummy>();
+            });
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Hooks
         public HookExecutorHelper(
             IGenericProcessorFactory genericProcessorFactory,
             IResourceGraph graph,
-            IJsonApiContext context = null
+            IJsonApiContext context
             )
         {
             _genericProcessorFactory = genericProcessorFactory;
@@ -81,39 +81,38 @@ namespace JsonApiDotNetCore.Hooks
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
 
-        public IEnumerable LoadDbValues(PrincipalType repositoryEntityType, Type affectedHookEntityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
+        public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
         {
-            if (!ShouldLoadDbValues(affectedHookEntityType, hook)) return null;
-
             var paths = relationships.Select(p => p.Attribute.RelationshipPath).ToArray();
-            var idType = GetIdentifierType(repositoryEntityType);
+            var idType = GetIdentifierType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
-                    .MakeGenericMethod(repositoryEntityType, idType);
+                    .MakeGenericMethod(entityTypeForRepository, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
             var ids = casted.Select(e => e.StringId).Cast(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
-            return values;
+            if (values == null) return null;
+            return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
         }
 
         public HashSet<TEntity> LoadDbValues<TEntity>(IEnumerable<TEntity> entities, ResourceHook hook, params RelationshipProxy[] relationships) where TEntity : class, IIdentifiable
         {
             var entityType = typeof(TEntity);
-            var dbValues = LoadDbValues(entityType, entityType, entities, hook, relationships)?.Cast<TEntity>();
+            var dbValues = LoadDbValues(entityType, entities, hook, relationships)?.Cast<TEntity>();
             if (dbValues == null) return null;
             return new HashSet<TEntity>(dbValues);
         }
 
 
-        bool ShouldLoadDbValues(DependentType entityType, ResourceHook hook)
+        public bool ShouldLoadDbValues(Type entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
 
-            if (discovery.DatabaseDiffDisabledHooks.Contains(hook))
+            if (discovery.DatabaseValuesDisabledHooks.Contains(hook))
             {
                 return false;
             }
-            else if (discovery.DatabaseDiffEnabledHooks.Contains(hook))
+            else if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
             {
                 return true;
             }
@@ -177,7 +176,9 @@ namespace JsonApiDotNetCore.Hooks
             foreach (var kvp in principalEntitiesByRelation)
             {
                 if (IsHasManyThrough(kvp, out var principals, out var relationship)) continue;
-                var includedPrincipals = LoadDbValues(relationship.PrincipalType, relationship.DependentType, principals, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
+
+                // note that we dont't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
+                var includedPrincipals = LoadDbValues(relationship.PrincipalType, principals, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
 
                 foreach (IIdentifiable ip in includedPrincipals)
                 {

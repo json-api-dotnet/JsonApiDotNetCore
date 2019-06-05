@@ -21,8 +21,8 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <value>The implemented hooks.</value>
         ResourceHook[] ImplementedHooks { get; }
-        ResourceHook[] DatabaseDiffEnabledHooks { get; }
-        ResourceHook[] DatabaseDiffDisabledHooks { get; }
+        ResourceHook[] DatabaseValuesEnabledHooks { get; }
+        ResourceHook[] DatabaseValuesDisabledHooks { get; }
     }
 
 }
