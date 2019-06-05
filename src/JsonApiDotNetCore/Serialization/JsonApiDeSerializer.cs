@@ -151,11 +151,11 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
-                    if (attr.IsImmutable)
-                        continue;
                     var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                     attr.SetValue(entity, convertedValue);
-                    _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
+
+                    if (attr.IsImmutable == false)
+                        _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
                 }
             }
 
