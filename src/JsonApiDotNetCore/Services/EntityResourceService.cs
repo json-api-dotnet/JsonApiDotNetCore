@@ -47,51 +47,47 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceMapper _mapper;
         private readonly IResourceHookExecutor _hookExecutor;
 
+
+        public EntityResourceService(
+            IJsonApiContext jsonApiContext,
+            IEntityRepository<TEntity, TId> entityRepository,
+            IResourceHookExecutor hookExecutor = null,
+            IResourceMapper mapper = null,
+            ILoggerFactory loggerFactory = null)
+        {
+            _jsonApiContext = jsonApiContext;
+            _entities = entityRepository;
+
+            if (mapper == null && typeof(TResource) != typeof(TEntity))
+            {
+                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
+            }
+            _hookExecutor = hookExecutor;
+            _mapper = mapper;
+            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+        }
+
+
         public EntityResourceService(
         IJsonApiContext jsonApiContext,
         IEntityRepository<TEntity, TId> entityRepository,
         IResourceHookExecutor hookExecutor,
-        ILoggerFactory loggerFactory = null)
-        {
-            // no mapper provided, TResource & TEntity must be the same type
-            if (typeof(TResource) != typeof(TEntity))
-            {
-                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
-            }
-
-            _jsonApiContext = jsonApiContext;
-            _entities = entityRepository;
-            _hookExecutor = hookExecutor;
-            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
-        }
+        ILoggerFactory loggerFactory = null) : this(jsonApiContext, entityRepository, hookExecutor: hookExecutor, mapper: null, loggerFactory: null)
+        { }
 
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                ILoggerFactory loggerFactory = null)
-        {
-            // no mapper provided, TResource & TEntity must be the same type
-            if (typeof(TResource) != typeof(TEntity))
-            {
-                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
-            }
+                ILoggerFactory loggerFactory = null)  : this(jsonApiContext, entityRepository, hookExecutor: null, mapper: null, loggerFactory: loggerFactory)
+        { }
 
-            _jsonApiContext = jsonApiContext;
-            _entities = entityRepository;
-            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
-        }
-
+        [Obsolete("Use ctor with signature (jsonApiContext, entityRepository, hookExecutor = null, mapper = null, loggerFactory = null")]
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                IResourceMapper mapper,
-                ILoggerFactory loggerFactory = null)
-        {
-            _jsonApiContext = jsonApiContext;
-            _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
-            _mapper = mapper;
-        }
+                ILoggerFactory loggerFactory,
+                IResourceMapper mapper ) : this(jsonApiContext, entityRepository, hookExecutor: null, mapper: mapper, loggerFactory: loggerFactory)
+        { }
 
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
