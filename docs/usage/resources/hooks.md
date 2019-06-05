@@ -1,4 +1,4 @@
-f
+
 # Resource Hooks
 This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`. For a quick start, jump right to the [Getting started: most minimal example](#getting-started-most-minimal-example) section.
 
@@ -369,6 +369,7 @@ Now let's consider an API user that tries to update `New Article` by setting its
 2. Is the API user allowed to update `Alice`?
 
 Apart from this, we also wish to verify permissions for the resources that are **implicitly affected** by this operation: `Bob` and `Old Article`. Setting `Alice` as the new author of `New Article` will result in removing the following two relationships:  `Bob` being an author of `New Article`, and `Alice` being an author of  `Old Article`. Therefore, we wish wish to verify the related permissions:
+
 3. Is the API user allowed to update `Bob`?
 4. Is the API user allowed to update `Old Article`?
 
