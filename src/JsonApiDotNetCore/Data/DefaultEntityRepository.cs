@@ -127,7 +127,6 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
-            var x = _genericProcessorFactory.GetProcessor<IResourceDefinition>(typeof(ResourceDefinition<>), typeof(TEntity));
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
