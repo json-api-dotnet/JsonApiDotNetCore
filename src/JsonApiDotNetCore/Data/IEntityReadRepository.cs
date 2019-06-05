@@ -82,6 +82,5 @@ namespace JsonApiDotNetCore.Data
         /// Convert the collection to a materialized list
         /// </summary>
         Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities);
-        TPrincipal AttachInverse<TPrincipal>(TEntity entity, RelationshipAttribute relationship) where TPrincipal : class, IIdentifiable<int>;
     }
 }

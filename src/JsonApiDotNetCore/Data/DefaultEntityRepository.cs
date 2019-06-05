@@ -211,37 +211,6 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// the constraint means it can be a to one or  to many, but not hasmanythrough
-        /// </summary>
-        /// <returns><c>true</c>, if inverse was attached, <c>false</c> otherwise.</returns>
-        /// <param name="entity">Entity.</param>
-        /// <param name="relationship">Relationship.</param>
-        /// <typeparam name="TRelationAttr">The 1st type parameter.</typeparam>
-        public virtual TPrincipal AttachInverse<TPrincipal>(TEntity entity, RelationshipAttribute relationship) where TPrincipal : class, IIdentifiable<int>
-        {
-            if (relationship is HasManyThroughAttribute) return null;
-
-            var entityMeta = _context.Model.FindEntityType(typeof(TPrincipal));
-            INavigation inverseNavigation = entityMeta.FindNavigation(relationship.InternalRelationshipName).FindInverse();
-
-            if (inverseNavigation != null)
-            {
-                //TODO: need to make sure we're not reattaching 
-                entity = (TEntity)((IEnumerable<object>)PreventReattachment(new List<TEntity> { entity })).Single();
-                var entityEntry = _context.Attach(entity);
-                entityEntry.Reload(); // TODO: we should only reload if the involved foreign key value is null.
-                entityEntry.Reference(inverseNavigation.Name).Load();
-
-                return (TPrincipal)inverseNavigation.PropertyInfo.GetValue(entity);
-
-            }
-            return null;
-
-        }
-
-
-
-        /// <summary>
         /// This is used to allow creation of HasMany relationships when the
         /// dependent side of the relationship already exists.
         /// </summary>
