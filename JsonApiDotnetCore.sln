@@ -1,4 +1,4 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -191,6 +191,18 @@ Global
 		{6DFA30D7-1679-4333-9779-6FB678E48EF5}.Release|x64.Build.0 = Release|Any CPU
 		{6DFA30D7-1679-4333-9779-6FB678E48EF5}.Release|x86.ActiveCfg = Release|Any CPU
 		{6DFA30D7-1679-4333-9779-6FB678E48EF5}.Release|x86.Build.0 = Release|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|x64.Build.0 = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Release|x64.ActiveCfg = Release|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Release|x64.Build.0 = Release|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF9BFD82-D937-4907-B0B4-64670417115F}.Release|x86.Build.0 = Release|Any CPU
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -203,8 +215,6 @@ Global
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Release|x64.Build.0 = Release|Any CPU
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Release|x86.ActiveCfg = Release|Any CPU
 		{09C0C8D8-B721-4955-8889-55CB149C3B5C}.Release|x86.Build.0 = Release|Any CPU
-		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF9BFD82-D937-4907-B0B4-64670417115F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

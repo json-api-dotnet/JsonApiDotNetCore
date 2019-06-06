@@ -31,6 +31,11 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
 
+        [Attr("calculated-value", isImmutable: true)]
+        public string CalculatedValue
+        {
+            get => "joe";
+        }
 
         [Attr("offset-date")]
         public DateTimeOffset? OffsetDate { get; set; }
