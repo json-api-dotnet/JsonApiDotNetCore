@@ -99,7 +99,9 @@ namespace JsonApiDotNetCore.Models
             {
                 return false;
             }
-            return IsHasMany == attr.IsHasMany && PublicRelationshipName.Equals(attr.PublicRelationshipName);
+            bool equalRelationshipName = PublicRelationshipName.Equals(attr.PublicRelationshipName);
+            bool equalPrincipalType = PrincipalType.Equals(attr.PrincipalType);
+            return IsHasMany == attr.IsHasMany && equalRelationshipName && equalPrincipalType;
         }
 
         /// <summary>

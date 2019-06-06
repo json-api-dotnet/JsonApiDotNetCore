@@ -55,6 +55,7 @@ namespace JsonApiDotNetCore.Hooks
         public RootNode<TEntity> CreateRootNode<TEntity>(IEnumerable<TEntity> rootEntities) where TEntity : class, IIdentifiable
         {
             _processedEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
+            RegisterRelationshipProxies(typeof(TEntity));
             var uniqueEntities = ProcessEntities(rootEntities);
             var relationshipsToNextLayer = GetRelationships(typeof(TEntity));
             return new RootNode<TEntity>(uniqueEntities, relationshipsToNextLayer);
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCore.Hooks
                     return CreateRelationsipGroupInstance(nextNodeType, proxy, grouped.Value, principals[proxy]);
                 }).ToList();
 
-
+                RegisterRelationshipProxies(nextNodeType);
                 return CreateNodeInstance(nextNodeType, GetRelationships(nextNodeType), relationshipsToPreviousLayer);
             }).ToList();
 
@@ -117,6 +118,8 @@ namespace JsonApiDotNetCore.Hooks
             var currentLayerEntities = new List<IIdentifiable>();
             var principalsGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
             var dependentsGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+
+            principalNodes.ForEach(n => RegisterRelationshipProxies(n.EntityType));
 
             foreach (var node in principalNodes)
             {
@@ -181,7 +184,11 @@ namespace JsonApiDotNetCore.Hooks
             Type type = typeof(TEntity);
             var newEntities = UniqueInTree(incomingEntities, type);
             RegisterProcessedEntities(newEntities, type);
+            return newEntities;
+        }
 
+        void RegisterRelationshipProxies(DependentType type)
+        {
             var contextEntity = _graph.GetContextEntity(type);
             foreach (RelationshipAttribute attr in contextEntity.Relationships)
             {
@@ -194,7 +201,6 @@ namespace JsonApiDotNetCore.Hooks
                     RelationshipProxies[attr] = proxy;
                 }
             }
-            return newEntities;
         }
 
 
