@@ -100,7 +100,12 @@ namespace JsonApiDotNetCore.Models
                 return false;
             }
             bool equalRelationshipName = PublicRelationshipName.Equals(attr.PublicRelationshipName);
-            bool equalPrincipalType = PrincipalType.Equals(attr.PrincipalType);
+
+            bool equalPrincipalType = true;
+            if (PrincipalType != null)
+            {
+                equalPrincipalType = PrincipalType.Equals(attr.PrincipalType);
+            }
             return IsHasMany == attr.IsHasMany && equalRelationshipName && equalPrincipalType;
         }
 
