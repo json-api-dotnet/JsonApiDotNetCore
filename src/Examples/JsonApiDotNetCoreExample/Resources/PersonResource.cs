@@ -16,6 +16,12 @@ namespace JsonApiDotNetCoreExample.Resources
             return ids;
         }
 
+        //[LoadDatabaseValues(true)]
+        //public override IEnumerable<Person> BeforeUpdate(IEntityDiff<Person> entityDiff, ResourcePipeline pipeline)
+        //{
+        //    return entityDiff.Entities;
+        //}
+
         public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
         {
             resourcesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));

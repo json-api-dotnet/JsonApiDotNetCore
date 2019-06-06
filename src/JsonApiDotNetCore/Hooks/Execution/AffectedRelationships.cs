@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             return _groups?.ToDictionary(p => p.Key.Attribute, p => p.Value);
         }
-        public AffectedRelationships(Dictionary<RelationshipProxy, IEnumerable> relationships)
+        internal AffectedRelationships(Dictionary<RelationshipProxy, IEnumerable> relationships)
         {
             _groups = relationships.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependent>((IEnumerable<TDependent>)kvp.Value));
         }

@@ -254,18 +254,18 @@ namespace UnitTests.ResourceHooks
         void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
         {
             resourceDefinition
-            .Setup(rd => rd.BeforeCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeCreate(It.IsAny<IAffectedResources<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
             .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<EntityDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<EntityDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.RequestEntities)
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<IEntityDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<EntityDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeDelete(It.IsAny<IAffectedResources<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition

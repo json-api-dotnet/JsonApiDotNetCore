@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed entity set</returns>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TEntity> BeforeCreate(HashSet<TEntity> entities, ResourcePipeline pipeline);
+        IEnumerable<TEntity> BeforeCreate(IAffectedResources<TEntity> entities, ResourcePipeline pipeline);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before reading entities of type <typeparamref name="TEntity"/>.
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed entity set</returns>
         /// <param name="entityDiff">The entity diff.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TEntity> BeforeUpdate(EntityDiff<TEntity> entityDiff, ResourcePipeline pipeline);
+        IEnumerable<TEntity> BeforeUpdate(IEntityDiff<TEntity> entityDiff, ResourcePipeline pipeline);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before deleting entities of type <typeparamref name="TEntity"/>.
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed entity set</returns>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TEntity> BeforeDelete(HashSet<TEntity> entities, ResourcePipeline pipeline);
+        IEnumerable<TEntity> BeforeDelete(IAffectedResources<TEntity> entities, ResourcePipeline pipeline);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before updating relationships to entities of type <typeparamref name="TEntity"/>.

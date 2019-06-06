@@ -54,7 +54,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IAffectedResources<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IAffectedRelationships<Person>>(),
@@ -101,7 +101,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IAffectedResources<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
                 It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheck(rh, description + description)),
                 ResourcePipeline.Post),
@@ -122,7 +122,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IAffectedResources<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IAffectedRelationships<Person>>(),
@@ -165,7 +165,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<HashSet<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IAffectedResources<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 

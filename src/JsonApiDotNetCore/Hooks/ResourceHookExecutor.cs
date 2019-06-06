@@ -64,7 +64,8 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeCreate, entities, out var container, out var node))
             {
-                IEnumerable<TEntity> updated = container.BeforeCreate((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                var affected = new AffectedResources<TEntity>((HashSet<TEntity>)node.UniqueEntities, node.PrincipalsToNextLayer());
+                IEnumerable<TEntity> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -78,8 +79,10 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
             {
-                var targetEntities = (LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, node.RelationshipsToNextLayer) ?? node.UniqueEntities);
-                IEnumerable<TEntity> updated = container.BeforeDelete((HashSet<TEntity>)targetEntities, pipeline);
+                var targetEntities = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, node.RelationshipsToNextLayer) ?? node.UniqueEntities;
+                var affected = new AffectedResources<TEntity>(targetEntities, node.PrincipalsToNextLayer());
+
+                IEnumerable<TEntity> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -350,7 +353,7 @@ namespace JsonApiDotNetCore.Hooks
         IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
             if (dbValues != null) ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, prevLayerRelationships);
+            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, true, prevLayerRelationships);
         }
 
         /// <summary>

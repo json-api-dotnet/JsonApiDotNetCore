@@ -105,6 +105,18 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
+        /// Use this overload if you need to instantiate a type that has a internal constructor
+        /// </summary>
+        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
+        {
+            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            var parameterizedType = openType.MakeGenericType(parameters);
+            // note that if for whatever reason the constructor of AffectedResource is set from
+            // internal to public, this will throw an error, as it is looking for a no
+            return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
+        }
+
+        /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
         /// <returns>The instance of the parameterized generic type</returns>
@@ -114,6 +126,15 @@ namespace JsonApiDotNetCore.Internal
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
             return CreateInstanceOfOpenType(openType, new Type[] { parameter }, constructorArguments);
+        }
+
+        /// <summary>
+        /// Use this overload if you need to instantiate a type that has a internal constructor
+        /// </summary>
+        public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
+        {
+            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, hasInternalConstructor, constructorArguments);
+
         }
 
         /// <summary>

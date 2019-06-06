@@ -175,13 +175,13 @@ namespace JsonApiDotNetCore.Models
         /// <inheritdoc/>
         public virtual void AfterUpdateRelationship(IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        public virtual IEnumerable<T> BeforeCreate(IAffectedResources<T> affected, ResourcePipeline pipeline) { return affected; }
         /// <inheritdoc/>
         public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(EntityDiff<T> entityDiff, ResourcePipeline pipeline) { return entityDiff.RequestEntities; }
+        public virtual IEnumerable<T> BeforeUpdate(IEntityDiff<T> entityDiff, ResourcePipeline pipeline) { return entityDiff.Entities; }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeDelete(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        public virtual IEnumerable<T> BeforeDelete(IAffectedResources<T> affected, ResourcePipeline pipeline) { return affected; }
         /// <inheritdoc/>
         public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { return ids; }
         /// <inheritdoc/>

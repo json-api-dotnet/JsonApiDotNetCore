@@ -14,9 +14,9 @@ namespace JsonApiDotNetCoreExample.Resources
         {
         }
 
-        public override void BeforeRead(ResourcePipeline pipeline, bool nestedHook = false, string stringId = null)
+        public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {
-            if (pipeline == ResourcePipeline.GetSingle && nestedHook)
+            if (pipeline == ResourcePipeline.GetSingle && isIncluded)
             {
                 throw new JsonApiException(403, "Not allowed to include passports on individual people", new UnauthorizedAccessException());
             }
