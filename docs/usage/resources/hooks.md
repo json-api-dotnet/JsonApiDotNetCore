@@ -1,4 +1,5 @@
 
+
 # Resource Hooks
 This section covers the usage of **Resource Hooks**, which is a feature of`ResourceDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `ResourceDefinition<T>`. For a quick start, jump right to the [Getting started: most minimal example](#getting-started-most-minimal-example) section.
 
@@ -12,16 +13,18 @@ This usage guide covers the following sections
 1.  [**Semantics: pipelines, actions and hooks**](#semantics-pipelines-actions-and-hooks)
 Understanding the semantics will be helpful in identifying which hooks on `ResourceDefinition<T>` you need to implement for your use-case.
 2.  [**Basic usage**](#basic-usage)
+        Some examples to get you started.
       * [**Getting started: most minimal example**](#getting-started-most-minimal-example)
       * [**Logging**](#logging)
       * [**Transforming data with OnReturn**](#transforming-data-with-onreturn)
       * [**Loading database values**](#loading-database-values)
 3.  [**Advanced usage**](#advanced-usage)
+    Complicated examples that show the advanced features of hooks.
       * [**Simple authorization: explicitly affected resources**](#simple-authorization-explicitly-affected-resources)
       * [**Advanced authorization: implicitly affected resources**](#advanced-authorization-implicitly-affected-resources)
       * [**Synchronizing data across microservices**](#synchronizing-data-across-microservices)
       * [**Hooks for many-to-many join tables**](#hooks-for-many-to-many-join-tables)
-4.  [**Hook execution overview**](#hook-execution-overview)
+5.  [**Hook execution overview**](#hook-execution-overview)
   A table overview of all pipelines and involved hooks
 
 # 1. Semantics: pipelines, actions and hooks
@@ -176,7 +179,7 @@ public class PersonResource : ResourceDefinition<Person>
         _userLogger = logService.Instance;
     }
 
-    public override void AfterUpdateRelationship(IUpdatedRelationshipHelper<Person> relationshipHelper, ResourcePipeline pipeline)
+    public override void AfterUpdateRelationship(IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
     {
       var updatedRelationshipsToArticle = relationshipHelper.EntitiesRelatedTo<Article>();
         foreach (var updated in updatedRelationshipsToArticle)
@@ -257,30 +260,35 @@ public class ArticleResource : ResourceDefinition<Article>
         _context = context;  
     } 
 
-    public override IEnumerable<Article> BeforeUpdate(EntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+    public override IEnumerable<Article> BeforeUpdate(IEntityDiff<Article> entityDiff, ResourcePipeline pipeline)
     {
         // PropertyGetter is a helper class that takes care of accessing the values on an instance of Article using reflection.
         var getter = new PropertyGetter<Article>();
-
-        entityDiff.RequestEntities.ForEach( requestEntity => 
+        
+        // EntityDiff<T> is a class that is like a list that contains EntityDiffPair<T> elements
+        foreach (EntityDiffPair<Article> affected in entityDiff)
         {
+            var currentDatabaseState = affected.DatabaseValue; // the current state in the database
+            var proposedValueFromRequest = affected.Entity; // the value from the request
 
-            var databaseEntity = entityDiff.DatabaseEntities.Single( e => e.Id == a.Id);
+            if (currentDatabaseState.IsLocked) throw new JsonApiException(403, "Forbidden: this article is locked!")
 
-            if (databaseEntity.IsLocked) throw new JsonApiException(403, "Forbidden: this article is locked!")
-
-            foreach (var attr in _context.AttributesToUpdate)
+             foreach (var attr in _context.AttributesToUpdate)
             {
-                var oldValue = getter(databaseEntity, attr);
-                var newValue = getter(requestEntity, attr);
+                var oldValue = getter(currentDatabaseState, attr);
+                var newValue = getter(proposedValueFromRequest, attr);
 
                 _logger.LogAttributeUpdate(oldValue, newValue)
             }
-        });
-        return entityDiff.RequestEntities;
+        }
+        // You must return IEnumerable<Article> from this hook.
+        // This means that you could reduce the set of entities that is 
+        // affected by this request, eg. by entityDiff.Entities.Where( ... );
+        entityDiff.Entities;
     }
 }
 ```
+In this case the `EntityDiffPair<T>.DatabaseValue` is `null`.  If you try to access all database values at once (`EntityDiff.DatabaseValues`) when it they are turned off, an exception will be thrown.
 
 Note that database values are turned on by default. They can be turned of globally by configuring the startup as follows:
 ```c#
@@ -297,15 +305,15 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-The global setting can be used together with toggling the option on and off on the level of individual hooks using the `LoadDatabaseValues` attribute:
+The global setting can be used together with per-hook configuration hooks using the `LoadDatabaseValues` attribute:
 ```c#
 public class ArticleResource : ResourceDefinition<Article>
 {
   [LoadDatabaseValues(true)]
-    public override IEnumerable<Article> BeforeUpdate(EntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+    public override IEnumerable<Article> BeforeUpdate(IEntityDiff<Article> entityDiff, ResourcePipeline pipeline)
     {
       ....
-  }
+    }
   
   [LoadDatabaseValues(false)] 
     public override IEnumerable<string> BeforeUpdateRelationships(HashSet<string>  ids,  IAffectedRelationships<Article>  resourcesByRelationship,  ResourcePipeline  pipeline)
@@ -314,6 +322,7 @@ public class ArticleResource : ResourceDefinition<Article>
       // are plain resource identifier objects when LoadDatabaseValues is turned off,
       // or objects loaded from the database when LoadDatabaseValues is turned on.
      ....
+     }
   }
 }
 ```
@@ -321,6 +330,7 @@ public class ArticleResource : ResourceDefinition<Article>
 Note that there are some hooks that the  `LoadDatabaseValues` option and attribute does not affect. The only hooks that are affected are:
 * `BeforeUpdate`
 * `BeforeUpdateRelationship`
+*  `BeforeDelete`
 
 
 
@@ -379,7 +389,7 @@ This authorization requirement can be fulfilled as follows.
 
 For checking the permissions for the explicitly affected resources, `New Article` and `Alice`, we may implement the `BeforeUpdate` hook for `Article`:
 ```c#
-public override IEnumerable<Article> BeforeUpdate(EntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+public override IEnumerable<Article> BeforeUpdate(IEntityDiff<Article> entityDiff, ResourcePipeline pipeline)
 {
     if (pipeline == ResourcePipeline.Patch)
     {
@@ -444,6 +454,54 @@ public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Per
     }
 }
 ```
+
+## Using Resource Hooks without EF Core
+
+If you want to use Resource Hooks without EF Core, there are several things that you need to consider that need to be met. For any resource that you want to use hooks for:
+1. The corresponding resource repository must fully implement `IEntityReadRepository<TEntity, TId>`
+2. If you are using custom services, you will be responsible for injecting the `IResourceHookExecutor` service into your services and call the appropriate methods. See the [hook execution overview](#hook-execution-overview) to determine which hook should be fired in which scenario.
+
+If you are required to use the `BeforeImplicitUpdateRelationship` hook (see previous example), there is an additional requirement. For this hook, given a particular relationship, JsonApiDotNetCore needs to be able to resolve the inverse relationship. For example: if `Article` has one  author (a `Person`), then it needs to be able to resolve the `RelationshipAttribute` that corresponds to the inverse relationship for the `author` property. There are two approaches :
+
+1. **Tell JsonApiDotNetCore how to do this only for the relevant models**.  If you're using the `BeforeImplicitUpdateRelationship` hook only for a small set of models, eg only for the relationship of the example, then it is easiest to provide the `inverseNavigationProperty` as follows:
+```c#
+public class Article : Identifiable
+{
+    ...
+    [HasOne("author", inverseNavigationProperty: "OwnerOfArticle")]
+    public virtual Person Author { get; set; }
+    ...
+}
+public class Person : Identifiable
+{
+    ...
+    [HasOne("article")]
+    public virtual Article OwnerOfArticle { get; set; }
+    ...
+}
+```
+2. **Tell JsonApiDotNetCore how to do this in general**. For full support, you can provide JsonApiDotNetCore with a custom service implementation of the `IInverseRelationships` interface. relationship of the example, then it is easiest to provide the `inverseNavigationProperty` as follows:
+```c#
+public class CustomInverseRelationshipsResolver : IInverseRelationships
+{
+    public void Resolve()
+    {
+        // the implementation of this method depends completely
+        // the data access layer you're using.
+        // It should set the RelationshipAttribute.InverseRelationship property 
+        // for all (relevant) relationships.
+        // To have an idea of how to implement this method, see the InverseRelationships class
+        // in the source code of JADNC:
+        // https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/59a93590ac4f05c9c246eca9459b49e331250805/src/JsonApiDotNetCore/Internal/InverseRelationships.cs
+    }
+}
+```
+This  service will then be called run once at startup and take care of the metadata that is required for `BeforeImplicitUpdateRelationship` to be supported.
+
+*Note: don't forget to register this singleton service with the service provider.*
+
+
+
 ## Synchronizing data across microservices
 If your application is built using a microservices infrastructure, it may be relevant to propagate data changes between microservices, [see this article for more information](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/integration-event-based-microservice-communications). In this example, we will assume the implementation of an event bus and we will publish data consistency integration events using resource hooks.
 
