@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Models
         /// <inheritdoc/>
         public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(IEntityDiff<T> entityDiff, ResourcePipeline pipeline) { return entityDiff.Entities; }
+        public virtual IEnumerable<T> BeforeUpdate(IResourceDiff<T> ResourceDiff, ResourcePipeline pipeline) { return ResourceDiff.Entities; }
         /// <inheritdoc/>
         public virtual IEnumerable<T> BeforeDelete(IAffectedResources<T> affected, ResourcePipeline pipeline) { return affected; }
         /// <inheritdoc/>

@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExample.Resources
         }
 
         //[LoadDatabaseValues(true)]
-        //public override IEnumerable<Person> BeforeUpdate(IEntityDiff<Person> entityDiff, ResourcePipeline pipeline)
+        //public override IEnumerable<Person> BeforeUpdate(IResourceDiff<Person> entityDiff, ResourcePipeline pipeline)
         //{
         //    return entityDiff.Entities;
         //}

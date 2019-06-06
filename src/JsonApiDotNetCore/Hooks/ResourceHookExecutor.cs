@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Hooks
             if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, node.RelationshipsToNextLayer);
-                var diff = new EntityDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
+                var diff = new ResourceDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);

@@ -110,12 +110,12 @@ namespace JsonApiDotNetCore.Hooks
         /// layer just before updating entities of type <typeparamref name="TEntity"/>.
         /// <para />
         /// For the <see cref="ResourcePipeline.Patch"/> pipeline, the
-        /// <paramref name="entityDiff" /> will typically contain one entity. 
+        /// <paramref name="ResourceDiff" /> will typically contain one entity. 
         /// For <see cref="ResourcePipeline.BulkPatch"/>, this it may contain 
         /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
-        /// of the <see cref="EntityDiff{TEntity}.RequestEntities"/> property in parameter <paramref name="entityDiff"/>, 
+        /// of the <see cref="ResourceDiff{TEntity}.RequestEntities"/> property in parameter <paramref name="ResourceDiff"/>, 
         /// in which case the operation of the  pipeline will not be executed 
         /// for the omitted entities. The returned set may also contain custom 
         /// changes of the properties on the entities.
@@ -131,9 +131,9 @@ namespace JsonApiDotNetCore.Hooks
         /// hook is fired for these.
         /// </summary>
         /// <returns>The transformed entity set</returns>
-        /// <param name="entityDiff">The entity diff.</param>
+        /// <param name="ResourceDiff">The entity diff.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TEntity> BeforeUpdate(IEntityDiff<TEntity> entityDiff, ResourcePipeline pipeline);
+        IEnumerable<TEntity> BeforeUpdate(IResourceDiff<TEntity> ResourceDiff, ResourcePipeline pipeline);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before deleting entities of type <typeparamref name="TEntity"/>.

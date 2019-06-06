@@ -14,12 +14,12 @@ namespace JsonApiDotNetCore.Hooks
     /// NOTE: you might wonder why there is a separate AffectedResourceBase and AffectedResource.
     /// If we merge them together, ie get rid of the base and just let the AffectedResource directly implement IEnumerable{TEntity},
     /// we will run in to problems with the following:
-    /// EntityDiff{<typeparam name="TEntity"/>} inherits from AffectedResource{TEntity},
-    /// but EntityDiff also implements IEnumerable{EntityDiffPair{TEntity}}. This means that
-    /// EntityDiff will implement two IEnumerable{x} where (x1 = TEntity and x2 = EntityDiffPair{TEntity} )
+    /// ResourceDiff{<typeparam name="TEntity"/>} inherits from AffectedResource{TEntity},
+    /// but ResourceDiff also implements IEnumerable{ResourceDiffPair{TEntity}}. This means that
+    /// ResourceDiff will implement two IEnumerable{x} where (x1 = TEntity and x2 = ResourceDiffPair{TEntity} )
     /// The problem with this is that when you then try to do a simple foreach loop over
-    /// a EntityDiff instance, it will throw an error, because it does not know which of the two enumerators to pick.
-    /// We want EntityDiff to only loop over the EntityDiffPair, so we can do that by making sure
+    /// a ResourceDiff instance, it will throw an error, because it does not know which of the two enumerators to pick.
+    /// We want ResourceDiff to only loop over the ResourceDiffPair, so we can do that by making sure
     /// it doesn't inherit the IEnumerable{TEntity} part from AffectedResources.
     public interface IAffectedResourcesBase<TEntity>  where TEntity : class, IIdentifiable
     {

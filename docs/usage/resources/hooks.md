@@ -260,13 +260,13 @@ public class ArticleResource : ResourceDefinition<Article>
         _context = context;  
     } 
 
-    public override IEnumerable<Article> BeforeUpdate(IEntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+    public override IEnumerable<Article> BeforeUpdate(IResourceDiff<Article> entityDiff, ResourcePipeline pipeline)
     {
         // PropertyGetter is a helper class that takes care of accessing the values on an instance of Article using reflection.
         var getter = new PropertyGetter<Article>();
         
-        // EntityDiff<T> is a class that is like a list that contains EntityDiffPair<T> elements
-        foreach (EntityDiffPair<Article> affected in entityDiff)
+        // ResourceDiff<T> is a class that is like a list that contains ResourceDiffPair<T> elements
+        foreach (ResourceDiffPair<Article> affected in entityDiff)
         {
             var currentDatabaseState = affected.DatabaseValue; // the current state in the database
             var proposedValueFromRequest = affected.Entity; // the value from the request
@@ -288,7 +288,7 @@ public class ArticleResource : ResourceDefinition<Article>
     }
 }
 ```
-In this case the `EntityDiffPair<T>.DatabaseValue` is `null`.  If you try to access all database values at once (`EntityDiff.DatabaseValues`) when it they are turned off, an exception will be thrown.
+In this case the `ResourceDiffPair<T>.DatabaseValue` is `null`.  If you try to access all database values at once (`ResourceDiff.DatabaseValues`) when it they are turned off, an exception will be thrown.
 
 Note that database values are turned on by default. They can be turned of globally by configuring the startup as follows:
 ```c#
@@ -310,7 +310,7 @@ The global setting can be used together with per-hook configuration hooks using 
 public class ArticleResource : ResourceDefinition<Article>
 {
   [LoadDatabaseValues(true)]
-    public override IEnumerable<Article> BeforeUpdate(IEntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+    public override IEnumerable<Article> BeforeUpdate(IResourceDiff<Article> entityDiff, ResourcePipeline pipeline)
     {
       ....
     }
@@ -389,7 +389,7 @@ This authorization requirement can be fulfilled as follows.
 
 For checking the permissions for the explicitly affected resources, `New Article` and `Alice`, we may implement the `BeforeUpdate` hook for `Article`:
 ```c#
-public override IEnumerable<Article> BeforeUpdate(IEntityDiff<Article> entityDiff, ResourcePipeline pipeline)
+public override IEnumerable<Article> BeforeUpdate(IResourceDiff<Article> entityDiff, ResourcePipeline pipeline)
 {
     if (pipeline == ResourcePipeline.Patch)
     {
