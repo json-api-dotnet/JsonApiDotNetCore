@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
@@ -36,8 +37,12 @@ namespace JsonApiDotNetCore.Serialization
         {
             try
             {
-                var bodyJToken = JToken.Parse(requestBody);
-
+                JToken bodyJToken;
+                using (JsonReader jsonReader = new JsonTextReader(new StringReader(requestBody)))
+                {
+                    jsonReader.DateParseHandling = DateParseHandling.None;
+                    bodyJToken = JToken.Load(jsonReader);
+                }
                 if (RequestIsOperation(bodyJToken))
                 {
                     _jsonApiContext.IsBulkOperationRequest = true;
