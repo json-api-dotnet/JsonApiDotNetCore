@@ -242,7 +242,6 @@ namespace JsonApiDotNetCore.Data
                     }
                     else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
                     {
-                        //var foreignkeyValue = relationshipValue.GetType().GetProperty(hasOneAttribute.IdentifiablePropertyName).GetValue(oldEntity);
                         hasOneAttribute.SetValue(oldEntity, relationshipValue);
                     }
                 }
