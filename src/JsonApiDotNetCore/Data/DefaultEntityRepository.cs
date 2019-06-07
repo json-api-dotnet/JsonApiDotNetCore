@@ -149,6 +149,15 @@ namespace JsonApiDotNetCore.Data
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             AttachRelationships(entity);
+            foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
+            {
+                var relationshipValue = relationshipEntry.Value;
+                if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
+                {
+                    AssignHasManyThrough(entity, throughAttribute, (IList)relationshipValue);
+                }
+            }
+
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();

@@ -625,7 +625,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
         {
-
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var passport = new Passport();
