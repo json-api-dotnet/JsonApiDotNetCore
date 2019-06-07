@@ -11,7 +11,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 namespace JsonApiDotNetCore.Data
 {
     /// <inheritdoc />
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Data
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
+            IDbContextResolver contextResolver, 
             ResourceDefinition<TEntity> resourceDefinition = null)
         : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
         { }
@@ -51,7 +50,6 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
-
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
@@ -102,7 +100,6 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
-
             return entities.Filter(_jsonApiContext, filterQuery);
         }
 
@@ -124,7 +121,6 @@ namespace JsonApiDotNetCore.Data
                     }
                 }
             }
-
             return entities;
         }
 
@@ -149,15 +145,7 @@ namespace JsonApiDotNetCore.Data
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             AttachRelationships(entity);
-            foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
-            {
-                var relationshipValue = relationshipEntry.Value;
-                if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
-                {
-                    AssignHasManyThrough(entity, throughAttribute, (IList)relationshipValue);
-                }
-            }
-
+            AssignRelationshipValues(entity);
             _dbSet.Add(entity);
 
             await _context.SaveChangesAsync();
@@ -165,6 +153,9 @@ namespace JsonApiDotNetCore.Data
             return entity;
         }
 
+        /// <summary>
+
+        /// </summary>
         protected virtual void AttachRelationships(TEntity entity = null)
         {
             AttachHasManyAndHasManyThroughPointers(entity);
@@ -232,27 +223,7 @@ namespace JsonApiDotNetCore.Data
             if (_jsonApiContext.RelationshipsToUpdate.Any())
             {
                 AttachRelationships(oldEntity);
-                foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
-                {
-                    var relationshipValue = relationshipEntry.Value;
-                    if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
-                    {
-                        // load relations to enforce complete replace
-                        await _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).LoadAsync();
-                        AssignHasManyThrough(oldEntity, throughAttribute, (IList)relationshipValue);
-                    } else if (relationshipEntry.Key is HasManyAttribute hasManyAttribute)
-                    {
-                        // load relations to enforce complete replace
-                        await _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).LoadAsync();
-                        // todo: need to load inverse relationship here, see issue #502
-                        hasManyAttribute.SetValue(oldEntity, relationshipValue);
-                    }
-                    else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
-                    {
-                        // todo: need to load inverse relationship here, see issue #502
-                        hasOneAttribute.SetValue(oldEntity, relationshipValue);
-                    }
-                }
+                AssignRelationshipValues(oldEntity, update: true);
             }
             await _context.SaveChangesAsync();
             return oldEntity;
@@ -273,18 +244,14 @@ namespace JsonApiDotNetCore.Data
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
+
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             var entity = await GetAsync(id);
-
-            if (entity == null)
-                return false;
-
+            if (entity == null) return false;
             _dbSet.Remove(entity);
-
             await _context.SaveChangesAsync();
-
             return true;
         }
 
@@ -392,14 +359,45 @@ namespace JsonApiDotNetCore.Data
 
                 if (pointers == null) continue;
                 bool alreadyTracked = false;
+                Type entityType = null;
                 var newPointerCollection = pointers.Select(pointer =>
                 {
+                    entityType = pointer.GetType();
                     var tracked = AttachOrGetTracked(pointer);
                     if (tracked != null) alreadyTracked = true;
-                    return tracked ?? pointer;
-                }).Cast(attribute.Type);
+                    return Convert.ChangeType(tracked ?? pointer, entityType);
+                }).ToList().Cast(entityType);
 
-                if (alreadyTracked) relationships[attribute] = (IList)newPointerCollection;
+                if (alreadyTracked || pointers != relationships[attribute]) relationships[attribute] = (IList)newPointerCollection;
+            }
+        }
+
+        /// <summary>
+        /// todo: comments
+        /// </summary>
+        protected void AssignRelationshipValues(TEntity oldEntity, bool update = false)
+        {
+            foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
+            {
+                var relationshipValue = relationshipEntry.Value;
+                if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
+                {
+                    // load relations to enforce complete replace in case of patch
+                    if (update) _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
+                    AssignHasManyThrough(oldEntity, throughAttribute, (IList)relationshipValue);
+                }
+                else if (relationshipEntry.Key is HasManyAttribute hasManyAttribute)
+                {
+                    // load relations to enforce complete replace
+                    if (update) _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).Load();
+                    // todo: need to load inverse relationship here, see issue #502
+                     hasManyAttribute.SetValue(oldEntity, relationshipValue);
+                }
+                else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
+                {
+                    // todo: need to load inverse relationship here, see issue #502
+                    if (update) hasOneAttribute.SetValue(oldEntity, relationshipValue);
+                }
             }
         }
 
@@ -409,7 +407,7 @@ namespace JsonApiDotNetCore.Data
         /// use the join table (ArticleTags). This methods assigns the relationship value to entity
         /// by taking care of that
         /// </summary>
-        protected void AssignHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList relationshipValue)
+        private void AssignHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList relationshipValue)
         {
             var pointers = relationshipValue.Cast<IIdentifiable>();
             var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
@@ -438,7 +436,7 @@ namespace JsonApiDotNetCore.Data
                 var pointer = GetRelationshipPointer(entity, attribute) ?? relationships[attribute];
                 if (pointer == null) return;
                 var tracked = AttachOrGetTracked(pointer);
-                if (tracked != null) relationships[attribute] = tracked;
+                if (tracked != null || pointer != relationships[attribute]) relationships[attribute] = tracked ?? pointer;
             }
         }
 
