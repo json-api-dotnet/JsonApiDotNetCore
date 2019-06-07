@@ -247,10 +247,12 @@ namespace JsonApiDotNetCore.Data
                     {
                         // load relations to enforce complete replace
                         await _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).LoadAsync();
+                        // also need to load inverse relationship here, see issue #502
                         hasManyAttribute.SetValue(oldEntity, relationshipValue);
                     }
                     else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
                     {
+                        // need to load inverse relationship here, see issue #502
                         hasOneAttribute.SetValue(oldEntity, relationshipValue);
                     }
                 }
