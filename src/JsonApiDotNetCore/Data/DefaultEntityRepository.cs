@@ -210,58 +210,89 @@ namespace JsonApiDotNetCore.Data
         /// This is used to allow creation of HasMany relationships when the
         /// dependent side of the relationship already exists.
         /// </summary>
-        private void AttachHasManyPointers(TEntity entity)
+        private void AttachHasManyAndHasManyThroughPointers(TEntity entity)
         {
             var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
-            foreach (var relationship in relationships)
+
+            foreach (var attribute in relationships.Keys)
             {
-                if (relationship.Key is HasManyThroughAttribute hasManyThrough)
-                    AttachHasManyThrough(entity, hasManyThrough, relationship.Value);
+                IEnumerable<IIdentifiable> pointers;
+                if (attribute is HasManyThroughAttribute hasManyThrough)
+                {
+                    pointers = relationships[attribute].Cast<IIdentifiable>();
+                }
                 else
-                    AttachHasMany(entity, relationship.Key as HasManyAttribute, relationship.Value);
+                {
+                    pointers = GetRelationshipPointers(entity, (HasManyAttribute)attribute) ?? relationships[attribute].Cast<IIdentifiable>();
+                }
+
+                if (pointers == null) continue;
+                bool alreadyTracked = false;
+                var newPointerCollection = pointers.Select(pointer =>
+                {
+                    var tracked = AttachOrGetTracked(pointer);
+                    if (tracked != null) alreadyTracked = true;
+                    return tracked ?? pointer;
+                });
+
+                if (alreadyTracked) relationships[attribute] = (IList)newPointerCollection;
             }
         }
 
-        private void AttachHasMany(TEntity entity, HasManyAttribute relationship, IList pointers)
+        private void AttachHasMany(TEntity entity, RelationshipAttribute attribute, Dictionary<RelationshipAttribute, IList> relationships)
         {
-            if (relationship.EntityPropertyName != null)
+            IEnumerable<IIdentifiable> pointers;
+            if (attribute is HasManyThroughAttribute hasManyThrough)
             {
-                var relatedList = (IList)entity.GetType().GetProperty(relationship.EntityPropertyName)?.GetValue(entity);
-                foreach (var related in relatedList)
-                {
-                    if (_context.EntityIsTracked((IIdentifiable)related) == false)
-                        _context.Entry(related).State = EntityState.Unchanged;
-                }
-            }
-            else
+                pointers = relationships[attribute].Cast<IIdentifiable>();
+            } else
             {
-                foreach (var pointer in pointers)
-                {
-                    if (_context.EntityIsTracked((IIdentifiable)pointer) == false)
-                        _context.Entry(pointer).State = EntityState.Unchanged;
-                }
+                pointers = GetRelationshipPointers(entity, (HasManyAttribute)attribute) ?? relationships[attribute].Cast<IIdentifiable>();
             }
+
+            if (pointers == null) return;
+            bool alreadyTracked = false;
+            var newPointerCollection = pointers.Select(pointer =>
+            {
+                var tracked = AttachOrGetTracked(pointer);
+                if (tracked != null) alreadyTracked = true;
+                return tracked ?? pointer;
+            });
+
+            if (alreadyTracked) relationships[attribute] = (IList)newPointerCollection;
         }
 
-        private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList pointers)
+        private void AttachHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, Dictionary<RelationshipAttribute, IList> relationships)
         {
-            // create the collection (e.g. List<ArticleTag>)
-            // this type MUST implement IList so we can build the collection
-            // if this is problematic, we _could_ reflect on the type and find an Add method
-            // or we might be able to create a proxy type and implement the enumerator
-            var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
-            hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
+            var pointers = relationships[hasManyThrough].Cast<IIdentifiable>();
+            bool alreadyTracked = false;
+            var newPointerCollection = pointers.Select(pointer =>
+            {
+                var tracked = AttachOrGetTracked(pointer);
+                if (tracked != null) alreadyTracked = true;
+                return tracked ?? pointer;
+            });
+            if (alreadyTracked) relationships[hasManyAttribute] = (IList)newPointerCollection;
 
             foreach (var pointer in pointers)
             {
                 if (_context.EntityIsTracked(pointer as IIdentifiable) == false)
                     _context.Entry(pointer).State = EntityState.Unchanged;
-                var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
 
-                hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
-                hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
+                var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
+                hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
 
-                throughRelationshipCollection.Add(throughInstance);
+                foreach (var pointer in pointers)
+                {
+                    if (_context.EntityIsTracked(pointer as IIdentifiable) == false)
+                        _context.Entry(pointer).State = EntityState.Unchanged;
+                    var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
+
+                    hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
+                    hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
+
+                    throughRelationshipCollection.Add(throughInstance);
+                }
             }
         }
 
@@ -276,37 +307,52 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var relationship in relationships)
             {
-                var pointer = GetValueFromRelationship(entity, relationship);
+                var pointer = GetRelationshipPointer(entity, relationship);
                 if (pointer == null) return;
-                var trackedEntity = _context.GetTrackedEntity(pointer);
-
-                // useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
-                if (trackedEntity == null)
-                {
-                    /// the relationship pointer is new to EF Core, but we are sure
-                    /// it exists in the database (json:api spec), so we attach it.
-                    _context.Entry(pointer).State = EntityState.Unchanged;
-                } else
-                {
-                    /// there already was an instance of this type and ID tracked
-                    /// by EF Core. Reattaching is not allowed, and from now on we 
-                    /// will use the already attached one instead. (This entry might
-                    /// contain updated fields as a result of Business logic.
-                    relationships[relationship.Key] = trackedEntity;
-                }
-
+                var tracked = AttachOrGetTracked(pointer);
+                if (tracked != null) relationships[relationship.Key] = tracked;
             }
         }
 
-        IIdentifiable GetValueFromRelationship(TEntity principalEntity, KeyValuePair<RelationshipAttribute, IIdentifiable> relationship  )
+        IIdentifiable GetRelationshipPointer(TEntity principalEntity, KeyValuePair<HasOneAttribute, IIdentifiable> relationship)
         {
-            HasOneAttribute hasOne = (HasOneAttribute)relationship.Key;
+            HasOneAttribute hasOne = relationship.Key;
             if (hasOne.EntityPropertyName != null)
             {
                 var relatedEntity = principalEntity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(principalEntity);
                 return (IIdentifiable)relatedEntity;
             }
             return relationship.Value;
+        }
+
+        IEnumerable<IIdentifiable> GetRelationshipPointers(TEntity entity, HasManyAttribute attribute)
+        {
+            if (attribute.EntityPropertyName == null)
+            {
+                return null;
+            }
+            return ((IEnumerable)(entity.GetType().GetProperty(attribute.EntityPropertyName)?.GetValue(entity))).Cast<IIdentifiable>();
+        }
+
+        // useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
+        IIdentifiable AttachOrGetTracked(IIdentifiable pointer)
+        {
+            var trackedEntity = _context.GetTrackedEntity(pointer);
+
+
+            if (trackedEntity != null)
+            {
+                /// there already was an instance of this type and ID tracked
+                /// by EF Core. Reattaching will produce a conflict, and from now on we 
+                /// will use the already attached one instead. (This entry might
+                /// contain updated fields as a result of business logic)
+                return trackedEntity;
+            }
+
+            /// the relationship pointer is new to EF Core, but we are sure
+            /// it exists in the database (json:api spec), so we attach it.
+            _context.Entry(pointer).State = EntityState.Unchanged;
+            return null;
         }
 
 
