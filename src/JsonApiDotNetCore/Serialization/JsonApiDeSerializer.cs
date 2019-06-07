@@ -250,7 +250,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
                 foreignKeyProperty.SetValue(entity, convertedValue);
-                //_jsonApiContext.RelationshipsToUpdate[hasOneAttr] = convertedValue;
+                if (convertedValue == null )  _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null); 
             }
         }
 

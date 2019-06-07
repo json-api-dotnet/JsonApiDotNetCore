@@ -242,6 +242,7 @@ namespace JsonApiDotNetCore.Data
                     }
                     else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
                     {
+                        //var foreignkeyValue = relationshipValue.GetType().GetProperty(hasOneAttribute.IdentifiablePropertyName).GetValue(oldEntity);
                         hasOneAttribute.SetValue(oldEntity, relationshipValue);
                     }
                 }
@@ -405,7 +406,7 @@ namespace JsonApiDotNetCore.Data
                     var tracked = AttachOrGetTracked(pointer);
                     if (tracked != null) alreadyTracked = true;
                     return tracked ?? pointer;
-                });
+                }).Cast(attribute.Type);
 
                 if (alreadyTracked) relationships[attribute] = (IList)newPointerCollection;
             }

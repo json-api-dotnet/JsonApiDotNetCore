@@ -8,6 +8,13 @@ namespace JsonApiDotNetCore.Extensions
 {
     internal static class TypeExtensions
     {
+        public static IEnumerable Cast(this IEnumerable source, Type type)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            return TypeHelper.ConvertCollection(source.Cast<object>(), type);
+        }
+
         public static Type GetElementType(this IEnumerable enumerable)
         {
             var enumerableTypes = enumerable.GetType()
