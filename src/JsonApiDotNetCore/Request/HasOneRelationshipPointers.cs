@@ -28,18 +28,18 @@ namespace JsonApiDotNetCore.Request
     /// </summary>
     public class HasOneRelationshipPointers
     {
-        private Dictionary<RelationshipAttribute, IIdentifiable> _hasOneRelationships = new Dictionary<RelationshipAttribute, IIdentifiable>();
+        private readonly Dictionary<HasOneAttribute, IIdentifiable> _hasOneRelationships = new Dictionary<HasOneAttribute, IIdentifiable>();
 
         /// <summary>
         /// Add the relationship to the list of relationships that should be 
         /// set in the repository layer.
         /// </summary>
-        public void Add(RelationshipAttribute relationship, IIdentifiable entity)
+        public void Add(HasOneAttribute relationship, IIdentifiable entity)
             => _hasOneRelationships[relationship] = entity;
 
         /// <summary>
         /// Get all the models that should be associated
         /// </summary>
-        public Dictionary<RelationshipAttribute, IIdentifiable> Get() => _hasOneRelationships;
+        public Dictionary<HasOneAttribute, IIdentifiable> Get() => _hasOneRelationships;
     }
 }

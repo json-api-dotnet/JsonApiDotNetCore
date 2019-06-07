@@ -82,6 +82,7 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Get()
             => _dbSet;
 
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
         {
             if (fields?.Count > 0)
@@ -228,7 +229,7 @@ namespace JsonApiDotNetCore.Data
                 var relatedList = (IList)entity.GetType().GetProperty(relationship.EntityPropertyName)?.GetValue(entity);
                 foreach (var related in relatedList)
                 {
-                    if (_context.EntityIsTracked(related as IIdentifiable) == false)
+                    if (_context.EntityIsTracked((IIdentifiable)related) == false)
                         _context.Entry(related).State = EntityState.Unchanged;
                 }
             }
@@ -236,8 +237,8 @@ namespace JsonApiDotNetCore.Data
             {
                 foreach (var pointer in pointers)
                 {
-                    if (_context.EntityIsTracked(pointer as IIdentifiable) == false)
-                    _context.Entry(pointer).State = EntityState.Unchanged;
+                    if (_context.EntityIsTracked((IIdentifiable)pointer) == false)
+                        _context.Entry(pointer).State = EntityState.Unchanged;
                 }
             }
         }
@@ -266,30 +267,48 @@ namespace JsonApiDotNetCore.Data
 
         /// <summary>
         /// This is used to allow creation of HasOne relationships when the
-        /// independent side of the relationship already exists.
         /// </summary>
         private void AttachHasOnePointers(TEntity entity)
         {
-            var relationships = _jsonApiContext.HasOneRelationshipPointers.Get();
+            var relationships = _jsonApiContext
+                                    .HasOneRelationshipPointers
+                                    .Get();
+
             foreach (var relationship in relationships)
             {
-                if (relationship.Key.GetType() != typeof(HasOneAttribute))
-                    continue;
+                var pointer = GetValueFromRelationship(entity, relationship);
+                if (pointer == null) return;
+                var trackedEntity = _context.GetTrackedEntity(pointer);
 
-                var hasOne = (HasOneAttribute)relationship.Key;
-                if (hasOne.EntityPropertyName != null)
+                // useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
+                if (trackedEntity == null)
                 {
-                    var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
-                    if (relatedEntity != null && _context.Entry(relatedEntity).State == EntityState.Detached && _context.EntityIsTracked((IIdentifiable)relatedEntity) == false)
-                        _context.Entry(relatedEntity).State = EntityState.Unchanged;
-                }
-                else
+                    /// the relationship pointer is new to EF Core, but we are sure
+                    /// it exists in the database (json:api spec), so we attach it.
+                    _context.Entry(pointer).State = EntityState.Unchanged;
+                } else
                 {
-                    if (_context.Entry(relationship.Value).State == EntityState.Detached && _context.EntityIsTracked(relationship.Value) == false)
-                        _context.Entry(relationship.Value).State = EntityState.Unchanged;
+                    /// there already was an instance of this type and ID tracked
+                    /// by EF Core. Reattaching is not allowed, and from now on we 
+                    /// will use the already attached one instead. (This entry might
+                    /// contain updated fields as a result of Business logic.
+                    relationships[relationship.Key] = trackedEntity;
                 }
+
             }
         }
+
+        IIdentifiable GetValueFromRelationship(TEntity principalEntity, KeyValuePair<RelationshipAttribute, IIdentifiable> relationship  )
+        {
+            HasOneAttribute hasOne = (HasOneAttribute)relationship.Key;
+            if (hasOne.EntityPropertyName != null)
+            {
+                var relatedEntity = principalEntity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(principalEntity);
+                return (IIdentifiable)relatedEntity;
+            }
+            return relationship.Value;
+        }
+
 
         /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)
