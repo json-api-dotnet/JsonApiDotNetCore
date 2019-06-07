@@ -154,6 +154,8 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
 
+
+
             entity = await _entities.UpdateAsync(id, entity);
 
             return MapOut(entity);

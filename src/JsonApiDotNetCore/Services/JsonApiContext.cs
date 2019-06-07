@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
@@ -52,7 +53,15 @@ namespace JsonApiDotNetCore.Services
         public bool IsBulkOperationRequest { get; set; }
 
         public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
-        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; } = new Dictionary<RelationshipAttribute, object>();
+        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get => GetRelationshipsToUpdate(); }
+
+        private Dictionary<RelationshipAttribute, object> GetRelationshipsToUpdate()
+        {
+            var hasOneEntries = HasOneRelationshipPointers.Get().ToDictionary(kvp => (RelationshipAttribute)kvp.Key, kvp => (object)kvp.Value);
+            var hasManyEntries = HasManyRelationshipPointers.Get().ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
+            return hasOneEntries.Union(hasManyEntries).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
         public HasManyRelationshipPointers HasManyRelationshipPointers { get; private set; } = new HasManyRelationshipPointers();
         public HasOneRelationshipPointers HasOneRelationshipPointers { get; private set; } = new HasOneRelationshipPointers();
 
@@ -138,7 +147,6 @@ namespace JsonApiDotNetCore.Services
         {
             IncludedRelationships = new List<string>();
             AttributesToUpdate = new Dictionary<AttrAttribute, object>();
-            RelationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
             HasManyRelationshipPointers = new HasManyRelationshipPointers();
             HasOneRelationshipPointers = new HasOneRelationshipPointers();
         }

@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Services
         /// Any relationships that were included in a PATCH request. 
         /// Only the relationships in this dictionary should be updated.
         /// </summary>
-        Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
+        Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; }
     }
 
     public interface IJsonApiRequest : IJsonApiApplication, IUpdateRequest, IQueryRequest

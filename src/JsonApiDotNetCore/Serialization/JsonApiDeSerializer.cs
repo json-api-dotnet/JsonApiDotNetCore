@@ -250,7 +250,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
                 foreignKeyProperty.SetValue(entity, convertedValue);
-                _jsonApiContext.RelationshipsToUpdate[hasOneAttr] = convertedValue;
+                //_jsonApiContext.RelationshipsToUpdate[hasOneAttr] = convertedValue;
             }
         }
 
@@ -300,7 +300,7 @@ namespace JsonApiDotNetCore.Serialization
                 var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.Type);
 
                 attr.SetValue(entity, convertedCollection);
-                _jsonApiContext.RelationshipsToUpdate[attr] = convertedCollection;
+                //_jsonApiContext.RelationshipsToUpdate[attr] = convertedCollection; // WHAT exactly is the use of these two different collections..?
                 _jsonApiContext.HasManyRelationshipPointers.Add(attr, convertedCollection);
             }
 
