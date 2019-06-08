@@ -404,8 +404,8 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// assigns relationships that were set in the request to the target entity of the request
         /// todo: partially remove dependency on IJsonApiContext here: it is fine to
-        /// retrieve from the context WHICH relationships to update, but the actual values should
-        /// come from the context.
+        /// retrieve from the context WHICH relationships to update, but the actual
+        /// values should not come from the context.
         /// </summary>
         protected void AssignRelationshipValues(TEntity oldEntity)
         {

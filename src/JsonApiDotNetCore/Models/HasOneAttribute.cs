@@ -50,10 +50,13 @@ namespace JsonApiDotNetCore.Models
         /// <param name="newValue">The new property value</param>
         public override void SetValue(object resource, object newValue)
         {
-            var propertyInfo = resource
-                .GetType()
-                .GetProperty(InternalRelationshipName);
+            string propertyName = InternalRelationshipName;
+            // if we're deleting the relationship (setting it to null),
+            // we set the foreignKey to null. We could also set the actual property to null,
+            // but then we would first need to load the current relationship, which requires an extra query.
+            if (newValue == null) propertyName = IdentifiablePropertyName;
 
+            var propertyInfo = resource.GetType().GetProperty(propertyName);
             propertyInfo.SetValue(resource, newValue);
         }
 
