@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Data
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver, 
+            IDbContextResolver contextResolver,
             ResourceDefinition<TEntity> resourceDefinition = null)
         : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
         { }
@@ -222,14 +222,20 @@ namespace JsonApiDotNetCore.Data
 
             if (_jsonApiContext.RelationshipsToUpdate.Any())
             {
+                /// First attach all targeted relationships to the dbcontext.
+                /// This takes into account that some of these entities are 
+                /// already attached in the dbcontext
                 AttachRelationships(oldEntity);
-                AssignRelationshipValues(oldEntity, update: true);
+                /// load the current state of the relationship to support complete-replacement
+                LoadCurrentRelationships(oldEntity);
+                /// assign the actual relationship values.
+                AssignRelationshipValues(oldEntity);
             }
             await _context.SaveChangesAsync();
             return oldEntity;
         }
-
         /// <inheritdoc />
+
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
             // TODO: it would be better to let this be determined within the relationship attribute...
@@ -373,30 +379,52 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// todo: comments
+        /// Before assigning new relationship values (updateasync), we need to
+        /// attach load the current relationship state into the dbcontext, else 
+        /// there won't be a complete-replace for one-to-many and many-to-many.
         /// </summary>
-        protected void AssignRelationshipValues(TEntity oldEntity, bool update = false)
+        /// <param name="oldEntity">Old entity.</param>
+        protected void LoadCurrentRelationships(TEntity oldEntity)
         {
             foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
             {
                 var relationshipValue = relationshipEntry.Value;
                 if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
                 {
-                    // load relations to enforce complete replace in case of patch
-                    if (update) _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
+                    _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
+
+                }
+                else if (relationshipEntry.Key is HasManyAttribute hasManyAttribute)
+                {
+                    _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).Load();
+                }
+            }
+        }
+
+        /// <summary>
+        /// assigns relationships that were set in the request to the target entity of the request
+        /// todo: partially remove dependency on IJsonApiContext here: it is fine to
+        /// retrieve from the context WHICH relationships to update, but the actual values should
+        /// come from the context.
+        /// </summary>
+        protected void AssignRelationshipValues(TEntity oldEntity)
+        {
+            foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
+            {
+                var relationshipValue = relationshipEntry.Value;
+                if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
+                {
                     AssignHasManyThrough(oldEntity, throughAttribute, (IList)relationshipValue);
                 }
                 else if (relationshipEntry.Key is HasManyAttribute hasManyAttribute)
                 {
-                    // load relations to enforce complete replace
-                    if (update) _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).Load();
                     // todo: need to load inverse relationship here, see issue #502
-                     hasManyAttribute.SetValue(oldEntity, relationshipValue);
+                    hasManyAttribute.SetValue(oldEntity, relationshipValue);
                 }
                 else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
                 {
                     // todo: need to load inverse relationship here, see issue #502
-                    if (update) hasOneAttribute.SetValue(oldEntity, relationshipValue);
+                    hasOneAttribute.SetValue(oldEntity, relationshipValue);
                 }
             }
         }

@@ -50,13 +50,9 @@ namespace JsonApiDotNetCore.Models
         /// <param name="newValue">The new property value</param>
         public override void SetValue(object resource, object newValue)
         {
-            var propertyName = (newValue?.GetType() == Type)
-                ? InternalRelationshipName
-                : IdentifiablePropertyName;
-
             var propertyInfo = resource
                 .GetType()
-                .GetProperty(propertyName);
+                .GetProperty(InternalRelationshipName);
 
             propertyInfo.SetValue(resource, newValue);
         }
