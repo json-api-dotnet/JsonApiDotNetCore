@@ -281,7 +281,6 @@ namespace JsonApiDotNetCore.Data
         // helper method used in GetTrackedRelationshipValue. See comments there.
         private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, HasOneAttribute hasOneAttribute, ref bool wasAlreadyAttached)
         {
-
             var tracked = AttachOrGetTracked(relationshipValue);
             if (tracked != null) wasAlreadyAttached = true;
             return tracked ?? relationshipValue;
