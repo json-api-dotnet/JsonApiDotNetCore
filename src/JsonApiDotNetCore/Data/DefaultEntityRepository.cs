@@ -198,9 +198,17 @@ namespace JsonApiDotNetCore.Data
 
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.Single(r => r.InternalRelationshipName == internalRelationshipName);
-            if (relationshipAttr is HasOneAttribute) return true;
-            return false;
+            var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
+            if(relationshipAttr != null)
+            {
+                if (relationshipAttr is HasOneAttribute) return true;
+                return false;
+            } else
+            {
+                // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
+                // In this case we use relfection to figure out what kind of relationship is pointing back.
+                return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
+            }
         }
 
 
