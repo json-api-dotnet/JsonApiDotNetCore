@@ -31,6 +31,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = course.Id,
                     type = "courses",
                     attributes = new Dictionary<string, object>()
                     {
@@ -64,6 +65,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = dept.Id,
                     type = "departments",
                     attributes = new Dictionary<string, object>()
                     {
@@ -97,6 +99,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = student.Id,
                     type = "students",
                     attributes = new Dictionary<string, string>()
                     {
