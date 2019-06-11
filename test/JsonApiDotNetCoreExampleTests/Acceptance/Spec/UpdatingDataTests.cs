@@ -55,8 +55,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var content = new
             {
-                datea = new
+                date = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new
                     {
@@ -90,6 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
+                    id = maxPersonId + 100,
                     type = "todo-items",
                     attributes = new
                     {
@@ -106,6 +108,41 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Respond_400_If_IdNotInAttributeList()
+        {
+            // Arrange
+            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
+            var todoItem = _todoItemFaker.Generate();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "todo-items",
+                    attributes = new
+                    {
+                        description = todoItem.Description,
+                        ordinal = todoItem.Ordinal,
+                        createdDate = DateTime.Now
+                    }
+                }
+            };
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId}", content);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+
         }
 
 
@@ -129,6 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new
                     {
@@ -194,6 +232,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new
                 {
                     type = "people",
+                    id = person.Id,
+
                     attributes = new Dictionary<string, object>
                     {
                         { "last-name",  newPerson.LastName },
@@ -241,6 +281,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new
                 {
                     type = "todo-items",
+                    id = todoItem.Id,
                     attributes = new
                     {
                         description = todoItem.Description,

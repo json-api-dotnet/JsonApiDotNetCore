@@ -174,18 +174,33 @@ namespace JsonApiDotNetCore.Data
         /// </summary>
         private void LoadInverseRelationships(object trackedRelationshipValue, RelationshipAttribute relationshipAttr)
         {
-            if (relationshipAttr.InverseNavigation == null) return;
+            if (relationshipAttr.InverseNavigation == null || trackedRelationshipValue == null) return;
             if (relationshipAttr is HasOneAttribute hasOneAttr)
             {
-                _context.Entry((IIdentifiable)trackedRelationshipValue).Reference(hasOneAttr.InverseNavigation).Load();
+                var relationEntry = _context.Entry((IIdentifiable)trackedRelationshipValue);
+                if (IsHasOneRelationship(hasOneAttr.InverseNavigation, trackedRelationshipValue.GetType()))
+                {
+                    relationEntry.Reference(hasOneAttr.InverseNavigation).Load();
+                } else
+                {
+                    relationEntry.Collection(hasOneAttr.InverseNavigation).Load();
+                }
             }
-            else if (relationshipAttr is HasManyAttribute hasManyAttr)
+            else if (relationshipAttr is HasManyAttribute hasManyAttr && !(relationshipAttr is HasManyThroughAttribute))
             {
                 foreach (IIdentifiable relationshipValue in (IList)trackedRelationshipValue) 
                 {
-                    _context.Entry((IIdentifiable)trackedRelationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
+                    _context.Entry(relationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
                 }
             }
+        }
+
+
+        private bool IsHasOneRelationship(string internalRelationshipName, Type type)
+        {
+            var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.Single(r => r.InternalRelationshipName == internalRelationshipName);
+            if (relationshipAttr is HasOneAttribute) return true;
+            return false;
         }
 
 
@@ -223,14 +238,16 @@ namespace JsonApiDotNetCore.Data
             }
         }
 
-        /// <inheritdoc />
+        [Obsolete("Use overload UpdateAsync(TEntity updatedEntity): providing parameter ID does no longer add anything relevant")]
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity updatedEntity)
         {
-            /// WHY is parameter "entity" even passed along to this method??
-            /// It does nothing!
+            return await UpdateAsync(updatedEntity);
+        }
 
-            var oldEntity = await GetAsync(id);
-
+        /// <inheritdoc />
+        public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
+        {
+            var oldEntity = await GetAsync(updatedEntity.Id);
             if (oldEntity == null)
                 return null;
 
@@ -244,6 +261,7 @@ namespace JsonApiDotNetCore.Data
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 AssignRelationshipValue(oldEntity, trackedRelationshipValue, relationshipAttr);
             }
+
             await _context.SaveChangesAsync();
             return oldEntity;
         }
@@ -375,7 +393,9 @@ namespace JsonApiDotNetCore.Data
         {
             if (pageNumber >= 0)
             {
-                return await entities.PageForward(pageSize, pageNumber).ToListAsync();
+                // the IQueryable returned from the hook executor is sometimes consumed here.
+                // In this case, it does not support .ToListAsync(), so we use the method below.
+                return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
             }
 
             // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
@@ -384,11 +404,10 @@ namespace JsonApiDotNetCore.Data
             // may be negative
             int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
             int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
-
-            return await entities
+           
+            return await ToListAsync(entities
                     .Skip(virtualFirstIndex)
-                    .Take(numberOfElementsInPage)
-                    .ToListAsync();
+                    .Take(numberOfElementsInPage));
         }
 
         /// <inheritdoc />
@@ -441,7 +460,7 @@ namespace JsonApiDotNetCore.Data
         /// retrieve from the context WHICH relationships to update, but the actual
         /// values should not come from the context.
         /// </summary>
-        protected void AssignRelationshipValue(TEntity oldEntity, object relationshipValue, RelationshipAttribute relationshipAttribute)
+        private void AssignRelationshipValue(TEntity oldEntity, object relationshipValue, RelationshipAttribute relationshipAttribute)
         {
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
@@ -479,7 +498,7 @@ namespace JsonApiDotNetCore.Data
         /// A helper method that gets the relationship value in the case of 
         /// entity resource separation.
         /// </summary>
-        IIdentifiable GetEntityResourceSeparationValue(TEntity entity, HasOneAttribute attribute)
+        private IIdentifiable GetEntityResourceSeparationValue(TEntity entity, HasOneAttribute attribute)
         {
             if (attribute.EntityPropertyName == null)
             {
@@ -492,7 +511,7 @@ namespace JsonApiDotNetCore.Data
         /// A helper method that gets the relationship value in the case of 
         /// entity resource separation.
         /// </summary>
-        IEnumerable<IIdentifiable> GetEntityResourceSeparationValue(TEntity entity, HasManyAttribute attribute)
+        private IEnumerable<IIdentifiable> GetEntityResourceSeparationValue(TEntity entity, HasManyAttribute attribute)
         {
             if (attribute.EntityPropertyName == null)
             {
@@ -508,7 +527,7 @@ namespace JsonApiDotNetCore.Data
         /// 
         /// useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
         /// </summary>
-        IIdentifiable AttachOrGetTracked(IIdentifiable relationshipValue)
+        private IIdentifiable AttachOrGetTracked(IIdentifiable relationshipValue)
         {
             var trackedEntity = _context.GetTrackedEntity(relationshipValue);
 
