@@ -195,9 +195,10 @@ namespace JsonApiDotNetCore.Data
             }
         }
 
-        private bool IsHasOneRelationship(string inverseNavigation, Type type)
+
+        private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.Single(r => r.InternalRelationshipName == inverseNavigation);
+            var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.Single(r => r.InternalRelationshipName == internalRelationshipName);
             if (relationshipAttr is HasOneAttribute) return true;
             return false;
         }
@@ -455,7 +456,7 @@ namespace JsonApiDotNetCore.Data
         /// retrieve from the context WHICH relationships to update, but the actual
         /// values should not come from the context.
         /// </summary>
-        protected void AssignRelationshipValue(TEntity oldEntity, object relationshipValue, RelationshipAttribute relationshipAttribute)
+        private void AssignRelationshipValue(TEntity oldEntity, object relationshipValue, RelationshipAttribute relationshipAttribute)
         {
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
@@ -493,7 +494,7 @@ namespace JsonApiDotNetCore.Data
         /// A helper method that gets the relationship value in the case of 
         /// entity resource separation.
         /// </summary>
-        IIdentifiable GetEntityResourceSeparationValue(TEntity entity, HasOneAttribute attribute)
+        private IIdentifiable GetEntityResourceSeparationValue(TEntity entity, HasOneAttribute attribute)
         {
             if (attribute.EntityPropertyName == null)
             {
@@ -506,7 +507,7 @@ namespace JsonApiDotNetCore.Data
         /// A helper method that gets the relationship value in the case of 
         /// entity resource separation.
         /// </summary>
-        IEnumerable<IIdentifiable> GetEntityResourceSeparationValue(TEntity entity, HasManyAttribute attribute)
+        private IEnumerable<IIdentifiable> GetEntityResourceSeparationValue(TEntity entity, HasManyAttribute attribute)
         {
             if (attribute.EntityPropertyName == null)
             {
@@ -522,7 +523,7 @@ namespace JsonApiDotNetCore.Data
         /// 
         /// useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
         /// </summary>
-        IIdentifiable AttachOrGetTracked(IIdentifiable relationshipValue)
+        private IIdentifiable AttachOrGetTracked(IIdentifiable relationshipValue)
         {
             var trackedEntity = _context.GetTrackedEntity(relationshipValue);
 
