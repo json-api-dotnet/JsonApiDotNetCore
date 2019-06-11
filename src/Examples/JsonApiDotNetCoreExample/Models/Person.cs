@@ -60,5 +60,6 @@ namespace JsonApiDotNetCoreExample.Models
                 { "authors", new string[] { "Jared Nance" } }
             };
         }
+
     }
 }

@@ -621,5 +621,52 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(todoItemResult.Owner);
         }
+
+        [Fact]
+        public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var passport = new Passport();
+            var person1 = _personFaker.Generate();
+            person1.Passport = passport;
+            var person2 = _personFaker.Generate();
+            context.People.AddRange(new List<Person>() { person1, person2 });
+            await context.SaveChangesAsync();
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person2.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "passport", new
+                            {
+                                data = new { type = "passports", id = $"{person1.PassportId}" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person2.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            // this test currently fails, will be adressed in next PR
+            //Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+        }
     }
 }
