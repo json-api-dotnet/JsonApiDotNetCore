@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             foreach(var item in deserializedBody)
-                Assert.Equal(person.Id, item.OwnerId);
+                Assert.Equal(person.Id, item.Owner.Id);
         }
 
         [Fact]

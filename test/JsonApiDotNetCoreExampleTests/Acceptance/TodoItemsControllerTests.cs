@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
-            Assert.Contains(deserializedBody, (i) => i.OwnerId == person.Id);
+            Assert.Contains(deserializedBody, (i) => i.Owner.Id == person.Id);
         }
 
         [Fact]
@@ -435,7 +435,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
-            Assert.Equal(person.Id, deserializedBody.OwnerId);
+
+            Assert.Equal(person.Id, deserializedBody.Owner.Id);
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
