@@ -588,6 +588,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
@@ -639,6 +640,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
@@ -690,6 +692,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {

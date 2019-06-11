@@ -549,6 +549,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     relationships = new
                     {
