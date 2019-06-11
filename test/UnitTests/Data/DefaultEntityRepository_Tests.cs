@@ -60,14 +60,14 @@ namespace UnitTests.Data
             {
                 {
                     descAttr,
-                    todoItemUpdates.Description
+                    null //todoItemUpdates.Description
                 }
             };
 
             var repository = GetRepository();
 
             // act
-            var updatedItem = await repository.UpdateAsync(_todoItem.Id, todoItemUpdates);
+            var updatedItem = await repository.UpdateAsync(todoItemUpdates);
 
             // assert
             Assert.NotNull(updatedItem);

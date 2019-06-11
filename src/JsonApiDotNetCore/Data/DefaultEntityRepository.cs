@@ -238,14 +238,16 @@ namespace JsonApiDotNetCore.Data
             }
         }
 
-        /// <inheritdoc />
+        [Obsolete("Use overload UpdateAsync(TEntity updatedEntity): providing parameter ID does no longer add anything relevant")]
         public virtual async Task<TEntity> UpdateAsync(TId id, TEntity updatedEntity)
         {
-            /// WHY is parameter "entity" even passed along to this method??
-            /// It does nothing!
+            return await UpdateAsync(updatedEntity);
+        }
 
-            var oldEntity = await GetAsync(id);
-
+        /// <inheritdoc />
+        public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
+        {
+            var oldEntity = await GetAsync(updatedEntity.Id);
             if (oldEntity == null)
                 return null;
 
@@ -259,6 +261,7 @@ namespace JsonApiDotNetCore.Data
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 AssignRelationshipValue(oldEntity, trackedRelationshipValue, relationshipAttr);
             }
+
             await _context.SaveChangesAsync();
             return oldEntity;
         }
