@@ -34,8 +34,6 @@ namespace JsonApiDotNetCore.Models
             _explicitIdentifiablePropertyName = withForeignKey;
             InverseNavigation = inverseNavigationProperty;
         }
-        public string InverseNavigation { get; internal set; }
-
 
         private readonly string _explicitIdentifiablePropertyName;
         

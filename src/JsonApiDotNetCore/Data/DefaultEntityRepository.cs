@@ -147,14 +147,15 @@ namespace JsonApiDotNetCore.Data
             foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
             {
                 var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
-                // LoadInverseRelationships(trackedRelationshipValue, relationshipAttribute)
+                LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 if (wasAlreadyTracked)
                 {
                     /// We only need to reassign the relationship value to the to-be-added
                     /// entity when we're using a different instance (because this different one
                     /// was already tracked) than the one assigned to the to-be-created entity.
                     AssignRelationshipValue(entity, trackedRelationshipValue, relationshipAttr);
-                } else if (relationshipAttr is HasManyThroughAttribute throughAttr)
+                }
+                else if (relationshipAttr is HasManyThroughAttribute throughAttr)
                 {
                     /// even if we don't have to reassign anything because of already tracked 
                     /// entities, we still need to assign the "through" entities in the case of many-to-many.
@@ -167,6 +168,26 @@ namespace JsonApiDotNetCore.Data
             return entity;
         }
 
+        /// <summary>
+        /// Loads the inverse relationships to prevent foreign key constraints from being violated
+        /// to support implicit removes, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
+        /// </summary>
+        private void LoadInverseRelationships(object trackedRelationshipValue, RelationshipAttribute relationshipAttr)
+        {
+            if (relationshipAttr.InverseNavigation == null) return;
+            if (relationshipAttr is HasOneAttribute hasOneAttr)
+            {
+                _context.Entry((IIdentifiable)trackedRelationshipValue).Reference(hasOneAttr.InverseNavigation).Load();
+            }
+            else if (relationshipAttr is HasManyAttribute hasManyAttr)
+            {
+                foreach (IIdentifiable relationshipValue in (IList)trackedRelationshipValue) 
+                {
+                    _context.Entry((IIdentifiable)trackedRelationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
+                }
+            }
+        }
+
 
         /// <inheritdoc />
         public void DetachRelationshipPointers(TEntity entity)
@@ -174,14 +195,14 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate.Keys)
             {
-                if (relationshipAttr is HasOneAttribute hasOneAttr) 
+                if (relationshipAttr is HasOneAttribute hasOneAttr)
                 {
                     var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttr) ?? (IIdentifiable)hasOneAttr.GetValue(entity);
                     if (relationshipValue == null) continue;
                     _context.Entry(relationshipValue).State = EntityState.Detached;
 
                 }
-                else 
+                else
                 {
                     IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
                     /// This adds support for resource-entity separation in the case of one-to-many. 
@@ -220,7 +241,7 @@ namespace JsonApiDotNetCore.Data
             {
                 LoadCurrentRelationships(oldEntity, relationshipAttr);
                 var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out bool wasAlreadyTracked);
-                // LoadInverseRelationships(trackedRelationshipValue, relationshipAttribute)
+                LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 AssignRelationshipValue(oldEntity, trackedRelationshipValue, relationshipAttr);
             }
             await _context.SaveChangesAsync();
@@ -237,21 +258,21 @@ namespace JsonApiDotNetCore.Data
         private object GetTrackedRelationshipValue(RelationshipAttribute relationshipAttr, TEntity entity, out bool wasAlreadyAttached)
         {
             wasAlreadyAttached = false;
-            if (relationshipAttr is HasOneAttribute hasOneAttribute)
+            if (relationshipAttr is HasOneAttribute hasOneAttr)
             {
                 /// This adds support for resource-entity separation in the case of one-to-one. 
-                var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttribute) ?? (IIdentifiable)hasOneAttribute.GetValue(entity);
-                if (relationshipValue == null) 
-                        return null;
-                return GetTrackedHasOneRelationshipValue(relationshipValue, hasOneAttribute, ref wasAlreadyAttached);
+                var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttr) ?? (IIdentifiable)hasOneAttr.GetValue(entity);
+                if (relationshipValue == null)
+                    return null;
+                return GetTrackedHasOneRelationshipValue(relationshipValue, hasOneAttr, ref wasAlreadyAttached);
             }
             else
             {
                 IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
                 /// This adds support for resource-entity separation in the case of one-to-many. 
                 /// todo: currently there is no support for many to many relations.
-                if (relationshipAttr is HasManyAttribute hasMany) 
-                        relationshipValueList = GetEntityResourceSeparationValue(entity, hasMany) ?? relationshipValueList;
+                if (relationshipAttr is HasManyAttribute hasMany)
+                    relationshipValueList = GetEntityResourceSeparationValue(entity, hasMany) ?? relationshipValueList;
                 if (relationshipValueList == null) return null;
                 return GetTrackedManyRelationshipValue(relationshipValueList, relationshipAttr, ref wasAlreadyAttached);
             }
@@ -279,7 +300,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments there.
-        private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, HasOneAttribute hasOneAttribute, ref bool wasAlreadyAttached)
+        private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, HasOneAttribute hasOneAttr, ref bool wasAlreadyAttached)
         {
             var tracked = AttachOrGetTracked(relationshipValue);
             if (tracked != null) wasAlreadyAttached = true;
