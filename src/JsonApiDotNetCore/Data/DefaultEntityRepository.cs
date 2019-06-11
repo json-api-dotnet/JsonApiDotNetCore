@@ -257,20 +257,28 @@ namespace JsonApiDotNetCore.Data
             }
         }
 
+        // helper method used in GetTrackedRelationshipValue. See comments there.
         private IList GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
         {
             if (relationshipValueList == null) return null;
             bool _wasAlreadyAttached = false;
+            Type entityType = null;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
             {
+                /// todo: we can't just use relationshipAttr.Type because
+                /// this will point to the Resource type in the case of entity resource
+                /// separation. We should consider to store entity type on 
+                /// the relationship attribute too.
+                entityType = entityType ?? pointer.GetType();
                 var tracked = AttachOrGetTracked(pointer);
                 if (tracked != null) _wasAlreadyAttached = true;
-                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.Type);
-            }).ToList().Cast(relationshipAttr.Type);
+                return Convert.ChangeType(tracked ?? pointer, entityType);
+            }).ToList().Cast(entityType);
             if (_wasAlreadyAttached) wasAlreadyAttached = true;
             return (IList)trackedPointerCollection;
         }
 
+        // helper method used in GetTrackedRelationshipValue. See comments there.
         private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, HasOneAttribute hasOneAttribute, ref bool wasAlreadyAttached)
         {
 
