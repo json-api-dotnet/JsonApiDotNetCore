@@ -59,7 +59,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IResourceDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IAffectedResourcesDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.Is<IAffectedRelationships<Person>>(rh => PersonCheck(lastName, rh)),
@@ -93,7 +93,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(_todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IResourceDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IAffectedResourcesDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
                 It.Is<IAffectedRelationships<Person>>(rh => PersonCheck(lastName + lastName, rh)),
                 ResourcePipeline.Patch),
@@ -140,7 +140,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IResourceDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IAffectedResourcesDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
                 It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheck(rh, description + description)),
                 ResourcePipeline.Patch),
@@ -161,7 +161,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IResourceDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IAffectedResourcesDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.IsAny<IAffectedRelationships<Person>>(),
@@ -204,14 +204,15 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IResourceDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IAffectedResourcesDiff<TodoItem>>((diff) => TodoCheck(diff, description)), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
-        private bool TodoCheck(IResourceDiff<TodoItem> diff, string checksum)
+        private bool TodoCheck(IAffectedResourcesDiff<TodoItem> diff, string checksum)
         {
-            var dbCheck = diff.DatabaseValues.Single().Description == checksum;
-            var reqCheck = diff.Single().Entity.Description == null;
+            var diffPair = diff.GetDiff().Single();
+            var dbCheck = diffPair.DatabaseValue.Description == checksum;
+            var reqCheck = diffPair.Entity.Description == null;
             return (dbCheck && reqCheck);
         }
 

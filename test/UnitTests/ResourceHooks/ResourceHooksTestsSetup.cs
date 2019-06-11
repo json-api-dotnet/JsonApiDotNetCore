@@ -261,7 +261,7 @@ namespace UnitTests.ResourceHooks
             .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<IResourceDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<ResourceDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
             .Verifiable();
             resourceDefinition
