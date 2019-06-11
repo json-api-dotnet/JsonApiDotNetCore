@@ -25,8 +25,10 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// </example>
         public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null, string inverseNavigationProperty = null)
-        : base(publicName, documentLinks, canInclude, mappedBy, inverseNavigationProperty)
-        { }
+        : base(publicName, documentLinks, canInclude, mappedBy)
+        {
+            InverseNavigation = inverseNavigationProperty;
+        }
 
         /// <summary>
         /// Sets the value of the property identified by this attribute

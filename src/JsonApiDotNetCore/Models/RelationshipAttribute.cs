@@ -6,18 +6,17 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute
     {
-        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude, string mappedBy, string inverseNavigationProperty = null)
+        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude, string mappedBy)
         {
             PublicRelationshipName = publicName;
             DocumentLinks = documentLinks;
             CanInclude = canInclude;
             EntityPropertyName = mappedBy;
-            InverseNavigation = inverseNavigationProperty;
         }
 
         public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
-
+        public string InverseNavigation { get; internal set; }
 
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
@@ -56,8 +55,6 @@ namespace JsonApiDotNetCore.Models
         public Link DocumentLinks { get; } = Link.All;
         public bool CanInclude { get; }
         public string EntityPropertyName { get; }
-
-        public string InverseNavigation { get ; internal set;}
 
         public bool TryGetHasOne(out HasOneAttribute result)
         {

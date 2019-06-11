@@ -29,9 +29,11 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// </example>
         public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)
-        : base(publicName, documentLinks, canInclude, mappedBy, inverseNavigationProperty)
+
+        : base(publicName, documentLinks, canInclude, mappedBy)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
+            InverseNavigation = inverseNavigationProperty;
         }
 
         private readonly string _explicitIdentifiablePropertyName;

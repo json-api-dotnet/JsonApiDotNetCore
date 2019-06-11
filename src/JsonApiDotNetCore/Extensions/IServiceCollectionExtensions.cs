@@ -159,6 +159,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
+           
             if (jsonApiOptions.EnableResourceHooks)
             {
                 services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
@@ -168,6 +169,7 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             services.AddScoped<IInverseRelationships, InverseRelationships>();
+
         }
 
         private static void AddOperationServices(IServiceCollection services)
