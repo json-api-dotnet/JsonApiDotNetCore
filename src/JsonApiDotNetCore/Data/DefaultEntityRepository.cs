@@ -144,23 +144,29 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            AttachRelationships(entity);
-            AssignRelationshipValues(entity);
+            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
+            {
+                var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
+                // LoadInverseRelationships(trackedRelationshipValue, relationshipAttribute)
+                if (wasAlreadyTracked)
+                {
+                    /// We only need to reassign the relationship value to the to-be-added
+                    /// entity when we're using a different instance (because this different one
+                    /// was already tracked) than the one assigned to the to-be-created entity.
+                    AssignRelationshipValue(entity, trackedRelationshipValue, relationshipAttr);
+                } else if (relationshipAttr is HasManyThroughAttribute throughAttr)
+                {
+                    /// even if we don't have to reassign anything because of already tracked 
+                    /// entities, we still need to assign the "through" entities in the case of many-to-many.
+                    AssignHasManyThrough(entity, throughAttr, (IList)trackedRelationshipValue);
+                }
+            }
             _dbSet.Add(entity);
-
             await _context.SaveChangesAsync();
 
             return entity;
         }
 
-        /// <summary>
-
-        /// </summary>
-        protected virtual void AttachRelationships(TEntity entity = null)
-        {
-            AttachHasManyAndHasManyThroughPointers(entity);
-            AttachHasOnePointers(entity);
-        }
 
         /// <inheritdoc />
         public void DetachRelationshipPointers(TEntity entity)
@@ -207,7 +213,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> UpdateAsync(TId id, TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TId id, TEntity updatedEntity)
         {
             /// WHY is parameter "entity" even passed along to this method??
             /// It does nothing!
@@ -217,25 +223,73 @@ namespace JsonApiDotNetCore.Data
             if (oldEntity == null)
                 return null;
 
-            foreach (var attr in _jsonApiContext.AttributesToUpdate)
-                attr.Key.SetValue(oldEntity, attr.Value);
+            foreach (var attr in _jsonApiContext.AttributesToUpdate.Keys)
+                attr.SetValue(oldEntity, attr.GetValue(updatedEntity));
 
-            if (_jsonApiContext.RelationshipsToUpdate.Any())
+            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
             {
-                /// First attach all targeted relationships to the dbcontext.
-                /// This takes into account that some of these entities are 
-                /// already attached in the dbcontext
-                AttachRelationships(oldEntity);
-                /// load the current state of the relationship to support complete-replacement
-                LoadCurrentRelationships(oldEntity);
-                /// assign the actual relationship values.
-                AssignRelationshipValues(oldEntity);
+                LoadCurrentRelationships(oldEntity, relationshipAttr);
+                var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out bool wasAlreadyTracked);
+                // LoadInverseRelationships(trackedRelationshipValue, relationshipAttribute)
+                AssignRelationshipValue(oldEntity, trackedRelationshipValue, relationshipAttr);
             }
             await _context.SaveChangesAsync();
             return oldEntity;
         }
-        /// <inheritdoc />
 
+
+        /// <summary>
+        /// Responsible for getting the relationship value for a given relationship 
+        /// attribute of a given entity. It ensures that the relationship value 
+        /// that it returns is attached to the database without reattaching duplicates instances 
+        /// to the change tracker.
+        /// </summary>
+        private object GetTrackedRelationshipValue(RelationshipAttribute relationshipAttr, TEntity entity, out bool wasAlreadyAttached)
+        {
+            wasAlreadyAttached = false;
+            if (relationshipAttr is HasOneAttribute hasOneAttribute)
+            {
+                /// This adds support for resource-entity separation in the case of one-to-one. 
+                var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttribute) ?? (IIdentifiable)hasOneAttribute.GetValue(entity);
+                if (relationshipValue == null) 
+                        return null;
+                return GetTrackedHasOneRelationshipValue(relationshipValue, hasOneAttribute, ref wasAlreadyAttached);
+            }
+            else
+            {
+                IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
+                /// This adds support for resource-entity separation in the case of one-to-many. 
+                /// todo: currently there is no support for many to many relations.
+                if (relationshipAttr is HasManyAttribute hasMany) 
+                        relationshipValueList = GetEntityResourceSeparationValue(entity, hasMany) ?? relationshipValueList;
+                if (relationshipValueList == null) return null;
+                return GetTrackedManyRelationshipValue(relationshipValueList, relationshipAttr, ref wasAlreadyAttached);
+            }
+        }
+
+        private IList GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
+        {
+            if (relationshipValueList == null) return null;
+            bool _wasAlreadyAttached = false;
+            var trackedPointerCollection = relationshipValueList.Select(pointer =>
+            {
+                var tracked = AttachOrGetTracked(pointer);
+                if (tracked != null) _wasAlreadyAttached = true;
+                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.Type);
+            }).ToList().Cast(relationshipAttr.Type);
+            if (_wasAlreadyAttached) wasAlreadyAttached = true;
+            return (IList)trackedPointerCollection;
+        }
+
+        private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, HasOneAttribute hasOneAttribute, ref bool wasAlreadyAttached)
+        {
+
+            var tracked = AttachOrGetTracked(relationshipValue);
+            if (tracked != null) wasAlreadyAttached = true;
+            return tracked ?? relationshipValue;
+        }
+
+        /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
             // TODO: it would be better to let this be determined within the relationship attribute...
@@ -343,61 +397,23 @@ namespace JsonApiDotNetCore.Data
                 : entities.ToList();
         }
 
+
         /// <summary>
-        /// This is used to allow creation of HasMany relationships when the
-        /// dependent side of the relationship already exists.
+        /// Before assigning new relationship values (UpdateAsync), we need to
+        /// attach the current relationship state to the dbcontext, else 
+        /// it will not perform a complete-replace which is required for 
+        /// one-to-many and many-to-many.
         /// </summary>
-        private void AttachHasManyAndHasManyThroughPointers(TEntity entity)
+        protected void LoadCurrentRelationships(TEntity oldEntity, RelationshipAttribute relationshipAttribute)
         {
-            var relationships = _jsonApiContext.HasManyRelationshipPointers.Get();
-
-            foreach (var attribute in relationships.Keys.ToArray())
+            if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
-                IEnumerable<IIdentifiable> pointers;
-                if (attribute is HasManyThroughAttribute hasManyThrough)
-                {
-                    pointers = relationships[attribute].Cast<IIdentifiable>();
-                }
-                else
-                {
-                    pointers = GetRelationshipPointers(entity, (HasManyAttribute)attribute) ?? relationships[attribute].Cast<IIdentifiable>();
-                }
+                _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
 
-                if (pointers == null) continue;
-                bool alreadyTracked = false;
-                Type entityType = null;
-                var newPointerCollection = pointers.Select(pointer =>
-                {
-                    entityType = pointer.GetType();
-                    var tracked = AttachOrGetTracked(pointer);
-                    if (tracked != null) alreadyTracked = true;
-                    return Convert.ChangeType(tracked ?? pointer, entityType);
-                }).ToList().Cast(entityType);
-
-                if (alreadyTracked || pointers != relationships[attribute]) relationships[attribute] = (IList)newPointerCollection;
             }
-        }
-
-        /// <summary>
-        /// Before assigning new relationship values (updateasync), we need to
-        /// attach load the current relationship state into the dbcontext, else 
-        /// there won't be a complete-replace for one-to-many and many-to-many.
-        /// </summary>
-        /// <param name="oldEntity">Old entity.</param>
-        protected void LoadCurrentRelationships(TEntity oldEntity)
-        {
-            foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
+            else if (relationshipAttribute is HasManyAttribute hasManyAttribute)
             {
-                var relationshipValue = relationshipEntry.Value;
-                if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
-                {
-                    _context.Entry(oldEntity).Collection(throughAttribute.InternalThroughName).Load();
-
-                }
-                else if (relationshipEntry.Key is HasManyAttribute hasManyAttribute)
-                {
-                    _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).Load();
-                }
+                _context.Entry(oldEntity).Collection(hasManyAttribute.InternalRelationshipName).Load();
             }
         }
 
@@ -407,25 +423,16 @@ namespace JsonApiDotNetCore.Data
         /// retrieve from the context WHICH relationships to update, but the actual
         /// values should not come from the context.
         /// </summary>
-        protected void AssignRelationshipValues(TEntity oldEntity)
+        protected void AssignRelationshipValue(TEntity oldEntity, object relationshipValue, RelationshipAttribute relationshipAttribute)
         {
-            foreach (var relationshipEntry in _jsonApiContext.RelationshipsToUpdate)
+            if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
-                var relationshipValue = relationshipEntry.Value;
-                if (relationshipEntry.Key is HasManyThroughAttribute throughAttribute)
-                {
-                    AssignHasManyThrough(oldEntity, throughAttribute, (IList)relationshipValue);
-                }
-                else if (relationshipEntry.Key is HasManyAttribute hasManyAttribute)
-                {
-                    // todo: need to load inverse relationship here, see issue #502
-                    hasManyAttribute.SetValue(oldEntity, relationshipValue);
-                }
-                else if (relationshipEntry.Key is HasOneAttribute hasOneAttribute)
-                {
-                    // todo: need to load inverse relationship here, see issue #502
-                    hasOneAttribute.SetValue(oldEntity, relationshipValue);
-                }
+                // todo: this logic should be put in the HasManyThrough attribute
+                AssignHasManyThrough(oldEntity, throughAttribute, (IList)relationshipValue);
+            }
+            else
+            {
+                relationshipAttribute.SetValue(oldEntity, relationshipValue);
             }
         }
 
@@ -451,33 +458,23 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// This is used to allow creation of HasOne relationships when the
+        /// A helper method that gets the relationship value in the case of 
+        /// entity resource separation.
         /// </summary>
-        private void AttachHasOnePointers(TEntity entity)
-        {
-            var relationships = _jsonApiContext
-                                    .HasOneRelationshipPointers
-                                    .Get();
-
-            foreach (var attribute in relationships.Keys.ToArray())
-            {
-                var pointer = GetRelationshipPointer(entity, attribute) ?? relationships[attribute];
-                if (pointer == null) return;
-                var tracked = AttachOrGetTracked(pointer);
-                if (tracked != null || pointer != relationships[attribute]) relationships[attribute] = tracked ?? pointer;
-            }
-        }
-
-        IIdentifiable GetRelationshipPointer(TEntity principalEntity, HasOneAttribute attribute)
+        IIdentifiable GetEntityResourceSeparationValue(TEntity entity, HasOneAttribute attribute)
         {
             if (attribute.EntityPropertyName == null)
             {
                 return null;
             }
-            return (IIdentifiable)principalEntity.GetType().GetProperty(attribute.EntityPropertyName)?.GetValue(principalEntity);
+            return (IIdentifiable)entity.GetType().GetProperty(attribute.EntityPropertyName)?.GetValue(entity);
         }
 
-        IEnumerable<IIdentifiable> GetRelationshipPointers(TEntity entity, HasManyAttribute attribute)
+        /// <summary>
+        /// A helper method that gets the relationship value in the case of 
+        /// entity resource separation.
+        /// </summary>
+        IEnumerable<IIdentifiable> GetEntityResourceSeparationValue(TEntity entity, HasManyAttribute attribute)
         {
             if (attribute.EntityPropertyName == null)
             {
@@ -486,23 +483,31 @@ namespace JsonApiDotNetCore.Data
             return ((IEnumerable)(entity.GetType().GetProperty(attribute.EntityPropertyName)?.GetValue(entity))).Cast<IIdentifiable>();
         }
 
-        // useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
-        IIdentifiable AttachOrGetTracked(IIdentifiable pointer)
+        /// <summary>
+        /// Given a iidentifiable relationshipvalue, verify if an entity of the underlying 
+        /// type with the same ID is already attached to the dbContext, and if so, return it.
+        /// If not, attach the relationship value to the dbContext.
+        /// 
+        /// useful article: https://stackoverflow.com/questions/30987806/dbset-attachentity-vs-dbcontext-entryentity-state-entitystate-modified
+        /// </summary>
+        IIdentifiable AttachOrGetTracked(IIdentifiable relationshipValue)
         {
-            var trackedEntity = _context.GetTrackedEntity(pointer);
+            var trackedEntity = _context.GetTrackedEntity(relationshipValue);
 
             if (trackedEntity != null)
             {
                 /// there already was an instance of this type and ID tracked
-                /// by EF Core. Reattaching will produce a conflict, and from now on we 
-                /// will use the already attached one instead. (This entry might
-                /// contain updated fields as a result of business logic)
+                /// by EF Core. Reattaching will produce a conflict, so from now on we 
+                /// will use the already attached instance instead. This entry might
+                /// contain updated fields as a result of business logic elsewhere in the application
                 return trackedEntity;
             }
 
             /// the relationship pointer is new to EF Core, but we are sure
-            /// it exists in the database (json:api spec), so we attach it.
-            _context.Entry(pointer).State = EntityState.Unchanged;
+            /// it exists in the database, so we attach it. In this case, as per
+            /// the json:api spec, we can also safely assume that no fields of 
+            /// this entity were updated.
+            _context.Entry(relationshipValue).State = EntityState.Unchanged;
             return null;
         }
     }
