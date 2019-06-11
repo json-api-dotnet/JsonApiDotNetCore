@@ -171,44 +171,34 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public void DetachRelationshipPointers(TEntity entity)
         {
-            foreach (var hasOneRelationship in _jsonApiContext.HasOneRelationshipPointers.Get())
-            {
-                var hasOne = (HasOneAttribute)hasOneRelationship.Key;
-                if (hasOne.EntityPropertyName != null)
-                {
-                    var relatedEntity = entity.GetType().GetProperty(hasOne.EntityPropertyName)?.GetValue(entity);
-                    if (relatedEntity != null)
-                        _context.Entry(relatedEntity).State = EntityState.Detached;
-                }
-                else
-                {
-                    _context.Entry(hasOneRelationship.Value).State = EntityState.Detached;
-                }
-            }
 
-            foreach (var hasManyRelationship in _jsonApiContext.HasManyRelationshipPointers.Get())
+            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate.Keys)
             {
-                var hasMany = (HasManyAttribute)hasManyRelationship.Key;
-                if (hasMany.EntityPropertyName != null)
+                if (relationshipAttr is HasOneAttribute hasOneAttr) 
                 {
-                    var relatedList = (IList)entity.GetType().GetProperty(hasMany.EntityPropertyName)?.GetValue(entity);
-                    foreach (var related in relatedList)
-                    {
-                        _context.Entry(related).State = EntityState.Detached;
-                    }
+                    var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttr) ?? (IIdentifiable)hasOneAttr.GetValue(entity);
+                    if (relationshipValue == null) continue;
+                    _context.Entry(relationshipValue).State = EntityState.Detached;
+
                 }
-                else
+                else 
                 {
-                    foreach (var pointer in hasManyRelationship.Value)
+                    IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
+                    /// This adds support for resource-entity separation in the case of one-to-many. 
+                    /// todo: currently there is no support for many to many relations.
+                    if (relationshipAttr is HasManyAttribute hasMany)
+                        relationshipValueList = GetEntityResourceSeparationValue(entity, hasMany) ?? relationshipValueList;
+                    if (relationshipValueList == null) continue;
+                    foreach (var pointer in relationshipValueList)
                     {
                         _context.Entry(pointer).State = EntityState.Detached;
                     }
+                    /// detaching has many relationships is not sufficient to 
+                    /// trigger a full reload of relationships: the navigation 
+                    /// property actually needs to be nulled out, otherwise
+                    /// EF will still add duplicate instances to the collection
+                    relationshipAttr.SetValue(entity, null);
                 }
-
-                // HACK: detaching has many relationships doesn't appear to be sufficient
-                // the navigation property actually needs to be nulled out, otherwise
-                // EF adds duplicate instances to the collection
-                hasManyRelationship.Key.SetValue(entity, null);
             }
         }
 
