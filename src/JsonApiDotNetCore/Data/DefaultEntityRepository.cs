@@ -174,18 +174,32 @@ namespace JsonApiDotNetCore.Data
         /// </summary>
         private void LoadInverseRelationships(object trackedRelationshipValue, RelationshipAttribute relationshipAttr)
         {
-            if (relationshipAttr.InverseNavigation == null) return;
+            if (relationshipAttr.InverseNavigation == null || trackedRelationshipValue == null) return;
             if (relationshipAttr is HasOneAttribute hasOneAttr)
             {
-                _context.Entry((IIdentifiable)trackedRelationshipValue).Reference(hasOneAttr.InverseNavigation).Load();
+                var relationEntry = _context.Entry((IIdentifiable)trackedRelationshipValue);
+                if (IsHasOneRelationship(hasOneAttr.InverseNavigation, trackedRelationshipValue.GetType()))
+                {
+                    relationEntry.Reference(hasOneAttr.InverseNavigation).Load();
+                } else
+                {
+                    relationEntry.Collection(hasOneAttr.InverseNavigation).Load();
+                }
             }
-            else if (relationshipAttr is HasManyAttribute hasManyAttr)
+            else if (relationshipAttr is HasManyAttribute hasManyAttr && !(relationshipAttr is HasManyThroughAttribute))
             {
                 foreach (IIdentifiable relationshipValue in (IList)trackedRelationshipValue) 
                 {
-                    _context.Entry((IIdentifiable)trackedRelationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
+                    _context.Entry(relationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
                 }
             }
+        }
+
+        private bool IsHasOneRelationship(string inverseNavigation, Type type)
+        {
+            var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.Single(r => r.InternalRelationshipName == inverseNavigation);
+            if (relationshipAttr is HasOneAttribute) return true;
+            return false;
         }
 
 

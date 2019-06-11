@@ -633,7 +633,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person2 = _personFaker.Generate();
             context.People.AddRange(new List<Person>() { person1, person2 });
             await context.SaveChangesAsync();
-
+            var passportId = person1.PassportId;
             var content = new
             {
                 data = new
@@ -644,7 +644,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                         { "passport", new
                             {
-                                data = new { type = "passports", id = $"{person1.PassportId}" }
+                                data = new { type = "passports", id = $"{passportId}" }
                             }
                         }
                     }
@@ -661,12 +661,75 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
-
-            // Assert
             var body = await response.Content.ReadAsStringAsync();
 
+            // Assert
+           
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("Passport").FirstOrDefault();
+            Assert.Equal(passportId, dbPerson.Passport.Id);
+        }
 
+        [Fact]
+        public async Task Updating_ToMany_Relationship_With_Implicit_Remove()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var person1 = _personFaker.Generate();
+            person1.TodoItems = _todoItemFaker.Generate(3).ToList();
+            var person2 = _personFaker.Generate();
+            person2.TodoItems = _todoItemFaker.Generate(2).ToList();
+            context.People.AddRange(new List<Person>() { person1, person2 });
+            await context.SaveChangesAsync();
+            var todoItem1Id = person1.TodoItems[0].Id;
+            var todoItem2Id = person1.TodoItems[1].Id;
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person2.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "todo-items", new
+                            {
+                                data = new List<object>
+                                {
+                                    new {
+                                        type = "todo-items",
+                                        id = $"{todoItem1Id}"
+                                    },
+                                    new {
+                                        type = "todo-items",
+                                        id = $"{todoItem2Id}"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person2.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Assert
+
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("TodoItems").FirstOrDefault();
+            Assert.Equal(2, dbPerson.TodoItems.Count);
+            Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem1Id));
+            Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem2Id));
         }
     }
 }
