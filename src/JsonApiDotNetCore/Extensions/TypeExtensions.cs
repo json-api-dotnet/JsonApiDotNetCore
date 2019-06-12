@@ -8,6 +8,32 @@ namespace JsonApiDotNetCore.Extensions
 {
     internal static class TypeExtensions
     {
+        public static void AddRange<T>(this IList list, IEnumerable<T> items)
+        {
+            if (list == null) throw new ArgumentNullException(nameof(list));
+            if (items == null) throw new ArgumentNullException(nameof(items));
+
+            if (list is List<T>)
+            {
+                ((List<T>)list).AddRange(items);
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+                    list.Add(item);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Extension to use the LINQ cast method in a non-generic way:
+        /// <code>
+        /// Type targetType = typeof(TEntity)
+        /// ((IList)myList).Cast(targetType).
+        /// </code>
+        /// </summary>
         public static IEnumerable Cast(this IEnumerable source, Type type)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

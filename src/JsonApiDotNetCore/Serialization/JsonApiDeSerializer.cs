@@ -159,6 +159,7 @@ namespace JsonApiDotNetCore.Serialization
                     /// through the decoupling IJsonApiContext), we now no longer need to 
                     /// store the updated relationship values in this property. For now 
                     /// just assigning null as value, will remove this property later as a whole.
+                    /// see #512
                     _jsonApiContext.AttributesToUpdate[attr] = null;
                 }
             }
@@ -224,14 +225,14 @@ namespace JsonApiDotNetCore.Serialization
             SetHasOneNavigationPropertyValue(entity, attr, rio, included);
 
             // recursive call ...
-            if(included != null) 
+            if (included != null)
             {
                 var navigationPropertyValue = attr.GetValue(entity);
                 var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.Type);
-                if(navigationPropertyValue != null && resourceGraphEntity != null)
+                if (navigationPropertyValue != null && resourceGraphEntity != null)
                 {
                     var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
-                    if(includedResource != null) 
+                    if (includedResource != null)
                         SetRelationships(navigationPropertyValue, resourceGraphEntity, includedResource.Relationships, included);
                 }
             }
@@ -257,7 +258,8 @@ namespace JsonApiDotNetCore.Serialization
                 /// through the decoupling IJsonApiContext), we now no longer need to 
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
-                if (convertedValue == null )  _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null); 
+                /// see #512
+                if (convertedValue == null) _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
             }
         }
 
@@ -281,6 +283,7 @@ namespace JsonApiDotNetCore.Serialization
                 /// through the decoupling IJsonApiContext), we now no longer need to 
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
+                /// see #512
                 _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
             }
         }
@@ -296,7 +299,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
             {
-                if(relationshipData.IsHasMany == false || relationshipData.ManyData == null)
+                if (relationshipData.IsHasMany == false || relationshipData.ManyData == null)
                     return entity;
 
                 var relatedResources = relationshipData.ManyData.Select(r =>
@@ -312,7 +315,8 @@ namespace JsonApiDotNetCore.Serialization
                 /// through the decoupling IJsonApiContext), we now no longer need to 
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
-                _jsonApiContext.HasManyRelationshipPointers.Add(attr, null); 
+                /// see #512
+                _jsonApiContext.HasManyRelationshipPointers.Add(attr, null);
             }
 
             return entity;

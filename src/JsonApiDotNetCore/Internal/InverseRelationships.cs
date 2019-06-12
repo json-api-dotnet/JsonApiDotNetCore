@@ -18,9 +18,14 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     public interface IInverseRelationships
     {
+        /// <summary>
+        /// This method is called upon startup by JsonApiDotNetCore. It should 
+        /// deal with resolving the inverse relationships. 
+        /// </summary>
         void Resolve();
     }
 
+    /// <inheritdoc />
     public class InverseRelationships : IInverseRelationships
     {
         private readonly ResourceGraph _graph;
@@ -32,6 +37,7 @@ namespace JsonApiDotNetCore.Internal
             _resolver = resolver;
         }
 
+        /// <inheritdoc />
         public void Resolve()
         {
             if (EntityFrameworkCoreIsEnabled())

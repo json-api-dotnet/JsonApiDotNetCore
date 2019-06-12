@@ -16,7 +16,6 @@ namespace JsonApiDotNetCore.Models
 
         public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
-
         public string InverseNavigation { get; internal set; }
 
         /// <summary>
