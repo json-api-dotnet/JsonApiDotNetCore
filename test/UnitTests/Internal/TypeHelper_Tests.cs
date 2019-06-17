@@ -106,6 +106,30 @@ namespace UnitTests.Internal
                 Assert.Equal(t.Value, result);
             }
         }
+        
+        [Fact]
+        public void Can_Convert_TimeSpans() 
+        {
+            //arrange
+            TimeSpan timeSpan = TimeSpan.FromMinutes(45);
+            string stringSpan = timeSpan.ToString();
+
+            //act
+            var result = TypeHelper.ConvertType(stringSpan, typeof(TimeSpan));
+
+            //assert
+            Assert.Equal(timeSpan, result);
+        }
+
+        [Fact]
+        public void Bad_TimeSpanString_Throws() 
+        {
+            // arrange
+            var formattedString = "this_is_not_a_valid_timespan";
+
+            // act/assert
+            Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(TimeSpan)));
+        }
 
         private enum TestEnum
         {
