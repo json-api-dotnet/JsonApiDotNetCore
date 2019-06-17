@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -37,7 +39,7 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
 
-                object model =null;
+                object model = null;
 
                 if (_jsonApiContext.IsRelationshipPath)
                 {
@@ -48,9 +50,28 @@ namespace JsonApiDotNetCore.Formatters
                     model = _deSerializer.Deserialize(body);
                 }
 
+
                 if (model == null)
                 {
                     _logger?.LogError("An error occurred while de-serializing the payload");
+                }
+
+                if (context.HttpContext.Request.Method == "PATCH")
+                {
+                    bool idMissing;
+                    if (model is IList list)
+                    {
+                        idMissing = CheckForId(list);
+                    }
+                    else
+                    {
+                        idMissing = CheckForId(model);
+                    }
+                    if (idMissing)
+                    {
+                        _logger?.LogError("Payload must include id attribute");
+                        throw new JsonApiException(400, "Payload must include id attribute");
+                    }
                 }
                 return InputFormatterResult.SuccessAsync(model);
             }
@@ -60,6 +81,40 @@ namespace JsonApiDotNetCore.Formatters
                 context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
                 return InputFormatterResult.FailureAsync();
             }
+        }
+
+        /// <summary> Checks if the deserialized payload has an ID included </summary
+        private bool CheckForId(object model)
+        {
+            if (model == null) return false;
+            if (model is ResourceObject ro)
+            {
+                if (string.IsNullOrEmpty(ro.Id)) return true;
+            }
+            else if (model is IIdentifiable identifiable)
+            {
+                if (string.IsNullOrEmpty(identifiable.StringId)) return true;
+            }
+            return false;
+        }
+
+        /// <summary> Checks if the elements in the deserialized payload have an ID included </summary
+        private bool CheckForId(IList modelList)
+        {
+            foreach (var model in modelList)
+            {
+                if (model == null) continue;
+                if (model is ResourceObject ro)
+                {
+                    if (string.IsNullOrEmpty(ro.Id)) return true;
+                }
+                else if (model is IIdentifiable identifiable)
+                {
+                    if (string.IsNullOrEmpty(identifiable.StringId)) return true;
+                }
+            }
+            return false;
+
         }
 
         private string GetRequestBody(Stream body)

@@ -155,6 +155,9 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
+            services.AddScoped<IInverseRelationships, InverseRelationships>();
+
+
             // services.AddScoped<IActionFilter, TypeMatchFilter>();
         }
 

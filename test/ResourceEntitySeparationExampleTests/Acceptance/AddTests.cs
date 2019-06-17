@@ -94,7 +94,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             Assert.Equal(course.Number, data.Number);
             Assert.Equal(course.Title, data.Title);
             Assert.Equal(course.Description, data.Description);
-            Assert.Equal(department.Id, data.DepartmentId);
+            Assert.Equal(department.Id, data.Department.Id);
         }
 
         [Fact]

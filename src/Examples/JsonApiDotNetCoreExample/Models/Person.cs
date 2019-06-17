@@ -45,5 +45,9 @@ namespace JsonApiDotNetCoreExample.Models
                 { "authors", new string[] { "Jared Nance" } }
             };
         }
+        public int? PassportId { get; set; }
+        [HasOne("passport")]
+        public virtual Passport Passport { get; set; }
+
     }
 }
