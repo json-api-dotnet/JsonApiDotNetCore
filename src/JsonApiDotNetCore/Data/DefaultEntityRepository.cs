@@ -171,13 +171,14 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Loads the inverse relationships to prevent foreign key constraints from being violated
         /// to support implicit removes, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
-        /// <para/>
+        /// <remark>
         /// Consider the following example: 
         /// person.todoItems = [t1,t2] is updated to [t3, t4]. If t3, and/or t4 was
         /// already related to a other person, and these persons are NOT loaded in to the 
         /// db context, then the query may cause a foreign key constraint. Loading
         /// these "inverse relationships" into the DB context ensures EF core to take
         /// this into account.
+        /// </remark>
         /// </summary>
         private void LoadInverseRelationships(object trackedRelationshipValue, RelationshipAttribute relationshipAttr)
         {
