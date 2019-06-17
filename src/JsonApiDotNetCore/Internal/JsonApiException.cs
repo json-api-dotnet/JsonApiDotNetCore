@@ -14,17 +14,7 @@ namespace JsonApiDotNetCore.Internal
 
         public JsonApiException(Error error)
         : base(error.Title) => _errors.Add(error);
-
-        [Obsolete("Use int statusCode overload instead")]
-        public JsonApiException(string statusCode, string message, string source = null)
-        : base(message)
-            => _errors.Add(new Error(statusCode, message, null, GetMeta(), source));
-
-        [Obsolete("Use int statusCode overload instead")]
-        public JsonApiException(string statusCode, string message, string detail, string source = null)
-        : base(message)
-            => _errors.Add(new Error(statusCode, message, detail, GetMeta(), source));
-
+            
         public JsonApiException(int statusCode, string message, string source = null)
         : base(message)
             => _errors.Add(new Error(statusCode, message, null, GetMeta(), source));

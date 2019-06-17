@@ -45,9 +45,8 @@ namespace Benchmarks.Serialization {
             jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
-            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object, genericProcessorFactoryMock.Object);
+            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
         }
 
         [Benchmark]

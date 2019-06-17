@@ -343,7 +343,6 @@ namespace UnitTests.ResourceHooks
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
-            mock.Setup(r => r.GetDbSet<TModel>()).Returns(dbContext.Set<TModel>());
             return mock.Object;
         }
 

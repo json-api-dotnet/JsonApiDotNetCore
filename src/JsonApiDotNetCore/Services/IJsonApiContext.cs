@@ -139,9 +139,6 @@ namespace JsonApiDotNetCore.Services
         /// If the request is on the `{id}/relationships/{relationshipName}` route
         /// </summary>
         bool IsRelationshipPath { get; }
-
-        [Obsolete("Use `IsRelationshipPath` instead.")]
-        bool IsRelationshipData { get; set; }
     }
 
     public interface IJsonApiContext : IJsonApiRequest
@@ -149,9 +146,6 @@ namespace JsonApiDotNetCore.Services
         IJsonApiContext ApplyContext<T>(object controller);
         IMetaBuilder MetaBuilder { get; set; }
         IGenericProcessorFactory GenericProcessorFactory { get; set; }
-
-        [Obsolete("Use the proxied method IControllerContext.GetControllerAttribute instead.")]
-        TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
 
         /// <summary>
         /// **_Experimental_**: do not use. It is likely to change in the future.
