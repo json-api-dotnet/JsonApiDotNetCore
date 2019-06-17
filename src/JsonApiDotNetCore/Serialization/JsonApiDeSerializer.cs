@@ -228,8 +228,10 @@ namespace JsonApiDotNetCore.Serialization
             if (included != null)
             {
                 var navigationPropertyValue = attr.GetValue(entity);
-                var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.Type);
-                if (navigationPropertyValue != null && resourceGraphEntity != null)
+
+                var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.DependentType);
+                if(navigationPropertyValue != null && resourceGraphEntity != null)
+
                 {
                     var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
                     if (includedResource != null)
@@ -308,7 +310,7 @@ namespace JsonApiDotNetCore.Serialization
                     return instance;
                 });
 
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.Type);
+                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
 
                 attr.SetValue(entity, convertedCollection);
                 /// todo: as a part of the process of decoupling JADNC (specifically 
@@ -325,7 +327,7 @@ namespace JsonApiDotNetCore.Serialization
         private IIdentifiable GetIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier, List<ResourceObject> includedResources, RelationshipAttribute relationshipAttr)
         {
             // at this point we can be sure the relationshipAttr.Type is IIdentifiable because we were able to successfully build the ResourceGraph
-            var relatedInstance = relationshipAttr.Type.New<IIdentifiable>();
+            var relatedInstance = relationshipAttr.DependentType.New<IIdentifiable>();
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             // can't provide any more data other than the rio since it is not contained in the included section
@@ -336,9 +338,9 @@ namespace JsonApiDotNetCore.Serialization
             if (includedResource == null)
                 return relatedInstance;
 
-            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipAttr.Type);
+            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipAttr.DependentType);
             if (contextEntity == null)
-                throw new JsonApiException(400, $"Included type '{relationshipAttr.Type}' is not a registered json:api resource.");
+                throw new JsonApiException(400, $"Included type '{relationshipAttr.DependentType}' is not a registered json:api resource.");
 
             SetEntityAttributes(relatedInstance, contextEntity, includedResource.Attributes);
 

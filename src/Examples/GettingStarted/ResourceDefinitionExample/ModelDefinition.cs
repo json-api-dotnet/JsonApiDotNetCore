@@ -1,10 +1,15 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace GettingStarted.ResourceDefinitionExample
 {
     public class ModelDefinition : ResourceDefinition<Model>
     {
+        public ModelDefinition(IResourceGraph graph) : base(graph)
+        {
+        }
+
         // this allows POST / PATCH requests to set the value of a
         // property, but we don't include this value in the response
         // this might be used if the incoming value gets hashed or

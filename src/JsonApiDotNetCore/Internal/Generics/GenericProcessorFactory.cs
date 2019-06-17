@@ -41,12 +41,12 @@ namespace JsonApiDotNetCore.Internal.Generics
         }
 
         public TInterface GetProcessor<TInterface>(Type openGenericType, Type resourceType)
-            => _getProcessor<TInterface>(openGenericType, resourceType);
+            => GetProcessorInternal<TInterface>(openGenericType, resourceType);
 
         public TInterface GetProcessor<TInterface>(Type openGenericType, Type resourceType, Type keyType)
-            => _getProcessor<TInterface>(openGenericType, resourceType, keyType);
+            => GetProcessorInternal<TInterface>(openGenericType, resourceType, keyType);
 
-        private TInterface _getProcessor<TInterface>(Type openGenericType, params Type[] types)
+        private TInterface GetProcessorInternal<TInterface>(Type openGenericType, params Type[] types)
         {
             var concreteType = openGenericType.MakeGenericType(types);
 

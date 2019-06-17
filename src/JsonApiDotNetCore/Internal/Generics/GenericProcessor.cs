@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -92,13 +93,11 @@ namespace JsonApiDotNetCore.Internal.Generics
         {
             if (relationship.IsHasMany)
             {
-                // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entities = _context.Set<T>().Where(x => relationshipIds.Contains(((IIdentifiable)x).StringId)).ToList();
                 relationship.SetValue(parent, entities);
             }
             else
             {
-                // TODO: need to handle the failure mode when the relationship does not implement IIdentifiable
                 var entity = _context.Set<T>().SingleOrDefault(x => relationshipIds.First() == ((IIdentifiable)x).StringId);
                 relationship.SetValue(parent, entity);
             }

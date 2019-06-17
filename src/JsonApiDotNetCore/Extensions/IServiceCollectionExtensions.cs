@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,12 +12,12 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
 using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -115,6 +114,11 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
+            services.AddScoped(typeof(IEntityReadRepository<,>), typeof(DefaultEntityRepository<,>));
+            services.AddScoped(typeof(IEntityWriteRepository<,>), typeof(DefaultEntityRepository<,>));
+
+
+
             services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
 
@@ -155,10 +159,17 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
+           
+            if (jsonApiOptions.EnableResourceHooks)
+            {
+                services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
+                services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
+                services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
+                services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
+            }
+
             services.AddScoped<IInverseRelationships, InverseRelationships>();
 
-
-            // services.AddScoped<IActionFilter, TypeMatchFilter>();
         }
 
         private static void AddOperationServices(IServiceCollection services)

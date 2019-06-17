@@ -135,7 +135,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             // TODO: need a better way to get the ContextEntity from a relationship name
             // when no generic parameter is available
             var relationshipType = _resourceGraph.GetContextEntity(operation.GetResourceTypeName())
-                .Relationships.Single(r => r.Is(operation.Ref.Relationship)).Type;
+                .Relationships.Single(r => r.Is(operation.Ref.Relationship)).DependentType;
 
             var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipType);
 

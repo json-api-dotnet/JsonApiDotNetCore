@@ -4,12 +4,14 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class TodoItem : Identifiable
+    public class TodoItem : Identifiable, IIsLockable
     {
         public TodoItem()
         {
             GuidProperty = Guid.NewGuid();
         }
+
+        public bool IsLocked { get; set; }
 
         [Attr("description")]
         public string Description { get; set; }
@@ -48,17 +50,25 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne("assignee")]
         public virtual Person Assignee { get; set; }
 
+        [HasOne("one-to-one-person")]
+        public virtual Person ToOnePerson { get; set; }
+        public virtual int? ToOnePersonId { get; set; }
+
+
+        [HasMany("stake-holders")]
+        public virtual List<Person> StakeHolders { get; set; }
+
         [HasOne("collection")]
         public virtual TodoItemCollection Collection { get; set; }
 
+
+        // cyclical to-one structure
         public virtual int? DependentTodoItemId { get; set; }
         [HasOne("dependent-on-todo")]
         public virtual TodoItem DependentTodoItem { get; set; }
 
 
-
-
-        // cyclical structure
+        // cyclical to-many structure
         public virtual int? ParentTodoItemId {get; set;}
         [HasOne("parent-todo")]
         public virtual TodoItem ParentTodoItem { get; set; }

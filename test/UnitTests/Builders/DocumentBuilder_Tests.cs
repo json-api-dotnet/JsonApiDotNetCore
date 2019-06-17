@@ -300,6 +300,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, UserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
@@ -323,6 +324,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, UserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
@@ -345,6 +347,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, InstanceSpecificUserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
@@ -368,6 +371,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, InstanceSpecificUserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
@@ -386,12 +390,20 @@ namespace UnitTests
 
         public class InstanceSpecificUserResource : ResourceDefinition<User>
         {
+            public InstanceSpecificUserResource(IResourceGraph graph) : base(graph)
+            {
+            }
+
             protected override List<AttrAttribute> OutputAttrs(User instance)
                 => Remove(user => user.Password);
         }
 
         public class UserResource : ResourceDefinition<User>
         {
+            public UserResource(IResourceGraph graph) : base(graph)
+            {
+            }
+
             protected override List<AttrAttribute> OutputAttrs()
                 => Remove(user => user.Password);
         }

@@ -85,14 +85,81 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>Collection of concrete type</returns>
         public static IList ConvertListType(IEnumerable<string> values, Type type)
         {
-            var listType = typeof(List<>).MakeGenericType(type);
-            IList list = (IList)Activator.CreateInstance(listType);
+            var list = CreateListFor(type);
             foreach (var value in values)
             {
                 list.Add(ConvertType(value, type));
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// Creates an instance of the specified generic type
+        /// </summary>
+        /// <returns>The instance of the parameterized generic type</returns>
+        /// <param name="parameters">Generic type parameters to be used in open type.</param>
+        /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
+        /// <typeparam name="TOpen">Open generic type</typeparam>
+        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
+        {
+            var parameterizedType = openType.MakeGenericType(parameters);
+            return Activator.CreateInstance(parameterizedType, constructorArguments);
+        }
+
+        /// <summary>
+        /// Use this overload if you need to instantiate a type that has a internal constructor
+        /// </summary>
+        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
+        {
+            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            var parameterizedType = openType.MakeGenericType(parameters);
+            // note that if for whatever reason the constructor of AffectedResource is set from
+            // internal to public, this will throw an error, as it is looking for a no
+            return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
+        }
+
+        /// <summary>
+        /// Creates an instance of the specified generic type
+        /// </summary>
+        /// <returns>The instance of the parameterized generic type</returns>
+        /// <param name="parameter">Generic type parameter to be used in open type.</param>
+        /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
+        /// <typeparam name="TOpen">Open generic type</typeparam>
+        public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
+        {
+            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, constructorArguments);
+        }
+
+        /// <summary>
+        /// Use this overload if you need to instantiate a type that has a internal constructor
+        /// </summary>
+        public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
+        {
+            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, hasInternalConstructor, constructorArguments);
+
+        }
+
+        /// <summary>
+        /// Reflectively instantiates a list of a certain type.
+        /// </summary>
+        /// <returns>The list of the target type</returns>
+        /// <param name="type">The target type</param>
+        public static IList CreateListFor(Type type)
+        {
+            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type );
+            return list;
+
+        }
+
+        /// <summary>
+        /// Gets the generic argument T of List{T}
+        /// </summary>
+        /// <returns>The type of the list</returns>
+        /// <param name="list">The list to be inspected/param>
+        public static Type GetListInnerType(IEnumerable list)
+        {
+            return list.GetType().GetGenericArguments()[0];
         }
     }
 }

@@ -208,14 +208,13 @@ namespace JsonApiDotNetCore.Data
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
             var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
-            if (relationshipAttr != null)
+            if(relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute) return true;
                 return false;
-            }
-            else
+            } else
             {
-                // relationshipAttr is null when there is not put a [RelationshipAttribute] on the inverse navigation property.
+                // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
                 // In this case we use relfection to figure out what kind of relationship is pointing back.
                 return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
             }
@@ -419,7 +418,9 @@ namespace JsonApiDotNetCore.Data
         {
             if (pageNumber >= 0)
             {
-                return await entities.PageForward(pageSize, pageNumber).ToListAsync();
+                // the IQueryable returned from the hook executor is sometimes consumed here.
+                // In this case, it does not support .ToListAsync(), so we use the method below.
+                return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
             }
 
             // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
@@ -428,11 +429,10 @@ namespace JsonApiDotNetCore.Data
             // may be negative
             int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
             int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
-
-            return await entities
+           
+            return await ToListAsync(entities
                     .Skip(virtualFirstIndex)
-                    .Take(numberOfElementsInPage)
-                    .ToListAsync();
+                    .Take(numberOfElementsInPage));
         }
 
         /// <inheritdoc />

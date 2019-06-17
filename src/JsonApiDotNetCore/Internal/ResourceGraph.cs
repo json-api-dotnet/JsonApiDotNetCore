@@ -69,6 +69,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <param name="internalAttributeName">The internal attribute name for a <see cref="AttrAttribute" />.</param>
         string GetPublicAttributeName<TParent>(string internalAttributeName);
+        RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
 
         /// <summary>
         /// Was built against an EntityFrameworkCore DbContext ?
@@ -176,6 +177,12 @@ namespace JsonApiDotNetCore.Internal
                 .Attributes
                 .SingleOrDefault(a => a.InternalAttributeName == internalAttributeName)?
                 .PublicAttributeName;
+        }
+
+        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
+        {
+            if (relationship.InverseNavigation == null) return null;
+            return GetContextEntity(relationship.DependentType).Relationships.SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public class JsonApiOptions
     {
+
         /// <summary>
         /// Provides an interface for formatting resource names by convention
         /// </summary>
@@ -35,6 +36,21 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not source URLs should be serialized in Error objects
         /// </summary>
         public static bool DisableErrorSource { get; set; }
+
+        /// <summary>
+        /// Whether or not ResourceHooks are enabled. 
+        /// 
+        /// Default is set to <see langword="false"/> for backward compatibility.
+        /// </summary>
+        public bool EnableResourceHooks { get; set; } = false;
+
+        /// <summary>
+        /// Whether or not database values should be included by default
+        /// for resource hooks. Ignored if EnableResourceHooks is set false.
+        /// 
+        /// Defaults to <see langword="false"/>.
+        /// </summary>
+        public bool LoadDatabaseValues { get; set; } = false;
 
         /// <summary>
         /// The base URL Namespace

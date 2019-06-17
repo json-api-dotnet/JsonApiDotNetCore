@@ -8,6 +8,7 @@ namespace JsonApiDotNetCore.Extensions
 {
     internal static class TypeExtensions
     {
+
         /// <summary>
         /// Extension to use the LINQ AddRange method on an IList
         /// </summary>
@@ -28,8 +29,7 @@ namespace JsonApiDotNetCore.Extensions
                 }
             }
         }
-
-
+            
         /// <summary>
         /// Extension to use the LINQ cast method in a non-generic way:
         /// <code>

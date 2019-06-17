@@ -12,3 +12,4 @@ namespace JsonApiDotNetCoreExample.Models
         public List<Article> Articles { get; set; }
     }
 }
+

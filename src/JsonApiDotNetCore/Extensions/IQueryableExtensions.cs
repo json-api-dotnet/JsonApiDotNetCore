@@ -236,6 +236,14 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
+        /// <summary>
+        /// This calls a generic where method.. more explaining to follow
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         private static IQueryable<TSource> CallGenericWhereMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
         {
             var op = filter.FilterOperation;
@@ -254,7 +262,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
-                var relatedType = filter.Relationship.Type;
+                var relatedType = filter.Relationship.DependentType;
                 property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
                 if (property == null)
                     throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
@@ -420,6 +428,14 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             return source;
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        {
+            foreach (T item in enumeration)
+            {
+                action(item);
+            }
         }
 
     }

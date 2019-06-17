@@ -207,6 +207,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
         {
+            /// @TODO: if we add a BeforeUpate resource hook to PersonDefinition
+            /// with database values enabled, this test will fail because todo-items
+            /// will be included in the person instance in the database-value loading. 
+            /// This is then attached in the EF dbcontext, so when the query is executed and returned,
+            /// that entity will still have the relationship included even though the repo didn't include it.
+
+
             // arrange
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
