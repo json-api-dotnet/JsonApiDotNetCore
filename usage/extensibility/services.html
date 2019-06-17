@@ -82,7 +82,7 @@ In simple cases, you can also just wrap the base implementation with your custom
 
     public TodoItemService(
         IJsonApiContext jsonApiContext,
-        IEntityRepository&lt;T, TId&gt; repository,
+        IEntityRepository&lt;TodoItem, int&gt; repository,
         ILoggerFactory loggerFactory,
         INotificationService notificationService) 
     : base(jsonApiContext, repository, loggerFactory)
@@ -90,7 +90,7 @@ In simple cases, you can also just wrap the base implementation with your custom
         _notificationService = notificationService;
     }
 
-    public override async Task&lt;TEntity&gt; CreateAsync(TEntity entity)
+    public override async Task&lt;TodoItem&gt; CreateAsync(TodoItem entity)
     {
         // call the base implementation which uses Entity Framework
         var newEntity = await base.CreateAsync(entity);

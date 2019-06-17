@@ -201,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/services.html",
-          "hash": "NGtFNzzTd0uLbwnQgyhxfQ=="
+          "hash": "pjghFBUVXIihYTglS+Z3ig=="
         }
       },
       "is_incremental": false,
@@ -323,6 +323,18 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "usage/resources/hooks.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/resources/hooks.html",
+          "hash": "wH5/wbz+/ojYoZnIRnHilQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "usage/resources/index.md",
       "output": {
         ".html": {
@@ -423,17 +435,17 @@
         "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 30,
+          "skipped_file_count": 0
+        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
-          "skipped_file_count": 0
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 29,
           "skipped_file_count": 0
         }
       }
