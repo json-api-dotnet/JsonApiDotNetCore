@@ -8,6 +8,9 @@ namespace JsonApiDotNetCore.Extensions
 {
     internal static class TypeExtensions
     {
+        /// <summary>
+        /// Extension to use the LINQ AddRange method on an IList
+        /// </summary>
         public static void AddRange<T>(this IList list, IEnumerable<T> items)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));
