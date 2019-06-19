@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Namespace JsonApiDotNetCore.Hooks
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Namespace JsonApiDotNetCore.Hooks
+   ">
+    <meta name="generator" content="docfx 2.43.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks">
+  
+  <h1 id="JsonApiDotNetCore_Hooks" data-uid="JsonApiDotNetCore.Hooks" class="text-break">Namespace JsonApiDotNetCore.Hooks
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.AffectedRelationships-1.html">AffectedRelationships&lt;TDependent&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.AffectedResources-1.html">AffectedResources&lt;TEntity&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.HooksDiscovery-1.html">HooksDiscovery&lt;TEntity&gt;</a></h4>
+      <section><p>The default implementation for IHooksDiscovery</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.LoadDatabaseValues.html">LoadDatabaseValues</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.RelationshipProxy.html">RelationshipProxy</a></h4>
+      <section><p>A class used internally for resource hook execution. Not intended for developer use.</p>
+<p>A wrapper for RelationshipAttribute with an abstraction layer that works on the 
+getters and setters of relationships. These are different in the case of 
+HasMany vs HasManyThrough, and HasManyThrough.
+It also depends on if the jointable entity
+(eg ArticleTags) is identifiable (in which case we will traverse through 
+it and fire hooks for it, if defined) or not (in which case we skip 
+ArticleTags and go directly to Tags.</p>
+<p>TODO: We can consider moving fields like DependentType and PrincipalType </p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceDiff-1.html">ResourceDiff&lt;TEntity&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceDiffPair-1.html">ResourceDiffPair&lt;TEntity&gt;</a></h4>
+      <section></section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships.html">IAffectedRelationships</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships&lt;TDependent&gt;</a></h4>
+      <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResources-1.html">IAffectedResources&lt;TEntity&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html">IAffectedResourcesDiff&lt;TEntity&gt;</a></h4>
+      <section><p>A helper class that provides insight in what is to be updated. The 
+<see cref="!:IAffectedResourcesDiff&lt;TEntity>.RequestEntities"></see> property reflects what was parsed from the incoming request,
+where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html#JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_DatabaseValues">DatabaseValues</a> reflects what is the current state in the database.</p>
+<p>Any relationships that are updated can be retrieved via the methods implemented on 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships&lt;TDependent&gt;</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a></h4>
+      <section><p>Wrapper interface for all After execution methods.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterHooks-1.html">IAfterHooks&lt;TEntity&gt;</a></h4>
+      <section><p>Wrapper interface for all After hooks.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a></h4>
+      <section><p>Wrapper interface for all Before execution methods.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeHooks-1.html">IBeforeHooks&lt;TEntity&gt;</a></h4>
+      <section><p>Wrapper interface for all Before hooks.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery.html">IHooksDiscovery</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery-1.html">IHooksDiscovery&lt;TEntity&gt;</a></h4>
+      <section><p>A singleton service for a particular TEntity that stores a field of 
+enums that represents which resource hooks have been implemented for that
+particular entity.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a></h4>
+      <section><p>Wrapper interface for all On execution methods.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnHooks-1.html">IOnHooks&lt;TEntity&gt;</a></h4>
+      <section><p>Wrapper interface for all on hooks.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer.html">IResourceHookContainer</a></h4>
+      <section><p>Not meant for public usage. Used internally in the <span class="xref">JsonApiDotNetCore.Hooks.ResourceHookExecutor</span></p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html">IResourceHookContainer&lt;TEntity&gt;</a></h4>
+      <section><p>Implement this interface to implement business logic hooks on <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookExecutor.html">IResourceHookExecutor</a></h4>
+      <section><p>Transient service responsible for executing Resource Hooks as defined 
+in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>. see methods in 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a> and 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a> for more information.</p>
+<p>Uses <span class="xref">JsonApiDotNetCore.Hooks.TraversalHelper</span> for traversal of nested entity data structures.
+Uses <span class="xref">JsonApiDotNetCore.Hooks.HookExecutorHelper</span> for retrieving meta data about hooks, 
+fetching database values and performing other recurring internal operations.</p>
+</section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceHook.html">ResourceHook</a></h4>
+      <section><p>A enum that represent the available resource hooks.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></h4>
+      <section><p>An enum that represents the initiator of a resource hook. Eg, when BeforeCreate()
+is called from EntityResourceService.GetAsync(TId id), it will be called
+with parameter pipeline = ResourceAction.GetSingle.</p>
+</section>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

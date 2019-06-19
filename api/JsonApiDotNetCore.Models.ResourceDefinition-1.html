@@ -1,0 +1,1092 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ResourceDefinition&lt;T&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ResourceDefinition&lt;T&gt;
+   ">
+    <meta name="generator" content="docfx 2.43.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1">
+  
+  
+  <h1 id="JsonApiDotNetCore_Models_ResourceDefinition_1" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1" class="text-break">Class ResourceDefinition&lt;T&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>exposes developer friendly hooks into how their resources are exposed. 
+It is intended to improve the experience and reduce boilerplate for commonly required features.
+The goal of this class is to reduce the frequency with which developers have to override the
+service and repository layers.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">ResourceDefinition&lt;T&gt;</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Models.IResourceDefinition.html">IResourceDefinition</a></div>
+    <div><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html">IResourceHookContainer</a>&lt;T&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeHooks-1.html">IBeforeHooks</a>&lt;T&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterHooks-1.html">IAfterHooks</a>&lt;T&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Hooks.IOnHooks-1.html">IOnHooks</a>&lt;T&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer.html">IResourceHookContainer</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Models.html">JsonApiDotNetCore.Models</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Models_ResourceDefinition_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ResourceDefinition&lt;T&gt; : IResourceDefinition, IResourceHookContainer&lt;T&gt;, IBeforeHooks&lt;T&gt;, IAfterHooks&lt;T&gt;, IOnHooks&lt;T&gt;, IResourceHookContainer where T : class, IIdentifiable</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The resource type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1__ctor_JsonApiDotNetCore_Internal_IResourceGraph_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.%23ctor(JsonApiDotNetCore.Internal.IResourceGraph)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L34">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1__ctor_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1__ctor_JsonApiDotNetCore_Internal_IResourceGraph_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.#ctor(JsonApiDotNetCore.Internal.IResourceGraph)">ResourceDefinition(IResourceGraph)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ResourceDefinition(IResourceGraph graph)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.IResourceGraph.html">IResourceGraph</a></td>
+        <td><span class="parametername">graph</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.AfterCreate(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L168">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterCreate_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterCreate*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterCreate(HashSet&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AfterCreate(HashSet&lt;T&gt; entities, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;T&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.AfterDelete(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L174">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterDelete_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterDelete*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterDelete(HashSet&lt;T&gt;, ResourcePipeline, Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AfterDelete(HashSet&lt;T&gt; entities, ResourcePipeline pipeline, bool succeeded)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;T&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">succeeded</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.AfterRead(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L170">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterRead_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterRead*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterRead(HashSet&lt;T&gt;, ResourcePipeline, Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AfterRead(HashSet&lt;T&gt; entities, ResourcePipeline pipeline, bool isIncluded = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;T&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isIncluded</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.AfterUpdate(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L172">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdate_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterUpdate*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdate(HashSet&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AfterUpdate(HashSet&lt;T&gt; entities, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;T&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.IAffectedRelationships%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L176">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterUpdateRelationship*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.IAffectedRelationships{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AfterUpdateRelationship(IAffectedRelationships&lt;T&gt; resourcesByRelationship, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships</a>&lt;T&gt;</td>
+        <td><span class="parametername">resourcesByRelationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_IAffectedResources__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.BeforeCreate(JsonApiDotNetCore.Hooks.IAffectedResources%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L178">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeCreate_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeCreate*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_IAffectedResources__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeCreate(JsonApiDotNetCore.Hooks.IAffectedResources{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeCreate(IAffectedResources&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IEnumerable&lt;T&gt; BeforeCreate(IAffectedResources&lt;T&gt; affected, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResources-1.html">IAffectedResources</a>&lt;T&gt;</td>
+        <td><span class="parametername">affected</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_IAffectedResources__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.BeforeDelete(JsonApiDotNetCore.Hooks.IAffectedResources%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L184">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeDelete_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeDelete*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_IAffectedResources__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeDelete(JsonApiDotNetCore.Hooks.IAffectedResources{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeDelete(IAffectedResources&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IEnumerable&lt;T&gt; BeforeDelete(IAffectedResources&lt;T&gt; affected, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResources-1.html">IAffectedResources</a>&lt;T&gt;</td>
+        <td><span class="parametername">affected</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.IAffectedRelationships%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L188">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeImplicitUpdateRelationship*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.IAffectedRelationships{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeImplicitUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void BeforeImplicitUpdateRelationship(IAffectedRelationships&lt;T&gt; resourcesByRelationship, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships</a>&lt;T&gt;</td>
+        <td><span class="parametername">resourcesByRelationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.BeforeRead(JsonApiDotNetCore.Hooks.ResourcePipeline%2CSystem.Boolean%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L180">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeRead_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeRead*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_System_String_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeRead(JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean,System.String)">BeforeRead(ResourcePipeline, Boolean, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isIncluded</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">stringId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IAffectedResourcesDiff__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.BeforeUpdate(JsonApiDotNetCore.Hooks.IAffectedResourcesDiff%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L182">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IAffectedResourcesDiff__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IAffectedResourcesDiff{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeUpdate(IAffectedResourcesDiff&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IEnumerable&lt;T&gt; BeforeUpdate(IAffectedResourcesDiff&lt;T&gt; ResourceDiff, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html">IAffectedResourcesDiff</a>&lt;T&gt;</td>
+        <td><span class="parametername">ResourceDiff</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.BeforeUpdateRelationship(System.Collections.Generic.HashSet%7BSystem.String%7D%2CJsonApiDotNetCore.Hooks.IAffectedRelationships%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L186">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdateRelationship*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdateRelationship(System.Collections.Generic.HashSet{System.String},JsonApiDotNetCore.Hooks.IAffectedRelationships{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeUpdateRelationship(HashSet&lt;String&gt;, IAffectedRelationships&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IEnumerable&lt;string&gt; BeforeUpdateRelationship(HashSet&lt;string&gt; ids, IAffectedRelationships&lt;T&gt; resourcesByRelationship, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">ids</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships</a>&lt;T&gt;</td>
+        <td><span class="parametername">resourcesByRelationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_DefaultSort.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.DefaultSort%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L217">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_DefaultSort_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.DefaultSort*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_DefaultSort" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.DefaultSort">DefaultSort()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;(AttrAttribute, SortDirection)&gt; DefaultSort()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>, <a class="xref" href="JsonApiDotNetCore.Internal.Query.SortDirection.html">SortDirection</a>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_GetDefaultSortOrder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.GetDefaultSortOrder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L215">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetDefaultSortOrder_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.GetDefaultSortOrder*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetDefaultSortOrder" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.GetDefaultSortOrder">GetDefaultSortOrder()</h4>
+  <div class="markdown level1 summary"><p>Define a the default sort order if no sort key is provided.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual ResourceDefinition&lt;T&gt;.PropertySortOrder GetDefaultSortOrder()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.PropertySortOrder.html">ResourceDefinition.PropertySortOrder</a>&lt;&gt;</td>
+        <td><p>A list of properties and the direction they should be sorted.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetDefaultSortOrder_examples">Examples</h5>
+  <pre><code>protected override PropertySortOrder GetDefaultSortOrder()
+    => new PropertySortOrder {
+        (t => t.Prop1, SortDirection.Ascending),
+        (t => t.Prop2, SortDirection.Descending),
+    };</code></pre>
+
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_GetOutputAttrs_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.GetOutputAttrs(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L111">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetOutputAttrs_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.GetOutputAttrs*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetOutputAttrs_System_Object_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.GetOutputAttrs(System.Object)">GetOutputAttrs(Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;AttrAttribute&gt; GetOutputAttrs(object instance)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">instance</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_GetQueryFilters.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.GetQueryFilters%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L165">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetQueryFilters_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.GetQueryFilters*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetQueryFilters" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.GetQueryFilters">GetQueryFilters()</h4>
+  <div class="markdown level1 summary"><p>Define a set of custom query expressions that can be applied
+instead of the default query behavior. A common use-case for this
+is including related resources and filtering on them.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual ResourceDefinition&lt;T&gt;.QueryFilters GetQueryFilters()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.QueryFilters.html">ResourceDefinition.QueryFilters</a>&lt;&gt;</td>
+        <td><p>A set of custom queries that will be applied instead of the default
+queries for the given key. Null will be returned if default behavior
+is desired.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="JsonApiDotNetCore_Models_ResourceDefinition_1_GetQueryFilters_examples">Examples</h5>
+  <pre><code>protected override QueryFilters GetQueryFilters() =>  { 
+    { &quot;facility&quot;, (t, value) => t.Include(t => t.Tenant)
+                                  .Where(t => t.Facility == value) }
+ }</code></pre>
+
+<p>If the logic is simply too complex for an in-line expression, you can
+delegate to a private method:</p>
+<pre><code>protected override QueryFilters GetQueryFilters()
+    => new QueryFilters {
+        { &quot;is-active&quot;, FilterIsActive }
+    };
+
+private IQueryable&lt;Model> FilterIsActive(IQueryable&lt;Model> query, string value)
+{
+    // some complex logic goes here...
+    return query.Where(x => x.IsActive == computedValue);
+}</code></pre>
+
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.OnReturn(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L190">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_OnReturn_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.OnReturn*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.OnReturn(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">OnReturn(HashSet&lt;T&gt;, ResourcePipeline)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IEnumerable&lt;T&gt; OnReturn(HashSet&lt;T&gt; entities, ResourcePipeline pipeline)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;T&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.ResourcePipeline.html">ResourcePipeline</a></td>
+        <td><span class="parametername">pipeline</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_OutputAttrs.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.OutputAttrs%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L98">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_OutputAttrs_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.OutputAttrs*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_OutputAttrs" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.OutputAttrs">OutputAttrs()</h4>
+  <div class="markdown level1 summary"><p>Allows POST / PATCH requests to set the value of an
+attribute, but exclude the attribute in the response
+this might be used if the incoming value gets hashed or
+encrypted prior to being persisted and this value should
+never be sent back to the client.</p>
+<p>Called once per filtered resource in request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual List&lt;AttrAttribute&gt; OutputAttrs()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_OutputAttrs__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.OutputAttrs(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L109">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_OutputAttrs_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.OutputAttrs*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_OutputAttrs__0_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.OutputAttrs(`0)">OutputAttrs(T)</h4>
+  <div class="markdown level1 summary"><p>Allows POST / PATCH requests to set the value of an
+attribute, but exclude the attribute in the response
+this might be used if the incoming value gets hashed or
+encrypted prior to being persisted and this value should
+never be sent back to the client.</p>
+<p>Called for every instance of a resource.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual List&lt;AttrAttribute&gt; OutputAttrs(T instance)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">instance</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1_Remove_System_Linq_Expressions_Expression_System_Func__0_System_Object___System_Collections_Generic_List_JsonApiDotNetCore_Models_AttrAttribute__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601.Remove(System.Linq.Expressions.Expression%7BSystem.Func%7B%600%2CSystem.Object%7D%7D%2CSystem.Collections.Generic.List%7BJsonApiDotNetCore.Models.AttrAttribute%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L61">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_ResourceDefinition_1_Remove_" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.Remove*"></a>
+  <h4 id="JsonApiDotNetCore_Models_ResourceDefinition_1_Remove_System_Linq_Expressions_Expression_System_Func__0_System_Object___System_Collections_Generic_List_JsonApiDotNetCore_Models_AttrAttribute__" data-uid="JsonApiDotNetCore.Models.ResourceDefinition`1.Remove(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Collections.Generic.List{JsonApiDotNetCore.Models.AttrAttribute})">Remove(Expression&lt;Func&lt;T, Object&gt;&gt;, List&lt;AttrAttribute&gt;)</h4>
+  <div class="markdown level1 summary"><p>Remove an attribute</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected List&lt;AttrAttribute&gt; Remove(Expression&lt;Func&lt;T, dynamic&gt;&gt; filter, List&lt;AttrAttribute&gt; from = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;T, <span class="xref">System.Object</span>&gt;&gt;</td>
+        <td><span class="parametername">filter</span></td>
+        <td><p>the filter to execute</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="parametername">from</span></td>
+        <td><p>@TODO</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.IResourceDefinition.html">IResourceDefinition</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html">IResourceHookContainer&lt;TEntity&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeHooks-1.html">IBeforeHooks&lt;TEntity&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterHooks-1.html">IAfterHooks&lt;TEntity&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IOnHooks-1.html">IOnHooks&lt;TEntity&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer.html">IResourceHookContainer</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_ResourceDefinition_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.ResourceDefinition%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/ResourceDefinition.cs/#L26" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

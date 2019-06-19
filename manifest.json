@@ -9,7 +9,2920 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "SDYYyPQYoGNofZ1KC6N5rA=="
+          "hash": "QKJU9NHtshyrd+ZJc8ZkYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.DocumentBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.DocumentBuilder.html",
+          "hash": "oCofwZg9rFAw9OF+aHGVEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.DocumentBuilderOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.DocumentBuilderOptions.html",
+          "hash": "MPjrgjeGYERxPHjmOA9ssQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.DocumentBuilderOptionsProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.DocumentBuilderOptionsProvider.html",
+          "hash": "h8c00sBPPY/jtjSFE9z9mw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.IDocumentBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.IDocumentBuilder.html",
+          "hash": "yJYpHEDL0ts9h6tglAASog=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.IDocumentBuilderOptionsProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.IDocumentBuilderOptionsProvider.html",
+          "hash": "jQ8sogv806cVff/pY6Z3wQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.IMetaBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.IMetaBuilder.html",
+          "hash": "hRez/fIkHotR/W0xFoGEwA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.html",
+          "hash": "qbRWd9e2LVPLurlDTqnaXw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.LinkBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.LinkBuilder.html",
+          "hash": "qVWSN/o1ZuurPKic0RDLoQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.MetaBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.MetaBuilder.html",
+          "hash": "ezjqMWD9xvrSbZxli13zCA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html",
+          "hash": "mLGiqPGyXFLrYmRZE2AwAA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Builders.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Builders.html",
+          "hash": "bN6vZM9mM+bz/wGKh5e8Wg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Configuration.JsonApiOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Configuration.JsonApiOptions.html",
+          "hash": "5mVZwIdvwm4s9XZ/mmZEkA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Configuration.NullAttributeResponseBehavior.html",
+          "hash": "pRVNFaoPMKU8Ibv64JjrRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Configuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Configuration.html",
+          "hash": "7iTPWwlGi1b3FnL8gS0AeQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html",
+          "hash": "KLXFmU8LDopmGWvggSlh4Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html",
+          "hash": "SKWh6sL5mGSmF/aWk78WHw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.DisableQueryAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.DisableQueryAttribute.html",
+          "hash": "WcT3ahIWcAwgnEl0uj1eJg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.DisableRoutingConventionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.DisableRoutingConventionAttribute.html",
+          "hash": "EEAQoEMI1p7H4t59mwC2+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.HttpReadOnlyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.HttpReadOnlyAttribute.html",
+          "hash": "mHJdUCEqU5ybG1zXLyo0aQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.HttpRestrictAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.HttpRestrictAttribute.html",
+          "hash": "26ItmM2+m11E/kriqONn6g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCmdController-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCmdController-1.html",
+          "hash": "u257OMpfKBUYhrx+f/OMGg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCmdController-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCmdController-2.html",
+          "hash": "gvTxZzmp4Pfm1XZzL5IzjQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiController-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiController-1.html",
+          "hash": "hWcuDo7QML0+tupP+/993g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiController-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiController-2.html",
+          "hash": "nVWXZDBJvLp6Yx1UevDHmA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiControllerMixin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiControllerMixin.html",
+          "hash": "Hi079hrJKiJgiU0qCs31PA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html",
+          "hash": "znNA3K2JcEERYRKaqvQVkw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiQueryController-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiQueryController-1.html",
+          "hash": "t5UOBZohJxQ1qnpp72Qomg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html",
+          "hash": "vrItFPxwNcs15Gfh9sR6Mw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.NoHttpDeleteAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.NoHttpDeleteAttribute.html",
+          "hash": "rGsP89MLVbyXaqQfZt6CuQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.NoHttpPatchAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.NoHttpPatchAttribute.html",
+          "hash": "Z13rfK6mcLS1D3LRCM5vYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.NoHttpPostAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.NoHttpPostAttribute.html",
+          "hash": "l6KzOqfLaQX8iAsKPaTHTg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.QueryParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.QueryParams.html",
+          "hash": "Lg+DnhWB0i78HvnkZ+mwhA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.html",
+          "hash": "GVzHmUKhTuzoDCvuQQSoYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.DbContextResolver-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.DbContextResolver-1.html",
+          "hash": "A0G6UB1CgRYE1pKTdybDyg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.DefaultEntityRepository-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.DefaultEntityRepository-1.html",
+          "hash": "vricBUUXJiMFDXvSE+ZZ1A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.DefaultEntityRepository-2.html",
+          "hash": "0ToRZW0CPR+npj3RTqVWgg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IDbContextResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IDbContextResolver.html",
+          "hash": "BqgZhJe9d5Rywwp9TDO5tw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IEntityReadRepository-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IEntityReadRepository-1.html",
+          "hash": "0AiYNzWEhQcZG4Q5XbG3gg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IEntityReadRepository-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IEntityReadRepository-2.html",
+          "hash": "VjjD852fL3O6iG/her7rig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IEntityRepository-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IEntityRepository-1.html",
+          "hash": "6od8eKnL4kKqUVf1ONx9Qw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IEntityRepository-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IEntityRepository-2.html",
+          "hash": "imeObza+/nKVTY1vQyvmNg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IEntityWriteRepository-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IEntityWriteRepository-1.html",
+          "hash": "rFdJnPASEAIBpeZBTCbGcA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.IEntityWriteRepository-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.IEntityWriteRepository-2.html",
+          "hash": "EXiHy5ZchozhRQ/sw4KQeg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Data.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Data.html",
+          "hash": "IgmFd4jyxws0Dzw56ttPwQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.DbContextExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.DbContextExtensions.html",
+          "hash": "B1mAW05v9q1ABFeYE5/Jhg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html",
+          "hash": "pPv+XIeO40Syrs2ben4nFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.IQueryableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.IQueryableExtensions.html",
+          "hash": "N/kqc1v60P0cELoSCzs7SQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.html",
+          "hash": "hWEIzPj3N/XrmNPGbjewvA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.ModelStateExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.ModelStateExtensions.html",
+          "hash": "ivSswj8e/BjkUx2eXvkVAA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.StringExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.StringExtensions.html",
+          "hash": "t1diw7PyzBzfsv76FXJ1+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.html",
+          "hash": "LBAi42+gq3+sIusaFEY+sw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.IJsonApiReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.IJsonApiReader.html",
+          "hash": "dAWoH9wDA0/6aUXC6IAQNg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.IJsonApiWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.IJsonApiWriter.html",
+          "hash": "3mmjVPK6HO8bAarXb1Hu4A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiInputFormatter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiInputFormatter.html",
+          "hash": "vQozjZwefI+iGrbiRp+XsA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiOutputFormatter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiOutputFormatter.html",
+          "hash": "i3g542lVJlUGx3XJsZs/uw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiReader.html",
+          "hash": "NUyg0rciYkJARp6/+/ofUw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.JsonApiWriter.html",
+          "hash": "T1t26gkN1KJiP5tZw0YdjA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Formatters.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Formatters.html",
+          "hash": "tOQIsCFb5oukdY12hmf5qQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Graph.DefaultRelatedIdMapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Graph.DefaultRelatedIdMapper.html",
+          "hash": "ID+SfuCEhvkGwomH7w3PmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Graph.DefaultResourceNameFormatter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Graph.DefaultResourceNameFormatter.html",
+          "hash": "TXTn3jN1N0jf2QqvVwR8BA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Graph.IRelatedIdMapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Graph.IRelatedIdMapper.html",
+          "hash": "Pglizv7IXMJ1zyH8Y5kf2Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Graph.IResourceNameFormatter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Graph.IResourceNameFormatter.html",
+          "hash": "mGoxt2YlANTjCM8WlGcuNw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.html",
+          "hash": "G/eyXJs3Zj8LQb1ZF0Um1w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Graph.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Graph.html",
+          "hash": "3NsLiTeK2Xi9CT/j1ItQaQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.AffectedRelationships-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.AffectedRelationships-1.html",
+          "hash": "emtnOc2GNBjTXvok4w6CZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.AffectedResources-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.AffectedResources-1.html",
+          "hash": "zga2A/qS3msEU8uRtQnbDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.HooksDiscovery-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.HooksDiscovery-1.html",
+          "hash": "tE1jJcW0Rg5fudSpYsHBnQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedRelationships-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html",
+          "hash": "bEwWFK6W8IxhPQ5GBLhASw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedRelationships.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedRelationships.html",
+          "hash": "gTjI2rZ/vxMHQXhbOCvACg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedResources-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedResources-1.html",
+          "hash": "VIlG8Zthx+zb/KbBBWt31g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html",
+          "hash": "DTNNYpfZGb3xHnacwcm0Tg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IAfterExecutor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IAfterExecutor.html",
+          "hash": "06lAyhyl5wa5AkR2+pRV/Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IAfterHooks-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IAfterHooks-1.html",
+          "hash": "ShwR86nZFH1yaZPpXFFPQw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IBeforeExecutor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IBeforeExecutor.html",
+          "hash": "5oUdYWs+peIibnPD3qfbsw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html",
+          "hash": "adO9G01LP6ym1IHpbkJxzA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IHooksDiscovery-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IHooksDiscovery-1.html",
+          "hash": "jtjYd/+D/1hDbBjHX1+ptw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IHooksDiscovery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IHooksDiscovery.html",
+          "hash": "S3usQ6dozdkW+ReaWsvX2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IOnExecutor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IOnExecutor.html",
+          "hash": "QRsIJf9b0ajeIrLnSrSrVA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IOnHooks-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IOnHooks-1.html",
+          "hash": "031JnYhpxT43b+kPZAwL0g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookContainer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html",
+          "hash": "PVK2HAddTWi9/R6+2ZNp+g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "ReferencedXrefPropertyNotString"
+      ],
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookContainer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookContainer.html",
+          "hash": "6aoVKGfWOBwpI1aSs2R61Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "ReferencedXrefPropertyNotString"
+      ],
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookExecutor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.IResourceHookExecutor.html",
+          "hash": "GJOJIj2hC6p+KfSErnBjgg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html",
+          "hash": "EmSCsPYSbTKUWQx9xhJNcg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.RelationshipProxy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.RelationshipProxy.html",
+          "hash": "pdhW1VQkHGuuuj353tSmlQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.ResourceDiff-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.ResourceDiff-1.html",
+          "hash": "VlNeKlf1yCl0us+8scaX/w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.ResourceDiffPair-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.ResourceDiffPair-1.html",
+          "hash": "K57O67tSPMZn4L0MYbitAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.ResourceHook.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.ResourceHook.html",
+          "hash": "sl7K+5StQJcG/MGQvsOO9w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.ResourcePipeline.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.ResourcePipeline.html",
+          "hash": "nrMdeued3XSwb9LYNV442Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "ReferencedXrefPropertyNotString"
+      ],
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Hooks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Hooks.html",
+          "hash": "dq4gICCM31ug5BXZ1juPNg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Constants.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Constants.html",
+          "hash": "Kx4Nhfqjpap20BCzP1zr+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.ContextEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.ContextEntity.html",
+          "hash": "TedrEs4SgOZoOvqdVen5BA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.ContextGraph.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.ContextGraph.html",
+          "hash": "tT8oIUQSyx7y+nvlLfnxfg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.DasherizedRoutingConvention.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.DasherizedRoutingConvention.html",
+          "hash": "X0LfePO+4WcBz97K5SBDcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Error.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Error.html",
+          "hash": "mnOR/QDLcpWOOgPCDaikqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.ErrorCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.ErrorCollection.html",
+          "hash": "gvM3MXgT1TNfUSfnXZLUpQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.ErrorMeta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.ErrorMeta.html",
+          "hash": "nmYO0OwxHoFNCs3NR4M2TA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Generics.GenericProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Generics.GenericProcessor-1.html",
+          "hash": "Pypgquwf0XKkh5QnWmuH7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.html",
+          "hash": "ZmzyuX9t4RIS0XmavvP4pQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Generics.IGenericProcessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Generics.IGenericProcessor.html",
+          "hash": "0p2QUwM4LyW+PNCdJy4yBA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Generics.IGenericProcessorFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Generics.IGenericProcessorFactory.html",
+          "hash": "V7MeIm+xF60E27nO6c2fjg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Generics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Generics.html",
+          "hash": "FZr0v9QxOzmbgqwJ+kFyYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.IContextGraph.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.IContextGraph.html",
+          "hash": "NjHjwOHG6W/TU4SIWnRWWA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.IInverseRelationships.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.IInverseRelationships.html",
+          "hash": "9ffOr3GoByCm82tHzTmhIA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.IResourceGraph.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.IResourceGraph.html",
+          "hash": "MJyysRESdMdVfJLSfrSSNg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.IdentifiableComparer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.IdentifiableComparer.html",
+          "hash": "8UaejGCLofkhLnvWzMWqMA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.InverseRelationships.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.InverseRelationships.html",
+          "hash": "gjgLHnNEbtu2BoD0hEeBtw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.JsonApiException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.JsonApiException.html",
+          "hash": "Do3xELbczt9Nif19vBovdA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.JsonApiExceptionFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.JsonApiExceptionFactory.html",
+          "hash": "0SgkOKmu0S76ZMpMtaFNCg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.JsonApiRouteHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.JsonApiRouteHandler.html",
+          "hash": "zNy+HXT5jx4T4gz2rIIZbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.JsonApiSetupException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.JsonApiSetupException.html",
+          "hash": "868ZQgxSvD/2cUuMP83Kww=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.PageManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.PageManager.html",
+          "hash": "YD27cxrjHROrh3nN6fkv8A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.AttrFilterQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.AttrFilterQuery.html",
+          "hash": "4/7wm4HPCuMUhfAIQqkaDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.AttrSortQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.AttrSortQuery.html",
+          "hash": "bii2YlnpJHPXwWpgLD9sCw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.BaseAttrQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.BaseAttrQuery.html",
+          "hash": "tg/7uTFBGYs/1KyLZjguvQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.BaseFilterQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.BaseFilterQuery.html",
+          "hash": "el4RwDK+BlmGUX41oq/qgg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.BaseQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.BaseQuery.html",
+          "hash": "Z9wXFizhrjRaDmkB36jjlw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.FilterOperations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.FilterOperations.html",
+          "hash": "QMusmmIfuUqVM2AvTfdrAw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.FilterQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.FilterQuery.html",
+          "hash": "+KyJYB/R/Z5zhs8cKxQN9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.PageQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.PageQuery.html",
+          "hash": "RM15KY4uo/kAFFEFNlSkqA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.QueryConstants.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.QueryConstants.html",
+          "hash": "uy5rgHM/s/hrX7uvnGFPzw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.QuerySet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.QuerySet.html",
+          "hash": "isGdNn2d9Ou5pko0J169gQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.RelatedAttrFilterQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.RelatedAttrFilterQuery.html",
+          "hash": "AdyN3bCk8kGS5btwiVItQA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.RelatedAttrSortQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.RelatedAttrSortQuery.html",
+          "hash": "uCbzj/rsxbKJ0zGQ3/nFbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.SortDirection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.SortDirection.html",
+          "hash": "tDD7E5SaLlnTRId/4lLcPQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.SortQuery.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.SortQuery.html",
+          "hash": "imb7PURvgPhUKSDgedIx4w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.Query.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.Query.html",
+          "hash": "andsB815afr34YggT45cPA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.ResourceGraph.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.ResourceGraph.html",
+          "hash": "/jk60FqK2MTJpkocbCkwhw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.TypeHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.TypeHelper.html",
+          "hash": "PuGJpyR3WyYnKX3pN2rBLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Internal.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Internal.html",
+          "hash": "KG8BLOMU9kTkIJM0ft7KLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExceptionFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiExceptionFilter.html",
+          "hash": "qrsx/dZTp9yW89oH1yfJcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.RequestMiddleware.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.RequestMiddleware.html",
+          "hash": "XZQk/IbK4dIJbyeF3OM0/A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.TypeMatchFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.TypeMatchFilter.html",
+          "hash": "QjfKybvsIqjoYNuzCzjyTg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Middleware.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Middleware.html",
+          "hash": "NAmcJjIAPtIL89WWBSdqbg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.AttrAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.AttrAttribute.html",
+          "hash": "hZxenpPm5Y05WenWALUDZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Document.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Document.html",
+          "hash": "Uvit/dmhBi+X+IKFvCIxdw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.DocumentBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.DocumentBase.html",
+          "hash": "yl6aGiHl0Y9nggntgB0h5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Documents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Documents.html",
+          "hash": "mVcPpLOgFM49ij9kgjHDEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.HasManyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.HasManyAttribute.html",
+          "hash": "Y6HIARJE233zI+EPDqKiAg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.HasManyThroughAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.HasManyThroughAttribute.html",
+          "hash": "9mRr1YygBsSrqn7m0UiOcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.HasOneAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.HasOneAttribute.html",
+          "hash": "K8XL3rOILBlHSNNQmCavvw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.IHasMeta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.IHasMeta.html",
+          "hash": "KuSD0r+d65BwQUpOAxmPCQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.IIdentifiable-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.IIdentifiable-1.html",
+          "hash": "QzYDDGhi3Lfez4mokv2VdA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.IIdentifiable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.IIdentifiable.html",
+          "hash": "pZ9xsPChWtvdx7YCp5CuZg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.IResourceDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.IResourceDefinition.html",
+          "hash": "FQCk3w735fCjiwCP+hquMg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.IResourceMapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.IResourceMapper.html",
+          "hash": "xZu2xHYn151njoXHXe/d3g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Identifiable-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Identifiable-1.html",
+          "hash": "+g0BQkz23vHgmJ6sCcfRgQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Identifiable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Identifiable.html",
+          "hash": "MH6yISmLf2xLpCHEge7t+g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.JsonApiExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.JsonApiExtension.html",
+          "hash": "kH1LWfNjjD6TyoXjKL9Ncw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Link.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Link.html",
+          "hash": "7OMjX5+YW/G0Qdptisp8Ag=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Links.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Links.html",
+          "hash": "IMg2RM4lcMU9Kv1x80GpOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.LinksAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.LinksAttribute.html",
+          "hash": "jMabc5whFFDe6QLc3qz6CQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Operations.Operation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Operations.Operation.html",
+          "hash": "xBwbaMbwkhW5ywLjNH7mkA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Operations.OperationCode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Operations.OperationCode.html",
+          "hash": "VfY1+GQgnp+xRUa3HL17Lg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Operations.OperationsDocument.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Operations.OperationsDocument.html",
+          "hash": "WzvFw/zYsFjNInEC/CNQWw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Operations.Params.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Operations.Params.html",
+          "hash": "cBvzgX0kzanVzTwq3wVbRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Operations.ResourceReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Operations.ResourceReference.html",
+          "hash": "jXni9bDUu0u9e6wxhh2Azg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.Operations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.Operations.html",
+          "hash": "Js1n65gOi9vZ707Fu5v13Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.RelationshipAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.RelationshipAttribute.html",
+          "hash": "jz9OGWC78jEVJqkf9//wrA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.RelationshipData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.RelationshipData.html",
+          "hash": "wume0bhvoibznk4gyjQM2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.ResourceAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.ResourceAttribute.html",
+          "hash": "SmNYB/pMBhHrALm095I2uQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.ResourceDefinition-1.PropertySortOrder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.ResourceDefinition-1.PropertySortOrder.html",
+          "hash": "kFfF3rsog56PibReX8DYWQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.ResourceDefinition-1.QueryFilters.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.ResourceDefinition-1.QueryFilters.html",
+          "hash": "GIPR2Hs1okr6jPj3Ep98rw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.ResourceDefinition-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.ResourceDefinition-1.html",
+          "hash": "O8sAJf8x1nVnYOd3S8l8Mw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.ResourceIdentifierObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.ResourceIdentifierObject.html",
+          "hash": "ieDyCqO1hLk6limJRsWucg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.ResourceObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.ResourceObject.html",
+          "hash": "oVhBmbhbSTZOaTZFe1h8Vg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.RootLinks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.RootLinks.html",
+          "hash": "eF5qxO9pAFQP1I+bH4vaBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.html",
+          "hash": "KxP519MWlPegSWCEEo4FlA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Request.HasManyRelationshipPointers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Request.HasManyRelationshipPointers.html",
+          "hash": "fPKU4nJgo6nJXRrCqudo0Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Request.HasOneRelationshipPointers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Request.HasOneRelationshipPointers.html",
+          "hash": "zIrhuj4EcaBjTEyzgh2uWQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Request.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Request.html",
+          "hash": "QKc1HwoIDFZRetkbsOMv7A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.DasherizedResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.DasherizedResolver.html",
+          "hash": "7gpL/27lo/xrXTIaDyXFqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiDeSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiDeSerializer.html",
+          "hash": "72RZ2p9iBuX34hOw4ISemQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.IJsonApiSerializer.html",
+          "hash": "pw71r63w7NoKEVpGmkBb5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.JsonApiDeSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.JsonApiDeSerializer.html",
+          "hash": "sbbd9zIrrFytQAgebXU3NA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.JsonApiSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.JsonApiSerializer.html",
+          "hash": "/DsAJebq9IldcVKMUWjR8w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.html",
+          "hash": "X9L3CSTYlzfeyj68TxQOMw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.ControllerContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.ControllerContext.html",
+          "hash": "FqVwmFUxLj11hKc0/fGjYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.EntityResourceService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.EntityResourceService-1.html",
+          "hash": "5bILkMWIebNiKJ5GeNfuAA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.EntityResourceService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.EntityResourceService-2.html",
+          "hash": "kRhRNs9X9hS3sc5qr2bPQA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.EntityResourceService-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.EntityResourceService-3.html",
+          "hash": "o57okC/Bul78KSCmoDv4oA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IControllerContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IControllerContext.html",
+          "hash": "ah6uMPJH12bL/ZZYpOt6mA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.ICreateService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.ICreateService-1.html",
+          "hash": "UfcMLS4p0HOl4M+aVMS0tw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.ICreateService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.ICreateService-2.html",
+          "hash": "i1nf60u+KlS6sdwC1Lmg6g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IDeleteService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IDeleteService-1.html",
+          "hash": "agxkMg/VqnrBtrmiCumYFQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IDeleteService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IDeleteService-2.html",
+          "hash": "Gy3/nqhjOgKTWLUPjB62Bw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetAllService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetAllService-1.html",
+          "hash": "HxZEkHiAps+iOE2xrusP7A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetAllService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetAllService-2.html",
+          "hash": "j1w2LMuMbMZgyCq7zSjU3w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetByIdService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetByIdService-1.html",
+          "hash": "KH/YBuWnR01Clj1Rs1st2Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetByIdService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetByIdService-2.html",
+          "hash": "PUbwHK213GEFBnhzGzyCWg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipService-1.html",
+          "hash": "fNGgAnvN+7ZLltQH/+JRvA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipService-2.html",
+          "hash": "ME1h4MGrpCZYIs9p9cgkfg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipsService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipsService-1.html",
+          "hash": "2YfvJYh8dasewmvot2gFVg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipsService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IGetRelationshipsService-2.html",
+          "hash": "5O16uy63JIeF5aau4kmFFQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IJsonApiApplication.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IJsonApiApplication.html",
+          "hash": "FsNRlxQ15yJdArT/fx1Hig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IJsonApiContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IJsonApiContext.html",
+          "hash": "PrN/GiZq4V3pfQo9TkIRmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IJsonApiRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IJsonApiRequest.html",
+          "hash": "5X0mhp9JXV2LiwbXo0JXEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IQueryAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IQueryAccessor.html",
+          "hash": "E52bS30wjRGSY909aPzfvg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IQueryComposer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IQueryComposer.html",
+          "hash": "O8ky9KsHCNeuJNz/mR1yww=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IQueryParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IQueryParser.html",
+          "hash": "Kw0Suwt9ULm4PB2t3BgXRA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IQueryRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IQueryRequest.html",
+          "hash": "5rCnH8p2r5R0W4WYmq0rog=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IRequestMeta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IRequestMeta.html",
+          "hash": "hiT6K2ixhmUtrNnyjrGz6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceCmdService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceCmdService-1.html",
+          "hash": "RgDWc2YSgFgyz3guXymbXA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceCmdService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceCmdService-2.html",
+          "hash": "yHuyxYRdwjyvP0kyVIQVcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceQueryService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceQueryService-1.html",
+          "hash": "3vCkD1zicFJ70/fmCCE20A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceQueryService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceQueryService-2.html",
+          "hash": "0taw4fUTN1ywgKEzO9Xltw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceService-1.html",
+          "hash": "PeFkOmj4/XUBZBh9hQgFyg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IResourceService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IResourceService-2.html",
+          "hash": "KO+QMmPWpVVfsHXfxE9pQQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IScopedServiceProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IScopedServiceProvider.html",
+          "hash": "adMa981d7spWitOLINdVDw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IUpdateRelationshipService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IUpdateRelationshipService-1.html",
+          "hash": "gM75EgQ4+JIxTIyfcNDNEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IUpdateRelationshipService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html",
+          "hash": "97zcAk6iSHhzvuX/KLYTEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IUpdateRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IUpdateRequest.html",
+          "hash": "7ATJ4AJtRmd99Y7YOHLXCg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IUpdateService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IUpdateService-1.html",
+          "hash": "CRW96TbQYbv7Cp3cEjxSpA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IUpdateService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.IUpdateService-2.html",
+          "hash": "vwS4MTrd5qnKLx09cf+UOA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.JsonApiContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.JsonApiContext.html",
+          "hash": "+ygP2m7M6L7tdntdwT8Iiw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.IOpProcessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.IOpProcessor.html",
+          "hash": "WIsRjWM0jmWn7MlniCf6Dw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.IOperationProcessorResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.IOperationProcessorResolver.html",
+          "hash": "HdByQauzeJteQ9AkM5do8g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.IOperationsProcessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.IOperationsProcessor.html",
+          "hash": "5sMZYZ4B7USvWigV00rNDA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.OperationProcessorResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.OperationProcessorResolver.html",
+          "hash": "VXKB4/REHxQmOlncbpmi5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.OperationsProcessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.OperationsProcessor.html",
+          "hash": "a+MRqP5tAsaIkrEKeIw4Ig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.CreateOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.CreateOpProcessor-1.html",
+          "hash": "Z7y7brrpvjbqDRj+ob3hVw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.CreateOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.CreateOpProcessor-2.html",
+          "hash": "gOZsf4FYEd4f0kb4Q4aJsA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.GetOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.GetOpProcessor-1.html",
+          "hash": "TU6J2xkhhaEyQDLbwlPThw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.GetOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.GetOpProcessor-2.html",
+          "hash": "NkaiU8zagdac5SxA3pnjgQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.ICreateOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.ICreateOpProcessor-1.html",
+          "hash": "NHVlTX9xjK0XkHPtUzqL/w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.ICreateOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.ICreateOpProcessor-2.html",
+          "hash": "LUZZefQioBIS1a9rvzMqlg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IGetOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IGetOpProcessor-1.html",
+          "hash": "+NSA6HAnOdkllC1SJlmLAQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IGetOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IGetOpProcessor-2.html",
+          "hash": "0gQC+fWuChcDoJS/8sqNLA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IRemoveOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IRemoveOpProcessor-1.html",
+          "hash": "WOQHx+GkEjtKkNuYSHyn0Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IRemoveOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IRemoveOpProcessor-2.html",
+          "hash": "ctgmHNwyfB2sDmZVtXcP4Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IUpdateOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IUpdateOpProcessor-1.html",
+          "hash": "s4K9JeBU7jpp5Uux6c2+Aw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IUpdateOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.IUpdateOpProcessor-2.html",
+          "hash": "eGJnTTKoehBRUJOz2vvq0A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.RemoveOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.RemoveOpProcessor-1.html",
+          "hash": "rAX3q+ZM4SotMl0t+TTWIg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.RemoveOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.RemoveOpProcessor-2.html",
+          "hash": "v1wSad7p5u1ln/aWKK8gTg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.UpdateOpProcessor-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.UpdateOpProcessor-1.html",
+          "hash": "am3wfWGmNNjLSIYWw//bmg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.UpdateOpProcessor-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.UpdateOpProcessor-2.html",
+          "hash": "izUhevas56S6K/cumJ7ySw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.Processors.html",
+          "hash": "xf/J6D7eENCdQre3hwI2jQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.Operations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.Operations.html",
+          "hash": "2jZ0p70Dqk+d5/upDbqvhg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.QueryAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.QueryAccessor.html",
+          "hash": "J0HakTXDC+pgLmhxeA7LcA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.QueryComposer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.QueryComposer.html",
+          "hash": "F8Fg7zGu3P2BTHgM32hWbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.QueryParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.QueryParser.html",
+          "hash": "PTNVKnuj4C9tiHYZ23/OpA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.RequestScopedServiceProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.RequestScopedServiceProvider.html",
+          "hash": "2f4CnoQK3Nt9yi3HsEAb8g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Services.html",
+          "hash": "fOkqZWMrqd60XXpcDkh0pw=="
         }
       },
       "is_incremental": false,
@@ -24,7 +2937,19 @@
       "output": {
         ".html": {
           "relative_path": "api/index.html",
-          "hash": "Nni44dlwOI4qn2st1D14yw=="
+          "hash": "4eqMyYZVcA+FABvj6H7SdQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "fRUubAtsHMKF4AHAOET2VA=="
         }
       },
       "is_incremental": false,
@@ -36,7 +2961,7 @@
       "output": {
         ".html": {
           "relative_path": "getting-started/install.html",
-          "hash": "K53aeSXS0/r8cy7Bmkp8Og=="
+          "hash": "moJxItH6FJDeJDPYN19O/Q=="
         }
       },
       "is_incremental": false,
@@ -48,7 +2973,7 @@
       "output": {
         ".html": {
           "relative_path": "getting-started/step-by-step.html",
-          "hash": "GriNoj8fxLr5gapyv/DwPw=="
+          "hash": "Ir9C1DVhXNox9lXmZ/xKOg=="
         }
       },
       "is_incremental": false,
@@ -75,7 +3000,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "xsJRSEgbFYmXcoWvYiLgjA=="
+          "hash": "60mlh93Hq2thaDx0oFUlOA=="
         }
       },
       "is_incremental": false,
@@ -90,7 +3015,7 @@
       "output": {
         ".html": {
           "relative_path": "request-examples/README.html",
-          "hash": "LJ/E/zHkOxpn0eSDk8b3TA=="
+          "hash": "t4dg2vtbXLJtIdST3+EiYg=="
         }
       },
       "is_incremental": false,
@@ -105,7 +3030,7 @@
       "output": {
         ".html": {
           "relative_path": "request-examples/index.html",
-          "hash": "9qxQBCvtTdiv2mlnF2yMFw=="
+          "hash": "2Z7LFVbgKa/9dxEFDxl51Q=="
         }
       },
       "is_incremental": false,
@@ -117,7 +3042,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "4QMrL2ZEXdna0BlO26jzCw=="
+          "hash": "eiHcaEO/5DXU967bpi2y+Q=="
         }
       },
       "is_incremental": false,
@@ -129,7 +3054,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/errors.html",
-          "hash": "bDVATCzEo5g4yE0a98G3nA=="
+          "hash": "fe1HMtdI9zPUCAW+lasoGw=="
         }
       },
       "is_incremental": false,
@@ -141,7 +3066,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/controllers.html",
-          "hash": "3f/Ct2c8CSGov2S2y+sb9A=="
+          "hash": "yDUyR71od2xgwLWpAGUNgg=="
         }
       },
       "is_incremental": false,
@@ -153,7 +3078,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/custom-query-formats.html",
-          "hash": "A2LK5YgkTUkdM2NMt4C/7Q=="
+          "hash": "QG19pZDkpU17ZcePxS1v+w=="
         }
       },
       "is_incremental": false,
@@ -165,7 +3090,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/layer-overview.html",
-          "hash": "bqJXRzU4gTy+NHzz2HmP2g=="
+          "hash": "w93M8DqGCAcapYDjd1nzxQ=="
         }
       },
       "is_incremental": false,
@@ -177,7 +3102,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/middleware.html",
-          "hash": "ZfFIF24r+AZtpJJgki5Q8A=="
+          "hash": "rDYElpWhe3xL28h2f6anbg=="
         }
       },
       "is_incremental": false,
@@ -189,7 +3114,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/repositories.html",
-          "hash": "JHRxPFt4ICrXgAopQL/QpQ=="
+          "hash": "xB9sxGM64Ftcn6c2PXc5wQ=="
         }
       },
       "is_incremental": false,
@@ -201,7 +3126,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/services.html",
-          "hash": "pjghFBUVXIihYTglS+Z3ig=="
+          "hash": "bRrU0r0iLst4ZOAl4Z6f0g=="
         }
       },
       "is_incremental": false,
@@ -216,7 +3141,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/filtering.html",
-          "hash": "Px5Kb+X5tHO74pbKvFs4PA=="
+          "hash": "Xt0Hl+HYSqlYK8zW22FmRg=="
         }
       },
       "is_incremental": false,
@@ -228,7 +3153,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/including-relationships.html",
-          "hash": "SHgCKJoRCPZjIN5k81n0mQ=="
+          "hash": "4EjnUWguOIzb1w4FQvh7ew=="
         }
       },
       "is_incremental": false,
@@ -240,7 +3165,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/index.html",
-          "hash": "Y2QjMHoRBZVEvgtkzhdD3w=="
+          "hash": "tx61Q8FKpPUx4+jSbwuViA=="
         }
       },
       "is_incremental": false,
@@ -252,7 +3177,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/meta.html",
-          "hash": "ZkphJq/nlOZfnWLEQXUxYw=="
+          "hash": "cVw4mmLzNYyk/44cjvfwZA=="
         }
       },
       "is_incremental": false,
@@ -264,7 +3189,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/options.html",
-          "hash": "1iAGT+Jb5zK8tHXh7J86lQ=="
+          "hash": "u+EWWXvYBDlXm/SqmCPGVw=="
         }
       },
       "is_incremental": false,
@@ -279,7 +3204,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/pagination.html",
-          "hash": "6yF5JvZWnEhiO4ohSrTe6A=="
+          "hash": "nuE4Xs7Mdy31Ipy+uZN+Bw=="
         }
       },
       "is_incremental": false,
@@ -291,7 +3216,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resource-graph.html",
-          "hash": "NaVlEfVnE6s3yR7wnaCoJQ=="
+          "hash": "j/40bfkV73j0yc4s2VX9dw=="
         }
       },
       "is_incremental": false,
@@ -303,7 +3228,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resources/attributes.html",
-          "hash": "pkgaJeyRVKaquglKzFNwkg=="
+          "hash": "b1Wm89gRgYYSsht/z2UcFg=="
         }
       },
       "is_incremental": false,
@@ -315,7 +3240,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resources/discovery.html",
-          "hash": "oh31xPJ2XQ+ZXPNR/+ypyQ=="
+          "hash": "XDewD7d50B2dRgUCBwqGJg=="
         }
       },
       "is_incremental": false,
@@ -327,7 +3252,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resources/hooks.html",
-          "hash": "wH5/wbz+/ojYoZnIRnHilQ=="
+          "hash": "QZ3IBiCbu7aGw1sX3EnjHw=="
         }
       },
       "is_incremental": false,
@@ -339,7 +3264,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resources/index.html",
-          "hash": "Dpc6IGhrKB+e6YBTL+5o7g=="
+          "hash": "SnyTfXubxzBr07eo5kgz5w=="
         }
       },
       "is_incremental": false,
@@ -351,7 +3276,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resources/relationships.html",
-          "hash": "W25FXWRbz44RsC8DzhGFiw=="
+          "hash": "WTjgu2NYXVkSLUNqPjJ4Sw=="
         }
       },
       "is_incremental": false,
@@ -363,7 +3288,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resources/resource-definitions.html",
-          "hash": "uVi9ULlj7gv6X34JqjBu0w=="
+          "hash": "YEWioQ7G59NT6NrLhOTVyw=="
         }
       },
       "is_incremental": false,
@@ -378,7 +3303,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/routing.html",
-          "hash": "41oziSVoaKKPFCUYijp/tA=="
+          "hash": "sBB/rsPBI2Dmwgd84QteLg=="
         }
       },
       "is_incremental": false,
@@ -393,7 +3318,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/sorting.html",
-          "hash": "HHux7trqUu5Y+YWXP4ZaiA=="
+          "hash": "+E2RC0PRVl9VCCzSjzHkTw=="
         }
       },
       "is_incremental": false,
@@ -405,7 +3330,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/sparse-field-selection.html",
-          "hash": "v0OYYcA7IWC/3TZ88hOpOg=="
+          "hash": "Zl0y/gpyfeVxkWuCC5CGKA=="
         }
       },
       "is_incremental": false,
@@ -446,6 +3371,12 @@
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 30,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 242,
           "skipped_file_count": 0
         }
       }

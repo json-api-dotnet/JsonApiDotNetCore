@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class DefaultEntityRepository&lt;TEntity&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class DefaultEntityRepository&lt;TEntity&gt;
+   ">
+    <meta name="generator" content="docfx 2.43.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Data.DefaultEntityRepository`1">
+  
+  
+  <h1 id="JsonApiDotNetCore_Data_DefaultEntityRepository_1" data-uid="JsonApiDotNetCore.Data.DefaultEntityRepository`1" class="text-break">Class DefaultEntityRepository&lt;TEntity&gt;
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html">DefaultEntityRepository</a>&lt;TEntity, <span class="xref">System.Int32</span>&gt;</div>
+    <div class="level2"><span class="xref">DefaultEntityRepository&lt;TEntity&gt;</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IEntityRepository-1.html">IEntityRepository</a>&lt;TEntity&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IEntityRepository-2.html">IEntityRepository</a>&lt;TEntity, <span class="xref">System.Int32</span>&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IEntityReadRepository-2.html">IEntityReadRepository</a>&lt;TEntity, <span class="xref">System.Int32</span>&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Data.IEntityWriteRepository-2.html">IEntityWriteRepository</a>&lt;TEntity, <span class="xref">System.Int32</span>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Get">DefaultEntityRepository&lt;TEntity, Int32&gt;.Get()</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Select_System_Linq_IQueryable__0__System_Collections_Generic_List_System_String__">DefaultEntityRepository&lt;TEntity, Int32&gt;.Select(IQueryable&lt;TEntity&gt;, List&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Filter_System_Linq_IQueryable__0__JsonApiDotNetCore_Internal_Query_FilterQuery_">DefaultEntityRepository&lt;TEntity, Int32&gt;.Filter(IQueryable&lt;TEntity&gt;, FilterQuery)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Sort_System_Linq_IQueryable__0__System_Collections_Generic_List_JsonApiDotNetCore_Internal_Query_SortQuery__">DefaultEntityRepository&lt;TEntity, Int32&gt;.Sort(IQueryable&lt;TEntity&gt;, List&lt;SortQuery&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_GetAsync__1_">DefaultEntityRepository&lt;TEntity, Int32&gt;.GetAsync(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_GetAndIncludeAsync__1_System_String_">DefaultEntityRepository&lt;TEntity, Int32&gt;.GetAndIncludeAsync(Int32, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_CreateAsync__0_">DefaultEntityRepository&lt;TEntity, Int32&gt;.CreateAsync(TEntity)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_DetachRelationshipPointers__0_">DefaultEntityRepository&lt;TEntity, Int32&gt;.DetachRelationshipPointers(TEntity)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_UpdateAsync__1__0_">DefaultEntityRepository&lt;TEntity, Int32&gt;.UpdateAsync(Int32, TEntity)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_UpdateAsync__0_">DefaultEntityRepository&lt;TEntity, Int32&gt;.UpdateAsync(TEntity)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_UpdateRelationshipsAsync_System_Object_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_IEnumerable_System_String__">DefaultEntityRepository&lt;TEntity, Int32&gt;.UpdateRelationshipsAsync(Object, RelationshipAttribute, IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_DeleteAsync__1_">DefaultEntityRepository&lt;TEntity, Int32&gt;.DeleteAsync(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_Include_System_Linq_IQueryable__0__System_String_">DefaultEntityRepository&lt;TEntity, Int32&gt;.Include(IQueryable&lt;TEntity&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_PageAsync_System_Linq_IQueryable__0__System_Int32_System_Int32_">DefaultEntityRepository&lt;TEntity, Int32&gt;.PageAsync(IQueryable&lt;TEntity&gt;, Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_CountAsync_System_Linq_IQueryable__0__">DefaultEntityRepository&lt;TEntity, Int32&gt;.CountAsync(IQueryable&lt;TEntity&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_FirstOrDefaultAsync_System_Linq_IQueryable__0__">DefaultEntityRepository&lt;TEntity, Int32&gt;.FirstOrDefaultAsync(IQueryable&lt;TEntity&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_ToListAsync_System_Linq_IQueryable__0__">DefaultEntityRepository&lt;TEntity, Int32&gt;.ToListAsync(IQueryable&lt;TEntity&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.DefaultEntityRepository-2.html#JsonApiDotNetCore_Data_DefaultEntityRepository_2_LoadCurrentRelationships__0_JsonApiDotNetCore_Models_RelationshipAttribute_">DefaultEntityRepository&lt;TEntity, Int32&gt;.LoadCurrentRelationships(TEntity, RelationshipAttribute)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Data.html">JsonApiDotNetCore.Data</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Data_DefaultEntityRepository_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DefaultEntityRepository&lt;TEntity&gt; : DefaultEntityRepository&lt;TEntity, int&gt;, IEntityFrameworkRepository&lt;TEntity&gt;, IEntityRepository&lt;TEntity&gt;, IEntityRepository&lt;TEntity, int&gt;, IEntityReadRepository&lt;TEntity, int&gt;, IEntityWriteRepository&lt;TEntity, int&gt; where TEntity : class, IIdentifiable&lt;int&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TEntity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_DefaultEntityRepository_1__ctor_JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Data_IDbContextResolver_JsonApiDotNetCore_Models_ResourceDefinition__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.DefaultEntityRepository%601.%23ctor(JsonApiDotNetCore.Services.IJsonApiContext%2CJsonApiDotNetCore.Data.IDbContextResolver%2CJsonApiDotNetCore.Models.ResourceDefinition%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/DefaultEntityRepository.cs/#L22">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_DefaultEntityRepository_1__ctor_" data-uid="JsonApiDotNetCore.Data.DefaultEntityRepository`1.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Data_DefaultEntityRepository_1__ctor_JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Data_IDbContextResolver_JsonApiDotNetCore_Models_ResourceDefinition__0__" data-uid="JsonApiDotNetCore.Data.DefaultEntityRepository`1.#ctor(JsonApiDotNetCore.Services.IJsonApiContext,JsonApiDotNetCore.Data.IDbContextResolver,JsonApiDotNetCore.Models.ResourceDefinition{`0})">DefaultEntityRepository(IJsonApiContext, IDbContextResolver, ResourceDefinition&lt;TEntity&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DefaultEntityRepository(IJsonApiContext jsonApiContext, IDbContextResolver contextResolver, ResourceDefinition&lt;TEntity&gt; resourceDefinition = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></td>
+        <td><span class="parametername">jsonApiContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Data.IDbContextResolver.html">IDbContextResolver</a></td>
+        <td><span class="parametername">contextResolver</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition</a>&lt;TEntity&gt;</td>
+        <td><span class="parametername">resourceDefinition</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_DefaultEntityRepository_1__ctor_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Data_IDbContextResolver_JsonApiDotNetCore_Models_ResourceDefinition__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.DefaultEntityRepository%601.%23ctor(Microsoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IJsonApiContext%2CJsonApiDotNetCore.Data.IDbContextResolver%2CJsonApiDotNetCore.Models.ResourceDefinition%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/DefaultEntityRepository.cs/#L29">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Data_DefaultEntityRepository_1__ctor_" data-uid="JsonApiDotNetCore.Data.DefaultEntityRepository`1.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Data_DefaultEntityRepository_1__ctor_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Data_IDbContextResolver_JsonApiDotNetCore_Models_ResourceDefinition__0__" data-uid="JsonApiDotNetCore.Data.DefaultEntityRepository`1.#ctor(Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IJsonApiContext,JsonApiDotNetCore.Data.IDbContextResolver,JsonApiDotNetCore.Models.ResourceDefinition{`0})">DefaultEntityRepository(ILoggerFactory, IJsonApiContext, IDbContextResolver, ResourceDefinition&lt;TEntity&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DefaultEntityRepository(ILoggerFactory loggerFactory, IJsonApiContext jsonApiContext, IDbContextResolver contextResolver, ResourceDefinition&lt;TEntity&gt; resourceDefinition = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></td>
+        <td><span class="parametername">jsonApiContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Data.IDbContextResolver.html">IDbContextResolver</a></td>
+        <td><span class="parametername">contextResolver</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition</a>&lt;TEntity&gt;</td>
+        <td><span class="parametername">resourceDefinition</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IEntityRepository-1.html">IEntityRepository&lt;TEntity&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IEntityRepository-2.html">IEntityRepository&lt;TEntity, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IEntityReadRepository-2.html">IEntityReadRepository&lt;TEntity, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Data.IEntityWriteRepository-2.html">IEntityWriteRepository&lt;TEntity, TId&gt;</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_DefaultEntityRepository_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.DefaultEntityRepository%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/DefaultEntityRepository.cs/#L17" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

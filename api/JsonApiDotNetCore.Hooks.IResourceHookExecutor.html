@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IResourceHookExecutor
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IResourceHookExecutor
+   ">
+    <meta name="generator" content="docfx 2.43.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IResourceHookExecutor">
+  
+  
+  <h1 id="JsonApiDotNetCore_Hooks_IResourceHookExecutor" data-uid="JsonApiDotNetCore.Hooks.IResourceHookExecutor" class="text-break">Interface IResourceHookExecutor
+  </h1>
+  <div class="markdown level0 summary"><p>Transient service responsible for executing Resource Hooks as defined 
+in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>. see methods in 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a> and 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a> for more information.</p>
+<p>Uses <span class="xref">JsonApiDotNetCore.Hooks.TraversalHelper</span> for traversal of nested entity data structures.
+Uses <span class="xref">JsonApiDotNetCore.Hooks.HookExecutorHelper</span> for retrieving meta data about hooks, 
+fetching database values and performing other recurring internal operations.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IBeforeExecutor.BeforeCreate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeRead__1_JsonApiDotNetCore_Hooks_ResourcePipeline_System_String_">IBeforeExecutor.BeforeRead&lt;TEntity&gt;(ResourcePipeline, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IBeforeExecutor.BeforeUpdate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IBeforeExecutor.BeforeDelete&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IAfterExecutor.AfterCreate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterRead__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IAfterExecutor.AfterRead&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IAfterExecutor.AfterUpdate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_">IAfterExecutor.AfterDelete&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html#JsonApiDotNetCore_Hooks_IOnExecutor_OnReturn__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IOnExecutor.OnReturn&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Hooks_IResourceHookExecutor_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IResourceHookExecutor : IBeforeExecutor, IAfterExecutor, IOnExecutor</code></pre>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IResourceHookExecutor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IResourceHookExecutor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L17" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
