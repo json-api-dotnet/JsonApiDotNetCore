@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public HashSet<TEntity> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
 
-        internal ResourceDiff(IEnumerable requestEntities,
+        public ResourceDiff(IEnumerable requestEntities,
                           IEnumerable databaseEntities,
                           Dictionary<RelationshipProxy, IEnumerable> relationships) : base(requestEntities, relationships)
         {
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Hooks
 
     public class ResourceDiffPair<TEntity> where TEntity : class, IIdentifiable
     {
-        internal ResourceDiffPair(TEntity entity, TEntity databaseValue)
+        public ResourceDiffPair(TEntity entity, TEntity databaseValue)
         {
             Entity = entity;
             DatabaseValue = databaseValue;
