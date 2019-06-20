@@ -14,12 +14,12 @@ namespace JsonApiDotNetCore.Hooks
         /// Grouped by relationship to the previous layer, gets all the entities of the current layer
         /// </summary>
         /// <returns>The dependent entities.</returns>
-        Dictionary<RelationshipProxy, IEnumerable> GetDependentEntities();
+        Dictionary<RelationshipAttribute, IEnumerable> GetDependentEntities();
         /// <summary>
         /// Grouped by relationship to the previous layer, gets all the entities of the previous layer
         /// </summary>
         /// <returns>The dependent entities.</returns>
-        Dictionary<RelationshipProxy, IEnumerable> GetPrincipalEntities();
+        Dictionary<RelationshipAttribute, IEnumerable> GetPrincipalEntities();
     }
 
     internal class RelationshipsFromPreviousLayer<TDependent> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TDependent>> where TDependent : class, IIdentifiable
@@ -31,14 +31,14 @@ namespace JsonApiDotNetCore.Hooks
             _collection = collection;
         }
 
-        public Dictionary<RelationshipProxy, IEnumerable> GetDependentEntities()
+        public Dictionary<RelationshipAttribute, IEnumerable> GetDependentEntities()
         {
-            return _collection.ToDictionary(rg => rg.Proxy, rg => (IEnumerable)rg.DependentEntities);
+            return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.DependentEntities);
         }
 
-        public Dictionary<RelationshipProxy, IEnumerable> GetPrincipalEntities()
+        public Dictionary<RelationshipAttribute, IEnumerable> GetPrincipalEntities()
         {
-            return _collection.ToDictionary(rg => rg.Proxy, rg => (IEnumerable)rg.PrincipalEntities);
+            return _collection.ToDictionary(rg => rg.Proxy.Attribute, rg => (IEnumerable)rg.PrincipalEntities);
         }
 
         public IEnumerator<RelationshipGroup<TDependent>> GetEnumerator()

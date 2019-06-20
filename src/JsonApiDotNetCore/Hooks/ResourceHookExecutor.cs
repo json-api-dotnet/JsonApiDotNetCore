@@ -47,7 +47,8 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
-                var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, node.RelationshipsToNextLayer);
+                var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
+                var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
                 var diff = new ResourceDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
@@ -79,7 +80,8 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
             {
-                var targetEntities = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, node.RelationshipsToNextLayer) ?? node.UniqueEntities;
+                var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
+                var targetEntities = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, relationships) ?? node.UniqueEntities;
                 var affected = new AffectedResources<TEntity>(targetEntities, node.PrincipalsToNextLayer());
 
                 IEnumerable<TEntity> updated = container.BeforeDelete(affected, pipeline);
@@ -251,7 +253,8 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
-                        var dbValues = LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, node.RelationshipsToNextLayer);
+                        var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
+                        var dbValues = LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, relationships);
                         var resourcesByRelationship = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
                         var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
@@ -281,7 +284,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Given a source of entities, gets the implicitly affected entities 
         /// from the database and calls the BeforeImplicitUpdateRelationship hook.
         /// </summary>
-        void FireForAffectedImplicits(Type entityTypeToInclude, Dictionary<RelationshipProxy, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitEntities = null)
+        void FireForAffectedImplicits(Type entityTypeToInclude, Dictionary<RelationshipAttribute, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitEntities = null)
         {
             var container = _executorHelper.GetResourceHookContainer(entityTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
             if (container == null) return;
@@ -310,10 +313,10 @@ namespace JsonApiDotNetCore.Hooks
         /// NOTE: in JADNC usage, the root layer is ALWAYS homogenous, so we can be sure that for every 
         /// relationship to the previous layer, the principal type is the same.
         /// </summary>
-        (Dictionary<RelationshipProxy, IEnumerable>, PrincipalType) GetDependentImplicitsTargets(Dictionary<RelationshipProxy, IEnumerable> dependentEntities)
+        (Dictionary<RelationshipAttribute, IEnumerable>, PrincipalType) GetDependentImplicitsTargets(Dictionary<RelationshipAttribute, IEnumerable> dependentEntities)
         {
             PrincipalType principalType = dependentEntities.First().Key.PrincipalType;
-            var byInverseRelationship = dependentEntities.Where(kvp => kvp.Key.Attribute.InverseNavigation != null).ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+            var byInverseRelationship = dependentEntities.Where(kvp => kvp.Key.InverseNavigation != null).ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             return (byInverseRelationship, principalType);
 
         }
@@ -350,17 +353,17 @@ namespace JsonApiDotNetCore.Hooks
         /// If <paramref name="dbValues"/> are included, the values of the entries in <paramref name="prevLayerRelationships"/> need to be replaced with these values.
         /// </summary>
         /// <returns>The relationship helper.</returns>
-        IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
+        IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
             if (dbValues != null) ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, true, prevLayerRelationships);
+            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, prevLayerRelationships);
         }
 
         /// <summary>
         /// Replaces the entities in the values of the prevLayerRelationships dictionary 
         /// with the corresponding entities loaded from the db.
         /// </summary>
-        void ReplaceWithDbValues(Dictionary<RelationshipProxy, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
+        void ReplaceWithDbValues(Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
@@ -379,14 +382,14 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Gets the inverse <see cref="RelationshipProxy"/> for <paramref name="proxy"/>
+        /// Gets the inverse <see cref="RelationshipAttribute"/> for <paramref name="attribute"/>
         /// </summary>
-        RelationshipProxy GetInverseRelationship(RelationshipProxy proxy)
+        RelationshipAttribute GetInverseRelationship(RelationshipAttribute attribute)
         {
-            return new RelationshipProxy(_graph.GetInverseRelationship(proxy.Attribute), proxy.PrincipalType, false);
+            return _graph.GetInverseRelationship(attribute);
         }
 
-        IEnumerable LoadDbValues(Type containerEntityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipProxy[] relationshipsToNextLayer) 
+        IEnumerable LoadDbValues(Type containerEntityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer) 
         {
             if (!_executorHelper.ShouldLoadDbValues(containerEntityType, targetHook)) return null;
             return _executorHelper.LoadDbValues(containerEntityType, uniqueEntities, targetHook, relationshipsToNextLayer);

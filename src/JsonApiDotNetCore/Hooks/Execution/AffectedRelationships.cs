@@ -30,13 +30,13 @@ namespace JsonApiDotNetCore.Hooks
 
     public class AffectedRelationships<TDependent> : IAffectedRelationships<TDependent> where TDependent : class, IIdentifiable
     {
-        private readonly Dictionary<RelationshipProxy, HashSet<TDependent>> _groups;
+        private readonly Dictionary<RelationshipAttribute, HashSet<TDependent>> _groups;
 
         public Dictionary<RelationshipAttribute, HashSet<TDependent>> AllByRelationships()
         {
-            return _groups?.ToDictionary(p => p.Key.Attribute, p => p.Value);
+            return _groups;
         }
-        internal AffectedRelationships(Dictionary<RelationshipProxy, IEnumerable> relationships)
+        public AffectedRelationships(Dictionary<RelationshipAttribute, IEnumerable> relationships)
         {
             _groups = relationships.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependent>((IEnumerable<TDependent>)kvp.Value));
         }
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Hooks
 
         public Dictionary<RelationshipAttribute, HashSet<TDependent>> GetByRelationship(Type principalType)
         {
-            return _groups?.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key.Attribute, p => p.Value);
+            return _groups?.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key, p => p.Value);
         }
     }
 }

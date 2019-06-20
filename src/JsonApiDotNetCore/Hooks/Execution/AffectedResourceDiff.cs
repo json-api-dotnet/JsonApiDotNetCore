@@ -31,9 +31,9 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public HashSet<TEntity> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
 
-        internal ResourceDiff(IEnumerable requestEntities,
+        public ResourceDiff(IEnumerable requestEntities,
                           IEnumerable databaseEntities,
-                          Dictionary<RelationshipProxy, IEnumerable> relationships) : base(requestEntities, relationships)
+                          Dictionary<RelationshipAttribute, IEnumerable> relationships) : base(requestEntities, relationships)
         {
             _databaseValues = (HashSet<TEntity>)databaseEntities;
             _databaseValuesLoaded |= _databaseValues != null;

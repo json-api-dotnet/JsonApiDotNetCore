@@ -69,6 +69,11 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <param name="internalAttributeName">The internal attribute name for a <see cref="AttrAttribute" />.</param>
         string GetPublicAttributeName<TParent>(string internalAttributeName);
+
+        /// <summary>
+        /// Helper method to get the inverse relationship attribute corresponding 
+        /// to a relationship.
+        /// </summary>
         RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
 
         /// <summary>
