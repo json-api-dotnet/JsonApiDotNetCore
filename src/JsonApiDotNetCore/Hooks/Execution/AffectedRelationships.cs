@@ -18,7 +18,6 @@ namespace JsonApiDotNetCore.Hooks
         /// Gets a dictionary of all entities grouped by affected relationship.
         /// </summary>
         Dictionary<RelationshipAttribute, HashSet<TDependentResource>> AllByRelationships();
-
         /// <summary>
         /// Gets a dictionary of all entities that have an affected relationship to type <typeparamref name="TPrincipalResource"/>
         /// </summary>
@@ -32,6 +31,9 @@ namespace JsonApiDotNetCore.Hooks
     /// <inheritdoc />
     public class AffectedRelationships<TDependentResource> :  IAffectedRelationships<TDependentResource> where TDependentResource : class, IIdentifiable
     {
+        /// <summary>
+        /// Helper method that "unboxes" the TValue from the relationship dictionary 
+        /// </summary>
         internal static Dictionary<RelationshipAttribute, HashSet<TDependentResource>> ConvertRelationshipDictionary(Dictionary<RelationshipAttribute, IEnumerable> relationships)
         {
             return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TDependentResource>)pair.Value);
@@ -71,45 +73,4 @@ namespace JsonApiDotNetCore.Hooks
             return _groups?.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key, p => p.Value);
         }
     }
-
-    ///// <inheritdoc />
-    //public class AffectedRelationships<TDependentResource> : ReadOnlyDictionary<RelationshipAttribute, HashSet<TDependentResource>>, IAffectedRelationships<TDependentResource> where TDependentResource : class, IIdentifiable
-    //{
-    //    private readonly Dictionary<RelationshipAttribute, HashSet<TDependentResource>> _groups;
-
-    //    private static IDictionary<RelationshipAttribute, HashSet<TDependentResource>> test(Dictionary<RelationshipAttribute, IEnumerable> relationship)
-    //    {
-    //        return relationship.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependentResource>((IEnumerable<TDependentResource>)kvp.Value));
-    //    }
-
-    //    public AffectedRelationships(Dictionary<RelationshipAttribute, IEnumerable> relationship) : base(test(relationship))
-    //    {
-    //    }
-
-
-    //    /// <inheritdoc />
-    //    public AffectedRelationships(Dictionary<RelationshipAttribute, IEnumerable> relationships)
-    //    {
-    //        _groups = relationships.ToDictionary(kvp => kvp.Key, kvp => new HashSet<TDependentResource>((IEnumerable<TDependentResource>)kvp.Value));
-    //    }
-
-    //    public Dictionary<RelationshipAttribute, HashSet<TDependentResource>> AllByRelationships()
-    //    {
-    //        return _groups;
-    //    }
-
-
-
-    //    /// <inheritdoc />
-    //    public Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship<TPrincipalResource>() where TPrincipalResource : class, IIdentifiable
-    //    {
-    //        return GetByRelationship(typeof(TPrincipalResource));
-    //    }
-
-    //    /// <inheritdoc />
-    //    public Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship(Type principalType)
-    //    {
-    //        return _groups?.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key, p => p.Value);
-    //    }
-    //}
 }
