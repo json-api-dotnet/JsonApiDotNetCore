@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public HashSet<TEntity> Entities { get; }
 
-        internal AffectedResources(IEnumerable entities,
+        public AffectedResources(IEnumerable entities,
                                  Dictionary<RelationshipAttribute, IEnumerable> relationships) : base(relationships)
         {
             Entities = new HashSet<TEntity>(entities.Cast<TEntity>());
