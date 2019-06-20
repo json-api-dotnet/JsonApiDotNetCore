@@ -8,12 +8,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
 {
-    public interface IAffectedRelationships { }
+    public interface IRelationshipsDictionary { }
 
     /// <summary>
     /// An interface that is implemented to expose a relationship dictionary on another class.
     /// </summary>
-    public interface IRelationshipsDictionary<TDependentResource> : IRelationshipsDictionaryGetters<TDependentResource> where TDependentResource : class, IIdentifiable
+    public interface IExposeRelationshipsDictionary<TDependentResource> : IRelationshipsDictionary<TDependentResource> where TDependentResource : class, IIdentifiable
     {
         /// <summary>
         /// Gets a dictionary of affected resources grouped by affected relationships.
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <summary>
     /// A helper class that provides insights in which relationships have been updated for which entities.
     /// </summary>
-    public interface IRelationshipsDictionaryGetters<TDependentResource> : IAffectedRelationships where TDependentResource : class, IIdentifiable
+    public interface IRelationshipsDictionary<TDependentResource> : IRelationshipsDictionary where TDependentResource : class, IIdentifiable
     {
         /// <summary>
         /// Gets a dictionary of all entities that have an affected relationship to type <typeparamref name="TPrincipalResource"/>
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks
     /// It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TDependentResource}} dictionary
     /// with the two helper methods defined on IAffectedRelationships{TDependentResource}.
     /// </summary>
-    public class RelationshipsDictionary<TDependentResource> : ReadOnlyDictionary<RelationshipAttribute, HashSet<TDependentResource>>, IRelationshipsDictionaryGetters<TDependentResource> where TDependentResource : class, IIdentifiable
+    public class RelationshipsDictionary<TDependentResource> : ReadOnlyDictionary<RelationshipAttribute, HashSet<TDependentResource>>, IRelationshipsDictionary<TDependentResource> where TDependentResource : class, IIdentifiable
     {
         /// <summary>
         /// a dictionary with affected relationships as keys and values being the corresponding resources

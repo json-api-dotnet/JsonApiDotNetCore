@@ -14,7 +14,7 @@ namespace UnitTests.ResourceHooks
         {
             public DummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<Dummy>().Build()) { }
 
-            public override IEnumerable<Dummy> BeforeDelete(IAffectedResources<Dummy> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<Dummy> BeforeDelete(IResourceHashSet<Dummy> affected, ResourcePipeline pipeline) { return affected; }
             public override void AfterDelete(HashSet<Dummy> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
 
@@ -35,7 +35,7 @@ namespace UnitTests.ResourceHooks
         {
             protected ResourceDefintionBase(IResourceGraph graph) : base(graph) { }
 
-            public override IEnumerable<T> BeforeDelete(IAffectedResources<T> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<T> BeforeDelete(IResourceHashSet<T> affected, ResourcePipeline pipeline) { return affected; }
             public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
 
@@ -59,7 +59,7 @@ namespace UnitTests.ResourceHooks
         {
             public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<YetAnotherDummy>().Build()) { }
 
-            public override IEnumerable<YetAnotherDummy> BeforeDelete(IAffectedResources<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<YetAnotherDummy> BeforeDelete(IResourceHashSet<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
 
             [LoadDatabaseValues(false)]
             public override void AfterDelete(HashSet<YetAnotherDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
@@ -81,7 +81,7 @@ namespace UnitTests.ResourceHooks
         {
             public DoubleDummyResourceDefinition1() : base(new ResourceGraphBuilder().AddResource<DoubleDummy>().Build()) { }
 
-            public override IEnumerable<DoubleDummy> BeforeDelete(IAffectedResources<DoubleDummy> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<DoubleDummy> BeforeDelete(IResourceHashSet<DoubleDummy> affected, ResourcePipeline pipeline) { return affected; }
         }
         public class DoubleDummyResourceDefinition2 : ResourceDefinition<DoubleDummy>
         {

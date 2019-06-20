@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
         }
 
-        public override IEnumerable<Tag> BeforeCreate(IAffectedResources<Tag> affected, ResourcePipeline pipeline)
+        public override IEnumerable<Tag> BeforeCreate(IResourceHashSet<Tag> affected, ResourcePipeline pipeline)
         {
             return base.BeforeCreate(affected, pipeline);
         }

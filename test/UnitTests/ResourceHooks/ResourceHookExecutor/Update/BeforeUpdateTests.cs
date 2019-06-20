@@ -24,7 +24,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiffs<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IResourceDiffs<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -62,7 +62,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiffs<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeUpdate(It.IsAny<IResourceDiffs<TodoItem>>(), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 

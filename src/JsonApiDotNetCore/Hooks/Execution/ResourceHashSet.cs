@@ -13,24 +13,25 @@ namespace JsonApiDotNetCore.Hooks
     /// Also contains information about updated relationships through 
     /// implementation of IAffectedRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public interface IAffectedResources<TResource> : IRelationshipsDictionary<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable
+    public interface IResourceHashSet<TResource> : IRelationshipsDictionary<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable
     {
 
     }
 
     /// <summary>
-    /// Implementation of IAffectedResources{TResource}.
+    /// Implementation of IResourceHashSet{TResource}.
     /// 
-    /// It is basically just a HashSet{TResource} that also stores the 
-    /// RelationshipDictionary{TResource} and the same helper methods to access this 
-    /// dictionary as defined on IAffectedRelationshipsDictionary{TResource}.
+    /// Basically a enumerable of <typeparamref name="TResource"/> of resources that were affected by the request. 
+    /// 
+    /// Also contains information about updated relationships through 
+    /// implementation of IRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public class AffectedResources<TResource> : HashSet<TResource>, IAffectedResources<TResource> where TResource : class, IIdentifiable
+    public class ResourceHashSet<TResource> : HashSet<TResource>, IResourceHashSet<TResource> where TResource : class, IIdentifiable
     {
         /// <inheritdoc />
         public RelationshipsDictionary<TResource> AffectedRelationships { get; private set; }
 
-        public AffectedResources(HashSet<TResource> entities,
+        public ResourceHashSet(HashSet<TResource> entities,
                         Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(entities)
         {
             AffectedRelationships = new RelationshipsDictionary<TResource>(relationships);
@@ -39,16 +40,18 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
-        internal AffectedResources(IEnumerable entities,
+        internal ResourceHashSet(IEnumerable entities,
                         Dictionary<RelationshipAttribute, IEnumerable> relationships)
             : this((HashSet<TResource>)entities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships)) { }
 
 
+        /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type principalType)
         {
             return AffectedRelationships.GetByRelationship(principalType);
         }
 
+        /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TPrincipalResource>()  where TPrincipalResource : class, IIdentifiable
         {
             return GetByRelationship<TPrincipalResource>();

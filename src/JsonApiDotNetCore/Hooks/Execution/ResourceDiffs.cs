@@ -12,9 +12,9 @@ namespace JsonApiDotNetCore.Hooks
     /// Contains the resources from the request and the corresponding database values.
     /// 
     /// Also contains information about updated relationships through 
-    /// implementation of IAffectedRelationshipsDictionary<typeparamref name="TResource"/>>
+    /// implementation of IRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public interface IAffectedResourcesDiffs<TResource> : IRelationshipsDictionary<TResource>, IEnumerable<ResourceDiffPair<TResource>> where TResource : class, IIdentifiable
+    public interface IResourceDiffs<TResource> : IRelationshipsDictionary<TResource>, IEnumerable<ResourceDiffPair<TResource>> where TResource : class, IIdentifiable
     {
         /// <summary>
         /// The database values of the resources affected by the request.
@@ -28,19 +28,19 @@ namespace JsonApiDotNetCore.Hooks
     }
 
     /// <inheritdoc />
-    public class AffectedResourcesDiffs<TResource> : IAffectedResourcesDiffs<TResource> where TResource : class, IIdentifiable
+    public class ResourceDiffs<TResource> : IResourceDiffs<TResource> where TResource : class, IIdentifiable
     {
+        /// <inheritdoc />
+        public HashSet<TResource> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
 
-        /// <inheritdoc />
-        public HashSet<TResource> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
         /// <inheritdoc />
         public HashSet<TResource> Resources { get; private set; }
         /// <inheritdoc />
         public RelationshipsDictionary<TResource> AffectedRelationships { get; private set; }
 
-        public AffectedResourcesDiffs(HashSet<TResource> requestEntities,
+        public ResourceDiffs(HashSet<TResource> requestEntities,
                           HashSet<TResource> databaseEntities,
                           Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) 
         {
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
-        internal AffectedResourcesDiffs(IEnumerable requestEntities,
+        internal ResourceDiffs(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
                   Dictionary<RelationshipAttribute, IEnumerable> relationships) 
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships)) { }
