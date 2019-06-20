@@ -61,7 +61,7 @@ namespace UnitTests.ResourceHooks
                 ResourcePipeline.Post),
                 Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
-                It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheck(rh, description + description)),
+                It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheckRelationships(rh, description + description)),
                 ResourcePipeline.Post),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -103,7 +103,7 @@ namespace UnitTests.ResourceHooks
             // assert
             todoResourceMock.Verify(rd => rd.BeforeCreate(It.Is<IAffectedResources<TodoItem>>((entities) => TodoCheck(entities, description)), ResourcePipeline.Post), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
-                It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheck(rh, description + description)),
+                It.Is<IAffectedRelationships<TodoItem>>(rh => TodoCheckRelationships(rh, description + description)),
                 ResourcePipeline.Post),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -174,7 +174,7 @@ namespace UnitTests.ResourceHooks
             return entities.Single().Description == checksum;
         }
 
-        private bool TodoCheck(IAffectedRelationships<TodoItem> rh, string checksum)
+        private bool TodoCheckRelationships(IAffectedRelationships<TodoItem> rh, string checksum)
         {
             return rh.GetByRelationship<Person>().Single().Value.First().Description == checksum;
         }

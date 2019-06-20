@@ -206,8 +206,13 @@ namespace JsonApiDotNetCore.Hooks
                 }
             }
 
-            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.DependentType, kvp.Value));
 
+        }
+
+        private IEnumerable CreateHashSet(Type type, IList elements)
+        {
+            return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(type), new object[] { elements });
         }
 
         bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,

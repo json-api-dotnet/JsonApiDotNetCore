@@ -5,29 +5,43 @@ using System.Collections;
 
 namespace JsonApiDotNetCore.Hooks
 {
-
-    public interface IAffectedResources<TEntity> :  IEnumerable<TEntity> where TEntity : class, IIdentifiable 
-    {
-        HashSet<TEntity> Entities { get; }
-    }
-
-    public class AffectedResources<TEntity> : AffectedRelationships<TEntity>, IAffectedResources<TEntity> where TEntity : class, IIdentifiable
+    /// <summary>
+    /// Basically just a list of <typeparamref name="TResource"/>, but also contains information
+    /// about updated relationships through inheritance of IAffectedRelationships<typeparamref name="TResource"/>>
+    /// </summary>
+    public interface IAffectedResources<TResource> : IAffectedRelationships<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable 
     {
         /// <summary>
         /// The entities that are affected by the request.
         /// </summary>
-        public HashSet<TEntity> Entities { get; }
+        HashSet<TResource> Resources { get; }
+    }
 
-        public AffectedResources(IEnumerable entities,
-                                 Dictionary<RelationshipAttribute, IEnumerable> relationships) : base(relationships)
+    public class AffectedResources<TResource> : AffectedRelationships<TResource>, IAffectedResources<TResource> where TResource : class, IIdentifiable
+    {
+        /// <inheritdoc />
+        public HashSet<TResource> Resources { get; }
+
+        public AffectedResources(HashSet<TResource> entities,
+                        Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(relationships)
         {
-            Entities = new HashSet<TEntity>(entities.Cast<TEntity>());
-        }
-        public IEnumerator<TEntity> GetEnumerator()
-        {
-            return Entities.GetEnumerator();
+            Resources = new HashSet<TResource>(entities.Cast<TResource>());
         }
 
+        /// <summary>
+        /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
+        /// </summary>
+        internal AffectedResources(IEnumerable entities,
+                        Dictionary<RelationshipAttribute, IEnumerable> relationships)
+            : this((HashSet<TResource>)entities, ConvertRelationshipDictionary(relationships)) { }
+
+        /// <inheritdoc />
+        public IEnumerator<TResource> GetEnumerator()
+        {
+            return Resources.GetEnumerator();
+        }
+
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

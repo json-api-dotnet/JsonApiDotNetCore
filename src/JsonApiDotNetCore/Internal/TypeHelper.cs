@@ -147,9 +147,17 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="type">The target type</param>
         public static IList CreateListFor(Type type)
         {
-            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type );
+            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type);
             return list;
+        }
 
+        /// <summary>
+        /// Reflectively instantiates a hashset of a certain type. 
+        /// </summary>
+        /// <summary>
+        public static IEnumerable CreateHashSetFor(Type type, object elements = null)
+        {
+            return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
         }
 
         /// <summary>

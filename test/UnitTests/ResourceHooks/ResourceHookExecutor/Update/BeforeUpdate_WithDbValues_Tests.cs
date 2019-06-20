@@ -212,7 +212,7 @@ namespace UnitTests.ResourceHooks
         {
             var diffPair = diff.GetDiffs().Single();
             var dbCheck = diffPair.DatabaseValue.Description == checksum;
-            var reqCheck = diffPair.Entity.Description == null;
+            var reqCheck = diffPair.Resource.Description == null;
             return (dbCheck && reqCheck);
         }
 

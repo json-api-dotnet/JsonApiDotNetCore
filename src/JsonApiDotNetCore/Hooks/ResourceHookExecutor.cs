@@ -355,21 +355,24 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The relationship helper.</returns>
         IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
-            if (dbValues != null) ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, prevLayerRelationships);
+            Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationshipsCasted = null;
+            if (dbValues != null) prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
+            prevLayerRelationshipsCasted = prevLayerRelationshipsCasted ?? prevLayerRelationships;
+            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, true, prevLayerRelationships);
         }
 
         /// <summary>
         /// Replaces the entities in the values of the prevLayerRelationships dictionary 
         /// with the corresponding entities loaded from the db.
         /// </summary>
-        void ReplaceWithDbValues(Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
+        Dictionary<RelationshipAttribute, IEnumerable> ReplaceWithDbValues(Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable<IIdentifiable> dbValues)
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
                 var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.DependentType);
-                prevLayerRelationships[key] = replaced;
+                prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.DependentType, replaced);
             }
+            return prevLayerRelationships;
         }
 
         /// <summary>
@@ -389,7 +392,7 @@ namespace JsonApiDotNetCore.Hooks
             return _graph.GetInverseRelationship(attribute);
         }
 
-        IEnumerable LoadDbValues(Type containerEntityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer) 
+        IEnumerable LoadDbValues(Type containerEntityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer)
         {
             if (!_executorHelper.ShouldLoadDbValues(containerEntityType, targetHook)) return null;
             return _executorHelper.LoadDbValues(containerEntityType, uniqueEntities, targetHook, relationshipsToNextLayer);
