@@ -47,5 +47,4 @@ namespace JsonApiDotNetCore.Hooks
             return GetEnumerator();
         }
     }
-
 }

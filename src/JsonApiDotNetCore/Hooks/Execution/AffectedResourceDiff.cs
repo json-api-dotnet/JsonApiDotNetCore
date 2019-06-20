@@ -30,17 +30,14 @@ namespace JsonApiDotNetCore.Hooks
 
     public  class AffectedResourceDiff<TResource> : AffectedResources<TResource>, IAffectedResourcesDiff<TResource> where TResource : class, IIdentifiable
     {
-
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
-
-
         /// <inheritdoc />
         public HashSet<TResource> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
 
         public AffectedResourceDiff(HashSet<TResource> requestEntities,
                           HashSet<TResource> databaseEntities,
-                           Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(requestEntities, relationships)
+                          Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(requestEntities, relationships)
         {
             _databaseValues = databaseEntities;
             _databaseValuesLoaded |= _databaseValues != null;
