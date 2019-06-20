@@ -2,30 +2,38 @@
 using JsonApiDotNetCore.Models;
 using System.Linq;
 using System.Collections;
+using JsonApiDotNetCore.Internal;
+using System;
 
 namespace JsonApiDotNetCore.Hooks
 {
     /// <summary>
-    /// Basically just a list of <typeparamref name="TResource"/>, but also contains information
-    /// about updated relationships through inheritance of IAffectedRelationships<typeparamref name="TResource"/>>
+    /// Basically a enumerable of <typeparamref name="TResource"/> of resources that were affected by the request. 
+    /// 
+    /// Also contains information about updated relationships through 
+    /// implementation of IAffectedRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public interface IAffectedResources<TResource> : IAffectedRelationships<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable 
+    public interface IAffectedResources<TResource> : IRelationshipsDictionary<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable
     {
-        /// <summary>
-        /// The entities that are affected by the request.
-        /// </summary>
-        HashSet<TResource> Resources { get; }
+
     }
 
-    public class AffectedResources<TResource> : AffectedRelationships<TResource>, IAffectedResources<TResource> where TResource : class, IIdentifiable
+    /// <summary>
+    /// Implementation of IAffectedResources{TResource}.
+    /// 
+    /// It is basically just a HashSet{TResource} that also stores the 
+    /// RelationshipDictionary{TResource} and the same helper methods to access this 
+    /// dictionary as defined on IAffectedRelationshipsDictionary{TResource}.
+    /// </summary>
+    public class AffectedResources<TResource> : HashSet<TResource>, IAffectedResources<TResource> where TResource : class, IIdentifiable
     {
         /// <inheritdoc />
-        public HashSet<TResource> Resources { get; }
+        public RelationshipsDictionary<TResource> AffectedRelationships { get; private set; }
 
         public AffectedResources(HashSet<TResource> entities,
-                        Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(relationships)
+                        Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) : base(entities)
         {
-            Resources = new HashSet<TResource>(entities.Cast<TResource>());
+            AffectedRelationships = new RelationshipsDictionary<TResource>(relationships);
         }
 
         /// <summary>
@@ -33,18 +41,17 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         internal AffectedResources(IEnumerable entities,
                         Dictionary<RelationshipAttribute, IEnumerable> relationships)
-            : this((HashSet<TResource>)entities, ConvertRelationshipDictionary(relationships)) { }
+            : this((HashSet<TResource>)entities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships)) { }
 
-        /// <inheritdoc />
-        public IEnumerator<TResource> GetEnumerator()
+
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type principalType)
         {
-            return Resources.GetEnumerator();
+            return AffectedRelationships.GetByRelationship(principalType);
         }
 
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TPrincipalResource>()  where TPrincipalResource : class, IIdentifiable
         {
-            return GetEnumerator();
+            return GetByRelationship<TPrincipalResource>();
         }
     }
 }

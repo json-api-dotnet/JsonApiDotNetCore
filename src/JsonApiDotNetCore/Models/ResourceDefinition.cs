@@ -173,19 +173,19 @@ namespace JsonApiDotNetCore.Models
         /// <inheritdoc/>
         public virtual void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         /// <inheritdoc/>
-        public virtual void AfterUpdateRelationship(IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { }
+        public virtual void AfterUpdateRelationship(IRelationshipsDictionary<T> resourcesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
         public virtual IEnumerable<T> BeforeCreate(IAffectedResources<T> affected, ResourcePipeline pipeline) { return affected; }
         /// <inheritdoc/>
         public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(IAffectedResourcesDiff<T> ResourceDiff, ResourcePipeline pipeline) { return ResourceDiff; }
+        public virtual IEnumerable<T> BeforeUpdate(IAffectedResourcesDiffs<T> ResourceDiff, ResourcePipeline pipeline) { return ResourceDiff.Resources; }
         /// <inheritdoc/>
         public virtual IEnumerable<T> BeforeDelete(IAffectedResources<T> affected, ResourcePipeline pipeline) { return affected; }
         /// <inheritdoc/>
-        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { return ids; }
+        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<T> resourcesByRelationship, ResourcePipeline pipeline) { return ids; }
         /// <inheritdoc/>
-        public virtual void BeforeImplicitUpdateRelationship(IAffectedRelationships<T> resourcesByRelationship, ResourcePipeline pipeline) { }
+        public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<T> resourcesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
         public virtual IEnumerable<T> OnReturn(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
 

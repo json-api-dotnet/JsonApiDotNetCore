@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public static class TypeHelper
+    internal static class TypeHelper
     {
         public static IList ConvertCollection(IEnumerable<object> collection, Type targetType)
         {
@@ -105,6 +107,15 @@ namespace JsonApiDotNetCore.Internal
         {
             var parameterizedType = openType.MakeGenericType(parameters);
             return Activator.CreateInstance(parameterizedType, constructorArguments);
+        }
+
+
+        /// <summary>
+        /// Helper method that "unboxes" the TValue from the relationship dictionary into  
+        /// </summary>
+        public static Dictionary<RelationshipAttribute, HashSet<TDependentResource>> ConvertRelationshipDictionary<TDependentResource>(Dictionary<RelationshipAttribute, IEnumerable> relationships)
+        {
+            return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TDependentResource>)pair.Value);
         }
 
         /// <summary>

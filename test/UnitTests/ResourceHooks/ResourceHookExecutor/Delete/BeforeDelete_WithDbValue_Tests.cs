@@ -48,8 +48,8 @@ namespace UnitTests.ResourceHooks
 
             // assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IAffectedResources<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<TodoItem>>( rh => CheckImplicitTodos(rh) ), ResourcePipeline.Delete), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<Passport>>( rh => CheckImplicitPassports(rh) ), ResourcePipeline.Delete), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>( rh => CheckImplicitTodos(rh) ), ResourcePipeline.Delete), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>( rh => CheckImplicitPassports(rh) ), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
@@ -68,8 +68,8 @@ namespace UnitTests.ResourceHooks
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IAffectedRelationships<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
@@ -92,13 +92,13 @@ namespace UnitTests.ResourceHooks
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
-        private bool CheckImplicitTodos(IAffectedRelationships<TodoItem> rh)
+        private bool CheckImplicitTodos(IRelationshipsDictionary<TodoItem> rh)
         {
             var todos = rh.GetByRelationship<Person>().ToList();
             return todos.Count == 2;
         }
 
-        private bool CheckImplicitPassports(IAffectedRelationships<Passport> rh)
+        private bool CheckImplicitPassports(IRelationshipsDictionary<Passport> rh)
         {
             var passports = rh.GetByRelationship<Person>().Single().Value;
             return passports.Count == 1;

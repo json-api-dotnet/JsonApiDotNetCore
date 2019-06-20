@@ -81,7 +81,7 @@ namespace UnitTests.ResourceHooks
         {
             public DoubleDummyResourceDefinition1() : base(new ResourceGraphBuilder().AddResource<DoubleDummy>().Build()) { }
 
-            public override IEnumerable<DoubleDummy> BeforeDelete(IAffectedResources<DoubleDummy> affected, ResourcePipeline pipeline) { return affected.Resources; }
+            public override IEnumerable<DoubleDummy> BeforeDelete(IAffectedResources<DoubleDummy> affected, ResourcePipeline pipeline) { return affected; }
         }
         public class DoubleDummyResourceDefinition2 : ResourceDefinition<DoubleDummy>
         {

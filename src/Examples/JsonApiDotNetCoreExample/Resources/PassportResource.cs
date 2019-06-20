@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Resources
             }
         }
 
-        public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Passport> resourcesByRelationship, ResourcePipeline pipeline)
+        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Passport> resourcesByRelationship, ResourcePipeline pipeline)
         {
             resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DoesNotTouchLockedPassports(kvp.Value));
         }

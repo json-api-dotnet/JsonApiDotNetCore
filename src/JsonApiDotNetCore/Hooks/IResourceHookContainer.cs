@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Hooks
         /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
-        /// of the <see cref="AffectedResourceDiff{TEntity}.RequestEntities"/> property in parameter <paramref name="ResourceDiff"/>, 
+        /// of the <see cref="AffectedResourcesDiffs{TEntity}.RequestEntities"/> property in parameter <paramref name="ResourceDiff"/>, 
         /// in which case the operation of the  pipeline will not be executed 
         /// for the omitted entities. The returned set may also contain custom 
         /// changes of the properties on the entities.
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed entity set</returns>
         /// <param name="ResourceDiff">The entity diff.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TEntity> BeforeUpdate(IAffectedResourcesDiff<TEntity> ResourceDiff, ResourcePipeline pipeline);
+        IEnumerable<TEntity> BeforeUpdate(IAffectedResourcesDiffs<TEntity> ResourceDiff, ResourcePipeline pipeline);
 
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="ids">The unique set of ids</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="resourcesByRelationship">A helper that groups the entities by the affected relationship</param>
-        IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<TEntity> resourcesByRelationship, ResourcePipeline pipeline);
+        IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<TEntity> resourcesByRelationship, ResourcePipeline pipeline);
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
         /// layer just before implicitly updating relationships to entities of type <typeparamref name="TEntity"/>.
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed set of ids</returns>
         /// <param name="resourcesByRelationship">A helper that groups the entities by the affected relationship</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        void BeforeImplicitUpdateRelationship(IAffectedRelationships<TEntity> resourcesByRelationship, ResourcePipeline pipeline);
+        void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TEntity> resourcesByRelationship, ResourcePipeline pipeline);
     }
 
 
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// If relationships were created with the created entities, this will
         /// be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IAffectedRelationships{T}, ResourcePipeline)"/>
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IRelationshipsDictionary{T}, ResourcePipeline)"/>
         /// hook is fired after the execution of this hook.
         /// </summary>
         /// <returns>The transformed entity set</returns>
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// If relationships were updated with the updated entities, this will
         /// be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IAffectedRelationships{T}, ResourcePipeline"/>
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IRelationshipsDictionary{T}, ResourcePipeline"/>
         /// hook is fired after the execution of this hook.
         /// </summary>
         /// <param name="entities">The unique set of affected entities.</param>
@@ -202,7 +202,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="resourcesByRelationship">Relationship helper.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        void AfterUpdateRelationship(IAffectedRelationships<TEntity> resourcesByRelationship, ResourcePipeline pipeline);
+        void AfterUpdateRelationship(IRelationshipsDictionary<TEntity> resourcesByRelationship, ResourcePipeline pipeline);
     }
 
     /// <summary>

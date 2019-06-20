@@ -261,19 +261,19 @@ namespace UnitTests.ResourceHooks
             .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<AffectedResourceDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Resources)
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiffs<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<AffectedResourcesDiffs<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Resources)
             .Verifiable();
             resourceDefinition
             .Setup(rd => rd.BeforeDelete(It.IsAny<IAffectedResources<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IAffectedRelationships<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<IEnumerable<string>, IAffectedRelationships<TModel>, ResourcePipeline>((ids, context, helper) => ids)
+            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, context, helper) => ids)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IAffectedRelationships<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
 
             resourceDefinition

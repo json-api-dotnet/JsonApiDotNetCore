@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new AffectedResourceDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
+                var diff = new AffectedResourcesDiffs<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -355,10 +355,8 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The relationship helper.</returns>
         IAffectedRelationships CreateRelationshipHelper(DependentType entityType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
-            Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationshipsCasted = null;
             if (dbValues != null) prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            prevLayerRelationshipsCasted = prevLayerRelationshipsCasted ?? prevLayerRelationships;
-            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(AffectedRelationships<>), entityType, true, prevLayerRelationships);
+            return (IAffectedRelationships)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), entityType, true, prevLayerRelationships);
         }
 
         /// <summary>

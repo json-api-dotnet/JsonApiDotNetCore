@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks
 
             // assert
             todoResourceMock.Verify(rd => rd.AfterCreate(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
-            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IAffectedRelationships<Person>>(), ResourcePipeline.Post), Times.Once());
+            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 
@@ -43,7 +43,7 @@ namespace UnitTests.ResourceHooks
             hookExecutor.AfterCreate(todoList, ResourcePipeline.Post);
 
             // assert
-            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IAffectedRelationships<Person>>(), ResourcePipeline.Post), Times.Once());
+            ownerResourceMock.Verify(rd => rd.AfterUpdateRelationship(It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
 

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Resources
     {
         public PersonResource(IResourceGraph graph) : base(graph) { }
 
-        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
         {
             BeforeImplicitUpdateRelationship(resourcesByRelationship, pipeline);
             return ids;
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Resources
         //    return entityDiff.Entities;
         //}
 
-        public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
         {
             resourcesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
         }

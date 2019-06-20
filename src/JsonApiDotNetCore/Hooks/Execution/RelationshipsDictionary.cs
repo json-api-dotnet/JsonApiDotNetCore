@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
@@ -10,14 +11,21 @@ namespace JsonApiDotNetCore.Hooks
     public interface IAffectedRelationships { }
 
     /// <summary>
-    /// A helper class that provides insights in which relationships have been updated for which entities.
+    /// An interface that is implemented to expose a relationship dictionary on another class.
     /// </summary>
-    public interface IAffectedRelationships<TDependentResource> : IAffectedRelationships where TDependentResource : class, IIdentifiable
+    public interface IRelationshipsDictionary<TDependentResource> : IRelationshipsDictionaryGetters<TDependentResource> where TDependentResource : class, IIdentifiable
     {
         /// <summary>
-        /// Gets a dictionary of all entities grouped by affected relationship.
+        /// Gets a dictionary of affected resources grouped by affected relationships.
         /// </summary>
-        Dictionary<RelationshipAttribute, HashSet<TDependentResource>> AllByRelationships();
+        RelationshipsDictionary<TDependentResource> AffectedRelationships { get; }
+    }
+
+    /// <summary>
+    /// A helper class that provides insights in which relationships have been updated for which entities.
+    /// </summary>
+    public interface IRelationshipsDictionaryGetters<TDependentResource> : IAffectedRelationships where TDependentResource : class, IIdentifiable
+    {
         /// <summary>
         /// Gets a dictionary of all entities that have an affected relationship to type <typeparamref name="TPrincipalResource"/>
         /// </summary>
@@ -28,17 +36,14 @@ namespace JsonApiDotNetCore.Hooks
         Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship(Type principalType);
     }
 
-    /// <inheritdoc />
-    public class AffectedRelationships<TDependentResource> :  IAffectedRelationships<TDependentResource> where TDependentResource : class, IIdentifiable
+    /// <summary>
+    /// Implementation of IAffectedRelationships{TDependentResource}
+    /// 
+    /// It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TDependentResource}} dictionary
+    /// with the two helper methods defined on IAffectedRelationships{TDependentResource}.
+    /// </summary>
+    public class RelationshipsDictionary<TDependentResource> : ReadOnlyDictionary<RelationshipAttribute, HashSet<TDependentResource>>, IRelationshipsDictionaryGetters<TDependentResource> where TDependentResource : class, IIdentifiable
     {
-        /// <summary>
-        /// Helper method that "unboxes" the TValue from the relationship dictionary 
-        /// </summary>
-        internal static Dictionary<RelationshipAttribute, HashSet<TDependentResource>> ConvertRelationshipDictionary(Dictionary<RelationshipAttribute, IEnumerable> relationships)
-        {
-            return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TDependentResource>)pair.Value);
-        }
-
         /// <summary>
         /// a dictionary with affected relationships as keys and values being the corresponding resources
         /// that were affected
@@ -46,7 +51,7 @@ namespace JsonApiDotNetCore.Hooks
         private readonly Dictionary<RelationshipAttribute, HashSet<TDependentResource>> _groups;
 
         /// <inheritdoc />
-        public AffectedRelationships(Dictionary<RelationshipAttribute, HashSet<TDependentResource>> relationships)
+        public RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TDependentResource>> relationships) : base(relationships)
         {
             _groups = relationships;
         }
@@ -54,12 +59,9 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
-        internal AffectedRelationships(Dictionary<RelationshipAttribute, IEnumerable> relationships) : this(ConvertRelationshipDictionary(relationships)) { }
+        internal RelationshipsDictionary(Dictionary<RelationshipAttribute, IEnumerable> relationships) 
+            : this(TypeHelper.ConvertRelationshipDictionary<TDependentResource>(relationships)) { }
 
-        public Dictionary<RelationshipAttribute, HashSet<TDependentResource>> AllByRelationships()
-        {
-            return _groups;
-        }
 
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship<TPrincipalResource>() where TPrincipalResource : class, IIdentifiable
@@ -70,7 +72,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship(Type principalType)
         {
-            return _groups?.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key, p => p.Value);
+            return this.Where(p => p.Key.PrincipalType == principalType).ToDictionary(p => p.Key, p => p.Value);
         }
     }
 }
