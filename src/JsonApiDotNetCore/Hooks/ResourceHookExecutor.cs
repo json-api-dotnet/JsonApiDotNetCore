@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new ResourceDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
+                var diff = new AffectedResourceDiff<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);

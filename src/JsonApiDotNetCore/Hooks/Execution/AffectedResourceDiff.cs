@@ -17,10 +17,10 @@ namespace JsonApiDotNetCore.Hooks
     public interface IAffectedResourcesDiff<TEntity> :  IAffectedResources<TEntity> where TEntity : class, IIdentifiable
     {
         HashSet<TEntity> DatabaseValues { get; }
-        IEnumerable<ResourceDiffPair<TEntity>> GetDiff();
+        IEnumerable<ResourceDiffPair<TEntity>> GetDiffs();
     }
 
-    public  class ResourceDiff<TEntity> : AffectedResources<TEntity>, IAffectedResourcesDiff<TEntity> where TEntity : class, IIdentifiable
+    public  class AffectedResourceDiff<TEntity> : AffectedResources<TEntity>, IAffectedResourcesDiff<TEntity> where TEntity : class, IIdentifiable
     {
 
         private readonly HashSet<TEntity> _databaseValues;
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public HashSet<TEntity> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
 
-        public ResourceDiff(IEnumerable requestEntities,
+        public AffectedResourceDiff(IEnumerable requestEntities,
                           IEnumerable databaseEntities,
                           Dictionary<RelationshipAttribute, IEnumerable> relationships) : base(requestEntities, relationships)
         {
@@ -39,12 +39,14 @@ namespace JsonApiDotNetCore.Hooks
             _databaseValuesLoaded |= _databaseValues != null;
         }
 
-        public IEnumerable<ResourceDiffPair<TEntity>> GetDiff()
+        public IEnumerable<ResourceDiffPair<TEntity>> GetDiffs()
         {
+            if (!_databaseValuesLoaded) ThrowNoDbValuesError();
+
             foreach (var entity in Entities)
             {
                 TEntity currentValueInDatabase = null;
-                if (_databaseValuesLoaded) currentValueInDatabase = _databaseValues.Single(e => entity.StringId == e.StringId);
+                currentValueInDatabase = _databaseValues.Single(e => entity.StringId == e.StringId);
                 yield return new ResourceDiffPair<TEntity>(entity, currentValueInDatabase);
             }
         }

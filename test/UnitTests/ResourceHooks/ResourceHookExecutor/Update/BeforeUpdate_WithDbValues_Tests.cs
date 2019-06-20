@@ -210,7 +210,7 @@ namespace UnitTests.ResourceHooks
 
         private bool TodoCheck(IAffectedResourcesDiff<TodoItem> diff, string checksum)
         {
-            var diffPair = diff.GetDiff().Single();
+            var diffPair = diff.GetDiffs().Single();
             var dbCheck = diffPair.DatabaseValue.Description == checksum;
             var reqCheck = diffPair.Entity.Description == null;
             return (dbCheck && reqCheck);

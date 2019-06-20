@@ -262,7 +262,7 @@ namespace UnitTests.ResourceHooks
             .Verifiable();
             resourceDefinition
             .Setup(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<ResourceDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
+            .Returns<AffectedResourceDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
             .Verifiable();
             resourceDefinition
             .Setup(rd => rd.BeforeDelete(It.IsAny<IAffectedResources<TModel>>(), It.IsAny<ResourcePipeline>()))
