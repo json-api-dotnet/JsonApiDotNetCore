@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IAffectedResourcesDiff&lt;TEntity&gt;
+    <title>Interface IEntityDiff&lt;TEntity&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IAffectedResourcesDiff&lt;TEntity&gt;
+    <meta name="title" content="Interface IEntityDiff&lt;TEntity&gt;
    ">
     <meta name="generator" content="docfx 2.43.1.0">
     
@@ -68,32 +68,34 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff`1">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1">
   
   
-  <h1 id="JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1" data-uid="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff`1" class="text-break">Interface IAffectedResourcesDiff&lt;TEntity&gt;
+  <h1 id="JsonApiDotNetCore_Hooks_IEntityDiff_1" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1" class="text-break">Interface IEntityDiff&lt;TEntity&gt;
   </h1>
-  <div class="markdown level0 summary"><p>A helper class that provides insight in what is to be updated. The 
-<see cref="!:IAffectedResourcesDiff&lt;TEntity>.RequestEntities"></see> property reflects what was parsed from the incoming request,
-where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html#JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_DatabaseValues">DatabaseValues</a> reflects what is the current state in the database.</p>
-<p>Any relationships that are updated can be retrieved via the methods implemented on 
-<a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships&lt;TDependent&gt;</a>.</p>
+  <div class="markdown level0 summary"><p>A wrapper class that contains information about the resources that are updated by the request.
+Contains the resources from the request and the corresponding database values.</p>
+<p>Also contains information about updated relationships through 
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>&gt;</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResources-1.html#JsonApiDotNetCore_Hooks_IAffectedResources_1_Entities">IAffectedResources&lt;TEntity&gt;.Entities</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship__1">IRelationshipsDictionary&lt;TEntity&gt;.GetByRelationship&lt;TPrincipalResource&gt;()</a>
     </div>
     <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;TEntity&gt;.GetEnumerator()</span>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_System_Type_">IRelationshipsDictionary&lt;TEntity&gt;.GetByRelationship(Type)</a>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;JsonApiDotNetCore.Hooks.EntityDiffPair&lt;TEntity&gt;&gt;.GetEnumerator()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Hooks_IEntityDiff_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IAffectedResourcesDiff&lt;TEntity&gt; : IAffectedResources&lt;TEntity&gt;, IEnumerable&lt;TEntity&gt;, IEnumerable where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IEntityDiff&lt;TEntity&gt; : IRelationshipsDictionary&lt;TEntity&gt;, IRelationshipsDictionary, IEnumerable&lt;EntityDiffPair&lt;TEntity&gt;&gt;, IEnumerable where TEntity : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -114,14 +116,15 @@ where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_DatabaseValues.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAffectedResourcesDiff%601.DatabaseValues%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiff%601.DatabaseValues%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/AffectedResourceDiff.cs/#L19">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L22">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_DatabaseValues_" data-uid="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff`1.DatabaseValues*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_DatabaseValues" data-uid="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff`1.DatabaseValues">DatabaseValues</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues_" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues*"></a>
+  <h4 id="JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues">DatabaseValues</h4>
+  <div class="markdown level1 summary"><p>The database values of the resources affected by the request.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -142,24 +145,23 @@ where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_GetDiff.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAffectedResourcesDiff%601.GetDiff%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiff%601.Entities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/AffectedResourceDiff.cs/#L20">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L27">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_GetDiff_" data-uid="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff`1.GetDiff*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_GetDiff" data-uid="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff`1.GetDiff">GetDiff()</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities_" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities*"></a>
+  <h4 id="JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities">Entities</h4>
+  <div class="markdown level1 summary"><p>The resources that were affected by the request.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;ResourceDiffPair&lt;TEntity&gt;&gt; GetDiff()</code></pre>
+    <pre><code class="lang-csharp hljs">HashSet&lt;TEntity&gt; Entities { get; }</code></pre>
   </div>
-  <h5 class="returns">Returns</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -169,7 +171,7 @@ where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Hooks.ResourceDiffPair-1.html">ResourceDiffPair</a>&lt;TEntity&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -186,10 +188,10 @@ where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAffectedResourcesDiff%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiff_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiff%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/AffectedResourceDiff.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -77,10 +77,18 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.AffectedRelationships-1.html">AffectedRelationships&lt;TDependent&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.EntityDiffPair-1.html">EntityDiffPair&lt;TEntity&gt;</a></h4>
+      <section><p>A wrapper that contains an entity that is affected by the request, 
+matched to its current database value</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.EntityDiffs-1.html">EntityDiffs&lt;TEntity&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.AffectedResources-1.html">AffectedResources&lt;TEntity&gt;</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.EntityHashSet-1.html">EntityHashSet&lt;TResource&gt;</a></h4>
+      <section><p>Implementation of IResourceHashSet{TResource}.</p>
+<p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
+<p>Also contains information about updated relationships through 
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.HooksDiscovery-1.html">HooksDiscovery&lt;TEntity&gt;</a></h4>
       <section><p>The default implementation for IHooksDiscovery</p>
 </section>
@@ -97,37 +105,38 @@ it and fire hooks for it, if defined) or not (in which case we skip
 ArticleTags and go directly to Tags.</p>
 <p>TODO: We can consider moving fields like DependentType and PrincipalType </p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceDiff-1.html">ResourceDiff&lt;TEntity&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ResourceDiffPair-1.html">ResourceDiffPair&lt;TEntity&gt;</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html">RelationshipsDictionary&lt;TDependentResource&gt;</a></h4>
+      <section><p>Implementation of IAffectedRelationships{TDependentResource}</p>
+<p>It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TDependentResource}} dictionary
+with the two helper methods defined on IAffectedRelationships{TDependentResource}.</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships.html">IAffectedRelationships</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships&lt;TDependent&gt;</a></h4>
-      <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResources-1.html">IAffectedResources&lt;TEntity&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html">IAffectedResourcesDiff&lt;TEntity&gt;</a></h4>
-      <section><p>A helper class that provides insight in what is to be updated. The 
-<see cref="!:IAffectedResourcesDiff&lt;TEntity>.RequestEntities"></see> property reflects what was parsed from the incoming request,
-where the <a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedResourcesDiff-1.html#JsonApiDotNetCore_Hooks_IAffectedResourcesDiff_1_DatabaseValues">DatabaseValues</a> reflects what is the current state in the database.</p>
-<p>Any relationships that are updated can be retrieved via the methods implemented on 
-<a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships&lt;TDependent&gt;</a>.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a></h4>
       <section><p>Wrapper interface for all After execution methods.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterHooks-1.html">IAfterHooks&lt;TEntity&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterHooks-1.html">IAfterHooks&lt;TResource&gt;</a></h4>
       <section><p>Wrapper interface for all After hooks.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a></h4>
       <section><p>Wrapper interface for all Before execution methods.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeHooks-1.html">IBeforeHooks&lt;TEntity&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeHooks-1.html">IBeforeHooks&lt;TResource&gt;</a></h4>
       <section><p>Wrapper interface for all Before hooks.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IEntityDiff-1.html">IEntityDiff&lt;TEntity&gt;</a></h4>
+      <section><p>A wrapper class that contains information about the resources that are updated by the request.
+Contains the resources from the request and the corresponding database values.</p>
+<p>Also contains information about updated relationships through 
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>&gt;</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IEntityHashSet-1.html">IEntityHashSet&lt;TResource&gt;</a></h4>
+      <section><p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
+<p>Also contains information about updated relationships through 
+implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary-1.html">IExposeRelationshipsDictionary&lt;TDependentResource&gt;</a></h4>
+      <section><p>An interface that is implemented to expose a relationship dictionary on another class.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery.html">IHooksDiscovery</a></h4>
       <section></section>
@@ -139,13 +148,18 @@ particular entity.</p>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a></h4>
       <section><p>Wrapper interface for all On execution methods.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnHooks-1.html">IOnHooks&lt;TEntity&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnHooks-1.html">IOnHooks&lt;TResource&gt;</a></h4>
       <section><p>Wrapper interface for all on hooks.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary.html">IRelationshipsDictionary</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html">IRelationshipsDictionary&lt;TDependentResource&gt;</a></h4>
+      <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer.html">IResourceHookContainer</a></h4>
       <section><p>Not meant for public usage. Used internally in the <span class="xref">JsonApiDotNetCore.Hooks.ResourceHookExecutor</span></p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html">IResourceHookContainer&lt;TEntity&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html">IResourceHookContainer&lt;TResource&gt;</a></h4>
       <section><p>Implement this interface to implement business logic hooks on <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookExecutor.html">IResourceHookExecutor</a></h4>

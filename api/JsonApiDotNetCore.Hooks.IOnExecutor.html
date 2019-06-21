@@ -92,7 +92,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L159">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IOnExecutor_OnReturn_" data-uid="JsonApiDotNetCore.Hooks.IOnExecutor.OnReturn*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IOnExecutor_OnReturn__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IOnExecutor.OnReturn``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">OnReturn&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IOnExecutor_OnReturn__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IOnExecutor.OnReturn``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">OnReturn&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the On Cycle by firing the appropiate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">OnReturn(HashSet&lt;T&gt;, ResourcePipeline)</a> for every unique
@@ -101,8 +101,8 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;TEntity&gt; OnReturn&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; OnReturn&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -115,7 +115,7 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -138,7 +138,7 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><p>The transformed set</p>
 </td>
       </tr>
@@ -154,7 +154,7 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>

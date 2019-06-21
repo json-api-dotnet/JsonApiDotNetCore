@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IAfterHooks&lt;TEntity&gt;
+    <title>Interface IAfterHooks&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IAfterHooks&lt;TEntity&gt;
+    <meta name="title" content="Interface IAfterHooks&lt;TResource&gt;
    ">
     <meta name="generator" content="docfx 2.43.1.0">
     
@@ -71,7 +71,7 @@
             <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1">
   
   
-  <h1 id="JsonApiDotNetCore_Hooks_IAfterHooks_1" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1" class="text-break">Interface IAfterHooks&lt;TEntity&gt;
+  <h1 id="JsonApiDotNetCore_Hooks_IAfterHooks_1" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1" class="text-break">Interface IAfterHooks&lt;TResource&gt;
   </h1>
   <div class="markdown level0 summary"><p>Wrapper interface for all After hooks.</p>
 </div>
@@ -80,8 +80,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IAfterHooks&lt;TEntity&gt;
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IAfterHooks&lt;TResource&gt;
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -93,7 +93,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -105,22 +105,22 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601.AfterCreate(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L34">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L162">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterCreate_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterCreate*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterCreate(HashSet&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterCreate(HashSet&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a> 
-layer just after creation of entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>.
+layer just after creation of entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
 If relationships were created with the created entities, this will
 be reflected by the corresponding NavigationProperty being set. 
-For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook is fired after the execution of this hook.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterCreate(HashSet&lt;TEntity&gt; entities, ResourcePipeline pipeline)</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterCreate(HashSet&lt;TResource&gt; entities, ResourcePipeline pipeline)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -133,7 +133,7 @@ hook is fired after the execution of this hook.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>The unique set of affected entities.</p>
 </td>
@@ -151,17 +151,17 @@ hook is fired after the execution of this hook.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601.AfterDelete(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L63">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L191">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterDelete_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterDelete*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterDelete(HashSet&lt;TEntity&gt;, ResourcePipeline, Boolean)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterDelete(HashSet&lt;TResource&gt;, ResourcePipeline, Boolean)</h4>
   <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a> 
-layer just after deletion of entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>.</p>
+layer just after deletion of entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterDelete(HashSet&lt;TEntity&gt; entities, ResourcePipeline pipeline, bool succeeded)</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterDelete(HashSet&lt;TResource&gt; entities, ResourcePipeline pipeline, bool succeeded)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -174,7 +174,7 @@ layer just after deletion of entities of type <code data-dev-comment-type="typep
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>The unique set of affected entities.</p>
 </td>
@@ -198,17 +198,17 @@ layer just after deletion of entities of type <code data-dev-comment-type="typep
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601.AfterRead(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L43">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L171">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterRead_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterRead*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterRead(HashSet&lt;TEntity&gt;, ResourcePipeline, Boolean)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterRead(HashSet&lt;TResource&gt;, ResourcePipeline, Boolean)</h4>
   <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a> 
-layer just after reading entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>.</p>
+layer just after reading entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterRead(HashSet&lt;TEntity&gt; entities, ResourcePipeline pipeline, bool isIncluded = false)</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterRead(HashSet&lt;TResource&gt; entities, ResourcePipeline pipeline, bool isIncluded = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,7 +221,7 @@ layer just after reading entities of type <code data-dev-comment-type="typeparam
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>The unique set of affected entities.</p>
 </td>
@@ -246,22 +246,22 @@ or if they were included as a relationship</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601.AfterUpdate(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L55">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L183">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdate_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterUpdate*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdate(HashSet&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdate(HashSet&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a> 
-layer just after updating entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>.
+layer just after updating entities of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
 If relationships were updated with the updated entities, this will
 be reflected by the corresponding NavigationProperty being set. 
-For each of these relationships, the <see cref="!:ResourceDefinition&lt;T>.AfterUpdateRelationship(IAffectedRelationships&lt;T>, ResourcePipeline"></see>
+For each of these relationships, the <see cref="!:ResourceDefinition&lt;T>.AfterUpdateRelationship(IRelationshipsDictionary&lt;T>, ResourcePipeline"></see>
 hook is fired after the execution of this hook.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterUpdate(HashSet&lt;TEntity&gt; entities, ResourcePipeline pipeline)</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterUpdate(HashSet&lt;TResource&gt; entities, ResourcePipeline pipeline)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -274,7 +274,7 @@ hook is fired after the execution of this hook.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>The unique set of affected entities.</p>
 </td>
@@ -289,20 +289,20 @@ hook is fired after the execution of this hook.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.IAffectedRelationships%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.IRelationshipsDictionary%7B%600%7D%2CJsonApiDotNetCore.Hooks.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L70">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L198">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdateRelationship_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterUpdateRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.IAffectedRelationships{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdateRelationship(IAffectedRelationships&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterHooks_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterHooks`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a> layer
 just after a relationship was updated.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterUpdateRelationship(IAffectedRelationships&lt;TEntity&gt; resourcesByRelationship, ResourcePipeline pipeline)</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt; entitiesByRelationship, ResourcePipeline pipeline)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,8 +315,8 @@ just after a relationship was updated.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IAffectedRelationships-1.html">IAffectedRelationships</a>&lt;TEntity&gt;</td>
-        <td><span class="parametername">resourcesByRelationship</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html">IRelationshipsDictionary</a>&lt;TResource&gt;</td>
+        <td><span class="parametername">entitiesByRelationship</span></td>
         <td><p>Relationship helper.</p>
 </td>
       </tr>
@@ -339,7 +339,7 @@ just after a relationship was updated.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IAfterHooks_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IAfterHooks%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L20" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookContainer.cs/#L148" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -92,20 +92,20 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L108">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterCreate_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterCreate*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterCreate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterCreate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterCreate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the After Cycle by firing the appropiate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterCreate(HashSet&lt;T&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook for any related (nested) entity for values within parameter <code data-dev-comment-type="paramref" class="paramref">entities</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterCreate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -118,7 +118,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -141,7 +141,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>
@@ -155,17 +155,17 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L141">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterDelete_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterDelete*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterDelete``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterDelete&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline, Boolean)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterDelete``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline,System.Boolean)">AfterDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline, Boolean)</h4>
   <div class="markdown level1 summary"><p>Executes the After Cycle by firing the appropiate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_">AfterDelete(HashSet&lt;T&gt;, ResourcePipeline, Boolean)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.</p>
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterDelete&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline, bool succeeded)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline, bool succeeded)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -178,7 +178,7 @@ hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">T
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -206,7 +206,7 @@ hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">T
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>
@@ -220,7 +220,7 @@ hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">T
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L118">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterRead_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterRead*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterRead__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterRead``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterRead&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterRead__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterRead``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterRead&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the After Cycle by firing the appropiate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_">AfterRead(HashSet&lt;T&gt;, ResourcePipeline, Boolean)</a> for every unique
@@ -229,8 +229,8 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterRead&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterRead&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -243,7 +243,7 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -266,7 +266,7 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>
@@ -280,20 +280,20 @@ entity type occuring in parameter <code data-dev-comment-type="paramref" class="
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L131">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterUpdate_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterUpdate*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterUpdate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IAfterExecutor_AfterUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IAfterExecutor.AfterUpdate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">AfterUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the After Cycle by firing the appropiate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdate(HashSet&lt;T&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook for any related (nested) entity for values within parameter <code data-dev-comment-type="paramref" class="paramref">entities</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AfterUpdate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">void AfterUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -306,7 +306,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -329,7 +329,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>

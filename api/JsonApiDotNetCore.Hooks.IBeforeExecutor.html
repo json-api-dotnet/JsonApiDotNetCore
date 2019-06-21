@@ -92,21 +92,21 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L38">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeCreate_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeCreate*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeCreate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeCreate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeCreate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
 The returned set will be used in the actual operation in <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_IAffectedResources__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeCreate(IAffectedResources&lt;T&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_IEntityHashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeCreate(IEntityHashSet&lt;T&gt;, ResourcePipeline)</a>
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook for any related (nested) entity for values within parameter <code data-dev-comment-type="paramref" class="paramref">entities</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;TEntity&gt; BeforeCreate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; BeforeCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -119,7 +119,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -142,7 +142,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><p>The transformed set</p>
 </td>
       </tr>
@@ -158,7 +158,7 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>
@@ -172,14 +172,14 @@ hook for any related (nested) entity for values within parameter <code data-dev-
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L88">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeDelete_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeDelete*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeDelete``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeDelete&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeDelete``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
 The returned set will be used in the actual operation in <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_IAffectedResources__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeDelete(IAffectedResources&lt;T&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_IEntityHashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeDelete(IEntityHashSet&lt;T&gt;, ResourcePipeline)</a>
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeImplicitUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook for any entities that are indirectly (implicitly) affected by this operation.
 Eg: when deleting an entity that has relationships set to other entities, 
 these other entities are implicitly affected by the delete operation.</p>
@@ -187,8 +187,8 @@ these other entities are implicitly affected by the delete operation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;TEntity&gt; BeforeDelete&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; BeforeDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -201,7 +201,7 @@ these other entities are implicitly affected by the delete operation.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -224,7 +224,7 @@ these other entities are implicitly affected by the delete operation.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><p>The transformed set</p>
 </td>
       </tr>
@@ -240,7 +240,7 @@ these other entities are implicitly affected by the delete operation.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>
@@ -254,18 +254,18 @@ these other entities are implicitly affected by the delete operation.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L50">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeRead_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeRead*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeRead__1_JsonApiDotNetCore_Hooks_ResourcePipeline_System_String_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeRead``1(JsonApiDotNetCore.Hooks.ResourcePipeline,System.String)">BeforeRead&lt;TEntity&gt;(ResourcePipeline, String)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeRead__1_JsonApiDotNetCore_Hooks_ResourcePipeline_System_String_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeRead``1(JsonApiDotNetCore.Hooks.ResourcePipeline,System.String)">BeforeRead&lt;TResource&gt;(ResourcePipeline, String)</h4>
   <div class="markdown level1 summary"><p>Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
 <p>
 Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_System_String_">BeforeRead(ResourcePipeline, Boolean, String)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for the requested 
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for the requested 
 entities as well as any related relationship.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void BeforeRead&lt;TEntity&gt;(ResourcePipeline pipeline, string stringId = null)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">void BeforeRead&lt;TResource&gt;(ResourcePipeline pipeline, string stringId = null)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -302,7 +302,7 @@ entities as well as any related relationship.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the request entity</p>
 </td>
       </tr>
@@ -316,17 +316,17 @@ entities as well as any related relationship.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/IResourceHookExecutor.cs/#L71">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeUpdate_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeUpdate*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeUpdate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeUpdate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt;, ResourcePipeline)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.IBeforeExecutor.BeforeUpdate``1(System.Collections.Generic.IEnumerable{``0},JsonApiDotNetCore.Hooks.ResourcePipeline)">BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</h4>
   <div class="markdown level1 summary"><p>Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
 The returned set will be used in the actual operation in <a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IAffectedResourcesDiff__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdate(IAffectedResourcesDiff&lt;T&gt;, ResourcePipeline)</a>
-hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiff__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdate(IEntityDiff&lt;T&gt;, ResourcePipeline)</a>
+hook where T = <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> for values in parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>.
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook for any related (nested) entity for values within parameter <code data-dev-comment-type="paramref" class="paramref">entities</code>
 <p>
-Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IAffectedRelationships__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeImplicitUpdateRelationship(IAffectedRelationships&lt;T&gt;, ResourcePipeline)</a>
+Fires the <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;T&gt;, ResourcePipeline)</a>
 hook for any entities that are indirectly (implicitly) affected by this operation.
 Eg: when updating a one-to-one relationship of an entity which already 
 had this relationship populated, then this update will indirectly affect 
@@ -335,8 +335,8 @@ the existing relationship value.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IEnumerable&lt;TEntity&gt; BeforeUpdate&lt;TEntity&gt;(IEnumerable&lt;TEntity&gt; entities, ResourcePipeline pipeline)
-    where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;TResource&gt; BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt; entities, ResourcePipeline pipeline)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -349,7 +349,7 @@ the existing relationship value.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><span class="parametername">entities</span></td>
         <td><p>Target entities for the Before cycle.</p>
 </td>
@@ -372,7 +372,7 @@ the existing relationship value.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TResource&gt;</td>
         <td><p>The transformed set</p>
 </td>
       </tr>
@@ -388,7 +388,7 @@ the existing relationship value.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td><p>The type of the root entities</p>
 </td>
       </tr>

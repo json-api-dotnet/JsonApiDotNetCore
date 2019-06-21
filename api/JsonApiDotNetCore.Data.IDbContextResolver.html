@@ -88,7 +88,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IDbContextResolver_GetContext.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IDbContextResolver.GetContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IDbContextResolver.cs/#L7">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IDbContextResolver.cs/#L8">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Data_IDbContextResolver_GetContext_" data-uid="JsonApiDotNetCore.Data.IDbContextResolver.GetContext*"></a>
   <h4 id="JsonApiDotNetCore_Data_IDbContextResolver_GetContext" data-uid="JsonApiDotNetCore.Data.IDbContextResolver.GetContext">GetContext()</h4>
@@ -118,7 +118,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IDbContextResolver_GetDbSet__1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IDbContextResolver.GetDbSet%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IDbContextResolver.cs/#L8">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IDbContextResolver.cs/#L10">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Data_IDbContextResolver_GetDbSet_" data-uid="JsonApiDotNetCore.Data.IDbContextResolver.GetDbSet*"></a>
   <h4 id="JsonApiDotNetCore_Data_IDbContextResolver_GetDbSet__1" data-uid="JsonApiDotNetCore.Data.IDbContextResolver.GetDbSet``1">GetDbSet&lt;TEntity&gt;()</h4>
@@ -126,7 +126,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">DbSet&lt;TEntity&gt; GetDbSet&lt;TEntity&gt;()
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use DbContext.Set&lt;TEntity&gt;() instead&quot;, true)]
+DbSet&lt;TEntity&gt; GetDbSet&lt;TEntity&gt;()
     where TEntity : class</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -170,7 +171,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_IDbContextResolver.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.IDbContextResolver%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IDbContextResolver.cs/#L5" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/IDbContextResolver.cs/#L6" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
