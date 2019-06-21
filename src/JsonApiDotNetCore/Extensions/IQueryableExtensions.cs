@@ -30,15 +30,6 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        [Obsolete("Use overload Sort<T>(IJsonApiContext, List<SortQuery>) instead.", error: true)]
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries) => null;
-
-        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery) => null;
-
-        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery) => null;
-
         public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)

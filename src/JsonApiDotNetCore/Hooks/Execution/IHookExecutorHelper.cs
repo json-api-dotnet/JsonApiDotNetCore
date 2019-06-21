@@ -37,12 +37,12 @@ namespace JsonApiDotNetCore.Hooks
         /// Load the implicitly affected entities from the database for a given set of target target entities and involved relationships
         /// </summary>
         /// <returns>The implicitly affected entities by relationship</returns>
-        Dictionary<RelationshipProxy, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipProxy, IEnumerable> principalEntities, IEnumerable existingDependentEntities = null);
+        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> principalEntities, IEnumerable existingDependentEntities = null);
 
         /// <summary>
         /// For a set of entities, loads current values from the database
         /// </summary>
-        IEnumerable LoadDbValues(Type repositoryEntityType, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships);
+        IEnumerable LoadDbValues(Type repositoryEntityType, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships);
         bool ShouldLoadDbValues(Type containerEntityType, ResourceHook hook);
     }
 }

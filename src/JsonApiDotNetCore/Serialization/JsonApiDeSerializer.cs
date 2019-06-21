@@ -18,16 +18,6 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiContext _jsonApiContext;
 
-        [Obsolete(
-            "The deserializer no longer depends on the IGenericProcessorFactory",
-            error: false)]
-        public JsonApiDeSerializer(
-            IJsonApiContext jsonApiContext,
-            IGenericProcessorFactory genericProcessorFactory)
-        {
-            _jsonApiContext = jsonApiContext;
-        }
-
         public JsonApiDeSerializer(IJsonApiContext jsonApiContext)
         {
             _jsonApiContext = jsonApiContext;

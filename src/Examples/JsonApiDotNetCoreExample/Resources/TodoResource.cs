@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExample.Resources
             }
         }
 
-        public override void BeforeImplicitUpdateRelationship(IAffectedRelationships<TodoItem> resourcesByRelationship, ResourcePipeline pipeline)
+        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TodoItem> resourcesByRelationship, ResourcePipeline pipeline)
         {
             List<TodoItem> todos = resourcesByRelationship.GetByRelationship<Person>().SelectMany(kvp => kvp.Value).ToList();
             DisallowLocked(todos);

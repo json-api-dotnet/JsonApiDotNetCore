@@ -139,10 +139,6 @@ namespace JsonApiDotNetCore.Services
             };
         }
 
-        [Obsolete("Use the proxied method IControllerContext.GetControllerAttribute instead.")]
-        public TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute
-            => _controllerContext.GetControllerAttribute<TAttribute>();
-
         public void BeginOperation()
         {
             IncludedRelationships = new List<string>();

@@ -24,7 +24,6 @@ namespace JsonApiDotNetCore.Hooks
         protected readonly Dictionary<DependentType, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
         protected readonly IJsonApiContext _context;
-        protected Dictionary<PrincipalType, List<RelationshipProxy>> _meta;
 
         public HookExecutorHelper(
             IGenericProcessorFactory genericProcessorFactory,
@@ -35,7 +34,6 @@ namespace JsonApiDotNetCore.Hooks
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
             _context = context;
-            _meta = new Dictionary<DependentType, List<RelationshipProxy>>();
             _hookContainers = new Dictionary<DependentType, IResourceHookContainer>();
             _hookDiscoveries = new Dictionary<DependentType, IHooksDiscovery>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
@@ -81,9 +79,9 @@ namespace JsonApiDotNetCore.Hooks
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
 
-        public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipProxy[] relationships)
+        public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships)
         {
-            var paths = relationships.Select(p => p.Attribute.RelationshipPath).ToArray();
+            var paths = relationships.Select(p => p.RelationshipPath).ToArray();
             var idType = GetIdentifierType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
@@ -95,7 +93,7 @@ namespace JsonApiDotNetCore.Hooks
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
         }
 
-        public HashSet<TEntity> LoadDbValues<TEntity>(IEnumerable<TEntity> entities, ResourceHook hook, params RelationshipProxy[] relationships) where TEntity : class, IIdentifiable
+        public HashSet<TEntity> LoadDbValues<TEntity>(IEnumerable<TEntity> entities, ResourceHook hook, params RelationshipAttribute[] relationships) where TEntity : class, IIdentifiable
         {
             var entityType = typeof(TEntity);
             var dbValues = LoadDbValues(entityType, entities, hook, relationships)?.Cast<TEntity>();
@@ -168,11 +166,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
 
-        public Dictionary<RelationshipProxy, IEnumerable> LoadImplicitlyAffected(
-            Dictionary<RelationshipProxy, IEnumerable> principalEntitiesByRelation,
+        public Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(
+            Dictionary<RelationshipAttribute, IEnumerable> principalEntitiesByRelation,
             IEnumerable existingDependentEntities = null)
         {
-            var implicitlyAffected = new Dictionary<RelationshipProxy, IEnumerable>();
+            var implicitlyAffected = new Dictionary<RelationshipAttribute, IEnumerable>();
             foreach (var kvp in principalEntitiesByRelation)
             {
                 if (IsHasManyThrough(kvp, out var principals, out var relationship)) continue;
@@ -208,17 +206,22 @@ namespace JsonApiDotNetCore.Hooks
                 }
             }
 
-            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.DependentType, kvp.Value));
 
         }
 
-        bool IsHasManyThrough(KeyValuePair<RelationshipProxy, IEnumerable> kvp,
-            out IEnumerable entities,
-            out RelationshipProxy proxy)
+        private IEnumerable CreateHashSet(Type type, IList elements)
         {
-            proxy = kvp.Key;
+            return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(type), new object[] { elements });
+        }
+
+        bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,
+            out IEnumerable entities,
+            out RelationshipAttribute attr)
+        {
+            attr = kvp.Key;
             entities = (kvp.Value);
-            return (kvp.Key.Attribute is HasManyThroughAttribute);
+            return (kvp.Key is HasManyThroughAttribute);
         }
     }
 }

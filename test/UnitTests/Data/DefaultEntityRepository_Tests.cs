@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Services;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Collections;
 using JsonApiDotNetCore.Request;
 
 namespace UnitTests.Data
@@ -77,13 +76,14 @@ namespace UnitTests.Data
 
         private DefaultEntityRepository<TodoItem> GetRepository()
         {
+
+            _contextMock
+                .Setup(m => m.Set<TodoItem>())
+                .Returns(_dbSetMock.Object);
+
             _contextResolverMock
                 .Setup(m => m.GetContext())
                 .Returns(_contextMock.Object);
-
-            _contextResolverMock
-                .Setup(m => m.GetDbSet<TodoItem>())
-                .Returns(_dbSetMock.Object);
 
             _jsonApiContextMock
                .Setup(m => m.AttributesToUpdate)

@@ -254,26 +254,26 @@ namespace UnitTests.ResourceHooks
         void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
         {
             resourceDefinition
-            .Setup(rd => rd.BeforeCreate(It.IsAny<IAffectedResources<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
             .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<IAffectedResourcesDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<ResourceDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<IEntityDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<EntityDiffs<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeDelete(It.IsAny<IAffectedResources<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IAffectedRelationships<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<IEnumerable<string>, IAffectedRelationships<TModel>, ResourcePipeline>((ids, context, helper) => ids)
+            .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, context, helper) => ids)
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IAffectedRelationships<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
 
             resourceDefinition
@@ -343,7 +343,6 @@ namespace UnitTests.ResourceHooks
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
-            mock.Setup(r => r.GetDbSet<TModel>()).Returns(dbContext.Set<TModel>());
             return mock.Object;
         }
 

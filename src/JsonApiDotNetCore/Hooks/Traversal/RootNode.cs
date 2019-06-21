@@ -17,19 +17,19 @@ namespace JsonApiDotNetCore.Hooks
         public Type EntityType { get; internal set; }
         public IEnumerable UniqueEntities { get { return _uniqueEntities; } }
         public RelationshipProxy[] RelationshipsToNextLayer { get; private set; }
-        public Dictionary<Type, Dictionary<RelationshipProxy, IEnumerable>> PrincipalsToNextLayerByType()
+        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> PrincipalsToNextLayerByType()
         {
             return RelationshipsToNextLayer
                     .GroupBy(proxy => proxy.DependentType)
-                    .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p, p => UniqueEntities));
+                    .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, p => UniqueEntities));
         }
 
         /// <summary>
         /// The current layer entities grouped by affected relationship to the next layer
         /// </summary>
-        public Dictionary<RelationshipProxy, IEnumerable> PrincipalsToNextLayer()
+        public Dictionary<RelationshipAttribute, IEnumerable> PrincipalsToNextLayer()
         {
-            return RelationshipsToNextLayer.ToDictionary(p => p, p => UniqueEntities);
+            return RelationshipsToNextLayer.ToDictionary(p => p.Attribute, p => UniqueEntities);
         }
 
         /// <summary>

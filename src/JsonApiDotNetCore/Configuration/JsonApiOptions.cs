@@ -181,12 +181,6 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public bool ValidateModelState { get; set; }
 
-        [Obsolete("JsonContract resolver can now be set on SerializerSettings.")]
-        public IContractResolver JsonContractResolver
-        {
-            get => SerializerSettings.ContractResolver;
-            set => SerializerSettings.ContractResolver = value;
-        }
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
         {
             NullValueHandling = NullValueHandling.Ignore,

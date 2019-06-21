@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Data
 
         public DbContext GetContext() => _context;
 
-        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class
-            => _context.GetDbSet<TEntity>();
+        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class =>  null;
+
     }
 }

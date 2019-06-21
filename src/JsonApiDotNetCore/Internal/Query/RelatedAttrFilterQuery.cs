@@ -19,15 +19,7 @@ namespace JsonApiDotNetCore.Internal.Query
 
             if (Attribute.IsFilterable == false)
                 throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
-
-            FilteredRelationship = Relationship;
-            FilteredAttribute = Attribute;
+                
         }
-
-        [Obsolete("Use " + nameof(Attribute) + " instead.")]
-        public AttrAttribute FilteredAttribute { get; set; }
-
-        [Obsolete("Use " + nameof(Relationship) + " instead.")]
-        public RelationshipAttribute FilteredRelationship { get; set; }
     }
 }

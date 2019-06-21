@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public static class TypeHelper
+    internal static class TypeHelper
     {
         public static IList ConvertCollection(IEnumerable<object> collection, Type targetType)
         {
@@ -107,6 +109,15 @@ namespace JsonApiDotNetCore.Internal
             return Activator.CreateInstance(parameterizedType, constructorArguments);
         }
 
+
+        /// <summary>
+        /// Helper method that "unboxes" the TValue from the relationship dictionary into  
+        /// </summary>
+        public static Dictionary<RelationshipAttribute, HashSet<TDependentResource>> ConvertRelationshipDictionary<TDependentResource>(Dictionary<RelationshipAttribute, IEnumerable> relationships)
+        {
+            return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TDependentResource>)pair.Value);
+        }
+
         /// <summary>
         /// Use this overload if you need to instantiate a type that has a internal constructor
         /// </summary>
@@ -147,9 +158,17 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="type">The target type</param>
         public static IList CreateListFor(Type type)
         {
-            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type );
+            IList list = (IList)CreateInstanceOfOpenType(typeof(List<>), type);
             return list;
+        }
 
+        /// <summary>
+        /// Reflectively instantiates a hashset of a certain type. 
+        /// </summary>
+        /// <summary>
+        public static IEnumerable CreateHashSetFor(Type type, object elements = null)
+        {
+            return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
         }
 
         /// <summary>

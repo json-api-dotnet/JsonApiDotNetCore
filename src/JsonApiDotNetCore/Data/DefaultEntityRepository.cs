@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Data
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
             _context = contextResolver.GetContext();
-            _dbSet = contextResolver.GetDbSet<TEntity>();
+            _dbSet = _context.Set<TEntity>();
             _jsonApiContext = jsonApiContext;
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
             _resourceDefinition = resourceDefinition;
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Data
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
             _context = contextResolver.GetContext();
-            _dbSet = contextResolver.GetDbSet<TEntity>();
+            _dbSet = _context.Set<TEntity>();
             _jsonApiContext = jsonApiContext;
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _genericProcessorFactory = _jsonApiContext.GenericProcessorFactory;
