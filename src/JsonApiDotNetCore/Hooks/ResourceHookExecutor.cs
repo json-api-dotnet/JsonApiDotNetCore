@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new ResourceDiffs<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
+                var diff = new EntityDiffs<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (GetHook(ResourceHook.BeforeCreate, entities, out var container, out var node))
             {
-                var affected = new ResourceHashSet<TEntity>((HashSet<TEntity>)node.UniqueEntities, node.PrincipalsToNextLayer());
+                var affected = new EntityHashSet<TEntity>((HashSet<TEntity>)node.UniqueEntities, node.PrincipalsToNextLayer());
                 IEnumerable<TEntity> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var targetEntities = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, relationships) ?? node.UniqueEntities;
-                var affected = new ResourceHashSet<TEntity>(targetEntities, node.PrincipalsToNextLayer());
+                var affected = new EntityHashSet<TEntity>(targetEntities, node.PrincipalsToNextLayer());
 
                 IEnumerable<TEntity> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);

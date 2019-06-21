@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A2B7ADD-ECB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleTests", "test\JsonApiDotNetCoreExampleTests\JsonApiDotNetCoreExampleTests.csproj", "{0B959765-40D2-43B5-87EE-FE2FEF9DBED5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCoreExampleTests", "test\JsonApiDotNetCoreExampleTests\JsonApiDotNetCoreExampleTests.csproj", "{0B959765-40D2-43B5-87EE-FE2FEF9DBED5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B4D998-CECB-454D-9F32-085A897577BE}"
 	ProjectSection(SolutionItems) = preProject

@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCore.Services;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Collections;
 using JsonApiDotNetCore.Request;
 
 namespace UnitTests.Data

@@ -24,7 +24,7 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -43,7 +43,7 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Never());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Never());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -61,7 +61,7 @@ namespace UnitTests.ResourceHooks
             // act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
             // assert
-            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
         [Fact]
