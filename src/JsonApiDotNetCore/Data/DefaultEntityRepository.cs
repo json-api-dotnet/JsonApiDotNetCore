@@ -326,6 +326,9 @@ namespace JsonApiDotNetCore.Data
         {
             if (relationshipValueList == null) return null;
             bool _wasAlreadyAttached = false;
+            /// if we're not using entity resource separation, we can just read off the related type
+            /// from the RelationshipAttribute. If we DO use separation, RelationshipAttribute.DependentType
+            /// will point to the Resource, not the Entity, which is not the one we need here.
             bool entityResourceSeparation = relationshipAttr.EntityPropertyName != null;
             Type entityType = entityResourceSeparation ?  null : relationshipAttr.DependentType;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
