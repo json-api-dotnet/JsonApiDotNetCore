@@ -252,7 +252,9 @@ namespace JsonApiDotNetCore.Serialization
 
                 // e.g. PATCH /articles
                 // {... { "relationships":{ "Owner": { "data": null } } } }
-                if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
+                bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) != null
+                    || foreignKeyProperty.PropertyType == typeof(string);
+                if (rio == null && !foreignKeyPropertyIsNullableType)
                     throw new JsonApiException(400, $"Cannot set required relationship identifier '{hasOneAttr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
 
                 var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
