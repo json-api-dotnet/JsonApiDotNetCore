@@ -220,7 +220,6 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.Patch);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             }
-
             return MapOut(entity);
         }
 

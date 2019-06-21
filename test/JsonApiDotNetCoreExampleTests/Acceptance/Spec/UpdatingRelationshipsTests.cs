@@ -528,7 +528,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Delete_Relationship_By_Patching_Resource()
+        public async Task Can_Delete_ToOne_Relationship_By_Patching_Resource()
         {
             // arrange
             var person = _personFaker.Generate();
@@ -578,6 +578,64 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(todoItemResult.Owner);
+        }
+
+
+        [Fact]
+        public async Task Can_Delete_ToMany_Relationship_By_Patching_Resource()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            person.TodoItems = new List<TodoItem>() { todoItem };
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    id = person.Id,
+                    type = "people",
+                    relationships = new Dictionary<string, object>
+                    {
+                         { "todo-items", new
+                            {
+                                data = new List<object>
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var personResult = _context.People
+                .AsNoTracking()
+                .Include(p => p.TodoItems)
+                .Single(p => p.Id == person.Id);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Empty(personResult.TodoItems);
         }
 
         [Fact]

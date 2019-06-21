@@ -223,6 +223,51 @@ namespace UnitTests.Serialization
         }
 
         [Fact]
+        public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_String_Keys()
+        {
+            // arrange
+            var resourceGraphBuilder = new ResourceGraphBuilder();
+            resourceGraphBuilder.AddResource<IndependentWithStringKey, string>("independents");
+            resourceGraphBuilder.AddResource<DependentWithStringKey, string>("dependents");
+            var resourceGraph = resourceGraphBuilder.Build();
+
+            var jsonApiContextMock = new Mock<IJsonApiContext>();
+            jsonApiContextMock.SetupAllProperties();
+            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
+            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
+
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
+            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+
+            var property = Guid.NewGuid().ToString();
+            var content = new Document
+            {
+                Data = new ResourceObject
+                {
+                    Type = "independents",
+                    Id = "natural-key",
+                    Attributes = new Dictionary<string, object> { { "property", property } },
+                    Relationships = new Dictionary<string, RelationshipData>
+                    {
+                        { "dependent" , new RelationshipData { } }
+                    }
+                }
+            };
+
+            var contentString = JsonConvert.SerializeObject(content);
+
+            // act
+            var result = deserializer.Deserialize<IndependentWithStringKey>(contentString);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(property, result.Property);
+        }
+
+        [Fact]
         public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship_With_Relationship_Body()
         {
             // arrange
@@ -346,6 +391,19 @@ namespace UnitTests.Serialization
         {
             [HasOne("independent")] public Independent Independent { get; set; }
             public int IndependentId { get; set; }
+        }
+
+        private class IndependentWithStringKey : Identifiable<string>
+        {
+            [Attr("property")] public string Property { get; set; }
+            [HasOne("dependent")] public Dependent Dependent { get; set; }
+            public string DependentId { get; set; }
+        }
+
+        private class DependentWithStringKey : Identifiable<string>
+        {
+            [HasOne("independent")] public Independent Independent { get; set; }
+            public string IndependentId { get; set; }
         }
 
         [Fact]
@@ -538,7 +596,7 @@ namespace UnitTests.Serialization
             resourceGraphBuilder.AddResource<ManyToManyNested>("many-to-manys");
 
             var deserializer = GetDeserializer(resourceGraphBuilder);
-          
+
             var contentString =
             @"{
                 ""data"": {
