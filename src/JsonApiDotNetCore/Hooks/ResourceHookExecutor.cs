@@ -318,7 +318,6 @@ namespace JsonApiDotNetCore.Hooks
             PrincipalType principalType = dependentEntities.First().Key.PrincipalType;
             var byInverseRelationship = dependentEntities.Where(kvp => kvp.Key.InverseNavigation != null).ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             return (byInverseRelationship, principalType);
-
         }
 
         /// <summary>

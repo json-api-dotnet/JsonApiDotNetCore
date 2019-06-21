@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Hooks
     /// Also contains information about updated relationships through 
     /// implementation of IRelationshipsDictionary<typeparamref name="TEntity"/>>
     /// </summary>
-    public interface IEntityDiff<TEntity> : IRelationshipsDictionary<TEntity>, IEnumerable<EntityDiffPair<TEntity>> where TEntity : class, IIdentifiable
+    public interface IEntityDiff<TEntity> : IExposeRelationshipsDictionary<TEntity>, IEnumerable<EntityDiffPair<TEntity>> where TEntity : class, IIdentifiable
     {
         /// <summary>
         /// The database values of the resources affected by the request.
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks
 
         public EntityDiffs(HashSet<TEntity> requestEntities,
                           HashSet<TEntity> databaseEntities,
-                          Dictionary<RelationshipAttribute, HashSet<TEntity>> relationships) 
+                          Dictionary<RelationshipAttribute, HashSet<TEntity>> relationships)
         {
             Entities = requestEntities;
             AffectedRelationships = new RelationshipsDictionary<TEntity>(relationships);
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         internal EntityDiffs(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
-                  Dictionary<RelationshipAttribute, IEnumerable> relationships) 
+                  Dictionary<RelationshipAttribute, IEnumerable> relationships)
             : this((HashSet<TEntity>)requestEntities, (HashSet<TEntity>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TEntity>(relationships)) { }
 
 

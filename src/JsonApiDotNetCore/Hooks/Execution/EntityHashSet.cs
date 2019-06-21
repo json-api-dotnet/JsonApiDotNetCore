@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Hooks
     /// Also contains information about updated relationships through 
     /// implementation of IAffectedRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public interface IEntityHashSet<TResource> : IRelationshipsDictionary<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable { }
+    public interface IEntityHashSet<TResource> : IExposeRelationshipsDictionary<TResource>, IEnumerable<TResource> where TResource : class, IIdentifiable { }
 
     /// <summary>
     /// Implementation of IResourceHashSet{TResource}.
