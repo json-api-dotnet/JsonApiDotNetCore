@@ -248,14 +248,18 @@ namespace JsonApiDotNetCore.Hooks
                 IEnumerable uniqueEntities = node.UniqueEntities;
                 DependentType entityType = node.EntityType;
 
-                // fire the BeforeUpdateRelationship hook for o1
+                // fire the BeforeUpdateRelationship hook for o2
                 if (nestedHookcontainer != null)
                 {
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
                         var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                         var dbValues = LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, relationships);
-                        var resourcesByRelationship = CreateRelationshipHelper(entityType, node.RelationshipsFromPreviousLayer.GetDependentEntities(), dbValues);
+
+                        var dependentByPrevLayerRelationships = node.RelationshipsFromPreviousLayer.GetDependentEntities();
+                        var principalsByCurrentLayerRelationships = dependentByPrevLayerRelationships.ToDictionary(kvp => _graph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+
+                        var resourcesByRelationship = CreateRelationshipHelper(entityType, principalsByCurrentLayerRelationships, dbValues);
                         var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
                         node.UpdateUnique(updated);
@@ -263,14 +267,17 @@ namespace JsonApiDotNetCore.Hooks
                     }
                 }
 
-                // fire the BeforeImplicitUpdateRelationship hook for o1
+                // fire the BeforeImplicitUpdateRelationship hook for o1 
                 var implicitPrincipalTargets = node.RelationshipsFromPreviousLayer.GetPrincipalEntities();
                 if (pipeline != ResourcePipeline.Post && implicitPrincipalTargets.Any())
                 {
+                    // value in implicitPrincipalTargets is a1 here.
+                    // we need to load the current value in db, which is o1.
+                    // then we need to inverse the relationship attribute 
                     FireForAffectedImplicits(entityType, implicitPrincipalTargets, pipeline, uniqueEntities);
                 }
 
-                // fire the BeforeImplicitUpdateRelationship hook for a2
+                // fire the BeforeImplicitUpdateRelationship hook for a2 
                 var dependentEntities = node.RelationshipsFromPreviousLayer.GetDependentEntities();
                 if (dependentEntities.Any())
                 {
@@ -290,7 +297,8 @@ namespace JsonApiDotNetCore.Hooks
             if (container == null) return;
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitEntities);
             if (!implicitAffected.Any()) return;
-            var resourcesByRelationship = CreateRelationshipHelper(entityTypeToInclude, implicitAffected);
+            var inverse = implicitAffected.ToDictionary(kvp => _graph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+            var resourcesByRelationship = CreateRelationshipHelper(entityTypeToInclude, inverse);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
         }
 
@@ -366,8 +374,8 @@ namespace JsonApiDotNetCore.Hooks
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
-                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.DependentType);
-                prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.DependentType, replaced);
+                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.PrincipalType);
+                prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.PrincipalType, replaced);
             }
             return prevLayerRelationships;
         }
