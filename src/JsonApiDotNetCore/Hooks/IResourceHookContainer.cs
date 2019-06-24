@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed entity set</returns>
         /// <param name="entityDiff">The entity diff.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TResource> BeforeUpdate(IEntityDiff<TResource> entityDiff, ResourcePipeline pipeline);
+        IEnumerable<TResource> BeforeUpdate(IEntityDiffs<TResource> entityDiff, ResourcePipeline pipeline);
 
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
