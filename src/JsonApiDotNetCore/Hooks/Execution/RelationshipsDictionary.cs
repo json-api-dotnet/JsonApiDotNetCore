@@ -22,6 +22,10 @@ namespace JsonApiDotNetCore.Hooks
     public interface IByAffectedRelationships<TDependentResource> : 
         IRelationshipGetters<TDependentResource> where TDependentResource : class, IIdentifiable
     {
+        /// todo: expose getters that behave something like this:
+        /// relationshipDictionary.GetAffected( entity => entity.NavigationProperty ).
+        /// see https://stackoverflow.com/a/17116267/4441216
+
         /// <summary>
         /// Gets a dictionary of affected resources grouped by affected relationships.
         /// </summary>
@@ -39,16 +43,16 @@ namespace JsonApiDotNetCore.Hooks
     /// <summary>
     /// A helper class that provides insights in which relationships have been updated for which entities.
     /// </summary>
-    public interface IRelationshipGetters<TDependentResource> where TDependentResource : class, IIdentifiable
+    public interface IRelationshipGetters<TResource> where TResource : class, IIdentifiable
     {
         /// <summary>
         /// Gets a dictionary of all entities that have an affected relationship to type <typeparamref name="TPrincipalResource"/>
         /// </summary>
-        Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship<TPrincipalResource>() where TPrincipalResource : class, IIdentifiable;
+        Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRelatedResource>() where TRelatedResource : class, IIdentifiable;
         /// <summary>
         /// Gets a dictionary of all entities that have an affected relationship to type <paramref name="principalType"/>
         /// </summary>
-        Dictionary<RelationshipAttribute, HashSet<TDependentResource>> GetByRelationship(Type principalType);
+        Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type relatedResourceType);
     }
 
     /// <summary>
@@ -82,7 +86,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type relatedType)
         {
-            return this.Where(p => p.Key.PrincipalType == relatedType).ToDictionary(p => p.Key, p => p.Value);
+            return this.Where(p => p.Key.DependentType == relatedType).ToDictionary(p => p.Key, p => p.Value);
         }
     }
 }
