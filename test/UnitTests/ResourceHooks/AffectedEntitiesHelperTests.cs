@@ -13,11 +13,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
 
     public class AffectedEntitiesHelperTests
     {
-
         public readonly HasOneAttribute FirstToOneAttr;
         public readonly HasOneAttribute SecondToOneAttr;
         public readonly HasManyAttribute ToManyAttr;
-
 
         public readonly Dictionary<RelationshipAttribute, HashSet<Dummy>> Relationships = new Dictionary<RelationshipAttribute, HashSet<Dummy>>();
         public readonly HashSet<Dummy> FirstToOnesEntities = new HashSet<Dummy> { new Dummy() { Id = 1 }, new Dummy() { Id = 2 }, new Dummy() { Id = 3 } };
@@ -132,7 +130,6 @@ namespace UnitTests.ResourceHooks.AffectedEntities
                 Assert.Contains(diff.Entity, AllEntities);
                 Assert.Contains(diff.DatabaseValue, dbEntities);
             }
- 
         }
 
         private void AssertRelationshipDictionaryGetters(Dictionary<RelationshipAttribute, HashSet<Dummy>> relationshipsDictionary,
@@ -161,6 +158,5 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             });
             Assert.Empty(notTargeted);
         }
-
     }
 }
