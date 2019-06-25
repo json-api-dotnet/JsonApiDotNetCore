@@ -7,14 +7,10 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
 {
-
-
-
     /// <summary>
     /// A dummy interface used internally by the hook executor.
     /// </summary>
     public interface IRelationshipsDictionary { }
-
 
     /// <summary>
     /// An interface that is implemented to expose a relationship dictionary on another class.
