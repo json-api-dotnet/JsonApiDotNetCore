@@ -193,6 +193,11 @@ namespace JsonApiDotNetCore.Hooks
             return newEntities;
         }
 
+        /// <summary>
+        /// Parses all relationships from <paramref name="type"/> to
+        /// other models in the resource graphs by constructing RelationshipProxies .
+        /// </summary>
+        /// <param name="type">The type to parse</param>
         void RegisterRelationshipProxies(DependentType type)
         {
             var contextEntity = _graph.GetContextEntity(type);
