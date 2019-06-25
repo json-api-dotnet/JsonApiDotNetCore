@@ -59,7 +59,6 @@ namespace JsonApiDotNetCore.Hooks
             return entities;
         }
 
-
         /// <inheritdoc/>
         public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
         {
@@ -366,7 +365,6 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
-
         /// <summary>
         /// A helper method to call a hook on <paramref name="container"/> reflectively.
         /// </summary>
@@ -428,7 +426,6 @@ namespace JsonApiDotNetCore.Hooks
             return new HashSet<IIdentifiable>(source.Cast<IIdentifiable>().Where(ue => allowedIds.Contains(ue.StringId)));
         }
 
-
         /// <summary>
         /// given the set of <paramref name="uniqueEntities"/>, it will load all the 
         /// values from the database of these entites.
@@ -446,7 +443,6 @@ namespace JsonApiDotNetCore.Hooks
             if (!_executorHelper.ShouldLoadDbValues(entityType, targetHook)) return null;
             return _executorHelper.LoadDbValues(entityType, uniqueEntities, targetHook, relationshipsToNextLayer);
         }
-
 
         /// <summary>
         /// Fires the AfterUpdateRelationship hook
