@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IRelationshipsDictionary&lt;TDependentResource&gt;
    ">
-    <meta name="generator" content="docfx 2.43.1.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -76,11 +76,44 @@
   <div class="markdown level0 summary"><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship__1">IRelationshipGetters&lt;TDependentResource&gt;.GetByRelationship&lt;TRelatedResource&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_System_Type_">IRelationshipGetters&lt;TDependentResource&gt;.GetByRelationship(Type)</a>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;.ContainsKey(JsonApiDotNetCore.Models.RelationshipAttribute)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;.TryGetValue(JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;.Item[JsonApiDotNetCore.Models.RelationshipAttribute]</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;.Keys</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;.Values</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyCollection&lt;System.Collections.Generic.KeyValuePair&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;&gt;.Count</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;System.Collections.Generic.KeyValuePair&lt;JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet&lt;TDependentResource&gt;&gt;&gt;.GetEnumerator()</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.IEnumerable.GetEnumerator()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IRelationshipsDictionary&lt;TDependentResource&gt; : IRelationshipsDictionary where TDependentResource : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IRelationshipsDictionary&lt;TDependentResource&gt; : IRelationshipGetters&lt;TDependentResource&gt;, IReadOnlyDictionary&lt;RelationshipAttribute, HashSet&lt;TDependentResource&gt;&gt;, IReadOnlyCollection&lt;KeyValuePair&lt;RelationshipAttribute, HashSet&lt;TDependentResource&gt;&gt;&gt;, IEnumerable&lt;KeyValuePair&lt;RelationshipAttribute, HashSet&lt;TDependentResource&gt;&gt;&gt;, IEnumerable, IRelationshipsDictionary where TDependentResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -97,103 +130,10 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IRelationshipsDictionary%601.GetByRelationship(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L36">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_" data-uid="JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_System_Type_" data-uid="JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship(System.Type)">GetByRelationship(Type)</h4>
-  <div class="markdown level1 summary"><p>Gets a dictionary of all entities that have an affected relationship to type <code data-dev-comment-type="paramref" class="paramref">principalType</code></p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Dictionary&lt;RelationshipAttribute, HashSet&lt;TDependentResource&gt;&gt; GetByRelationship(Type principalType)</code></pre>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Extensions.IQueryableExtensions.html#JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach__1_System_Collections_Generic_IEnumerable___0__System_Action___0__">IQueryableExtensions.ForEach&lt;T&gt;(IEnumerable&lt;T&gt;, Action&lt;T&gt;)</a>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">principalType</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TDependentResource&gt;&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship__1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IRelationshipsDictionary%601.GetByRelationship%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L32">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_" data-uid="JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship__1" data-uid="JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship``1">GetByRelationship&lt;TPrincipalResource&gt;()</h4>
-  <div class="markdown level1 summary"><p>Gets a dictionary of all entities that have an affected relationship to type <code data-dev-comment-type="typeparamref" class="typeparamref">TPrincipalResource</code></p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Dictionary&lt;RelationshipAttribute, HashSet&lt;TDependentResource&gt;&gt; GetByRelationship&lt;TPrincipalResource&gt;()
-    where TPrincipalResource : class, IIdentifiable</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TDependentResource&gt;&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TPrincipalResource</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 </article>
           </div>
           
@@ -205,7 +145,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IRelationshipsDictionary%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L27" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L34" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

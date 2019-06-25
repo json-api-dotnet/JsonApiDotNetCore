@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IQueryAccessor
+    <title>Interface IRelationshipGetters&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IQueryAccessor
+    <meta name="title" content="Interface IRelationshipGetters&lt;TResource&gt;
    ">
     <meta name="generator" content="docfx 2.43.2.0">
     
@@ -68,37 +68,53 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Services.IQueryAccessor">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IRelationshipGetters`1">
   
   
-  <h1 id="JsonApiDotNetCore_Services_IQueryAccessor" data-uid="JsonApiDotNetCore.Services.IQueryAccessor" class="text-break">Interface IQueryAccessor
+  <h1 id="JsonApiDotNetCore_Hooks_IRelationshipGetters_1" data-uid="JsonApiDotNetCore.Hooks.IRelationshipGetters`1" class="text-break">Interface IRelationshipGetters&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Services.html">JsonApiDotNetCore.Services</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Services_IQueryAccessor_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Hooks_IRelationshipGetters_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IQueryAccessor</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IRelationshipGetters&lt;TResource&gt;
+    where TResource : class, IIdentifiable</code></pre>
   </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IQueryAccessor_GetRequired__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IQueryAccessor.GetRequired%60%601(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IRelationshipGetters%601.GetByRelationship(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/QueryAccessor.cs/#L17">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L51">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Services_IQueryAccessor_GetRequired_" data-uid="JsonApiDotNetCore.Services.IQueryAccessor.GetRequired*"></a>
-  <h4 id="JsonApiDotNetCore_Services_IQueryAccessor_GetRequired__1_System_String_" data-uid="JsonApiDotNetCore.Services.IQueryAccessor.GetRequired``1(System.String)">GetRequired&lt;T&gt;(String)</h4>
-  <div class="markdown level1 summary"><p>Gets the query value and throws a if it is not present.
-If the exception is not caught, the middleware will return an HTTP 422 response.</p>
+  <a id="JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_" data-uid="JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship*"></a>
+  <h4 id="JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_System_Type_" data-uid="JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship(System.Type)">GetByRelationship(Type)</h4>
+  <div class="markdown level1 summary"><p>Gets a dictionary of all entities that have an affected relationship to type <code data-dev-comment-type="paramref" class="paramref">principalType</code></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">T GetRequired&lt;T&gt;(string key)</code></pre>
+    <pre><code class="lang-csharp hljs">Dictionary&lt;RelationshipAttribute, HashSet&lt;TResource&gt;&gt; GetByRelationship(Type relatedResourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -111,8 +127,8 @@ If the exception is not caught, the middleware will return an HTTP 422 response.
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">key</span></td>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">relatedResourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -127,78 +143,28 @@ If the exception is not caught, the middleware will return an HTTP 422 response.
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">T</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.JsonApiException.html">JsonApiException</a></td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IQueryAccessor_TryGetValue__1_System_String___0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IQueryAccessor.TryGetValue%60%601(System.String%2C%60%600%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship__1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IRelationshipGetters%601.GetByRelationship%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/QueryAccessor.cs/#L10">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L47">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Services_IQueryAccessor_TryGetValue_" data-uid="JsonApiDotNetCore.Services.IQueryAccessor.TryGetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Services_IQueryAccessor_TryGetValue__1_System_String___0__" data-uid="JsonApiDotNetCore.Services.IQueryAccessor.TryGetValue``1(System.String,``0@)">TryGetValue&lt;T&gt;(String, out T)</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_" data-uid="JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship*"></a>
+  <h4 id="JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship__1" data-uid="JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship``1">GetByRelationship&lt;TRelatedResource&gt;()</h4>
+  <div class="markdown level1 summary"><p>Gets a dictionary of all entities that have an affected relationship to type <code data-dev-comment-type="typeparamref" class="typeparamref">TPrincipalResource</code></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">bool TryGetValue&lt;T&gt;(string key, out T value)</code></pre>
+    <pre><code class="lang-csharp hljs">Dictionary&lt;RelationshipAttribute, HashSet&lt;TResource&gt;&gt; GetByRelationship&lt;TRelatedResource&gt;()
+    where TRelatedResource : class, IIdentifiable</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">key</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">T</span></td>
-        <td><span class="parametername">value</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -209,7 +175,7 @@ If the exception is not caught, the middleware will return an HTTP 422 response.
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -224,7 +190,7 @@ If the exception is not caught, the middleware will return an HTTP 422 response.
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">T</span></td>
+        <td><span class="parametername">TRelatedResource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -237,10 +203,10 @@ If the exception is not caught, the middleware will return an HTTP 422 response.
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_IQueryAccessor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.IQueryAccessor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IRelationshipGetters_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IRelationshipGetters%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/QueryAccessor.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/RelationshipsDictionary.cs/#L42" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

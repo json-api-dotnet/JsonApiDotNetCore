@@ -5,12 +5,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IEntityDiff&lt;TEntity&gt;
+    <title>Interface IEntityDiffs&lt;TResource&gt;
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IEntityDiff&lt;TEntity&gt;
+    <meta name="title" content="Interface IEntityDiffs&lt;TResource&gt;
    ">
-    <meta name="generator" content="docfx 2.43.1.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -68,34 +68,28 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Hooks.IEntityDiffs`1">
   
   
-  <h1 id="JsonApiDotNetCore_Hooks_IEntityDiff_1" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1" class="text-break">Interface IEntityDiff&lt;TEntity&gt;
+  <h1 id="JsonApiDotNetCore_Hooks_IEntityDiffs_1" data-uid="JsonApiDotNetCore.Hooks.IEntityDiffs`1" class="text-break">Interface IEntityDiffs&lt;TResource&gt;
   </h1>
   <div class="markdown level0 summary"><p>A wrapper class that contains information about the resources that are updated by the request.
 Contains the resources from the request and the corresponding database values.</p>
 <p>Also contains information about updated relationships through 
-implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TEntity</code>&gt;</p>
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship__1">IRelationshipsDictionary&lt;TEntity&gt;.GetByRelationship&lt;TPrincipalResource&gt;()</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_System_Type_">IRelationshipsDictionary&lt;TEntity&gt;.GetByRelationship(Type)</a>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;JsonApiDotNetCore.Hooks.EntityDiffPair&lt;TEntity&gt;&gt;.GetEnumerator()</span>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;JsonApiDotNetCore.Hooks.EntityDiffPair&lt;TResource&gt;&gt;.GetEnumerator()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Hooks_IEntityDiff_1_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Hooks_IEntityDiffs_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IEntityDiff&lt;TEntity&gt; : IRelationshipsDictionary&lt;TEntity&gt;, IRelationshipsDictionary, IEnumerable&lt;EntityDiffPair&lt;TEntity&gt;&gt;, IEnumerable where TEntity : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IEntityDiffs&lt;TResource&gt; : IEnumerable&lt;EntityDiffPair&lt;TResource&gt;&gt;, IEnumerable where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -107,7 +101,7 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">TEntity</span></td>
+        <td><span class="parametername">TResource</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -116,19 +110,19 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiff%601.DatabaseValues%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiffs%601.DatabaseValues%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L23">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues_" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues">DatabaseValues</h4>
+  <a id="JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues_" data-uid="JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues*"></a>
+  <h4 id="JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues" data-uid="JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues">DatabaseValues</h4>
   <div class="markdown level1 summary"><p>The database values of the resources affected by the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">HashSet&lt;TEntity&gt; DatabaseValues { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">HashSet&lt;TResource&gt; DatabaseValues { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -140,26 +134,26 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiff%601.Entities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiffs%601.Entities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L28">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities_" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities" data-uid="JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities">Entities</h4>
+  <a id="JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities_" data-uid="JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities*"></a>
+  <h4 id="JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities" data-uid="JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities">Entities</h4>
   <div class="markdown level1 summary"><p>The resources that were affected by the request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">HashSet&lt;TEntity&gt; Entities { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">EntityHashSet&lt;TResource&gt; Entities { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -171,7 +165,7 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;TEntity&gt;</td>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.EntityHashSet-1.html">EntityHashSet</a>&lt;TResource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -188,10 +182,10 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiff_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiff%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_IEntityDiffs_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.IEntityDiffs%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Execution/EntityDiffs.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

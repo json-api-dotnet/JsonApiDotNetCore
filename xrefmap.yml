@@ -3484,205 +3484,162 @@ references:
   fullName: JsonApiDotNetCore.Hooks
   nameWithType: JsonApiDotNetCore.Hooks
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1
-  name: EntityDiffPair<TEntity>
+  name: EntityDiffPair<TResource>
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html
   commentId: T:JsonApiDotNetCore.Hooks.EntityDiffPair`1
-  name.vb: EntityDiffPair(Of TEntity)
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity)
-  nameWithType: EntityDiffPair<TEntity>
-  nameWithType.vb: EntityDiffPair(Of TEntity)
+  name.vb: EntityDiffPair(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource)
+  nameWithType: EntityDiffPair<TResource>
+  nameWithType.vb: EntityDiffPair(Of TResource)
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1.#ctor(`0,`0)
-  name: EntityDiffPair(TEntity, TEntity)
+  name: EntityDiffPair(TResource, TResource)
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html#JsonApiDotNetCore_Hooks_EntityDiffPair_1__ctor__0__0_
   commentId: M:JsonApiDotNetCore.Hooks.EntityDiffPair`1.#ctor(`0,`0)
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>.EntityDiffPair(TEntity, TEntity)
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity).EntityDiffPair(TEntity, TEntity)
-  nameWithType: EntityDiffPair<TEntity>.EntityDiffPair(TEntity, TEntity)
-  nameWithType.vb: EntityDiffPair(Of TEntity).EntityDiffPair(TEntity, TEntity)
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>.EntityDiffPair(TResource, TResource)
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).EntityDiffPair(TResource, TResource)
+  nameWithType: EntityDiffPair<TResource>.EntityDiffPair(TResource, TResource)
+  nameWithType.vb: EntityDiffPair(Of TResource).EntityDiffPair(TResource, TResource)
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1.#ctor*
   name: EntityDiffPair
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html#JsonApiDotNetCore_Hooks_EntityDiffPair_1__ctor_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffPair`1.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>.EntityDiffPair
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity).EntityDiffPair
-  nameWithType: EntityDiffPair<TEntity>.EntityDiffPair
-  nameWithType.vb: EntityDiffPair(Of TEntity).EntityDiffPair
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>.EntityDiffPair
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).EntityDiffPair
+  nameWithType: EntityDiffPair<TResource>.EntityDiffPair
+  nameWithType.vb: EntityDiffPair(Of TResource).EntityDiffPair
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1.DatabaseValue
   name: DatabaseValue
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html#JsonApiDotNetCore_Hooks_EntityDiffPair_1_DatabaseValue
   commentId: P:JsonApiDotNetCore.Hooks.EntityDiffPair`1.DatabaseValue
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>.DatabaseValue
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity).DatabaseValue
-  nameWithType: EntityDiffPair<TEntity>.DatabaseValue
-  nameWithType.vb: EntityDiffPair(Of TEntity).DatabaseValue
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>.DatabaseValue
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).DatabaseValue
+  nameWithType: EntityDiffPair<TResource>.DatabaseValue
+  nameWithType.vb: EntityDiffPair(Of TResource).DatabaseValue
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1.DatabaseValue*
   name: DatabaseValue
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html#JsonApiDotNetCore_Hooks_EntityDiffPair_1_DatabaseValue_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffPair`1.DatabaseValue
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>.DatabaseValue
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity).DatabaseValue
-  nameWithType: EntityDiffPair<TEntity>.DatabaseValue
-  nameWithType.vb: EntityDiffPair(Of TEntity).DatabaseValue
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>.DatabaseValue
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).DatabaseValue
+  nameWithType: EntityDiffPair<TResource>.DatabaseValue
+  nameWithType.vb: EntityDiffPair(Of TResource).DatabaseValue
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1.Entity
   name: Entity
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html#JsonApiDotNetCore_Hooks_EntityDiffPair_1_Entity
   commentId: P:JsonApiDotNetCore.Hooks.EntityDiffPair`1.Entity
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>.Entity
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity).Entity
-  nameWithType: EntityDiffPair<TEntity>.Entity
-  nameWithType.vb: EntityDiffPair(Of TEntity).Entity
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>.Entity
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).Entity
+  nameWithType: EntityDiffPair<TResource>.Entity
+  nameWithType.vb: EntityDiffPair(Of TResource).Entity
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1.Entity*
   name: Entity
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html#JsonApiDotNetCore_Hooks_EntityDiffPair_1_Entity_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffPair`1.Entity
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TEntity>.Entity
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TEntity).Entity
-  nameWithType: EntityDiffPair<TEntity>.Entity
-  nameWithType.vb: EntityDiffPair(Of TEntity).Entity
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffPair<TResource>.Entity
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).Entity
+  nameWithType: EntityDiffPair<TResource>.Entity
+  nameWithType.vb: EntityDiffPair(Of TResource).Entity
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1
-  name: EntityDiffs<TEntity>
+  name: EntityDiffs<TResource>
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html
   commentId: T:JsonApiDotNetCore.Hooks.EntityDiffs`1
-  name.vb: EntityDiffs(Of TEntity)
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity)
-  nameWithType: EntityDiffs<TEntity>
-  nameWithType.vb: EntityDiffs(Of TEntity)
+  name.vb: EntityDiffs(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource)
+  nameWithType: EntityDiffs<TResource>
+  nameWithType.vb: EntityDiffs(Of TResource)
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name: EntityDiffs(HashSet<TEntity>, HashSet<TEntity>, Dictionary<RelationshipAttribute, HashSet<TEntity>>)
+  name: EntityDiffs(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_HashSet__0___
   commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name.vb: EntityDiffs(HashSet(Of TEntity), HashSet(Of TEntity), Dictionary(Of RelationshipAttribute, HashSet(Of TEntity)))
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.EntityDiffs(System.Collections.Generic.HashSet<TEntity>, System.Collections.Generic.HashSet<TEntity>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TEntity>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).EntityDiffs(System.Collections.Generic.HashSet(Of TEntity), System.Collections.Generic.HashSet(Of TEntity), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TEntity)))
-  nameWithType: EntityDiffs<TEntity>.EntityDiffs(HashSet<TEntity>, HashSet<TEntity>, Dictionary<RelationshipAttribute, HashSet<TEntity>>)
-  nameWithType.vb: EntityDiffs(Of TEntity).EntityDiffs(HashSet(Of TEntity), HashSet(Of TEntity), Dictionary(Of RelationshipAttribute, HashSet(Of TEntity)))
+  name.vb: EntityDiffs(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.EntityDiffs(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).EntityDiffs(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: EntityDiffs<TResource>.EntityDiffs(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
+  nameWithType.vb: EntityDiffs(Of TResource).EntityDiffs(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor*
   name: EntityDiffs
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1__ctor_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.EntityDiffs
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).EntityDiffs
-  nameWithType: EntityDiffs<TEntity>.EntityDiffs
-  nameWithType.vb: EntityDiffs(Of TEntity).EntityDiffs
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.AffectedRelationships
-  name: AffectedRelationships
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_AffectedRelationships
-  commentId: P:JsonApiDotNetCore.Hooks.EntityDiffs`1.AffectedRelationships
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.AffectedRelationships
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).AffectedRelationships
-  nameWithType: EntityDiffs<TEntity>.AffectedRelationships
-  nameWithType.vb: EntityDiffs(Of TEntity).AffectedRelationships
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.AffectedRelationships*
-  name: AffectedRelationships
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_AffectedRelationships_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.AffectedRelationships
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.AffectedRelationships
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).AffectedRelationships
-  nameWithType: EntityDiffs<TEntity>.AffectedRelationships
-  nameWithType.vb: EntityDiffs(Of TEntity).AffectedRelationships
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.EntityDiffs
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).EntityDiffs
+  nameWithType: EntityDiffs<TResource>.EntityDiffs
+  nameWithType.vb: EntityDiffs(Of TResource).EntityDiffs
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues
   name: DatabaseValues
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_DatabaseValues
   commentId: P:JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).DatabaseValues
-  nameWithType: EntityDiffs<TEntity>.DatabaseValues
-  nameWithType.vb: EntityDiffs(Of TEntity).DatabaseValues
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.DatabaseValues
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).DatabaseValues
+  nameWithType: EntityDiffs<TResource>.DatabaseValues
+  nameWithType.vb: EntityDiffs(Of TResource).DatabaseValues
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues*
   name: DatabaseValues
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_DatabaseValues_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).DatabaseValues
-  nameWithType: EntityDiffs<TEntity>.DatabaseValues
-  nameWithType.vb: EntityDiffs(Of TEntity).DatabaseValues
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.DatabaseValues
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).DatabaseValues
+  nameWithType: EntityDiffs<TResource>.DatabaseValues
+  nameWithType.vb: EntityDiffs(Of TResource).DatabaseValues
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities
   name: Entities
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_Entities
   commentId: P:JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).Entities
-  nameWithType: EntityDiffs<TEntity>.Entities
-  nameWithType.vb: EntityDiffs(Of TEntity).Entities
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.Entities
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).Entities
+  nameWithType: EntityDiffs<TResource>.Entities
+  nameWithType.vb: EntityDiffs(Of TResource).Entities
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities*
   name: Entities
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_Entities_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).Entities
-  nameWithType: EntityDiffs<TEntity>.Entities
-  nameWithType.vb: EntityDiffs(Of TEntity).Entities
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetByRelationship(System.Type)
-  name: GetByRelationship(Type)
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetByRelationship_System_Type_
-  commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetByRelationship(System.Type)
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.GetByRelationship(System.Type)
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).GetByRelationship(System.Type)
-  nameWithType: EntityDiffs<TEntity>.GetByRelationship(Type)
-  nameWithType.vb: EntityDiffs(Of TEntity).GetByRelationship(Type)
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetByRelationship*
-  name: GetByRelationship
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetByRelationship_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetByRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.GetByRelationship
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).GetByRelationship
-  nameWithType: EntityDiffs<TEntity>.GetByRelationship
-  nameWithType.vb: EntityDiffs(Of TEntity).GetByRelationship
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetByRelationship``1
-  name: GetByRelationship<TPrincipalResource>()
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetByRelationship__1
-  commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetByRelationship``1
-  name.vb: GetByRelationship(Of TPrincipalResource)()
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.GetByRelationship<TPrincipalResource>()
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).GetByRelationship(Of TPrincipalResource)()
-  nameWithType: EntityDiffs<TEntity>.GetByRelationship<TPrincipalResource>()
-  nameWithType.vb: EntityDiffs(Of TEntity).GetByRelationship(Of TPrincipalResource)()
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.Entities
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).Entities
+  nameWithType: EntityDiffs<TResource>.Entities
+  nameWithType.vb: EntityDiffs(Of TResource).Entities
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator
   name: GetEnumerator()
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetEnumerator
   commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.GetEnumerator()
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).GetEnumerator()
-  nameWithType: EntityDiffs<TEntity>.GetEnumerator()
-  nameWithType.vb: EntityDiffs(Of TEntity).GetEnumerator()
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.GetEnumerator()
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).GetEnumerator()
+  nameWithType: EntityDiffs<TResource>.GetEnumerator()
+  nameWithType.vb: EntityDiffs(Of TResource).GetEnumerator()
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator*
   name: GetEnumerator
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetEnumerator_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.GetEnumerator
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).GetEnumerator
-  nameWithType: EntityDiffs<TEntity>.GetEnumerator
-  nameWithType.vb: EntityDiffs(Of TEntity).GetEnumerator
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.GetEnumerator
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).GetEnumerator
+  nameWithType: EntityDiffs<TResource>.GetEnumerator
+  nameWithType.vb: EntityDiffs(Of TResource).GetEnumerator
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator
   name: IEnumerable.GetEnumerator()
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_System_Collections_IEnumerable_GetEnumerator
   commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator
   name.vb: System.Collections.IEnumerable.GetEnumerator()
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.System.Collections.IEnumerable.GetEnumerator()
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).System.Collections.IEnumerable.GetEnumerator()
-  nameWithType: EntityDiffs<TEntity>.IEnumerable.GetEnumerator()
-  nameWithType.vb: EntityDiffs(Of TEntity).System.Collections.IEnumerable.GetEnumerator()
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.System.Collections.IEnumerable.GetEnumerator()
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: EntityDiffs<TResource>.IEnumerable.GetEnumerator()
+  nameWithType.vb: EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator()
 - uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator*
   name: IEnumerable.GetEnumerator
   href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_System_Collections_IEnumerable_GetEnumerator_
   commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator
   isSpec: "True"
   name.vb: System.Collections.IEnumerable.GetEnumerator
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TEntity>.System.Collections.IEnumerable.GetEnumerator
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TEntity).System.Collections.IEnumerable.GetEnumerator
-  nameWithType: EntityDiffs<TEntity>.IEnumerable.GetEnumerator
-  nameWithType.vb: EntityDiffs(Of TEntity).System.Collections.IEnumerable.GetEnumerator
+  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.System.Collections.IEnumerable.GetEnumerator
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator
+  nameWithType: EntityDiffs<TResource>.IEnumerable.GetEnumerator
+  nameWithType.vb: EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator
 - uid: JsonApiDotNetCore.Hooks.EntityHashSet`1
   name: EntityHashSet<TResource>
   href: api/JsonApiDotNetCore.Hooks.EntityHashSet-1.html
@@ -3745,14 +3702,14 @@ references:
   nameWithType: EntityHashSet<TResource>.GetByRelationship
   nameWithType.vb: EntityHashSet(Of TResource).GetByRelationship
 - uid: JsonApiDotNetCore.Hooks.EntityHashSet`1.GetByRelationship``1
-  name: GetByRelationship<TPrincipalResource>()
+  name: GetByRelationship<TRelatedResource>()
   href: api/JsonApiDotNetCore.Hooks.EntityHashSet-1.html#JsonApiDotNetCore_Hooks_EntityHashSet_1_GetByRelationship__1
   commentId: M:JsonApiDotNetCore.Hooks.EntityHashSet`1.GetByRelationship``1
-  name.vb: GetByRelationship(Of TPrincipalResource)()
-  fullName: JsonApiDotNetCore.Hooks.EntityHashSet<TResource>.GetByRelationship<TPrincipalResource>()
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityHashSet(Of TResource).GetByRelationship(Of TPrincipalResource)()
-  nameWithType: EntityHashSet<TResource>.GetByRelationship<TPrincipalResource>()
-  nameWithType.vb: EntityHashSet(Of TResource).GetByRelationship(Of TPrincipalResource)()
+  name.vb: GetByRelationship(Of TRelatedResource)()
+  fullName: JsonApiDotNetCore.Hooks.EntityHashSet<TResource>.GetByRelationship<TRelatedResource>()
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityHashSet(Of TResource).GetByRelationship(Of TRelatedResource)()
+  nameWithType: EntityHashSet<TResource>.GetByRelationship<TRelatedResource>()
+  nameWithType.vb: EntityHashSet(Of TResource).GetByRelationship(Of TRelatedResource)()
 - uid: JsonApiDotNetCore.Hooks.HooksDiscovery`1
   name: HooksDiscovery<TEntity>
   href: api/JsonApiDotNetCore.Hooks.HooksDiscovery-1.html
@@ -4149,15 +4106,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeRead
   nameWithType: IBeforeHooks<TResource>.BeforeRead
   nameWithType.vb: IBeforeHooks(Of TResource).BeforeRead
-- uid: JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name: BeforeUpdate(IEntityDiff<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html#JsonApiDotNetCore_Hooks_IBeforeHooks_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiff__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name.vb: BeforeUpdate(IEntityDiff(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Hooks.IBeforeHooks<TResource>.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff<TResource>, JsonApiDotNetCore.Hooks.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff(Of TResource), JsonApiDotNetCore.Hooks.ResourcePipeline)
-  nameWithType: IBeforeHooks<TResource>.BeforeUpdate(IEntityDiff<TResource>, ResourcePipeline)
-  nameWithType.vb: IBeforeHooks(Of TResource).BeforeUpdate(IEntityDiff(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name: BeforeUpdate(IEntityDiffs<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html#JsonApiDotNetCore_Hooks_IBeforeHooks_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiffs__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name.vb: BeforeUpdate(IEntityDiffs(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Hooks.IBeforeHooks<TResource>.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>, JsonApiDotNetCore.Hooks.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource), JsonApiDotNetCore.Hooks.ResourcePipeline)
+  nameWithType: IBeforeHooks<TResource>.BeforeUpdate(IEntityDiffs<TResource>, ResourcePipeline)
+  nameWithType.vb: IBeforeHooks(Of TResource).BeforeUpdate(IEntityDiffs(Of TResource), ResourcePipeline)
 - uid: JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate*
   name: BeforeUpdate
   href: api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html#JsonApiDotNetCore_Hooks_IBeforeHooks_1_BeforeUpdate_
@@ -4185,49 +4142,75 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeUpdateRelationship
   nameWithType: IBeforeHooks<TResource>.BeforeUpdateRelationship
   nameWithType.vb: IBeforeHooks(Of TResource).BeforeUpdateRelationship
-- uid: JsonApiDotNetCore.Hooks.IEntityDiff`1
-  name: IEntityDiff<TEntity>
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiff-1.html
-  commentId: T:JsonApiDotNetCore.Hooks.IEntityDiff`1
-  name.vb: IEntityDiff(Of TEntity)
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiff<TEntity>
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiff(Of TEntity)
-  nameWithType: IEntityDiff<TEntity>
-  nameWithType.vb: IEntityDiff(Of TEntity)
-- uid: JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues
-  name: DatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiff-1.html#JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues
-  commentId: P:JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiff<TEntity>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiff(Of TEntity).DatabaseValues
-  nameWithType: IEntityDiff<TEntity>.DatabaseValues
-  nameWithType.vb: IEntityDiff(Of TEntity).DatabaseValues
-- uid: JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues*
-  name: DatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiff-1.html#JsonApiDotNetCore_Hooks_IEntityDiff_1_DatabaseValues_
-  commentId: Overload:JsonApiDotNetCore.Hooks.IEntityDiff`1.DatabaseValues
+- uid: JsonApiDotNetCore.Hooks.IByAffectedRelationships`1
+  name: IByAffectedRelationships<TDependentResource>
+  href: api/JsonApiDotNetCore.Hooks.IByAffectedRelationships-1.html
+  commentId: T:JsonApiDotNetCore.Hooks.IByAffectedRelationships`1
+  name.vb: IByAffectedRelationships(Of TDependentResource)
+  fullName: JsonApiDotNetCore.Hooks.IByAffectedRelationships<TDependentResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.IByAffectedRelationships(Of TDependentResource)
+  nameWithType: IByAffectedRelationships<TDependentResource>
+  nameWithType.vb: IByAffectedRelationships(Of TDependentResource)
+- uid: JsonApiDotNetCore.Hooks.IByAffectedRelationships`1.AffectedRelationships
+  name: AffectedRelationships
+  href: api/JsonApiDotNetCore.Hooks.IByAffectedRelationships-1.html#JsonApiDotNetCore_Hooks_IByAffectedRelationships_1_AffectedRelationships
+  commentId: P:JsonApiDotNetCore.Hooks.IByAffectedRelationships`1.AffectedRelationships
+  fullName: JsonApiDotNetCore.Hooks.IByAffectedRelationships<TDependentResource>.AffectedRelationships
+  fullName.vb: JsonApiDotNetCore.Hooks.IByAffectedRelationships(Of TDependentResource).AffectedRelationships
+  nameWithType: IByAffectedRelationships<TDependentResource>.AffectedRelationships
+  nameWithType.vb: IByAffectedRelationships(Of TDependentResource).AffectedRelationships
+- uid: JsonApiDotNetCore.Hooks.IByAffectedRelationships`1.AffectedRelationships*
+  name: AffectedRelationships
+  href: api/JsonApiDotNetCore.Hooks.IByAffectedRelationships-1.html#JsonApiDotNetCore_Hooks_IByAffectedRelationships_1_AffectedRelationships_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IByAffectedRelationships`1.AffectedRelationships
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiff<TEntity>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiff(Of TEntity).DatabaseValues
-  nameWithType: IEntityDiff<TEntity>.DatabaseValues
-  nameWithType.vb: IEntityDiff(Of TEntity).DatabaseValues
-- uid: JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities
-  name: Entities
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiff-1.html#JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities
-  commentId: P:JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiff<TEntity>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiff(Of TEntity).Entities
-  nameWithType: IEntityDiff<TEntity>.Entities
-  nameWithType.vb: IEntityDiff(Of TEntity).Entities
-- uid: JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities*
-  name: Entities
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiff-1.html#JsonApiDotNetCore_Hooks_IEntityDiff_1_Entities_
-  commentId: Overload:JsonApiDotNetCore.Hooks.IEntityDiff`1.Entities
+  fullName: JsonApiDotNetCore.Hooks.IByAffectedRelationships<TDependentResource>.AffectedRelationships
+  fullName.vb: JsonApiDotNetCore.Hooks.IByAffectedRelationships(Of TDependentResource).AffectedRelationships
+  nameWithType: IByAffectedRelationships<TDependentResource>.AffectedRelationships
+  nameWithType.vb: IByAffectedRelationships(Of TDependentResource).AffectedRelationships
+- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1
+  name: IEntityDiffs<TResource>
+  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html
+  commentId: T:JsonApiDotNetCore.Hooks.IEntityDiffs`1
+  name.vb: IEntityDiffs(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource)
+  nameWithType: IEntityDiffs<TResource>
+  nameWithType.vb: IEntityDiffs(Of TResource)
+- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues
+  name: DatabaseValues
+  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues
+  commentId: P:JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues
+  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.DatabaseValues
+  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).DatabaseValues
+  nameWithType: IEntityDiffs<TResource>.DatabaseValues
+  nameWithType.vb: IEntityDiffs(Of TResource).DatabaseValues
+- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues*
+  name: DatabaseValues
+  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiff<TEntity>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiff(Of TEntity).Entities
-  nameWithType: IEntityDiff<TEntity>.Entities
-  nameWithType.vb: IEntityDiff(Of TEntity).Entities
+  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.DatabaseValues
+  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).DatabaseValues
+  nameWithType: IEntityDiffs<TResource>.DatabaseValues
+  nameWithType.vb: IEntityDiffs(Of TResource).DatabaseValues
+- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities
+  name: Entities
+  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities
+  commentId: P:JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities
+  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.Entities
+  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).Entities
+  nameWithType: IEntityDiffs<TResource>.Entities
+  nameWithType.vb: IEntityDiffs(Of TResource).Entities
+- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities*
+  name: Entities
+  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.Entities
+  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).Entities
+  nameWithType: IEntityDiffs<TResource>.Entities
+  nameWithType.vb: IEntityDiffs(Of TResource).Entities
 - uid: JsonApiDotNetCore.Hooks.IEntityHashSet`1
   name: IEntityHashSet<TResource>
   href: api/JsonApiDotNetCore.Hooks.IEntityHashSet-1.html
@@ -4237,32 +4220,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IEntityHashSet(Of TResource)
   nameWithType: IEntityHashSet<TResource>
   nameWithType.vb: IEntityHashSet(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary`1
-  name: IExposeRelationshipsDictionary<TDependentResource>
-  href: api/JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary-1.html
-  commentId: T:JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary`1
-  name.vb: IExposeRelationshipsDictionary(Of TDependentResource)
-  fullName: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary<TDependentResource>
-  fullName.vb: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary(Of TDependentResource)
-  nameWithType: IExposeRelationshipsDictionary<TDependentResource>
-  nameWithType.vb: IExposeRelationshipsDictionary(Of TDependentResource)
-- uid: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary`1.AffectedRelationships
-  name: AffectedRelationships
-  href: api/JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IExposeRelationshipsDictionary_1_AffectedRelationships
-  commentId: P:JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary`1.AffectedRelationships
-  fullName: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary<TDependentResource>.AffectedRelationships
-  fullName.vb: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary(Of TDependentResource).AffectedRelationships
-  nameWithType: IExposeRelationshipsDictionary<TDependentResource>.AffectedRelationships
-  nameWithType.vb: IExposeRelationshipsDictionary(Of TDependentResource).AffectedRelationships
-- uid: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary`1.AffectedRelationships*
-  name: AffectedRelationships
-  href: api/JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IExposeRelationshipsDictionary_1_AffectedRelationships_
-  commentId: Overload:JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary`1.AffectedRelationships
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary<TDependentResource>.AffectedRelationships
-  fullName.vb: JsonApiDotNetCore.Hooks.IExposeRelationshipsDictionary(Of TDependentResource).AffectedRelationships
-  nameWithType: IExposeRelationshipsDictionary<TDependentResource>.AffectedRelationships
-  nameWithType.vb: IExposeRelationshipsDictionary(Of TDependentResource).AffectedRelationships
 - uid: JsonApiDotNetCore.Hooks.IHooksDiscovery
   name: IHooksDiscovery
   href: api/JsonApiDotNetCore.Hooks.IHooksDiscovery.html
@@ -4366,6 +4323,41 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IOnHooks(Of TResource).OnReturn
   nameWithType: IOnHooks<TResource>.OnReturn
   nameWithType.vb: IOnHooks(Of TResource).OnReturn
+- uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1
+  name: IRelationshipGetters<TResource>
+  href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html
+  commentId: T:JsonApiDotNetCore.Hooks.IRelationshipGetters`1
+  name.vb: IRelationshipGetters(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.IRelationshipGetters<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource)
+  nameWithType: IRelationshipGetters<TResource>
+  nameWithType.vb: IRelationshipGetters(Of TResource)
+- uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship(System.Type)
+  name: GetByRelationship(Type)
+  href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_System_Type_
+  commentId: M:JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship(System.Type)
+  fullName: JsonApiDotNetCore.Hooks.IRelationshipGetters<TResource>.GetByRelationship(System.Type)
+  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource).GetByRelationship(System.Type)
+  nameWithType: IRelationshipGetters<TResource>.GetByRelationship(Type)
+  nameWithType.vb: IRelationshipGetters(Of TResource).GetByRelationship(Type)
+- uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship*
+  name: GetByRelationship
+  href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IRelationshipGetters<TResource>.GetByRelationship
+  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource).GetByRelationship
+  nameWithType: IRelationshipGetters<TResource>.GetByRelationship
+  nameWithType.vb: IRelationshipGetters(Of TResource).GetByRelationship
+- uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship``1
+  name: GetByRelationship<TRelatedResource>()
+  href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship__1
+  commentId: M:JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship``1
+  name.vb: GetByRelationship(Of TRelatedResource)()
+  fullName: JsonApiDotNetCore.Hooks.IRelationshipGetters<TResource>.GetByRelationship<TRelatedResource>()
+  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource).GetByRelationship(Of TRelatedResource)()
+  nameWithType: IRelationshipGetters<TResource>.GetByRelationship<TRelatedResource>()
+  nameWithType.vb: IRelationshipGetters(Of TResource).GetByRelationship(Of TRelatedResource)()
 - uid: JsonApiDotNetCore.Hooks.IRelationshipsDictionary
   name: IRelationshipsDictionary
   href: api/JsonApiDotNetCore.Hooks.IRelationshipsDictionary.html
@@ -4381,32 +4373,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipsDictionary(Of TDependentResource)
   nameWithType: IRelationshipsDictionary<TDependentResource>
   nameWithType.vb: IRelationshipsDictionary(Of TDependentResource)
-- uid: JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship(System.Type)
-  name: GetByRelationship(Type)
-  href: api/JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_System_Type_
-  commentId: M:JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship(System.Type)
-  fullName: JsonApiDotNetCore.Hooks.IRelationshipsDictionary<TDependentResource>.GetByRelationship(System.Type)
-  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipsDictionary(Of TDependentResource).GetByRelationship(System.Type)
-  nameWithType: IRelationshipsDictionary<TDependentResource>.GetByRelationship(Type)
-  nameWithType.vb: IRelationshipsDictionary(Of TDependentResource).GetByRelationship(Type)
-- uid: JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship*
-  name: GetByRelationship
-  href: api/JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship_
-  commentId: Overload:JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.IRelationshipsDictionary<TDependentResource>.GetByRelationship
-  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipsDictionary(Of TDependentResource).GetByRelationship
-  nameWithType: IRelationshipsDictionary<TDependentResource>.GetByRelationship
-  nameWithType.vb: IRelationshipsDictionary(Of TDependentResource).GetByRelationship
-- uid: JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship``1
-  name: GetByRelationship<TPrincipalResource>()
-  href: api/JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_IRelationshipsDictionary_1_GetByRelationship__1
-  commentId: M:JsonApiDotNetCore.Hooks.IRelationshipsDictionary`1.GetByRelationship``1
-  name.vb: GetByRelationship(Of TPrincipalResource)()
-  fullName: JsonApiDotNetCore.Hooks.IRelationshipsDictionary<TDependentResource>.GetByRelationship<TPrincipalResource>()
-  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipsDictionary(Of TDependentResource).GetByRelationship(Of TPrincipalResource)()
-  nameWithType: IRelationshipsDictionary<TDependentResource>.GetByRelationship<TPrincipalResource>()
-  nameWithType.vb: IRelationshipsDictionary(Of TDependentResource).GetByRelationship(Of TPrincipalResource)()
 - uid: JsonApiDotNetCore.Hooks.IResourceHookContainer
   name: IResourceHookContainer
   href: api/JsonApiDotNetCore.Hooks.IResourceHookContainer.html
@@ -4551,58 +4517,58 @@ references:
   fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue
   nameWithType: RelationshipProxy.SetValue
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1
-  name: RelationshipsDictionary<TDependentResource>
+  name: RelationshipsDictionary<TResource>
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html
   commentId: T:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1
-  name.vb: RelationshipsDictionary(Of TDependentResource)
-  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TDependentResource>
-  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TDependentResource)
-  nameWithType: RelationshipsDictionary<TDependentResource>
-  nameWithType.vb: RelationshipsDictionary(Of TDependentResource)
+  name.vb: RelationshipsDictionary(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource)
+  nameWithType: RelationshipsDictionary<TResource>
+  nameWithType.vb: RelationshipsDictionary(Of TResource)
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.#ctor(System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name: RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TDependentResource>>)
+  name: RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TResource>>)
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1__ctor_System_Collections_Generic_Dictionary_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_HashSet__0___
   commentId: M:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.#ctor(System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name.vb: RelationshipsDictionary(Dictionary(Of RelationshipAttribute, HashSet(Of TDependentResource)))
-  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TDependentResource>.RelationshipsDictionary(System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TDependentResource>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TDependentResource).RelationshipsDictionary(System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TDependentResource)))
-  nameWithType: RelationshipsDictionary<TDependentResource>.RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TDependentResource>>)
-  nameWithType.vb: RelationshipsDictionary(Of TDependentResource).RelationshipsDictionary(Dictionary(Of RelationshipAttribute, HashSet(Of TDependentResource)))
+  name.vb: RelationshipsDictionary(Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.RelationshipsDictionary(System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).RelationshipsDictionary(System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: RelationshipsDictionary<TResource>.RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TResource>>)
+  nameWithType.vb: RelationshipsDictionary(Of TResource).RelationshipsDictionary(Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.#ctor*
   name: RelationshipsDictionary
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1__ctor_
   commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TDependentResource>.RelationshipsDictionary
-  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TDependentResource).RelationshipsDictionary
-  nameWithType: RelationshipsDictionary<TDependentResource>.RelationshipsDictionary
-  nameWithType.vb: RelationshipsDictionary(Of TDependentResource).RelationshipsDictionary
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.RelationshipsDictionary
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).RelationshipsDictionary
+  nameWithType: RelationshipsDictionary<TResource>.RelationshipsDictionary
+  nameWithType.vb: RelationshipsDictionary(Of TResource).RelationshipsDictionary
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship(System.Type)
   name: GetByRelationship(Type)
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship_System_Type_
   commentId: M:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship(System.Type)
-  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TDependentResource>.GetByRelationship(System.Type)
-  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TDependentResource).GetByRelationship(System.Type)
-  nameWithType: RelationshipsDictionary<TDependentResource>.GetByRelationship(Type)
-  nameWithType.vb: RelationshipsDictionary(Of TDependentResource).GetByRelationship(Type)
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.GetByRelationship(System.Type)
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).GetByRelationship(System.Type)
+  nameWithType: RelationshipsDictionary<TResource>.GetByRelationship(Type)
+  nameWithType.vb: RelationshipsDictionary(Of TResource).GetByRelationship(Type)
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship*
   name: GetByRelationship
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship_
   commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TDependentResource>.GetByRelationship
-  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TDependentResource).GetByRelationship
-  nameWithType: RelationshipsDictionary<TDependentResource>.GetByRelationship
-  nameWithType.vb: RelationshipsDictionary(Of TDependentResource).GetByRelationship
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.GetByRelationship
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).GetByRelationship
+  nameWithType: RelationshipsDictionary<TResource>.GetByRelationship
+  nameWithType.vb: RelationshipsDictionary(Of TResource).GetByRelationship
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship``1
-  name: GetByRelationship<TPrincipalResource>()
+  name: GetByRelationship<TRelatedResource>()
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship__1
   commentId: M:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship``1
-  name.vb: GetByRelationship(Of TPrincipalResource)()
-  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TDependentResource>.GetByRelationship<TPrincipalResource>()
-  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TDependentResource).GetByRelationship(Of TPrincipalResource)()
-  nameWithType: RelationshipsDictionary<TDependentResource>.GetByRelationship<TPrincipalResource>()
-  nameWithType.vb: RelationshipsDictionary(Of TDependentResource).GetByRelationship(Of TPrincipalResource)()
+  name.vb: GetByRelationship(Of TRelatedResource)()
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.GetByRelationship<TRelatedResource>()
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).GetByRelationship(Of TRelatedResource)()
+  nameWithType: RelationshipsDictionary<TResource>.GetByRelationship<TRelatedResource>()
+  nameWithType.vb: RelationshipsDictionary(Of TResource).GetByRelationship(Of TRelatedResource)()
 - uid: JsonApiDotNetCore.Hooks.ResourceHook
   name: ResourceHook
   href: api/JsonApiDotNetCore.Hooks.ResourceHook.html
@@ -8230,15 +8196,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Models.ResourceDefinition(Of T).BeforeRead
   nameWithType: ResourceDefinition<T>.BeforeRead
   nameWithType.vb: ResourceDefinition(Of T).BeforeRead
-- uid: JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name: BeforeUpdate(IEntityDiff<T>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiff__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name.vb: BeforeUpdate(IEntityDiff(Of T), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Models.ResourceDefinition<T>.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff<T>, JsonApiDotNetCore.Hooks.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Models.ResourceDefinition(Of T).BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiff(Of T), JsonApiDotNetCore.Hooks.ResourcePipeline)
-  nameWithType: ResourceDefinition<T>.BeforeUpdate(IEntityDiff<T>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of T).BeforeUpdate(IEntityDiff(Of T), ResourcePipeline)
+- uid: JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name: BeforeUpdate(IEntityDiffs<T>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiffs__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name.vb: BeforeUpdate(IEntityDiffs(Of T), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Models.ResourceDefinition<T>.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs<T>, JsonApiDotNetCore.Hooks.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Models.ResourceDefinition(Of T).BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs(Of T), JsonApiDotNetCore.Hooks.ResourcePipeline)
+  nameWithType: ResourceDefinition<T>.BeforeUpdate(IEntityDiffs<T>, ResourcePipeline)
+  nameWithType.vb: ResourceDefinition(Of T).BeforeUpdate(IEntityDiffs(Of T), ResourcePipeline)
 - uid: JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate*
   name: BeforeUpdate
   href: api/JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_
