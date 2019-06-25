@@ -130,7 +130,6 @@ namespace UnitTests.ResourceHooks
             var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
-
     }
 
     public class HooksTestsSetup : HooksDummyData
@@ -168,7 +167,6 @@ namespace UnitTests.ResourceHooks
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
-
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
@@ -276,12 +274,10 @@ namespace UnitTests.ResourceHooks
             resourceDefinition
             .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
-
             resourceDefinition
             .Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
-
             resourceDefinition
             .Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
@@ -294,8 +290,6 @@ namespace UnitTests.ResourceHooks
             resourceDefinition
             .Setup(rd => rd.AfterDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>()))
             .Verifiable();
-
-
         }
 
         (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
