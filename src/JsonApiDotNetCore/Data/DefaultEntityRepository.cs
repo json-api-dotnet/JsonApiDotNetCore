@@ -376,7 +376,7 @@ namespace JsonApiDotNetCore.Data
             var entity = await GetAsync(id);
             if (entity == null) return false;
             _dbSet.Remove(entity);
-             await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return true;
         }
 
