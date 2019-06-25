@@ -181,5 +181,23 @@ namespace JsonApiDotNetCore.Internal
         {
             return list.GetType().GetGenericArguments()[0];
         }
+
+        /// <summary>
+        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
+        /// </summary>
+        public static Type GetIdentifierType(Type entityType)
+        {
+            var property = entityType.GetProperty("Id");
+            if (property == null) throw new ArgumentException("Type does not have a property Id");
+            return entityType.GetProperty("Id").PropertyType;
+        }
+
+        /// <summary>
+        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
+        /// </summary>
+        public static Type GetIdentifierType<T>() where T : IIdentifiable
+        {
+            return typeof(T).GetProperty("Id").PropertyType;
+        }
     }
 }

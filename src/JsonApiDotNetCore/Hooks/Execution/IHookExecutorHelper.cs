@@ -42,7 +42,20 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// For a set of entities, loads current values from the database
         /// </summary>
+        /// <param name="repositoryEntityType">type of the entities to be loaded</param>
+        /// <param name="entities">The set of entities to load the db values for</param>
+        /// <param name="hook">The hook in which the db values will be displayed.</param>
+        /// <param name="relationships">Relationships that need to be included on entities.</param>
         IEnumerable LoadDbValues(Type repositoryEntityType, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships);
-        bool ShouldLoadDbValues(Type containerEntityType, ResourceHook hook);
+
+        /// <summary>
+        /// Checks if the display database values option is allowed for the targetd hook, and for 
+        /// a given resource of type <paramref name="entityType"/> checks if this hook is implemented and if the
+        /// database values option is enabled.
+        /// </summary>
+        /// <returns><c>true</c>, if load db values was shoulded, <c>false</c> otherwise.</returns>
+        /// <param name="entityType">Container entity type.</param>
+        /// <param name="hook">Hook.</param>
+        bool ShouldLoadDbValues(Type entityType, ResourceHook hook);
     }
 }

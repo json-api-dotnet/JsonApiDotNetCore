@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Hooks
         public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships)
         {
             var paths = relationships.Select(p => p.RelationshipPath).ToArray();
-            var idType = GetIdentifierType(entityTypeForRepository);
+            var idType = TypeHelper.GetIdentifierType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityTypeForRepository, idType);
@@ -142,11 +142,6 @@ namespace JsonApiDotNetCore.Hooks
                 _hookDiscoveries[entityType] = discovery;
             }
             return discovery;
-        }
-
-        Type GetIdentifierType(Type entityType)
-        {
-            return entityType.GetProperty("Id").PropertyType;
         }
 
         IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, string[] relationshipPaths) where TEntity : class, IIdentifiable<TId>

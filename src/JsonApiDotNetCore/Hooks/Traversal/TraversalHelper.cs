@@ -91,6 +91,8 @@ namespace JsonApiDotNetCore.Hooks
             var nextNodes = principalsGrouped.Select(entry =>
             {
                 var nextNodeType = entry.Key;
+                RegisterRelationshipProxies(nextNodeType);
+
                 var populatedRelationships = new List<RelationshipProxy>();
                 var relationshipsToPreviousLayer = entry.Value.Select(grouped =>
                 {
@@ -99,7 +101,6 @@ namespace JsonApiDotNetCore.Hooks
                     return CreateRelationshipGroupInstance(nextNodeType, proxy, grouped.Value, dependents[proxy]);
                 }).ToList();
 
-                RegisterRelationshipProxies(nextNodeType);
                 return CreateNodeInstance(nextNodeType, populatedRelationships.ToArray(), relationshipsToPreviousLayer);
             }).ToList();
 
@@ -201,7 +202,8 @@ namespace JsonApiDotNetCore.Hooks
                 if (!RelationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
-                    var isContextRelation = (_context.RelationshipsToUpdate?.ContainsKey(attr)) != null;
+                    bool isContextRelation = false;
+                    if (_context.RelationshipsToUpdate != null) isContextRelation = _context.RelationshipsToUpdate.ContainsKey(attr);
                     var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
                     RelationshipProxies[attr] = proxy;
                 }

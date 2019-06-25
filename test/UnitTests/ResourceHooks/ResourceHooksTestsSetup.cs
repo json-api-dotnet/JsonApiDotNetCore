@@ -39,6 +39,7 @@ namespace UnitTests.ResourceHooks
                 .AddResource<Article>()
                 .AddResource<IdentifiableArticleTag>()
                 .AddResource<Tag>()
+                .AddResource<TodoItemCollection, Guid>()
                 .Build();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
@@ -325,8 +326,16 @@ namespace UnitTests.ResourceHooks
 
             if (dbContext != null)
             {
-                IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, apiContext);
-                processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                var idType = TypeHelper.GetIdentifierType<TModel>();
+                if (idType == typeof(int))
+                {
+                    IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, apiContext);
+                    processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                } else
+                {
+                    throw new TypeLoadException("Test not set up properly");
+                }
+
             }
         }
 

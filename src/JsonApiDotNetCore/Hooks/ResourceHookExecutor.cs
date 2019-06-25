@@ -70,7 +70,6 @@ namespace JsonApiDotNetCore.Hooks
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
-
             FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
             return entities;
         }
@@ -234,12 +233,15 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Fires the nested before hooks. For example consider the case when
-        /// the owner of an article a1 (one-to-one) was updated from o1 to o2, where o2
-        /// was already related to a2. Then, the BeforeUpdateRelationship should be
-        /// fired for o2, and the BeforeImplicitUpdateRelationship hook should be fired for
-        /// o2 and then too for a2.
+        /// Fires the nested before hooks for entities in the current <paramref name="layer"/>
         /// </summary>
+        /// <remarks>
+        /// For example: consider the case when the owner of article1 (one-to-one) 
+        /// is being updated from owner_old to owner_new, where owner_new is currently already 
+        /// related to article2. Then, the following nested hooks need to be fired in the following order. 
+        /// First the BeforeUpdateRelationship should be for owner1, then the 
+        /// BeforeImplicitUpdateRelationship hook should be fired for
+        /// owner2, and lastely the BeforeImplicitUpdateRelationship for article2.</remarks>
         void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, EntityChildLayer layer)
         {
             foreach (IEntityNode node in layer)
@@ -247,8 +249,10 @@ namespace JsonApiDotNetCore.Hooks
                 var nestedHookcontainer = _executorHelper.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeUpdateRelationship);
                 IEnumerable uniqueEntities = node.UniqueEntities;
                 DependentType entityType = node.EntityType;
+                Dictionary<RelationshipAttribute, IEnumerable> currenEntitiesGrouped;
+                Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGroupedInverse;
 
-                // fire the BeforeUpdateRelationship hook for o2
+                // fire the BeforeUpdateRelationship hook for owner_new
                 if (nestedHookcontainer != null)
                 {
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
@@ -256,10 +260,17 @@ namespace JsonApiDotNetCore.Hooks
                         var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                         var dbValues = LoadDbValues(entityType, uniqueEntities, ResourceHook.BeforeUpdateRelationship, relationships);
 
-                        var dependentByPrevLayerRelationships = node.RelationshipsFromPreviousLayer.GetDependentEntities();
-                        var principalsByCurrentLayerRelationships = dependentByPrevLayerRelationships.ToDictionary(kvp => _graph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+                        /// these are the entities of the current node grouped by 
+                        /// RelationshipAttributes that occured in the previous layer
+                        /// so it looks like { HasOneAttribute:owner  =>  owner_new }.
+                        /// Note that in the BeforeUpdateRelationship hook of Person, 
+                        /// we want want inverse relationship attribute:
+                        /// we now have the one pointing from article -> person, ]
+                        /// but we require the the one that points from person -> article             
+                        currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetDependentEntities();
+                        currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currenEntitiesGrouped);
 
-                        var resourcesByRelationship = CreateRelationshipHelper(entityType, principalsByCurrentLayerRelationships, dbValues);
+                        var resourcesByRelationship = CreateRelationshipHelper(entityType, currentEntitiesGroupedInverse, dbValues);
                         var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
                         node.UpdateUnique(updated);
@@ -267,24 +278,58 @@ namespace JsonApiDotNetCore.Hooks
                     }
                 }
 
-                // fire the BeforeImplicitUpdateRelationship hook for o1 
-                var implicitPrincipalTargets = node.RelationshipsFromPreviousLayer.GetPrincipalEntities();
-                if (pipeline != ResourcePipeline.Post && implicitPrincipalTargets.Any())
+                /// Fire the BeforeImplicitUpdateRelationship hook for owner_old.
+                /// Note: if the pipeline is Post it means we just created article1,
+                /// which means we are sure that it isn't related to any other entities yet.
+                if (pipeline != ResourcePipeline.Post)
                 {
-                    // value in implicitPrincipalTargets is a1 here.
-                    // we need to load the current value in db, which is o1.
-                    // then we need to inverse the relationship attribute 
-                    FireForAffectedImplicits(entityType, implicitPrincipalTargets, pipeline, uniqueEntities);
+                    /// To fire a hook for owner_old, we need to first get a reference to it.
+                    /// For this, we need to query the database for the  HasOneAttribute:owner 
+                    /// relationship of article1, which is referred to as the 
+                    /// principal side of the HasOneAttribute:owner relationship.
+                    var principalEntities = node.RelationshipsFromPreviousLayer.GetPrincipalEntities();
+                    if (principalEntities.Any())
+                    {
+                        /// owner_old is loaded, which is an "implicitly affected entity"
+                        FireForAffectedImplicits(entityType, principalEntities, pipeline, uniqueEntities);
+                    }
                 }
 
-                // fire the BeforeImplicitUpdateRelationship hook for a2 
-                var dependentEntities = node.RelationshipsFromPreviousLayer.GetDependentEntities();
-                if (dependentEntities.Any())
+                /// Fire the BeforeImplicitUpdateRelationship hook for article2
+                /// For this, we need to query the database for the current owner 
+                /// relationship value of owner_new.
+                currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetDependentEntities();
+                if (currenEntitiesGrouped.Any())
                 {
-                    (var implicitDependentTargets, var principalEntityType) = GetDependentImplicitsTargets(dependentEntities);
-                    FireForAffectedImplicits(principalEntityType, implicitDependentTargets, pipeline);
+                    /// dependentEntities is grouped by relationships from previous 
+                    /// layer, ie { HasOneAttribute:owner  =>  owner_new }. But 
+                    /// to load article2 onto owner_new, we need to have the 
+                    /// RelationshipAttribute from owner to article, which is the
+                    /// inverse of HasOneAttribute:owner
+                    currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currenEntitiesGrouped);
+                    /// Note that currently in the JADNC implementation of hooks, 
+                    /// the root layer is ALWAYS homogenous, so we safely assume 
+                    /// that for every relationship to the previous layer, the 
+                    /// principal type is the same.
+                    PrincipalType principalEntityType = currenEntitiesGrouped.First().Key.PrincipalType;
+                    FireForAffectedImplicits(principalEntityType, currentEntitiesGroupedInverse, pipeline);
                 }
             }
+        }
+
+        /// <summary>
+        /// replaces the keys of the <paramref name="entitiesByRelationship"/> dictionary
+        /// with its inverse relationship attribute.
+        /// </summary>
+        /// <param name="entitiesByRelationship">Entities grouped by relationship attribute</param>
+        Dictionary<RelationshipAttribute, IEnumerable> ReplaceKeysWithInverseRelationships(Dictionary<RelationshipAttribute, IEnumerable> entitiesByRelationship)
+        {
+            /// when Article has one Owner (HasOneAttribute:owner) is set, there is no guarantee
+            /// that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
+            /// If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
+            /// currently cannot fire hooks for entities resolved through inverse relationships.
+            var inversableRelationshipAttributes = entitiesByRelationship.Where(kvp => kvp.Key.InverseNavigation != null);
+            return inversableRelationshipAttributes.ToDictionary(kvp => _graph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
         }
 
         /// <summary>
@@ -317,16 +362,6 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
-        /// <summary>
-        /// NOTE: in JADNC usage, the root layer is ALWAYS homogenous, so we can be sure that for every 
-        /// relationship to the previous layer, the principal type is the same.
-        /// </summary>
-        (Dictionary<RelationshipAttribute, IEnumerable>, PrincipalType) GetDependentImplicitsTargets(Dictionary<RelationshipAttribute, IEnumerable> dependentEntities)
-        {
-            PrincipalType principalType = dependentEntities.First().Key.PrincipalType;
-            var byInverseRelationship = dependentEntities.Where(kvp => kvp.Key.InverseNavigation != null).ToDictionary(kvp => GetInverseRelationship(kvp.Key), kvp => kvp.Value);
-            return (byInverseRelationship, principalType);
-        }
 
         /// <summary>
         /// A helper method to call a hook on <paramref name="container"/> reflectively.
@@ -389,26 +424,46 @@ namespace JsonApiDotNetCore.Hooks
             return new HashSet<IIdentifiable>(source.Cast<IIdentifiable>().Where(ue => allowedIds.Contains(ue.StringId)));
         }
 
+
         /// <summary>
-        /// Gets the inverse <see cref="RelationshipAttribute"/> for <paramref name="attribute"/>
+        /// given the set of <paramref name="uniqueEntities"/>, it will load all the 
+        /// values from the database of these entites.
         /// </summary>
-        RelationshipAttribute GetInverseRelationship(RelationshipAttribute attribute)
+        /// <returns>The db values.</returns>
+        /// <param name="entityType">type of the entities to be loaded</param>
+        /// <param name="uniqueEntities">The set of entities to load the db values for</param>
+        /// <param name="targetHook">The hook in which the db values will be displayed.</param>
+        /// <param name="relationshipsToNextLayer">Relationships from <paramref name="entityType"/> to the next layer: 
+        /// this indicates which relationships will be included on <paramref name="uniqueEntities"/>.</param>
+        IEnumerable LoadDbValues(Type entityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer)
         {
-            return _graph.GetInverseRelationship(attribute);
+            /// We only need to load database values if the target hook of this hook execution
+            /// cycle is compatible with displaying database values and has this option enabled.
+            if (!_executorHelper.ShouldLoadDbValues(entityType, targetHook)) return null;
+            return _executorHelper.LoadDbValues(entityType, uniqueEntities, targetHook, relationshipsToNextLayer);
         }
 
-        IEnumerable LoadDbValues(Type containerEntityType, IEnumerable uniqueEntities, ResourceHook targetHook, RelationshipAttribute[] relationshipsToNextLayer)
-        {
-            if (!_executorHelper.ShouldLoadDbValues(containerEntityType, targetHook)) return null;
-            return _executorHelper.LoadDbValues(containerEntityType, uniqueEntities, targetHook, relationshipsToNextLayer);
-        }
 
+        /// <summary>
+        /// Fires the AfterUpdateRelationship hook
+        /// </summary>
         void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourcePipeline pipeline)
         {
-            var resourcesByRelationship = CreateRelationshipHelper(node.EntityType, node.RelationshipsFromPreviousLayer.GetDependentEntities());
+
+            Dictionary<RelationshipAttribute, IEnumerable> currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetDependentEntities();
+            /// the relationships attributes in currenEntitiesGrouped will be pointing from a 
+            /// resource in the previouslayer to a resource in the current (nested) layer.
+            /// For the nested hook we need to replace these attributes with their inverse.
+            /// See the FireNestedBeforeUpdateHooks method for a more detailed example.
+            var resourcesByRelationship = CreateRelationshipHelper(node.EntityType, ReplaceKeysWithInverseRelationships(currenEntitiesGrouped));
             CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { resourcesByRelationship, pipeline });
         }
 
+        /// <summary>
+        /// Returns a list of StringIds from a list of IIdentifiables (<paramref name="entities"/>).
+        /// </summary>
+        /// <returns>The ids.</returns>
+        /// <param name="entities">iidentifiable entities.</param>
         HashSet<string> GetIds(IEnumerable entities)
         {
             return new HashSet<string>(entities.Cast<IIdentifiable>().Select(e => e.StringId));
