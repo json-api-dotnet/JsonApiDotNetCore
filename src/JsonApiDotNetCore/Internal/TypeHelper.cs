@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
@@ -113,9 +114,9 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Helper method that "unboxes" the TValue from the relationship dictionary into  
         /// </summary>
-        public static Dictionary<RelationshipAttribute, HashSet<TDependentResource>> ConvertRelationshipDictionary<TDependentResource>(Dictionary<RelationshipAttribute, IEnumerable> relationships)
+        public static Dictionary<RelationshipAttribute, HashSet<TValueOut>> ConvertRelationshipDictionary<TValueOut>(Dictionary<RelationshipAttribute, IEnumerable> relationships) 
         {
-            return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TDependentResource>)pair.Value);
+            return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TValueOut>)pair.Value);
         }
 
         /// <summary>
@@ -179,6 +180,24 @@ namespace JsonApiDotNetCore.Internal
         public static Type GetListInnerType(IEnumerable list)
         {
             return list.GetType().GetGenericArguments()[0];
+        }
+
+        /// <summary>
+        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
+        /// </summary>
+        public static Type GetIdentifierType(Type entityType)
+        {
+            var property = entityType.GetProperty("Id");
+            if (property == null) throw new ArgumentException("Type does not have a property Id");
+            return entityType.GetProperty("Id").PropertyType;
+        }
+
+        /// <summary>
+        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
+        /// </summary>
+        public static Type GetIdentifierType<T>() where T : IIdentifiable
+        {
+            return typeof(T).GetProperty("Id").PropertyType;
         }
     }
 }

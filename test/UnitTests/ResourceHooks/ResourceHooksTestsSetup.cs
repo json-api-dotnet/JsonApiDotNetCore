@@ -39,6 +39,7 @@ namespace UnitTests.ResourceHooks
                 .AddResource<Article>()
                 .AddResource<IdentifiableArticleTag>()
                 .AddResource<Tag>()
+                .AddResource<TodoItemCollection, Guid>()
                 .Build();
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
@@ -129,7 +130,6 @@ namespace UnitTests.ResourceHooks
             var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
-
     }
 
     public class HooksTestsSetup : HooksDummyData
@@ -167,7 +167,6 @@ namespace UnitTests.ResourceHooks
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             (var context, var processorFactory) = CreateContextAndProcessorMocks();
-
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
@@ -261,7 +260,7 @@ namespace UnitTests.ResourceHooks
             .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<IEntityDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<IEntityDiffs<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<EntityDiffs<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
             .Verifiable();
             resourceDefinition
@@ -275,12 +274,10 @@ namespace UnitTests.ResourceHooks
             resourceDefinition
             .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
-
             resourceDefinition
             .Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Returns<IEnumerable<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
-
             resourceDefinition
             .Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
             .Verifiable();
@@ -293,8 +290,6 @@ namespace UnitTests.ResourceHooks
             resourceDefinition
             .Setup(rd => rd.AfterDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>()))
             .Verifiable();
-
-
         }
 
         (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
@@ -325,8 +320,16 @@ namespace UnitTests.ResourceHooks
 
             if (dbContext != null)
             {
-                IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, apiContext);
-                processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                var idType = TypeHelper.GetIdentifierType<TModel>();
+                if (idType == typeof(int))
+                {
+                    IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, apiContext);
+                    processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                } else
+                {
+                    throw new TypeLoadException("Test not set up properly");
+                }
+
             }
         }
 

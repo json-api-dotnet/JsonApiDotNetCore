@@ -7,9 +7,9 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
-    public abstract class LockableResourceBase<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
+    public abstract class LockableResource<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
     {
-        protected LockableResourceBase(IResourceGraph graph) : base(graph) { }
+        protected LockableResource(IResourceGraph graph) : base(graph) { }
 
         protected void DisallowLocked(IEnumerable<T> entities)
         {
