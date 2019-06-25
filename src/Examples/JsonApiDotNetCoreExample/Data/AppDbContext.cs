@@ -58,15 +58,11 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithOne(t => t.ParentTodoItem)
                 .HasForeignKey(t => t.ParentTodoItemId);
 
-            modelBuilder.Entity<Person>()
-                .HasOne(p => p.Passport)
-                .WithOne(p => p.Person)
-                .HasForeignKey<Person>(p => p.PassportId);
-
             modelBuilder.Entity<Passport>()
                 .HasOne(p => p.Person)
                 .WithOne(p => p.Passport)
-                .HasForeignKey<Person>(p => p.PassportId);
+                .HasForeignKey<Person>(p => p.PassportId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<TodoItem>()
                 .HasOne(p => p.ToOnePerson)

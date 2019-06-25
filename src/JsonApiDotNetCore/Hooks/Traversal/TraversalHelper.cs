@@ -57,8 +57,9 @@ namespace JsonApiDotNetCore.Hooks
             _processedEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
             RegisterRelationshipProxies(typeof(TEntity));
             var uniqueEntities = ProcessEntities(rootEntities);
-            var relationshipsToNextLayer = GetPopulatedRelationships(typeof(TEntity), uniqueEntities.Cast<IIdentifiable>());
-            return new RootNode<TEntity>(uniqueEntities, relationshipsToNextLayer);
+            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TEntity), uniqueEntities.Cast<IIdentifiable>());
+            var allRelationshipsFromType = RelationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == typeof(TEntity)).ToArray();
+            return new RootNode<TEntity>(uniqueEntities, populatedRelationshipsToNextLayer, allRelationshipsFromType);
         }
 
         /// <summary>
@@ -107,7 +108,6 @@ namespace JsonApiDotNetCore.Hooks
             /// wrap the child nodes in a EntityChildLayer
             return new EntityChildLayer(nextNodes);
         }
-
 
         /// <summary>
         /// iterates throug the <paramref name="relationships"/> dictinary and groups the values 

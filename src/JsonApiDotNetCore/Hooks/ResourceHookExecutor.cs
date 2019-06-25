@@ -88,7 +88,11 @@ namespace JsonApiDotNetCore.Hooks
                 node.Reassign(entities);
             }
 
-            foreach (var entry in node.PrincipalsToNextLayerByType())
+            /// If we're deleting an article, we're implicitly affected any owners related to it.
+            /// Here we're loading all relations onto the to-be-deleted article
+            /// if for that relation the BeforeImplicitUpdateHook is implemented,
+            /// and this hook is then executed
+            foreach (var entry in node.PrincipalsToNextLayerByRelationships())
             {
                 var dependentType = entry.Key;
                 var implicitTargets = entry.Value;

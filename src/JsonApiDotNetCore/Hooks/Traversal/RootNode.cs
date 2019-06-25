@@ -13,13 +13,15 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal class RootNode<TEntity> : IEntityNode where TEntity : class, IIdentifiable
     {
+        private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TEntity> _uniqueEntities;
         public Type EntityType { get; internal set; }
         public IEnumerable UniqueEntities { get { return _uniqueEntities; } }
-        public RelationshipProxy[] RelationshipsToNextLayer { get; private set; }
-        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> PrincipalsToNextLayerByType()
+        public RelationshipProxy[] RelationshipsToNextLayer { get; }
+
+        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> PrincipalsToNextLayerByRelationships()
         {
-            return RelationshipsToNextLayer
+            return _allRelationshipsToNextLayer
                     .GroupBy(proxy => proxy.DependentType)
                     .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, p => UniqueEntities));
         }
@@ -37,11 +39,12 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer { get { return null; } }
 
-        public RootNode(IEnumerable<TEntity> uniqueEntities, RelationshipProxy[] relationships)
+        public RootNode(IEnumerable<TEntity> uniqueEntities, RelationshipProxy[] poplatedRelationships, RelationshipProxy[] allRelationships)
         {
             EntityType = typeof(TEntity);
             _uniqueEntities = new HashSet<TEntity>(uniqueEntities);
-            RelationshipsToNextLayer = relationships;
+            RelationshipsToNextLayer = poplatedRelationships;
+            _allRelationshipsToNextLayer = allRelationships;
         }
 
         /// <summary>

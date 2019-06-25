@@ -7,7 +7,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
-    public class TodoResource : LockableResourceBase<TodoItem>
+    public class TodoResource : LockableResource<TodoItem>
     {
         public TodoResource(IResourceGraph graph) : base(graph) { }
 

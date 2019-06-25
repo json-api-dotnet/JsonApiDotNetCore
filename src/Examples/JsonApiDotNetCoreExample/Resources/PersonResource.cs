@@ -6,25 +6,19 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
-    public class PersonResource : LockableResourceBase<Person>
+    public class PersonResource : LockableResource<Person>
     {
         public PersonResource(IResourceGraph graph) : base(graph) { }
 
-        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> entitiesByRelationship, ResourcePipeline pipeline)
         {
-            BeforeImplicitUpdateRelationship(resourcesByRelationship, pipeline);
+            BeforeImplicitUpdateRelationship(entitiesByRelationship, pipeline);
             return ids;
         }
 
-        //[LoadDatabaseValues(true)]
-        //public override IEnumerable<Person> BeforeUpdate(IResourceDiff<Person> entityDiff, ResourcePipeline pipeline)
-        //{
-        //    return entityDiff.Entities;
-        //}
-
-        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Person> entitiesByRelationship, ResourcePipeline pipeline)
         {
-            resourcesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
+            entitiesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
         }
     }
 }
