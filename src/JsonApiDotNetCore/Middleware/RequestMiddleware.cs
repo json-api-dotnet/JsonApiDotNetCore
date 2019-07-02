@@ -155,7 +155,6 @@ namespace JsonApiDotNetCore.Middleware
                 pathParsed = pathParsed.Substring(1);
             }
             return resourceGraph.GetEntityBasedOnPath(pathParsed);
-
         }
 
         private static bool IsValid(HttpContext context)

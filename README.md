@@ -42,7 +42,7 @@ See [the documentation](https://json-api-dotnet.github.io/#/) for detailed usage
 
 ```csharp
 public class Article : Identifiable
-{ 
+{
     [Attr("name")]
     public string Name { get; set; }
 }
@@ -91,7 +91,7 @@ Running tests locally requires access to a postgresql database.
 If you have docker installed, this can be propped up via: 
 
 ```bash
-docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample   -e POSTGRES_USER=postgres   -e POSTGRES_PASSWORD=postgres   -p 5432:5432   postgres
+docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432   postgres
 ```
 
 And then to run the tests:

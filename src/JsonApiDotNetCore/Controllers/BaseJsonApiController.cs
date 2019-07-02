@@ -12,37 +12,6 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class BaseJsonApiController<T>
-        : BaseJsonApiController<T, int>
-        where T : class, IIdentifiable<int>
-    {
-        public BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
-            IResourceService<T, int> resourceService
-        ) : base(jsonApiOptions, resourceService, resourceService) { }
-
-        public BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IResourceQueryService<T, int> queryService = null,
-            IResourceCmdService<T, int> cmdService = null
-        ) : base(jsonApiOptions, queryService, cmdService) { }
-
-
-        public BaseJsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph,
-            IGetAllService<T, int> getAll = null,
-            IGetByIdService<T, int> getById = null,
-            IGetRelationshipService<T, int> getRelationship = null,
-            IGetRelationshipsService<T, int> getRelationships = null,
-            ICreateService<T, int> create = null,
-            IUpdateService<T, int> update = null,
-            IUpdateRelationshipService<T, int> updateRelationships = null,
-            IDeleteService<T, int> delete = null
-        ) : base(jsonApiOptions, resourceGraph, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
-    }
-
     public class BaseJsonApiController<T, TId>
         : JsonApiControllerMixin
         where T : class, IIdentifiable<TId>
@@ -107,6 +76,19 @@ namespace JsonApiDotNetCore.Controllers
             _delete = cmdService;
         }
 
+        /// <summary>
+        /// Base constructor
+        /// </summary>
+        /// <param name="jsonApiOptions"></param>
+        /// <param name="resourceGraph"></param>
+        /// <param name="getAll"></param>
+        /// <param name="getById"></param>
+        /// <param name="getRelationship"></param>
+        /// <param name="getRelationships"></param>
+        /// <param name="create"></param>
+        /// <param name="update"></param>
+        /// <param name="updateRelationships"></param>
+        /// <param name="delete"></param>
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceGraph resourceGraph,
@@ -224,5 +206,34 @@ namespace JsonApiDotNetCore.Controllers
                 return NotFound();
             return NoContent();
         }
+    }
+    public class BaseJsonApiController<T>
+    : BaseJsonApiController<T, int>
+    where T : class, IIdentifiable<int>
+    {
+        public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceService<T, int> resourceService
+        ) : base(jsonApiOptions, resourceService, resourceService) { }
+
+        public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceQueryService<T, int> queryService = null,
+            IResourceCmdService<T, int> cmdService = null
+        ) : base(jsonApiOptions, queryService, cmdService) { }
+
+
+        public BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
+            IGetAllService<T, int> getAll = null,
+            IGetByIdService<T, int> getById = null,
+            IGetRelationshipService<T, int> getRelationship = null,
+            IGetRelationshipsService<T, int> getRelationships = null,
+            ICreateService<T, int> create = null,
+            IUpdateService<T, int> update = null,
+            IUpdateRelationshipService<T, int> updateRelationships = null,
+            IDeleteService<T, int> delete = null
+        ) : base(jsonApiOptions, resourceGraph, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
     }
 }

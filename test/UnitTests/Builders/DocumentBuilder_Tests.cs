@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -304,6 +305,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, UserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = GetDocumentBuilder(scopedServiceProvider: scopedServiceProvider);
@@ -327,6 +329,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, UserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = GetDocumentBuilder(_jsonApiContextMock, scopedServiceProvider: scopedServiceProvider);
@@ -349,6 +352,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, InstanceSpecificUserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = GetDocumentBuilder(_jsonApiContextMock, scopedServiceProvider: scopedServiceProvider);
@@ -372,6 +376,7 @@ namespace UnitTests
             var scopedServiceProvider = new TestScopedServiceProvider(
                 new ServiceCollection()
                     .AddScoped<ResourceDefinition<User>, InstanceSpecificUserResource>()
+                    .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
             var documentBuilder = GetDocumentBuilder(_jsonApiContextMock, scopedServiceProvider: scopedServiceProvider);
@@ -390,12 +395,20 @@ namespace UnitTests
 
         public class InstanceSpecificUserResource : ResourceDefinition<User>
         {
+            public InstanceSpecificUserResource(IResourceGraph graph) : base(graph)
+            {
+            }
+
             protected override List<AttrAttribute> OutputAttrs(User instance)
                 => Remove(user => user.Password);
         }
 
         public class UserResource : ResourceDefinition<User>
         {
+            public UserResource(IResourceGraph graph) : base(graph)
+            {
+            }
+
             protected override List<AttrAttribute> OutputAttrs()
                 => Remove(user => user.Password);
         }

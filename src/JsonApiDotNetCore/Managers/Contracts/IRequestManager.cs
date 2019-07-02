@@ -45,6 +45,9 @@ namespace JsonApiDotNetCore.Managers.Contracts
         void SetContextEntity(ContextEntity contextEntityCurrent);
 
         ContextEntity GetContextEntity();
+        /// <summary>
+        /// Which query params are filtered
+        /// </summary>
         QueryParams DisabledQueryParams { get; set; }
 
     }

@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Request
     /// </summary>
     public class HasManyRelationshipPointers
     {
-        private Dictionary<RelationshipAttribute, IList> _hasManyRelationships = new Dictionary<RelationshipAttribute, IList>();
+        private readonly Dictionary<RelationshipAttribute, IList> _hasManyRelationships = new Dictionary<RelationshipAttribute, IList>();
 
         /// <summary>
         /// Add the relationship to the list of relationships that should be 

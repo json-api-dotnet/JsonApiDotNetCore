@@ -106,7 +106,7 @@ namespace UnitTests.Services
         [Fact]
         public void Can_Disable_Filters()
         {
-            // arrange
+            // Arrange
             var query = new Dictionary<string, StringValues> {
                 { "filter[key]", new StringValues("value") }
             };
@@ -117,14 +117,14 @@ namespace UnitTests.Services
 
             _requestMock
                 .Setup(m => m.DisabledQueryParams)
-                .Returns(QueryParams.Filter);
+                .Returns(QueryParams.Filters);
 
             var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
-            // act
+            // Act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
-            // assert
+            // Assert
             Assert.Empty(querySet.Filters);
         }
 
@@ -224,7 +224,7 @@ namespace UnitTests.Services
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
-            // assert
+            // Assert
             Assert.Empty(querySet.Fields);
         }
 

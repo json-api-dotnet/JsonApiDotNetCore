@@ -1,4 +1,6 @@
 using System;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -7,12 +9,15 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrFilterQuery : BaseFilterQuery
     {
         public RelatedAttrFilterQuery(
-            IJsonApiContext jsonApiContext,
+            IRequestManager requestManager,
+            IResourceGraph resourceGraph,
             FilterQuery filterQuery)
-            :base(jsonApiContext, filterQuery)
+            : base(requestManager: requestManager,
+                  resourceGraph: resourceGraph,
+                  filterQuery: filterQuery)
         {
             if (Relationship == null)
-                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {jsonApiContext.RequestEntity.EntityName}.");
+                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {requestManager.GetContextEntity().EntityName}.");
 
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
@@ -20,14 +25,6 @@ namespace JsonApiDotNetCore.Internal.Query
             if (Attribute.IsFilterable == false)
                 throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
 
-            FilteredRelationship = Relationship;
-            FilteredAttribute = Attribute;
         }
-
-        [Obsolete("Use " + nameof(Attribute) + " instead.")]
-        public AttrAttribute FilteredAttribute { get; set; }
-
-        [Obsolete("Use " + nameof(Relationship) + " instead.")]
-        public RelationshipAttribute FilteredRelationship { get; set; }
     }
 }

@@ -528,7 +528,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Can_Delete_Relationship_By_Patching_Resource()
+        public async Task Can_Delete_ToOne_Relationship_By_Patching_Resource()
         {
             // arrange
             var person = _personFaker.Generate();
@@ -549,6 +549,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     relationships = new
                     {
@@ -577,6 +578,64 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(todoItemResult.Owner);
+        }
+
+
+        [Fact]
+        public async Task Can_Delete_ToMany_Relationship_By_Patching_Resource()
+        {
+            // arrange
+            var person = _personFaker.Generate();
+            var todoItem = _todoItemFaker.Generate();
+            person.TodoItems = new List<TodoItem>() { todoItem };
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    id = person.Id,
+                    type = "people",
+                    relationships = new Dictionary<string, object>
+                    {
+                         { "todo-items", new
+                            {
+                                data = new List<object>
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var personResult = _context.People
+                .AsNoTracking()
+                .Include(p => p.TodoItems)
+                .Single(p => p.Id == person.Id);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Empty(personResult.TodoItems);
         }
 
         [Fact]
@@ -620,6 +679,116 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Null(todoItemResult.Owner);
+        }
+
+        [Fact]
+        public async Task Updating_ToOne_Relationship_With_Implicit_Remove()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var passport = new Passport();
+            var person1 = _personFaker.Generate();
+            person1.Passport = passport;
+            var person2 = _personFaker.Generate();
+            context.People.AddRange(new List<Person>() { person1, person2 });
+            await context.SaveChangesAsync();
+            var passportId = person1.PassportId;
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person2.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "passport", new
+                            {
+                                data = new { type = "passports", id = $"{passportId}" }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person2.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Assert
+           
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("Passport").FirstOrDefault();
+            Assert.Equal(passportId, dbPerson.Passport.Id);
+        }
+
+        [Fact]
+        public async Task Updating_ToMany_Relationship_With_Implicit_Remove()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var person1 = _personFaker.Generate();
+            person1.TodoItems = _todoItemFaker.Generate(3).ToList();
+            var person2 = _personFaker.Generate();
+            person2.TodoItems = _todoItemFaker.Generate(2).ToList();
+            context.People.AddRange(new List<Person>() { person1, person2 });
+            await context.SaveChangesAsync();
+            var todoItem1Id = person1.TodoItems[0].Id;
+            var todoItem2Id = person1.TodoItems[1].Id;
+
+            var content = new
+            {
+                data = new
+                {
+                    type = "people",
+                    id = person2.Id,
+                    relationships = new Dictionary<string, object>
+                    {
+                        { "todo-items", new
+                            {
+                                data = new List<object>
+                                {
+                                    new {
+                                        type = "todo-items",
+                                        id = $"{todoItem1Id}"
+                                    },
+                                    new {
+                                        type = "todo-items",
+                                        id = $"{todoItem2Id}"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var httpMethod = new HttpMethod("PATCH");
+            var route = $"/api/v1/people/{person2.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            string serializedContent = JsonConvert.SerializeObject(content);
+            request.Content = new StringContent(serializedContent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Assert
+
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            var dbPerson = context.People.AsNoTracking().Where(p => p.Id == person2.Id).Include("TodoItems").FirstOrDefault();
+            Assert.Equal(2, dbPerson.TodoItems.Count);
+            Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem1Id));
+            Assert.NotNull(dbPerson.TodoItems.SingleOrDefault(ti => ti.Id == todoItem2Id));
         }
     }
 }

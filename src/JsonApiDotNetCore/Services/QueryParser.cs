@@ -32,14 +32,12 @@ namespace JsonApiDotNetCore.Services
         public virtual QuerySet Parse(IQueryCollection query)
         {
             var querySet = new QuerySet();
-            // var disabledQueries = _controllerContext.GetControllerAttribute<DisableQueryAttribute>()?.QueryParams ?? QueryParams.None;
-
-            var disabledQueries = QueryParams.None;
+            var disabledQueries = _requestManager.DisabledQueryParams;
             foreach (var pair in query)
             {
                 if (pair.Key.StartsWith(QueryConstants.FILTER))
                 {
-                    if (disabledQueries.HasFlag(QueryParams.Filter) == false)
+                    if (disabledQueries.HasFlag(QueryParams.Filters) == false)
                         querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
@@ -197,10 +195,10 @@ namespace JsonApiDotNetCore.Services
             {
                 if (relationship != default)
                 {
-                    var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.Type);
+                    var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.DependentType);
                     var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
                     if(attr == null)
-                        throw new JsonApiException(400, $"'{relationship.Type.Name}' does not contain '{field}'.");
+                        throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
 
                     // e.g. "Owner.Name"
                     includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);

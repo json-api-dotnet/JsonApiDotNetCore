@@ -85,7 +85,7 @@ namespace UnitTests.Models
             // assert
             Assert.True(resource._instanceAttrsAreSpecified);
         }
-        
+
         [Fact]
         public void InstanceOutputAttrsAreSpecified_Returns_False_If_Instance_Method_Is_Not_Overriden()
         {
@@ -110,7 +110,7 @@ namespace UnitTests.Models
 
         // this constructor will be resolved from the container
         // that means you can take on any dependency that is also defined in the container
-        public RequestFilteredResource(bool isAdmin)
+        public RequestFilteredResource(bool isAdmin) : base (new ResourceGraphBuilder().AddResource<Model>().Build())
         {
             _isAdmin = isAdmin;
         }
@@ -120,20 +120,23 @@ namespace UnitTests.Models
             => _isAdmin
                 ? Remove(m => m.AlwaysExcluded)
                 : Remove(m => new { m.AlwaysExcluded, m.Password }, from: base.OutputAttrs());
-        
+
         public override QueryFilters GetQueryFilters()
             => new QueryFilters {
                 { "is-active", (query, value) => query.Select(x => x) }
             };
-
-        protected override PropertySortOrder GetDefaultSortOrder()
+        public override PropertySortOrder GetDefaultSortOrder()
             => new PropertySortOrder {
                 (t => t.Prop, SortDirection.Ascending)
             };
     }
-    
+
     public class InstanceFilteredResource : ResourceDefinition<Model>
     {
+        public InstanceFilteredResource() : base(new ResourceGraphBuilder().AddResource<Model>().Build())
+        {
+        }
+
         // Called once per resource instance
         protected override List<AttrAttribute> OutputAttrs(Model model)
             => model.AlwaysExcluded == "Admin"

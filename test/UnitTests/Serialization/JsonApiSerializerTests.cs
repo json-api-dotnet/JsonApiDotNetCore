@@ -226,7 +226,6 @@ namespace UnitTests.Serialization
             jsonApiContextMock.Setup(m => m.PageManager).Returns(pmMock.Object);
 
 
-            Assert.True(false);
 
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);

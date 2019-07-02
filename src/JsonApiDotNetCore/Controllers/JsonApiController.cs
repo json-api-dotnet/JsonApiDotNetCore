@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -9,40 +10,17 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
-    {
-        private IJsonApiOptions jsonApiOptions;
-        private IJsonApiContext jsonApiContext;
-        private IResourceService<T> resourceService;
-        private ILoggerFactory loggerFactory;
 
-        public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph,
-            IResourceService<T, int> resourceService,
-            ILoggerFactory loggerFactory = null
-           )
-            : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory)
-        { }
-
-        public JsonApiController(
-            IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph,
-            IGetAllService<T, int> getAll = null,
-            IGetByIdService<T, int> getById = null,
-            IGetRelationshipService<T, int> getRelationship = null,
-            IGetRelationshipsService<T, int> getRelationships = null,
-            ICreateService<T, int> create = null,
-            IUpdateService<T, int> update = null,
-            IUpdateRelationshipService<T, int> updateRelationships = null,
-            IDeleteService<T, int> delete = null
-        ) : base(jsonApiOptions, resourceGraph, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
-
-
-    }
 
     public class JsonApiController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jsonApiOptions"></param>
+        /// <param name="resourceGraph"></param>
+        /// <param name="resourceService"></param>
+        /// <param name="loggerFactory"></param>
         public JsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceGraph resourceGraph,
@@ -95,5 +73,60 @@ namespace JsonApiDotNetCore.Controllers
 
         [HttpDelete("{id}")]
         public override async Task<IActionResult> DeleteAsync(TId id) => await base.DeleteAsync(id);
+    }
+
+    /// <summary>
+    /// JsonApiController with int as default
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
+    {
+        private IJsonApiOptions jsonApiOptions;
+        private IJsonApiContext jsonApiContext;
+        private IResourceService<T> resourceService;
+        private ILoggerFactory loggerFactory;
+
+
+        /// <summary>
+        /// Normal constructor with int as default (old fashioned)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="resourceService"></param>
+        [Obsolete("JsonApiContext is Obsolete, use constructor without jsonApiContext")]
+        public JsonApiController(
+            IJsonApiContext context,
+            IResourceService<T> resourceService) : base(context.Options,context.ResourceGraph,resourceService) {
+        }
+
+        /// <summary>
+        /// Base constructor with int as default
+        /// </summary>
+        /// <param name="jsonApiOptions"></param>
+        /// <param name="resourceGraph"></param>
+        /// <param name="resourceService"></param>
+        /// <param name="loggerFactory"></param>
+        public JsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
+            IResourceService<T, int> resourceService,
+            ILoggerFactory loggerFactory = null
+           )
+            : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory)
+        { }
+
+        public JsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
+            IGetAllService<T, int> getAll = null,
+            IGetByIdService<T, int> getById = null,
+            IGetRelationshipService<T, int> getRelationship = null,
+            IGetRelationshipsService<T, int> getRelationships = null,
+            ICreateService<T, int> create = null,
+            IUpdateService<T, int> update = null,
+            IUpdateRelationshipService<T, int> updateRelationships = null,
+            IDeleteService<T, int> delete = null
+        ) : base(jsonApiOptions, resourceGraph, getAll, getById, getRelationship, getRelationships, create, update, updateRelationships, delete) { }
+
+
     }
 }

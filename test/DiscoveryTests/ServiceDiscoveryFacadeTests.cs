@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
@@ -17,6 +18,15 @@ namespace DiscoveryTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
         private readonly ResourceGraphBuilder _graphBuilder = new ResourceGraphBuilder();
+
+        public ServiceDiscoveryFacadeTests()
+        {
+            var contextMock = new Mock<DbContext>();
+            var dbResolverMock = new Mock<IDbContextResolver>();
+            dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
+            TestModelRepository._dbContextResolver = dbResolverMock.Object;
+        }
+
         private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _graphBuilder);
 
         [Fact]
@@ -75,17 +85,14 @@ namespace DiscoveryTests
         public class TestModelService : EntityResourceService<TestModel>
         {
             private static IEntityRepository<TestModel> _repo = new Mock<IEntityRepository<TestModel>>().Object;
-            private static IJsonApiContext _jsonApiContext = new  Mock<IJsonApiContext>().Object;
-            private static IJsonApiOptions _jsonApiOptions = new Mock<IJsonApiOptions>().Object;
-            private static IRequestManager _queryManager = new Mock<IRequestManager>().Object;
-            private static IPageManager _pageManager = new Mock<IPageManager>().Object;
-            public TestModelService() : base(_jsonApiContext, _repo, _jsonApiOptions, _queryManager, _pageManager) { }
+            private static IJsonApiContext _jsonApiContext = new Mock<IJsonApiContext>().Object;
+            public TestModelService() : base(_jsonApiContext, _repo) { }
         }
 
         public class TestModelRepository : DefaultEntityRepository<TestModel>
         {
-            private static IDbContextResolver _dbContextResolver = new  Mock<IDbContextResolver>().Object;
-            private static IJsonApiContext _jsonApiContext = new  Mock<IJsonApiContext>().Object;
+            internal static IDbContextResolver _dbContextResolver;
+            private static IJsonApiContext _jsonApiContext = new Mock<IJsonApiContext>().Object;
             public TestModelRepository() : base(_jsonApiContext, _dbContextResolver) { }
         }
     }

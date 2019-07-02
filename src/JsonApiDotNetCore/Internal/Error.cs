@@ -9,32 +9,12 @@ namespace JsonApiDotNetCore.Internal
 {
     public class Error
     {
-        public Error()
-        { }
-
-        [Obsolete("Use Error constructors with int typed status")]
-        public Error(string status, string title, ErrorMeta meta = null, object source = null)
-        {
-            Status = status;
-            Title = title;
-            Meta = meta;
-            Source = source;
-        }
+        public Error() { }
 
         public Error(int status, string title, ErrorMeta meta = null, object source = null)
         {
             Status = status.ToString();
             Title = title;
-            Meta = meta;
-            Source = source;
-        }
-
-        [Obsolete("Use Error constructors with int typed status")]
-        public Error(string status, string title, string detail, ErrorMeta meta = null, object source = null)
-        {
-            Status = status;
-            Title = title;
-            Detail = detail;
             Meta = meta;
             Source = source;
         }

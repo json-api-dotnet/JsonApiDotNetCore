@@ -15,6 +15,9 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using System.Net;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Query;
+using System.Linq;
 
 namespace UnitTests.Services
 {
@@ -43,7 +46,8 @@ namespace UnitTests.Services
             var repositoryMock = new Mock<IEntityRepository<Article>>();
             var queryManagerMock = new Mock<IRequestManager>();
             var pageManagerMock = new Mock<IPageManager>();
-            var service = new CustomArticleService(jacMock.Object, repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, loggerMock.Object);
+            var rgMock = new Mock<IResourceGraph>();
+            var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, rgMock.Object);
 
             // Act / Assert
             var toExecute = new Func<Task>(() =>
@@ -69,10 +73,16 @@ namespace UnitTests.Services
                 IncludeTotalRecordCount = false
             } as IJsonApiOptions;
             var repositoryMock = new Mock<IEntityRepository<Article>>();
-            var queryManagerMock = new Mock<IRequestManager>();
+
+            var requestManager = new Mock<IRequestManager>();
             var pageManagerMock = new Mock<IPageManager>();
-            queryManagerMock.Setup(qm => qm.GetRelationships()).Returns(new List<string>() { "cookies" });
-            var service = new CustomArticleService(jacMock.Object, repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, loggerMock.Object);
+            requestManager.Setup(qm => qm.GetRelationships()).Returns(new List<string>() { "cookies" });
+            requestManager.SetupGet(rm => rm.QuerySet).Returns(new QuerySet
+            {
+                IncludedRelationships = new List<string> { "cookies" }
+            });
+            var rgMock = new Mock<IResourceGraph>();
+            var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, requestManager.Object, pageManagerMock.Object, rgMock.Object);
 
             // Act / Assert
             var toExecute = new Func<Task>(() =>

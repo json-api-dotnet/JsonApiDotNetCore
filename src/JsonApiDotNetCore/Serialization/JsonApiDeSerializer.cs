@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
@@ -17,16 +18,6 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiContext _jsonApiContext;
 
-        [Obsolete(
-            "The deserializer no longer depends on the IGenericProcessorFactory",
-            error: false)]
-        public JsonApiDeSerializer(
-            IJsonApiContext jsonApiContext,
-            IGenericProcessorFactory genericProcessorFactory)
-        {
-            _jsonApiContext = jsonApiContext;
-        }
-
         public JsonApiDeSerializer(IJsonApiContext jsonApiContext)
         {
             _jsonApiContext = jsonApiContext;
@@ -36,8 +27,12 @@ namespace JsonApiDotNetCore.Serialization
         {
             try
             {
-                var bodyJToken = JToken.Parse(requestBody);
-
+                JToken bodyJToken;
+                using (JsonReader jsonReader = new JsonTextReader(new StringReader(requestBody)))
+                {
+                    jsonReader.DateParseHandling = DateParseHandling.None;
+                    bodyJToken = JToken.Load(jsonReader);
+                }
                 if (RequestIsOperation(bodyJToken))
                 {
                     _jsonApiContext.IsBulkOperationRequest = true;
@@ -146,11 +141,16 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues.TryGetValue(attr.PublicAttributeName, out object newValue))
                 {
+                    if (attr.IsImmutable)
+                        continue;
                     var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                     attr.SetValue(entity, convertedValue);
-
-                    if (attr.IsImmutable == false)
-                        _jsonApiContext.AttributesToUpdate[attr] = convertedValue;
+                    /// todo: as a part of the process of decoupling JADNC (specifically 
+                    /// through the decoupling IJsonApiContext), we now no longer need to 
+                    /// store the updated relationship values in this property. For now 
+                    /// just assigning null as value, will remove this property later as a whole.
+                    /// see #512
+                    _jsonApiContext.AttributesToUpdate[attr] = null;
                 }
             }
 
@@ -224,8 +224,10 @@ namespace JsonApiDotNetCore.Serialization
             if (included != null)
             {
                 var navigationPropertyValue = attr.GetValue(entity);
-                var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.Type);
-                if (navigationPropertyValue != null && resourceGraphEntity != null)
+
+                var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.DependentType);
+                if(navigationPropertyValue != null && resourceGraphEntity != null)
+
                 {
                     var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
                     if (includedResource != null)
@@ -246,12 +248,18 @@ namespace JsonApiDotNetCore.Serialization
 
                 // e.g. PATCH /articles
                 // {... { "relationships":{ "Owner": { "data": null } } } }
-                if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
+                bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) != null
+                    || foreignKeyProperty.PropertyType == typeof(string);
+                if (rio == null && !foreignKeyPropertyIsNullableType)
                     throw new JsonApiException(400, $"Cannot set required relationship identifier '{hasOneAttr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
 
                 var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
-                foreignKeyProperty.SetValue(entity, convertedValue);
-                _jsonApiContext.RelationshipsToUpdate[hasOneAttr] = convertedValue;
+                /// todo: as a part of the process of decoupling JADNC (specifically 
+                /// through the decoupling IJsonApiContext), we now no longer need to 
+                /// store the updated relationship values in this property. For now 
+                /// just assigning null as value, will remove this property later as a whole.
+                /// see #512
+                if (convertedValue == null) _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
             }
         }
 
@@ -271,10 +279,12 @@ namespace JsonApiDotNetCore.Serialization
                 if (includedRelationshipObject != null)
                     hasOneAttr.SetValue(entity, includedRelationshipObject);
 
-                // we need to store the fact that this relationship was included in the payload
-                // for EF, the repository will use these pointers to make ensure we don't try to
-                // create resources if they already exist, we just need to create the relationship
-                _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, includedRelationshipObject);
+                /// todo: as a part of the process of decoupling JADNC (specifically 
+                /// through the decoupling IJsonApiContext), we now no longer need to 
+                /// store the updated relationship values in this property. For now 
+                /// just assigning null as value, will remove this property later as a whole.
+                /// see #512
+                _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
             }
         }
 
@@ -298,11 +308,15 @@ namespace JsonApiDotNetCore.Serialization
                     return instance;
                 });
 
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.Type);
+                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
 
                 attr.SetValue(entity, convertedCollection);
-                _jsonApiContext.RelationshipsToUpdate[attr] = convertedCollection;
-                _jsonApiContext.HasManyRelationshipPointers.Add(attr, convertedCollection);
+                /// todo: as a part of the process of decoupling JADNC (specifically 
+                /// through the decoupling IJsonApiContext), we now no longer need to 
+                /// store the updated relationship values in this property. For now 
+                /// just assigning null as value, will remove this property later as a whole.
+                /// see #512
+                _jsonApiContext.HasManyRelationshipPointers.Add(attr, null);
             }
 
             return entity;
@@ -311,7 +325,7 @@ namespace JsonApiDotNetCore.Serialization
         private IIdentifiable GetIncludedRelationship(ResourceIdentifierObject relatedResourceIdentifier, List<ResourceObject> includedResources, RelationshipAttribute relationshipAttr)
         {
             // at this point we can be sure the relationshipAttr.Type is IIdentifiable because we were able to successfully build the ResourceGraph
-            var relatedInstance = relationshipAttr.Type.New<IIdentifiable>();
+            var relatedInstance = relationshipAttr.DependentType.New<IIdentifiable>();
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             // can't provide any more data other than the rio since it is not contained in the included section
@@ -322,9 +336,9 @@ namespace JsonApiDotNetCore.Serialization
             if (includedResource == null)
                 return relatedInstance;
 
-            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipAttr.Type);
+            var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipAttr.DependentType);
             if (contextEntity == null)
-                throw new JsonApiException(400, $"Included type '{relationshipAttr.Type}' is not a registered json:api resource.");
+                throw new JsonApiException(400, $"Included type '{relationshipAttr.DependentType}' is not a registered json:api resource.");
 
             SetEntityAttributes(relatedInstance, contextEntity, includedResource.Attributes);
 

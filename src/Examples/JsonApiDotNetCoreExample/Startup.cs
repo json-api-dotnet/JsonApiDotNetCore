@@ -40,11 +40,13 @@ namespace JsonApiDotNetCoreExample
                     options.Namespace = "api/v1";
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
-                },
+                    options.EnableResourceHooks = true;
+                    options.LoadDatabaseValues = true;
+                }, 
                 mvcBuilder,
                 discovery => discovery.AddCurrentAssembly());
-            var serviceProvider =  services.BuildServiceProvider();
-            return serviceProvider;
+ 
+            return services.BuildServiceProvider();
         }
 
         public virtual void Configure(

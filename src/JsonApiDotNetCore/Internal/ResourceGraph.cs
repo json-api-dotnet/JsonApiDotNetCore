@@ -9,13 +9,12 @@ namespace JsonApiDotNetCore.Internal
 {
     public class ControllerModelMap
     {
-        public Type Controller;
-        public Type Model;
+        public Type Controller { get; set; }
+        public Type Model { get; set; }
         public string Path { get; set; }
 
-        
-
     }
+
     /// <summary>
     ///  keeps track of all the models/resources defined in JADNC
     /// </summary>
@@ -23,10 +22,10 @@ namespace JsonApiDotNetCore.Internal
     {
         internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
-        
-        internal List<ControllerModelMap> ControllerModelMap { get; set; }
 
-        [Obsolete("please instantiate properly")]
+        public List<ControllerModelMap> ControllerModelMap { get; internal set; }
+
+        [Obsolete("please instantiate properly, dont use the static constructor")]
         internal static IResourceGraph Instance { get; set; }
 
         public ResourceGraph() { }
@@ -44,8 +43,6 @@ namespace JsonApiDotNetCore.Internal
             return Entities.Where(e => e.EntityName == entityName).FirstOrDefault();
         }
 
-
-
         // eventually, this is the planned public constructor
         // to avoid breaking changes, we will be leaving the original constructor in place
         // until the context graph validation process is completed
@@ -61,6 +58,7 @@ namespace JsonApiDotNetCore.Internal
 
         /// <inheritdoc />
         public bool UsesDbContext { get; }
+        public List<string> IncludedRelationships { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc />
         public ContextEntity GetContextEntity(string entityName)
@@ -87,7 +85,7 @@ namespace JsonApiDotNetCore.Internal
 
         public object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable
         {
-            if(relationship is HasManyThroughAttribute hasManyThroughRelationship) 
+            if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 return GetHasManyThrough(resource, hasManyThroughRelationship);
             }
@@ -134,32 +132,19 @@ namespace JsonApiDotNetCore.Internal
                 .PublicAttributeName;
         }
 
-        public ControllerModelMap GetControllerMap(string path)
+        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
         {
-            var limitedContexts = ControllerModelMap.Where(cc => cc.Path != null);
-            foreach(var cc in limitedContexts)
-            {
-                if (path.Contains(cc.Path))
-                {
-                    return cc;
-                }
-            }
-            return null;
+            if (relationship.InverseNavigation == null) return null;
+            return GetContextEntity(relationship.DependentType).Relationships.SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
         }
 
         public ContextEntity GetEntityBasedOnPath(string pathParsed)
         {
-            // Check if there is a custom controller registered
-            var controllerHelper = GetControllerMap(pathParsed);
-            if (controllerHelper != null)
-            {
-                return GetContextEntity(controllerHelper.Model);
-            }
+            var controllerMatches = ControllerModelMap.Where(cm => cm.Controller.Name.ToLower().Contains(pathParsed.ToLower()));
 
-            var pathSplit = pathParsed.Split('/').ToList();
+            var model = controllerMatches.First().Model;
 
-
-            return GetContextEntity(pathSplit[0]);
+            return Entities.Where(e => e.EntityType == model).First();
         }
     }
 }

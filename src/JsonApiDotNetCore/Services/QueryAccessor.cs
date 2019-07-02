@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -17,19 +18,28 @@ namespace JsonApiDotNetCore.Services
         T GetRequired<T>(string key);
     }
 
+    /// <summary>
+    /// Accessing queries
+    /// </summary>
     public class QueryAccessor : IQueryAccessor
     {
-        private readonly IJsonApiContext _jsonApiContext;
+        private readonly IRequestManager _requestManager;
         private readonly ILogger<QueryAccessor> _logger;
 
+        /// <summary>
+        /// Creates an instance which can be used to access the qury
+        /// </summary>
+        /// <param name="requestManager"></param>
+        /// <param name="logger"></param>
         public QueryAccessor(
-            IJsonApiContext jsonApiContext,
+            IRequestManager requestManager,
             ILogger<QueryAccessor> logger)
         {
-            _jsonApiContext = jsonApiContext;
+            _requestManager = requestManager;
             _logger = logger;
         }
 
+  
         public T GetRequired<T>(string key)
         {
             if (TryGetValue<T>(key, out T result) == false)
@@ -71,13 +81,13 @@ namespace JsonApiDotNetCore.Services
         }
 
         private string GetFilterValue(string key) {
-            var publicValue = _jsonApiContext.RequestManager.QuerySet.Filters
+            var publicValue = _requestManager.QuerySet.Filters
                 .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
             
             if(publicValue != null) 
                 return publicValue;
             
-            var internalValue = _jsonApiContext.RequestManager.QuerySet.Filters
+            var internalValue = _requestManager.QuerySet.Filters
                 .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
             
             if(internalValue != null) {

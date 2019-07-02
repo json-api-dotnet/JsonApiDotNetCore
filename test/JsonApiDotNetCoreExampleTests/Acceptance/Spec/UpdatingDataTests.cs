@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -40,10 +40,80 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
         }
 
+
+        [Fact]
+        public async Task Response400IfUpdatingNotSettableAttribute()
+        {
+            // Arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var content = new
+            {
+                date = new
+                {
+                    id = todoItem.Id,
+                    type = "todo-items",
+                    attributes = new
+                    {
+                        calculatedAttribute = "lol"
+                    }
+                }
+            };
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+        }
+
         [Fact]
         public async Task Respond_404_If_EntityDoesNotExist()
         {
-            // arrange
+            // Arrange
+            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
+            var todoItem = _todoItemFaker.Generate();
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            var content = new
+            {
+                data = new
+                {
+                    id = maxPersonId + 100,
+                    type = "todo-items",
+                    attributes = new
+                    {
+                        description = todoItem.Description,
+                        ordinal = todoItem.Ordinal,
+                        createdDate = DateTime.Now
+                    }
+                }
+            };
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId + 100}", content);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Respond_400_If_IdNotInAttributeList()
+        {
+            // Arrange
             var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             var builder = new WebHostBuilder()
@@ -65,19 +135,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{maxPersonId + 100}";
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId}", content);
 
             // Act
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+
         }
 
 
@@ -101,6 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new
                     {
@@ -109,13 +175,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -147,6 +207,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
         {
+            /// @TODO: if we add a BeforeUpate resource hook to PersonDefinition
+            /// with database values enabled, this test will fail because todo-items
+            /// will be included in the person instance in the database-value loading. 
+            /// This is then attached in the EF dbcontext, so when the query is executed and returned,
+            /// that entity will still have the relationship included even though the repo didn't include it.
+
+
             // arrange
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
@@ -165,6 +232,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new
                 {
                     type = "people",
+                    id = person.Id,
+
                     attributes = new Dictionary<string, object>
                     {
                         { "last-name",  newPerson.LastName },
@@ -172,13 +241,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/people/{person.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = PrepareRequest("PATCH", $"/api/v1/people/{person.Id}", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -218,6 +281,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new
                 {
                     type = "todo-items",
+                    id = todoItem.Id,
                     attributes = new
                     {
                         description = todoItem.Description,
@@ -237,13 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-
-            var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -254,6 +312,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(person.Id, updatedTodoItem.OwnerId);
+        }
+
+        private HttpRequestMessage PrepareRequest(string method, string route, object content)
+        {
+            var httpMethod = new HttpMethod(method);
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+            return request;
         }
     }
 }

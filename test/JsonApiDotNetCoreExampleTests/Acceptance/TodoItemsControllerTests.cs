@@ -121,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
-            Assert.Contains(deserializedBody, (i) => i.OwnerId == person.Id);
+            Assert.Contains(deserializedBody, (i) => i.Owner.Id == person.Id);
         }
 
         [Fact]
@@ -442,7 +442,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
-            Assert.Equal(person.Id, deserializedBody.OwnerId);
+
+            Assert.Equal(person.Id, deserializedBody.Owner.Id);
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
@@ -459,6 +460,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
+            var nowOffset = new DateTimeOffset();
             var content = new
             {
                 data = new
@@ -468,7 +470,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "description", todoItem.Description },
                         { "ordinal", todoItem.Ordinal },
-                        { "created-date", todoItem.CreatedDate }
+                        { "created-date", todoItem.CreatedDate },
+                        { "offset-date", nowOffset }
                     },
                     relationships = new
                     {
@@ -501,6 +504,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(nowOffset.ToString("yyyy-MM-ddTHH:mm:ssK"), deserializedBody.OffsetDate?.ToString("yyyy-MM-ddTHH:mm:ssK"));
             Assert.Null(deserializedBody.AchievedDate);
         }
 
@@ -591,6 +595,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
@@ -642,6 +647,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
@@ -693,6 +699,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {

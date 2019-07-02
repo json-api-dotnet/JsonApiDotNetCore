@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Extensions
@@ -21,6 +22,12 @@ namespace JsonApiDotNetCore.Extensions
 
             if (useMvc)
                 app.UseMvc();
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
+                inverseRelationshipResolver?.Resolve();
+            }
 
             return app;
         }

@@ -10,6 +10,9 @@ namespace JsonApiDotNetCore.Internal.Contracts
     /// </summary>
     public interface IResourceGraph
     {
+
+
+        RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
         /// <summary>
         /// Gets the value of the navigation property, defined by the relationshipName,
         /// on the provided instance.
@@ -83,7 +86,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// Was built against an EntityFrameworkCore DbContext ?
         /// </summary>
         bool UsesDbContext { get; }
-
+        List<string> IncludedRelationships { get; set; }
 
         ContextEntity GetEntityBasedOnPath(string pathParsed);
     }

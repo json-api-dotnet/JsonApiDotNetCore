@@ -30,15 +30,6 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        [Obsolete("Use overload Sort<T>(IJsonApiContext, List<SortQuery>) instead.", error: true)]
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, List<SortQuery> sortQueries) => null;
-
-        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQuery sortQuery) => null;
-
-        [Obsolete("Use overload Sort<T>(IJsonApiContext, SortQuery) instead.", error: true)]
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQuery sortQuery) => null;
-
         public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)
@@ -226,6 +217,14 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
+        /// <summary>
+        /// This calls a generic where method.. more explaining to follow
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         private static IQueryable<TSource> CallGenericWhereMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
         {
             var op = filter.FilterOperation;
@@ -244,7 +243,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
-                var relatedType = filter.Relationship.Type;
+                var relatedType = filter.Relationship.DependentType;
                 property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
                 if (property == null)
                     throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
@@ -410,6 +409,14 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             return source;
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        {
+            foreach (T item in enumeration)
+            {
+                action(item);
+            }
         }
 
     }

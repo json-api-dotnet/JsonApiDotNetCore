@@ -28,10 +28,12 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null)
+        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)
+
         : base(publicName, documentLinks, canInclude, mappedBy)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
+            InverseNavigation = inverseNavigationProperty;
         }
 
         private readonly string _explicitIdentifiablePropertyName;
@@ -50,14 +52,13 @@ namespace JsonApiDotNetCore.Models
         /// <param name="newValue">The new property value</param>
         public override void SetValue(object resource, object newValue)
         {
-            var propertyName = (newValue?.GetType() == Type)
-                ? InternalRelationshipName
-                : IdentifiablePropertyName;
+            string propertyName = InternalRelationshipName;
+            // if we're deleting the relationship (setting it to null),
+            // we set the foreignKey to null. We could also set the actual property to null,
+            // but then we would first need to load the current relationship, which requires an extra query.
+            if (newValue == null) propertyName = IdentifiablePropertyName;
 
-            var propertyInfo = resource
-                .GetType()
-                .GetProperty(propertyName);
-
+            var propertyInfo = resource.GetType().GetProperty(propertyName);
             propertyInfo.SetValue(resource, newValue);
         }
 

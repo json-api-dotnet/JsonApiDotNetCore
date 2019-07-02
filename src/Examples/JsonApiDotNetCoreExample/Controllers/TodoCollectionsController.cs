@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExample.Controllers
             if (entity.Name == "PRE-ATTACH-TEST")
             {
                 var targetTodoId = entity.TodoItems.First().Id;
-                var todoItemContext = _dbResolver.GetDbSet<TodoItem>();
+                var todoItemContext = _dbResolver.GetContext().Set<TodoItem>();
                 await todoItemContext.Where(ti => ti.Id == targetTodoId).FirstOrDefaultAsync();
             }
             return await base.PatchAsync(id, entity);

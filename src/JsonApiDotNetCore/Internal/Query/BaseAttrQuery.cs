@@ -64,8 +64,9 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
-            var relatedContextEntity = _resourceGraph.GetContextEntity(relationship.Type);
-            return relatedContextEntity.Attributes.FirstOrDefault(a => a.Is(attribute));
+            var relatedContextEntity = _resourceGraph.GetContextEntity(relationship.DependentType);
+            return relatedContextEntity.Attributes
+              .FirstOrDefault(a => a.Is(attribute));
         }
     }
 }

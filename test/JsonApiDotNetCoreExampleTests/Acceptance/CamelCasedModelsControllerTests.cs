@@ -142,6 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     type = "camelCasedModels",
+                    id = model.Id,
                     attributes = new Dictionary<string, object>()
                     {
                         { "compoundAttr", newModel.CompoundAttr }

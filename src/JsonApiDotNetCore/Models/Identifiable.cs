@@ -62,11 +62,5 @@ namespace JsonApiDotNetCore.Models
             var convertedValue = TypeHelper.ConvertType(value, typeof(T));
             return convertedValue == null ? default : (T)convertedValue;
         }
-
-        [Obsolete("Use GetTypedId instead")]
-        protected virtual object GetConcreteId(string value)
-        {
-            return TypeHelper.ConvertType(value, typeof(T));
-        }
     }
 }

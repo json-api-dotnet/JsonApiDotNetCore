@@ -11,6 +11,13 @@ namespace JsonApiDotNetCore.Configuration
     public interface IJsonApiOptions
     {
         /// <summary>
+        /// Whether or not database values should be included by default
+        /// for resource hooks. Ignored if EnableResourceHooks is set false.
+        /// 
+        /// Defaults to <see langword="false"/>.
+        /// </summary>
+        bool LoadDatabaseValues { get; set; }
+        /// <summary>
         /// Whether or not the total-record count should be included in all document
         /// level meta objects.
         /// Defaults to false.

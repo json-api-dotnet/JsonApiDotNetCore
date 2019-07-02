@@ -1,14 +1,20 @@
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using System;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
+    /// <summary>
+    /// Is the base for all filter queries
+    /// </summary>
     public class BaseFilterQuery : BaseAttrQuery
     {
         public BaseFilterQuery(
-            IJsonApiContext jsonApiContext,
+            IRequestManager requestManager,
+            IResourceGraph resourceGraph,
             FilterQuery filterQuery)
-        : base(jsonApiContext.RequestManager, jsonApiContext.ResourceGraph, filterQuery)
+        : base(requestManager, resourceGraph, filterQuery)
         {
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);
