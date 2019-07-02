@@ -14,27 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Data
 {
-    /// <inheritdoc />
-    public class DefaultEntityRepository<TEntity>
-        : DefaultEntityRepository<TEntity, int>,
-        IEntityRepository<TEntity>
-        where TEntity : class, IIdentifiable<int>
-    {
-        public DefaultEntityRepository(
-            IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-        : base(jsonApiContext, contextResolver, resourceDefinition)
-        { }
 
-        public DefaultEntityRepository(
-            ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
-        { }
-    }
 
     /// <summary>
     /// Provides a default repository implementation and is responsible for
@@ -52,6 +32,11 @@ namespace JsonApiDotNetCore.Data
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
+
+           
+
+
+        [Obsolete("Dont use jsonapicontext instantiation anymore")]
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
@@ -65,6 +50,7 @@ namespace JsonApiDotNetCore.Data
             _resourceDefinition = resourceDefinition;
         }
 
+        [Obsolete("Dont use jsonapicontext instantiation anymore")]
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
@@ -146,7 +132,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
+            foreach (var relationshipAttr in _requestManager.GetUpdatedRelationships()?.Keys)
             {
                 var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
@@ -228,7 +214,7 @@ namespace JsonApiDotNetCore.Data
         public void DetachRelationshipPointers(TEntity entity)
         {
 
-            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate.Keys)
+            foreach (var relationshipAttr in _requestManager.GetUpdatedRelationships().Keys)
             {
                 if (relationshipAttr is HasOneAttribute hasOneAttr)
                 {
@@ -271,10 +257,10 @@ namespace JsonApiDotNetCore.Data
             if (databaseEntity == null)
                 return null;
 
-            foreach (var attr in _jsonApiContext.AttributesToUpdate.Keys)
+            foreach (var attr in _requestManager.GetUpdatedAttributes().Keys)
                 attr.SetValue(databaseEntity, attr.GetValue(updatedEntity));
 
-            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
+            foreach (var relationshipAttr in _requestManager.GetUpdatedRelationships()?.Keys)
             {
                 /// loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
@@ -583,5 +569,26 @@ namespace JsonApiDotNetCore.Data
             _context.Entry(relationshipValue).State = EntityState.Unchanged;
             return null;
         }
+    }
+    /// <inheritdoc />
+    public class DefaultEntityRepository<TEntity>
+        : DefaultEntityRepository<TEntity, int>,
+        IEntityRepository<TEntity>
+        where TEntity : class, IIdentifiable<int>
+    {
+        public DefaultEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(jsonApiContext, contextResolver, resourceDefinition)
+        { }
+
+        public DefaultEntityRepository(
+            ILoggerFactory loggerFactory,
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
+        { }
     }
 }

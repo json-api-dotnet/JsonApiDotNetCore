@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
@@ -7,8 +7,11 @@ using DependentType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
-    /// <inheritdoc />
-    internal class ChildNode<TEntity> : IEntityNode where TEntity : class, IIdentifiable
+    /// <summary>
+    /// Child node in the tree
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    internal class ChildNode<TEntity> : INode where TEntity : class, IIdentifiable
     {
         /// <inheritdoc />
         public DependentType EntityType { get; private set; }
@@ -51,7 +54,10 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reassignment is done according to provided relationships
+        /// </summary>
+        /// <param name="updated"></param>
         public void Reassign(IEnumerable updated = null)
         {
             var unique = (HashSet<TEntity>)UniqueEntities;

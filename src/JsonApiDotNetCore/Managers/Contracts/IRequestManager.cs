@@ -4,6 +4,7 @@ using System.Text;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -11,6 +12,8 @@ namespace JsonApiDotNetCore.Managers.Contracts
 {
     public interface IRequestManager : IQueryRequest
     {
+        Dictionary<AttrAttribute, object> GetUpdatedAttributes();
+        Dictionary<RelationshipAttribute, object> GetUpdatedRelationships();
         /// <summary>
         /// The request namespace. This may be an absolute or relative path
         /// depending upon the configuration.

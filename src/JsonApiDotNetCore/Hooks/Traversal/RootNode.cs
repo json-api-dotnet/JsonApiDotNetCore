@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Hooks
     /// The root node class of the breadth-first-traversal of entity data structures
     /// as performed by the <see cref="ResourceHookExecutor"/>
     /// </summary>
-    internal class RootNode<TEntity> : IEntityNode where TEntity : class, IIdentifiable
+    internal class RootNode<TEntity> : INode where TEntity : class, IIdentifiable
     {
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TEntity> _uniqueEntities;

@@ -1,9 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using DependentType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
-    internal interface IEntityNode
+    /// <summary>
+    /// This is the interface that nodes need to inherit from
+    /// </summary>
+    internal interface INode
     {
         /// <summary>
         /// Each node representes the entities of a given type throughout a particular layer.

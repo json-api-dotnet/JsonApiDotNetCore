@@ -15,7 +15,7 @@ using JsonApiDotNetCore.Managers.Contracts;
 namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
-    internal class ResourceHookExecutor : IResourceHookExecutor
+    internal  class ResourceHookExecutor : IResourceHookExecutor
     {
         public static readonly IdentifiableComparer Comparer = new IdentifiableComparer();
         internal readonly ITraversalHelper _traversalHelper;
@@ -31,17 +31,6 @@ namespace JsonApiDotNetCore.Hooks
             _graph = resourceGraph;
             _traversalHelper = traversalHelper;
         }
-
-
-        [Obsolete("Dont use, use consturctor without jsonApiContext")]
-        public ResourceHookExecutor(IHookExecutorHelper helper, ITraversalHelper traversalHelper,  IJsonApiContext context, IRequestManager requestManager) : this(helper, traversalHelper, context.ResourceGraph, context.RequestManager)
-        {
-
-        }
-
-
-
-
 
         /// <inheritdoc/>
         public virtual void BeforeRead<TEntity>(ResourcePipeline pipeline, string stringId = null) where TEntity : class, IIdentifiable
@@ -201,12 +190,12 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Traverses the nodes in a <see cref="EntityChildLayer"/>.
+        /// Traverses the nodes in a <see cref="NodeLayer"/>.
         /// </summary>
-        void Traverse(EntityChildLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IEntityNode> action)
+        void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, INode> action)
         {
             if (!currentLayer.AnyEntities()) return;
-            foreach (IEntityNode node in currentLayer)
+            foreach (INode node in currentLayer)
             {
                 var entityType = node.EntityType;
                 var hookContainer = _executorHelper.GetResourceHookContainer(entityType, target);
@@ -259,9 +248,9 @@ namespace JsonApiDotNetCore.Hooks
         /// First the BeforeUpdateRelationship should be for owner1, then the 
         /// BeforeImplicitUpdateRelationship hook should be fired for
         /// owner2, and lastely the BeforeImplicitUpdateRelationship for article2.</remarks>
-        void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, EntityChildLayer layer)
+        void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, NodeLayer layer)
         {
-            foreach (IEntityNode node in layer)
+            foreach (INode node in layer)
             {
                 var nestedHookcontainer = _executorHelper.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeUpdateRelationship);
                 IEnumerable uniqueEntities = node.UniqueEntities;
@@ -461,7 +450,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Fires the AfterUpdateRelationship hook
         /// </summary>
-        void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourcePipeline pipeline)
+        void FireAfterUpdateRelationship(IResourceHookContainer container, INode node, ResourcePipeline pipeline)
         {
 
             Dictionary<RelationshipAttribute, IEnumerable> currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetDependentEntities();

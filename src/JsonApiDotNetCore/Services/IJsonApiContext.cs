@@ -26,25 +26,10 @@ namespace JsonApiDotNetCore.Services
         PageManager PageManager { get; set; }
     }
 
-    public interface IUpdateRequest
+
+
+    public interface IJsonApiRequest : IJsonApiApplication,  IQueryRequest
     {
-        /// <summary>
-        /// The attributes that were included in a PATCH request. 
-        /// Only the attributes in this dictionary should be updated.
-        /// </summary>
-        Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
-
-        /// <summary>
-        /// Any relationships that were included in a PATCH request. 
-        /// Only the relationships in this dictionary should be updated.
-        /// </summary>
-        Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; }
-    }
-
-    public interface IJsonApiRequest : IJsonApiApplication, IUpdateRequest, IQueryRequest
-    {
-
-
         /// <summary>
         /// Stores information to set relationships for the request resource. 
         /// These relationships must already exist and should not be re-created.
