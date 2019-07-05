@@ -14,23 +14,23 @@ namespace JsonApiDotNetCore.Hooks
     /// Also contains information about updated relationships through 
     /// implementation of IRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public interface IEntityHashSetDiff<TResource> : IEntityHashSet<TResource> where TResource : class, IIdentifiable
+    public interface IDiffableEntityHashSet<TResource> : IEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
         /// <summary>
         /// Iterates over diffs, which is the affected entity from the request
         ///  with their associated current value from the database.
         /// </summary>
-        IEnumerator<EntityDiffPair<TResource>> GetDiffs();
+        IEnumerable<EntityDiffPair<TResource>> GetDiffs();
             
     }
 
     /// <inheritdoc />
-    public class EntityHashSetDiff<TResource> : EntityHashSet<TResource>, IEntityHashSetDiff<TResource> where TResource : class, IIdentifiable
+    public class DiffableEntityHashSet<TResource> : EntityHashSet<TResource>, IDiffableEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
 
-        public EntityHashSetDiff(HashSet<TResource> requestEntities,
+        public DiffableEntityHashSet(HashSet<TResource> requestEntities,
                           HashSet<TResource> databaseEntities,
                           Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) 
             : base(requestEntities, relationships)
@@ -42,14 +42,14 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
-        internal EntityHashSetDiff(IEnumerable requestEntities,
+        internal DiffableEntityHashSet(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
                   Dictionary<RelationshipAttribute, IEnumerable> relationships)
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships)) { }
 
 
         /// <inheritdoc />
-        public IEnumerator<EntityDiffPair<TResource>> GetDiffs()
+        public IEnumerable<EntityDiffPair<TResource>> GetDiffs()
         {
             if (!_databaseValuesLoaded) ThrowNoDbValuesError();
 

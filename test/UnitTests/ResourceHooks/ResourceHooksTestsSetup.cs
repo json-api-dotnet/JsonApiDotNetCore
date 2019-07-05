@@ -260,8 +260,8 @@ namespace UnitTests.ResourceHooks
             .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
             .Verifiable();
             resourceDefinition
-            .Setup(rd => rd.BeforeUpdate(It.IsAny<IEntityHashSetDiff<TModel>>(), It.IsAny<ResourcePipeline>()))
-            .Returns<EntityHashSetDiff<TModel>, ResourcePipeline>((entityDiff, context) => entityDiff.Entities)
+            .Setup(rd => rd.BeforeUpdate(It.IsAny<IDiffableEntityHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+            .Returns<DiffableEntityHashSet<TModel>, ResourcePipeline>((entities, context) => entities)
             .Verifiable();
             resourceDefinition
             .Setup(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))

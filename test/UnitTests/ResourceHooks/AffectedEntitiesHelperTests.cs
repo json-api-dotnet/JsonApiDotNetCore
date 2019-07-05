@@ -87,13 +87,13 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         {
             // arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }).ToList());
-            EntityHashSetDiff<Dummy> diffs = new EntityHashSetDiff<Dummy>(AllEntities, dbEntities, Relationships);
+            DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships);
 
             // act
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.Entities.GetByRelationship<ToOne>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = diffs.Entities.GetByRelationship<ToMany>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = diffs.Entities.GetByRelationship<NotTargeted>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> allRelationships = diffs.Entities.AffectedRelationships;
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.GetByRelationship<ToOne>();
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = diffs.GetByRelationship<ToMany>();
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = diffs.GetByRelationship<NotTargeted>();
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> allRelationships = diffs.AffectedRelationships;
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
@@ -103,12 +103,12 @@ namespace UnitTests.ResourceHooks.AffectedEntities
                 Assert.DoesNotContain(e, allEntitiesWithAffectedRelationships);
             });
 
-            var requestEntitiesFromDiff = diffs.Entities;
+            var requestEntitiesFromDiff = diffs;
             requestEntitiesFromDiff.ToList().ForEach(e =>
             {
                 Assert.Contains(e, AllEntities);
             });
-            var databaseEntitiesFromDiff = diffs.DatabaseValues;
+            var databaseEntitiesFromDiff = diffs.GetDiffs().Select( d => d.DatabaseValue);
             databaseEntitiesFromDiff.ToList().ForEach(e =>
             {
                 Assert.Contains(e, dbEntities);
@@ -120,10 +120,10 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         {
             // arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }));
-            EntityHashSetDiff<Dummy> diffs = new EntityHashSetDiff<Dummy>(AllEntities, dbEntities, Relationships);
+            DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships);
 
             // Assert & act
-            foreach (EntityDiffPair<Dummy> diff in diffs)
+            foreach (EntityDiffPair<Dummy> diff in diffs.GetDiffs())
             {
                 Assert.Equal(diff.Entity.Id, diff.DatabaseValue.Id);
                 Assert.NotEqual(diff.Entity, diff.DatabaseValue);
