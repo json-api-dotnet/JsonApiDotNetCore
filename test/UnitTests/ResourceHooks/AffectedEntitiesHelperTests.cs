@@ -87,7 +87,7 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         {
             // arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }).ToList());
-            EntityDiffs<Dummy> diffs = new EntityDiffs<Dummy>(AllEntities, dbEntities, Relationships);
+            EntityHashSetDiff<Dummy> diffs = new EntityHashSetDiff<Dummy>(AllEntities, dbEntities, Relationships);
 
             // act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.Entities.GetByRelationship<ToOne>();
@@ -120,7 +120,7 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         {
             // arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }));
-            EntityDiffs<Dummy> diffs = new EntityDiffs<Dummy>(AllEntities, dbEntities, Relationships);
+            EntityHashSetDiff<Dummy> diffs = new EntityHashSetDiff<Dummy>(AllEntities, dbEntities, Relationships);
 
             // Assert & act
             foreach (EntityDiffPair<Dummy> diff in diffs)

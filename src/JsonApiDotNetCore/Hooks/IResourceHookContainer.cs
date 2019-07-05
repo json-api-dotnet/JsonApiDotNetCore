@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Hooks
         /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
-        /// of the <see cref="EntityDiffs{TEntity}.RequestEntities"/> property in parameter <paramref name="entityDiff"/>, 
+        /// of the <see cref="EntityHashSetDiff{TEntity}.RequestEntities"/> property in parameter <paramref name="entityDiff"/>, 
         /// in which case the operation of the  pipeline will not be executed 
         /// for the omitted entities. The returned set may also contain custom 
         /// changes of the properties on the entities.
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The transformed entity set</returns>
         /// <param name="entityDiff">The entity diff.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        IEnumerable<TResource> BeforeUpdate(IEntityDiffs<TResource> entityDiff, ResourcePipeline pipeline);
+        IEnumerable<TResource> BeforeUpdate(IEntityHashSetDiff<TResource> entityDiff, ResourcePipeline pipeline);
 
         /// <summary>
         /// Implement this hook to run custom logic in the <see cref=" EntityResourceService{T}"/> 
