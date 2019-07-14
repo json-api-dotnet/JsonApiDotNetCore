@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Models;
@@ -13,7 +14,7 @@ namespace JsonApiDotNetCore.Internal
         public static IList ConvertCollection(IEnumerable<object> collection, Type targetType)
         {
             var list = Activator.CreateInstance(typeof(List<>).MakeGenericType(targetType)) as IList;
-            foreach(var item in collection)
+            foreach (var item in collection)
                 list.Add(ConvertType(item, targetType));
             return list;
         }
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(DateTimeOffset))
                     return DateTimeOffset.Parse(stringValue);
 
-                if(type == typeof(TimeSpan)) 
+                if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);
 
                 if (type.GetTypeInfo().IsEnum)
@@ -75,9 +76,42 @@ namespace JsonApiDotNetCore.Internal
         {
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
-                return type.GetGenericArguments()[0]; 
+                return type.GetGenericArguments()[0];
             }
             return null;
+        }
+
+
+
+        /// <summary>
+        /// Gets the property info that is referenced in the NavigatioAction expression.
+        /// Credits: https://stackoverflow.com/a/17116267/4441216
+        /// </summary>
+        public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> NavigationExpression)
+        {
+            MemberExpression Exp = null;
+
+            //this line is necessary, because sometimes the expression comes in as Convert(originalexpression)
+            if (NavigationExpression.Body is UnaryExpression)
+            {
+                var UnExp = (UnaryExpression)NavigationExpression.Body;
+                if (UnExp.Operand is MemberExpression)
+                {
+                    Exp = (MemberExpression)UnExp.Operand;
+                }
+                else
+                    throw new ArgumentException();
+            }
+            else if (NavigationExpression.Body is MemberExpression)
+            {
+                Exp = (MemberExpression)NavigationExpression.Body;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
+            return (PropertyInfo)Exp.Member;
         }
 
         /// <summary>
@@ -114,9 +148,14 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Helper method that "unboxes" the TValue from the relationship dictionary into  
         /// </summary>
-        public static Dictionary<RelationshipAttribute, HashSet<TValueOut>> ConvertRelationshipDictionary<TValueOut>(Dictionary<RelationshipAttribute, IEnumerable> relationships) 
+        public static Dictionary<RelationshipAttribute, HashSet<TValueOut>> ConvertRelationshipDictionary<TValueOut>(Dictionary<RelationshipAttribute, IEnumerable> relationships)
         {
             return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TValueOut>)pair.Value);
+        }
+
+        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributesToUpdate<TValueOut>(Dictionary<AttrAttribute, object> attributes, HashSet<TValueOut> entities)
+        {
+            return attributes?.ToDictionary(p => p.Key.PropertyInfo, p => entities);
         }
 
         /// <summary>

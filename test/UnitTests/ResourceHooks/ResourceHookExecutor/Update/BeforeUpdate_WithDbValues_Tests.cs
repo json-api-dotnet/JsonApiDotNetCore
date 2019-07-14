@@ -70,7 +70,7 @@ namespace UnitTests.ResourceHooks
                 ResourcePipeline.Patch),
                 Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
-                It.Is<IRelationshipsDictionary<TodoItem>>( rh => TodoCheck(rh, description + description)),
+                It.Is<IRelationshipsDictionary<TodoItem>>(rh => TodoCheck(rh, description + description)),
                 ResourcePipeline.Patch),
                 Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -152,8 +152,8 @@ namespace UnitTests.ResourceHooks
         public void BeforeUpdate_NoImplicit()
         {
             // arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, ResourceHook.BeforeUpdate );
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship );
+            var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, ResourceHook.BeforeUpdate);
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -175,7 +175,7 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship );
+            var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship);
             (var contextMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
@@ -218,7 +218,9 @@ namespace UnitTests.ResourceHooks
             var updatedRelationship = entities.GetByRelationship<Person>().Single();
             var diffcheck = updatedRelationship.Key.PublicRelationshipName == "one-to-one-person";
 
-            return (dbCheck && reqCheck && diffcheck);
+            var getAffectedCheck = entities.GetAffected(e => e.ToOnePerson).Any();
+
+            return (dbCheck && reqCheck && diffcheck && getAffectedCheck);
         }
 
         private bool TodoCheck(IRelationshipsDictionary<TodoItem> rh, string checksum)
