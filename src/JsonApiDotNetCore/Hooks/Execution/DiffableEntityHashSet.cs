@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -15,36 +14,27 @@ namespace JsonApiDotNetCore.Hooks
     /// Also contains information about updated relationships through 
     /// implementation of IRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
-    public interface IEntityDiffs<TResource> :  IEnumerable<EntityDiffPair<TResource>> where TResource : class, IIdentifiable
+    public interface IDiffableEntityHashSet<TResource> : IEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
         /// <summary>
-        /// The database values of the resources affected by the request.
+        /// Iterates over diffs, which is the affected entity from the request
+        ///  with their associated current value from the database.
         /// </summary>
-        HashSet<TResource> DatabaseValues { get; }
-
-        /// <summary>
-        /// The resources that were affected by the request.
-        /// </summary>
-        EntityHashSet<TResource> Entities { get; }
-
+        IEnumerable<EntityDiffPair<TResource>> GetDiffs();
+            
     }
 
     /// <inheritdoc />
-    public class EntityDiffs<TResource> : IEntityDiffs<TResource> where TResource : class, IIdentifiable
+    public class DiffableEntityHashSet<TResource> : EntityHashSet<TResource>, IDiffableEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
-        /// <inheritdoc />
-        public HashSet<TResource> DatabaseValues { get => _databaseValues ?? ThrowNoDbValuesError(); }
-        /// <inheritdoc />
-        public EntityHashSet<TResource> Entities { get; private set; }
-
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
 
-        public EntityDiffs(HashSet<TResource> requestEntities,
+        public DiffableEntityHashSet(HashSet<TResource> requestEntities,
                           HashSet<TResource> databaseEntities,
-                          Dictionary<RelationshipAttribute, HashSet<TResource>> relationships)
+                          Dictionary<RelationshipAttribute, HashSet<TResource>> relationships) 
+            : base(requestEntities, relationships)
         {
-            Entities = new EntityHashSet<TResource>(requestEntities, relationships);
             _databaseValues = databaseEntities;
             _databaseValuesLoaded |= _databaseValues != null;
         }
@@ -52,31 +42,27 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
-        internal EntityDiffs(IEnumerable requestEntities,
+        internal DiffableEntityHashSet(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
                   Dictionary<RelationshipAttribute, IEnumerable> relationships)
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships)) { }
 
 
         /// <inheritdoc />
-        public IEnumerator<EntityDiffPair<TResource>> GetEnumerator()
+        public IEnumerable<EntityDiffPair<TResource>> GetDiffs()
         {
             if (!_databaseValuesLoaded) ThrowNoDbValuesError();
 
-            foreach (var entity in Entities)
+            foreach (var entity in this)
             {
-                TResource currentValueInDatabase = null;
-                currentValueInDatabase = _databaseValues.Single(e => entity.StringId == e.StringId);
+                TResource currentValueInDatabase = _databaseValues.Single(e => entity.StringId == e.StringId);
                 yield return new EntityDiffPair<TResource>(entity, currentValueInDatabase);
             }
         }
 
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
         private HashSet<TResource> ThrowNoDbValuesError()
         {
-            throw new MemberAccessException("Cannot access database entities if the LoadDatabaseValues option is set to false");
+            throw new MemberAccessException("Cannot iterate over the diffs if the LoadDatabaseValues option is set to false");
         }
     }
 
