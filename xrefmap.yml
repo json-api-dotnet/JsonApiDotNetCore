@@ -3483,6 +3483,50 @@ references:
   commentId: N:JsonApiDotNetCore.Hooks
   fullName: JsonApiDotNetCore.Hooks
   nameWithType: JsonApiDotNetCore.Hooks
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1
+  name: DiffableEntityHashSet<TResource>
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html
+  commentId: T:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1
+  name.vb: DiffableEntityHashSet(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource)
+  nameWithType: DiffableEntityHashSet<TResource>
+  nameWithType.vb: DiffableEntityHashSet(Of TResource)
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
+  name: DiffableEntityHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_HashSet__0___
+  commentId: M:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
+  name.vb: DiffableEntityHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.DiffableEntityHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).DiffableEntityHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: DiffableEntityHashSet<TResource>.DiffableEntityHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).DiffableEntityHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor*
+  name: DiffableEntityHashSet
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1__ctor_
+  commentId: Overload:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.DiffableEntityHashSet
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).DiffableEntityHashSet
+  nameWithType: DiffableEntityHashSet<TResource>.DiffableEntityHashSet
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).DiffableEntityHashSet
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs
+  name: GetDiffs()
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetDiffs
+  commentId: M:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.GetDiffs()
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).GetDiffs()
+  nameWithType: DiffableEntityHashSet<TResource>.GetDiffs()
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).GetDiffs()
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs*
+  name: GetDiffs
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetDiffs_
+  commentId: Overload:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.GetDiffs
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).GetDiffs
+  nameWithType: DiffableEntityHashSet<TResource>.GetDiffs
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).GetDiffs
 - uid: JsonApiDotNetCore.Hooks.EntityDiffPair`1
   name: EntityDiffPair<TResource>
   href: api/JsonApiDotNetCore.Hooks.EntityDiffPair-1.html
@@ -3543,103 +3587,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffPair(Of TResource).Entity
   nameWithType: EntityDiffPair<TResource>.Entity
   nameWithType.vb: EntityDiffPair(Of TResource).Entity
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1
-  name: EntityDiffs<TResource>
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html
-  commentId: T:JsonApiDotNetCore.Hooks.EntityDiffs`1
-  name.vb: EntityDiffs(Of TResource)
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource)
-  nameWithType: EntityDiffs<TResource>
-  nameWithType.vb: EntityDiffs(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name: EntityDiffs(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_HashSet__0___
-  commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name.vb: EntityDiffs(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.EntityDiffs(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).EntityDiffs(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
-  nameWithType: EntityDiffs<TResource>.EntityDiffs(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  nameWithType.vb: EntityDiffs(Of TResource).EntityDiffs(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor*
-  name: EntityDiffs
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.EntityDiffs
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).EntityDiffs
-  nameWithType: EntityDiffs<TResource>.EntityDiffs
-  nameWithType.vb: EntityDiffs(Of TResource).EntityDiffs
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues
-  name: DatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_DatabaseValues
-  commentId: P:JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).DatabaseValues
-  nameWithType: EntityDiffs<TResource>.DatabaseValues
-  nameWithType.vb: EntityDiffs(Of TResource).DatabaseValues
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues*
-  name: DatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_DatabaseValues_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.DatabaseValues
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).DatabaseValues
-  nameWithType: EntityDiffs<TResource>.DatabaseValues
-  nameWithType.vb: EntityDiffs(Of TResource).DatabaseValues
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities
-  name: Entities
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_Entities
-  commentId: P:JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).Entities
-  nameWithType: EntityDiffs<TResource>.Entities
-  nameWithType.vb: EntityDiffs(Of TResource).Entities
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities*
-  name: Entities
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_Entities_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.Entities
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).Entities
-  nameWithType: EntityDiffs<TResource>.Entities
-  nameWithType.vb: EntityDiffs(Of TResource).Entities
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator
-  name: GetEnumerator()
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetEnumerator
-  commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.GetEnumerator()
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).GetEnumerator()
-  nameWithType: EntityDiffs<TResource>.GetEnumerator()
-  nameWithType.vb: EntityDiffs(Of TResource).GetEnumerator()
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator*
-  name: GetEnumerator
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_GetEnumerator_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.GetEnumerator
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.GetEnumerator
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).GetEnumerator
-  nameWithType: EntityDiffs<TResource>.GetEnumerator
-  nameWithType.vb: EntityDiffs(Of TResource).GetEnumerator
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator
-  name: IEnumerable.GetEnumerator()
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_System_Collections_IEnumerable_GetEnumerator
-  commentId: M:JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator
-  name.vb: System.Collections.IEnumerable.GetEnumerator()
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.System.Collections.IEnumerable.GetEnumerator()
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator()
-  nameWithType: EntityDiffs<TResource>.IEnumerable.GetEnumerator()
-  nameWithType.vb: EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator()
-- uid: JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator*
-  name: IEnumerable.GetEnumerator
-  href: api/JsonApiDotNetCore.Hooks.EntityDiffs-1.html#JsonApiDotNetCore_Hooks_EntityDiffs_1_System_Collections_IEnumerable_GetEnumerator_
-  commentId: Overload:JsonApiDotNetCore.Hooks.EntityDiffs`1.System#Collections#IEnumerable#GetEnumerator
-  isSpec: "True"
-  name.vb: System.Collections.IEnumerable.GetEnumerator
-  fullName: JsonApiDotNetCore.Hooks.EntityDiffs<TResource>.System.Collections.IEnumerable.GetEnumerator
-  fullName.vb: JsonApiDotNetCore.Hooks.EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator
-  nameWithType: EntityDiffs<TResource>.IEnumerable.GetEnumerator
-  nameWithType.vb: EntityDiffs(Of TResource).System.Collections.IEnumerable.GetEnumerator
 - uid: JsonApiDotNetCore.Hooks.EntityHashSet`1
   name: EntityHashSet<TResource>
   href: api/JsonApiDotNetCore.Hooks.EntityHashSet-1.html
@@ -4106,15 +4053,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeRead
   nameWithType: IBeforeHooks<TResource>.BeforeRead
   nameWithType.vb: IBeforeHooks(Of TResource).BeforeRead
-- uid: JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name: BeforeUpdate(IEntityDiffs<TResource>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html#JsonApiDotNetCore_Hooks_IBeforeHooks_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiffs__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name.vb: BeforeUpdate(IEntityDiffs(Of TResource), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Hooks.IBeforeHooks<TResource>.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>, JsonApiDotNetCore.Hooks.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource), JsonApiDotNetCore.Hooks.ResourcePipeline)
-  nameWithType: IBeforeHooks<TResource>.BeforeUpdate(IEntityDiffs<TResource>, ResourcePipeline)
-  nameWithType.vb: IBeforeHooks(Of TResource).BeforeUpdate(IEntityDiffs(Of TResource), ResourcePipeline)
+- uid: JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name: BeforeUpdate(IDiffableEntityHashSet<TResource>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html#JsonApiDotNetCore_Hooks_IBeforeHooks_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IDiffableEntityHashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name.vb: BeforeUpdate(IDiffableEntityHashSet(Of TResource), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Hooks.IBeforeHooks<TResource>.BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet<TResource>, JsonApiDotNetCore.Hooks.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Hooks.IBeforeHooks(Of TResource).BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet(Of TResource), JsonApiDotNetCore.Hooks.ResourcePipeline)
+  nameWithType: IBeforeHooks<TResource>.BeforeUpdate(IDiffableEntityHashSet<TResource>, ResourcePipeline)
+  nameWithType.vb: IBeforeHooks(Of TResource).BeforeUpdate(IDiffableEntityHashSet(Of TResource), ResourcePipeline)
 - uid: JsonApiDotNetCore.Hooks.IBeforeHooks`1.BeforeUpdate*
   name: BeforeUpdate
   href: api/JsonApiDotNetCore.Hooks.IBeforeHooks-1.html#JsonApiDotNetCore_Hooks_IBeforeHooks_1_BeforeUpdate_
@@ -4168,49 +4115,32 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IByAffectedRelationships(Of TDependentResource).AffectedRelationships
   nameWithType: IByAffectedRelationships<TDependentResource>.AffectedRelationships
   nameWithType.vb: IByAffectedRelationships(Of TDependentResource).AffectedRelationships
-- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1
-  name: IEntityDiffs<TResource>
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html
-  commentId: T:JsonApiDotNetCore.Hooks.IEntityDiffs`1
-  name.vb: IEntityDiffs(Of TResource)
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource)
-  nameWithType: IEntityDiffs<TResource>
-  nameWithType.vb: IEntityDiffs(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues
-  name: DatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues
-  commentId: P:JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).DatabaseValues
-  nameWithType: IEntityDiffs<TResource>.DatabaseValues
-  nameWithType.vb: IEntityDiffs(Of TResource).DatabaseValues
-- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues*
-  name: DatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_DatabaseValues_
-  commentId: Overload:JsonApiDotNetCore.Hooks.IEntityDiffs`1.DatabaseValues
+- uid: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet`1
+  name: IDiffableEntityHashSet<TResource>
+  href: api/JsonApiDotNetCore.Hooks.IDiffableEntityHashSet-1.html
+  commentId: T:JsonApiDotNetCore.Hooks.IDiffableEntityHashSet`1
+  name.vb: IDiffableEntityHashSet(Of TResource)
+  fullName: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet<TResource>
+  fullName.vb: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet(Of TResource)
+  nameWithType: IDiffableEntityHashSet<TResource>
+  nameWithType.vb: IDiffableEntityHashSet(Of TResource)
+- uid: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet`1.GetDiffs
+  name: GetDiffs()
+  href: api/JsonApiDotNetCore.Hooks.IDiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_IDiffableEntityHashSet_1_GetDiffs
+  commentId: M:JsonApiDotNetCore.Hooks.IDiffableEntityHashSet`1.GetDiffs
+  fullName: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet<TResource>.GetDiffs()
+  fullName.vb: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet(Of TResource).GetDiffs()
+  nameWithType: IDiffableEntityHashSet<TResource>.GetDiffs()
+  nameWithType.vb: IDiffableEntityHashSet(Of TResource).GetDiffs()
+- uid: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet`1.GetDiffs*
+  name: GetDiffs
+  href: api/JsonApiDotNetCore.Hooks.IDiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_IDiffableEntityHashSet_1_GetDiffs_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IDiffableEntityHashSet`1.GetDiffs
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.DatabaseValues
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).DatabaseValues
-  nameWithType: IEntityDiffs<TResource>.DatabaseValues
-  nameWithType.vb: IEntityDiffs(Of TResource).DatabaseValues
-- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities
-  name: Entities
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities
-  commentId: P:JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).Entities
-  nameWithType: IEntityDiffs<TResource>.Entities
-  nameWithType.vb: IEntityDiffs(Of TResource).Entities
-- uid: JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities*
-  name: Entities
-  href: api/JsonApiDotNetCore.Hooks.IEntityDiffs-1.html#JsonApiDotNetCore_Hooks_IEntityDiffs_1_Entities_
-  commentId: Overload:JsonApiDotNetCore.Hooks.IEntityDiffs`1.Entities
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.IEntityDiffs<TResource>.Entities
-  fullName.vb: JsonApiDotNetCore.Hooks.IEntityDiffs(Of TResource).Entities
-  nameWithType: IEntityDiffs<TResource>.Entities
-  nameWithType.vb: IEntityDiffs(Of TResource).Entities
+  fullName: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet<TResource>.GetDiffs
+  fullName.vb: JsonApiDotNetCore.Hooks.IDiffableEntityHashSet(Of TResource).GetDiffs
+  nameWithType: IDiffableEntityHashSet<TResource>.GetDiffs
+  nameWithType.vb: IDiffableEntityHashSet(Of TResource).GetDiffs
 - uid: JsonApiDotNetCore.Hooks.IEntityHashSet`1
   name: IEntityHashSet<TResource>
   href: api/JsonApiDotNetCore.Hooks.IEntityHashSet-1.html
@@ -8196,15 +8126,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Models.ResourceDefinition(Of T).BeforeRead
   nameWithType: ResourceDefinition<T>.BeforeRead
   nameWithType.vb: ResourceDefinition(Of T).BeforeRead
-- uid: JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name: BeforeUpdate(IEntityDiffs<T>, ResourcePipeline)
-  href: api/JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IEntityDiffs__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
-  commentId: M:JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
-  name.vb: BeforeUpdate(IEntityDiffs(Of T), ResourcePipeline)
-  fullName: JsonApiDotNetCore.Models.ResourceDefinition<T>.BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs<T>, JsonApiDotNetCore.Hooks.ResourcePipeline)
-  fullName.vb: JsonApiDotNetCore.Models.ResourceDefinition(Of T).BeforeUpdate(JsonApiDotNetCore.Hooks.IEntityDiffs(Of T), JsonApiDotNetCore.Hooks.ResourcePipeline)
-  nameWithType: ResourceDefinition<T>.BeforeUpdate(IEntityDiffs<T>, ResourcePipeline)
-  nameWithType.vb: ResourceDefinition(Of T).BeforeUpdate(IEntityDiffs(Of T), ResourcePipeline)
+- uid: JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name: BeforeUpdate(IDiffableEntityHashSet<T>, ResourcePipeline)
+  href: api/JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_IDiffableEntityHashSet__0__JsonApiDotNetCore_Hooks_ResourcePipeline_
+  commentId: M:JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet{`0},JsonApiDotNetCore.Hooks.ResourcePipeline)
+  name.vb: BeforeUpdate(IDiffableEntityHashSet(Of T), ResourcePipeline)
+  fullName: JsonApiDotNetCore.Models.ResourceDefinition<T>.BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet<T>, JsonApiDotNetCore.Hooks.ResourcePipeline)
+  fullName.vb: JsonApiDotNetCore.Models.ResourceDefinition(Of T).BeforeUpdate(JsonApiDotNetCore.Hooks.IDiffableEntityHashSet(Of T), JsonApiDotNetCore.Hooks.ResourcePipeline)
+  nameWithType: ResourceDefinition<T>.BeforeUpdate(IDiffableEntityHashSet<T>, ResourcePipeline)
+  nameWithType.vb: ResourceDefinition(Of T).BeforeUpdate(IDiffableEntityHashSet(Of T), ResourcePipeline)
 - uid: JsonApiDotNetCore.Models.ResourceDefinition`1.BeforeUpdate*
   name: BeforeUpdate
   href: api/JsonApiDotNetCore.Models.ResourceDefinition-1.html#JsonApiDotNetCore_Models_ResourceDefinition_1_BeforeUpdate_
