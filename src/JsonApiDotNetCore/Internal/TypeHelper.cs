@@ -151,7 +151,12 @@ namespace JsonApiDotNetCore.Internal
             return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TValueOut>)pair.Value);
         }
 
-        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributesToUpdate<TValueOut>(Dictionary<AttrAttribute, object> attributes, HashSet<TValueOut> entities)
+        /// <summary>
+        /// Converts a dictionary of AttrAttributes to the underlying PropertyInfo that is referenced
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <param name="entities"></param>
+        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(Dictionary<AttrAttribute, object> attributes, HashSet<TValueOut> entities)
         {
             return attributes?.ToDictionary(p => p.Key.PropertyInfo, p => entities);
         }
