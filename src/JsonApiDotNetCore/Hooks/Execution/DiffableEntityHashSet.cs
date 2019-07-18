@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Hooks
                   Dictionary<RelationshipAttribute, IEnumerable> relationships,
                   IJsonApiContext jsonApiContext)
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-              TypeHelper.ConvertAttributesToUpdate(jsonApiContext.AttributesToUpdate, (HashSet<TResource>)requestEntities))
+              TypeHelper.ConvertAttributeDictionary(jsonApiContext.AttributesToUpdate, (HashSet<TResource>)requestEntities))
         { }
 
 

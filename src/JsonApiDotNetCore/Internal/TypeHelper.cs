@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
@@ -81,8 +80,6 @@ namespace JsonApiDotNetCore.Internal
             return null;
         }
 
-
-
         /// <summary>
         /// Gets the property info that is referenced in the NavigatioAction expression.
         /// Credits: https://stackoverflow.com/a/17116267/4441216
@@ -100,7 +97,9 @@ namespace JsonApiDotNetCore.Internal
                     Exp = (MemberExpression)UnExp.Operand;
                 }
                 else
+                {
                     throw new ArgumentException();
+                }
             }
             else if (NavigationExpression.Body is MemberExpression)
             {
@@ -143,7 +142,6 @@ namespace JsonApiDotNetCore.Internal
             var parameterizedType = openType.MakeGenericType(parameters);
             return Activator.CreateInstance(parameterizedType, constructorArguments);
         }
-
 
         /// <summary>
         /// Helper method that "unboxes" the TValue from the relationship dictionary into  

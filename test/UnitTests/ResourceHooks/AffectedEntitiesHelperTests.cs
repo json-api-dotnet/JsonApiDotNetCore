@@ -12,7 +12,6 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         public string SomeUpdatedProperty { get; set; }
         public string SomeNotUpdatedProperty { get; set; }
 
-
         [HasOne("first-to-one")]
         public ToOne FirstToOne { get; set; }
         [HasOne("second-to-one")]
@@ -20,6 +19,7 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [HasMany("to-manies")]
         public List<ToMany> ToManies { get; set; }
     }
+
     public class NotTargeted : Identifiable { }
     public class ToMany : Identifiable { }
     public class ToOne : Identifiable { }
