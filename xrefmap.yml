@@ -3492,15 +3492,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource)
   nameWithType: DiffableEntityHashSet<TResource>
   nameWithType.vb: DiffableEntityHashSet(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name: DiffableEntityHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_HashSet__0___
-  commentId: M:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name.vb: DiffableEntityHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
-  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.DiffableEntityHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).DiffableEntityHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
-  nameWithType: DiffableEntityHashSet<TResource>.DiffableEntityHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  nameWithType.vb: DiffableEntityHashSet(Of TResource).DiffableEntityHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.Dictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})
+  name: DiffableEntityHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>, Dictionary<PropertyInfo, HashSet<TResource>>)
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Models_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_Dictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___
+  commentId: M:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Models.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.Dictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})
+  name.vb: DiffableEntityHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)), Dictionary(Of PropertyInfo, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.DiffableEntityHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>, System.Collections.Generic.Dictionary<System.Reflection.PropertyInfo, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).DiffableEntityHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Models.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)), System.Collections.Generic.Dictionary(Of System.Reflection.PropertyInfo, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: DiffableEntityHashSet<TResource>.DiffableEntityHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>, Dictionary<PropertyInfo, HashSet<TResource>>)
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).DiffableEntityHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)), Dictionary(Of PropertyInfo, HashSet(Of TResource)))
 - uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.#ctor*
   name: DiffableEntityHashSet
   href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1__ctor_
@@ -3510,6 +3510,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).DiffableEntityHashSet
   nameWithType: DiffableEntityHashSet<TResource>.DiffableEntityHashSet
   nameWithType.vb: DiffableEntityHashSet(Of TResource).DiffableEntityHashSet
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name: GetAffected(Expression<Func<TResource, Object>>)
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___
+  commentId: M:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name.vb: GetAffected(Expression(Of Func(Of TResource, Object)))
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.GetAffected(System.Linq.Expressions.Expression<System.Func<TResource, System.Object>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).GetAffected(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
+  nameWithType: DiffableEntityHashSet<TResource>.GetAffected(Expression<Func<TResource, Object>>)
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).GetAffected(Expression(Of Func(Of TResource, Object)))
+- uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetAffected*
+  name: GetAffected
+  href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetAffected_
+  commentId: Overload:JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetAffected
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.DiffableEntityHashSet<TResource>.GetAffected
+  fullName.vb: JsonApiDotNetCore.Hooks.DiffableEntityHashSet(Of TResource).GetAffected
+  nameWithType: DiffableEntityHashSet<TResource>.GetAffected
+  nameWithType.vb: DiffableEntityHashSet(Of TResource).GetAffected
 - uid: JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs
   name: GetDiffs()
   href: api/JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html#JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetDiffs
@@ -3631,6 +3649,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.EntityHashSet(Of TResource).AffectedRelationships
   nameWithType: EntityHashSet<TResource>.AffectedRelationships
   nameWithType.vb: EntityHashSet(Of TResource).AffectedRelationships
+- uid: JsonApiDotNetCore.Hooks.EntityHashSet`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name: GetAffected(Expression<Func<TResource, Object>>)
+  href: api/JsonApiDotNetCore.Hooks.EntityHashSet-1.html#JsonApiDotNetCore_Hooks_EntityHashSet_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___
+  commentId: M:JsonApiDotNetCore.Hooks.EntityHashSet`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name.vb: GetAffected(Expression(Of Func(Of TResource, Object)))
+  fullName: JsonApiDotNetCore.Hooks.EntityHashSet<TResource>.GetAffected(System.Linq.Expressions.Expression<System.Func<TResource, System.Object>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityHashSet(Of TResource).GetAffected(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
+  nameWithType: EntityHashSet<TResource>.GetAffected(Expression<Func<TResource, Object>>)
+  nameWithType.vb: EntityHashSet(Of TResource).GetAffected(Expression(Of Func(Of TResource, Object)))
+- uid: JsonApiDotNetCore.Hooks.EntityHashSet`1.GetAffected*
+  name: GetAffected
+  href: api/JsonApiDotNetCore.Hooks.EntityHashSet-1.html#JsonApiDotNetCore_Hooks_EntityHashSet_1_GetAffected_
+  commentId: Overload:JsonApiDotNetCore.Hooks.EntityHashSet`1.GetAffected
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.EntityHashSet<TResource>.GetAffected
+  fullName.vb: JsonApiDotNetCore.Hooks.EntityHashSet(Of TResource).GetAffected
+  nameWithType: EntityHashSet<TResource>.GetAffected
+  nameWithType.vb: EntityHashSet(Of TResource).GetAffected
 - uid: JsonApiDotNetCore.Hooks.EntityHashSet`1.GetByRelationship(System.Type)
   name: GetByRelationship(Type)
   href: api/JsonApiDotNetCore.Hooks.EntityHashSet-1.html#JsonApiDotNetCore_Hooks_EntityHashSet_1_GetByRelationship_System_Type_
@@ -4262,6 +4298,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource)
   nameWithType: IRelationshipGetters<TResource>
   nameWithType.vb: IRelationshipGetters(Of TResource)
+- uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name: GetAffected(Expression<Func<TResource, Object>>)
+  href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___
+  commentId: M:JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name.vb: GetAffected(Expression(Of Func(Of TResource, Object)))
+  fullName: JsonApiDotNetCore.Hooks.IRelationshipGetters<TResource>.GetAffected(System.Linq.Expressions.Expression<System.Func<TResource, System.Object>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource).GetAffected(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
+  nameWithType: IRelationshipGetters<TResource>.GetAffected(Expression<Func<TResource, Object>>)
+  nameWithType.vb: IRelationshipGetters(Of TResource).GetAffected(Expression(Of Func(Of TResource, Object)))
+- uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetAffected*
+  name: GetAffected
+  href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetAffected_
+  commentId: Overload:JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetAffected
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.IRelationshipGetters<TResource>.GetAffected
+  fullName.vb: JsonApiDotNetCore.Hooks.IRelationshipGetters(Of TResource).GetAffected
+  nameWithType: IRelationshipGetters<TResource>.GetAffected
+  nameWithType.vb: IRelationshipGetters(Of TResource).GetAffected
 - uid: JsonApiDotNetCore.Hooks.IRelationshipGetters`1.GetByRelationship(System.Type)
   name: GetByRelationship(Type)
   href: api/JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_System_Type_
@@ -4473,6 +4527,24 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).RelationshipsDictionary
   nameWithType: RelationshipsDictionary<TResource>.RelationshipsDictionary
   nameWithType.vb: RelationshipsDictionary(Of TResource).RelationshipsDictionary
+- uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name: GetAffected(Expression<Func<TResource, Object>>)
+  href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___
+  commentId: M:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})
+  name.vb: GetAffected(Expression(Of Func(Of TResource, Object)))
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.GetAffected(System.Linq.Expressions.Expression<System.Func<TResource, System.Object>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).GetAffected(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
+  nameWithType: RelationshipsDictionary<TResource>.GetAffected(Expression<Func<TResource, Object>>)
+  nameWithType.vb: RelationshipsDictionary(Of TResource).GetAffected(Expression(Of Func(Of TResource, Object)))
+- uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetAffected*
+  name: GetAffected
+  href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetAffected_
+  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetAffected
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Hooks.RelationshipsDictionary<TResource>.GetAffected
+  fullName.vb: JsonApiDotNetCore.Hooks.RelationshipsDictionary(Of TResource).GetAffected
+  nameWithType: RelationshipsDictionary<TResource>.GetAffected
+  nameWithType.vb: RelationshipsDictionary(Of TResource).GetAffected
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship(System.Type)
   name: GetByRelationship(Type)
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship_System_Type_
