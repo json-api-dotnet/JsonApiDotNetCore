@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Extensions
             var config = new JsonApiOptions();
             configureOptions(config);
 
-            if(autoDiscover != null)
+            if (autoDiscover != null)
             {
                 var facade = new ServiceDiscoveryFacade(services, config.ResourceGraphBuilder);
                 autoDiscover(facade);
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
-           
+
             if (jsonApiOptions.EnableResourceHooks)
             {
                 services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds all required registrations for the service to the container
         /// </summary>
         /// <exception cref="JsonApiSetupException"/>
-        public static IServiceCollection AddResourceService<T>(this IServiceCollection services) 
+        public static IServiceCollection AddResourceService<T>(this IServiceCollection services)
         {
             var typeImplementsAnExpectedInterface = false;
 
@@ -213,28 +213,29 @@ namespace JsonApiDotNetCore.Extensions
             // it is _possible_ that a single concrete type could be used for multiple resources...
             var resourceDescriptors = GetResourceTypesFromServiceImplementation(serviceImplementationType);
 
-            foreach(var resourceDescriptor in resourceDescriptors)
+            foreach (var resourceDescriptor in resourceDescriptors)
             {
-                foreach(var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
+                foreach (var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
                 {
                     // A shorthand interface is one where the id type is ommitted
                     // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
                     var isShorthandInterface = (openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1);
-                    if(isShorthandInterface && resourceDescriptor.IdType != typeof(int))
+                    if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
                         continue; // we can't create a shorthand for id types other than int
 
                     var concreteGenericType = isShorthandInterface
                         ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)
                         : openGenericType.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
 
-                    if(concreteGenericType.IsAssignableFrom(serviceImplementationType)) {
+                    if (concreteGenericType.IsAssignableFrom(serviceImplementationType))
+                    {
                         services.AddScoped(concreteGenericType, serviceImplementationType);
                         typeImplementsAnExpectedInterface = true;
                     }
                 }
             }
 
-            if(typeImplementsAnExpectedInterface == false)
+            if (typeImplementsAnExpectedInterface == false)
                 throw new JsonApiSetupException($"{serviceImplementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
 
             return services;
@@ -244,12 +245,12 @@ namespace JsonApiDotNetCore.Extensions
         {
             var resourceDecriptors = new HashSet<ResourceDescriptor>();
             var interfaces = type.GetInterfaces();
-            foreach(var i in interfaces)
+            foreach (var i in interfaces)
             {
-                if(i.IsGenericType)
+                if (i.IsGenericType)
                 {
                     var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
-                    if(TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
+                    if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
                     {
                         resourceDecriptors.Add(resourceDescriptor);
                     }
