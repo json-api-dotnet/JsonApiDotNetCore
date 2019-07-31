@@ -12,7 +12,7 @@ using Xunit;
 
 namespace UnitTests.Services
 {
-    public class QueryParser_Tests
+    public class QueryParserTests
     {
         private readonly Mock<IControllerContext> _controllerContextMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
