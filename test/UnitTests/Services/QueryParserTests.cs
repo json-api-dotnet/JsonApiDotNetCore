@@ -12,12 +12,12 @@ using Xunit;
 
 namespace UnitTests.Services
 {
-    public class QueryParser_Tests
+    public class QueryParserTests
     {
         private readonly Mock<IControllerContext> _controllerContextMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
 
-        public QueryParser_Tests()
+        public QueryParserTests()
         {
             _controllerContextMock = new Mock<IControllerContext>();
             _queryCollectionMock = new Mock<IQueryCollection>();
@@ -126,11 +126,34 @@ namespace UnitTests.Services
             // assert
             Assert.Empty(querySet.Filters);
         }
+        [Theory]
+        [InlineData("text,,1")]
+        [InlineData("text,hello,,5")]
+        [InlineData(",,2")]
+        public void Parse_EmptySortSegment_ReceivesJsonApiException(string stringSortQuery)
+        {
+            // Arrange
+            var query = new Dictionary<string, StringValues> {
+                { "sort", new StringValues(stringSortQuery) }
+            };
 
+            _queryCollectionMock
+                .Setup(m => m.GetEnumerator())
+                .Returns(query.GetEnumerator());
+
+            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+
+            // Act / Assert
+            var exception = Assert.Throws<JsonApiException>(() =>
+            {
+                var querySet = queryParser.Parse(_queryCollectionMock.Object);
+            });
+            Assert.Contains("sort", exception.Message);
+        }
         [Fact]
         public void Can_Disable_Sort()
         {
-            // arrange
+            // Arrange
             var query = new Dictionary<string, StringValues> {
                 { "sort", new StringValues("-key") }
             };

@@ -153,7 +153,10 @@ namespace JsonApiDotNetCore.Services
 
             const char DESCENDING_SORT_OPERATOR = '-';
             var sortSegments = value.Split(QueryConstants.COMMA);
-
+            if(sortSegments.Where(s => s == string.Empty).Count() >0)
+            {
+                throw new JsonApiException(400, "The sort URI segment contained a null value.");
+            }
             foreach (var sortSegment in sortSegments)
             {
                 var propertyName = sortSegment;
