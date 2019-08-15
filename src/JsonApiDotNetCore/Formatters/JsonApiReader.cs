@@ -48,6 +48,7 @@ namespace JsonApiDotNetCore.Formatters
                 {
                     model = _deserializer.Deserialize(body);
                 }
+
                 if (model == null)
                 {
                     _logger?.LogError("An error occurred while de-serializing the payload");

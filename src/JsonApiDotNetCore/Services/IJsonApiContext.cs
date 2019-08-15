@@ -26,8 +26,6 @@ namespace JsonApiDotNetCore.Services
         PageManager PageManager { get; set; }
     }
 
-
-
     public interface IJsonApiRequest : IJsonApiApplication,  IQueryRequest
     {
         /// <summary>

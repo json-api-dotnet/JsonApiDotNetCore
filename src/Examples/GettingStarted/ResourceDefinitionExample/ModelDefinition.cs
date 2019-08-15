@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal;
+<<<<<<< HEAD
 using JsonApiDotNetCore.Internal.Contracts;
+=======
+>>>>>>> master
 using JsonApiDotNetCore.Models;
 
 namespace GettingStarted.ResourceDefinitionExample

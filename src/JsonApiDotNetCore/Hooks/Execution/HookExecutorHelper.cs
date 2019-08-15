@@ -10,7 +10,6 @@ using JsonApiDotNetCore.Extensions;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Configuration;
@@ -112,7 +111,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 return false;
             }
-            else if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
+            if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
             {
                 return true;
             }

@@ -38,5 +38,4 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="updated">Updated.</param>
         void UpdateUnique(IEnumerable updated);
     }
-
 }

@@ -148,9 +148,7 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterRead(AsList(entity), pipeline);
                 entity = _hookExecutor.OnReturn(AsList(entity), pipeline).SingleOrDefault();
             }
-
             return MapOut(entity);
-
         }
 
         // triggered by GET /articles/1/relationships/{relationshipName}
@@ -292,7 +290,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// Get the specified id with relationships (async)
+        /// Get the specified id with relationships
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

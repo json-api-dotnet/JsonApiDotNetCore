@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using DependentType = System.Type;
 using PrincipalType = System.Type;
 
@@ -27,7 +26,6 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly IResourceGraph _graph;
         private readonly IRequestManager _requestManager;
-
         /// <summary>
         /// Keeps track of which entities has already been traversed through, to prevent
         /// infinite loops in eg cyclic data structures.
@@ -210,8 +208,8 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
                     bool isContextRelation = false;
-                    if (_context.RelationshipsToUpdate != null) isContextRelation = _context.RelationshipsToUpdate.ContainsKey(attr);
-                    if (_context.RelationshipsToUpdate != null) isContextRelation = _context.RelationshipsToUpdate.ContainsKey(attr);
+                    var relationshipsToUpdate = _requestManager.GetUpdatedRelationships();
+                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.ContainsKey(attr);
                     var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
                     RelationshipProxies[attr] = proxy;
                 }

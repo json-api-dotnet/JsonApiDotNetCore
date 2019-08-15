@@ -24,7 +24,6 @@ namespace JsonApiDotNetCore.Internal.Query
 
             if (Attribute.IsFilterable == false)
                 throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
-
         }
     }
 }

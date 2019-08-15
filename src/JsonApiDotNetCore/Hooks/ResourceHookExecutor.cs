@@ -24,7 +24,11 @@ namespace JsonApiDotNetCore.Hooks
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
 
-        public ResourceHookExecutor(IHookExecutorHelper helper, ITraversalHelper traversalHelper, IResourceGraph resourceGraph, IRequestManager requestManager)
+        public ResourceHookExecutor(
+            IHookExecutorHelper helper,
+            ITraversalHelper traversalHelper,
+            IResourceGraph resourceGraph,
+            IRequestManager requestManager)
         {
             _requestManager = requestManager;
             _executorHelper = helper;
@@ -52,7 +56,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new EntityDiffs<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer());
+                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _requestManager);
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);

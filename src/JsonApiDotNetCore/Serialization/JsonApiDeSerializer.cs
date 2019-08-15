@@ -150,7 +150,7 @@ namespace JsonApiDotNetCore.Serialization
                     /// store the updated relationship values in this property. For now 
                     /// just assigning null as value, will remove this property later as a whole.
                     /// see #512
-                    _jsonApiContext.AttributesToUpdate[attr] = null;
+                    _jsonApiContext.RequestManager.GetUpdatedAttributes()[attr] = null;
                 }
             }
 

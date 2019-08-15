@@ -1,10 +1,8 @@
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;

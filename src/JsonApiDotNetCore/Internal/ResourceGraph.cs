@@ -12,7 +12,6 @@ namespace JsonApiDotNetCore.Internal
         public Type Controller { get; set; }
         public Type Model { get; set; }
         public string Path { get; set; }
-
     }
 
     /// <summary>

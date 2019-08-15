@@ -1,4 +1,3 @@
-
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
@@ -7,9 +6,6 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JsonApiDotNetCoreExample.Services

@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Internal;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Immutable;
+using System.Linq.Expressions;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -26,8 +27,6 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     public class EntityHashSet<TResource> : HashSet<TResource>, IEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
-    
-
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> AffectedRelationships { get => _relationships; }
         private readonly RelationshipsDictionary<TResource> _relationships;
@@ -53,9 +52,15 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRelatedResource>()  where TRelatedResource : class, IIdentifiable
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRelatedResource>() where TRelatedResource : class, IIdentifiable
         {
             return GetByRelationship(typeof(TRelatedResource));
+        }
+
+        /// <inheritdoc />
+        public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> NavigationAction)
+        {
+            return _relationships.GetAffected(NavigationAction);
         }
     }
 }

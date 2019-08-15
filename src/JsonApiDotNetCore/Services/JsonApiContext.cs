@@ -134,23 +134,6 @@ namespace JsonApiDotNetCore.Services
             return false;
         }
 
-        //private PageManager GetPageManager()
-        //{
-        //    if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
-        //    {
-        //        return new PageManager();
-        //    }
-
-        //    var query = QuerySet?.PageQuery ?? new PageQuery();
-
-        //    return new PageManager
-        //    {
-        //        DefaultPageSize = Options.DefaultPageSize,
-        //        CurrentPage = query.PageOffset,
-        //        PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
-        //    };
-        //}
-
         public void BeginOperation()
         {
             IncludedRelationships = new List<string>();

@@ -86,11 +86,11 @@ namespace UnitTests.Data
                 .Returns(_contextMock.Object);
 
             _jsonApiContextMock
-               .Setup(m => m.AttributesToUpdate)
+               .Setup(m => m.RequestManager.GetUpdatedAttributes())
                .Returns(_attrsToUpdate);
 
             _jsonApiContextMock
-                .Setup(m => m.RelationshipsToUpdate)
+                .Setup(m => m.RequestManager.GetUpdatedRelationships())
                 .Returns(_relationshipsToUpdate);
 
             _jsonApiContextMock

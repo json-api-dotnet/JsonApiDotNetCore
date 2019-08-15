@@ -63,6 +63,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             var config = new JsonApiOptions();
             configureOptions(config);
+
             if (autoDiscover != null)
             {
                 var facade = new ServiceDiscoveryFacade(services, config.ResourceGraphBuilder);
@@ -162,7 +163,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
-           
             if (jsonApiOptions.EnableResourceHooks)
             {
                 services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Request;
 using JsonApiDotNetCore.Serialization;
@@ -15,28 +16,42 @@ namespace UnitTests.Serialization
 {
     public class JsonApiDeSerializerTests
     {
+        private readonly Mock<IRequestManager> _requestManagerMock = new Mock<IRequestManager>();
+        private readonly Mock<IJsonApiContext> _jsonApiContextMock = new Mock<IJsonApiContext>();
+
+        public JsonApiDeSerializerTests()
+        {
+            _jsonApiContextMock.SetupAllProperties();
+            _requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            var jsonApiOptions = new JsonApiOptions();
+            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            _jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+            _jsonApiContextMock.Setup(m => m.RequestManager).Returns(_requestManagerMock.Object);
+            var resourceGraphBuilder = new ResourceGraphBuilder();
+            resourceGraphBuilder.AddResource<TestResource>("test-resource");
+            resourceGraphBuilder.AddResource<Independent>("independents");
+            resourceGraphBuilder.AddResource<Dependent>("dependents");
+            var resourceGraph = resourceGraphBuilder.Build();
+            _jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
+
+
+        }
+
+        private void CreateMocks()
+        {
+
+        }
+
         [Fact]
         public void Can_Deserialize_Complex_Types()
         {
             // arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<TestResource>("test-resource");
-            var resourceGraph = resourceGraphBuilder.Build();
-
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-
-            var jsonApiOptions = new JsonApiOptions();
-            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
-
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
 
             var content = new Document
             {
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -58,23 +73,12 @@ namespace UnitTests.Serialization
         public void Can_Deserialize_Complex_List_Types()
         {
             // arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<TestResourceWithList>("test-resource");
-            var resourceGraph = resourceGraphBuilder.Build();
-
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            var jsonApiOptions = new JsonApiOptions();
-            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
-
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
 
             var content = new Document
             {
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -97,24 +101,14 @@ namespace UnitTests.Serialization
         public void Can_Deserialize_Complex_Types_With_Dasherized_Attrs()
         {
             // arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<TestResource>("test-resource");
-            var resourceGraph = resourceGraphBuilder.Build();
-
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-
             var jsonApiOptions = new JsonApiOptions();
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver(); // <--
-            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
-
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
 
             var content = new Document
             {
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -138,26 +132,18 @@ namespace UnitTests.Serialization
         public void Immutable_Attrs_Are_Not_Included_In_AttributesToUpdate()
         {
             // arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<TestResource>("test-resource");
-            var resourceGraph = resourceGraphBuilder.Build();
-
             var attributesToUpdate = new Dictionary<AttrAttribute, object>();
-
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(attributesToUpdate);
-
+            _requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
             var jsonApiOptions = new JsonApiOptions();
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver();
-            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+            _jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
 
             var content = new Document
             {
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "test-resource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
@@ -187,25 +173,13 @@ namespace UnitTests.Serialization
         public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship()
         {
             // arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<Independent>("independents");
-            resourceGraphBuilder.AddResource<Dependent>("dependents");
-            var resourceGraph = resourceGraphBuilder.Build();
-
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-
-            var jsonApiOptions = new JsonApiOptions();
-            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
-
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
 
             var property = Guid.NewGuid().ToString();
             var content = new Document
             {
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "independents",
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } }
@@ -234,7 +208,9 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
             jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
@@ -279,7 +255,9 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
             jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
@@ -290,7 +268,8 @@ namespace UnitTests.Serialization
             var property = Guid.NewGuid().ToString();
             var content = new Document
             {
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "independents",
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } },
@@ -330,7 +309,9 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
 
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
@@ -343,7 +324,8 @@ namespace UnitTests.Serialization
             var content = new Document
             {
                 Meta = new Dictionary<string, object>() { { "foo", "bar" } },
-                Data = new ResourceObject {
+                Data = new ResourceObject
+                {
                     Type = "independents",
                     Id = "1",
                     Attributes = new Dictionary<string, object> { { "property", property } },
@@ -418,8 +400,10 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            requestManagerMock.Setup(m => m.GetUpdatedRelationships()).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
             jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
@@ -472,8 +456,10 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            requestManagerMock.Setup(m => m.GetUpdatedRelationships()).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
             jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
 
             var jsonApiOptions = new JsonApiOptions();
@@ -537,8 +523,10 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            requestManagerMock.Setup(m => m.GetUpdatedRelationships()).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
             jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
             jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
 
@@ -728,8 +716,10 @@ namespace UnitTests.Serialization
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            requestManagerMock.Setup(m => m.GetUpdatedRelationships()).Returns(new Dictionary<RelationshipAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
             jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
             jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
 

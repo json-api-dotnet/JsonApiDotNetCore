@@ -33,9 +33,6 @@ namespace JsonApiDotNetCore.Data
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
-           
-
-
         [Obsolete("Dont use jsonapicontext instantiation anymore")]
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
@@ -192,16 +189,14 @@ namespace JsonApiDotNetCore.Data
             }
         }
 
-
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
             var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
-            if (relationshipAttr != null)
+            if(relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute) return true;
                 return false;
-            }
-            else
+            } else
             {
                 // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
                 // In this case we use relfection to figure out what kind of relationship is pointing back.
