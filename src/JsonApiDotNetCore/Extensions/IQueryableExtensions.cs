@@ -170,11 +170,29 @@ namespace JsonApiDotNetCore.Extensions
                     break;
                 case FilterOperations.isnotnull:
                     // {model.Id != null}
-                    body = Expression.NotEqual(left, right);
+                    if (left.Type.IsValueType &&
+                        !(left.Type.IsGenericType && left.Type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                    {
+                        var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
+                        body = Expression.NotEqual(Expression.Convert(left, nullableType), right);
+                    }
+                    else
+                    {
+                        body = Expression.NotEqual(left, right);
+                    }
                     break;
                 case FilterOperations.isnull:
                     // {model.Id == null}
-                    body = Expression.Equal(left, right);
+                    if (left.Type.IsValueType &&
+                        !(left.Type.IsGenericType && left.Type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                    {
+                        var nullableType = typeof(Nullable<>).MakeGenericType(left.Type);
+                        body = Expression.Equal(Expression.Convert(left, nullableType), right);
+                    }
+                    else
+                    {
+                        body = Expression.Equal(left, right);
+                    }
                     break;
                 default:
                     throw new JsonApiException(500, $"Unknown filter operation {operation}");

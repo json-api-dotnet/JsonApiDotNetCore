@@ -176,6 +176,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Can_Filter_TodoItems_ByParent_Using_IsNotNull_Operator()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Assignee = new Person();
+
+            var otherTodoItem = _todoItemFaker.Generate();
+            otherTodoItem.Assignee = null;
+
+            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[assignee.id]=isnotnull:";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.NotEmpty(todoItems);
+            Assert.All(todoItems, t => Assert.NotNull(t.Assignee));
+        }
+
+        [Fact]
         public async Task Can_Filter_TodoItems_Using_IsNull_Operator()
         {
             // Arrange
@@ -203,6 +233,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.NotEmpty(todoItems);
             Assert.All(todoItems, t => Assert.Null(t.UpdatedDate));
+        }
+
+        [Fact]
+        public async Task Can_Filter_TodoItems_ByParent_Using_IsNull_Operator()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Assignee = null;
+
+            var otherTodoItem = _todoItemFaker.Generate();
+            otherTodoItem.Assignee = new Person();
+
+            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[assignee.id]=isnull:";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.NotEmpty(todoItems);
+            Assert.All(todoItems, t => Assert.Null(t.Assignee));
         }
 
         [Fact]
