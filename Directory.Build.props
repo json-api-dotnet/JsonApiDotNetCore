@@ -4,14 +4,14 @@
     <NetCoreAppVersion>netcoreapp2.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.0</NetStandardVersion>
 
-    <AspNetCoreVersion>2.1.0</AspNetCoreVersion>
+    <AspNetCoreVersion>2.*</AspNetCoreVersion>
 
-    <MicrosoftLoggingVersion>2.1.0</MicrosoftLoggingVersion>
-    <MicrosoftConfigurationVersion>2.1.0</MicrosoftConfigurationVersion>
-    <MicrosoftOptionsVersion>2.1.0</MicrosoftOptionsVersion>
+    <MicrosoftLoggingVersion>2.*</MicrosoftLoggingVersion>
+    <MicrosoftConfigurationVersion>2.*</MicrosoftConfigurationVersion>
+    <MicrosoftOptionsVersion>2.*</MicrosoftOptionsVersion>
 
-    <EFCoreVersion>2.1.0</EFCoreVersion>
-    <EFCoreToolsVersion>2.1.0</EFCoreToolsVersion>
+    <EFCoreVersion>2.*</EFCoreVersion>
+    <EFCoreToolsVersion>2.*</EFCoreToolsVersion>
 
     <NpgsqlVersion>4.0.0</NpgsqlVersion>
     <NpgsqlPostgreSQLVersion>2.1.0</NpgsqlPostgreSQLVersion>

@@ -48,10 +48,13 @@ namespace JsonApiDotNetCore.Services
         [Obsolete("Use the proxied member IControllerContext.RequestEntity instead.")]
         public ContextEntity RequestEntity { get => _controllerContext.RequestEntity; set => _controllerContext.RequestEntity = value; }
 
-        [Obsolete("Please us the IRequestManager")]
+        [Obsolete("Use IRequestManager")]
         public QuerySet QuerySet { get; set; }
+        [Obsolete("Use IRequestManager")]
         public bool IsRelationshipData { get; set; }
+        [Obsolete("Use IRequestManager")]
         public bool IsRelationshipPath { get; private set; }
+        [Obsolete("Use IRequestManager")]
         public List<string> IncludedRelationships { get; set; }
         public IPageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
@@ -136,6 +139,7 @@ namespace JsonApiDotNetCore.Services
 
         public void BeginOperation()
         {
+            RequestManager.IncludedRelationships = new List<string>();
             IncludedRelationships = new List<string>();
             AttributesToUpdate = new Dictionary<AttrAttribute, object>();
             HasManyRelationshipPointers = new HasManyRelationshipPointers();

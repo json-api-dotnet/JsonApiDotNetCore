@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -79,6 +80,7 @@ namespace JsonApiDotNetCore.Extensions
             options.Filters.Add(typeof(JsonApiExceptionFilter));
             options.Filters.Add(typeof(TypeMatchFilter));
             options.SerializeAsJsonApi(config);
+
         }
 
         public static void AddJsonApiInternals<TContext>(
@@ -170,6 +172,7 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
                 services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
             }
+            services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddScoped<IInverseRelationships, InverseRelationships>();
         }

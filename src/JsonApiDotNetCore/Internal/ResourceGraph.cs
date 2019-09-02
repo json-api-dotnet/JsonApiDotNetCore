@@ -7,11 +7,10 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class ControllerModelMap
+    public class ControllerResourceMap
     {
-        public Type Controller { get; set; }
-        public Type Model { get; set; }
-        public string Path { get; set; }
+        public string ControllerName { get; set; }
+        public Type Resource { get; set; }
     }
 
     /// <summary>
@@ -22,7 +21,7 @@ namespace JsonApiDotNetCore.Internal
         internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
 
-        public List<ControllerModelMap> ControllerModelMap { get; internal set; }
+        public List<ControllerResourceMap> ControllerResourceMap { get; internal set; }
 
         [Obsolete("please instantiate properly, dont use the static constructor")]
         internal static IResourceGraph Instance { get; set; }
@@ -46,9 +45,9 @@ namespace JsonApiDotNetCore.Internal
         // to avoid breaking changes, we will be leaving the original constructor in place
         // until the context graph validation process is completed
         // you can track progress on this issue here: https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170
-        internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults, List<ControllerModelMap> controllerContexts)
+        internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults, List<ControllerResourceMap> controllerContexts)
         {
-            ControllerModelMap = controllerContexts;
+            ControllerResourceMap = controllerContexts;
             Entities = entities;
             UsesDbContext = usesDbContext;
             ValidationResults = validationResults;
@@ -137,13 +136,11 @@ namespace JsonApiDotNetCore.Internal
             return GetContextEntity(relationship.DependentType).Relationships.SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
         }
 
-        public ContextEntity GetEntityBasedOnPath(string pathParsed)
+        public ContextEntity GetEntityFromControllerName(string controllerName)
         {
-            var controllerMatches = ControllerModelMap.Where(cm => cm.Controller.Name.ToLower().Contains(pathParsed.ToLower()));
-
-            var model = controllerMatches.First().Model;
-
-            return Entities.Where(e => e.EntityType == model).First();
+            var resource = ControllerResourceMap.FirstOrDefault(cm => cm.ControllerName == controllerName)?.Resource;
+            if (resource == null) return null;
+            return Entities.First(e => e.EntityType == resource);
         }
     }
 }

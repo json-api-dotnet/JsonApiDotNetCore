@@ -142,7 +142,7 @@ namespace UnitTests.Services
                 .Setup(m => m.GetEnumerator())
                 .Returns(query.GetEnumerator());
 
-            var queryParser = new QueryParser(_controllerContextMock.Object, new JsonApiOptions());
+            var queryParser = new QueryParser(_requestMock.Object, new JsonApiOptions());
 
             // Act / Assert
             var exception = Assert.Throws<JsonApiException>(() =>

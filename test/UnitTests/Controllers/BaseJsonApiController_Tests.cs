@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using JsonApiDotNetCore.Internal.Contracts;
+using System.IO;
 
 namespace UnitTests
 {
@@ -241,11 +242,10 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
-            //_resourceGraph.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = false });
             var controller = new BaseJsonApiController<Resource>(new JsonApiOptions { ValidateModelState = false }, _resourceGraph.Object, create: serviceMock.Object);
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
             controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
+            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
+
 
             // act
             var response = await controller.PostAsync(resource);
@@ -261,12 +261,12 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            //_resourceGraph.SetupGet(a => a.ResourceGraph).Returns(_resourceGraphMock.Object);
             _resourceGraphMock.Setup(a => a.GetPublicAttributeName<Resource>("TestAttribute")).Returns("test-attribute");
-            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
-            //_resourceGraph.SetupGet(a => a.Options).Returns(new JsonApiOptions { ValidateModelState = true });
-            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions { ValidateModelState = false }, _resourceGraph.Object, create: serviceMock.Object);
+            var controller = new BaseJsonApiController<Resource>(new JsonApiOptions { ValidateModelState = true }, _resourceGraph.Object, create: serviceMock.Object);
+            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
             controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
+            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
+
 
             // act
             var response = await controller.PostAsync(resource);

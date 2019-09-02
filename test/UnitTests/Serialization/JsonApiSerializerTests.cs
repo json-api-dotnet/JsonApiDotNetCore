@@ -77,7 +77,7 @@ namespace UnitTests.Serialization
 
             var serializer = GetSerializer(
                 resourceGraphBuilder,
-                included: new List<string> { "children.infections" }
+                new List<string> { "children.infections" }
             );
 
             var resource = new TestResource
@@ -211,16 +211,17 @@ namespace UnitTests.Serialization
             List<string> included = null)
         {
             var resourceGraph = resourceGraphBuilder.Build();
-
+            var requestManagerMock = new Mock<IRequestManager>();
+            requestManagerMock.Setup(m => m.GetContextEntity()).Returns(resourceGraph.GetContextEntity("test-resource"));
+            requestManagerMock.Setup(m => m.IncludedRelationships).Returns(included);
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
             jsonApiContextMock.Setup(m => m.Options).Returns(new JsonApiOptions());
             jsonApiContextMock.Setup(m => m.RequestEntity).Returns(resourceGraph.GetContextEntity("test-resource"));
-            // jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
-            // jsonApiContextMock.Setup(m => m.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>());
-            // jsonApiContextMock.Setup(m => m.HasManyRelationshipPointers).Returns(new HasManyRelationshipPointers());
-            // jsonApiContextMock.Setup(m => m.HasOneRelationshipPointers).Returns(new HasOneRelationshipPointers());
+            jsonApiContextMock.Setup(m => m.RequestManager).Returns(requestManagerMock.Object);
+
+
             jsonApiContextMock.Setup(m => m.MetaBuilder).Returns(new MetaBuilder());
             var pmMock = new Mock<IPageManager>();
             jsonApiContextMock.Setup(m => m.PageManager).Returns(pmMock.Object);
@@ -240,7 +241,7 @@ namespace UnitTests.Serialization
             var provider = services.BuildServiceProvider();
             var scoped = new TestScopedServiceProvider(provider);
 
-            var documentBuilder = GetDocumentBuilder(jsonApiContextMock, scopedServiceProvider: scoped);
+            var documentBuilder = GetDocumentBuilder(jsonApiContextMock, requestManagerMock.Object, scopedServiceProvider: scoped);
             var serializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);
 
             return serializer;
@@ -271,12 +272,11 @@ namespace UnitTests.Serialization
             [HasOne("infected")] public ChildResource Infected { get; set; }
         }
 
-        private DocumentBuilder GetDocumentBuilder(Mock<IJsonApiContext> jaContextMock, TestScopedServiceProvider scopedServiceProvider = null)
+        private DocumentBuilder GetDocumentBuilder(Mock<IJsonApiContext> jaContextMock, IRequestManager requestManager, TestScopedServiceProvider scopedServiceProvider = null)
         {
             var pageManagerMock = new Mock<IPageManager>();
-            var rmMock = new Mock<IRequestManager>();
 
-            return new DocumentBuilder(jaContextMock.Object, pageManagerMock.Object, rmMock.Object, scopedServiceProvider: scopedServiceProvider);
+            return new DocumentBuilder(jaContextMock.Object, pageManagerMock.Object, requestManager, scopedServiceProvider: scopedServiceProvider);
 
         }
     }

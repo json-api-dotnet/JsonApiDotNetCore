@@ -21,6 +21,7 @@ namespace JsonApiDotNetCore.Serialization
             IDocumentBuilder documentBuilder)
         {
             _jsonApiContext = jsonApiContext;
+            _requestManager = jsonApiContext.RequestManager;
             _documentBuilder = documentBuilder;
         }
 

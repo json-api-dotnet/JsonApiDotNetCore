@@ -30,9 +30,9 @@ namespace JsonApiDotNetCore.Builders
             IDocumentBuilderOptionsProvider documentBuilderOptionsProvider = null,
             IScopedServiceProvider scopedServiceProvider = null)
         {
-            _requestManager = requestManager;
             _pageManager = pageManager;
             _jsonApiContext = jsonApiContext;
+            _requestManager = requestManager ?? jsonApiContext.RequestManager;
             _resourceGraph = jsonApiContext.ResourceGraph;
             _requestMeta = requestMeta;
             _documentBuilderOptions = documentBuilderOptionsProvider?.GetDocumentBuilderOptions() ?? new DocumentBuilderOptions();
@@ -219,7 +219,7 @@ namespace JsonApiDotNetCore.Builders
         {
             if (_requestManager.IncludedRelationships != null)
             {
-                foreach (var relationshipName in _jsonApiContext.RequestManager.IncludedRelationships)
+                foreach (var relationshipName in _requestManager.IncludedRelationships)
                 {
                     var relationshipChain = relationshipName.Split('.');
 

@@ -1,12 +1,17 @@
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -84,7 +89,10 @@ namespace DiscoveryTests
         {
             private static IEntityRepository<TestModel> _repo = new Mock<IEntityRepository<TestModel>>().Object;
             private static IJsonApiContext _jsonApiContext = new Mock<IJsonApiContext>().Object;
-            public TestModelService() : base(_jsonApiContext, _repo) { }
+
+            public TestModelService(IEntityRepository<TestModel> repository, IJsonApiOptions options, IRequestManager requestManager, IPageManager pageManager, IResourceGraph resourceGraph, ILoggerFactory loggerFactory = null, IResourceHookExecutor hookExecutor = null) : base(repository, options, requestManager, pageManager, resourceGraph, loggerFactory, hookExecutor)
+            {
+            }
         }
 
         public class TestModelRepository : DefaultEntityRepository<TestModel>

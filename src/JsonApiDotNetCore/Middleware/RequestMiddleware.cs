@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Middleware
@@ -20,36 +21,56 @@ namespace JsonApiDotNetCore.Middleware
     public class RequestMiddleware
     {
         private readonly RequestDelegate _next;
+        private IResourceGraph _resourceGraph;
+        private HttpContext _httpContext;
+        private IJsonApiOptions _options;
+        private IJsonApiContext _jsonApiContext;
+        private IRequestManager _requestManager;
+        private IQueryParser _queryParser;
 
         public RequestMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context,
+        public async Task Invoke(HttpContext httpContext,
                                  IJsonApiContext jsonApiContext,
                                  IResourceGraph resourceGraph,
                                  IRequestManager requestManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
         {
-            if (IsValid(context))
+            _httpContext = httpContext;
+            _jsonApiContext = jsonApiContext;
+            _resourceGraph = resourceGraph;
+            _requestManager = requestManager;
+            _queryParser = queryParser;
+            _options = options;
+
+            if (IsValid())
             {
+
                 // HACK: this currently results in allocation of
                 // objects that may or may not be used and even double allocation
                 // since the JsonApiContext is using field initializers
                 // Need to work on finding a better solution.
                 jsonApiContext.BeginOperation();
-                ContextEntity contextEntityCurrent = GetCurrentEntity(context.Request.Path, resourceGraph, options);
-                requestManager.SetContextEntity(contextEntityCurrent);
-                requestManager.BasePath = GetBasePath(context, options, contextEntityCurrent?.EntityName);
-                //Handle all querySet
-                HandleUriParameters(context, queryParser, requestManager);
-                requestManager.IsRelationshipPath = PathIsRelationship(context.Request.Path.Value);
-                // BACKWARD COMPATIBILITY for v4  will be removed in v5
-                jsonApiContext.RequestManager = requestManager;
-                jsonApiContext.PageManager = new PageManager(new LinkBuilder(options, requestManager), options, requestManager);
-                await _next(context);
+                ContextEntity contextEntityCurrent = GetCurrentEntity();
+                // the contextEntity is null eg when we're using a non-JsonApiDotNetCore route. 
+                if (contextEntityCurrent != null)
+                {
+                    requestManager.SetContextEntity(contextEntityCurrent);
+                    // TODO: this does not need to be reset every request: we shouldn't need to rely on an external request to figure out the basepath of current application
+                    requestManager.BasePath = GetBasePath(contextEntityCurrent.EntityName);
+                    //Handle all querySet
+                    HandleUriParameters();
+                    requestManager.IsRelationshipPath = PathIsRelationship();
+                    // BACKWARD COMPATIBILITY for v4  will be removed in v5
+                    jsonApiContext.RequestManager = requestManager;
+                    jsonApiContext.PageManager = new PageManager(new LinkBuilder(options, requestManager), options, requestManager);
+                }
+
+                await _next(httpContext);
             }
         }
         /// <summary>
@@ -57,17 +78,19 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         /// <param name="context"></param>
         /// <param name="requestManager"></param>
-        protected void HandleUriParameters(HttpContext context, IQueryParser queryParser, IRequestManager requestManager)
+        protected void HandleUriParameters()
         {
-            if (context.Request.Query.Count > 0)
+            if (_httpContext.Request.Query.Count > 0)
             {
                 //requestManager.FullQuerySet = context.Request.Query;
-                requestManager.QuerySet = queryParser.Parse(context.Request.Query);
-                requestManager.IncludedRelationships = requestManager.QuerySet.IncludedRelationships;
+                _requestManager.QuerySet = _queryParser.Parse(_httpContext.Request.Query);
+                _requestManager.IncludedRelationships = _requestManager.QuerySet.IncludedRelationships;
             }
         }
-        internal static bool PathIsRelationship(string requestPath)
+
+        protected bool PathIsRelationship()
         {
+            string requestPath = _httpContext.Request.Path.Value;
             // while(!Debugger.IsAttached) { Thread.Sleep(1000); }
             const string relationships = "relationships";
             const char pathSegmentDelimiter = '/';
@@ -99,10 +122,10 @@ namespace JsonApiDotNetCore.Middleware
 
             return false;
         }
-        private string GetBasePath(HttpContext context, IJsonApiOptions options, string entityName)
+        private string GetBasePath(string entityName)
         {
-            var r = context.Request;
-            if (options.RelativeLinks)
+            var r = _httpContext.Request;
+            if (_options.RelativeLinks)
             {
                 return GetNamespaceFromPath(r.Path, entityName);
             }
@@ -147,22 +170,18 @@ namespace JsonApiDotNetCore.Middleware
         /// <param name="context"></param>
         /// <param name="resourceGraph"></param>
         /// <returns></returns>
-        private ContextEntity GetCurrentEntity(PathString path, IResourceGraph resourceGraph, IJsonApiOptions options)
+        private ContextEntity GetCurrentEntity()
         {
-            var pathParsed = path.ToString().Replace($"{options.Namespace}/", "");
-            if(pathParsed[0] == '/')
-            {
-                pathParsed = pathParsed.Substring(1);
-            }
-            return resourceGraph.GetEntityBasedOnPath(pathParsed);
+            var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
+            return _resourceGraph.GetEntityFromControllerName(controllerName);
         }
 
-        private static bool IsValid(HttpContext context)
+        private bool IsValid()
         {
-            return IsValidContentTypeHeader(context) && IsValidAcceptHeader(context);
+            return IsValidContentTypeHeader(_httpContext) && IsValidAcceptHeader(_httpContext);
         }
 
-        private static bool IsValidContentTypeHeader(HttpContext context)
+        private bool IsValidContentTypeHeader(HttpContext context)
         {
             var contentType = context.Request.ContentType;
             if (contentType != null && ContainsMediaTypeParameters(contentType))
@@ -173,7 +192,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static bool IsValidAcceptHeader(HttpContext context)
+        private bool IsValidAcceptHeader(HttpContext context)
         {
             if (context.Request.Headers.TryGetValue(Constants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
@@ -189,7 +208,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        internal static bool ContainsMediaTypeParameters(string mediaType)
+        internal bool ContainsMediaTypeParameters(string mediaType)
         {
             var incomingMediaTypeSpan = mediaType.AsSpan();
 
@@ -208,7 +227,7 @@ namespace JsonApiDotNetCore.Middleware
             );
         }
 
-        private static void FlushResponse(HttpContext context, int statusCode)
+        private void FlushResponse(HttpContext context, int statusCode)
         {
             context.Response.StatusCode = statusCode;
             context.Response.Body.Flush();

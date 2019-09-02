@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 
+
 namespace UnitTests.Extensions
 {
     public class IServiceCollectionExtensionsTests
@@ -42,7 +43,7 @@ namespace UnitTests.Extensions
             // assert
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
-            Assert.NotNull(provider.GetService<JsonApiOptions>());
+            Assert.NotNull(provider.GetService<IJsonApiOptions>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IJsonApiContext>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());

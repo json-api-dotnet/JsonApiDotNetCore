@@ -33,16 +33,6 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceMapper _mapper;
         private readonly IResourceHookExecutor _hookExecutor;
 
-        /// <summary>
-        /// Base constructor where we assign the variables
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="options"></param>
-        /// <param name="requestManager"></param>
-        /// <param name="pageManager"></param>
-        /// <param name="hookExecutor"></param>
-        /// <param name="mapper"></param>
-        /// <param name="loggerFactory"></param>
         public EntityResourceService(
                 IEntityRepository<TEntity, TId> repository,
                 IJsonApiOptions options,
@@ -402,14 +392,8 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int>
     {
         /// <summary>
-        /// Constructor for  no mapping with integer as dfeault
+        /// Constructor for  no mapping with integer as default
         /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="options"></param>
-        /// <param name="requestManager"></param>
-        /// <param name="pageManager"></param>
-        /// <param name="loggerFactory"></param>
-        /// <param name="hookExecutor"></param>
         public EntityResourceService(
             IEntityRepository<TResource> repository,
             IJsonApiOptions options,
@@ -421,8 +405,8 @@ namespace JsonApiDotNetCore.Services
             base(repository: repository, apiOptions: options, requestManager, resourceGraph, pageManager, loggerFactory, hookExecutor)
         { }
 
-        [Obsolete("Dont use this constructor, use the one without JsonApiContext instead")]
-        public EntityResourceService(
-            IJsonApiContext context, IEntityRepository<TResource> repository) : this(repository, context.Options, context.RequestManager, context.PageManager, context.ResourceGraph) { }
+        //[Obsolete("Dont use this constructor, use the one without JsonApiContext instead")]
+        //public EntityResourceService(
+        //    IJsonApiContext context, IEntityRepository<TResource> repository) : this(repository, context.Options, context.RequestManager, context.PageManager, context.ResourceGraph) { }
     }
 }

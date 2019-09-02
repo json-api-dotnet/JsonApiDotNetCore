@@ -17,13 +17,13 @@ namespace JsonApiDotNetCore.Managers
         /// The attributes that were included in a PATCH request. 
         /// Only the attributes in this dictionary should be updated.
         /// </summary>
-        public Dictionary<AttrAttribute, object> Attributes { get; set; }
+        public Dictionary<AttrAttribute, object> Attributes { get; set; } = new Dictionary<AttrAttribute, object>();
 
         /// <summary>
         /// Any relationships that were included in a PATCH request. 
         /// Only the relationships in this dictionary should be updated.
         /// </summary>
-        public Dictionary<RelationshipAttribute, object> Relationships { get; }
+        public Dictionary<RelationshipAttribute, object> Relationships { get; } = new Dictionary<RelationshipAttribute, object>();
 
     }
 
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Managers
         /// <summary>
         /// Contains all the information you want about any update occuring
         /// </summary>
-        private UpdatesContainer _updatesContainer { get; set; }
+        private UpdatesContainer _updatesContainer { get; set; } = new UpdatesContainer();
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
 
 

@@ -88,6 +88,6 @@ namespace JsonApiDotNetCore.Internal.Contracts
         bool UsesDbContext { get; }
         List<string> IncludedRelationships { get; set; }
 
-        ContextEntity GetEntityBasedOnPath(string pathParsed);
+        ContextEntity GetEntityFromControllerName(string pathParsed);
     }
 }

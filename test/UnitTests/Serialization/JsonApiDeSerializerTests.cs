@@ -29,6 +29,7 @@ namespace UnitTests.Serialization
             _jsonApiContextMock.Setup(m => m.RequestManager).Returns(_requestManagerMock.Object);
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<TestResource>("test-resource");
+            resourceGraphBuilder.AddResource<TestResourceWithList>("test-resource-with-list");
             resourceGraphBuilder.AddResource<Independent>("independents");
             resourceGraphBuilder.AddResource<Dependent>("dependents");
             var resourceGraph = resourceGraphBuilder.Build();
@@ -79,7 +80,7 @@ namespace UnitTests.Serialization
             {
                 Data = new ResourceObject
                 {
-                    Type = "test-resource",
+                    Type = "test-resource-with-list",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
@@ -103,6 +104,8 @@ namespace UnitTests.Serialization
             // arrange
             var jsonApiOptions = new JsonApiOptions();
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver(); // <--
+            _jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+
             var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
 
             var content = new Document
@@ -133,7 +136,7 @@ namespace UnitTests.Serialization
         {
             // arrange
             var attributesToUpdate = new Dictionary<AttrAttribute, object>();
-            _requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            _requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(attributesToUpdate);
             var jsonApiOptions = new JsonApiOptions();
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver();
             _jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);

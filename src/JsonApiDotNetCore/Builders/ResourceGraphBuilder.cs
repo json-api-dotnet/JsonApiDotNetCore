@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -33,20 +32,20 @@ namespace JsonApiDotNetCore.Builders
             // this must be done at build so that call order doesn't matter
             _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
 
-            List<ControllerModelMap> controllerContexts = new List<ControllerModelMap>() { };
+            List<ControllerResourceMap> controllerContexts = new List<ControllerResourceMap>() { };
             foreach(var cm in _controllerMapper)
             {
                 var model = cm.Key;
-                foreach(var controller in cm.Value)
+                foreach (var controller in cm.Value)
                 {
-                    var routeAttribute = controller.GetCustomAttribute<RouteAttribute>();
-                 
-                    controllerContexts.Add(new ControllerModelMap
+                    var controllerName = controller.Name.Replace("Controller", "");
+
+                    controllerContexts.Add(new ControllerResourceMap
                     {
-                        Model = model,
-                        Controller = controller,
-                        Path = routeAttribute?.Template
+                        Resource = model,
+                        ControllerName = controllerName,
                     });
+
                 }
             }
             var graph = new ResourceGraph(_entities, _usesDbContext, _validationResults, controllerContexts);
