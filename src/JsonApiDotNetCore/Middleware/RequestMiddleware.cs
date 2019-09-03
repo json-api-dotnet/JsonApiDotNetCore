@@ -90,37 +90,8 @@ namespace JsonApiDotNetCore.Middleware
 
         protected bool PathIsRelationship()
         {
-            string requestPath = _httpContext.Request.Path.Value;
-            // while(!Debugger.IsAttached) { Thread.Sleep(1000); }
-            const string relationships = "relationships";
-            const char pathSegmentDelimiter = '/';
-
-            var span = requestPath.AsSpan();
-
-            // we need to iterate over the string, from the end,
-            // checking whether or not the 2nd to last path segment
-            // is "relationships"
-            // -2 is chosen in case the path ends with '/'
-            for (var i = requestPath.Length - 2; i >= 0; i--)
-            {
-                // if there are not enough characters left in the path to 
-                // contain "relationships"
-                if (i < relationships.Length)
-                    return false;
-
-                // we have found the first instance of '/'
-                if (span[i] == pathSegmentDelimiter)
-                {
-                    // in the case of a "relationships" route, the next
-                    // path segment will be "relationships"
-                    return (
-                        span.Slice(i - relationships.Length, relationships.Length)
-                            .SequenceEqual(relationships.AsSpan())
-                    );
-                }
-            }
-
-            return false;
+            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            return actionName.ToLower().Contains("relationships");
         }
         private string GetBasePath(string entityName)
         {
@@ -208,7 +179,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        internal bool ContainsMediaTypeParameters(string mediaType)
+        internal static bool ContainsMediaTypeParameters(string mediaType)
         {
             var incomingMediaTypeSpan = mediaType.AsSpan();
 

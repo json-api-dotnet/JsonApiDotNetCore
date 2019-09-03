@@ -30,4 +30,11 @@
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\Repositories\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Helpers\Repositories\AuthorizedTodoItemsRepository.cs" />
+    <Compile Remove="Helpers\Services\IAuthorizationService.cs" />
+  </ItemGroup>
 </Project>
