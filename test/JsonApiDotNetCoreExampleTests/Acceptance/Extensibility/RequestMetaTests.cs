@@ -40,7 +40,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var body = await response.Content.ReadAsStringAsync();
+            var documents = JsonConvert.DeserializeObject<Documents>(body);
             
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
