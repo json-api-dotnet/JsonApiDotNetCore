@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
 using JsonApiDotNetCoreExample;
+using System.Reflection;
 
 namespace JsonApiDotNetCoreExampleTests.Startups
 {
@@ -18,25 +19,24 @@ namespace JsonApiDotNetCoreExampleTests.Startups
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
-
-            loggerFactory.AddConsole();
-
-            services.AddSingleton<ILoggerFactory>(loggerFactory);
-
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(GetDbConnectionString());
-            }, ServiceLifetime.Transient);
-
-            services.AddJsonApi<AppDbContext>(opt =>
-            {
-                opt.Namespace = "api/v1";
-                opt.DefaultPageSize = 5;
-                opt.IncludeTotalRecordCount = true;
-                opt.AllowClientGeneratedIds = true;
-            });
+            loggerFactory.AddConsole(LogLevel.Warning);
+            var mvcBuilder = services.AddMvcCore();
+            services
+                .AddSingleton<ILoggerFactory>(loggerFactory)
+                .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
+                .AddJsonApi(options => {
+                    options.Namespace = "api/v1";
+                    options.DefaultPageSize = 5;
+                    options.IncludeTotalRecordCount = true;
+                    options.EnableResourceHooks = true;
+                    options.LoadDatabaseValues = true;
+                    options.AllowClientGeneratedIds = true;
+                },
+                mvcBuilder,
+                discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))));
 
             return services.BuildServiceProvider();
+
         }
     }
 }

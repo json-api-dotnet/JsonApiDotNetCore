@@ -235,9 +235,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var context = _fixture.GetService<AppDbContext>();
 
-            var owner = new JsonApiDotNetCoreExample.Models.Person();
-            var todoItem = new TodoItem();
-            todoItem.Owner = owner;
+            var owner = new Person();
+            var todoItem = new TodoItem
+            {
+                Owner = owner
+            };
             context.People.Add(owner);
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();

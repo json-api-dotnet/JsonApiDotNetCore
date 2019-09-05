@@ -269,7 +269,6 @@ namespace JsonApiDotNetCore.Services
         /// <returns></returns>
         protected virtual IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities, List<string> relationships)
         {
-            _resourceGraph.IncludedRelationships = relationships;
 
             foreach (var r in relationships)
             {

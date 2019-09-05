@@ -259,7 +259,12 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                if (convertedValue == null) _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
+                if (convertedValue == null)
+                {
+                    _jsonApiContext.RequestManager.GetUpdatedRelationships()[hasOneAttr] = null;
+                    //_jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
+                }
+
             }
         }
 
@@ -284,7 +289,8 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                _jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
+                _jsonApiContext.RequestManager.GetUpdatedRelationships()[hasOneAttr] = null;
+
             }
         }
 
@@ -316,7 +322,8 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                _jsonApiContext.HasManyRelationshipPointers.Add(attr, null);
+                _jsonApiContext.RequestManager.GetUpdatedRelationships()[attr] = null;
+
             }
 
             return entity;

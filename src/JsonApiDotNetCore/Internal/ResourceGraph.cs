@@ -56,7 +56,6 @@ namespace JsonApiDotNetCore.Internal
 
         /// <inheritdoc />
         public bool UsesDbContext { get; }
-        public List<string> IncludedRelationships { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc />
         public ContextEntity GetContextEntity(string entityName)

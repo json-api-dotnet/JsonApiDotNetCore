@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Data
 
             return entities;
         }
-
+        
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
-            return entities;
+            return entities.Filter(new AttrFilterQuery(_requestManager, _jsonApiContext.ResourceGraph, filterQuery));
         }
 
         /// <inheritdoc />
