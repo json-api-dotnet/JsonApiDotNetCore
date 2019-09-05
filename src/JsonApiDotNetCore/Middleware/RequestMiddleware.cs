@@ -23,10 +23,11 @@ namespace JsonApiDotNetCore.Middleware
         private readonly RequestDelegate _next;
         private IResourceGraph _resourceGraph;
         private HttpContext _httpContext;
-        private IJsonApiOptions _options;
         private IJsonApiContext _jsonApiContext;
         private IRequestManager _requestManager;
+        private IPageManager _pageManager;
         private IQueryParser _queryParser;
+        private IJsonApiOptions _options;
 
         public RequestMiddleware(RequestDelegate next)
         {
@@ -37,6 +38,7 @@ namespace JsonApiDotNetCore.Middleware
                                  IJsonApiContext jsonApiContext,
                                  IResourceGraph resourceGraph,
                                  IRequestManager requestManager,
+                                 IPageManager pageManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
         {
@@ -44,6 +46,7 @@ namespace JsonApiDotNetCore.Middleware
             _jsonApiContext = jsonApiContext;
             _resourceGraph = resourceGraph;
             _requestManager = requestManager;
+            _pageManager = pageManager;
             _queryParser = queryParser;
             _options = options;
 
@@ -74,7 +77,7 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
         /// <summary>
-        /// Parses the uri, and helps you out
+        /// Parses the uri
         /// </summary>
         /// <param name="context"></param>
         /// <param name="requestManager"></param>
@@ -83,7 +86,10 @@ namespace JsonApiDotNetCore.Middleware
             if (_httpContext.Request.Query.Count > 0)
             {
                 //requestManager.FullQuerySet = context.Request.Query;
-                _requestManager.QuerySet = _queryParser.Parse(_httpContext.Request.Query);
+                var querySet = _queryParser.Parse(_httpContext.Request.Query);
+                _requestManager.QuerySet = querySet; //this shouldn't be exposed
+                _pageManager.PageSize = querySet.PageQuery.PageSize ?? _pageManager.PageSize;
+                _pageManager.CurrentPage = querySet.PageQuery.PageOffset ?? _pageManager.CurrentPage;
                 _requestManager.IncludedRelationships = _requestManager.QuerySet.IncludedRelationships;
             }
         }

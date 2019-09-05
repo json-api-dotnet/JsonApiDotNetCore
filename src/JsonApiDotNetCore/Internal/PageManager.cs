@@ -15,20 +15,12 @@ namespace JsonApiDotNetCore.Internal
         {
             _linkBuilder = linkBuilder;
             _options = options;
-            if (requestManager.QuerySet != null)
-            {
-                PageSize = requestManager.QuerySet?.PageQuery.PageSize !=  null ? requestManager.QuerySet.PageQuery.PageSize : _options.DefaultPageSize;
-            }
-            else
-            {
-                PageSize = _options.DefaultPageSize;
-            }
-
             DefaultPageSize = _options.DefaultPageSize;
+            PageSize = _options.DefaultPageSize;
         }
         public int? TotalRecords { get; set; }
         public int PageSize { get; set; }
-        public int DefaultPageSize { get; set; }
+        public int DefaultPageSize { get; set; } // I think we shouldnt expose this
         public int CurrentPage { get; set; }
         public bool IsPaginated => PageSize > 0;
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
