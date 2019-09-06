@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Builders
         {
             var builder = _jsonApiContext.MetaBuilder;
             if (_jsonApiContext.Options.IncludeTotalRecordCount && _pageManager.TotalRecords != null)
-                builder.Add("total-records", _jsonApiContext.PageManager.TotalRecords);
+                builder.Add("total-records", _pageManager.TotalRecords);
 
             if (_requestMeta != null)
                 builder.Add(_requestMeta.GetMeta());
