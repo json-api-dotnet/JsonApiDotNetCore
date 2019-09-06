@@ -79,6 +79,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             options.Filters.Add(typeof(JsonApiExceptionFilter));
             options.Filters.Add(typeof(TypeMatchFilter));
+            options.Filters.Add(typeof(JsonApiActionFilter));
             options.SerializeAsJsonApi(config);
 
         }

@@ -35,12 +35,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // act
             var response = await client.SendAsync(request);
-            var body = JsonConvert.DeserializeObject<ErrorCollection>(await response.Content.ReadAsStringAsync());
+            var body = await response.Content.ReadAsStringAsync();
+            var errorCollection = JsonConvert.DeserializeObject<ErrorCollection>(body);
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Single(body.Errors);
-            Assert.Equal($"[{queryKey}, {queryValue}] is not a valid query.", body.Errors[0].Title);
+            Assert.Single(errorCollection.Errors);
+            Assert.Equal($"[{queryKey}, {queryValue}] is not a valid query.", errorCollection.Errors[0].Title);
         }
     }
 }
