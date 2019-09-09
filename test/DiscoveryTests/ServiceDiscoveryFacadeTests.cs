@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
@@ -65,11 +66,18 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // arrange, act
+            _services.AddSingleton<IJsonApiOptions>(new JsonApiOptions());
+
+            _services.AddScoped( (_) => new Mock<ILinkBuilder>().Object);
+            _services.AddScoped( (_) => new Mock<IRequestManager>().Object);
+            _services.AddScoped( (_) => new Mock<IPageManager>().Object);
+            _services.AddScoped( (_) => new Mock<IResourceGraph>().Object);
             _facade.AddCurrentAssembly();
 
             // assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelService>(services.GetService<IResourceService<TestModel>>());
+            var service = services.GetService<IResourceService<TestModel>>();
+            Assert.IsType<TestModelService>(service);
         }
 
         [Fact]
@@ -90,7 +98,14 @@ namespace DiscoveryTests
             private static IEntityRepository<TestModel> _repo = new Mock<IEntityRepository<TestModel>>().Object;
             private static IJsonApiContext _jsonApiContext = new Mock<IJsonApiContext>().Object;
 
-            public TestModelService(IEntityRepository<TestModel> repository, IJsonApiOptions options, IRequestManager requestManager, IPageManager pageManager, IResourceGraph resourceGraph, ILoggerFactory loggerFactory = null, IResourceHookExecutor hookExecutor = null) : base(repository, options, requestManager, pageManager, resourceGraph, loggerFactory, hookExecutor)
+            public TestModelService(
+                IEntityRepository<TestModel> repository,
+                IJsonApiOptions options,
+                IRequestManager requestManager,
+                IPageManager pageManager,
+                IResourceGraph resourceGraph,
+                ILoggerFactory loggerFactory = null,
+                IResourceHookExecutor hookExecutor = null) : base(repository, options, requestManager, pageManager, resourceGraph, loggerFactory, hookExecutor)
             {
             }
         }

@@ -155,14 +155,10 @@ namespace UnitTests.ResourceHooks
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             var (graph, rqMock, gpfMock, options) = CreateMocks();
 
-
-            var traversalHelper = new TraversalHelper(graph, rqMock.Object);
-
             SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, null);
 
-
             var meta = new HookExecutorHelper(gpfMock.Object, graph, options);
-            var hookExecutor = new ResourceHookExecutor(meta, traversalHelper, graph, rqMock.Object);
+            var hookExecutor = new ResourceHookExecutor(meta, graph, rqMock.Object);
 
             return (rqMock, hookExecutor, mainResource);
         }
@@ -189,7 +185,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, dbContext);
             SetupProcessorFactoryForResourceDefinition(gpfMock, nestedResource.Object, nestedDiscovery, dbContext);
             var meta = new HookExecutorHelper(gpfMock.Object, graph, options);
-            var hookExecutor = new ResourceHookExecutor(meta, traversalHelper, graph, rqMock.Object);
+            var hookExecutor = new ResourceHookExecutor(meta, graph, rqMock.Object);
 
             return (rqMock, hookExecutor, mainResource, nestedResource);
         }
@@ -212,7 +208,6 @@ namespace UnitTests.ResourceHooks
 
             // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
             var (graph, rqMock, gpfMock, options) = CreateMocks();
-            var traversalHelper = new TraversalHelper(graph, rqMock.Object);
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
@@ -221,7 +216,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondNestedResource.Object, secondNestedDiscovery, dbContext);
 
             var hookExecutorHelper = new HookExecutorHelper(gpfMock.Object, graph, options);
-            var hookExecutor = new ResourceHookExecutor(hookExecutorHelper, traversalHelper, graph, rqMock.Object);
+            var hookExecutor = new ResourceHookExecutor(hookExecutorHelper, graph, rqMock.Object);
 
             return (rqMock, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }

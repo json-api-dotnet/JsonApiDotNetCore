@@ -7,9 +7,6 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
-using System.ComponentModel.Design;
-using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -32,7 +29,6 @@ namespace JsonApiDotNetCoreExample
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddConsole(LogLevel.Warning);
-            var mvcBuilder = services.AddMvcCore();
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
                 .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
@@ -43,7 +39,6 @@ namespace JsonApiDotNetCoreExample
                     options.EnableResourceHooks = true;
                     options.LoadDatabaseValues = true;
                 }, 
-                mvcBuilder,
                 discovery => discovery.AddCurrentAssembly());
  
             return services.BuildServiceProvider();

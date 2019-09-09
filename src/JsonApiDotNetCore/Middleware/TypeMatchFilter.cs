@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,11 +10,11 @@ namespace JsonApiDotNetCore.Middleware
 {
     public class TypeMatchFilter : IActionFilter
     {
-        private readonly IJsonApiContext _jsonApiContext;
+        private readonly IResourceGraph _resourceGraph;
 
-        public TypeMatchFilter(IJsonApiContext jsonApiContext)
+        public TypeMatchFilter(IResourceGraph resourceGraph)
         {
-            _jsonApiContext = jsonApiContext;
+            _resourceGraph = resourceGraph;
         }
 
         /// <summary>
@@ -29,10 +30,10 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (deserializedType != null && targetType != null && deserializedType != targetType)
                 {
-                    var expectedJsonApiResource = _jsonApiContext.ResourceGraph.GetContextEntity(targetType);
+                    var expectedJsonApiResource = _resourceGraph.GetContextEntity(targetType);
 
                     throw new JsonApiException(409,
-                        $"Cannot '{context.HttpContext.Request.Method}' type '{_jsonApiContext.RequestEntity.EntityName}' "
+                        $"Cannot '{context.HttpContext.Request.Method}' type '{deserializedType.Name}' "
                         + $"to '{expectedJsonApiResource?.EntityName}' endpoint.",
                         detail: "Check that the request payload type matches the type expected by this endpoint.");
                 }

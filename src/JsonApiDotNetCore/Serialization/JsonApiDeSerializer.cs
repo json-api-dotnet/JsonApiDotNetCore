@@ -6,6 +6,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services;
@@ -17,10 +18,12 @@ namespace JsonApiDotNetCore.Serialization
     public class JsonApiDeSerializer : IJsonApiDeSerializer
     {
         private readonly IJsonApiContext _jsonApiContext;
+        private readonly IRequestManager _requestManager;
 
-        public JsonApiDeSerializer(IJsonApiContext jsonApiContext)
+        public JsonApiDeSerializer(IJsonApiContext jsonApiContext, IRequestManager requestManager)
         {
             _jsonApiContext = jsonApiContext;
+            _requestManager = requestManager;
         }
 
         public object Deserialize(string requestBody)
@@ -112,7 +115,7 @@ namespace JsonApiDotNetCore.Serialization
                 throw new JsonApiException(422, "Failed to deserialize document as json:api.");
 
             var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(data.Type?.ToString());
-            _jsonApiContext.RequestEntity = contextEntity ?? throw new JsonApiException(400,
+            if(contextEntity == null) throw new JsonApiException(400,
                     message: $"This API does not contain a json:api resource named '{data.Type}'.",
                     detail: "This resource is not registered on the ResourceGraph. "
                             + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
@@ -150,7 +153,7 @@ namespace JsonApiDotNetCore.Serialization
                     /// store the updated relationship values in this property. For now 
                     /// just assigning null as value, will remove this property later as a whole.
                     /// see #512
-                    _jsonApiContext.RequestManager.GetUpdatedAttributes()[attr] = null;
+                    _requestManager.GetUpdatedAttributes()[attr] = null;
                 }
             }
 
@@ -261,7 +264,7 @@ namespace JsonApiDotNetCore.Serialization
                 /// see #512
                 if (convertedValue == null)
                 {
-                    _jsonApiContext.RequestManager.GetUpdatedRelationships()[hasOneAttr] = null;
+                    _requestManager.GetUpdatedRelationships()[hasOneAttr] = null;
                     //_jsonApiContext.HasOneRelationshipPointers.Add(hasOneAttr, null);
                 }
 
@@ -289,7 +292,7 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                _jsonApiContext.RequestManager.GetUpdatedRelationships()[hasOneAttr] = null;
+                _requestManager.GetUpdatedRelationships()[hasOneAttr] = null;
 
             }
         }
@@ -322,7 +325,7 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                _jsonApiContext.RequestManager.GetUpdatedRelationships()[attr] = null;
+                _requestManager.GetUpdatedRelationships()[attr] = null;
 
             }
 

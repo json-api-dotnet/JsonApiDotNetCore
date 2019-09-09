@@ -18,22 +18,21 @@ namespace JsonApiDotNetCore.Hooks
     internal  class ResourceHookExecutor : IResourceHookExecutor
     {
         public static readonly IdentifiableComparer Comparer = new IdentifiableComparer();
-        internal readonly ITraversalHelper _traversalHelper;
         private readonly IRequestManager _requestManager;
         internal readonly IHookExecutorHelper _executorHelper;
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
+        private readonly TraversalHelper _traversalHelper;
 
         public ResourceHookExecutor(
             IHookExecutorHelper helper,
-            ITraversalHelper traversalHelper,
             IResourceGraph resourceGraph,
             IRequestManager requestManager)
         {
             _requestManager = requestManager;
             _executorHelper = helper;
             _graph = resourceGraph;
-            _traversalHelper = traversalHelper;
+            _traversalHelper = new TraversalHelper(resourceGraph, requestManager);
         }
 
         /// <inheritdoc/>

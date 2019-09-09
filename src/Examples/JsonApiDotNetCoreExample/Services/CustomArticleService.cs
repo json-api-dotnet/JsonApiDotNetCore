@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
@@ -18,8 +19,9 @@ namespace JsonApiDotNetCoreExample.Services
             IRequestManager queryManager,
             IPageManager pageManager,
             IResourceGraph resourceGraph,
+            IResourceHookExecutor resourceHookExecutor = null,
             ILoggerFactory loggerFactory = null
-        ) : base(repository: repository, jsonApiOptions, queryManager, pageManager, resourceGraph:resourceGraph, loggerFactory)
+        ) : base(repository: repository, jsonApiOptions, queryManager, pageManager, resourceGraph:resourceGraph, loggerFactory, resourceHookExecutor)
         { }
 
         public override async Task<Article> GetAsync(int id)

@@ -137,9 +137,19 @@ namespace JsonApiDotNetCore.Internal
 
         public ContextEntity GetEntityFromControllerName(string controllerName)
         {
-            var resource = ControllerResourceMap.FirstOrDefault(cm => cm.ControllerName == controllerName)?.Resource;
-            if (resource == null) return null;
-            return Entities.First(e => e.EntityType == resource);
+
+            if (ControllerResourceMap.Any()) 
+            {
+                // Autodiscovery was used, so there is a well defined mapping between exposed resources and their associated controllers
+                var resourceType = ControllerResourceMap.FirstOrDefault(cm => cm.ControllerName == controllerName)?.Resource;
+                if (resourceType == null) return null;
+                return Entities.First(e => e.EntityType == resourceType);
+
+            } else
+            {
+                // No autodiscovery: try to guess contextentity from controller name.
+                return Entities.FirstOrDefault(e => e.EntityName.ToLower().Replace("-", "") == controllerName.ToLower());
+            }
         }
     }
 }

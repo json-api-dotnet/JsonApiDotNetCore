@@ -403,9 +403,5 @@ namespace JsonApiDotNetCore.Services
             IResourceHookExecutor hookExecutor = null) :
             base(repository: repository, apiOptions: options, requestManager, resourceGraph, pageManager, loggerFactory, hookExecutor)
         { }
-
-        //[Obsolete("Dont use this constructor, use the one without JsonApiContext instead")]
-        //public EntityResourceService(
-        //    IJsonApiContext context, IEntityRepository<TResource> repository) : this(repository, context.Options, context.RequestManager, context.PageManager, context.ResourceGraph) { }
     }
 }

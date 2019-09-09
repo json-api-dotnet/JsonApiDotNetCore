@@ -206,10 +206,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var route = $"/api/v1/articles/{article.Id}";
 
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
-
-
             // Act
             var response = await _fixture.Client.GetAsync(route);
 

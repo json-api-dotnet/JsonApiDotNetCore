@@ -223,7 +223,7 @@ namespace UnitTests.Services
             var querySet = queryParser.Parse(_queryCollectionMock.Object);
 
             // assert
-            Assert.Equal(0, querySet.PageQuery.PageSize);
+            Assert.Equal(null, querySet.PageQuery.PageSize);
         }
 
         [Fact]

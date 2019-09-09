@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Exporters;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
@@ -35,6 +36,9 @@ namespace Benchmarks.Serialization
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
             var resourceGraph = resourceGraphBuilder.Build();
+            var  requestManagerMock = new Mock<IRequestManager>();
+
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
 
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
@@ -46,7 +50,7 @@ namespace Benchmarks.Serialization
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
 
-            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object, requestManagerMock.Object);
         }
 
         [Benchmark]

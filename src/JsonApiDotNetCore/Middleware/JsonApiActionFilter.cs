@@ -46,7 +46,6 @@ namespace JsonApiDotNetCore.Middleware
                 _requestManager.SetContextEntity(contextEntityCurrent);
                 _requestManager.BasePath = GetBasePath(contextEntityCurrent.EntityName);
                 HandleUriParameters();
-                _requestManager.IsRelationshipPath = PathIsRelationship();
             }
 
         }
@@ -67,11 +66,7 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        protected bool PathIsRelationship()
-        {
-            var actionName = (string)_httpContext.GetRouteData().Values["action"];
-            return actionName.ToLower().Contains("relationships");
-        }
+
         private string GetBasePath(string entityName)
         {
             var r = _httpContext.Request;

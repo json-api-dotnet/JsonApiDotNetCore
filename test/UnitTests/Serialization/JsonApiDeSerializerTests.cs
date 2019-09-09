@@ -47,7 +47,7 @@ namespace UnitTests.Serialization
         public void Can_Deserialize_Complex_Types()
         {
             // arrange
-            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var content = new Document
             {
@@ -74,7 +74,7 @@ namespace UnitTests.Serialization
         public void Can_Deserialize_Complex_List_Types()
         {
             // arrange
-            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var content = new Document
             {
@@ -106,7 +106,7 @@ namespace UnitTests.Serialization
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver(); // <--
             _jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var content = new Document
             {
@@ -141,7 +141,8 @@ namespace UnitTests.Serialization
             jsonApiOptions.SerializerSettings.ContractResolver = new DasherizedResolver();
             _jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
+
 
             var content = new Document
             {
@@ -176,7 +177,7 @@ namespace UnitTests.Serialization
         public void Can_Deserialize_Independent_Side_Of_One_To_One_Relationship()
         {
             // arrange
-            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var property = Guid.NewGuid().ToString();
             var content = new Document
@@ -219,7 +220,8 @@ namespace UnitTests.Serialization
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
+
 
             var property = Guid.NewGuid().ToString();
             var content = new Document
@@ -266,7 +268,7 @@ namespace UnitTests.Serialization
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var property = Guid.NewGuid().ToString();
             var content = new Document
@@ -320,7 +322,7 @@ namespace UnitTests.Serialization
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var property = Guid.NewGuid().ToString();
 
@@ -412,7 +414,7 @@ namespace UnitTests.Serialization
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var contentString =
             @"{
@@ -468,7 +470,7 @@ namespace UnitTests.Serialization
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var expectedName = "John Doe";
             var contentString =
@@ -536,7 +538,7 @@ namespace UnitTests.Serialization
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             var expectedName = "John Doe";
             var contentString =
@@ -729,7 +731,7 @@ namespace UnitTests.Serialization
             var jsonApiOptions = new JsonApiOptions();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var deserializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            var deserializer = new JsonApiDeSerializer(_jsonApiContextMock.Object, _requestManagerMock.Object);
 
             return deserializer;
         }

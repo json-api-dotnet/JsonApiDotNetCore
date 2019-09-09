@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
@@ -16,13 +17,13 @@ namespace JsonApiDotNetCore.Formatters
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeSerializer _deserializer;
-        private readonly IJsonApiContext _jsonApiContext;
+        private readonly IRequestManager _requestManager;
         private readonly ILogger<JsonApiReader> _logger;
 
-        public JsonApiReader(IJsonApiDeSerializer deSerializer, IJsonApiContext jsonApiContext, ILoggerFactory loggerFactory)
+        public JsonApiReader(IJsonApiDeSerializer deSerializer, IRequestManager requestManager, ILoggerFactory loggerFactory)
         {
             _deserializer = deSerializer;
-            _jsonApiContext = jsonApiContext;
+            _requestManager = requestManager;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
 
@@ -40,7 +41,7 @@ namespace JsonApiDotNetCore.Formatters
                 var body = GetRequestBody(context.HttpContext.Request.Body);
 
                 object model = null;
-                if (_jsonApiContext.IsRelationshipPath)
+                if (_requestManager.IsRelationshipPath)
                 {
                     model = _deserializer.DeserializeRelationship(body);
                 }

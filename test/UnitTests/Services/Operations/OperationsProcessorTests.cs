@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
@@ -93,7 +95,9 @@ namespace UnitTests.Services
                 .Returns(opProcessorMock.Object);
 
             _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
-            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object);
+            var requestManagerMock = new Mock<IRequestManager>();
+            var resourceGraphMock = new Mock<IResourceGraph>();
+            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object, requestManagerMock.Object, resourceGraphMock.Object);
 
             // act
             var results = await operationsProcessor.ProcessAsync(operations);
@@ -176,7 +180,9 @@ namespace UnitTests.Services
                 .Returns(updateOpProcessorMock.Object);
 
             _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
-            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object);
+            var requestManagerMock = new Mock<IRequestManager>();
+            var resourceGraphMock = new Mock<IResourceGraph>();
+            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object, requestManagerMock.Object, resourceGraphMock.Object);
 
             // act
             var results = await operationsProcessor.ProcessAsync(operations);

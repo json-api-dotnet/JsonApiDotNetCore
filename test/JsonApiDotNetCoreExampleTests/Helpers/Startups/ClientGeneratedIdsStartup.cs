@@ -32,8 +32,8 @@ namespace JsonApiDotNetCoreExampleTests.Startups
                     options.LoadDatabaseValues = true;
                     options.AllowClientGeneratedIds = true;
                 },
-                mvcBuilder,
-                discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))));
+                discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),
+                mvcBuilder);
 
             return services.BuildServiceProvider();
 

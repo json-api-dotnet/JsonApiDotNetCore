@@ -58,12 +58,18 @@ namespace JsonApiDotNetCore.Middleware
                 // since the JsonApiContext is using field initializers
                 // Need to work on finding a better solution.
                 jsonApiContext.BeginOperation();
+                _requestManager.IsRelationshipPath = PathIsRelationship();
 
                 await _next(httpContext);
             }
         }
 
-        private bool IsValid()
+        protected bool PathIsRelationship()
+        {
+            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            return actionName.ToLower().Contains("relationships");
+        }
+            private bool IsValid()
         {
             return IsValidContentTypeHeader(_httpContext) && IsValidAcceptHeader(_httpContext);
         }
