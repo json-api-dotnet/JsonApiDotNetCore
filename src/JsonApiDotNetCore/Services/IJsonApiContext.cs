@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Request;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -23,70 +22,15 @@ namespace JsonApiDotNetCore.Services
     {
         List<string> IncludedRelationships { get; set; }
         QuerySet QuerySet { get; set; }
-        PageManager PageManager { get; set; }
+        PageQueryService PageManager { get; set; }
     }
 
     public interface IJsonApiRequest : IJsonApiApplication,  IQueryRequest
     {
         /// <summary>
-        /// Stores information to set relationships for the request resource. 
-        /// These relationships must already exist and should not be re-created.
-        /// By default, it is the responsibility of the repository to use the 
-        /// relationship pointers to persist the relationship.
-        /// 
-        /// The expected use case is POST-ing or PATCH-ing an entity with HasMany 
-        /// relationships:
-        /// <code>
-        /// {
-        ///    "data": {
-        ///      "type": "photos",
-        ///      "attributes": {
-        ///        "title": "Ember Hamster",
-        ///        "src": "http://example.com/images/productivity.png"
-        ///      },
-        ///      "relationships": {
-        ///        "tags": {
-        ///          "data": [
-        ///            { "type": "tags", "id": "2" },
-        ///            { "type": "tags", "id": "3" }
-        ///          ]
-        ///        }
-        ///      }
-        ///    }
-        ///  }
-        /// </code>
-        /// </summary>
-        HasManyRelationshipPointers HasManyRelationshipPointers { get; }
-
-        /// <summary>
-        /// Stores information to set relationships for the request resource. 
-        /// These relationships must already exist and should not be re-created.
-        /// 
-        /// The expected use case is POST-ing or PATCH-ing 
-        /// an entity with HasOne relationships:
-        /// <code>
-        /// {
-        ///    "data": {
-        ///      "type": "photos",
-        ///      "attributes": {
-        ///        "title": "Ember Hamster",
-        ///        "src": "http://example.com/images/productivity.png"
-        ///      },
-        ///      "relationships": {
-        ///        "photographer": {
-        ///          "data": { "type": "people", "id": "2" }
-        ///        }
-        ///      }
-        ///    }
-        ///  }
-        /// </code>
-        /// </summary>
-        HasOneRelationshipPointers HasOneRelationshipPointers { get; }
-
-        /// <summary>
         /// If the request is a bulk json:api v1.1 operations request.
         /// This is determined by the `
-        /// <see cref="JsonApiDotNetCore.Serialization.JsonApiDeSerializer" />` class.
+        /// <see cref="JsonApiDotNetCore.Serialization.JsonApiDeserializer" />` class.
         /// 
         /// See [json-api/1254](https://github.com/json-api/json-api/pull/1254) for details.
         /// </summary>
@@ -123,16 +67,9 @@ namespace JsonApiDotNetCore.Services
         [Obsolete("Use standalone IRequestManager")]
         IRequestManager RequestManager { get; set; }
         [Obsolete("Use standalone IPageManager")]
-        IPageManager PageManager { get; set; }
+        IPageQueryService PageManager { get; set; }
         IJsonApiContext ApplyContext<T>(object controller);
-        IMetaBuilder MetaBuilder { get; set; }
+        //IMetaBuilder MetaBuilder { get; set; }
         IGenericProcessorFactory GenericProcessorFactory { get; set; }
-
-        /// <summary>
-        /// **_Experimental_**: do not use. It is likely to change in the future.
-        /// 
-        /// Resets operational state information.
-        /// </summary>
-        void BeginOperation();
     }
 }

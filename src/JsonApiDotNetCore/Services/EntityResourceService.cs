@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
         where TEntity : class, IIdentifiable<TId>
     {
-        private readonly IPageManager _pageManager;
+        private readonly IPageQueryService _pageManager;
         private readonly IRequestManager _requestManager;
         private readonly IJsonApiOptions _options;
         private readonly IResourceGraph _resourceGraph;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Services
                 IEntityRepository<TEntity, TId> repository,
                 IJsonApiOptions options,
                 IRequestManager requestManager,
-                IPageManager pageManager,
+                IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
                 IResourceMapper mapper = null,
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCore.Services
             IJsonApiOptions apiOptions,
             IRequestManager requestManager,
             IResourceGraph resourceGraph,
-            IPageManager pageManager,
+            IPageQueryService pageManager,
             ILoggerFactory loggerFactory = null,
             IResourceHookExecutor hookExecutor = null)
             : base(repository: repository,
@@ -397,7 +397,7 @@ namespace JsonApiDotNetCore.Services
             IEntityRepository<TResource> repository,
             IJsonApiOptions options,
             IRequestManager requestManager,
-            IPageManager pageManager,
+            IPageQueryService pageManager,
             IResourceGraph resourceGraph,
             ILoggerFactory loggerFactory = null,
             IResourceHookExecutor hookExecutor = null) :

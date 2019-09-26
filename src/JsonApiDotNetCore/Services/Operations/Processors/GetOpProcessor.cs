@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -37,11 +38,11 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetAllService<T, int> getAll,
             IGetByIdService<T, int> getById,
             IGetRelationshipService<T, int> getRelationship,
-            IJsonApiDeSerializer deSerializer,
+            IOperationsDeserializer deserializer,
             IDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph,
             IJsonApiContext jsonApiContext
-        ) : base(getAll, getById, getRelationship, deSerializer, documentBuilder, resourceGraph, jsonApiContext)
+        ) : base(getAll, getById, getRelationship, deserializer, documentBuilder, resourceGraph, jsonApiContext)
         { }
     }
 
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IGetAllService<T, TId> _getAll;
         private readonly IGetByIdService<T, TId> _getById;
         private readonly IGetRelationshipService<T, TId> _getRelationship;
-        private readonly IJsonApiDeSerializer _deSerializer;
+        private readonly IOperationsDeserializer _deserializer;
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiContext _jsonApiContext;
@@ -62,7 +63,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetAllService<T, TId> getAll,
             IGetByIdService<T, TId> getById,
             IGetRelationshipService<T, TId> getRelationship,
-            IJsonApiDeSerializer deSerializer,
+            IOperationsDeserializer deserializer,
             IDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph,
             IJsonApiContext jsonApiContext)
@@ -70,7 +71,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             _getAll = getAll;
             _getById = getById;
             _getRelationship = getRelationship;
-            _deSerializer = deSerializer;
+            _deserializer = deserializer;
             _documentBuilder = documentBuilder;
             _resourceGraph = resourceGraph;
             _jsonApiContext = jsonApiContext.ApplyContext<T>(this);

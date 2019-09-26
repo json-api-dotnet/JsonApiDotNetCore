@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Request;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -24,10 +23,10 @@ namespace JsonApiDotNetCore.Services
             IResourceGraph resourceGraph,
             IHttpContextAccessor httpContextAccessor,
             IJsonApiOptions options,
-            IMetaBuilder metaBuilder,
+
             IGenericProcessorFactory genericProcessorFactory,
             IQueryParser queryParser,
-            IPageManager pageManager,
+            IPageQueryService pageManager,
             IRequestManager requestManager,
             IControllerContext controllerContext)
         {
@@ -36,7 +35,6 @@ namespace JsonApiDotNetCore.Services
             ResourceGraph = resourceGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
-            MetaBuilder = metaBuilder;
             GenericProcessorFactory = genericProcessorFactory;
             _queryParser = queryParser;
             _controllerContext = controllerContext;
@@ -56,28 +54,16 @@ namespace JsonApiDotNetCore.Services
         public bool IsRelationshipPath { get; private set; }
         [Obsolete("Use IRequestManager")]
         public List<string> IncludedRelationships { get; set; }
-        public IPageManager PageManager { get; set; }
-        public IMetaBuilder MetaBuilder { get; set; }
+        public IPageQueryService PageManager { get; set; }
+        //public IMetaBuilder MetaBuilder { get; set; }
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
         public Type ControllerType { get; set; }
         public Dictionary<string, object> DocumentMeta { get; set; }
         public bool IsBulkOperationRequest { get; set; }
 
-        public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; } = new Dictionary<AttrAttribute, object>();
-        public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get => GetRelationshipsToUpdate(); }
-
-        private Dictionary<RelationshipAttribute, object> GetRelationshipsToUpdate()
-        {
-            var hasOneEntries = HasOneRelationshipPointers.Get().ToDictionary(kvp => (RelationshipAttribute)kvp.Key, kvp => (object)kvp.Value);
-            var hasManyEntries = HasManyRelationshipPointers.Get().ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
-            return hasOneEntries.Union(hasManyEntries).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
-
-        public HasManyRelationshipPointers HasManyRelationshipPointers { get; private set; } = new HasManyRelationshipPointers();
-        public HasOneRelationshipPointers HasOneRelationshipPointers { get; private set; } = new HasOneRelationshipPointers();
         [Obsolete("Please use the standalone Requestmanager")]
         public IRequestManager RequestManager { get; set; }
-        PageManager IQueryRequest.PageManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        PageQueryService IQueryRequest.PageManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         [Obsolete("This is no longer necessary")]
         public IJsonApiContext ApplyContext<T>(object controller)
@@ -135,15 +121,6 @@ namespace JsonApiDotNetCore.Services
             }
 
             return false;
-        }
-
-        public void BeginOperation()
-        {
-            RequestManager.IncludedRelationships = new List<string>();
-            IncludedRelationships = new List<string>();
-            AttributesToUpdate = new Dictionary<AttrAttribute, object>();
-            HasManyRelationshipPointers = new HasManyRelationshipPointers();
-            HasOneRelationshipPointers = new HasOneRelationshipPointers();
         }
     }
 }

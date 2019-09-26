@@ -5,6 +5,9 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
+using JsonApiDotNetCore.Serialization.Contracts;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -21,10 +24,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         public UpdateOpProcessor(
             IUpdateService<T, int> service,
-            IJsonApiDeSerializer deSerializer,
+            IOperationsDeserializer deserializer,
             IDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
-        ) : base(service, deSerializer, documentBuilder, resourceGraph)
+        ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -32,18 +35,18 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
          where T : class, IIdentifiable<TId>
     {
         private readonly IUpdateService<T, TId> _service;
-        private readonly IJsonApiDeSerializer _deSerializer;
+        private readonly IOperationsDeserializer _deserializer;
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public UpdateOpProcessor(
             IUpdateService<T, TId> service,
-            IJsonApiDeSerializer deSerializer,
+            IOperationsDeserializer deserializer,
             IDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;
-            _deSerializer = deSerializer;
+            _deserializer = deserializer;
             _documentBuilder = documentBuilder;
             _resourceGraph = resourceGraph;
         }
@@ -53,7 +56,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             if (string.IsNullOrWhiteSpace(operation?.DataObject?.Id?.ToString()))
                 throw new JsonApiException(400, "The data.id parameter is required for replace operations");
 
-            var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
+            //var model = (T)_deserializer.DocumentToObject(operation.DataObject);
+            T model = null; // TODO
 
             var result = await _service.UpdateAsync(model.Id, model);
             if (result == null)

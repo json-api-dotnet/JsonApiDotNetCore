@@ -4,6 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
 {
+
     public interface IQueryParser
     {
         QuerySet Parse(IQueryCollection query);
@@ -18,52 +20,62 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
+        private readonly IInternalIncludedQueryService _includedQuery;
+        private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IRequestManager _requestManager;
         private readonly IJsonApiOptions _options;
+        private readonly ContextEntity _requestResource;
+        private readonly IContextEntityProvider _provider;
 
-        public QueryParser(
+        public QueryParser(IInternalIncludedQueryService includedRelationships,
+            IInternalFieldsQueryService fieldQuery,
             IRequestManager requestManager,
+            IContextEntityProvider provider,
             IJsonApiOptions options)
         {
+            _includedQuery = includedRelationships;
+            _fieldQuery = fieldQuery;
             _requestManager = requestManager;
+            _provider = provider;
+            _requestResource = requestManager.GetRequestResource();
             _options = options;
         }
 
         public virtual QuerySet Parse(IQueryCollection query)
         {
-            var querySet = new QuerySet();
+            var querySet = new QuerySet(); 
             var disabledQueries = _requestManager.DisabledQueryParams;
             foreach (var pair in query)
             {
-                if (pair.Key.StartsWith(QueryConstants.FILTER))
+                if (pair.Key.StartsWith(QueryConstants.FILTER, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Filters) == false)
                         querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
-                if (pair.Key.StartsWith(QueryConstants.SORT))
+                if (pair.Key.StartsWith(QueryConstants.SORT, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Sort) == false)
                         querySet.SortParameters = ParseSortParameters(pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(QueryConstants.INCLUDE))
+                if (pair.Key.StartsWith(QueryConstants.INCLUDE, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
                         querySet.IncludedRelationships = ParseIncludedRelationships(pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(QueryConstants.PAGE))
+                if (pair.Key.StartsWith(QueryConstants.PAGE, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Page) == false)
                         querySet.PageQuery = ParsePageQuery(querySet.PageQuery, pair.Key, pair.Value);
                     continue;
                 }
 
-                if (pair.Key.StartsWith(QueryConstants.FIELDS))
+                if (pair.Key.StartsWith(QueryConstants.FIELDS, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Fields) == false)
                         querySet.Fields = ParseFieldsQuery(pair.Key, pair.Value);
@@ -155,7 +167,7 @@ namespace JsonApiDotNetCore.Services
 
             const char DESCENDING_SORT_OPERATOR = '-';
             var sortSegments = value.Split(QueryConstants.COMMA);
-            if(sortSegments.Where(s => s == string.Empty).Count() >0)
+            if (sortSegments.Where(s => s == string.Empty).Count() > 0)
             {
                 throw new JsonApiException(400, "The sort URI segment contained a null value.");
             }
@@ -178,9 +190,30 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual List<string> ParseIncludedRelationships(string value)
         {
-            return value
-                .Split(QueryConstants.COMMA)
-                .ToList();
+            var inclusions = value.Split(QueryConstants.COMMA).ToList();
+            foreach (var chain in inclusions)
+            {
+                var parsedChain = new List<RelationshipAttribute>();
+                var resourceContext = _requestManager.GetRequestResource();
+                var splittedPath = chain.Split(QueryConstants.DOT);
+                foreach (var requestedRelationship in splittedPath)
+                {
+                    var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
+                    if (relationship == null)
+                        throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.EntityName}",
+                            $"{resourceContext.EntityName} does not have a relationship named {requestedRelationship}");
+
+                    if (relationship.CanInclude == false)
+                        throw new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.EntityName} is not allowed");
+
+                    parsedChain.Add(relationship);
+                    resourceContext = _provider.GetContextEntity(relationship.PrincipalType);
+                }
+                _includedQuery.Register(parsedChain);
+            }
+
+
+            return inclusions;
         }
 
         protected virtual List<string> ParseFieldsQuery(string key, string value)
@@ -189,8 +222,8 @@ namespace JsonApiDotNetCore.Services
             var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var includedFields = new List<string> { nameof(Identifiable.Id) };
 
-            var relationship = _requestManager.GetContextEntity().Relationships.SingleOrDefault(a => a.Is(typeName));
-            if (relationship == default && string.Equals(typeName, _requestManager.GetContextEntity().EntityName, StringComparison.OrdinalIgnoreCase) == false)
+            var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(typeName));
+            if (relationship == default && string.Equals(typeName, _requestResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 return includedFields;
 
             var fields = value.Split(QueryConstants.COMMA);
@@ -200,17 +233,18 @@ namespace JsonApiDotNetCore.Services
                 {
                     var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.DependentType);
                     var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
-                    if(attr == null)
+                    if (attr == null)
                         throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
 
                     // e.g. "Owner.Name"
                     includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
+
                 }
                 else
                 {
-                    var attr = _requestManager.GetContextEntity().Attributes.SingleOrDefault(a => a.Is(field));
+                    var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
                     if (attr == null)
-                        throw new JsonApiException(400, $"'{_requestManager.GetContextEntity().EntityName}' does not contain '{field}'.");
+                        throw new JsonApiException(400, $"'{_requestResource.EntityName}' does not contain '{field}'.");
 
                     // e.g. "Name"
                     includedFields.Add(attr.InternalAttributeName);
@@ -224,13 +258,13 @@ namespace JsonApiDotNetCore.Services
         {
             try
             {
-                return _requestManager.GetContextEntity()
+                return _requestResource
                     .Attributes
                     .Single(attr => attr.Is(propertyName));
             }
             catch (InvalidOperationException e)
             {
-                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_requestManager.GetContextEntity().EntityName}'", e);
+                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_requestResource.EntityName}'", e);
             }
         }
 
