@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -62,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

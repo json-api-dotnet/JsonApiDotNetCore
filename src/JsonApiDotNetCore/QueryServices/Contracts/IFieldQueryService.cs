@@ -7,4 +7,9 @@ namespace JsonApiDotNetCore.Services
     {
         List<AttrAttribute> Get(RelationshipAttribute relationship = null);
     }
+
+    public interface IInternalFieldsQueryService
+    {
+        void Register(AttrAttribute selected, RelationshipAttribute relationship = null);
+    }
 }

@@ -1,11 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
@@ -22,12 +18,8 @@ namespace JsonApiDotNetCore.Middleware
     public class RequestMiddleware
     {
         private readonly RequestDelegate _next;
-        private IResourceGraph _resourceGraph;
         private HttpContext _httpContext;
         private IRequestManager _requestManager;
-        private IPageManager _pageManager;
-        private IQueryParser _queryParser;
-        private IJsonApiOptions _options;
 
         public RequestMiddleware(RequestDelegate next)
         {
@@ -35,33 +27,23 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task Invoke(HttpContext httpContext,
-                                 IJsonApiContext jsonApiContext,
-                                 IResourceGraph resourceGraph,
-                                 IRequestManager requestManager,
-                                 IPageManager pageManager,
-                                 IQueryParser queryParser,
-                                 IJsonApiOptions options
-            )
+                                 IRequestManager requestManager)
         {
             _httpContext = httpContext;
-            _resourceGraph = resourceGraph;
             _requestManager = requestManager;
-            _pageManager = pageManager;
-            _queryParser = queryParser;
-            _options = options;
 
             if (IsValid())
             {
-
-                // HACK: this currently results in allocation of
-                // objects that may or may not be used and even double allocation
-                // since the JsonApiContext is using field initializers
-                // Need to work on finding a better solution.
-                jsonApiContext.BeginOperation();
                 _requestManager.IsRelationshipPath = PathIsRelationship();
-
+                _requestManager.IsBulkRequest = PathIsBulk();
                 await _next(httpContext);
             }
+        }
+
+        private bool PathIsBulk()
+        {
+            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            return actionName.ToLower().Contains("bulk");
         }
 
         protected bool PathIsRelationship()

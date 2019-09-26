@@ -11,22 +11,6 @@ using System.Text;
 
 namespace JsonApiDotNetCore.Managers
 {
-    public class UpdatesContainer
-    {
-        /// <summary>
-        /// The attributes that were included in a PATCH request. 
-        /// Only the attributes in this dictionary should be updated.
-        /// </summary>
-        public Dictionary<AttrAttribute, object> Attributes { get; set; } = new Dictionary<AttrAttribute, object>();
-
-        /// <summary>
-        /// Any relationships that were included in a PATCH request. 
-        /// Only the relationships in this dictionary should be updated.
-        /// </summary>
-        public Dictionary<RelationshipAttribute, object> Relationships { get; } = new Dictionary<RelationshipAttribute, object>();
-
-    }
-
     class RequestManager : IRequestManager
     {
         private ContextEntity _contextEntity;
@@ -35,26 +19,16 @@ namespace JsonApiDotNetCore.Managers
         public string BasePath { get; set; }
         public List<string> IncludedRelationships { get; set; }
         public QuerySet QuerySet { get; set; }
-        public PageManager PageManager { get; set; }
+        public PageQueryService PageManager { get; set; }
         public IQueryCollection FullQuerySet { get; set; }
         public QueryParams DisabledQueryParams { get; set; }
         public bool IsRelationshipPath { get; set; }
         public Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
-        /// <summary>
-        /// Contains all the information you want about any update occuring
-        /// </summary>
-        private UpdatesContainer _updatesContainer { get; set; } = new UpdatesContainer();
+
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
 
+        public bool IsBulkRequest { get; set; } = false;
 
-        public Dictionary<AttrAttribute, object> GetUpdatedAttributes()
-        {
-            return _updatesContainer.Attributes;
-        }
-        public Dictionary<RelationshipAttribute, object> GetUpdatedRelationships()
-        {
-            return _updatesContainer.Relationships;
-        }
         public List<string> GetFields()
         {
             return QuerySet?.Fields;
@@ -64,14 +38,19 @@ namespace JsonApiDotNetCore.Managers
         {
             return QuerySet?.IncludedRelationships;
         }
-        public ContextEntity GetContextEntity()
+
+        /// <summary>s
+        /// The main resource of the request.
+        /// </summary>
+        /// <returns></returns>
+        public ContextEntity GetRequestResource()
         {
             return _contextEntity;
         }
 
-        public void SetContextEntity(ContextEntity contextEntityCurrent)
+        public void SetRequestResource(ContextEntity requestResource)
         {
-            _contextEntity = contextEntityCurrent;
+            _contextEntity = requestResource;
         }
     }
 }

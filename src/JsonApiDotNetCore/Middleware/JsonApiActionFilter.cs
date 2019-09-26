@@ -13,16 +13,15 @@ namespace JsonApiDotNetCore.Middleware
 {
     public class JsonApiActionFilter : IActionFilter
     {
-        private readonly IJsonApiContext _jsonApiContext;
         private readonly IResourceGraph _resourceGraph;
         private readonly IRequestManager _requestManager;
-        private readonly IPageManager _pageManager;
+        private readonly IPageQueryService _pageManager;
         private readonly IQueryParser _queryParser;
         private readonly IJsonApiOptions _options;
         private HttpContext _httpContext;
         public JsonApiActionFilter(IResourceGraph resourceGraph,
                                  IRequestManager requestManager,
-                                 IPageManager pageManager,
+                                 IPageQueryService pageManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
         {
@@ -43,7 +42,7 @@ namespace JsonApiDotNetCore.Middleware
             // the contextEntity is null eg when we're using a non-JsonApiDotNetCore route. 
             if (contextEntityCurrent != null)
             {
-                _requestManager.SetContextEntity(contextEntityCurrent);
+                _requestManager.SetRequestResource(contextEntityCurrent);
                 _requestManager.BasePath = GetBasePath(contextEntityCurrent.EntityName);
                 HandleUriParameters();
             }

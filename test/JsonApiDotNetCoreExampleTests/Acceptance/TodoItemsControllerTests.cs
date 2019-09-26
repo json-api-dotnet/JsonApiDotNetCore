@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -68,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -91,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -116,7 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -142,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -175,7 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var todoItems = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.NotEmpty(todoItems);
@@ -205,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var todoItems = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.NotEmpty(todoItems);
@@ -229,7 +231,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -264,7 +266,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -305,7 +307,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
             Assert.NotEmpty(deserializedBody);
 
             long lastAge = 0;
@@ -343,7 +345,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
             Assert.NotEmpty(deserializedBody);
 
             int maxAge = deserializedBody.Max(i => i.Owner.Age) + 1;
@@ -379,7 +381,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -410,7 +412,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -441,7 +443,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
 
             Assert.Equal(person.Id, deserializedBody.Owner.Id);
             Assert.Equal(todoItem.Id, deserializedBody.Id);
@@ -500,7 +502,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
@@ -616,7 +618,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -669,7 +671,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -721,7 +723,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

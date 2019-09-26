@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var document = JsonConvert.DeserializeObject<Documents>(body);
             Assert.NotEmpty(document.Included);
 
-            var articleResponseList = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
+            var articleResponseList = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<Article>(body);
             Assert.NotNull(articleResponseList);
             
             var articleResponse = articleResponseList.FirstOrDefault(a => a.Id == article.Id);
@@ -101,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.NotEmpty(document.Included);
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetService<IJsonApiDeserializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
             Assert.Equal(article.Id, articleResponse.Id);
 
@@ -190,7 +192,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetService<IJsonApiDeserializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
             
             var persistedArticle = await _fixture.Context.Articles
@@ -243,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
             
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetService<IJsonApiDeserializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
             
             _fixture.ReloadDbContext();
@@ -303,7 +305,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetService<IJsonApiDeserializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
 
             _fixture.ReloadDbContext();
@@ -366,7 +368,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetService<IJsonApiDeserializer>().Deserialize<Article>(body);
             Assert.NotNull(articleResponse);
 
             _fixture.ReloadDbContext();

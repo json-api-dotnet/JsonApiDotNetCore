@@ -1,6 +1,7 @@
 ﻿namespace JsonApiDotNetCore.Models
 {
-    internal interface IResourceField
+    public interface IResourceField
     {
+        string ExposedInternalMemberName { get; }
     }
 }

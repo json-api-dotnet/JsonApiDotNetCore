@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var body = await response.Content.ReadAsStringAsync();
-        var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
+        var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<User>(body);
         var usersWithFirstCharacter = _context.Users.Where(u => u.Username[0] == firstUsernameCharacter);
         Assert.True(deserializedBody.All(u => u.Username[0] == firstUsernameCharacter));
       }
@@ -78,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var body = await response.Content.ReadAsStringAsync();
-        var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
+        var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<User>(body);
         Assert.True(deserializedBody.All(u => u.Username[0] < median));
       }
     }

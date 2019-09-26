@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Models;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -42,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             Assert.NotEmpty(deserializedBody);
             Assert.Equal(expectedEntitiesPerPage, deserializedBody.Count);
@@ -73,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             var expectedTodoItems = new[] { todoItems[0], todoItems[1] };
             Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
@@ -104,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var deserializedBody = GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body);
 
             var expectedTodoItems = new[] { todoItems[totalCount - 2], todoItems[totalCount - 1] };
             Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());

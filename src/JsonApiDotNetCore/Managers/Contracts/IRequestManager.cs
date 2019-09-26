@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -12,8 +9,6 @@ namespace JsonApiDotNetCore.Managers.Contracts
 {
     public interface IRequestManager : IQueryRequest
     {
-        Dictionary<AttrAttribute, object> GetUpdatedAttributes();
-        Dictionary<RelationshipAttribute, object> GetUpdatedRelationships();
         /// <summary>
         /// The request namespace. This may be an absolute or relative path
         /// depending upon the configuration.
@@ -45,13 +40,14 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// Sets the current context entity for this entire request
         /// </summary>
         /// <param name="contextEntityCurrent"></param>
-        void SetContextEntity(ContextEntity contextEntityCurrent);
+        void SetRequestResource(ContextEntity contextEntityCurrent);
 
-        ContextEntity GetContextEntity();
+        ContextEntity GetRequestResource();
         /// <summary>
         /// Which query params are filtered
         /// </summary>
         QueryParams DisabledQueryParams { get; set; }
+        bool IsBulkRequest { get; set; }
 
     }
 }

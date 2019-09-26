@@ -61,11 +61,11 @@ namespace UnitTests.ResourceHooks
 
             public override IEnumerable<YetAnotherDummy> BeforeDelete(IEntityHashSet<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
 
-            [LoadDatabaseValues(false)]
+            [LoaDatabaseValues(false)]
             public override void AfterDelete(HashSet<YetAnotherDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
         [Fact]
-        public void LoadDatabaseValues_Attribute_Not_Allowed()
+        public void LoaDatabaseValues_Attribute_Not_Allowed()
         {
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>

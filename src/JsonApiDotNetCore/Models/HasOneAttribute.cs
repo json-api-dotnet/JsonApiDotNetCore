@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -10,7 +11,8 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="links">Enum to set which links should be outputted for this relationship. Defaults to <see cref="Link.NotConfigured"/> which means that the configuration in
+        /// <see cref="IGlobalLinksConfiguration"/> or <see cref="ContextEntity"/> is used.</param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
         /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
@@ -26,11 +28,10 @@ namespace JsonApiDotNetCore.Models
         ///     public int AuthorKey { get; set; }
         /// }
         /// </code>
-        /// 
         /// </example>
-        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)
+        public HasOneAttribute(string publicName = null, Link links = Link.NotConfigured, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)
 
-        : base(publicName, documentLinks, canInclude, mappedBy)
+        : base(publicName, links, canInclude, mappedBy)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
             InverseNavigation = inverseNavigationProperty;
@@ -57,8 +58,13 @@ namespace JsonApiDotNetCore.Models
             // we set the foreignKey to null. We could also set the actual property to null,
             // but then we would first need to load the current relationship, which requires an extra query.
             if (newValue == null) propertyName = IdentifiablePropertyName;
-
-            var propertyInfo = resource.GetType().GetProperty(propertyName);
+            var resourceType = resource.GetType();
+            var propertyInfo = resourceType.GetProperty(propertyName);
+            if (propertyInfo == null)
+            {
+                // we can't set the FK to null because there isn't any.
+                propertyInfo = resourceType.GetProperty(RelationshipPath);
+            }
             propertyInfo.SetValue(resource, newValue);
         }
 

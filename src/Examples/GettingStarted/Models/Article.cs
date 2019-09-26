@@ -6,7 +6,6 @@ namespace GettingStarted.Models
     {
         [Attr]
         public string Title { get; set; }
-
         [HasOne]
         public Person Author { get; set; }
         public int AuthorId { get; set; }

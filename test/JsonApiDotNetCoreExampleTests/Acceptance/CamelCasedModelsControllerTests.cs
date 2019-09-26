@@ -5,6 +5,12 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
+using JsonApiDotNetCore.Serialization.Contracts;
+
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -52,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<CamelCasedModel>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeserializer>().DeserializeList<CamelCasedModel>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -79,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeserializer>()
                 .Deserialize(body);
 
             // Assert
@@ -123,7 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotNull(body);
             Assert.NotEmpty(body);
 
-            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeserializer>()
                 .Deserialize(body);
             Assert.Equal(model.CompoundAttr, deserializedBody.CompoundAttr);
         }
@@ -167,7 +173,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotNull(body);
             Assert.NotEmpty(body);
 
-            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeserializer>()
                 .Deserialize(body);
             Assert.Equal(newModel.CompoundAttr, deserializedBody.CompoundAttr);
         }

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
@@ -52,7 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture
-                .GetService<IJsonApiDeSerializer>()
+                .GetService<IJsonApiDeserializer>()
                 .DeserializeList<TodoItem>(body);
 
             var todoItemResponse = deserializedBody.Single();
@@ -125,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedTodoItems = _fixture
-                .GetService<IJsonApiDeSerializer>()
+                .GetService<IJsonApiDeserializer>()
                 .DeserializeList<TodoItem>(body);
 
             // assert
@@ -161,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedTodoItems = _fixture
-                .GetService<IJsonApiDeSerializer>()
+                .GetService<IJsonApiDeserializer>()
                 .DeserializeList<TodoItem>(body);
 
             // assert
@@ -240,7 +242,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedTodoItems = _fixture
-                .GetService<IJsonApiDeSerializer>()
+                .GetService<IJsonApiDeserializer>()
                 .DeserializeList<TodoItem>(body);
 
             // assert

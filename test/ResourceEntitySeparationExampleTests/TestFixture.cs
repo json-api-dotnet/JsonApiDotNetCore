@@ -1,5 +1,7 @@
 using Bogus;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models.Entities;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
@@ -85,7 +87,7 @@ namespace ResourceEntitySeparationExampleTests
         {
             var response = await SendAsync(method, route, data);
             var json = await response.Content.ReadAsStringAsync();
-            var obj = (T)Server.GetService<IJsonApiDeSerializer>().Deserialize(json);
+            var obj = (T)Server.GetService<IJsonApiDeserializer>().Deserialize(json);
             return (response, obj);
         }
     }

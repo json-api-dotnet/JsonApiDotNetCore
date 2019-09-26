@@ -10,29 +10,30 @@ using DependentType = System.Type;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
-    internal  class ResourceHookExecutor : IResourceHookExecutor
+    internal class ResourceHookExecutor : IResourceHookExecutor
     {
-        public static readonly IdentifiableComparer Comparer = new IdentifiableComparer();
-        private readonly IRequestManager _requestManager;
         internal readonly IHookExecutorHelper _executorHelper;
-        protected readonly IJsonApiContext _context;
+        private readonly ITraversalHelper _traversalHelper;
+        private readonly IIncludedQueryService  _includedQuery;
+        private readonly IUpdatedFields  _updatedFields;
         private readonly IResourceGraph _graph;
-        private readonly TraversalHelper _traversalHelper;
-
         public ResourceHookExecutor(
-            IHookExecutorHelper helper,
-            IResourceGraph resourceGraph,
-            IRequestManager requestManager)
+            IHookExecutorHelper executorHelper,
+            ITraversalHelper traversalHelper,
+            IUpdatedFields  updatedFields,
+            IIncludedQueryService  includedRelationships,
+            IResourceGraph resourceGraph)
         {
-            _requestManager = requestManager;
-            _executorHelper = helper;
+            _executorHelper = executorHelper;
+            _traversalHelper = traversalHelper;
+            _updatedFields = updatedFields;
+            _includedQuery = includedRelationships;
             _graph = resourceGraph;
-            _traversalHelper = new TraversalHelper(resourceGraph, requestManager);
         }
 
         /// <inheritdoc/>
@@ -40,12 +41,9 @@ namespace JsonApiDotNetCore.Hooks
         {
             var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
-            var contextEntity = _graph.GetContextEntity(typeof(TEntity));
             var calledContainers = new List<PrincipalType>() { typeof(TEntity) };
-            foreach (var relationshipPath in _requestManager.IncludedRelationships)
-            {
-                RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), pipeline, calledContainers);
-            }
+            foreach (var chain in _includedQuery.Get())
+                RecursiveBeforeRead(chain, pipeline, calledContainers);
         }
 
         /// <inheritdoc/>
@@ -55,7 +53,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _requestManager);
+                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _updatedFields);
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -214,31 +212,19 @@ namespace JsonApiDotNetCore.Hooks
         /// translates them to the corresponding hook containers and fires the 
         /// BeforeRead hook (if implemented)
         /// </summary>
-        void RecursiveBeforeRead(ContextEntity contextEntity, List<string> relationshipChain, ResourcePipeline pipeline, List<PrincipalType> calledContainers)
+        void RecursiveBeforeRead(List<RelationshipAttribute> relationshipChain, ResourcePipeline pipeline, List<PrincipalType> calledContainers)
         {
-            var target = relationshipChain.First();
-            var relationship = contextEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == target);
-            if (relationship == null)
-            {
-                throw new JsonApiException(400, $"Invalid relationship {target} on {contextEntity.EntityName}",
-                    $"{contextEntity.EntityName} does not have a relationship named {target}");
-            }
-
+            var relationship = relationshipChain.First();
             if (!calledContainers.Contains(relationship.DependentType))
             {
                 calledContainers.Add(relationship.DependentType);
                 var container = _executorHelper.GetResourceHookContainer(relationship.DependentType, ResourceHook.BeforeRead);
                 if (container != null)
-                {
                     CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
-                }
             }
             relationshipChain.RemoveAt(0);
             if (relationshipChain.Any())
-            {
-
-                RecursiveBeforeRead(_graph.GetContextEntity(relationship.DependentType), relationshipChain, pipeline, calledContainers);
-            }
+                RecursiveBeforeRead(relationshipChain, pipeline, calledContainers);
         }
 
         /// <summary>

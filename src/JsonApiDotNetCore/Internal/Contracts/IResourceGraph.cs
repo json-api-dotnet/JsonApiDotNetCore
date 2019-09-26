@@ -8,10 +8,8 @@ namespace JsonApiDotNetCore.Internal.Contracts
     /// <summary>
     /// A cache for the models in entity core
     /// </summary>
-    public interface IResourceGraph
+    public interface IResourceGraph : IContextEntityProvider
     {
-
-
         RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
         /// <summary>
         /// Gets the value of the navigation property, defined by the relationshipName,
@@ -30,13 +28,6 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// If you want to traverse the relationship, you should use <see cref="GetRelationshipValue" />.
         /// </remarks>
         object GetRelationship<TParent>(TParent resource, string propertyName);
-
-        /// <summary>
-        /// Get the entity type based on a string
-        /// </summary>
-        /// <param name="entityName"></param>
-        /// <returns>The context entity from the resource graph</returns>
-        ContextEntity GetEntityType(string entityName);
 
         /// <summary>
         /// Gets the value of the navigation property (defined by the <see cref="RelationshipAttribute" />)
@@ -65,16 +56,6 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </code>
         /// </example>
         string GetRelationshipName<TParent>(string relationshipName);
-
-        /// <summary>
-        /// Get the resource metadata by the DbSet property name
-        /// </summary>
-        ContextEntity GetContextEntity(string dbSetName);
-
-        /// <summary>
-        /// Get the resource metadata by the resource type
-        /// </summary>
-        ContextEntity GetContextEntity(Type entityType);
 
         /// <summary>
         /// Get the public attribute name for a type based on the internal attribute name.

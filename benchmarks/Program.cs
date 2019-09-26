@@ -9,7 +9,7 @@ namespace Benchmarks {
     class Program {
         static void Main(string[] args) {
             var switcher = new BenchmarkSwitcher(new[] {
-                typeof(JsonApiDeserializer_Benchmarks),
+                typeof(JsonApideserializer_Benchmarks),
                 //typeof(JsonApiSerializer_Benchmarks),
                 typeof(QueryParser_Benchmarks),
                 typeof(LinkBuilder_GetNamespaceFromPath_Benchmarks),

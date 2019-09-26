@@ -11,14 +11,20 @@ namespace JsonApiDotNetCore.Models
             Id = id;
         }
 
-        [JsonProperty("type")]
+        [JsonProperty("type", Order = -3)]
         public string Type { get; set; }
 
-        [JsonProperty("id")]
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore, Order = -2)]
         public string Id { get; set; }
 
         [JsonIgnore]
         //[JsonProperty("lid")]
         public string LocalId { get; set; }
+
+
+        public override string ToString()
+        {
+            return $"(type: {Type}, id: {Id})";
+        }
     }
 }

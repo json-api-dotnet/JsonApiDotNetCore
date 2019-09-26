@@ -1,19 +1,24 @@
 using System;
-using System.Runtime.CompilerServices;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
-    public abstract class RelationshipAttribute : Attribute
+    public abstract class RelationshipAttribute : Attribute, IResourceField
     {
-        protected RelationshipAttribute(string publicName, Link documentLinks, bool canInclude, string mappedBy)
+        protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude, string mappedBy)
         {
+            if (relationshipLinks == Link.Paging)
+                throw new JsonApiSetupException($"{Link.Paging.ToString("g")} not allowed for argument {nameof(relationshipLinks)}");
+
             PublicRelationshipName = publicName;
-            DocumentLinks = documentLinks;
+            RelationshipLinks = relationshipLinks;
             CanInclude = canInclude;
             EntityPropertyName = mappedBy;
         }
 
+        public string ExposedInternalMemberName => InternalRelationshipName;
         public string PublicRelationshipName { get; internal set; }
         public string InternalRelationshipName { get; internal set; }
         public string InverseNavigation { get; internal set; }
@@ -25,7 +30,7 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// <example>
         /// <code>
-        /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
+        /// public List&lt;Tag&gt; Tags { get; sit; } // Type => Tag
         /// </code>
         /// </example>
         [Obsolete("Use property DependentType")]
@@ -52,7 +57,12 @@ namespace JsonApiDotNetCore.Models
 
         public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
-        public Link DocumentLinks { get; } = Link.All;
+
+        /// <summary>
+        /// Configures which links to show in the <see cref="RelationshipLinks"/>
+        /// object for this relationship.
+        /// </summary>
+        public Link RelationshipLinks { get; }
         public bool CanInclude { get; }
         public string EntityPropertyName { get; }
 
@@ -119,5 +129,6 @@ namespace JsonApiDotNetCore.Models
         /// In all cases except the HasManyThrough relationships, this will just be the <see cref="InternalRelationshipName" />.
         /// </remarks>
         public virtual string RelationshipPath => InternalRelationshipName;
+
     }
 }

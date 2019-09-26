@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class ExposableData<T>
+    public class ExposableData<T> where T : class
     {
         /// <summary>
         /// see "primary data" in https://jsonapi.org/format/#document-top-level.
@@ -15,9 +16,16 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// see https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
         /// </summary>
-        public bool ShouldSerializData()
+        /// <remarks>
+        /// Moving this method to the derived class where it is needed only in the
+        /// case of <see cref="RelationshipData"/> would make more sense, but
+        /// Newtonsoft does not support this.
+        /// </remarks>
+        public bool ShouldSerializeData()
         {
-            return IsPopulated;
+            if (GetType() == typeof(RelationshipData))
+                return IsPopulated;
+            return true;
         }
 
         /// <summary>
@@ -42,6 +50,8 @@ namespace JsonApiDotNetCore.Models
         /// a single resource is requested but not present (eg /articles/1/author).
         /// </summary>
         internal bool IsPopulated { get; private set; } = false;
+
+        internal bool HasData {  get { return IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null); } }
 
         /// <summary>
         /// Gets the "single" or "many" data depending on which one was

@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility

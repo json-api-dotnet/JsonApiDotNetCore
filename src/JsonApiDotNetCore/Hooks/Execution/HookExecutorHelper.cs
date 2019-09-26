@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <inheritdoc/>
     internal class HookExecutorHelper : IHookExecutorHelper
     {
+        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly IJsonApiOptions _options;
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
@@ -117,7 +118,7 @@ namespace JsonApiDotNetCore.Hooks
             }
             else
             {
-                return _options.LoadDatabaseValues;
+                return _options.LoaDatabaseValues;
             }
         }
 
@@ -188,7 +189,7 @@ namespace JsonApiDotNetCore.Hooks
                         dbDependentEntityList = (IList)relationshipValue;
                     }
                     var dbDependentEntityListCasted = dbDependentEntityList.Cast<IIdentifiable>().ToList();
-                    if (existingDependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(existingDependentEntities.Cast<IIdentifiable>(), ResourceHookExecutor.Comparer).ToList();
+                    if (existingDependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(existingDependentEntities.Cast<IIdentifiable>(), _comparer).ToList();
 
                     if (dbDependentEntityListCasted.Any())
                     {

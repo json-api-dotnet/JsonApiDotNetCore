@@ -3,16 +3,16 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization
 {
-
-    public interface IUpdatedFieldsManager
+    public interface IUpdatedFields
     {
         List<AttrAttribute> AttributesToUpdate { get; set; }
         List<RelationshipAttribute> RelationshipsToUpdate { get; set; }
     }
 
-    public interface IUpdatedFieldManager_ProposalWithDictionaries
+    public class UpdatedFields: IUpdatedFields
     {
-        Dictionary<IIdentifiable, List<AttrAttribute>> AttributesToUpdate { get; set; }
-        Dictionary<IIdentifiable, List<RelationshipAttribute>> RelationshipsToUpdate { get; set; }
+        public List<AttrAttribute> AttributesToUpdate { get; set; } = new List<AttrAttribute>();
+        public List<RelationshipAttribute> RelationshipsToUpdate { get; set; } = new List<RelationshipAttribute>();
     }
+
 }

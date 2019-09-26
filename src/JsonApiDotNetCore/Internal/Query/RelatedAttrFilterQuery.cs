@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Internal.Query
                   filterQuery: filterQuery)
         {
             if (Relationship == null)
-                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {requestManager.GetContextEntity().EntityName}.");
+                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {requestManager.GetRequestResource().EntityName}.");
 
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");

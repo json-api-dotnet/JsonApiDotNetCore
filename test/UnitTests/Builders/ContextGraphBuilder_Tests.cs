@@ -71,8 +71,7 @@ namespace UnitTests
         public void Resources_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // arrange
-            JsonApiOptions.ResourceNameFormatter = new CamelCaseNameFormatter();
-            var builder = new ResourceGraphBuilder();
+            var builder = new ResourceGraphBuilder(new CamelCaseNameFormatter());
             builder.AddResource<TestResource>();
 
             // act
@@ -102,8 +101,7 @@ namespace UnitTests
         public void Attrs_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
             // arrange
-            JsonApiOptions.ResourceNameFormatter = new CamelCaseNameFormatter();
-            var builder = new ResourceGraphBuilder();
+            var builder = new ResourceGraphBuilder(new CamelCaseNameFormatter());
             builder.AddResource<TestResource>();
 
             // act

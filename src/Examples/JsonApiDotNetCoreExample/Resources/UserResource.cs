@@ -4,16 +4,16 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Internal.Contracts;
-
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph graph) : base(graph) { }
+        public UserResource(IResourceGraph graph, IExposedFieldExplorer fieldExplorer) : base(fieldExplorer, graph) { }
 
-        protected override List<AttrAttribute> OutputAttrs()
-            => Remove(user => user.Password);
+        //protected override List<IResourceField> OutputAttrs()
+        //    => Remove(user => user.Password);
 
         public override QueryFilters GetQueryFilters()
         {

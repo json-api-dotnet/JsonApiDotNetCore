@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -101,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (User)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (User)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.False(document.Data.Attributes.ContainsKey("password"));
             Assert.Equal(user.Username, document.Data.Attributes["username"]);
@@ -150,7 +152,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (User)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
+            var deserializedBody = (User)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.False(document.Data.Attributes.ContainsKey("password"));
             Assert.Equal(user.Username, document.Data.Attributes["username"]);

@@ -68,10 +68,10 @@ namespace DiscoveryTests
             // arrange, act
             _services.AddSingleton<IJsonApiOptions>(new JsonApiOptions());
 
-            _services.AddScoped( (_) => new Mock<ILinkBuilder>().Object);
-            _services.AddScoped( (_) => new Mock<IRequestManager>().Object);
-            _services.AddScoped( (_) => new Mock<IPageManager>().Object);
-            _services.AddScoped( (_) => new Mock<IResourceGraph>().Object);
+            _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
+            _services.AddScoped((_) => new Mock<IRequestManager>().Object);
+            _services.AddScoped((_) => new Mock<IPageQueryService>().Object);
+            _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
             _facade.AddCurrentAssembly();
 
             // assert
@@ -102,7 +102,7 @@ namespace DiscoveryTests
                 IEntityRepository<TestModel> repository,
                 IJsonApiOptions options,
                 IRequestManager requestManager,
-                IPageManager pageManager,
+                IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 ILoggerFactory loggerFactory = null,
                 IResourceHookExecutor hookExecutor = null) : base(repository, options, requestManager, pageManager, resourceGraph, loggerFactory, hookExecutor)

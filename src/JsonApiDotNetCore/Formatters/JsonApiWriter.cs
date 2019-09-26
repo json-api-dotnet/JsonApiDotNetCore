@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -14,10 +15,10 @@ namespace JsonApiDotNetCore.Formatters
         private readonly IJsonApiSerializer _serializer;
 
         public JsonApiWriter(
-            IJsonApiSerializer serializer, 
+            IJsonApiSerializerFactory factory, 
             ILoggerFactory loggerFactory)
         {
-            _serializer = serializer;
+            _serializer = factory.GetSerializer();
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
         }
 

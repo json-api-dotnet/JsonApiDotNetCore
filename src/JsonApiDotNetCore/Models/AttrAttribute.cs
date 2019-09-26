@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class AttrAttribute : Attribute
+    public class AttrAttribute : Attribute, IResourceField
     {
         /// <summary>
         /// Defines a public attribute exposed by the API
@@ -33,6 +33,9 @@ namespace JsonApiDotNetCore.Models
             IsFilterable = isFilterable;
             IsSortable = isSortable;
         }
+
+        public string ExposedInternalMemberName => InternalAttributeName;
+
 
         /// <summary>
         /// Do not use this overload in your applications.

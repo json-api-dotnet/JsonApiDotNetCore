@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -9,7 +10,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
@@ -24,8 +25,8 @@ namespace JsonApiDotNetCore.Models
         /// </code>
         /// 
         /// </example>
-        public HasManyAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null, string inverseNavigationProperty = null)
-        : base(publicName, documentLinks, canInclude, mappedBy)
+        public HasManyAttribute(string publicName = null, Link relationshipLinks = Link.All, bool canInclude = true, string mappedBy = null, string inverseNavigationProperty = null)
+        : base(publicName, relationshipLinks, canInclude, mappedBy)
         {
             InverseNavigation = inverseNavigationProperty;
         }

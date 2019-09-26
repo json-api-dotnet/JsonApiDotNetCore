@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using System.Security;
+using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// 
         /// <param name="internalThroughName">The name of the navigation property that will be used to get the HasMany relationship</param>
-        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
+        /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
@@ -38,8 +38,8 @@ namespace JsonApiDotNetCore.Models
         /// [HasManyThrough(nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]
         /// </code>
         /// </example>
-        public HasManyThroughAttribute(string internalThroughName, Link documentLinks = Link.All, bool canInclude = true, string mappedBy = null)
-        : base(null, documentLinks, canInclude, mappedBy)
+        public HasManyThroughAttribute(string internalThroughName, Link relationshipLinks = Link.All, bool canInclude = true, string mappedBy = null)
+        : base(null, relationshipLinks, canInclude, mappedBy)
         {
             InternalThroughName = internalThroughName;
         }

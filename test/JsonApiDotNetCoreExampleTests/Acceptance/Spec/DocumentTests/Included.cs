@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_Included_Contains_SideloadedData_ForManyToOne()
+        public async Task GET_Included_Contains_SideloadeData_ForManyToOne()
         {
             // arrange
             var person = _personFaker.Generate();
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_ById_Included_Contains_SideloadedData_ForManyToOne()
+        public async Task GET_ById_Included_Contains_SideloadeData_ForManyToOne()
         {
             // arrange
             var person = _personFaker.Generate();
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_Included_Contains_SideloadedData_OneToMany()
+        public async Task GET_Included_Contains_SideloadeData_OneToMany()
         {
             // arrange
             _context.People.RemoveRange(_context.People); // ensure all people have todo-items
@@ -214,7 +214,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_ById_Included_Contains_SideloadedData_ForOneToMany()
+        public async Task GET_ById_Included_Contains_SideloadeData_ForOneToMany()
         {
             // arrange
             const int numberOfTodoItems = 5;

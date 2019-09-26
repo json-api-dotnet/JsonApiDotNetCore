@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Newtonsoft.Json;
@@ -37,7 +39,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = _fixture.Server.GetService<IJsonApiDeserializer>()
                 .DeserializeList<TodoItem>(responseBody);
 
             // assert
@@ -64,7 +66,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeserializer>()
                 .Deserialize(responseBody);
 
             // assert
@@ -101,7 +103,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeserializer>()
                 .Deserialize(responseBody);
 
             // assert

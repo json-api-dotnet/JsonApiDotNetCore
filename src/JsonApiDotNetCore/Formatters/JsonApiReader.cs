@@ -6,23 +6,27 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Serialization.Contracts;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
 {
     /// <inheritdoc />
     public class JsonApiReader : IJsonApiReader
     {
-        private readonly IJsonApiDeSerializer _deserializer;
+        private readonly IOperationsDeserializer _operationsDeserializer;
+        private readonly IJsonApiDeserializer _deserializer;
         private readonly IRequestManager _requestManager;
         private readonly ILogger<JsonApiReader> _logger;
 
-        public JsonApiReader(IJsonApiDeSerializer deSerializer, IRequestManager requestManager, ILoggerFactory loggerFactory)
+        public JsonApiReader(IJsonApiDeserializer deserializer,
+                             IOperationsDeserializer operationsDeserializer,
+                             IRequestManager requestManager,
+                             ILoggerFactory loggerFactory)
         {
-            _deserializer = deSerializer;
+            _deserializer = deserializer;
+            _operationsDeserializer = operationsDeserializer;
             _requestManager = requestManager;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
@@ -40,15 +44,13 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
 
-                object model = null;
-                if (_requestManager.IsRelationshipPath)
+                if( _requestManager.IsBulkRequest)
                 {
-                    model = _deserializer.DeserializeRelationship(body);
+                    var operations = _operationsDeserializer.Deserialize(body);
+                    return InputFormatterResult.SuccessAsync(operations);
                 }
-                else
-                {
-                    model = _deserializer.Deserialize(body);
-                }
+
+                object model = _deserializer.Deserialize(body);
 
                 if (model == null)
                 {

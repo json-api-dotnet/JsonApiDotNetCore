@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Hooks
@@ -53,9 +54,9 @@ namespace JsonApiDotNetCore.Hooks
         internal DiffableEntityHashSet(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
                   Dictionary<RelationshipAttribute, IEnumerable> relationships,
-                  IRequestManager requestManager)
+                  IUpdatedFields updatedFields)
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-              TypeHelper.ConvertAttributeDictionary(requestManager.GetUpdatedAttributes(), (HashSet<TResource>)requestEntities))
+              TypeHelper.ConvertAttributeDictionary(updatedFields.AttributesToUpdate, (HashSet<TResource>)requestEntities))
         { }
 
 
@@ -91,7 +92,7 @@ namespace JsonApiDotNetCore.Hooks
 
         private HashSet<TResource> ThrowNoDbValuesError()
         {
-            throw new MemberAccessException("Cannot iterate over the diffs if the LoadDatabaseValues option is set to false");
+            throw new MemberAccessException("Cannot iterate over the diffs if the LoaDatabaseValues option is set to false");
         }
     }
 

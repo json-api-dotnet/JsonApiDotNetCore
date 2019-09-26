@@ -6,6 +6,8 @@ using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -18,7 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
-
+using JsonApiDotNetCore.Serialization.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 
 namespace UnitTests.Extensions
 {
@@ -32,7 +35,7 @@ namespace UnitTests.Extensions
             var jsonApiOptions = new JsonApiOptions();
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
-
+            services.AddScoped<ResourceDefinition<TodoItem>>();
             // act
             services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);
             // this is required because the DbContextResolver requires access to the current HttpContext
@@ -41,20 +44,24 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
 
             // assert
+            var requestManager = provider.GetService<IRequestManager>();
+            Assert.NotNull(requestManager);
+            var graph = provider.GetService<IResourceGraph>();
+            Assert.NotNull(graph);
+            requestManager.SetRequestResource(graph.GetContextEntity<TodoItem>());
+            Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<IJsonApiOptions>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IJsonApiContext>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
-            Assert.NotNull(provider.GetService<IMetaBuilder>());
-            Assert.NotNull(provider.GetService<IDocumentBuilder>());
-            Assert.NotNull(provider.GetService<IJsonApiSerializer>());
+            Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
+            Assert.NotNull(provider.GetService<IJsonApiSerializerFactory>());
             Assert.NotNull(provider.GetService<IJsonApiWriter>());
             Assert.NotNull(provider.GetService<IJsonApiReader>());
-            Assert.NotNull(provider.GetService<IJsonApiDeSerializer>());
+            Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
             Assert.NotNull(provider.GetService<IGenericProcessorFactory>());
-            Assert.NotNull(provider.GetService<IDocumentBuilderOptionsProvider>());
             Assert.NotNull(provider.GetService(typeof(GenericProcessor<TodoItem>)));
         }
 

@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models
-{ 
+{
     public class ResourceObject : ResourceIdentifierObject
     {
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]

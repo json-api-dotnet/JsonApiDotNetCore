@@ -6,16 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Models
 {
-
     public interface IResourceDefinition
     {
-        List<AttrAttribute> GetOutputAttrs(object instance);
+        List<AttrAttribute> GetAllowedAttributes();
+        List<RelationshipAttribute> GetAllowedRelationships();
     }
-
 
     /// <summary>
     /// exposes developer friendly hooks into how their resources are exposed. 
@@ -23,69 +22,30 @@ namespace JsonApiDotNetCore.Models
     /// The goal of this class is to reduce the frequency with which developers have to override the
     /// service and repository layers.
     /// </summary>
-    /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer<T> where T : class, IIdentifiable
+    /// <typeparam name="TResource">The resource type</typeparam>
+    public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
         private readonly ContextEntity _contextEntity;
-        internal readonly bool _instanceAttrsAreSpecified;
-
-        private bool _requestCachedAttrsHaveBeenLoaded = false;
-        private List<AttrAttribute> _requestCachedAttrs;
+        private readonly IExposedFieldExplorer _fieldExplorer;
+        private List<AttrAttribute> _allowedAttributes;
+        private List<RelationshipAttribute> _allowedRelationships;
+        public ResourceDefinition(IExposedFieldExplorer fieldExplorer, IResourceGraph graph)
+        {
+            _contextEntity = graph.GetContextEntity(typeof(TResource));
+            _allowedAttributes = _contextEntity.Attributes;
+            _allowedRelationships = _contextEntity.Relationships;
+            _fieldExplorer = fieldExplorer;
+        }
 
         public ResourceDefinition(IResourceGraph graph)
         {
-            _contextEntity = graph.GetContextEntity(typeof(T));
-            _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
+            _allowedAttributes = _contextEntity.Attributes;
+            _allowedRelationships = _contextEntity.Relationships;
+            _contextEntity = graph.GetContextEntity(typeof(TResource));
         }
 
-        private bool InstanceOutputAttrsAreSpecified()
-        {
-            var derivedType = GetType();
-            var methods = derivedType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
-            var instanceMethod = methods
-                .Where(m =>
-                   m.Name == nameof(OutputAttrs)
-                   && m.GetParameters()
-                        .FirstOrDefault()
-                        ?.ParameterType == typeof(T))
-                .FirstOrDefault();
-            var declaringType = instanceMethod?.DeclaringType;
-            return declaringType == derivedType;
-        }
-
-        /// <summary>
-        /// Remove an attribute
-        /// </summary>
-        /// <param name="filter">the filter to execute</param>
-        /// <param name="from">@TODO</param>
-        /// <returns></returns>
-        protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
-        {
-            //@TODO: need to investigate options for caching these
-            from = from ?? _contextEntity.Attributes;
-
-            // model => model.Attribute
-            if (filter.Body is MemberExpression memberExpression)
-                return _contextEntity.Attributes
-                        .Where(a => a.InternalAttributeName != memberExpression.Member.Name)
-                        .ToList();
-
-            // model => new { model.Attribute1, model.Attribute2 }
-            if (filter.Body is NewExpression newExpression)
-            {
-                var attributes = new List<AttrAttribute>();
-                foreach (var attr in _contextEntity.Attributes)
-                    if (newExpression.Members.Any(m => m.Name == attr.InternalAttributeName) == false)
-                        attributes.Add(attr);
-
-                return attributes;
-            }
-
-            throw new JsonApiException(500,
-                message: $"The expression returned by '{filter}' for '{GetType()}' is of type {filter.Body.GetType()}"
-                        + " and cannot be used to select resource attributes. ",
-                detail: "The type must be a NewExpression. Example: article => new { article.Author }; ");
-        }
+        public List<RelationshipAttribute> GetAllowedRelationships() => _allowedRelationships;
+        public List<AttrAttribute> GetAllowedAttributes() => _allowedAttributes;
 
         /// <summary>
         /// Allows POST / PATCH requests to set the value of an
@@ -96,37 +56,17 @@ namespace JsonApiDotNetCore.Models
         ///
         /// Called once per filtered resource in request.
         /// </summary>
-        protected virtual List<AttrAttribute> OutputAttrs() => _contextEntity.Attributes;
-
-        /// <summary>
-        /// Allows POST / PATCH requests to set the value of an
-        /// attribute, but exclude the attribute in the response
-        /// this might be used if the incoming value gets hashed or
-        /// encrypted prior to being persisted and this value should
-        /// never be sent back to the client.
-        ///
-        /// Called for every instance of a resource.
-        /// </summary>
-        protected virtual List<AttrAttribute> OutputAttrs(T instance) => _contextEntity.Attributes;
-
-        public List<AttrAttribute> GetOutputAttrs(object instance)
-            => _instanceAttrsAreSpecified == false
-                ? GetOutputAttrs()
-                : OutputAttrs(instance as T);
-
-        private List<AttrAttribute> GetOutputAttrs()
+        public void HideAttributes(Expression<Func<TResource, dynamic>> selector)
         {
-            if (_requestCachedAttrsHaveBeenLoaded == false)
-            {
-                _requestCachedAttrs = OutputAttrs();
-                // the reason we don't just check for null is because we
-                // guarantee that OutputAttrs will be called once per
-                // request and null is a valid return value
-                _requestCachedAttrsHaveBeenLoaded = true;
-            }
-
-            return _requestCachedAttrs;
+            var attributesToHide = _fieldExplorer.GetAttributes(selector);
+            _allowedAttributes = _allowedAttributes.Except(attributesToHide).ToList();
         }
+        public void HideRelationships(Expression<Func<TResource, dynamic>> selector)
+        {
+            var relationshipsToHide = _fieldExplorer.GetRelationships(selector);
+            _allowedRelationships = _allowedRelationships.Except(relationshipsToHide).ToList();
+        }
+
 
         /// <summary>
         /// Define a set of custom query expressions that can be applied
@@ -166,29 +106,29 @@ namespace JsonApiDotNetCore.Models
         public virtual QueryFilters GetQueryFilters() => null;
 
         /// <inheritdoc/>
-        public virtual void AfterCreate(HashSet<T> entities, ResourcePipeline pipeline) { }
+        public virtual void AfterCreate(HashSet<TResource> entities, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual void AfterRead(HashSet<T> entities, ResourcePipeline pipeline, bool isIncluded = false) { }
+        public virtual void AfterRead(HashSet<TResource> entities, ResourcePipeline pipeline, bool isIncluded = false) { }
         /// <inheritdoc/>
-        public virtual void AfterUpdate(HashSet<T> entities, ResourcePipeline pipeline) { }
+        public virtual void AfterUpdate(HashSet<TResource> entities, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
+        public virtual void AfterDelete(HashSet<TResource> entities, ResourcePipeline pipeline, bool succeeded) { }
         /// <inheritdoc/>
-        public virtual void AfterUpdateRelationship(IRelationshipsDictionary<T> entitiesByRelationship, ResourcePipeline pipeline) { }
+        public virtual void AfterUpdateRelationship(IRelationshipsDictionary<TResource> entitiesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeCreate(IEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        public virtual IEnumerable<TResource> BeforeCreate(IEntityHashSet<TResource> entities, ResourcePipeline pipeline) { return entities; }
         /// <inheritdoc/>
         public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeUpdate(IDiffableEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        public virtual IEnumerable<TResource> BeforeUpdate(IDiffableEntityHashSet<TResource> entities, ResourcePipeline pipeline) { return entities; }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> BeforeDelete(IEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        public virtual IEnumerable<TResource> BeforeDelete(IEntityHashSet<TResource> entities, ResourcePipeline pipeline) { return entities; }
         /// <inheritdoc/>
-        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<T> entitiesByRelationship, ResourcePipeline pipeline) { return ids; }
+        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<TResource> entitiesByRelationship, ResourcePipeline pipeline) { return ids; }
         /// <inheritdoc/>
-        public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<T> entitiesByRelationship, ResourcePipeline pipeline) { }
+        public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<TResource> entitiesByRelationship, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
-        public virtual IEnumerable<T> OnReturn(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        public virtual IEnumerable<TResource> OnReturn(HashSet<TResource> entities, ResourcePipeline pipeline) { return entities; }
 
 
         /// <summary>
@@ -196,7 +136,7 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class QueryFilters : Dictionary<string, Func<IQueryable<T>, FilterQuery, IQueryable<T>>> { }
+        public class QueryFilters : Dictionary<string, Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>> { }
 
         /// <summary>
         /// Define a the default sort order if no sort key is provided.
@@ -237,11 +177,12 @@ namespace JsonApiDotNetCore.Models
             return null;
         }
 
+
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class PropertySortOrder : List<(Expression<Func<T, dynamic>>, SortDirection)> { }
+        public class PropertySortOrder : List<(Expression<Func<TResource, dynamic>>, SortDirection)> { }
     }
 }

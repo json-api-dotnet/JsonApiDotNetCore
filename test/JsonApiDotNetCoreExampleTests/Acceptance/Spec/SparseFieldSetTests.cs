@@ -19,6 +19,8 @@ using StringExtensions = JsonApiDotNetCoreExampleTests.Helpers.Extensions.String
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -146,7 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedTodoItems = _fixture
-                .GetService<IJsonApiDeSerializer>()
+                .GetService<IJsonApiDeserializer>()
                 .DeserializeList<TodoItem>(body);
 
             foreach(var item in deserializedTodoItems.Where(i => i.Owner != null))

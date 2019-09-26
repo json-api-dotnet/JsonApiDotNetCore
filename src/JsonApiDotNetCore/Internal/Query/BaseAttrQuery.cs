@@ -54,12 +54,12 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private AttrAttribute GetAttribute(string attribute)
         {
-            return _requestManager.GetContextEntity().Attributes.FirstOrDefault(attr => attr.Is(attribute));
+            return _requestManager.GetRequestResource().Attributes.FirstOrDefault(attr => attr.Is(attribute));
         }
 
         private RelationshipAttribute GetRelationship(string propertyName)
         {
-            return _requestManager.GetContextEntity().Relationships.FirstOrDefault(r => r.Is(propertyName));
+            return _requestManager.GetRequestResource().Relationships.FirstOrDefault(r => r.Is(propertyName));
         }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)

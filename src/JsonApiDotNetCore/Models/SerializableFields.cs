@@ -7,17 +7,17 @@ namespace JsonApiDotNetCore.Models
 {
     public class SerializableFields : ISerializableFields
     {
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IContextEntityProvider _resourceContextProvider;
         private readonly IServiceProvider _provider;
         private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
         private readonly IExposedFieldExplorer _fieldExplorer;
 
         public SerializableFields(IExposedFieldExplorer fieldExplorer,
-                                  IResourceGraph resourceGraph,
+                                  IContextEntityProvider resourceContextProvider,
                                   IServiceProvider provider)
         {
             _fieldExplorer = fieldExplorer;
-            _resourceGraph = resourceGraph;
+            _resourceContextProvider = resourceContextProvider;
             _provider = provider;
         }
 
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Models
         private IResourceDefinition GetResourceDefinition(Type resourceType)
         {
 
-            var resourceDefinitionType = _resourceGraph.GetContextEntity(resourceType).ResourceType;
+            var resourceDefinitionType = _resourceContextProvider.GetContextEntity(resourceType).ResourceType;
             if (!_resourceDefinitionCache.TryGetValue(resourceDefinitionType, out IResourceDefinition resourceDefinition))
             {
                 resourceDefinition = _provider.GetService(resourceDefinitionType) as IResourceDefinition;

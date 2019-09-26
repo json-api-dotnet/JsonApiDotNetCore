@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Models
         protected virtual string GetStringId(object value)
         {
             if(value == null)
-                return string.Empty;
+                return string.Empty; // todo; investigate why not using null, because null would make more sense in serialization
 
             var type = typeof(T);
             var stringValue = value.ToString();
@@ -59,8 +59,9 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         protected virtual T GetTypedId(string value)
         {
-            var convertedValue = TypeHelper.ConvertType(value, typeof(T));
-            return convertedValue == null ? default : (T)convertedValue;
+            if (value == null)
+                return default;
+            return (T)TypeHelper.ConvertType(value, typeof(T));
         }
     }
 }

@@ -6,6 +6,8 @@
 //using JsonApiDotNetCore.Internal.Generics;
 //using JsonApiDotNetCore.Models;
 //using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 //using JsonApiDotNetCore.Services;
 //using Moq;
 //using Newtonsoft.Json.Serialization;

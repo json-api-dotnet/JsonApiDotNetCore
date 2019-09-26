@@ -44,4 +44,12 @@
   <ItemGroup Condition="'$(GenerateDocumentation)' == 'true'">
     <PackageReference Include="docfx.console" Version="2.33.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Serialization\Contracts\" />
+    <Folder Include="Serialization\Deserializer\" />
+    <Folder Include="Serialization\Serializer\" />
+    <Folder Include="Models\JsonApi\" />
+    <Folder Include="QueryServices\" />
+    <Folder Include="QueryServices\Contracts\" />
+  </ItemGroup>
 </Project>

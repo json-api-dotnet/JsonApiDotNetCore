@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExample.Services
             IEntityRepository<Article> repository,
             IJsonApiOptions jsonApiOptions,
             IRequestManager queryManager,
-            IPageManager pageManager,
+            IPageQueryService pageManager,
             IResourceGraph resourceGraph,
             IResourceHookExecutor resourceHookExecutor = null,
             ILoggerFactory loggerFactory = null

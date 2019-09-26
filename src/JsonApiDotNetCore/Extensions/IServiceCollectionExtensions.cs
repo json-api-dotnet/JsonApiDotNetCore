@@ -14,6 +14,8 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
@@ -23,6 +25,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using JsonApiDotNetCore.Serialization.Contracts;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -147,10 +151,8 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-            if (jsonApiOptions.ResourceGraph == null)
-            {
-                jsonApiOptions.ResourceGraph = jsonApiOptions.ResourceGraphBuilder.Build();
-            }
+
+            var graph = jsonApiOptions.ResourceGraph ?? jsonApiOptions.ResourceGraphBuilder.Build();
 
             if (jsonApiOptions.ResourceGraph.UsesDbContext == false)
             {
@@ -191,26 +193,40 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
             services.AddScoped<ILinkBuilder, LinkBuilder>();
-            services.AddScoped<IRequestManager, RequestManager>();
+            services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
+
             services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
-            services.AddScoped<IPageManager, PageManager>();
-            services.AddSingleton(jsonApiOptions.ResourceGraph);
-            services.AddScoped<IJsonApiContext, JsonApiContext>();
+            services.AddSingleton<IGlobalLinksConfiguration>(jsonApiOptions);
+            services.AddSingleton(graph);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IContextEntityProvider>(graph);
+
+            services.AddScoped(typeof(ServerSerializer<>));
+            services.AddScoped<IRequestManager, RequestManager>();
+            services.AddScoped<IPageQueryService, PageQueryService>();
+            services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
-            services.AddScoped<IMetaBuilder, MetaBuilder>();
-            services.AddScoped<IDocumentBuilder, DocumentBuilder>();
-            services.AddScoped<IJsonApiSerializer, JsonApiSerializer>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
-            services.AddScoped<IJsonApiDeSerializer, JsonApiDeSerializer>();
+            services.AddScoped<IJsonApiDeserializer, ServerDeserializer>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IControllerContext, Services.ControllerContext>();
-            services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
+            services.AddScoped<IIncludedQueryService, IncludedQueryService>();
+            services.AddScoped<IInternalIncludedQueryService, IncludedQueryService>();
+            services.AddScoped<IFieldsQueryService, FieldsQueryService>();
+            services.AddScoped<IInternalFieldsQueryService, FieldsQueryService>();
+            services.AddScoped<IUpdatedFields, UpdatedFields>();
+            services.AddScoped<IJsonApiSerializerFactory, ServerSerializerFactory>();
+            services.AddScoped<IIncludedRelationshipsBuilder, IncludedRelationshipsBuilder>();
+            services.AddScoped<IJsonApiDeserializer, ServerDeserializer>();
+            services.AddScoped<ISerializableFields, SerializableFields>();
+            services.AddScoped<IExposedFieldExplorer, ExposedFieldExplorer>();
+            services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
+            services.AddScoped<IJsonApiSerializerSettings, JsonApiSerializerSettings>();
 
             if (jsonApiOptions.EnableResourceHooks)
             {
@@ -219,7 +235,6 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
                 services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
             }
-            //services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddScoped<IInverseRelationships, InverseRelationships>();
         }

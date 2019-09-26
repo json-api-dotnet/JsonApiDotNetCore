@@ -8,4 +8,9 @@ namespace JsonApiDotNetCore.Services
     {
         List<List<RelationshipAttribute>> Get();
     }
+
+    public interface IInternalIncludedQueryService
+    {
+        void Register(List<RelationshipAttribute> inclusionChain);
+    }
 }
