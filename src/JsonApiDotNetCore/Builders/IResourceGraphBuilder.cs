@@ -71,11 +71,6 @@ namespace JsonApiDotNetCore.Builders
         /// <param name="resourceNameFormatter">Formatter used to define exposed resource names by convention.</param>
         IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter);
 
-        /// <summary>
-        /// Which links to include. Defaults to <see cref="Link.All"/>.
-        /// </summary>
-        Link DocumentLinks { get; set; }
-
    
     }
 }

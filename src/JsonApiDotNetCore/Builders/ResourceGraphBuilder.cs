@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Links;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -21,16 +22,17 @@ namespace JsonApiDotNetCore.Builders
         private Dictionary<Type, List<Type>> _controllerMapper = new Dictionary<Type, List<Type>>() { };
         private List<Type> _undefinedMapper = new List<Type>() { };
         private bool _usesDbContext;
-        private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
+        private IResourceNameFormatter _resourceNameFormatter;
 
-        /// <inheritdoc />
-        public Link DocumentLinks { get; set; } = Link.All;
+        public ResourceGraphBuilder(IResourceNameFormatter formatter = null)
+        {
+            _resourceNameFormatter = formatter ?? new DefaultResourceNameFormatter();
+        }
 
         /// <inheritdoc />
         public IResourceGraph Build()
         {
-            // this must be done at build so that call order doesn't matter
-            _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
+            _entities.ForEach(SetResourceLinksOptions);
 
             List<ControllerResourceMap> controllerContexts = new List<ControllerResourceMap>() { };
             foreach(var cm in _controllerMapper)
@@ -50,6 +52,17 @@ namespace JsonApiDotNetCore.Builders
             }
             var graph = new ResourceGraph(_entities, _usesDbContext, _validationResults, controllerContexts);
             return graph;
+        }
+
+        private void SetResourceLinksOptions(ContextEntity resourceContext)
+        {
+            var attribute = (LinksAttribute)resourceContext.EntityType.GetCustomAttribute(typeof(LinksAttribute));
+            if (attribute != null)
+            {
+                resourceContext.RelationshipLinks = attribute.RelationshipLinks;
+                resourceContext.ResourceLinks = attribute.ResourceLinks;
+                resourceContext.TopLevelLinks = attribute.TopLevelLinks;
+            }
         }
 
         /// <inheritdoc />
@@ -82,14 +95,6 @@ namespace JsonApiDotNetCore.Builders
             ResourceType = GetResourceDefinitionType(entityType)
         };
 
-        private Link GetLinkFlags(Type entityType)
-        {
-            var attribute = (LinksAttribute)entityType.GetTypeInfo().GetCustomAttribute(typeof(LinksAttribute));
-            if (attribute != null)
-                return attribute.Links;
-
-            return DocumentLinks;
-        }
 
         protected virtual List<AttrAttribute> GetAttributes(Type entityType)
         {
@@ -99,11 +104,14 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var prop in properties)
             {
+                /// todo: investigate why this is added in the exposed attributes list
+                /// because it is not really defined attribute considered from the json:api
+                /// spec point of view.
                 if (prop.Name == nameof(Identifiable.Id))
                 {
                     var idAttr = new AttrAttribute()
                     {
-                        PublicAttributeName = JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop),
+                        PublicAttributeName = _resourceNameFormatter.FormatPropertyName(prop),
                         PropertyInfo = prop,
                         InternalAttributeName = prop.Name
                     };
@@ -115,7 +123,7 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
-                attribute.PublicAttributeName = attribute.PublicAttributeName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
+                attribute.PublicAttributeName = attribute.PublicAttributeName ?? _resourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalAttributeName = prop.Name;
                 attribute.PropertyInfo = prop;
 
@@ -133,7 +141,7 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
-                attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
+                attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? _resourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
                 attribute.DependentType = GetRelationshipType(attribute, prop);
                 attribute.PrincipalType = entityType;
@@ -269,7 +277,6 @@ namespace JsonApiDotNetCore.Builders
             {
                 _undefinedMapper.Add(controller);
                 return this;
-
             }
             if (_controllerMapper.Keys.Contains(model))
             {

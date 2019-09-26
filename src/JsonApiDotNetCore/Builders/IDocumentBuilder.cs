@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Builders
         /// Builds a json:api document from the provided resource instances.
         /// </summary>
         /// <param name="entities">The collection of resources to convert.</param>
-        Documents Build(IEnumerable<IIdentifiable> entities);
+        //Documents Build(IEnumerable<IIdentifiable> entities);
 
         [Obsolete("You should specify an IResourceDefinition implementation using the GetData/3 overload.")]
         ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity);
@@ -32,6 +32,6 @@ namespace JsonApiDotNetCore.Builders
         /// that should not be exposed to the client. For example, you might want to limit
         /// the exposed attributes based on the authenticated user's role.
         /// </param>
-        ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity, IResourceDefinition resourceDefinition = null);
+        ResourceObject GetData(ContextEntity contextEntity, IIdentifiable entity,  object resourceDefinition = null);
     }
 }

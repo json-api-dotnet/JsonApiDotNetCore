@@ -1,17 +1,21 @@
+using JsonApiDotNetCore.Configuration;
+
 namespace JsonApiDotNetCore.Builders
 {
     /// <summary>
     /// Options used to configure how a model gets serialized into
     /// a json:api document.
     /// </summary>
-    public struct DocumentBuilderOptions
+    public class SerializerBehaviour 
     {
-        /// <param name="omitNullValuedAttributes">
-        /// Do not serialize attributes with null values.
-        /// </param>
-        public DocumentBuilderOptions(bool omitNullValuedAttributes = false)
+        /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
+        public SerializerBehaviour(ISerializerOptions options)
         {
-            this.OmitNullValuedAttributes = omitNullValuedAttributes;
+            OmitNullValuedAttributes = options.NullAttributeResponseBehavior.OmitNullValuedAttributes;
+            if (options.NullAttributeResponseBehavior.AllowClientOverride)
+            {
+
+            }
         }
 
         /// <summary>
@@ -26,4 +30,10 @@ namespace JsonApiDotNetCore.Builders
         /// </example>
         public bool OmitNullValuedAttributes { get; private set; }
     }
+
+    public interface ISerializerOptions
+    {
+        NullAttributeResponseBehavior NullAttributeResponseBehavior  { get;set;}
+    }
 }
+
