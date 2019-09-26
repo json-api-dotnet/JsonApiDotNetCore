@@ -9,7 +9,6 @@ namespace JsonApiDotNetCore.Serialization
             return new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new DasherizedResolver(),
                 DateParseHandling = DateParseHandling.None
             };
         }

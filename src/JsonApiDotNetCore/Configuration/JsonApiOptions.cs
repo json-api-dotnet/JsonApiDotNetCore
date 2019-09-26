@@ -205,8 +205,7 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
         {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new DasherizedResolver()
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         public void BuildResourceGraph<TContext>(Action<IResourceGraphBuilder> builder) where TContext : DbContext

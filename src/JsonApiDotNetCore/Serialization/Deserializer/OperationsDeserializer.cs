@@ -295,4 +295,10 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
     }
+
+    public interface IOperationsDeserializer
+    {
+        object Deserialize(string body);
+        object DocumentToObject(ResourceObject data, List<ResourceObject> included = null);
+    }
 }
