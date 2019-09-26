@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Serialization;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace UnitTests.Deserialization
+namespace UnitTests.Serialization.Deserializer
 {
     public class ClientDeserializerTests : DeserializerTestsSetup
     {
@@ -14,7 +15,7 @@ namespace UnitTests.Deserialization
 
         public ClientDeserializerTests()
         {
-            _deserializer = new ClientDeserializer(_resourceGraph, _defaultSettings);
+            _deserializer = new ClientDeserializer(_resourceGraph);
             _linkValues.Add("self", "http://example.com/articles");
             _linkValues.Add("next", "http://example.com/articles?page[offset]=2");
             _linkValues.Add("last", "http://example.com/articles?page[offset]=10");
@@ -45,7 +46,7 @@ namespace UnitTests.Deserialization
             // arrange
             var content = new Document
             {
-                Links = new RootLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"]  }
+                Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] }
             };
             var body = JsonConvert.SerializeObject(content);
 
@@ -64,9 +65,10 @@ namespace UnitTests.Deserialization
         public void DeserializeList_EmptyResponseWithTopLevelLinks_CanDeserialize()
         {
             // arrange
-            var content = new Documents
+            var content = new Document
             {
-                Links = new RootLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] },
+                Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] },
+                Data = new List<ResourceObject>()
             };
             var body = JsonConvert.SerializeObject(content);
 
@@ -95,8 +97,8 @@ namespace UnitTests.Deserialization
             // assert
             Assert.Null(result.Links);
             Assert.Null(result.Meta);
-            Assert.Equal(1, entity.Id);            
-            Assert.Equal(content.Data.Attributes["string-field"], entity.StringField);            
+            Assert.Equal(1, entity.Id);
+            Assert.Equal(content.SingleData.Attributes["string-field"], entity.StringField);
         }
 
         [Fact]
@@ -104,10 +106,10 @@ namespace UnitTests.Deserialization
         {
             // arrange
             var content = CreateDocumentWithRelationships("multi-principals");
-            content.Data.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
-            content.Data.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
-            content.Data.Relationships.Add("empty-to-one", CreateRelationshipData());
-            content.Data.Relationships.Add("empty-to-manies", CreateRelationshipData(isToManyData: true));
+            content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
+            content.SingleData.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
+            content.SingleData.Relationships.Add("empty-to-one", CreateRelationshipData());
+            content.SingleData.Relationships.Add("empty-to-manies", CreateRelationshipData(isToManyData: true));
             var toOneAttributeValue = "populated-to-one member content";
             var toManyAttributeValue = "populated-to-manies member content";
             content.Included = new List<ResourceObject>()
@@ -147,10 +149,10 @@ namespace UnitTests.Deserialization
         {
             // arrange
             var content = CreateDocumentWithRelationships("multi-dependents");
-            content.Data.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
-            content.Data.Relationships.Add("populated-to-many", CreateRelationshipData("one-to-many-principals"));
-            content.Data.Relationships.Add("empty-to-one", CreateRelationshipData());
-            content.Data.Relationships.Add("empty-to-many", CreateRelationshipData());
+            content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
+            content.SingleData.Relationships.Add("populated-to-many", CreateRelationshipData("one-to-many-principals"));
+            content.SingleData.Relationships.Add("empty-to-one", CreateRelationshipData());
+            content.SingleData.Relationships.Add("empty-to-many", CreateRelationshipData());
             var toOneAttributeValue = "populated-to-one member content";
             var toManyAttributeValue = "populated-to-manies member content";
             content.Included = new List<ResourceObject>()
@@ -189,7 +191,7 @@ namespace UnitTests.Deserialization
         {
             // arrange
             var content = CreateDocumentWithRelationships("multi-principals");
-            content.Data.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
+            content.SingleData.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
             var toManyAttributeValue = "populated-to-manies member content";
             var nestedIncludeAttributeValue = "nested include member content";
             content.Included = new List<ResourceObject>()
@@ -232,7 +234,7 @@ namespace UnitTests.Deserialization
         {
             // arrange
             var content = CreateDocumentWithRelationships("multi-principals");
-            content.Data.Relationships.Add("multi", CreateRelationshipData("multi-principals"));
+            content.SingleData.Relationships.Add("multi", CreateRelationshipData("multi-principals"));
             var includedAttributeValue = "multi member content";
             var nestedIncludedAttributeValue = "nested include member content";
             var deeplyNestedIncludedAttributeValue = "deeply nested member content";
@@ -270,7 +272,7 @@ namespace UnitTests.Deserialization
             var included = entity.Multi;
             Assert.Equal(10, included.Id);
             Assert.Equal(includedAttributeValue, included.AttributeMember);
-            var nestedIncluded = included.PopulatedToManies.First(); 
+            var nestedIncluded = included.PopulatedToManies.First();
             Assert.Equal(10, nestedIncluded.Id);
             Assert.Equal(nestedIncludedAttributeValue, nestedIncluded.AttributeMember);
             var deeplyNestedIncluded = nestedIncluded.Principal;
@@ -283,8 +285,8 @@ namespace UnitTests.Deserialization
         public void DeserializeList_DeeplyNestedIncluded_CanDeserialize()
         {
             // arrange
-            var content = new Documents { Data = new List<ResourceObject> { CreateDocumentWithRelationships("multi-principals").Data } };
-            content.Data[0].Relationships.Add("multi", CreateRelationshipData("multi-principals"));
+            var content = new Document { Data = new List<ResourceObject> { CreateDocumentWithRelationships("multi-principals").SingleData } };
+            content.ManyData[0].Relationships.Add("multi", CreateRelationshipData("multi-principals"));
             var includedAttributeValue = "multi member content";
             var nestedIncludedAttributeValue = "nested include member content";
             var deeplyNestedIncludedAttributeValue = "deeply nested member content";

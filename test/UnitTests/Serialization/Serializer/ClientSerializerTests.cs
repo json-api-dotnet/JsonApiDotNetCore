@@ -1,138 +1,250 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
     public class ClientSerializerTests : SerializerTestsSetup
     {
+        private readonly ClientSerializer _serializer;
 
         public ClientSerializerTests()
         {
-            
+            _serializer = new ClientSerializer(_fieldExplorer, _resourceGraph, _resourceGraph);
         }
 
 
-
         [Fact]
-        public void Serialize_TestResource_CanSerialize()
+        public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {
             // arrange
-            var complexFieldValue = "complex type field";
-            var stringFieldValue = "string field";
-            var entity = new TestResource()
-            {
-                Id = 1,
-                ComplexField = new ComplexType() { CompoundName = complexFieldValue },
-                StringField = stringFieldValue
-            };
-            var serializer = GetClientSerializer();
+            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
 
             // act
-            var document = serializer.Build(entity);
+            string serialized = _serializer.Serialize(entity);
 
             // assert
-            Assert.Equal(8, document.Data.Attributes.Keys.Count);
-            var complexType = (ComplexType)document.Data.Attributes["complex-field"];
-            Assert.Equal(complexFieldValue, complexType.CompoundName);
-            Assert.Equal(stringFieldValue, document.Data.Attributes["string-field"]);
-            Assert.Null(document.Data.Relationships);
-            Assert.Equal("1", document.Data.Id);
-            Assert.Equal("test-resource", document.Data.Type);
+            var expectedFormatted =
+            @"{
+               ""data"":{
+                  ""type"":""test-resource"",
+                  ""id"":""1"",
+                  ""attributes"":{
+                     ""string-field"":""value"",
+                     ""date-time-field"":""0001-01-01T00:00:00"",
+                     ""nullable-date-time-field"":null,
+                     ""int-field"":0,
+                     ""nullable-int-field"":123,
+                     ""guid-field"":""00000000-0000-0000-0000-000000000000"",
+                     ""complex-field"":null,
+                     ""immutable"":null
+                  }
+               }
+            }";
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
         }
 
         [Fact]
-        public void Serialize_TestResourceList_CanSerialize()
+        public void SerializeSingle_ResourceWithTargetedSetAttributes_CanBuild()
+        {
+            // arrange
+            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+
+            // act
+            string serialized = _serializer.Serialize(entity);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"":{
+                  ""type"":""test-resource"",
+                  ""id"":""1"",
+                  ""attributes"":{
+                     ""string-field"":""value""
+                  }
+               }
+            }";
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeSingle_NoIdWithTargetedSetAttributes_CanBuild()
+        {
+            // arrange
+            var entityNoId = new TestResource() { Id = 0, StringField = "value", NullableIntField = 123 };
+            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+
+            // act
+            string serialized = _serializer.Serialize(entityNoId);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"":{
+                  ""type"":""test-resource"",
+                  ""attributes"":{
+                     ""string-field"":""value""
+                  }
+               }
+            }";
+
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeSingle_ResourceWithoutTargetedAttributes_CanBuild()
+        {
+            // arrange
+            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            _serializer.SetAttributesToSerialize<TestResource>(tr => new { });
+
+            // act
+            string serialized = _serializer.Serialize(entity);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"":{
+                  ""type"":""test-resource"",
+                  ""id"":""1""
+               }
+            }";
+
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeSingle_ResourceWithTargetedRelationships_CanBuild()
+        {
+            // arrange
+            var entityWithRelationships = new MultipleRelationshipsPrincipalPart
+            {
+                PopulatedToOne = new OneToOneDependent { Id = 10 },
+                PopulatedToManies = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
+            };
+            _serializer.SetRelationshipsToSerialize<MultipleRelationshipsPrincipalPart>(tr => new { tr.EmptyToOne, tr.EmptyToManies, tr.PopulatedToOne, tr.PopulatedToManies });
+
+            // act
+            string serialized = _serializer.Serialize(entityWithRelationships);
+            Console.WriteLine(serialized);
+            // assert
+            var expectedFormatted =
+            @"{
+                ""data"":{
+                    ""type"":""multi-principals"",
+                    ""attributes"":{
+                        ""attribute-member"":null
+                    },
+                    ""relationships"":{
+                        ""empty-to-one"":{
+                        ""data"":null
+                        },
+                        ""empty-to-manies"":{
+                        ""data"":[ ]
+                        },
+                        ""populated-to-one"":{
+                        ""data"":{
+                            ""type"":""one-to-one-dependents"",
+                            ""id"":""10""
+                           }
+                        },
+                        ""populated-to-manies"":{
+                        ""data"":[
+                            {
+                                ""type"":""one-to-many-dependents"",
+                                ""id"":""20""
+                            }
+                          ]
+                        }
+                    }
+                }
+            }";
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeMany_ResourcesWithTargetedAttributes_CanBuild()
         {
             // arrange
             var entities = new List<TestResource>
             {
-                new TestResource { Id = 1 },
-                new TestResource { Id = 2 },
-                new TestResource { Id = 3 }
+                new TestResource() { Id = 1, StringField = "value1", NullableIntField = 123 },
+                new TestResource() { Id = 2, StringField = "value2", NullableIntField = 123 }
             };
-            var serializer = GetClientSerializer();
+            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
             // act
-            var documents = serializer.Build(entities);
+            string serialized = _serializer.Serialize(entities);
 
             // assert
-            Assert.Equal(3, documents.Data.Count);
-            foreach (var resourceObject in documents.Data)
-            {
-                Assert.Equal(8, resourceObject.Attributes.Keys.Count);
-                Assert.Null(resourceObject.Relationships);
-            }
-        }
-
-
-        [Fact]
-        public void Serialize_TestResourceListWithSubsetOfAttributes_CanSerialize()
-        {
-            // arrange
-            var entities = new List<TestResource>
-            {
-                new TestResource { Id = 1 },
-                new TestResource { Id = 2 },
-                new TestResource { Id = 3 }
-            };
-            var serializer = GetClientSerializer();
-            serializer.AttributesToInclude<TestResource>(tr => new { tr.StringField, tr.NullableDateTimeField });
-            serializer.SetResourceForTests<TestResource>();
-
-            // act
-            var documents = serializer.Build(entities);
-
-            // assert
-            Assert.Equal(3, documents.Data.Count);
-            foreach (var resourceObject in documents.Data)
-            {
-                Assert.Equal(2, resourceObject.Attributes.Keys.Count);
-                Assert.Null(resourceObject.Relationships);
-            }
+            var expectedFormatted =
+            @"{
+                ""data"":[
+                    {
+                        ""type"":""test-resource"",
+                        ""id"":""1"",
+                        ""attributes"":{
+                        ""string-field"":""value1""
+                        }
+                    },
+                    {
+                        ""type"":""test-resource"",
+                        ""id"":""2"",
+                        ""attributes"":{
+                        ""string-field"":""value2""
+                        }
+                    }
+                ]
+            }";
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
         }
 
         [Fact]
-        public void Serialize_ResourceWithNoAttributes_CanSerialize()
+        public void SerializeSingle_Null_CanBuild()
         {
             // arrange
-            var serializer = GetClientSerializer();
-            serializer.AttributesToInclude<TestResource>(tr => new { });
-            serializer.SetResourceForTests<TestResource>();
+            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
             // act
-            var document = serializer.Build(new TestResource { Id = 1 });
+            IIdentifiable obj = null;
+            string serialized = _serializer.Serialize(obj);
 
             // assert
-            Assert.Null(document.Data.Attributes);
-            Assert.Null(document.Data.Relationships);
+            var expectedFormatted =
+            @"{
+                ""data"":null
+            }";
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
         }
 
         [Fact]
-        public void Serialize_ResourceWithRelationships_CanSerialize()
+        public void SerializeMany_EmptyList_CanBuild()
         {
             // arrange
-            var serializer = GetClientSerializer();
-            //serializer.AttributesToInclude<MultipleRelationshipsPrincipalPart>(tr => new { });
-            var entity = new MultipleRelationshipsPrincipalPart();
-
+            var entities = new List<TestResource> { };
+            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
             // act
-            var document = serializer.Build(entity);
+            string serialized = _serializer.Serialize(entities);
 
             // assert
-            Assert.Equal(1, document.Data.Attributes.Keys.Count);
-            Assert.Null(document.Data.Relationships);
+            var expectedFormatted =
+            @"{
+                ""data"":[]
+            }";
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
         }
-
     }
 }

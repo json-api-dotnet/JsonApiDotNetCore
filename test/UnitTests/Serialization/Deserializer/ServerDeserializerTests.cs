@@ -6,15 +6,15 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace UnitTests.Deserialization
+namespace UnitTests.Serialization.Deserializer
 {
     public class ServerDeserializerTests : DeserializerTestsSetup
     {
         private readonly ServerDeserializer _deserializer;
-        private readonly Mock<IUpdatedFieldsManager> _fieldsManagerMock = new Mock<IUpdatedFieldsManager>();
+        private readonly Mock<IUpdatedFields> _fieldsManagerMock = new Mock<IUpdatedFields>();
         public ServerDeserializerTests() : base()
         {
-            _deserializer = new ServerDeserializer(_resourceGraph, _defaultSettings, _fieldsManagerMock.Object);
+            _deserializer = new ServerDeserializer(_resourceGraph, _fieldsManagerMock.Object);
         }
 
         [Fact]
@@ -62,10 +62,10 @@ namespace UnitTests.Deserialization
             // arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
             var content = CreateDocumentWithRelationships("multi-principals");
-            content.Data.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
-            content.Data.Relationships.Add("empty-to-one", CreateRelationshipData());
-            content.Data.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
-            content.Data.Relationships.Add("empty-to-manies", CreateRelationshipData(isToManyData: true));
+            content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
+            content.SingleData.Relationships.Add("empty-to-one", CreateRelationshipData());
+            content.SingleData.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
+            content.SingleData.Relationships.Add("empty-to-manies", CreateRelationshipData(isToManyData: true));
             var body = JsonConvert.SerializeObject(content);
 
             // act
@@ -82,10 +82,10 @@ namespace UnitTests.Deserialization
             // arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
             var content = CreateDocumentWithRelationships("multi-dependents");
-            content.Data.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
-            content.Data.Relationships.Add("empty-to-one", CreateRelationshipData());
-            content.Data.Relationships.Add("populated-to-many", CreateRelationshipData("one-to-many-principals"));
-            content.Data.Relationships.Add("empty-to-many", CreateRelationshipData());
+            content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
+            content.SingleData.Relationships.Add("empty-to-one", CreateRelationshipData());
+            content.SingleData.Relationships.Add("populated-to-many", CreateRelationshipData("one-to-many-principals"));
+            content.SingleData.Relationships.Add("empty-to-many", CreateRelationshipData());
             var body = JsonConvert.SerializeObject(content);
 
             // act

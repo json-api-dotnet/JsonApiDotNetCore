@@ -14,7 +14,6 @@ namespace UnitTests.Serialization.Serializer
         public DocumentBuilderTests()
         {
             _serializer = new TestSerializer(_resourceGraph, _resourceGraph);
-
         }
 
         [Fact]

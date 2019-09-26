@@ -1,18 +1,28 @@
-﻿using JsonApiDotNetCore.Models;
-using System.Collections.Generic;
-using System;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal.Contracts;
+﻿using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using System.Collections.Generic;
 
-namespace UnitTests.Deserialization
+namespace UnitTests.Serialization.Deserializer
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
+        protected class TestDocumentParser : DocumentParser
+        {
+            public TestDocumentParser(IResourceGraph resourceGraph) : base(resourceGraph) { }
+
+            public new object Deserialize(string body)
+            {
+                return base.Deserialize(body);
+            }
+
+            protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null) { }
+        }
+
         protected Document CreateDocumentWithRelationships(string mainType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
         {
             var content = CreateDocumentWithRelationships(mainType);
-            content.Data.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
+            content.SingleData.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
             return content;
         }
 
@@ -36,11 +46,12 @@ namespace UnitTests.Deserialization
 
             if (isToManyData)
             {
-                data.ExposedData = new List<ResourceIdentifierObject>();
-                if (relatedType != null) ((List<ResourceIdentifierObject>)data.ExposedData).Add(rio);
-            } else
+                data.Data = new List<ResourceIdentifierObject>();
+                if (relatedType != null) ((List<ResourceIdentifierObject>)data.Data).Add(rio);
+            }
+            else
             {
-                data.ExposedData = rio;
+                data.Data = rio;
             }
             return data;
         }

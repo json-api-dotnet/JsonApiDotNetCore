@@ -13,6 +13,11 @@ namespace UnitTests.Serialization.Deserializer
     {
         private readonly TestDocumentParser _deserializer;
 
+        public DocumentParserTests()
+        {
+            _deserializer = new TestDocumentParser(_resourceGraph);
+        }
+
         [Fact]
         public void DeserializeResourceIdentifiers_SingleData_CanDeserialize()
         {

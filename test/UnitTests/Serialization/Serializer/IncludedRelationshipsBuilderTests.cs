@@ -1,216 +1,178 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCoreExample.Models;
-using Moq;
 using Xunit;
-using System;
+using UnitTests.Serialization.Serializer;
+using System.Collections.Generic;
+using System.Linq;
+using JsonApiDotNetCore.Internal.Query;
 
-namespace UnitTests
+namespace UnitTests.Serialization.IncludedRelationshipBuilder
 {
-    public class LinkBuilderTests
+    public class IncludedRelationshipBuilderTests : SerializerTestsSetup
     {
-        private readonly IPageManager _pageManager;
-        private readonly Mock<IContextEntityProvider> _provider = new Mock<IContextEntityProvider>();
-        private const string _host = "http://www.example.com";
-        private const string _topSelf = "http://www.example.com/articles";
-        private const string _resourceSelf = "http://www.example.com/articles/123";
-        private const string _relSelf = "http://www.example.com/articles/123/relationships/author";
-        private const string _relRelated = "http://www.example.com/articles/123/author";
-
-        public LinkBuilderTests()
+        [Fact]
+        public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
         {
-            _pageManager = GetPageManager();
-        }
-
-        [Theory]
-        [InlineData(Link.All, Link.NotConfigured, _resourceSelf)]
-        [InlineData(Link.Self, Link.NotConfigured, _resourceSelf)]
-        [InlineData(Link.None, Link.NotConfigured, null)]
-        [InlineData(Link.All, Link.Self, _resourceSelf)]
-        [InlineData(Link.Self, Link.Self, _resourceSelf)]
-        [InlineData(Link.None, Link.Self, _resourceSelf)]
-        [InlineData(Link.All, Link.None, null)]
-        [InlineData(Link.Self, Link.None, null)]
-        [InlineData(Link.None, Link.None, null)]
-        public void BuildResourceLinks_GlobalAndResourceConfiguration_ExpectedResult(Link global, Link resource, object expectedResult)
-        {
-            // arrange
-            var config = GetConfiguration(resourceLinks: global);
-            _provider.Setup(m => m.GetContextEntity("articles")).Returns(GetContextEntity<Article>(resourceLinks: resource));
-            var builder =  new LinkBuilder(config, GetRequestManager(), _pageManager, _provider.Object);
+            // arrange 
+            var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
+            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
+            var builder = GetBuilder();
 
             // act
-            var links = builder.GetResourceLinks("articles", "123");
+            builder.IncludeRelationshipChain(authorChain, article);
+            var result = builder.Build();
 
             // assert
-            if (expectedResult == null)
-                Assert.Null(links);
-            else 
-                Assert.Equal(_resourceSelf, links.Self);
+            Assert.Equal(6, result.Count);
+
+            var authorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == author.StringId);
+            var authorFoodRelation = authorResourceObject.Relationships["favorite-food"].SingleData;
+            Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
+
+            var reviewerResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == reviewer.StringId);
+            var reviewerFoodRelation = reviewerResourceObject.Relationships["favorite-food"].SingleData;
+            Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
 
-
-
-        [Theory]
-        [InlineData(Link.All, Link.NotConfigured, Link.NotConfigured, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.NotConfigured, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.NotConfigured, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.NotConfigured, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.NotConfigured, Link.None, null, null)]
-        [InlineData(Link.All, Link.All, Link.NotConfigured, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.All, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.All, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.All, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.All, Link.None, null, null)]
-        [InlineData(Link.All, Link.Self, Link.NotConfigured, _relSelf, null)]
-        [InlineData(Link.All, Link.Self, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.Self, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.Self, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.Self, Link.None, null, null)]
-        [InlineData(Link.All, Link.Related, Link.NotConfigured, null, _relRelated)]
-        [InlineData(Link.All, Link.Related, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.Related, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.Related, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.Related, Link.None, null, null)]
-        [InlineData(Link.All, Link.None, Link.NotConfigured, null, null)]
-        [InlineData(Link.All, Link.None, Link.All, _relSelf, _relRelated)]
-        [InlineData(Link.All, Link.None, Link.Self, _relSelf, null)]
-        [InlineData(Link.All, Link.None, Link.Related, null, _relRelated)]
-        [InlineData(Link.All, Link.None, Link.None, null, null)]
-        public void BuildRelationshipLinks_GlobalResourceAndAttrConfiguration_ExpectedLinks(Link global,
-                                                                                                Link resource,
-                                                                                                Link relationship,
-                                                                                                object expectedSelfLink,
-                                                                                                object expectedRelatedLink)
+        [Fact]
+        public void BuildIncluded_DeeplyNestedCircularChainOfManyData_BuildsWithoutDuplicates()
         {
             // arrange
-            var config = GetConfiguration(relationshipLinks: global);
-            _provider.Setup(m => m.GetContextEntity(typeof(Article))).Returns(GetContextEntity<Article>(relationshipLinks: resource));
-            var builder = new LinkBuilder(config, GetRequestManager(), _pageManager, _provider.Object);
-            var attr = new HasOneAttribute(links: relationship)  { DependentType = typeof(Author), PublicRelationshipName = "author" };
+            var (article, author, _, _, _) = GetAuthorChainInstances();
+            var secondArticle = _articleFaker.Generate();
+            secondArticle.Author = author;
+            var builder = GetBuilder();
 
             // act
-            var links = builder.GetRelationshipLinks(attr, new Article { Id = 123 });
+            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
+            builder.IncludeRelationshipChain(authorChain, article);
+            builder.IncludeRelationshipChain(authorChain, secondArticle);
 
             // assert
-            if (expectedSelfLink == null && expectedRelatedLink == null)
-            {
-                Assert.Null(links);
-            }
-            else
-            {
-                Assert.Equal(expectedSelfLink, links.Self);
-                Assert.Equal(expectedRelatedLink, links.Related);
-            }
+            var result = builder.Build();
+            Assert.Equal(6, result.Count);
         }
 
-        [Theory]
-        [InlineData(Link.All, Link.NotConfigured, _topSelf, true)]
-        [InlineData(Link.All, Link.All, _topSelf, true)]
-        [InlineData(Link.All, Link.Self, _topSelf, false)]
-        [InlineData(Link.All, Link.Paging, null, true)]
-        [InlineData(Link.All, Link.None, null, null)]
-        [InlineData(Link.Self, Link.NotConfigured, _topSelf, false)]
-        [InlineData(Link.Self, Link.All, _topSelf, true)]
-        [InlineData(Link.Self, Link.Self, _topSelf, false)]
-        [InlineData(Link.Self, Link.Paging, null, true)]
-        [InlineData(Link.Self, Link.None, null, null)]
-        [InlineData(Link.Paging, Link.NotConfigured, null, true)]
-        [InlineData(Link.Paging, Link.All, _topSelf, true)]
-        [InlineData(Link.Paging, Link.Self, _topSelf, false)]
-        [InlineData(Link.Paging, Link.Paging, null, true)]
-        [InlineData(Link.Paging, Link.None, null, null)]
-        [InlineData(Link.None, Link.NotConfigured, null, false)]
-        [InlineData(Link.None, Link.All, _topSelf, true)]
-        [InlineData(Link.None, Link.Self, _topSelf, false)]
-        [InlineData(Link.None, Link.Paging, null, true)]
-        [InlineData(Link.None, Link.None, null, null)]
-        public void BuildTopLevelLinks_GlobalAndResourceConfiguration_ExpectedLinks(Link global,
-                                                                                    Link resource,
-                                                                                    object expectedSelfLink,
-                                                                                    bool pages)
+        [Fact]
+        public void BuildIncluded_OverlappingDeeplyNestedCirculairChains_CanBuild()
         {
             // arrange
-            var config = GetConfiguration(topLevelLinks: global);
-            var resourceContext = GetContextEntity<Article>(topLevelLinks: resource);
-            var builder = new LinkBuilder(config, GetRequestManager(resourceContext), _pageManager, null);
+            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
+            var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
+            var sharedBlog = author.Blogs.First();
+            var sharedBlogAuthor = reviewer;
+            var (_reviewer, _reviewerSong, _author, _authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
+            var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favorite-song");
+            var builder = GetBuilder();
 
             // act
-            var links = builder.GetTopLevelLinks();
+            builder.IncludeRelationshipChain(authorChain, article);
+            builder.IncludeRelationshipChain(reviewerChain, article);
+            var result = builder.Build();
 
             // assert
-            if (!pages && expectedSelfLink == null)
+            Assert.Equal(10, result.Count);
+            var overlappingBlogResourcObject = result.Single((ro) => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
+
+            Assert.Equal(2, overlappingBlogResourcObject.Relationships.Keys.ToList().Count);
+            var nonOverlappingBlogs = result.Where((ro) => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
+
+            foreach (var blog in nonOverlappingBlogs)
+                Assert.Equal(1, blog.Relationships.Keys.ToList().Count);
+
+            var sharedAuthorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == sharedBlogAuthor.StringId);
+            var sharedAuthorSongRelation = sharedAuthorResourceObject.Relationships["favorite-song"].SingleData;
+            Assert.Equal(_authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
+            var sharedAuthorFoodRelation = sharedAuthorResourceObject.Relationships["favorite-food"].SingleData;
+            Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);
+        }
+
+        private (Person, Song, Person, Song) GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)
+        {
+            var reviewer = _personFaker.Generate();
+            article.Reviewer = reviewer;
+
+            var blogs = _blogFaker.Generate(1).ToList();
+            blogs.Add(sharedBlog);
+            reviewer.Blogs = blogs;
+
+            blogs[0].Author = reviewer;
+            var author = _personFaker.Generate();
+            blogs[1].Author = sharedBlogAuthor;
+
+            var authorSong = _songFaker.Generate();
+            author.FavoriteSong = authorSong;
+            sharedBlogAuthor.FavoriteSong = authorSong;
+
+            var reviewerSong = _songFaker.Generate();
+            reviewer.FavoriteSong = reviewerSong;
+
+            return (reviewer, reviewerSong, author, authorSong);
+        }
+
+        private (Article, Person, Food, Person, Food) GetAuthorChainInstances()
+        {
+            var article = _articleFaker.Generate();
+            var author = _personFaker.Generate();
+            article.Author = author;
+
+            var blogs = _blogFaker.Generate(2).ToList();
+            author.Blogs = blogs;
+
+            blogs[0].Reviewer = author;
+            var reviewer = _personFaker.Generate();
+            blogs[1].Reviewer = reviewer;
+
+            var authorFood = _foodFaker.Generate();
+            author.FavoriteFood = authorFood;
+            var reviewerFood = _foodFaker.Generate();
+            reviewer.FavoriteFood = reviewerFood;
+
+            return (article, author, authorFood, reviewer, reviewerFood);
+        }
+
+        [Fact]
+        public void BuildIncluded_DuplicateChildrenMultipleChains_OnceInOutput()
+        {
+            var person = _personFaker.Generate();
+            var articles = _articleFaker.Generate(5).ToList();
+            articles.ForEach(a => a.Author = person);
+            articles.ForEach(a => a.Reviewer = person);
+            var builder = GetBuilder();
+            var authorChain = GetIncludedRelationshipsChain("author");
+            var reviewerChain = GetIncludedRelationshipsChain("reviewer");
+            foreach (var article in articles)
             {
-                Assert.Null(links);
+                builder.IncludeRelationshipChain(authorChain, article);
+                builder.IncludeRelationshipChain(reviewerChain, article);
             }
-            else
+
+            var result = builder.Build();
+            Assert.Equal(1, result.Count);
+            Assert.Equal(person.Name, result[0].Attributes["name"]);
+            Assert.Equal(person.Id.ToString(), result[0].Id);
+        }
+
+        private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
+        {
+            var parsedChain = new List<RelationshipAttribute>();
+            var resourceContext = _resourceGraph.GetContextEntity<Article>();
+            var splittedPath = chain.Split(QueryConstants.DOT);
+            foreach (var requestedRelationship in splittedPath)
             {
-                Assert.Equal(expectedSelfLink, links.Self);
-                Assert.True(CheckPages(links, pages));
+                var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
+                parsedChain.Add(relationship);
+                resourceContext = _resourceGraph.GetContextEntity(relationship.DependentType);
             }
+            return parsedChain;
         }
 
-        private bool CheckPages(TopLevelLinks links, bool pages)
+        private IncludedRelationshipsBuilder GetBuilder()
         {
-            if (pages)
-            {
-                return links.First == $"{_host}/articles?page[size]=10&page[number]=1"
-                    && links.Prev == $"{_host}/articles?page[size]=10&page[number]=1"
-                    && links.Next == $"{_host}/articles?page[size]=10&page[number]=3"
-                    && links.Last == $"{_host}/articles?page[size]=10&page[number]=3";
-            }
-            return links.First == null && links.Prev == null && links.Next == null && links.Last == null;
+            var fields = GetSerializableFields();
+            var links = GetLinkBuilder();
+            return new IncludedRelationshipsBuilder(fields, links, _resourceGraph, _resourceGraph);
         }
 
-        private IRequestManager GetRequestManager(ContextEntity resourceContext = null)
-        {
-            var mock = new Mock<IRequestManager>();
-            mock.Setup(m => m.BasePath).Returns(_host);
-            mock.Setup(m => m.GetRequestResource()).Returns(resourceContext);
-            return mock.Object;
-        }
-
-        private IGlobalLinksConfiguration GetConfiguration(Link resourceLinks = Link.All,
-                                                           Link topLevelLinks = Link.All,
-                                                           Link relationshipLinks = Link.All)
-        {
-            var config = new Mock<IGlobalLinksConfiguration>();
-            config.Setup(m => m.TopLevelLinks).Returns(topLevelLinks);
-            config.Setup(m => m.ResourceLinks).Returns(resourceLinks);
-            config.Setup(m => m.RelationshipLinks).Returns(relationshipLinks);
-            return config.Object;
-        }
-
-        private IPageManager GetPageManager()
-        {
-            var mock = new Mock<IPageManager>();
-            mock.Setup(m => m.ShouldPaginate()).Returns(true);
-            mock.Setup(m => m.CurrentPage).Returns(2);
-            mock.Setup(m => m.TotalPages).Returns(3);
-            mock.Setup(m => m.PageSize).Returns(10);
-            return mock.Object;
-
-        }
-
-
-
-        private ContextEntity GetContextEntity<TResource>(Link resourceLinks = Link.NotConfigured,
-                                                          Link topLevelLinks = Link.NotConfigured,
-                                                          Link relationshipLinks = Link.NotConfigured) where TResource  : class, IIdentifiable
-        {
-            return new ContextEntity
-            {
-                ResourceLinks = resourceLinks,
-                TopLevelLinks = topLevelLinks,
-                RelationshipLinks = relationshipLinks,
-                EntityName = typeof(TResource).Name.Dasherize() + "s"
-            };
-        }
     }
 }
