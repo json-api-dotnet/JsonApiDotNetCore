@@ -209,7 +209,7 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
                     bool isContextRelation = false;
-                    var relationshipsToUpdate = _updatedFields.RelationshipsToUpdate;
+                    var relationshipsToUpdate = _updatedFields.Relationships;
                     if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.Contains(attr);
                     var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
                     RelationshipProxies[attr] = proxy;

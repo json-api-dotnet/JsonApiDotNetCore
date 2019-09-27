@@ -38,7 +38,7 @@ namespace Benchmarks.Serialization
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
             var resourceGraph = resourceGraphBuilder.Build();
-            var  requestManagerMock = new Mock<IRequestManager>();
+            var  requestManagerMock = new Mock<IRequestContext>();
 
             requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
 

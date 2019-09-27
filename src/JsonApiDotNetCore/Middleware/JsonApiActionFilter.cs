@@ -14,13 +14,13 @@ namespace JsonApiDotNetCore.Middleware
     public class JsonApiActionFilter : IActionFilter
     {
         private readonly IResourceGraph _resourceGraph;
-        private readonly IRequestManager _requestManager;
+        private readonly IRequestContext _requestManager;
         private readonly IPageQueryService _pageManager;
         private readonly IQueryParser _queryParser;
         private readonly IJsonApiOptions _options;
         private HttpContext _httpContext;
         public JsonApiActionFilter(IResourceGraph resourceGraph,
-                                 IRequestManager requestManager,
+                                 IRequestContext requestManager,
                                  IPageQueryService pageManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
@@ -49,7 +49,6 @@ namespace JsonApiDotNetCore.Middleware
 
         }
 
-
         /// <summary>
         /// Parses the uri
         /// </summary>
@@ -61,10 +60,9 @@ namespace JsonApiDotNetCore.Middleware
                 _requestManager.QuerySet = querySet; //this shouldn't be exposed?
                 _pageManager.PageSize = querySet.PageQuery.PageSize ?? _pageManager.PageSize;
                 _pageManager.CurrentPage = querySet.PageQuery.PageOffset ?? _pageManager.CurrentPage;
-                _requestManager.IncludedRelationships = _requestManager.QuerySet.IncludedRelationships;
+
             }
         }
-
 
         private string GetBasePath(string entityName)
         {

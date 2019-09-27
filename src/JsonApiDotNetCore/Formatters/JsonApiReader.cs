@@ -17,12 +17,12 @@ namespace JsonApiDotNetCore.Formatters
     {
         private readonly IOperationsDeserializer _operationsDeserializer;
         private readonly IJsonApiDeserializer _deserializer;
-        private readonly IRequestManager _requestManager;
+        private readonly IRequestContext _requestManager;
         private readonly ILogger<JsonApiReader> _logger;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
                              IOperationsDeserializer operationsDeserializer,
-                             IRequestManager requestManager,
+                             IRequestContext requestManager,
                              ILoggerFactory loggerFactory)
         {
             _deserializer = deserializer;
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
 
-                if( _requestManager.IsBulkRequest)
+                if (_requestManager.IsBulkRequest)
                 {
                     var operations = _operationsDeserializer.Deserialize(body);
                     return InputFormatterResult.SuccessAsync(operations);

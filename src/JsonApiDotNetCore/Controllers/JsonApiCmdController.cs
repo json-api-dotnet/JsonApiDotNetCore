@@ -12,10 +12,8 @@ namespace JsonApiDotNetCore.Controllers
     {
         public JsonApiCmdController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService)
-            : base(jsonApiOptions, 
-                  jsonApiContext, resourceService)
+            : base(jsonApiOptions, resourceService)
         { }
     }
 
@@ -24,7 +22,6 @@ namespace JsonApiDotNetCore.Controllers
     {
         public JsonApiCmdController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         : base(jsonApiOptions, resourceService)
         { }

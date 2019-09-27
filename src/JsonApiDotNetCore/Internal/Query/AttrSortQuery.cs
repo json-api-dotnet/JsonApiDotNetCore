@@ -4,7 +4,7 @@ namespace JsonApiDotNetCore.Internal.Query
 {
     public class AttrSortQuery : BaseAttrQuery
     {
-        public AttrSortQuery(IJsonApiContext jsonApiContext,SortQuery sortQuery)
+        public AttrSortQuery(IJsonApiContext jsonApiContext ,SortQuery sortQuery)
             :base(jsonApiContext.RequestManager,jsonApiContext.ResourceGraph, sortQuery)
         {
             if (Attribute == null)

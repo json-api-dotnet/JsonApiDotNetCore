@@ -22,7 +22,7 @@ namespace Benchmarks.Query {
         private const string DESCENDING_SORT = "-" + ATTRIBUTE;
 
         public QueryParser_Benchmarks() {
-            var requestMock = new Mock<IRequestManager>();
+            var requestMock = new Mock<IRequestContext>();
             requestMock.Setup(m => m.GetRequestResource()).Returns(new ContextEntity {
                 Attributes = new List<AttrAttribute> {
                     new AttrAttribute(ATTRIBUTE, ATTRIBUTE)
@@ -59,7 +59,7 @@ namespace Benchmarks.Query {
         // this facade allows us to expose and micro-benchmark protected methods
         private class BenchmarkFacade : QueryParser {
             public BenchmarkFacade(
-                IRequestManager requestManager,
+                IRequestContext requestManager,
                 JsonApiOptions options) : base(requestManager, options) { }
 
             public void _ParseSortParameters(string value) => base.ParseSortParameters(value);

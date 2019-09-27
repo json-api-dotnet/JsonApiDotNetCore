@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Serialization
                         continue;
                     var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                     attr.SetValue(entity, convertedValue);
-                    _updatedFieldsManager.AttributesToUpdate.Add(attr);
+                    _updatedFieldsManager.Attributes.Add(attr);
                 }
             }
 
@@ -201,7 +201,7 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                if (convertedValue == null) _updatedFieldsManager.RelationshipsToUpdate.Add(hasOneAttr);
+                if (convertedValue == null) _updatedFieldsManager.Relationships.Add(hasOneAttr);
             }
         }
 
@@ -226,7 +226,7 @@ namespace JsonApiDotNetCore.Serialization
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                _updatedFieldsManager.RelationshipsToUpdate.Add(hasOneAttr);
+                _updatedFieldsManager.Relationships.Add(hasOneAttr);
             }
         }
 
@@ -253,7 +253,7 @@ namespace JsonApiDotNetCore.Serialization
                 var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
 
                 attr.SetValue(entity, convertedCollection);
-                _updatedFieldsManager.RelationshipsToUpdate.Add(attr);
+                _updatedFieldsManager.Relationships.Add(attr);
             }
 
             return entity;

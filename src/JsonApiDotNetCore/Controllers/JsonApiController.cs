@@ -81,23 +81,6 @@ namespace JsonApiDotNetCore.Controllers
     /// <typeparam name="T"></typeparam>
     public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
     {
-        private IJsonApiOptions jsonApiOptions;
-        private IJsonApiContext jsonApiContext;
-        private IResourceService<T> resourceService;
-        private ILoggerFactory loggerFactory;
-
-
-        /// <summary>
-        /// Normal constructor with int as default (old fashioned)
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="resourceService"></param>
-        [Obsolete("JsonApiContext is Obsolete, use constructor without jsonApiContext")]
-        public JsonApiController(
-            IJsonApiContext context,
-            IResourceService<T> resourceService) : base(context.Options,context.ResourceGraph,resourceService) {
-        }
-
         /// <summary>
         /// Base constructor with int as default
         /// </summary>

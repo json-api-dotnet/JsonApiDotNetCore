@@ -20,9 +20,7 @@ namespace JsonApiDotNetCore.Services
 
     public interface IQueryRequest
     {
-        List<string> IncludedRelationships { get; set; }
         QuerySet QuerySet { get; set; }
-        PageQueryService PageManager { get; set; }
     }
 
     public interface IJsonApiRequest : IJsonApiApplication,  IQueryRequest
@@ -60,16 +58,5 @@ namespace JsonApiDotNetCore.Services
         /// If the request is on the `{id}/relationships/{relationshipName}` route
         /// </summary>
         bool IsRelationshipPath { get; }
-    }
-
-    public interface IJsonApiContext : IJsonApiRequest
-    {
-        [Obsolete("Use standalone IRequestManager")]
-        IRequestManager RequestManager { get; set; }
-        [Obsolete("Use standalone IPageManager")]
-        IPageQueryService PageManager { get; set; }
-        IJsonApiContext ApplyContext<T>(object controller);
-        //IMetaBuilder MetaBuilder { get; set; }
-        IGenericProcessorFactory GenericProcessorFactory { get; set; }
     }
 }

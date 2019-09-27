@@ -25,12 +25,12 @@ namespace JsonApiDotNetCore.Serialization
             if (field is AttrAttribute attr)
             {
                 if (!attr.IsImmutable)
-                    _updatedFields.AttributesToUpdate.Add(attr);
+                    _updatedFields.Attributes.Add(attr);
                 else
                     throw new InvalidOperationException($"Attribute {attr.PublicAttributeName} is immutable and therefore cannot be updated.");
             }
             else if (field is RelationshipAttribute relationship)
-                _updatedFields.RelationshipsToUpdate.Add(relationship);
+                _updatedFields.Relationships.Add(relationship);
         }
     }
 }

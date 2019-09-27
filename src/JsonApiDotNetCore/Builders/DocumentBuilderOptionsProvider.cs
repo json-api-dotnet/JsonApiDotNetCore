@@ -6,12 +6,8 @@ namespace JsonApiDotNetCore.Builders
 {
     public class DocumentBuilderOptionsProvider : IDocumentBuilderOptionsProvider
     {
-        private readonly IJsonApiContext _jsonApiContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public DocumentBuilderOptionsProvider(IJsonApiOptions options, IHttpContextAccessor httpContextAccessor)
+        public DocumentBuilderOptionsProvider(IJsonApiOptions options)
         {
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public SerializerBehaviour GetDocumentBuilderOptions()

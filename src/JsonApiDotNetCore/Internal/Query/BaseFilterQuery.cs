@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Internal.Query
     public class BaseFilterQuery : BaseAttrQuery
     {
         public BaseFilterQuery(
-            IRequestManager requestManager,
+            IRequestContext requestManager,
             IResourceGraph resourceGraph,
             FilterQuery filterQuery)
         : base(requestManager, resourceGraph, filterQuery)

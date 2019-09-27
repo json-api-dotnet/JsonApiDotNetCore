@@ -13,10 +13,10 @@ namespace JsonApiDotNetCore.Builders
 
     public class ServerSerializerFactory : IJsonApiSerializerFactory
     {
-        private readonly IRequestManager _requestManager;
+        private readonly IRequestContext _requestManager;
         private readonly IServiceProvider _provider;
 
-        public ServerSerializerFactory(IRequestManager requestManager, IServiceProvider provider)
+        public ServerSerializerFactory(IRequestContext requestManager, IServiceProvider provider)
         {
             _requestManager = requestManager;
             _provider = provider;

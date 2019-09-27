@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
-    public interface IRequestManager : IQueryRequest
+    public interface IRequestContext : IQueryRequest
     {
         /// <summary>
         /// The request namespace. This may be an absolute or relative path
@@ -26,16 +26,6 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// If the request is on the `{id}/relationships/{relationshipName}` route
         /// </summary>
         bool IsRelationshipPath { get; set; }
-        /// <summary>
-        /// Gets the relationships as set in the query parameters
-        /// </summary>
-        /// <returns></returns>
-        List<string> GetRelationships();
-        /// <summary>
-        /// Gets the sparse fields
-        /// </summary>
-        /// <returns></returns>
-        List<string> GetFields();
         /// <summary>
         /// Sets the current context entity for this entire request
         /// </summary>

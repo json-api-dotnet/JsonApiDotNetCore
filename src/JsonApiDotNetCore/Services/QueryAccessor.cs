@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class QueryAccessor : IQueryAccessor
     {
-        private readonly IRequestManager _requestManager;
+        private readonly IRequestContext _requestManager;
         private readonly ILogger<QueryAccessor> _logger;
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Services
         /// <param name="requestManager"></param>
         /// <param name="logger"></param>
         public QueryAccessor(
-            IRequestManager requestManager,
+            IRequestContext requestManager,
             ILogger<QueryAccessor> logger)
         {
             _requestManager = requestManager;

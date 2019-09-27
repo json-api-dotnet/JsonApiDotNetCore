@@ -16,15 +16,15 @@ namespace UnitTests.Services
 {
     public class QueryParserTests
     {
-        private readonly Mock<IRequestManager> _requestMock;
+        private readonly Mock<IRequestContext> _requestMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
-        private readonly IInternalFieldsQueryService  _fieldsQuery = new Mock<IInternalFieldsQueryService>().Object;
-        private readonly IInternalIncludedQueryService  _includedQuery = new Mock<IInternalIncludedQueryService>().Object;
-        private readonly IContextEntityProvider  _graph = new Mock<IContextEntityProvider>().Object;
+        private readonly IInternalFieldsQueryService _fieldsQuery = new Mock<IInternalFieldsQueryService>().Object;
+        private readonly IInternalIncludedQueryService _includedQuery = new Mock<IInternalIncludedQueryService>().Object;
+        private readonly IContextEntityProvider _graph = new Mock<IContextEntityProvider>().Object;
 
         public QueryParserTests()
         {
-            _requestMock = new Mock<IRequestManager>();
+            _requestMock = new Mock<IRequestContext>();
             _queryCollectionMock = new Mock<IQueryCollection>();
         }
 
@@ -44,7 +44,7 @@ namespace UnitTests.Services
                 .Setup(m => m.DisabledQueryParams)
                 .Returns(QueryParams.None);
 
-            var queryParser = new QueryParser(_includedQuery, _fieldsQuery, _requestMock.Object, _graph,  new JsonApiOptions());
+            var queryParser = new QueryParser(_includedQuery, _fieldsQuery, _requestMock.Object, _graph, new JsonApiOptions());
 
             // act
             var querySet = queryParser.Parse(_queryCollectionMock.Object);

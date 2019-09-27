@@ -11,14 +11,14 @@ namespace JsonApiDotNetCore.Builders
 {
     public class LinkBuilder : ILinkBuilder
     {
-        private readonly IRequestManager _requestManager;
+        private readonly IRequestContext _requestManager;
         private readonly IGlobalLinksConfiguration _options;
         private readonly IPageQueryService _pageManager;
         private readonly ContextEntity _requestResourceContext;
         private readonly IContextEntityProvider _provider;
 
         public LinkBuilder(IGlobalLinksConfiguration options,
-                           IRequestManager requestManager,
+                           IRequestContext requestManager,
                            IPageQueryService pageManager,
                            IContextEntityProvider provider)
         {

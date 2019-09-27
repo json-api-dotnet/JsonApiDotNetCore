@@ -202,7 +202,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IContextEntityProvider>(graph);
 
             services.AddScoped(typeof(ServerSerializer<>));
-            services.AddScoped<IRequestManager, RequestManager>();
+            services.AddScoped<IRequestContext, RequestContext>();
             services.AddScoped<IPageQueryService, PageQueryService>();
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();

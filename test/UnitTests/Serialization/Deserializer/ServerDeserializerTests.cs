@@ -100,8 +100,8 @@ namespace UnitTests.Serialization.Deserializer
         {
             attributesToUpdate = new List<AttrAttribute>();
             relationshipsToUpdate = new List<RelationshipAttribute>();
-            _fieldsManagerMock.Setup(m => m.AttributesToUpdate).Returns(attributesToUpdate);
-            _fieldsManagerMock.Setup(m => m.RelationshipsToUpdate).Returns(relationshipsToUpdate);
+            _fieldsManagerMock.Setup(m => m.Attributes).Returns(attributesToUpdate);
+            _fieldsManagerMock.Setup(m => m.Relationshipss)).Returns(relationshipsToUpdate);
         }
     }
 }

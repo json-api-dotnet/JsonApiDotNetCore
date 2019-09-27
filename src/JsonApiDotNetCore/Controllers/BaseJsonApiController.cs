@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Controllers
         private readonly ILogger<BaseJsonApiController<T, TId>> _logger;
         private readonly IJsonApiOptions _jsonApiOptions;
         private readonly IResourceGraph _resourceGraph;
-
+        
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceGraph resourceGraphManager,

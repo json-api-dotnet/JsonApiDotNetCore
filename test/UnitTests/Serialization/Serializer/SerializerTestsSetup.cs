@@ -69,9 +69,9 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected IRequestManager GetRequestManager<T>() where T : class, IIdentifiable
+        protected IRequestContext GetRequestManager<T>() where T : class, IIdentifiable
         {
-            var mock = new Mock<IRequestManager>();
+            var mock = new Mock<IRequestContext>();
             mock.Setup(m => m.GetRequestResource()).Returns(_resourceGraph.GetContextEntity<T>());
             return mock.Object;
         }
@@ -99,7 +99,7 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected IIncludedQueryService  GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
+        protected IIncludedQueryService GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
         {
             var mock = new Mock<IIncludedQueryService>();
             if (inclusionChains != null)

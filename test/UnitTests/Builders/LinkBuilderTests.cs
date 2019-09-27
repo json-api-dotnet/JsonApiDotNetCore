@@ -168,9 +168,9 @@ namespace UnitTests
             return links.First == null && links.Prev == null && links.Next == null && links.Last == null;
         }
 
-        private IRequestManager GetRequestManager(ContextEntity resourceContext = null)
+        private IRequestContext GetRequestManager(ContextEntity resourceContext = null)
         {
-            var mock = new Mock<IRequestManager>();
+            var mock = new Mock<IRequestContext>();
             mock.Setup(m => m.BasePath).Returns(_host);
             mock.Setup(m => m.GetRequestResource()).Returns(resourceContext);
             return mock.Object;

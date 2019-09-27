@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExample.Services
         public CustomArticleService(
             IEntityRepository<Article> repository,
             IJsonApiOptions jsonApiOptions,
-            IRequestManager queryManager,
+            IRequestContext queryManager,
             IPageQueryService pageManager,
             IResourceGraph resourceGraph,
             IResourceHookExecutor resourceHookExecutor = null,

@@ -11,7 +11,8 @@ using System.Text;
 
 namespace JsonApiDotNetCore.Managers
 {
-    class RequestManager : IRequestManager
+
+    class RequestContext : IRequestContext
     {
         private ContextEntity _contextEntity;
         private IQueryParser _queryParser;

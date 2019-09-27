@@ -51,5 +51,6 @@
     <Folder Include="Models\JsonApi\" />
     <Folder Include="QueryServices\" />
     <Folder Include="QueryServices\Contracts\" />
+    <Folder Include="Internal\Exceptions\" />
   </ItemGroup>
 </Project>

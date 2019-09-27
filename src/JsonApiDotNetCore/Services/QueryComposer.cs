@@ -6,12 +6,12 @@ namespace JsonApiDotNetCore.Services
 {
     public interface IQueryComposer
     {
-        string Compose(IRequestManager jsonApiContext);
+        string Compose(IRequestContext jsonApiContext);
     }
 
     public class QueryComposer : IQueryComposer
     {
-        public string Compose(IRequestManager requestManager)
+        public string Compose(IRequestContext requestManager)
         {
             string result = "";
             if (requestManager != null && requestManager.QuerySet != null)

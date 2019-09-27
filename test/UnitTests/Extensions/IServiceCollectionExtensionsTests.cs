@@ -44,7 +44,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
 
             // assert
-            var requestManager = provider.GetService<IRequestManager>();
+            var requestManager = provider.GetService<IRequestContext>();
             Assert.NotNull(requestManager);
             var graph = provider.GetService<IResourceGraph>();
             Assert.NotNull(graph);

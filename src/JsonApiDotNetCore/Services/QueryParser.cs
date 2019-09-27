@@ -22,20 +22,23 @@ namespace JsonApiDotNetCore.Services
     {
         private readonly IInternalIncludedQueryService _includedQuery;
         private readonly IInternalFieldsQueryService _fieldQuery;
-        private readonly IRequestManager _requestManager;
+        private readonly IPageQueryService _pageQuery;
+        private readonly IRequestContext _requestManager;
         private readonly IJsonApiOptions _options;
         private readonly ContextEntity _requestResource;
         private readonly IContextEntityProvider _provider;
 
         public QueryParser(IInternalIncludedQueryService includedRelationships,
             IInternalFieldsQueryService fieldQuery,
-            IRequestManager requestManager,
+            IRequestContext requestManager,
+            IPageQueryService pageQuery,
             IContextEntityProvider provider,
             IJsonApiOptions options)
         {
             _includedQuery = includedRelationships;
             _fieldQuery = fieldQuery;
             _requestManager = requestManager;
+            _pageQuery = pageQuery;
             _provider = provider;
             _requestResource = requestManager.GetRequestResource();
             _options = options;
@@ -43,7 +46,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual QuerySet Parse(IQueryCollection query)
         {
-            var querySet = new QuerySet(); 
+            var querySet = new QuerySet();
             var disabledQueries = _requestManager.DisabledQueryParams;
             foreach (var pair in query)
             {
@@ -212,7 +215,6 @@ namespace JsonApiDotNetCore.Services
                 _includedQuery.Register(parsedChain);
             }
 
-
             return inclusions;
         }
 
@@ -231,11 +233,12 @@ namespace JsonApiDotNetCore.Services
             {
                 if (relationship != default)
                 {
-                    var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.DependentType);
+                    var relationProperty = _resourceGraph.GetContextEntity(relationship.DependentType);
                     var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
                     if (attr == null)
                         throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
 
+                    _fieldQuery.Register(attr, relationship);
                     // e.g. "Owner.Name"
                     includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
 
@@ -246,6 +249,7 @@ namespace JsonApiDotNetCore.Services
                     if (attr == null)
                         throw new JsonApiException(400, $"'{_requestResource.EntityName}' does not contain '{field}'.");
 
+                    _fieldQuery.Register(attr, relationship);
                     // e.g. "Name"
                     includedFields.Add(attr.InternalAttributeName);
                 }

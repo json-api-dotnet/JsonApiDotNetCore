@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -25,8 +26,9 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IPageQueryService _pageManager;
-        private readonly IRequestManager _requestManager;
+        private readonly IRequestContext _requestManager;
         private readonly IJsonApiOptions _options;
+        private readonly IUpdatedFields _updatedFields;
         private readonly IResourceGraph _resourceGraph;
         private readonly IEntityRepository<TEntity, TId> _repository;
         private readonly ILogger _logger;
@@ -36,7 +38,8 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
                 IEntityRepository<TEntity, TId> repository,
                 IJsonApiOptions options,
-                IRequestManager requestManager,
+                IUpdatedFields updatedFields,
+                IRequestContext requestManager,
                 IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
@@ -46,6 +49,7 @@ namespace JsonApiDotNetCore.Services
             _requestManager = requestManager;
             _pageManager = pageManager;
             _options = options;
+            _updatedFields = updatedFields;
             _resourceGraph = resourceGraph;
             _repository = repository;
             if (mapper == null && typeof(TResource) != typeof(TEntity))
@@ -66,7 +70,7 @@ namespace JsonApiDotNetCore.Services
             // this ensures relationships get reloaded from the database if they have
             // been requested
             // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
-            if (ShouldRelationshipsBeIncluded())
+            if (ShouldIncludeRelationships())
             {
                 if (_repository is IEntityFrameworkRepository<TEntity> efRepository)
                     efRepository.DetachRelationshipPointers(entity);
@@ -287,28 +291,23 @@ namespace JsonApiDotNetCore.Services
         {
             var query = _repository.Select(_repository.Get(), _requestManager.QuerySet?.Fields).Where(e => e.Id.Equals(id));
 
-            _requestManager.GetRelationships().ForEach((Action<string>)(r =>
-            {
-                query = this._repository.Include((IQueryable<TEntity>)query, r);
-            }));
+            foreach (var r in _updatedFields.Relationships)
+                query = _repository.Include(query, r.InternalRelationshipName);
 
             TEntity value;
             // https://github.com/aspnet/EntityFrameworkCore/issues/6573
-            if (_requestManager.GetFields()?.Count() > 0)
-            {
+            if (_updatedFields.Attributes.Count() > 0)
                 value = query.FirstOrDefault();
-            }
             else
-            {
                 value = await _repository.FirstOrDefaultAsync(query);
-            }
+
 
             return value;
         }
 
         private bool ShouldIncludeRelationships()
         {
-            return _requestManager.GetRelationships()?.Count() > 0;
+            return _updatedFields.Relationships.Count() > 0;
         }
 
 
@@ -321,15 +320,6 @@ namespace JsonApiDotNetCore.Services
             return false;
         }
 
-        /// <summary>
-        /// Should the relationships be included?
-        /// </summary>
-        /// <returns></returns>
-        private bool ShouldRelationshipsBeIncluded()
-        {
-            return _requestManager.GetRelationships()?.Count() > 0;
-
-        }
         /// <summary>
         /// Casts the entity given to `TResource` or maps it to its equal
         /// </summary>
@@ -367,7 +357,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IEntityRepository<TResource, TId> repository,
             IJsonApiOptions apiOptions,
-            IRequestManager requestManager,
+            IRequestContext requestManager,
             IResourceGraph resourceGraph,
             IPageQueryService pageManager,
             ILoggerFactory loggerFactory = null,
@@ -396,7 +386,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IEntityRepository<TResource> repository,
             IJsonApiOptions options,
-            IRequestManager requestManager,
+            IRequestContext requestManager,
             IPageQueryService pageManager,
             IResourceGraph resourceGraph,
             ILoggerFactory loggerFactory = null,
