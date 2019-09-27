@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JsonApiDotNetCore.Managers.Contracts
+namespace JsonApiDotNetCore.QueryServices.Contracts
 {
     public interface IPageQueryService
     {

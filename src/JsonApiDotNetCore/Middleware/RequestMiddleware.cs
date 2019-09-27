@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Middleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
-        private IRequestContext _requestManager;
+        private ICurrentRequest _requestManager;
 
         public RequestMiddleware(RequestDelegate next)
         {
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task Invoke(HttpContext httpContext,
-                                 IRequestContext requestManager)
+                                 ICurrentRequest requestManager)
         {
             _httpContext = httpContext;
             _requestManager = requestManager;

@@ -1,6 +1,6 @@
 ﻿using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Contracts
+namespace JsonApiDotNetCore.Serialization.Deserializer.Contracts
 {
     public interface IClientDeserializer
     {

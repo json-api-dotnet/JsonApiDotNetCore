@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
 
-namespace JsonApiDotNetCore.Serialization
+namespace JsonApiDotNetCore.Serialization.Deserializer
 {
     public class ClientDeserializer : DocumentParser, IClientDeserializer
     {

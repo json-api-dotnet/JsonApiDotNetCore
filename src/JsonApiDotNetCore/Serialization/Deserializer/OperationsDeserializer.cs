@@ -11,7 +11,7 @@ using JsonApiDotNetCore.Models.Operations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JsonApiDotNetCore.Serialization
+namespace JsonApiDotNetCore.Serialization.Deserializer
 {
 
     public class OperationsDeserializer : IOperationsDeserializer
@@ -294,11 +294,5 @@ namespace JsonApiDotNetCore.Serialization
                         + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
             }
         }
-    }
-
-    public interface IOperationsDeserializer
-    {
-        object Deserialize(string body);
-        object DocumentToObject(ResourceObject data, List<ResourceObject> included = null);
     }
 }

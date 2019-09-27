@@ -6,10 +6,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Hooks
 {

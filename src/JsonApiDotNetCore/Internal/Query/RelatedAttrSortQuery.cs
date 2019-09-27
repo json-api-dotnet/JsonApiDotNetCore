@@ -5,7 +5,6 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrSortQuery : BaseAttrQuery
     {
         public RelatedAttrSortQuery(
-            IJsonApiContext jsonApiContext,
             SortQuery sortQuery)
             :base(jsonApiContext.RequestManager, jsonApiContext.ResourceGraph, sortQuery)
         {

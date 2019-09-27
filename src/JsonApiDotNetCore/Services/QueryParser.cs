@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.QueryServices.Contracts;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -23,14 +24,14 @@ namespace JsonApiDotNetCore.Services
         private readonly IInternalIncludedQueryService _includedQuery;
         private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IJsonApiOptions _options;
         private readonly ContextEntity _requestResource;
         private readonly IContextEntityProvider _provider;
 
         public QueryParser(IInternalIncludedQueryService includedRelationships,
             IInternalFieldsQueryService fieldQuery,
-            IRequestContext requestManager,
+            ICurrentRequest requestManager,
             IPageQueryService pageQuery,
             IContextEntityProvider provider,
             IJsonApiOptions options)

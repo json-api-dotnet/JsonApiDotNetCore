@@ -16,7 +16,7 @@ namespace UnitTests.Services
 {
     public class QueryParserTests
     {
-        private readonly Mock<IRequestContext> _requestMock;
+        private readonly Mock<ICurrentRequest> _requestMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
         private readonly IInternalFieldsQueryService _fieldsQuery = new Mock<IInternalFieldsQueryService>().Object;
         private readonly IInternalIncludedQueryService _includedQuery = new Mock<IInternalIncludedQueryService>().Object;
@@ -24,7 +24,7 @@ namespace UnitTests.Services
 
         public QueryParserTests()
         {
-            _requestMock = new Mock<IRequestContext>();
+            _requestMock = new Mock<ICurrentRequest>();
             _queryCollectionMock = new Mock<IQueryCollection>();
         }
 

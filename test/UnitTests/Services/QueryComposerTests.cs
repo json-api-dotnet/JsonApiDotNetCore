@@ -26,7 +26,7 @@ namespace UnitTests.Services
             filters.Add(filter);
             querySet.Filters = filters;
 
-            var rmMock = new Mock<IRequestContext>();
+            var rmMock = new Mock<ICurrentRequest>();
             rmMock
                 .Setup(m => m.QuerySet)
                 .Returns(querySet);
@@ -49,7 +49,7 @@ namespace UnitTests.Services
             filters.Add(filter);
             filters.Add(filter2);
             querySet.Filters = filters;
-            var rmMock = new Mock<IRequestContext>();
+            var rmMock = new Mock<ICurrentRequest>();
             rmMock
                 .Setup(m => m.QuerySet)
                 .Returns(querySet);
@@ -68,7 +68,7 @@ namespace UnitTests.Services
             // arrange
             var querySet = new QuerySet();
 
-            var rmMock = new Mock<IRequestContext>();
+            var rmMock = new Mock<ICurrentRequest>();
             rmMock
                 .Setup(m => m.QuerySet)
                 .Returns(querySet);

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 

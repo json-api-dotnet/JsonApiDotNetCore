@@ -3,30 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.DependencyInjection;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
-
-    public class ServerSerializerFactory : IJsonApiSerializerFactory
-    {
-        private readonly IRequestContext _requestManager;
-        private readonly IServiceProvider _provider;
-
-        public ServerSerializerFactory(IRequestContext requestManager, IServiceProvider provider)
-        {
-            _requestManager = requestManager;
-            _provider = provider;
-        }
-        public IJsonApiSerializer GetSerializer()
-        {
-            var serializerType = typeof(ServerSerializer<>).MakeGenericType(_requestManager.GetRequestResource().EntityType);
-            return (IJsonApiSerializer)_provider.GetRequiredService(serializerType);
-        }
-    }
 
     public class ServerSerializer<T> : DocumentBuilder, IJsonApiSerializer where T : class, IIdentifiable
     {

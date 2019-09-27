@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
     public abstract class ResourceObjectBuilder
     {

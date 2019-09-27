@@ -11,7 +11,6 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Data
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCore.Data
         IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IUpdatedFields _updatedFields;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;

@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.QueryServices.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,13 +15,13 @@ namespace JsonApiDotNetCore.Middleware
     public class JsonApiActionFilter : IActionFilter
     {
         private readonly IResourceGraph _resourceGraph;
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IPageQueryService _pageManager;
         private readonly IQueryParser _queryParser;
         private readonly IJsonApiOptions _options;
         private HttpContext _httpContext;
         public JsonApiActionFilter(IResourceGraph resourceGraph,
-                                 IRequestContext requestManager,
+                                 ICurrentRequest requestManager,
                                  IPageQueryService pageManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)

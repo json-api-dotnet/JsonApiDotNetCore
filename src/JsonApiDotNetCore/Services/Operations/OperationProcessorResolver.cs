@@ -35,15 +35,12 @@ namespace JsonApiDotNetCore.Services.Operations
     public class OperationProcessorResolver : IOperationProcessorResolver
     {
         private readonly IGenericProcessorFactory _processorFactory;
-        private readonly IJsonApiContext _context;
 
         /// <nodoc />
         public OperationProcessorResolver(
-            IGenericProcessorFactory processorFactory,
-            IJsonApiContext context)
+            IGenericProcessorFactory processorFactory)
         {
             _processorFactory = processorFactory;
-            _context = context;
         }
 
         /// <inheritdoc />

@@ -14,10 +14,10 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public abstract class BaseAttrQuery
     {
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IResourceGraph _resourceGraph;
 
-        public BaseAttrQuery(IRequestContext requestManager, IResourceGraph resourceGraph, BaseQuery baseQuery)
+        public BaseAttrQuery(ICurrentRequest requestManager, IResourceGraph resourceGraph, BaseQuery baseQuery)
         {
             _requestManager = requestManager ?? throw new ArgumentNullException(nameof(requestManager));
             _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));

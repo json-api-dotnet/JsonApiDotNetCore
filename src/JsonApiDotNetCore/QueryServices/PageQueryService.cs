@@ -1,8 +1,8 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.QueryServices.Contracts;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.QueryServices
 {
     public class PageQueryService : IPageQueryService
     {

@@ -44,7 +44,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
 
             // assert
-            var requestManager = provider.GetService<IRequestContext>();
+            var requestManager = provider.GetService<ICurrentRequest>();
             Assert.NotNull(requestManager);
             var graph = provider.GetService<IResourceGraph>();
             Assert.NotNull(graph);
@@ -73,7 +73,7 @@ namespace UnitTests.Extensions
 
             // act
             services.AddResourceService<IntResourceService>();
-            
+
             // assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceService<IntResource>)));
@@ -96,7 +96,7 @@ namespace UnitTests.Extensions
 
             // act
             services.AddResourceService<GuidResourceService>();
-            
+
             // assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceService<GuidResource, Guid>)));
@@ -116,7 +116,7 @@ namespace UnitTests.Extensions
         {
             // arrange
             var services = new ServiceCollection();
-            
+
             // act, assert
             Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
         }
@@ -167,7 +167,7 @@ namespace UnitTests.Extensions
         }
 
 
-        public class TestContext : DbContext 
+        public class TestContext : DbContext
         {
             public DbSet<IntResource> Resource { get; set; }
         }

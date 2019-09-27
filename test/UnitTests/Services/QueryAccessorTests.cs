@@ -13,13 +13,13 @@ namespace UnitTests.Services
 {
     public class QueryAccessorTests
     {
-        private readonly Mock<IRequestContext> _rmMock;
+        private readonly Mock<ICurrentRequest> _rmMock;
         private readonly Mock<ILogger<QueryAccessor>> _loggerMock;
         private readonly Mock<IQueryCollection> _queryMock;
 
         public QueryAccessorTests()
         {
-            _rmMock = new Mock<IRequestContext>();
+            _rmMock = new Mock<ICurrentRequest>();
             _loggerMock = new Mock<ILogger<QueryAccessor>>();
             _queryMock = new Mock<IQueryCollection>();
         }

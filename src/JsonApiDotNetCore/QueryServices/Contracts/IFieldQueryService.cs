@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.QueryServices.Contracts
 {
     public interface IFieldsQueryService
     {

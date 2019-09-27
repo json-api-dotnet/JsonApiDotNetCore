@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 
@@ -17,12 +17,12 @@ namespace JsonApiDotNetCore.Formatters
     {
         private readonly IOperationsDeserializer _operationsDeserializer;
         private readonly IJsonApiDeserializer _deserializer;
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly ILogger<JsonApiReader> _logger;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
                              IOperationsDeserializer operationsDeserializer,
-                             IRequestContext requestManager,
+                             ICurrentRequest requestManager,
                              ILoggerFactory loggerFactory)
         {
             _deserializer = deserializer;

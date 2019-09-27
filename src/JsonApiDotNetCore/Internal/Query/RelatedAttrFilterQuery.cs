@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Internal.Query
     public class RelatedAttrFilterQuery : BaseFilterQuery
     {
         public RelatedAttrFilterQuery(
-            IRequestContext requestManager,
+            ICurrentRequest requestManager,
             IResourceGraph resourceGraph,
             FilterQuery filterQuery)
             : base(requestManager: requestManager,

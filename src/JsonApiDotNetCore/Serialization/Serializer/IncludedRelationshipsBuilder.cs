@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
-
     public class IncludedRelationshipsBuilder : ResourceObjectBuilder, IIncludedRelationshipsBuilder
     {
         private readonly HashSet<ResourceObject> _included;
@@ -98,6 +99,7 @@ namespace JsonApiDotNetCore.Builders
 
         private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute attr)
         {
+            /// @TODO: apply sparse field selection using attr.
             var type = parent.GetType();
             var resourceName = _provider.GetContextEntity(type).EntityName;
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);

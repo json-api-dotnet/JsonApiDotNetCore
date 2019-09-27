@@ -1,6 +1,4 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Builders
 {

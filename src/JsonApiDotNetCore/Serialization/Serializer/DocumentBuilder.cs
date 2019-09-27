@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
     public abstract class DocumentBuilder : ResourceObjectBuilder
     {

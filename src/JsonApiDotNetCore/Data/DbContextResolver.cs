@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data

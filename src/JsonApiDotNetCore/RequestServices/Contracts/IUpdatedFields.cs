@@ -9,10 +9,4 @@ namespace JsonApiDotNetCore.Serialization
         List<RelationshipAttribute> Relationships { get; set; }
     }
 
-    public class UpdatedFields: IUpdatedFields
-    {
-        public List<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();
-        public List<RelationshipAttribute> Relationships { get; set; } = new List<RelationshipAttribute>();
-    }
-
 }

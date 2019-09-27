@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.QueryServices.Contracts;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.QueryServices
 {
 
     public class IncludedQueryService : IIncludedQueryService, IInternalIncludedQueryService

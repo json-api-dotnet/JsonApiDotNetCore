@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
 {
     public interface IMetaBuilder<T> where T : class, IIdentifiable
     {

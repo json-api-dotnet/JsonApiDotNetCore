@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
-    public interface IRequestContext : IQueryRequest
+    public interface ICurrentRequest : IQueryRequest
     {
         /// <summary>
         /// The request namespace. This may be an absolute or relative path

@@ -4,9 +4,11 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using JsonApiDotNetCore.Services;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
     public class MetaBuilder<T> : IMetaBuilder<T> where T : class, IIdentifiable
     {

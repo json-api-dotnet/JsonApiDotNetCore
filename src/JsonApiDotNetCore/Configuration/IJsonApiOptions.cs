@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Internal.Contracts;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Configuration
 {

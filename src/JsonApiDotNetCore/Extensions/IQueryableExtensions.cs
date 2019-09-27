@@ -7,7 +7,6 @@ using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Extensions
 {

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IPageQueryService _pageManager;
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IJsonApiOptions _options;
         private readonly IUpdatedFields _updatedFields;
         private readonly IResourceGraph _resourceGraph;
@@ -39,7 +40,7 @@ namespace JsonApiDotNetCore.Services
                 IEntityRepository<TEntity, TId> repository,
                 IJsonApiOptions options,
                 IUpdatedFields updatedFields,
-                IRequestContext requestManager,
+                ICurrentRequest requestManager,
                 IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
@@ -357,7 +358,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IEntityRepository<TResource, TId> repository,
             IJsonApiOptions apiOptions,
-            IRequestContext requestManager,
+            ICurrentRequest requestManager,
             IResourceGraph resourceGraph,
             IPageQueryService pageManager,
             ILoggerFactory loggerFactory = null,
@@ -386,7 +387,7 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IEntityRepository<TResource> repository,
             IJsonApiOptions options,
-            IRequestContext requestManager,
+            ICurrentRequest requestManager,
             IPageQueryService pageManager,
             IResourceGraph resourceGraph,
             ILoggerFactory loggerFactory = null,

@@ -5,9 +5,6 @@ using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 

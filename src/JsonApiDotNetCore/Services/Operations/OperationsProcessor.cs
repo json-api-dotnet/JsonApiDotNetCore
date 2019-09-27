@@ -21,20 +21,17 @@ namespace JsonApiDotNetCore.Services.Operations
     {
         private readonly IOperationProcessorResolver _processorResolver;
         private readonly DbContext _dbContext;
-        private readonly IJsonApiContext _jsonApiContext;
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IResourceGraph _resourceGraph;
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
             IDbContextResolver dbContextResolver,
-            IJsonApiContext jsonApiContext,
-            IRequestContext requestManager,
+            ICurrentRequest requestManager,
             IResourceGraph resourceGraph)
         {
             _processorResolver = processorResolver;
             _dbContext = dbContextResolver.GetContext();
-            _jsonApiContext = jsonApiContext;
             _requestManager = requestManager;
             _resourceGraph = resourceGraph;
         }

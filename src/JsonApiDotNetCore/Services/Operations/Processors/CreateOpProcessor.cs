@@ -1,13 +1,9 @@
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
-using JsonApiDotNetCore.Serialization.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {

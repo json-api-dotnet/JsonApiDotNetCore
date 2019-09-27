@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
@@ -14,8 +13,6 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
@@ -24,8 +21,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using JsonApiDotNetCore.Serialization.Contracts;
 using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCore.Extensions
@@ -202,7 +197,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IContextEntityProvider>(graph);
 
             services.AddScoped(typeof(ServerSerializer<>));
-            services.AddScoped<IRequestContext, RequestContext>();
+            services.AddScoped<ICurrentRequest, CurrentRequest>();
             services.AddScoped<IPageQueryService, PageQueryService>();
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();

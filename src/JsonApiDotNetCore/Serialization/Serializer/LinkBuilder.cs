@@ -5,20 +5,22 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using JsonApiDotNetCore.Services;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
     public class LinkBuilder : ILinkBuilder
     {
-        private readonly IRequestContext _requestManager;
+        private readonly ICurrentRequest _requestManager;
         private readonly IGlobalLinksConfiguration _options;
         private readonly IPageQueryService _pageManager;
         private readonly ContextEntity _requestResourceContext;
         private readonly IContextEntityProvider _provider;
 
         public LinkBuilder(IGlobalLinksConfiguration options,
-                           IRequestContext requestManager,
+                           ICurrentRequest requestManager,
                            IPageQueryService pageManager,
                            IContextEntityProvider provider)
         {

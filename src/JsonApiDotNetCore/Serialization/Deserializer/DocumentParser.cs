@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JsonApiDotNetCore.Serialization
+namespace JsonApiDotNetCore.Serialization.Deserializer
 {
     /// <summary>
     /// Base class for deserialization. 

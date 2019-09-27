@@ -44,7 +44,7 @@ namespace UnitTests.Services
                 IncludeTotalRecordCount = false
             } as IJsonApiOptions;
             var repositoryMock = new Mock<IEntityRepository<Article>>();
-            var queryManagerMock = new Mock<IRequestContext>();
+            var queryManagerMock = new Mock<ICurrentRequest>();
             var pageManagerMock = new Mock<IPageQueryService>();
             var rgMock = new Mock<IResourceGraph>();
             var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, rgMock.Object);
@@ -74,7 +74,7 @@ namespace UnitTests.Services
             } as IJsonApiOptions;
             var repositoryMock = new Mock<IEntityRepository<Article>>();
 
-            var requestManager = new Mock<IRequestContext>();
+            var requestManager = new Mock<ICurrentRequest>();
             var pageManagerMock = new Mock<IPageQueryService>();
             requestManager.Setup(qm => qm.GetRelationships()).Returns(new List<string>() { "cookies" });
             requestManager.SetupGet(rm => rm.QuerySet).Returns(new QuerySet

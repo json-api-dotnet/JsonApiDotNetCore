@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
 {
     public interface ILinkBuilder
     {

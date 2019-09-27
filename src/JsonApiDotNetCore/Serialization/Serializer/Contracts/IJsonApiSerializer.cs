@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
 {
     public interface IJsonApiSerializer
     {

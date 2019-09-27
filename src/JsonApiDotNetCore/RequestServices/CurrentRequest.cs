@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.QueryServices;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,7 +13,7 @@ using System.Text;
 namespace JsonApiDotNetCore.Managers
 {
 
-    class RequestContext : IRequestContext
+    class CurrentRequest : ICurrentRequest
     {
         private ContextEntity _contextEntity;
         private IQueryParser _queryParser;

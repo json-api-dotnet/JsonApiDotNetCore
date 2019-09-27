@@ -7,8 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -40,9 +39,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetRelationshipService<T, int> getRelationship,
             IOperationsDeserializer deserializer,
             IDocumentBuilder documentBuilder,
-            IResourceGraph resourceGraph,
-            IJsonApiContext jsonApiContext
-        ) : base(getAll, getById, getRelationship, deserializer, documentBuilder, resourceGraph, jsonApiContext)
+            IResourceGraph resourceGraph
+        ) : base(getAll, getById, getRelationship, deserializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -56,7 +54,6 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IOperationsDeserializer _deserializer;
         private readonly IDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IJsonApiContext _jsonApiContext;
 
         /// <inheritdoc />
         public GetOpProcessor(
@@ -65,8 +62,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetRelationshipService<T, TId> getRelationship,
             IOperationsDeserializer deserializer,
             IDocumentBuilder documentBuilder,
-            IResourceGraph resourceGraph,
-            IJsonApiContext jsonApiContext)
+            IResourceGraph resourceGraph)
         {
             _getAll = getAll;
             _getById = getById;
@@ -74,7 +70,6 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             _deserializer = deserializer;
             _documentBuilder = documentBuilder;
             _resourceGraph = resourceGraph;
-            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
         }
 
         /// <inheritdoc />

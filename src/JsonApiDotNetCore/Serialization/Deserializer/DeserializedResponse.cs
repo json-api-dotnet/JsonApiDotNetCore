@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Serialization
+namespace JsonApiDotNetCore.Serialization.Deserializer
 {
     /// TODO: Currently <see cref="ResourceLinks"/> and <see cref="RelationshipLinks"/>
-    /// information is ignored by the serializer. This is considered not mission critical for now, and therefore out of scope.
+    /// information is ignored by the serializer. This is out of scope for now because
+    /// it is not considered mission critical for v4.
     public class DeserializedResponseBase
     {
         public TopLevelLinks Links { get; internal set; }

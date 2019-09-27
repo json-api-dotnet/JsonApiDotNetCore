@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Services
 {

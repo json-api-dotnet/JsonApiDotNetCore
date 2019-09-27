@@ -69,9 +69,9 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected IRequestContext GetRequestManager<T>() where T : class, IIdentifiable
+        protected ICurrentRequest GetRequestManager<T>() where T : class, IIdentifiable
         {
-            var mock = new Mock<IRequestContext>();
+            var mock = new Mock<ICurrentRequest>();
             mock.Setup(m => m.GetRequestResource()).Returns(_resourceGraph.GetContextEntity<T>());
             return mock.Object;
         }
