@@ -49,6 +49,7 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(DateTimeOffset))
                     return DateTimeOffset.Parse(stringValue);
 
+
                 if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);
 
