@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample;
@@ -14,14 +14,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task Allows_GET_Requests()
         {
-            // arrange
+            // Arrange
             const string route = "readonly";
             const string method = "GET";
 
-            // act
+            // Act
             var statusCode = await MakeRequestAsync(route, method);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, statusCode);
         }
 

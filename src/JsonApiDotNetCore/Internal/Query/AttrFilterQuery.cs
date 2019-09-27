@@ -1,4 +1,6 @@
 using System;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -7,9 +9,10 @@ namespace JsonApiDotNetCore.Internal.Query
     public class AttrFilterQuery : BaseFilterQuery
     {
         public AttrFilterQuery(
-            IJsonApiContext jsonApiContext,
+            IRequestManager requestManager,
+            IResourceGraph resourceGraph,
             FilterQuery filterQuery)
-            : base(jsonApiContext, filterQuery)
+            : base(requestManager, resourceGraph, filterQuery)
         {
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");

@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +17,7 @@ namespace UnitTests
     public class DocumentBuilder_Tests
     {
         private readonly Mock<IJsonApiContext> _jsonApiContextMock;
-        private readonly PageManager _pageManager;
+        private readonly IPageManager _pageManager;
         private readonly JsonApiOptions _options;
         private readonly Mock<IRequestMeta> _requestMetaMock;
 
@@ -43,14 +46,12 @@ namespace UnitTests
                 .Setup(m => m.MetaBuilder)
                 .Returns(new MetaBuilder());
 
-            _pageManager = new PageManager();
+            _pageManager = new Mock<IPageManager>().Object;
             _jsonApiContextMock
                 .Setup(m => m.PageManager)
                 .Returns(_pageManager);
 
-            _jsonApiContextMock
-                .Setup(m => m.BasePath)
-                .Returns("localhost");
+
 
             _jsonApiContextMock
                 .Setup(m => m.RequestEntity)
@@ -61,11 +62,17 @@ namespace UnitTests
         public void Includes_Paging_Links_By_Default()
         {
             // arrange
-            _pageManager.PageSize = 1;
-            _pageManager.TotalRecords = 1;
-            _pageManager.CurrentPage = 1;
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+
+            var rmMock = new Mock<IRequestManager>();
+            rmMock.Setup(m => m.GetContextEntity()).Returns(new ContextEntity { EntityName = "resources" });
+            var rm = rmMock.Object;
+            var options = new JsonApiOptions { RelativeLinks = false };
+            var pg = new PageManager(new LinkBuilder(options, rm), options, rm);
+            pg.PageSize = 1;
+            pg.TotalRecords = 1;
+            pg.CurrentPage = 1;
+            var documentBuilder = GetDocumentBuilder(pageManager: pg);
             var entity = new Model();
 
             // act
@@ -75,6 +82,8 @@ namespace UnitTests
             Assert.NotNull(document.Links);
             Assert.NotNull(document.Links.Last);
         }
+
+
 
         [Fact]
         public void Page_Links_Can_Be_Disabled_Globally()
@@ -90,7 +99,7 @@ namespace UnitTests
                 .Setup(m => m.ResourceGraph)
                 .Returns(_options.ResourceGraph);
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
             var entity = new Model();
 
             // act
@@ -112,7 +121,7 @@ namespace UnitTests
                 .Setup(m => m.ResourceGraph)
                 .Returns(_options.ResourceGraph);
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
             var entity = new Model();
 
             // act
@@ -136,7 +145,7 @@ namespace UnitTests
                 .Setup(m => m.ResourceGraph)
                 .Returns(_options.ResourceGraph);
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
             var entity = new RelatedModel();
 
             // act
@@ -157,7 +166,7 @@ namespace UnitTests
                 .Setup(m => m.ResourceGraph)
                 .Returns(_options.ResourceGraph);
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
             var entity = new Model
             {
                 RelatedModel = new RelatedModel
@@ -189,7 +198,7 @@ namespace UnitTests
                 .Setup(m => m.ResourceGraph)
                 .Returns(_options.ResourceGraph);
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
             var entity = new Model
             {
                 RelatedModelId = relatedId
@@ -211,7 +220,7 @@ namespace UnitTests
         public void Build_Can_Build_Arrays()
         {
             var entities = new[] { new Model() };
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
 
             var documents = documentBuilder.Build(entities);
 
@@ -222,7 +231,7 @@ namespace UnitTests
         public void Build_Can_Build_CustomIEnumerables()
         {
             var entities = new Models(new[] { new Model() });
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object);
+            var documentBuilder = GetDocumentBuilder();
 
             var documents = documentBuilder.Build(entities);
 
@@ -247,7 +256,9 @@ namespace UnitTests
                 documentBuilderBehaviourMock.Setup(m => m.GetDocumentBuilderOptions())
                     .Returns(new DocumentBuilderOptions(omitNullValuedAttributes.Value));
             }
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, null, omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
+            var pageManagerMock = new Mock<IPageManager>();
+            var requestManagerMock = new Mock<IRequestManager>();
+            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, pageManagerMock.Object, requestManagerMock.Object, documentBuilderOptionsProvider: omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
             var document = documentBuilder.Build(new Model() { StringProperty = attributeValue });
 
             Assert.Equal(resultContainsAttribute, document.Data.Attributes.ContainsKey("StringProperty"));
@@ -303,7 +314,7 @@ namespace UnitTests
                     .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+            var documentBuilder = GetDocumentBuilder(scopedServiceProvider: scopedServiceProvider);
 
             var documents = documentBuilder.Build(entities);
 
@@ -327,7 +338,7 @@ namespace UnitTests
                     .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+            var documentBuilder = GetDocumentBuilder(scopedServiceProvider);
 
             var documents = documentBuilder.Build(entity);
 
@@ -350,7 +361,7 @@ namespace UnitTests
                     .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+            var documentBuilder = GetDocumentBuilder(scopedServiceProvider);
 
             var documents = documentBuilder.Build(entities);
 
@@ -374,10 +385,10 @@ namespace UnitTests
                     .AddSingleton(resourceGraph)
                     .BuildServiceProvider());
 
-            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, scopedServiceProvider: scopedServiceProvider);
+            var documentBuilder = GetDocumentBuilder(scopedServiceProvider);
 
             var documents = documentBuilder.Build(entity);
-            
+
             Assert.False(documents.Data.Attributes.ContainsKey("password"));
             Assert.True(documents.Data.Attributes.ContainsKey("username"));
         }
@@ -406,6 +417,18 @@ namespace UnitTests
 
             protected override List<AttrAttribute> OutputAttrs()
                 => Remove(user => user.Password);
+        }
+        private DocumentBuilder GetDocumentBuilder(TestScopedServiceProvider scopedServiceProvider = null, IPageManager pageManager = null)
+        {
+            var pageManagerMock = new Mock<IPageManager>();
+            var rmMock = new Mock<IRequestManager>();
+            rmMock.SetupGet(rm => rm.BasePath).Returns("Localhost");
+
+            if (pageManager != null)
+            {
+                return new DocumentBuilder(_jsonApiContextMock.Object, pageManager, rmMock.Object, scopedServiceProvider: scopedServiceProvider);
+            }
+            return new DocumentBuilder(_jsonApiContextMock.Object, pageManagerMock.Object, rmMock.Object, scopedServiceProvider: scopedServiceProvider);
         }
     }
 }

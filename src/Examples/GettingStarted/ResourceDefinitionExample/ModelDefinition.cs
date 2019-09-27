@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
 namespace GettingStarted.ResourceDefinitionExample

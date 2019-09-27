@@ -1,18 +1,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiCmdController<T>
-    : JsonApiCmdController<T, int> where T : class, IIdentifiable<int>
+    public class JsonApiCmdController<T> : JsonApiCmdController<T, int>
+        where T : class, IIdentifiable<int>
     {
         public JsonApiCmdController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService)
-            : base(jsonApiContext, resourceService)
+            : base(jsonApiOptions, 
+                  jsonApiContext, resourceService)
         { }
     }
 
@@ -20,9 +23,10 @@ namespace JsonApiDotNetCore.Controllers
     : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiCmdController(
+            IJsonApiOptions jsonApiOptions,
             IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
-        : base(jsonApiContext, resourceService)
+        : base(jsonApiOptions, resourceService)
         { }
 
         [HttpPost]

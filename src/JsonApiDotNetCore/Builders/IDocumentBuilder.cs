@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Builders
     public interface IDocumentBuilder
     {
         /// <summary>
-        /// Builds a json:api document from the provided resource instance.
+        /// Builds a Json:Api document from the provided resource instance.
         /// </summary>
         /// <param name="entity">The resource to convert.</param>
         Document Build(IIdentifiable entity);

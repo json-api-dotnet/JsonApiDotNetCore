@@ -1,11 +1,14 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -17,10 +20,14 @@ namespace JsonApiDotNetCore.Extensions
             DisableDetailedErrorsIfProduction(app);
             LogResourceGraphValidations(app);
 
+            app.UseEndpointRouting();
+
             app.UseMiddleware<RequestMiddleware>();
 
             if (useMvc)
+            {
                 app.UseMvc();
+            }
 
             using (var scope = app.ApplicationServices.CreateScope())
             {

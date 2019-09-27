@@ -215,6 +215,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            context.SaveChanges();
             var todoItems = _todoItemFaker.Generate(5);
             var guids = new List<Guid>();
             var notInGuids = new List<Guid>();

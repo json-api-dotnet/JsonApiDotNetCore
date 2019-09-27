@@ -43,18 +43,19 @@ namespace ResourceEntitySeparationExample
                 ServiceLifetime.Transient);
             services.AddScoped<IDbContextResolver, DbContextResolver<AppDbContext>>();
 
-            var mvcBuilder = services.AddMvcCore();
 
             services.AddJsonApi(options => {
                 options.Namespace = "api/v1";
                 options.DefaultPageSize = 10;
                 options.IncludeTotalRecordCount = true;
-                options.BuildResourceGraph((builder) => {
+                options.EnableResourceHooks = false; // not supported with ResourceEntitySeparation
+                options.BuildResourceGraph((builder) =>
+                {
                     builder.AddResource<CourseResource>("courses");
                     builder.AddResource<DepartmentResource>("departments");
                     builder.AddResource<StudentResource>("students");
                 });
-            }, mvcBuilder);
+            });
 
             services.AddAutoMapper();
             services.AddScoped<IResourceMapper, AutoMapperAdapter>();

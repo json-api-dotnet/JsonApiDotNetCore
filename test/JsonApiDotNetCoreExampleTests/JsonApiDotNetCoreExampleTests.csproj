@@ -24,9 +24,17 @@
     <PackageReference Include="Bogus" Version="$(BogusVersion)" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.6" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\Repositories\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Helpers\Repositories\AuthorizedTodoItemsRepository.cs" />
+    <Compile Remove="Helpers\Services\IAuthorizationService.cs" />
   </ItemGroup>
 </Project>

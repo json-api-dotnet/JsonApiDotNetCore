@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -29,10 +30,9 @@ namespace JsonApiDotNetCore.Extensions
                             meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
                             source: attrName == null ? null : new {
                                 pointer = $"/data/attributes/{attrName}"
-                            }));
+                        }));
                 }
             }
-
             return collection;
         }
     }

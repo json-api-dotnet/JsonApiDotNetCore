@@ -4,7 +4,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Exporters;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Generics;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
@@ -12,7 +12,8 @@ using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Benchmarks.Serialization {
+namespace Benchmarks.Serialization
+{
     [MarkdownExporter]
     public class JsonApiDeserializer_Benchmarks {
         private const string TYPE_NAME = "simple-types";
@@ -35,18 +36,21 @@ namespace Benchmarks.Serialization {
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
             var resourceGraph = resourceGraphBuilder.Build();
+            var  requestManagerMock = new Mock<IRequestManager>();
+
+            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
 
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
             jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+            jsonApiContextMock.Setup(m => m.RequestManager.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
 
             var jsonApiOptions = new JsonApiOptions();
             jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
 
-            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object);
+            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object, requestManagerMock.Object);
         }
 
         [Benchmark]

@@ -5,6 +5,7 @@ using BenchmarkDotNet.Attributes.Exporters;
 using BenchmarkDotNet.Attributes.Jobs;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http.Internal;
@@ -21,14 +22,14 @@ namespace Benchmarks.Query {
         private const string DESCENDING_SORT = "-" + ATTRIBUTE;
 
         public QueryParser_Benchmarks() {
-            var controllerContextMock = new Mock<IControllerContext>();
-            controllerContextMock.Setup(m => m.RequestEntity).Returns(new ContextEntity {
+            var requestMock = new Mock<IRequestManager>();
+            requestMock.Setup(m => m.GetContextEntity()).Returns(new ContextEntity {
                 Attributes = new List<AttrAttribute> {
                     new AttrAttribute(ATTRIBUTE, ATTRIBUTE)
                 }
             });
             var options = new JsonApiOptions();
-            _queryParser = new BenchmarkFacade(controllerContextMock.Object, options);
+            _queryParser = new BenchmarkFacade(requestMock.Object, options);
         }
 
         [Benchmark]
@@ -58,8 +59,8 @@ namespace Benchmarks.Query {
         // this facade allows us to expose and micro-benchmark protected methods
         private class BenchmarkFacade : QueryParser {
             public BenchmarkFacade(
-                IControllerContext controllerContext,
-                JsonApiOptions options) : base(controllerContext, options) { }
+                IRequestManager requestManager,
+                JsonApiOptions options) : base(requestManager, options) { }
 
             public void _ParseSortParameters(string value) => base.ParseSortParameters(value);
         }

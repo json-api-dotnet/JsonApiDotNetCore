@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IDocumentBuilder _documentBuilder;
         private readonly ILogger<JsonApiSerializer> _logger;
+        private readonly IRequestManager _requestManager;
         private readonly IJsonApiContext _jsonApiContext;
         
         public JsonApiSerializer(
@@ -19,14 +21,17 @@ namespace JsonApiDotNetCore.Serialization
             IDocumentBuilder documentBuilder)
         {
             _jsonApiContext = jsonApiContext;
+            _requestManager = jsonApiContext.RequestManager;
             _documentBuilder = documentBuilder;
         }
 
         public JsonApiSerializer(
             IJsonApiContext jsonApiContext,
+            IRequestManager requestManager,
             IDocumentBuilder documentBuilder,
             ILoggerFactory loggerFactory)
         {
+            _requestManager = requestManager;
             _jsonApiContext = jsonApiContext;
             _documentBuilder = documentBuilder;
             _logger = loggerFactory?.CreateLogger<JsonApiSerializer>();
@@ -37,7 +42,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entity == null)
                 return GetNullDataResponse();
 
-            if (entity.GetType() == typeof(ErrorCollection) || (_jsonApiContext.RequestEntity == null && _jsonApiContext.IsBulkOperationRequest == false))
+            if (entity.GetType() == typeof(ErrorCollection) || (_requestManager.GetContextEntity()== null && _jsonApiContext.IsBulkOperationRequest == false))
                 return GetErrorJson(entity, _logger);
 
             if (_jsonApiContext.IsBulkOperationRequest)

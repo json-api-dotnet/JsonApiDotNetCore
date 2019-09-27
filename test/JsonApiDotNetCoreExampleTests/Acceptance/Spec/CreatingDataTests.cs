@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -84,6 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // act
             var response = await client.SendAsync(request);
+            var sdfsd = await response.Content.ReadAsStringAsync();
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -234,9 +235,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var context = _fixture.GetService<AppDbContext>();
 
-            var owner = new JsonApiDotNetCoreExample.Models.Person();
-            var todoItem = new TodoItem();
-            todoItem.Owner = owner;
+            var owner = new Person();
+            var todoItem = new TodoItem
+            {
+                Owner = owner
+            };
             context.People.Add(owner);
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();

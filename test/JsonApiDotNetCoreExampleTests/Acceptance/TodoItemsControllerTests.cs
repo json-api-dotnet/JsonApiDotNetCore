@@ -44,15 +44,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Can_Get_TodoItems()
+        public async Task Can_Get_TodoItems_Paginate_Check()
         {
             // Arrange
-            const int expectedEntitiesPerPage = 5;
-            var person = new Person();
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
-            _context.TodoItems.Add(todoItem);
+            _context.TodoItems.RemoveRange(_context.TodoItems.ToList());
             _context.SaveChanges();
+            int expectedEntitiesPerPage = _jsonApiContext.Options.DefaultPageSize;
+            var person = new Person();
+            var todoItems = _todoItemFaker.Generate(expectedEntitiesPerPage +1);
+          
+            foreach (var todoItem in todoItems)
+            {
+                todoItem.Owner = person;
+                _context.TodoItems.Add(todoItem);
+                _context.SaveChanges();
+
+            }
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/todo-items";
@@ -66,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
-            Assert.True(deserializedBody.Count <= expectedEntitiesPerPage);
+            Assert.True(deserializedBody.Count <= expectedEntitiesPerPage, $"There are more items on the page than the default page size. {deserializedBody.Count} > {expectedEntitiesPerPage}");
         }
 
         [Fact]
@@ -96,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Can_Filter_By_Relationship_Id()
         {
             // Arrange
-            var person = new Person();           
+            var person = new Person();
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);

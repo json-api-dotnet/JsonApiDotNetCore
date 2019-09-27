@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 
 namespace JsonApiDotNetCore.Services
 {
     public interface IQueryComposer
     {
-        string Compose(IJsonApiContext jsonApiContext);
+        string Compose(IRequestManager jsonApiContext);
     }
 
     public class QueryComposer : IQueryComposer
     {
-        public string Compose(IJsonApiContext jsonApiContext)
+        public string Compose(IRequestManager requestManager)
         {
             string result = "";
-            if (jsonApiContext != null && jsonApiContext.QuerySet != null)
+            if (requestManager != null && requestManager.QuerySet != null)
             {
-                List<FilterQuery> filterQueries = jsonApiContext.QuerySet.Filters;
+                List<FilterQuery> filterQueries = requestManager.QuerySet.Filters;
                 if (filterQueries.Count > 0)
                 {
                     foreach (FilterQuery filter in filterQueries)

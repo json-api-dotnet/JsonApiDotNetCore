@@ -9,24 +9,30 @@ using PrincipalType = System.Type;
 using DependentType = System.Type;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 
 namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
-    internal class ResourceHookExecutor : IResourceHookExecutor
+    internal  class ResourceHookExecutor : IResourceHookExecutor
     {
         public static readonly IdentifiableComparer Comparer = new IdentifiableComparer();
-        internal readonly TraversalHelper _traversalHelper;
+        private readonly IRequestManager _requestManager;
         internal readonly IHookExecutorHelper _executorHelper;
         protected readonly IJsonApiContext _context;
         private readonly IResourceGraph _graph;
+        private readonly TraversalHelper _traversalHelper;
 
-        public ResourceHookExecutor(IHookExecutorHelper helper, IJsonApiContext context, IResourceGraph graph)
+        public ResourceHookExecutor(
+            IHookExecutorHelper helper,
+            IResourceGraph resourceGraph,
+            IRequestManager requestManager)
         {
+            _requestManager = requestManager;
             _executorHelper = helper;
-            _context = context;
-            _graph = graph;
-            _traversalHelper = new TraversalHelper(graph, _context);
+            _graph = resourceGraph;
+            _traversalHelper = new TraversalHelper(resourceGraph, requestManager);
         }
 
         /// <inheritdoc/>
@@ -36,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks
             hookContainer?.BeforeRead(pipeline, false, stringId);
             var contextEntity = _graph.GetContextEntity(typeof(TEntity));
             var calledContainers = new List<PrincipalType>() { typeof(TEntity) };
-            foreach (var relationshipPath in _context.IncludedRelationships)
+            foreach (var relationshipPath in _requestManager.IncludedRelationships)
             {
                 RecursiveBeforeRead(contextEntity, relationshipPath.Split('.').ToList(), pipeline, calledContainers);
             }
@@ -49,7 +55,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _context);
+                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _requestManager);
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -187,12 +193,12 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Traverses the nodes in a <see cref="EntityChildLayer"/>.
+        /// Traverses the nodes in a <see cref="NodeLayer"/>.
         /// </summary>
-        void Traverse(EntityChildLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IEntityNode> action)
+        void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, INode> action)
         {
             if (!currentLayer.AnyEntities()) return;
-            foreach (IEntityNode node in currentLayer)
+            foreach (INode node in currentLayer)
             {
                 var entityType = node.EntityType;
                 var hookContainer = _executorHelper.GetResourceHookContainer(entityType, target);
@@ -245,9 +251,9 @@ namespace JsonApiDotNetCore.Hooks
         /// First the BeforeUpdateRelationship should be for owner1, then the 
         /// BeforeImplicitUpdateRelationship hook should be fired for
         /// owner2, and lastely the BeforeImplicitUpdateRelationship for article2.</remarks>
-        void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, EntityChildLayer layer)
+        void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, NodeLayer layer)
         {
-            foreach (IEntityNode node in layer)
+            foreach (INode node in layer)
             {
                 var nestedHookcontainer = _executorHelper.GetResourceHookContainer(node.EntityType, ResourceHook.BeforeUpdateRelationship);
                 IEnumerable uniqueEntities = node.UniqueEntities;
@@ -447,7 +453,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Fires the AfterUpdateRelationship hook
         /// </summary>
-        void FireAfterUpdateRelationship(IResourceHookContainer container, IEntityNode node, ResourcePipeline pipeline)
+        void FireAfterUpdateRelationship(IResourceHookContainer container, INode node, ResourcePipeline pipeline)
         {
 
             Dictionary<RelationshipAttribute, IEnumerable> currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetDependentEntities();

@@ -1,4 +1,6 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,11 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
     {
         public CamelCasedModelsController(
-            IJsonApiContext jsonApiContext,
+            IJsonApiOptions jsonApiOptions,
+            IResourceGraph resourceGraph,
             IResourceService<CamelCasedModel> resourceService,
             ILoggerFactory loggerFactory) 
-            : base(jsonApiContext, resourceService, loggerFactory)
+            : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory)
         { }
     }
 }

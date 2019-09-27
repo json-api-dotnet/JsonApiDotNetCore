@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -52,9 +53,9 @@ namespace JsonApiDotNetCore.Hooks
         internal DiffableEntityHashSet(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
                   Dictionary<RelationshipAttribute, IEnumerable> relationships,
-                  IJsonApiContext jsonApiContext)
+                  IRequestManager requestManager)
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-              TypeHelper.ConvertAttributeDictionary(jsonApiContext.AttributesToUpdate, (HashSet<TResource>)requestEntities))
+              TypeHelper.ConvertAttributeDictionary(requestManager.GetUpdatedAttributes(), (HashSet<TResource>)requestEntities))
         { }
 
 

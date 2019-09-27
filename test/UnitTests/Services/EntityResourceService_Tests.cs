@@ -72,7 +72,9 @@ namespace UnitTests.Services
             Assert.Equal(todoItem.Collection.Id, collection.Id);
         }
 
-        private EntityResourceService<TodoItem> GetService() =>
-            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, _loggerFactory, null);
+        private EntityResourceService<TodoItem> GetService()
+        {
+            return new EntityResourceService<TodoItem>(_repositoryMock.Object,_jsonApiContextMock.Object.Options, _jsonApiContextMock.Object.RequestManager, _jsonApiContextMock.Object.PageManager, _jsonApiContextMock.Object.ResourceGraph, _loggerFactory, null);
+        }
     }
 }

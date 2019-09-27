@@ -16,10 +16,10 @@ namespace UnitTests.ResourceHooks
             // arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
+            (var rqMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>());
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>());
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
             // assert
@@ -35,12 +35,12 @@ namespace UnitTests.ResourceHooks
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner", "assignee", "stake-holders" });
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner", "assignee", "stake-holders" });
 
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -58,12 +58,12 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -83,12 +83,12 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -106,12 +106,12 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -129,12 +129,12 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -153,12 +153,12 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            rqMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
 
             // act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);

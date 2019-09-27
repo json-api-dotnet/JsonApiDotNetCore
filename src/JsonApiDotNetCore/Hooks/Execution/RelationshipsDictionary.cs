@@ -48,7 +48,6 @@ namespace JsonApiDotNetCore.Hooks
         /// Gets a dictionary of all entities that have an affected relationship to type <paramref name="principalType"/>
         /// </summary>
         Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type relatedResourceType);
-
         /// <summary>
         /// Gets a collection of all the entities for the property within <paramref name="NavigationAction"/>
         /// has been affected by the request

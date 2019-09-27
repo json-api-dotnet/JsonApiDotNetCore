@@ -4,14 +4,13 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class TagResource : ResourceDefinition<Tag>
     {
-        public TagResource(IResourceGraph graph) : base(graph)
-        {
-        }
+        public TagResource(IResourceGraph graph) : base(graph) { }
 
         public override IEnumerable<Tag> BeforeCreate(IEntityHashSet<Tag> affected, ResourcePipeline pipeline)
         {

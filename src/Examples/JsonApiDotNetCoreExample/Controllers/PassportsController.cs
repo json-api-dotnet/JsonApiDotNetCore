@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public PassportsController(
             IJsonApiContext jsonApiContext,
-            IResourceService<Passport> resourceService) 
+            IResourceService<Passport> resourceService)
             : base(jsonApiContext, resourceService)
         { }
     }

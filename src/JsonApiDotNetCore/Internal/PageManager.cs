@@ -1,19 +1,31 @@
 using System;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class PageManager
+    public class PageManager : IPageManager
     {
+        private ILinkBuilder _linkBuilder;
+        private IJsonApiOptions _options;
+
+        public PageManager(ILinkBuilder linkBuilder, IJsonApiOptions options, IRequestManager requestManager)
+        {
+            _linkBuilder = linkBuilder;
+            _options = options;
+            DefaultPageSize = _options.DefaultPageSize;
+            PageSize = _options.DefaultPageSize;
+        }
         public int? TotalRecords { get; set; }
         public int PageSize { get; set; }
-        public int DefaultPageSize { get; set; }
+        public int DefaultPageSize { get; set; } // I think we shouldnt expose this
         public int CurrentPage { get; set; }
         public bool IsPaginated => PageSize > 0;
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
-        public RootLinks GetPageLinks(LinkBuilder linkBuilder)
+        public RootLinks GetPageLinks()
         {
             if (ShouldIncludeLinksObject())
                 return null;
@@ -21,16 +33,16 @@ namespace JsonApiDotNetCore.Internal
             var rootLinks = new RootLinks();
 
             if (CurrentPage > 1)
-                rootLinks.First = linkBuilder.GetPageLink(1, PageSize);
+                rootLinks.First = _linkBuilder.GetPageLink(1, PageSize);
 
             if (CurrentPage > 1)
-                rootLinks.Prev = linkBuilder.GetPageLink(CurrentPage - 1, PageSize);
+                rootLinks.Prev = _linkBuilder.GetPageLink(CurrentPage - 1, PageSize);
 
             if (CurrentPage < TotalPages)
-                rootLinks.Next = linkBuilder.GetPageLink(CurrentPage + 1, PageSize);
+                rootLinks.Next = _linkBuilder.GetPageLink(CurrentPage + 1, PageSize);
 
             if (TotalPages > 0)
-                rootLinks.Last = linkBuilder.GetPageLink(TotalPages, PageSize);
+                rootLinks.Last = _linkBuilder.GetPageLink(TotalPages, PageSize);
 
             return rootLinks;
         }

@@ -113,17 +113,7 @@ namespace JsonApiDotNetCore.Extensions
             return (IOrderedQueryable<TSource>)result;
         }
 
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, FilterQuery filterQuery)
-        {
-            if (filterQuery == null)
-                return source;
 
-            // Relationship.Attribute
-            if (filterQuery.IsAttributeOfRelationship)
-                return source.Filter(new RelatedAttrFilterQuery(jsonApiContext, filterQuery));
-
-            return source.Filter(new AttrFilterQuery(jsonApiContext, filterQuery));
-        }
 
         public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, BaseFilterQuery filterQuery)
         {

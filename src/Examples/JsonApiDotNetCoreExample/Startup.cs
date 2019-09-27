@@ -29,9 +29,6 @@ namespace JsonApiDotNetCoreExample
         {
             var loggerFactory = new LoggerFactory();
             loggerFactory.AddConsole(LogLevel.Warning);
-
-            var mvcBuilder = services.AddMvcCore();
-
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
                 .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
@@ -42,7 +39,6 @@ namespace JsonApiDotNetCoreExample
                     options.EnableResourceHooks = true;
                     options.LoadDatabaseValues = true;
                 }, 
-                mvcBuilder,
                 discovery => discovery.AddCurrentAssembly());
  
             return services.BuildServiceProvider();
@@ -55,9 +51,7 @@ namespace JsonApiDotNetCoreExample
             AppDbContext context)
         {
             context.Database.EnsureCreated();
-
             loggerFactory.AddConsole(Config.GetSection("Logging"));
-
             app.UseJsonApi();
         }
 

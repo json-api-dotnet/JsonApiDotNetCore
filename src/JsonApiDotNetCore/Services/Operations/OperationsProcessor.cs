@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
 using Microsoft.EntityFrameworkCore;
@@ -20,15 +22,21 @@ namespace JsonApiDotNetCore.Services.Operations
         private readonly IOperationProcessorResolver _processorResolver;
         private readonly DbContext _dbContext;
         private readonly IJsonApiContext _jsonApiContext;
+        private readonly IRequestManager _requestManager;
+        private readonly IResourceGraph _resourceGraph;
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
             IDbContextResolver dbContextResolver,
-            IJsonApiContext jsonApiContext)
+            IJsonApiContext jsonApiContext,
+            IRequestManager requestManager,
+            IResourceGraph resourceGraph)
         {
             _processorResolver = processorResolver;
             _dbContext = dbContextResolver.GetContext();
             _jsonApiContext = jsonApiContext;
+            _requestManager = requestManager;
+            _resourceGraph = resourceGraph;
         }
 
         public async Task<List<Operation>> ProcessAsync(List<Operation> inputOps)
@@ -44,6 +52,7 @@ namespace JsonApiDotNetCore.Services.Operations
                     foreach (var op in inputOps)
                     {
                         _jsonApiContext.BeginOperation();
+
                         lastAttemptedOperation = op.Op;
                         await ProcessOperation(op, outputOps);
                         opIndex++;
@@ -69,6 +78,16 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             ReplaceLocalIdsInResourceObject(op.DataObject, outputOps);
             ReplaceLocalIdsInRef(op.Ref, outputOps);
+
+            string type = null;
+            if (op.Op == OperationCode.add || op.Op == OperationCode.update)
+            {
+                type = op.DataObject.Type;
+            } else if (op.Op == OperationCode.get || op.Op == OperationCode.remove)
+            {
+                type = op.Ref.Type;
+            }
+            _requestManager.SetContextEntity(_resourceGraph.GetEntityFromControllerName(type));
 
             var processor = GetOperationsProcessor(op);
             var resultOp = await processor.ProcessAsync(op);

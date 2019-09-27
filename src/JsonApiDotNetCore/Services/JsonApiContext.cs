@@ -4,8 +4,10 @@ using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Request;
 using Microsoft.AspNetCore.Http;
@@ -21,12 +23,16 @@ namespace JsonApiDotNetCore.Services
         public JsonApiContext(
             IResourceGraph resourceGraph,
             IHttpContextAccessor httpContextAccessor,
-            JsonApiOptions options,
+            IJsonApiOptions options,
             IMetaBuilder metaBuilder,
             IGenericProcessorFactory genericProcessorFactory,
             IQueryParser queryParser,
+            IPageManager pageManager,
+            IRequestManager requestManager,
             IControllerContext controllerContext)
         {
+            RequestManager = requestManager;
+            PageManager = pageManager;
             ResourceGraph = resourceGraph;
             _httpContextAccessor = httpContextAccessor;
             Options = options;
@@ -36,16 +42,21 @@ namespace JsonApiDotNetCore.Services
             _controllerContext = controllerContext;
         }
 
-        public JsonApiOptions Options { get; set; }
+        public IJsonApiOptions Options { get; set; }
+        [Obsolete("Please use the standalone `IResourceGraph`")]
         public IResourceGraph ResourceGraph { get; set; }
         [Obsolete("Use the proxied member IControllerContext.RequestEntity instead.")]
         public ContextEntity RequestEntity { get => _controllerContext.RequestEntity; set => _controllerContext.RequestEntity = value; }
-        public string BasePath { get; set; }
+
+        [Obsolete("Use IRequestManager")]
         public QuerySet QuerySet { get; set; }
+        [Obsolete("Use IRequestManager")]
         public bool IsRelationshipData { get; set; }
+        [Obsolete("Use IRequestManager")]
         public bool IsRelationshipPath { get; private set; }
+        [Obsolete("Use IRequestManager")]
         public List<string> IncludedRelationships { get; set; }
-        public PageManager PageManager { get; set; }
+        public IPageManager PageManager { get; set; }
         public IMetaBuilder MetaBuilder { get; set; }
         public IGenericProcessorFactory GenericProcessorFactory { get; set; }
         public Type ControllerType { get; set; }
@@ -64,7 +75,11 @@ namespace JsonApiDotNetCore.Services
 
         public HasManyRelationshipPointers HasManyRelationshipPointers { get; private set; } = new HasManyRelationshipPointers();
         public HasOneRelationshipPointers HasOneRelationshipPointers { get; private set; } = new HasOneRelationshipPointers();
+        [Obsolete("Please use the standalone Requestmanager")]
+        public IRequestManager RequestManager { get; set; }
+        PageManager IQueryRequest.PageManager { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        [Obsolete("This is no longer necessary")]
         public IJsonApiContext ApplyContext<T>(object controller)
         {
             if (controller == null)
@@ -83,8 +98,6 @@ namespace JsonApiDotNetCore.Services
                 IncludedRelationships = QuerySet.IncludedRelationships;
             }
 
-            BasePath = new LinkBuilder(this).GetBasePath(context, _controllerContext.RequestEntity.EntityName);
-            PageManager = GetPageManager();
             IsRelationshipPath = PathIsRelationship(context.Request.Path.Value);
 
             return this;
@@ -124,23 +137,9 @@ namespace JsonApiDotNetCore.Services
             return false;
         }
 
-        private PageManager GetPageManager()
-        {
-            if (Options.DefaultPageSize == 0 && (QuerySet == null || QuerySet.PageQuery.PageSize == 0))
-                return new PageManager();
-
-            var query = QuerySet?.PageQuery ?? new PageQuery();
-
-            return new PageManager
-            {
-                DefaultPageSize = Options.DefaultPageSize,
-                CurrentPage = query.PageOffset,
-                PageSize = query.PageSize > 0 ? query.PageSize : Options.DefaultPageSize
-            };
-        }
-
         public void BeginOperation()
         {
+            RequestManager.IncludedRelationships = new List<string>();
             IncludedRelationships = new List<string>();
             AttributesToUpdate = new Dictionary<AttrAttribute, object>();
             HasManyRelationshipPointers = new HasManyRelationshipPointers();

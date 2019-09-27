@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -17,27 +18,26 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
-        private readonly IControllerContext _controllerContext;
-        private readonly JsonApiOptions _options;
+        private readonly IRequestManager _requestManager;
+        private readonly IJsonApiOptions _options;
 
         public QueryParser(
-            IControllerContext controllerContext,
-            JsonApiOptions options)
+            IRequestManager requestManager,
+            IJsonApiOptions options)
         {
-            _controllerContext = controllerContext;
+            _requestManager = requestManager;
             _options = options;
         }
 
         public virtual QuerySet Parse(IQueryCollection query)
         {
             var querySet = new QuerySet();
-            var disabledQueries = _controllerContext.GetControllerAttribute<DisableQueryAttribute>()?.QueryParams ?? QueryParams.None;
-
+            var disabledQueries = _requestManager.DisabledQueryParams;
             foreach (var pair in query)
             {
                 if (pair.Key.StartsWith(QueryConstants.FILTER))
                 {
-                    if (disabledQueries.HasFlag(QueryParams.Filter) == false)
+                    if (disabledQueries.HasFlag(QueryParams.Filters) == false)
                         querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
@@ -133,9 +133,11 @@ namespace JsonApiDotNetCore.Services
             const string NUMBER = "number";
 
             if (propertyName == SIZE)
+            {
                 pageQuery.PageSize = int.TryParse(value, out var pageSize) ?
                 pageSize :
                 throw new JsonApiException(400, $"Invalid page size '{value}'");
+            }
 
             else if (propertyName == NUMBER)
                 pageQuery.PageOffset = int.TryParse(value, out var pageOffset) ?
@@ -187,8 +189,8 @@ namespace JsonApiDotNetCore.Services
             var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var includedFields = new List<string> { nameof(Identifiable.Id) };
 
-            var relationship = _controllerContext.RequestEntity.Relationships.SingleOrDefault(a => a.Is(typeName));
-            if (relationship == default && string.Equals(typeName, _controllerContext.RequestEntity.EntityName, StringComparison.OrdinalIgnoreCase) == false)
+            var relationship = _requestManager.GetContextEntity().Relationships.SingleOrDefault(a => a.Is(typeName));
+            if (relationship == default && string.Equals(typeName, _requestManager.GetContextEntity().EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 return includedFields;
 
             var fields = value.Split(QueryConstants.COMMA);
@@ -206,9 +208,9 @@ namespace JsonApiDotNetCore.Services
                 }
                 else
                 {
-                    var attr = _controllerContext.RequestEntity.Attributes.SingleOrDefault(a => a.Is(field));
+                    var attr = _requestManager.GetContextEntity().Attributes.SingleOrDefault(a => a.Is(field));
                     if (attr == null)
-                        throw new JsonApiException(400, $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'.");
+                        throw new JsonApiException(400, $"'{_requestManager.GetContextEntity().EntityName}' does not contain '{field}'.");
 
                     // e.g. "Name"
                     includedFields.Add(attr.InternalAttributeName);
@@ -222,14 +224,13 @@ namespace JsonApiDotNetCore.Services
         {
             try
             {
-                return _controllerContext
-                    .RequestEntity
+                return _requestManager.GetContextEntity()
                     .Attributes
                     .Single(attr => attr.Is(propertyName));
             }
             catch (InvalidOperationException e)
             {
-                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
+                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_requestManager.GetContextEntity().EntityName}'", e);
             }
         }
 

@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior();
             }
-            var jsonApiOptions = _fixture.GetService<JsonApiOptions>();
+            var jsonApiOptions = _fixture.GetService<IJsonApiOptions>();
             jsonApiOptions.NullAttributeResponseBehavior = nullAttributeResponseBehavior;
             jsonApiOptions.AllowCustomQueryParameters = true;
 

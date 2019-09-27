@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Request;
 
@@ -12,7 +14,8 @@ namespace JsonApiDotNetCore.Services
 {
     public interface IJsonApiApplication
     {
-        JsonApiOptions Options { get; set; }
+        IJsonApiOptions Options { get; set; }
+        [Obsolete("Use standalone resourcegraph")]
         IResourceGraph ResourceGraph { get; set; }
     }
 
@@ -23,34 +26,8 @@ namespace JsonApiDotNetCore.Services
         PageManager PageManager { get; set; }
     }
 
-    public interface IUpdateRequest
+    public interface IJsonApiRequest : IJsonApiApplication,  IQueryRequest
     {
-        /// <summary>
-        /// The attributes that were included in a PATCH request. 
-        /// Only the attributes in this dictionary should be updated.
-        /// </summary>
-        Dictionary<AttrAttribute, object> AttributesToUpdate { get; set; }
-
-        /// <summary>
-        /// Any relationships that were included in a PATCH request. 
-        /// Only the relationships in this dictionary should be updated.
-        /// </summary>
-        Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; }
-    }
-
-    public interface IJsonApiRequest : IJsonApiApplication, IUpdateRequest, IQueryRequest
-    {
-        /// <summary>
-        /// The request namespace. This may be an absolute or relative path
-        /// depending upon the configuration.
-        /// </summary>
-        /// <example>
-        /// Absolute: https://example.com/api/v1
-        /// 
-        /// Relative: /api/v1
-        /// </example>
-        string BasePath { get; set; }
-
         /// <summary>
         /// Stores information to set relationships for the request resource. 
         /// These relationships must already exist and should not be re-created.
@@ -58,7 +35,7 @@ namespace JsonApiDotNetCore.Services
         /// relationship pointers to persist the relationship.
         /// 
         /// The expected use case is POST-ing or PATCH-ing an entity with HasMany 
-        /// relaitonships:
+        /// relationships:
         /// <code>
         /// {
         ///    "data": {
@@ -143,6 +120,10 @@ namespace JsonApiDotNetCore.Services
 
     public interface IJsonApiContext : IJsonApiRequest
     {
+        [Obsolete("Use standalone IRequestManager")]
+        IRequestManager RequestManager { get; set; }
+        [Obsolete("Use standalone IPageManager")]
+        IPageManager PageManager { get; set; }
         IJsonApiContext ApplyContext<T>(object controller);
         IMetaBuilder MetaBuilder { get; set; }
         IGenericProcessorFactory GenericProcessorFactory { get; set; }

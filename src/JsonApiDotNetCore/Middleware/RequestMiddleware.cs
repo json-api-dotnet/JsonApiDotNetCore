@@ -1,40 +1,80 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    /// <summary>
+    /// Can be overwritten to help you out during testing
+    /// 
+    /// This sets all necessary parameters relating to the HttpContext for JADNC
+    /// </summary>
     public class RequestMiddleware
     {
         private readonly RequestDelegate _next;
+        private IResourceGraph _resourceGraph;
+        private HttpContext _httpContext;
+        private IRequestManager _requestManager;
+        private IPageManager _pageManager;
+        private IQueryParser _queryParser;
+        private IJsonApiOptions _options;
 
         public RequestMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IJsonApiContext jsonApiContext)
+        public async Task Invoke(HttpContext httpContext,
+                                 IJsonApiContext jsonApiContext,
+                                 IResourceGraph resourceGraph,
+                                 IRequestManager requestManager,
+                                 IPageManager pageManager,
+                                 IQueryParser queryParser,
+                                 IJsonApiOptions options
+            )
         {
-            if (IsValid(context))
+            _httpContext = httpContext;
+            _resourceGraph = resourceGraph;
+            _requestManager = requestManager;
+            _pageManager = pageManager;
+            _queryParser = queryParser;
+            _options = options;
+
+            if (IsValid())
             {
+
                 // HACK: this currently results in allocation of
                 // objects that may or may not be used and even double allocation
                 // since the JsonApiContext is using field initializers
                 // Need to work on finding a better solution.
                 jsonApiContext.BeginOperation();
-                await _next(context);
+                _requestManager.IsRelationshipPath = PathIsRelationship();
+
+                await _next(httpContext);
             }
         }
 
-        private static bool IsValid(HttpContext context)
+        protected bool PathIsRelationship()
         {
-            return IsValidContentTypeHeader(context) && IsValidAcceptHeader(context);
+            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            return actionName.ToLower().Contains("relationships");
+        }
+            private bool IsValid()
+        {
+            return IsValidContentTypeHeader(_httpContext) && IsValidAcceptHeader(_httpContext);
         }
 
-        private static bool IsValidContentTypeHeader(HttpContext context)
+        private bool IsValidContentTypeHeader(HttpContext context)
         {
             var contentType = context.Request.ContentType;
             if (contentType != null && ContainsMediaTypeParameters(contentType))
@@ -45,7 +85,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static bool IsValidAcceptHeader(HttpContext context)
+        private bool IsValidAcceptHeader(HttpContext context)
         {
             if (context.Request.Headers.TryGetValue(Constants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
@@ -80,7 +120,7 @@ namespace JsonApiDotNetCore.Middleware
             );
         }
 
-        private static void FlushResponse(HttpContext context, int statusCode)
+        private void FlushResponse(HttpContext context, int statusCode)
         {
             context.Response.StatusCode = statusCode;
             context.Response.Body.Flush();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xunit;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace UnitTests.ResourceHooks
 {

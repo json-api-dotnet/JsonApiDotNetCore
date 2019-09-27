@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +15,17 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public class TodoCollectionsController : JsonApiController<TodoItemCollection, Guid>
     {
-
         readonly IDbContextResolver _dbResolver;
 
-         public TodoCollectionsController(
-            IDbContextResolver contextResolver,
-            IJsonApiContext jsonApiContext,
-            IResourceService<TodoItemCollection, Guid> resourceService,
-            ILoggerFactory loggerFactory) 
-            : base(jsonApiContext, resourceService, loggerFactory)
+        public TodoCollectionsController(
+            IJsonApiOptions jsonApiOptions, 
+           IResourceGraph resourceGraph,
+           IDbContextResolver contextResolver,
+           IResourceService<TodoItemCollection, Guid> resourceService,
+           ILoggerFactory loggerFactory)
+           : base(jsonApiOptions, resourceGraph, resourceService, loggerFactory)
         {
             _dbResolver = contextResolver;
-        
         }
 
         [HttpPatch("{id}")]

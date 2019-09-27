@@ -7,77 +7,19 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public interface IResourceGraphBuilder
-    {
-        /// <summary>
-        /// Construct the <see cref="ResourceGraph"/>
-        /// </summary>
-        IResourceGraph Build();
-
-        /// <summary>
-        /// Add a json:api resource
-        /// </summary>
-        /// <typeparam name="TResource">The resource model type</typeparam>
-        /// <param name="pluralizedTypeName">
-        /// The pluralized name that should be exposed by the API. 
-        /// If nothing is specified, the configured name formatter will be used.
-        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
-        /// </param>
-        IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
-
-        /// <summary>
-        /// Add a json:api resource
-        /// </summary>
-        /// <typeparam name="TResource">The resource model type</typeparam>
-        /// <typeparam name="TId">The resource model identifier type</typeparam>
-        /// <param name="pluralizedTypeName">
-        /// The pluralized name that should be exposed by the API. 
-        /// If nothing is specified, the configured name formatter will be used.
-        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
-        /// </param>
-        IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>;
-
-        /// <summary>
-        /// Add a json:api resource
-        /// </summary>
-        /// <param name="entityType">The resource model type</param>
-        /// <param name="idType">The resource model identifier type</param>
-        /// <param name="pluralizedTypeName">
-        /// The pluralized name that should be exposed by the API. 
-        /// If nothing is specified, the configured name formatter will be used.
-        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
-        /// </param>
-        IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
-
-        /// <summary>
-        /// Add all the models that are part of the provided <see cref="DbContext" /> 
-        /// that also implement <see cref="IIdentifiable"/>
-        /// </summary>
-        /// <typeparam name="T">The <see cref="DbContext"/> implementation type.</typeparam>
-        IResourceGraphBuilder AddDbContext<T>() where T : DbContext;
-
-        /// <summary>
-        /// Specify the <see cref="IResourceNameFormatter"/> used to format resource names.
-        /// </summary>
-        /// <param name="resourceNameFormatter">Formatter used to define exposed resource names by convention.</param>
-        IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter);
-
-        /// <summary>
-        /// Which links to include. Defaults to <see cref="Link.All"/>.
-        /// </summary>
-        Link DocumentLinks { get; set; }
-    }
-
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
         private List<ContextEntity> _entities = new List<ContextEntity>();
         private List<ValidationResult> _validationResults = new List<ValidationResult>();
+        private Dictionary<Type, List<Type>> _controllerMapper = new Dictionary<Type, List<Type>>() { };
+        private List<Type> _undefinedMapper = new List<Type>() { };
         private bool _usesDbContext;
         private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
@@ -90,7 +32,23 @@ namespace JsonApiDotNetCore.Builders
             // this must be done at build so that call order doesn't matter
             _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
 
-            var graph = new ResourceGraph(_entities, _usesDbContext, _validationResults);
+            List<ControllerResourceMap> controllerContexts = new List<ControllerResourceMap>() { };
+            foreach(var cm in _controllerMapper)
+            {
+                var model = cm.Key;
+                foreach (var controller in cm.Value)
+                {
+                    var controllerName = controller.Name.Replace("Controller", "");
+
+                    controllerContexts.Add(new ControllerResourceMap
+                    {
+                        Resource = model,
+                        ControllerName = controllerName,
+                    });
+
+                }
+            }
+            var graph = new ResourceGraph(_entities, _usesDbContext, _validationResults, controllerContexts);
             return graph;
         }
 
@@ -169,9 +127,7 @@ namespace JsonApiDotNetCore.Builders
         protected virtual List<RelationshipAttribute> GetRelationships(Type entityType)
         {
             var attributes = new List<RelationshipAttribute>();
-
             var properties = entityType.GetProperties();
-
             foreach (var prop in properties)
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
@@ -183,16 +139,17 @@ namespace JsonApiDotNetCore.Builders
                 attribute.PrincipalType = entityType;
                 attributes.Add(attribute);
 
-                if (attribute is HasManyThroughAttribute hasManyThroughAttribute) {
+                if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
+                {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
-                    if(throughProperty == null)
+                    if (throughProperty == null)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
-                    
-                    if(throughProperty.PropertyType.Implements<IList>() == false)
+
+                    if (throughProperty.PropertyType.Implements<IList>() == false)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}.{throughProperty.Name}'. Property type does not implement IList.");
-                    
+
                     // assumption: the property should be a generic collection, e.g. List<ArticleTag>
-                    if(throughProperty.PropertyType.IsGenericType == false)
+                    if (throughProperty.PropertyType.IsGenericType == false)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Expected through entity to be a generic type, such as List<{prop.PropertyType}>.");
 
                     // Article → List<ArticleTag>
@@ -202,7 +159,7 @@ namespace JsonApiDotNetCore.Builders
                     hasManyThroughAttribute.ThroughType = throughProperty.PropertyType.GetGenericArguments()[0];
 
                     var throughProperties = hasManyThroughAttribute.ThroughType.GetProperties();
-                    
+
                     // ArticleTag.Article
                     hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType == entityType)
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {entityType}");
@@ -303,6 +260,25 @@ namespace JsonApiDotNetCore.Builders
         public IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter)
         {
             _resourceNameFormatter = resourceNameFormatter;
+            return this;
+        }
+
+        public IResourceGraphBuilder AddControllerPairing(Type controller, Type model = null)
+        {
+            if (model == null)
+            {
+                _undefinedMapper.Add(controller);
+                return this;
+
+            }
+            if (_controllerMapper.Keys.Contains(model))
+            {
+                _controllerMapper[model].Add(controller);
+            }
+            else
+            {
+                _controllerMapper.Add(model, new List<Type>() { controller });
+            }
             return this;
         }
     }

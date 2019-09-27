@@ -83,10 +83,10 @@ namespace UnitTests.ResourceHooks
             // arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock,
+            (var rqMock, var hookExecutor, var todoResourceMock,
                 var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
             var attr = ResourceGraph.Instance.GetContextEntity(typeof(TodoItem)).Relationships.Single(r => r.PublicRelationshipName == "one-to-one-person");
-            contextMock.Setup(c => c.RelationshipsToUpdate).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
+            rqMock.Setup(c => c.GetUpdatedRelationships()).Returns(new Dictionary<RelationshipAttribute, object>() { { attr, new object() } });
 
             // act
             var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };

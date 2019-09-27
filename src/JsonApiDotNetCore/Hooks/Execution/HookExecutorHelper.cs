@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +10,31 @@ using JsonApiDotNetCore.Extensions;
 using PrincipalType = System.Type;
 using DependentType = System.Type;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
     internal class HookExecutorHelper : IHookExecutorHelper
     {
+        private readonly IJsonApiOptions _options;
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
         protected readonly Dictionary<DependentType, IResourceHookContainer> _hookContainers;
         protected readonly Dictionary<DependentType, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
-        protected readonly IJsonApiContext _context;
 
         public HookExecutorHelper(
             IGenericProcessorFactory genericProcessorFactory,
             IResourceGraph graph,
-            IJsonApiContext context
+            IJsonApiOptions options
             )
         {
+            _options = options;
             _genericProcessorFactory = genericProcessorFactory;
             _graph = graph;
-            _context = context;
             _hookContainers = new Dictionary<DependentType, IResourceHookContainer>();
             _hookDiscoveries = new Dictionary<DependentType, IHooksDiscovery>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
@@ -110,13 +111,13 @@ namespace JsonApiDotNetCore.Hooks
             {
                 return false;
             }
-            else if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
+            if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
             {
                 return true;
             }
             else
             {
-                return _context.Options.LoadDatabaseValues;
+                return _options.LoadDatabaseValues;
             }
         }
 

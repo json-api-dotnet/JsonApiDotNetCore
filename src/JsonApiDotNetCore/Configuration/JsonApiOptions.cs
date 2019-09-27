@@ -2,19 +2,18 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// Global options
     /// </summary>
-    public class JsonApiOptions
+    public class JsonApiOptions : IJsonApiOptions
     {
 
         /// <summary>
@@ -31,7 +30,7 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not stack traces should be serialized in Error objects
         /// </summary>
         public static bool DisableErrorStackTraces { get; set; }
-        
+
         /// <summary>
         /// Whether or not source URLs should be serialized in Error objects
         /// </summary>
@@ -92,6 +91,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The graph of all resources exposed by this application.
         /// </summary>
+        [Obsolete("Use the standalone resourcegraph")]
         public IResourceGraph ResourceGraph { get; set; }
 
         /// <summary>

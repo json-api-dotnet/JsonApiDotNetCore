@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
+using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
@@ -42,6 +42,7 @@ namespace JsonApiDotNetCore.Internal
 
                 if (type == typeof(DateTimeOffset))
                     return DateTimeOffset.Parse(stringValue);
+
 
                 if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);

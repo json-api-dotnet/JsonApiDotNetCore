@@ -20,11 +20,10 @@ namespace GettingStarted
                 options.UseSqlite("Data Source=sample.db");
             });
 
-            var mvcCoreBuilder = services.AddMvcCore();
+            var mvcBuilder = services.AddMvcCore();
             services.AddJsonApi(
                 options => options.Namespace = "api", 
-                mvcCoreBuilder, 
-                discover => discover.AddCurrentAssembly());
+                discover => discover.AddCurrentAssembly(), mvcBuilder);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SampleDbContext context)

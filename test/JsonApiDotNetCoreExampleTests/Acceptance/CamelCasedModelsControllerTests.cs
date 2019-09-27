@@ -52,8 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>()
-                .DeserializeList<CamelCasedModel>(body);
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<CamelCasedModel>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -152,8 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/camelCasedModels/{model.Id}";
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);

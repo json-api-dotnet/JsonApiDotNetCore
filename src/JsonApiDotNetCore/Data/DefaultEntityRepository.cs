@@ -7,33 +7,14 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Data
 {
-    /// <inheritdoc />
-    public class DefaultEntityRepository<TEntity>
-        : DefaultEntityRepository<TEntity, int>,
-        IEntityRepository<TEntity>
-        where TEntity : class, IIdentifiable<int>
-    {
-        public DefaultEntityRepository(
-            IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-        : base(jsonApiContext, contextResolver, resourceDefinition)
-        { }
 
-        public DefaultEntityRepository(
-            ILoggerFactory loggerFactory,
-            IJsonApiContext jsonApiContext,
-            IDbContextResolver contextResolver,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
-        { }
-    }
 
     /// <summary>
     /// Provides a default repository implementation and is responsible for
@@ -44,17 +25,21 @@ namespace JsonApiDotNetCore.Data
         IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
+        private readonly IRequestManager _requestManager;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
         private readonly ILogger _logger;
         private readonly IJsonApiContext _jsonApiContext;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
+
+        [Obsolete("Dont use jsonapicontext instantiation anymore")]
         public DefaultEntityRepository(
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
+            _requestManager = jsonApiContext.RequestManager;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
             _jsonApiContext = jsonApiContext;
@@ -62,12 +47,15 @@ namespace JsonApiDotNetCore.Data
             _resourceDefinition = resourceDefinition;
         }
 
+        [Obsolete("Dont use jsonapicontext instantiation anymore")]
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
             IJsonApiContext jsonApiContext,
             IDbContextResolver contextResolver,
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
+            _requestManager = jsonApiContext.RequestManager;
+
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
             _jsonApiContext = jsonApiContext;
@@ -77,8 +65,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Get()
-            => _dbSet;
+        public virtual IQueryable<TEntity> Get() => _dbSet;
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
@@ -88,7 +75,7 @@ namespace JsonApiDotNetCore.Data
 
             return entities;
         }
-
+        
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
         {
@@ -100,7 +87,7 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
-            return entities.Filter(_jsonApiContext, filterQuery);
+            return entities.Filter(new AttrFilterQuery(_requestManager, _jsonApiContext.ResourceGraph, filterQuery));
         }
 
         /// <inheritdoc />
@@ -127,24 +114,22 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await Select(Get(), _jsonApiContext.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await Select(Get(), _requestManager.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
             _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
-
-            var includedSet = Include(Select(Get(), _jsonApiContext.QuerySet?.Fields), relationshipName);
+            var includedSet = Include(Select(Get(), _requestManager.QuerySet?.Fields), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
-
             return result;
         }
 
         /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
+            foreach (var relationshipAttr in _requestManager.GetUpdatedRelationships()?.Keys)
             {
                 var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
@@ -204,7 +189,6 @@ namespace JsonApiDotNetCore.Data
             }
         }
 
-
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
             var relationshipAttr = _jsonApiContext.ResourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
@@ -225,7 +209,7 @@ namespace JsonApiDotNetCore.Data
         public void DetachRelationshipPointers(TEntity entity)
         {
 
-            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate.Keys)
+            foreach (var relationshipAttr in _requestManager.GetUpdatedRelationships().Keys)
             {
                 if (relationshipAttr is HasOneAttribute hasOneAttr)
                 {
@@ -268,10 +252,10 @@ namespace JsonApiDotNetCore.Data
             if (databaseEntity == null)
                 return null;
 
-            foreach (var attr in _jsonApiContext.AttributesToUpdate.Keys)
+            foreach (var attr in _requestManager.GetUpdatedAttributes().Keys)
                 attr.SetValue(databaseEntity, attr.GetValue(updatedEntity));
 
-            foreach (var relationshipAttr in _jsonApiContext.RelationshipsToUpdate?.Keys)
+            foreach (var relationshipAttr in _requestManager.GetUpdatedRelationships()?.Keys)
             {
                 /// loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
@@ -330,7 +314,7 @@ namespace JsonApiDotNetCore.Data
             /// from the RelationshipAttribute. If we DO use separation, RelationshipAttribute.DependentType
             /// will point to the Resource, not the Entity, which is not the one we need here.
             bool entityResourceSeparation = relationshipAttr.EntityPropertyName != null;
-            Type entityType = entityResourceSeparation ?  null : relationshipAttr.DependentType;
+            Type entityType = entityResourceSeparation ? null : relationshipAttr.DependentType;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
             {
                 /// todo: we can't just use relationshipAttr.DependentType because
@@ -390,7 +374,7 @@ namespace JsonApiDotNetCore.Data
             // variables mutated in recursive loop
             // TODO: make recursive method
             string internalRelationshipPath = null;
-            var entity = _jsonApiContext.RequestEntity;
+            var entity = _requestManager.GetContextEntity();
             for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];
@@ -433,7 +417,7 @@ namespace JsonApiDotNetCore.Data
             // may be negative
             int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
             int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
-           
+
             return await ToListAsync(entities
                     .Skip(virtualFirstIndex)
                     .Take(numberOfElementsInPage));
@@ -580,5 +564,26 @@ namespace JsonApiDotNetCore.Data
             _context.Entry(relationshipValue).State = EntityState.Unchanged;
             return null;
         }
+    }
+    /// <inheritdoc />
+    public class DefaultEntityRepository<TEntity>
+        : DefaultEntityRepository<TEntity, int>,
+        IEntityRepository<TEntity>
+        where TEntity : class, IIdentifiable<int>
+    {
+        public DefaultEntityRepository(
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(jsonApiContext, contextResolver, resourceDefinition)
+        { }
+
+        public DefaultEntityRepository(
+            ILoggerFactory loggerFactory,
+            IJsonApiContext jsonApiContext,
+            IDbContextResolver contextResolver,
+            ResourceDefinition<TEntity> resourceDefinition = null)
+        : base(loggerFactory, jsonApiContext, contextResolver, resourceDefinition)
+        { }
     }
 }

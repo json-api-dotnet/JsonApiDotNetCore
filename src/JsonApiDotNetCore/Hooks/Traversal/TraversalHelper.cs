@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using DependentType = System.Type;
 using PrincipalType = System.Type;
 
@@ -21,10 +22,10 @@ namespace JsonApiDotNetCore.Hooks
     /// and further nodes can be mixed.
     /// 
     /// </summary>
-    internal class TraversalHelper
+    internal class TraversalHelper : ITraversalHelper
     {
         private readonly IResourceGraph _graph;
-        private readonly IJsonApiContext _context;
+        private readonly IRequestManager _requestManager;
         /// <summary>
         /// Keeps track of which entities has already been traversed through, to prevent
         /// infinite loops in eg cyclic data structures.
@@ -35,12 +36,11 @@ namespace JsonApiDotNetCore.Hooks
         /// See the latter for more details.
         /// </summary>
         private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
-
         public TraversalHelper(
             IResourceGraph graph,
-            IJsonApiContext context)
+            IRequestManager requestManager)
         {
-            _context = context;
+            _requestManager = requestManager;
             _graph = graph;
         }
 
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The next layer.</returns>
         /// <param name="rootNode">Root node.</param>
-        public EntityChildLayer CreateNextLayer(IEntityNode rootNode)
+        public NodeLayer CreateNextLayer(INode rootNode)
         {
-            return CreateNextLayer(new IEntityNode[] { rootNode });
+            return CreateNextLayer(new INode[] { rootNode });
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The next layer.</returns>
         /// <param name="nodes">Nodes.</param>
-        public EntityChildLayer CreateNextLayer(IEnumerable<IEntityNode> nodes)
+        public NodeLayer CreateNextLayer(IEnumerable<INode> nodes)
         {
             /// first extract entities by parsing populated relationships in the entities
             /// of previous layer
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Hooks
             }).ToList();
 
             /// wrap the child nodes in a EntityChildLayer
-            return new EntityChildLayer(nextNodes);
+            return new NodeLayer(nextNodes);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Extracts the entities for the current layer by going through all populated relationships
         /// of the (principal entities of the previous layer.
         /// </summary>
-        (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<IEntityNode> principalNodes)
+        (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<INode> principalNodes)
         {
             var principalsEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevlayer->currentlayer  => prevLayerEntities
             var dependentsEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevlayer->currentlayer   => currentLayerEntities
@@ -208,7 +208,8 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
                     bool isContextRelation = false;
-                    if (_context.RelationshipsToUpdate != null) isContextRelation = _context.RelationshipsToUpdate.ContainsKey(attr);
+                    var relationshipsToUpdate = _requestManager.GetUpdatedRelationships();
+                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.ContainsKey(attr);
                     var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
                     RelationshipProxies[attr] = proxy;
                 }
@@ -285,10 +286,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Reflective helper method to create an instance of <see cref="ChildNode{TEntity}"/>;
         /// </summary>
-        IEntityNode CreateNodeInstance(DependentType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        INode CreateNodeInstance(DependentType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
-            return (IEntityNode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
+            return (INode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
         }
 
         /// <summary>
@@ -316,21 +317,21 @@ namespace JsonApiDotNetCore.Hooks
     /// A helper class that represents all entities in the current layer that
     /// are being traversed for which hooks will be executed (see IResourceHookExecutor)
     /// </summary>
-    internal class EntityChildLayer : IEnumerable<IEntityNode>
+    internal class NodeLayer : IEnumerable<INode>
     {
-        readonly List<IEntityNode> _collection;
+        readonly List<INode> _collection;
 
         public bool AnyEntities()
         {
             return _collection.Any(n => n.UniqueEntities.Cast<IIdentifiable>().Any());
         }
 
-        public EntityChildLayer(List<IEntityNode> nodes)
+        public NodeLayer(List<INode> nodes)
         {
             _collection = nodes;
         }
 
-        public IEnumerator<IEntityNode> GetEnumerator()
+        public IEnumerator<INode> GetEnumerator()
         {
             return _collection.GetEnumerator();
         }

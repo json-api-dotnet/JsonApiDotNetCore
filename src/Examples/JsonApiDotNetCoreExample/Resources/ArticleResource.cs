@@ -5,8 +5,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.Extensions.Logging;
-using System.Security.Principal;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExample.Resources
 {

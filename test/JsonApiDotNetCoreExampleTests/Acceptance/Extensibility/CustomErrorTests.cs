@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             });
 
             // act
-            var result = new JsonApiSerializer(null, null, null)
+            var result = new JsonApiSerializer(null, null, null,null)
                 .Serialize(errorCollection);
 
             // assert

@@ -27,8 +27,6 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     public class EntityHashSet<TResource> : HashSet<TResource>, IEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
-
-
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> AffectedRelationships { get => _relationships; }
         private readonly RelationshipsDictionary<TResource> _relationships;
