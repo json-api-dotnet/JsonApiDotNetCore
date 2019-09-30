@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    public interface IJsonApiOptions : IGlobalLinksConfiguration, ISerializerOptions
+    public interface IJsonApiOptions : ILinksConfiguration, ISerializerOptions
     {
         /// <summary>
         /// Whether or not database values should be included by default

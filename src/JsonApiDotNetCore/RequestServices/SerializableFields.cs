@@ -21,6 +21,7 @@ namespace JsonApiDotNetCore.Models
             _provider = provider;
         }
 
+        /// <inheritdoc/>
         public List<AttrAttribute> GetAllowedAttributes(Type type)
         {
             var resourceDefinition = GetResourceDefinition(type);
@@ -32,6 +33,7 @@ namespace JsonApiDotNetCore.Models
             return _fieldExplorer.GetAttributes(type);
         }
 
+        /// <inheritdoc/>
         public List<RelationshipAttribute> GetAllowedRelationships(Type type)
         {
             var resourceDefinition = GetResourceDefinition(type);

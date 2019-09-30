@@ -3,6 +3,9 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
 {
+    /// <summary>
+    /// Builds the top-level links, resource object links and relationship object links.
+    /// </summary>
     public interface ILinkBuilder
     {
         /// <summary>

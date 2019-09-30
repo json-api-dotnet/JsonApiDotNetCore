@@ -5,10 +5,16 @@ using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
-    public class ClientSerializer : DocumentBuilder
+    /// <summary>
+    /// Client serializer implementation of <see cref="DocumentBuilder"/>
+    /// Note that this implementation does not override the default
+    /// <see cref="DocumentBuilder.GetRelationshipData"/>.
+    /// </summary>
+    public class ClientSerializer : DocumentBuilder, IClientSerializer
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
@@ -21,30 +27,19 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             _fieldExplorer = fieldExplorer;
         }
 
-        /// <summary>
-        /// Creates and serializes a document for a single intance of a resource.
-        /// </summary>
-        /// <param name="entity">Entity to serialize</param>
-        /// <returns>The serialized content</returns>
+        /// <inheritdoc/>
         public string Serialize(IIdentifiable entity)
         {
             if (entity == null)
-                return GetStringOutput(base.Build(entity));
+                return JsonConvert.SerializeObject(Build(entity));
 
             _currentTargetedResource = entity?.GetType();
-            var attributes = GetAttributesToSerialize(entity);
-            var relationships = GetRelationshipsToSerialize(entity);
-            var document = base.Build(entity, attributes, relationships);
+            var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
             _currentTargetedResource = null;
-            return GetStringOutput(document);
-
+            return JsonConvert.SerializeObject(document);
         }
 
-        /// <summary>
-        /// Creates and serializes a document for for a list of entities of one resource.
-        /// </summary>
-        /// <param name="entities">Entities to serialize</param>
-        /// <returns>The serialized content</returns>
+        /// <inheritdoc/>
         public string Serialize(IEnumerable entities)
         {
             IIdentifiable entity = null;
@@ -54,38 +49,30 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 break;
             }
             if (entity == null)
-                return GetStringOutput(base.Build(entities));
+                return JsonConvert.SerializeObject(Build(entities));
 
             _currentTargetedResource = entity?.GetType();
             var attributes = GetAttributesToSerialize(entity);
             var relationships = GetRelationshipsToSerialize(entity);
             var document = base.Build(entities, attributes, relationships);
             _currentTargetedResource = null;
-            return GetStringOutput(document);
+            return JsonConvert.SerializeObject(document);
         }
 
-        /// <summary>
-        /// Sets the <see cref="AttrAttribute"/>s to serialize for resources of type <typeparamref name="T"/>.
-        /// If no <see cref="AttrAttribute"/>s are specified, by default all attributes are included in the serialization result.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="filter"></param>
-        public void SetAttributesToSerialize<T>(Expression<Func<T, dynamic>> filter) where T : class, IIdentifiable
+        /// <inheritdoc/>
+        public void SetAttributesToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
+            where TResource : class, IIdentifiable
         {
             var allowedAttributes = _fieldExplorer.GetAttributes(filter);
-            _attributesToSerializeCache[typeof(T)] = allowedAttributes;
+            _attributesToSerializeCache[typeof(TResource)] = allowedAttributes;
         }
 
-        /// <summary>
-        /// Sets the <see cref="RelationshipAttribute"/>s to serialize for resources of type <typeparamref name="T"/>.
-        /// If no <see cref="RelationshipAttribute"/>s are specified, by default no relationships are included in the serialization result.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="filter"></param>
-        public void SetRelationshipsToSerialize<T>(Expression<Func<T, dynamic>> filter) where T : class, IIdentifiable
+        /// <inheritdoc/>
+        public void SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
+            where TResource : class, IIdentifiable
         {
             var allowedRelationships = _fieldExplorer.GetRelationships(filter);
-            _relationshipsToSerializeCache[typeof(T)] = allowedRelationships;
+            _relationshipsToSerializeCache[typeof(TResource)] = allowedRelationships;
         }
 
         /// <summary>
@@ -93,8 +80,6 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// unless a list of allowed attributes was supplied using the <see cref="SetAttributesToSerialize"/>
         /// method. For any related resources, attributes are never exposed.
         /// </summary>
-        /// <param name="entity">Entity to be serialized</param>
-        /// <returns>List of allowed attributes in the serialized result.</returns>
         private List<AttrAttribute> GetAttributesToSerialize(IIdentifiable entity)
         {
             var resourceType = entity.GetType();
@@ -114,8 +99,6 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// for entities in the primary data unless explicitly included using
         /// <see cref="SetRelationshipsToSerialize{T}(Expression{Func{T, dynamic}})"/>.
         /// </summary>
-        /// <param name="entity">Entity to be serialized</param>
-        /// <returns>List of allowed relationships in the serialized result.</returns>
         private List<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable entity)
         {
             var currentResourceType = entity.GetType();

@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Models
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>
         /// <param name="links">Enum to set which links should be outputted for this relationship. Defaults to <see cref="Link.NotConfigured"/> which means that the configuration in
-        /// <see cref="IGlobalLinksConfiguration"/> or <see cref="ContextEntity"/> is used.</param>
+        /// <see cref="ILinksConfiguration"/> or <see cref="ContextEntity"/> is used.</param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
         /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         private readonly string _explicitIdentifiablePropertyName;
-        
+
         /// <summary>
         /// The independent resource identifier.
         /// </summary>

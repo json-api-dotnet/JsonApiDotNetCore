@@ -3,14 +3,17 @@ using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.Models
 {
-    /// TODO: GetOutputAttrs is used in SERIALIATION LAYER to remove fields from
-    /// list of attrs that will be displayed, (i.e. touches the DOCUMENT structure)
-    /// whereas hooks is stuff to do on the MODEL in the SERVICELAYER.
-    /// Consider (not sure yet) to move to different class because of this.
-    /// edit: using different interfaces for this is maybe good enough to separate
     public interface ISerializableFields
     {
+        /// <summary>
+        /// Gets the list of attributes that are allowed to be serialized for
+        /// resource of type <paramref name="type"/>
+        /// </summary>
         List<AttrAttribute> GetAllowedAttributes(Type type);
+        /// <summary>
+        /// Gets the list of relationships that are allowed to be serialized for
+        /// resource of type <paramref name="type"/>
+        /// </summary>
         List<RelationshipAttribute> GetAllowedRelationships(Type type);
     }
 }

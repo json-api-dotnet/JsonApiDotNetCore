@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
+    /// <summary>
+    /// Metadata associated to the current json:api request.
+    /// </summary>
     public interface ICurrentRequest : IQueryRequest
     {
         /// <summary>

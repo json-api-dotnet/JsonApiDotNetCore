@@ -176,11 +176,11 @@ namespace UnitTests
             return mock.Object;
         }
 
-        private IGlobalLinksConfiguration GetConfiguration(Link resourceLinks = Link.All,
+        private ILinksConfiguration GetConfiguration(Link resourceLinks = Link.All,
                                                            Link topLevelLinks = Link.All,
                                                            Link relationshipLinks = Link.All)
         {
-            var config = new Mock<IGlobalLinksConfiguration>();
+            var config = new Mock<ILinksConfiguration>();
             config.Setup(m => m.TopLevelLinks).Returns(topLevelLinks);
             config.Setup(m => m.ResourceLinks).Returns(resourceLinks);
             config.Setup(m => m.RelationshipLinks).Returns(relationshipLinks);

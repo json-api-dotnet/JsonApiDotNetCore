@@ -191,7 +191,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
 
             services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
-            services.AddSingleton<IGlobalLinksConfiguration>(jsonApiOptions);
+            services.AddSingleton<ILinksConfiguration>(jsonApiOptions);
             services.AddSingleton(graph);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);

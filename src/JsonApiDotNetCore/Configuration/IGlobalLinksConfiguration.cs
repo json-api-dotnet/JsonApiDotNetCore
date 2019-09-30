@@ -2,7 +2,7 @@
 
 namespace JsonApiDotNetCore.Configuration
 {
-    public interface IGlobalLinksConfiguration
+    public interface ILinksConfiguration
     {
         bool RelativeLinks { get; }
         Link RelationshipLinks { get; }

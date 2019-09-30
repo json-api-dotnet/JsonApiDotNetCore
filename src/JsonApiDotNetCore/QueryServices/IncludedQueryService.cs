@@ -14,6 +14,7 @@ namespace JsonApiDotNetCore.QueryServices
             _includedChains = new List<List<RelationshipAttribute>>();
         }
 
+        /// <inheritdoc/>
         public List<List<RelationshipAttribute>> Get()
         {
             return _includedChains;

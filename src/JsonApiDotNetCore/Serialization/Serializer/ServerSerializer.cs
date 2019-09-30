@@ -6,24 +6,37 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.QueryServices.Contracts;
 using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using Newtonsoft.Json;
+using JsonApiDotNetCore.Managers.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
-
-    public class ServerSerializer<T> : DocumentBuilder, IJsonApiSerializer where T : class, IIdentifiable
+    /// <summary>
+    /// Server serializer implementation of <see cref="DocumentBuilder"/>
+    /// </summary>
+    /// <remarks>
+    /// Because in JsonApiDotNetCore every json:api request is associated with exactly one
+    /// resource (the request resource, see <see cref="ICurrentRequest.GetRequestResource"/>),
+    /// the serializer can leverage this information using generics.
+    /// See <see cref="ServerSerializerFactory"/> for how this is instantiated.
+    /// </remarks>
+    /// <typeparam name="TResource">Type of the resource associated with the scope of the request
+    /// for which this serializer is used.</typeparam>
+    public class ServerSerializer<TResource> : DocumentBuilder, IJsonApiSerializer
+        where TResource : class, IIdentifiable
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IIncludedQueryService _includedQuery;
         private readonly IFieldsQueryService _fieldQuery;
         private readonly ISerializableFields _serializableFields;
-        private readonly IMetaBuilder<T> _metaBuilder;
+        private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _requestResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedRelationshipsBuilder _includedBuilder;
 
         public ServerSerializer(
-            IMetaBuilder<T> metaBuilder,
+            IMetaBuilder<TResource> metaBuilder,
             ILinkBuilder linkBuilder,
             IIncludedRelationshipsBuilder includedBuilder,
             ISerializableFields serializableFields,
@@ -37,9 +50,10 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _includedBuilder = includedBuilder;
-            _requestResourceType = typeof(T);
+            _requestResourceType = typeof(TResource);
         }
 
+        /// <inheritdoc/>
         public string Serialize(object content)
         {
             if (content is IEnumerable entities)
@@ -47,6 +61,12 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             return SerializeSingle((IIdentifiable)content);
         }
 
+        /// <summary>
+        /// Convert a single entity into a serialized <see cref="Document"/>
+        /// </summary>
+        /// <remarks>
+        /// This method is set internal instead of private for easier testability.
+        /// </remarks>
         internal string SerializeSingle(IIdentifiable entity)
         {
             var attributes = GetAttributesToSerialize(_requestResourceType);
@@ -55,9 +75,15 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             var resourceObject = document.SingleData;
             if (resourceObject != null) resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
             AddTopLevelObjects(document);
-            return GetStringOutput(document);
+            return JsonConvert.SerializeObject(document);
         }
 
+        /// <summary>
+        /// Convert a list of entities into a serialized <see cref="Document"/>
+        /// </summary>
+        /// <remarks>
+        /// This method is set internal instead of private for easier testability.
+        /// </remarks>
         internal string SerializeMany(IEnumerable entities)
         {
             var attributes = GetAttributesToSerialize(_requestResourceType);
@@ -72,15 +98,13 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 resourceObject.Links = links;
             }
             AddTopLevelObjects(document);
-            return GetStringOutput(document);
+            return JsonConvert.SerializeObject(document);
         }
 
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
-        /// Depending on if instance-dependent attribute hiding was implemented in the corresponding
-        /// <see cref="ResourceDefinition{T}"/>, the server serializer caches the output list of attributes
-        /// or recalculates it for every instance. Note that the choice omitting null-values
-        /// is not handled here, but in <see cref="DocumentBuilderOptionsProvider"/>.
+        /// Note that the choice omitting null-values is not handled here,
+        /// but in <see cref="DocumentBuilderOptionsProvider (TODO)"/>.
         /// </summary>
         /// <param name="resourceType">Type of entity to be serialized</param>
         /// <returns>List of allowed attributes in the serialized result</returns>
@@ -116,6 +140,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
 
             // Get the list of relationships to be exposed for this type
             allowedRelations = _serializableFields.GetAllowedRelationships(resourceType);
+            // add to cache so we we don't have to look this up next time.
             _relationshipsToSerializeCache.Add(resourceType, allowedRelations);
             return allowedRelations;
 
@@ -128,9 +153,6 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// and links are turned off, the entry would be completely empty, ie { }, which is not conform
         /// json:api spec. In that case we return null which will omit the entry from the output.
         /// </summary>
-        /// <param name="relationship"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
         protected override RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
             RelationshipData relationshipData = null;
@@ -151,9 +173,14 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             }
 
             /// if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
+            /// (see the NullValueHandling settings on <see cref="ResourceObject"/>)
             return relationshipData;
         }
 
+        /// <summary>
+        /// Adds top-level objects that are only added to a document in the case
+        /// of server-side serialization.
+        /// </summary>
         private void AddTopLevelObjects(Document document)
         {
             document.Links = _linkBuilder.GetTopLevelLinks();
@@ -161,6 +188,10 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             document.Included = _includedBuilder.Build();
         }
 
+        /// <summary>
+        /// Inspects the included relationship chains (see <see cref="IIncludedQueryService"/>
+        /// to see if <paramref name="relationship"/> should be included or not.
+        /// </summary>
         private bool ShouldInclude(RelationshipAttribute relationship, out List<RelationshipAttribute> inclusionChain)
         {
             inclusionChain = _includedQuery.Get()?.SingleOrDefault(l => l.First().Equals(relationship));

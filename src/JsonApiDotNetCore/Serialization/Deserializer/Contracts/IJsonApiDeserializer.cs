@@ -1,7 +1,7 @@
 namespace JsonApiDotNetCore.Serialization.Deserializer.Contracts
 {
     /// <summary>
-    /// Serializer used internally in JsonApiDotNetCore to deserialize requests.
+    /// Deserializer used internally in JsonApiDotNetCore to deserialize requests.
     /// </summary>
     public interface IJsonApiDeserializer
     {
