@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Deserializer;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
@@ -101,7 +102,7 @@ namespace UnitTests.Serialization.Deserializer
             attributesToUpdate = new List<AttrAttribute>();
             relationshipsToUpdate = new List<RelationshipAttribute>();
             _fieldsManagerMock.Setup(m => m.Attributes).Returns(attributesToUpdate);
-            _fieldsManagerMock.Setup(m => m.Relationshipss)).Returns(relationshipsToUpdate);
+            _fieldsManagerMock.Setup(m => m.Relationships).Returns(relationshipsToUpdate);
         }
     }
 }

@@ -13,7 +13,10 @@ using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization.Deserializer
 {
-
+    /// <summary>
+    /// Legacy document parser to be used for Bulk requests.
+    /// Will probably remove this for v4.
+    /// </summary>
     public class OperationsDeserializer : IOperationsDeserializer
     {
         private readonly IUpdatedFields _updatedFieldsManager;

@@ -9,10 +9,14 @@ using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Deserializer
 {
+    /// <summary>
+    /// Client deserializer implementation of the <see cref="DocumentParser"/>
+    /// </summary>
     public class ClientDeserializer : DocumentParser, IClientDeserializer
     {
         public ClientDeserializer(IContextEntityProvider provider) : base(provider) { }
 
+        /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
             var entity = base.Deserialize(body);
@@ -26,6 +30,7 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             };
         }
 
+        /// <inheritdoc/>
         public DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable
         {
             var entities = base.Deserialize(body);
@@ -39,34 +44,46 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             };
         }
 
+        /// <summary>
+        /// Additional procesing required for client deserialization, responsible
+        /// for parsing the <see cref="Document.Included"/> property. When a relationship value is parsed,
+        /// it goes through the included list to set its attributes and relationships.
+        /// </summary>
+        /// <param name="entity">The entity that was constructed from the document's body</param>
+        /// <param name="field">The metadata for the exposed field</param>
+        /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
         protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null)
         {
+            // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
                 return;
 
-            // can't provide any more data other than the rios since it is not contained in the included section
+            // if the included property is empty or absent, there is no additional data to be parsed.
             if (_document.Included == null || _document.Included.Count == 0)
                 return;
 
             if (field is HasOneAttribute hasOneAttr)
-            {
+            {   // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
                 if (rio == null)
                     hasOneAttr.SetValue(entity, null);
                 else
-                    hasOneAttr.SetValue(entity, GetIncludedRelationship(hasOneAttr, rio));
+                    hasOneAttr.SetValue(entity, ParseIncludedRelationship(hasOneAttr, rio));
             }
             else if (field is HasManyAttribute hasManyAttr)
-            {
+            {  // add attributes and relationships of a parsed HasMany relationship
                 var values = TypeHelper.CreateListFor(hasManyAttr.DependentType);
                 foreach (var rio in data.ManyData)
-                    values.Add(GetIncludedRelationship(hasManyAttr, rio));
+                    values.Add(ParseIncludedRelationship(hasManyAttr, rio));
 
                 hasManyAttr.SetValue(entity, values);
             }
         }
 
-        private IIdentifiable GetIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
+        /// <summary>
+        /// Searches for and parses the included relationship
+        /// </summary>
+        private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
             var relatedInstance = relationshipAttr.DependentType.New<IIdentifiable>();
             relatedInstance.StringId = relatedResourceIdentifier.Id;
@@ -83,7 +100,6 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             SetRelationships(relatedInstance, includedResource.Relationships, contextEntity.Relationships);
             return relatedInstance;
         }
-
 
         private ResourceObject GetLinkedResource(ResourceIdentifierObject relatedResourceIdentifier)
         {

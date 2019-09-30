@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Deserializer;
 using Newtonsoft.Json;
 using Xunit;
 

@@ -1,6 +1,7 @@
 ﻿using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Deserializer;
 using System.Collections.Generic;
 
 namespace UnitTests.Serialization.Deserializer

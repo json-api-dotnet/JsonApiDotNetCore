@@ -13,36 +13,57 @@ using Newtonsoft.Json.Linq;
 namespace JsonApiDotNetCore.Serialization.Deserializer
 {
     /// <summary>
-    /// Base class for deserialization. 
+    /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Document"/>s
+    /// And constructs instances of the resource(s) in the document body.
     /// </summary>
     public abstract class DocumentParser
     {
-        protected Document _document;
         protected readonly IContextEntityProvider _provider;
+        protected Document _document;
 
         protected DocumentParser(IContextEntityProvider provider)
         {
             _provider = provider;
         }
 
+        /// <summary>
+        /// This method is called each time an <paramref name="entity"/> is constructed
+        /// from the serialized content, which is used to do additional processing
+        /// depending on the type of deserializers.
+        /// </summary>
+        /// <remarks>
+        /// See the impementation of this method in <see cref="ClientDeserializer"/>
+        /// and <see cref="ServerDeserializer"/> for examples.
+        /// </remarks>
+        /// <param name="entity">The entity that was constructed from the document's body</param>
+        /// <param name="field">The metadata for the exposed field</param>
+        /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
         protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null);
 
+        /// <inheritdoc/>
         protected object Deserialize(string body)
         {
             var bodyJToken = LoadJToken(body);
             _document = bodyJToken.ToObject<Document>();
             if (_document.IsManyData)
             {
-                if (_document.ManyData.Count == 0) return new List<IIdentifiable>();
-                return _document.ManyData.Select(DocumentToObject).ToList();
+                if (_document.ManyData.Count == 0)
+                    return new List<IIdentifiable>();
+
+                return _document.ManyData.Select(ParseResourceObject).ToList();
             }
-            else
-            {
-                if (_document.SingleData == null) return null;
-                return DocumentToObject(_document.SingleData);
-            }
+
+            if (_document.SingleData == null) return null;
+                return ParseResourceObject(_document.SingleData);
         }
 
+        /// <summary>
+        /// Sets the attributes on a parsed entity.
+        /// </summary>
+        /// <param name="entity">The parsed entity</param>
+        /// <param name="attributeValues">Attributes and their values, as in the serialized content</param>
+        /// <param name="attributes">Exposed attributes for <paramref name="entity"/></param>
+        /// <returns></returns>
         protected IIdentifiable SetAttributes(IIdentifiable entity, Dictionary<string, object> attributeValues, List<AttrAttribute> attributes)
         {
             if (attributeValues == null || attributeValues.Count == 0)
@@ -60,19 +81,25 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
 
             return entity;
         }
-
-        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipData> relationships, List<RelationshipAttribute> relationshipAttributes)
+        /// <summary>
+        /// Sets the relationships on a parsed entity
+        /// </summary>
+        /// <param name="entity">The parsed entity</param>
+        /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
+        /// <param name="relationshipAttributes">Exposed relatinships for <paramref name="entity"/></param>
+        /// <returns></returns>
+        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipData> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
-            if (relationships == null || relationships.Count == 0)
+            if (relationshipsValues == null || relationshipsValues.Count == 0)
                 return entity;
 
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
                 if (attr is HasOneAttribute hasOne)
-                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationships);
+                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipsValues);
                 else
-                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationships);
+                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipsValues);
 
             }
             return entity;
@@ -88,7 +115,14 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             return jToken;
         }
 
-        private IIdentifiable DocumentToObject(ResourceObject data)
+
+        /// <summary>
+        /// Creates an instance of the referenced type in <paramref name="data"/>
+        /// and sets its attributes and relationships
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>The parsed entity</returns>
+        private IIdentifiable ParseResourceObject(ResourceObject data)
         {
             var contextEntity = _provider.GetContextEntity(data.Type);
             if (contextEntity == null)
@@ -111,22 +145,15 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             return entity;
         }
 
-
-        private object ConvertAttrValue(object newValue, Type targetType)
-        {
-            if (newValue is JContainer jObject)
-                return DeserializeComplexType(jObject, targetType);
-
-            var convertedValue = TypeHelper.ConvertType(newValue, targetType);
-            return convertedValue;
-        }
-
-        private object DeserializeComplexType(JContainer obj, Type targetType)
-        {
-            return obj.ToObject(targetType);
-            //return obj.ToObject(targetType, _jsonSerializer);
-        }
-
+        /// <summary>
+        /// Sets a HasOne relationship on a parsed entity. If present, also
+        /// populates the foreign key.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="entityProperties"></param>
+        /// <param name="attr"></param>
+        /// <param name="relationships"></param>
+        /// <returns></returns>
         private object SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
@@ -154,11 +181,17 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
                 SetDependentSide(entity, foreignKeyProperty, attr, relatedId);
             }
 
+            // allow for additional processing of relationships as required for the
+            // serializer class that implements this abstract class.
             AfterProcessField(entity, attr, relationshipData);
 
             return entity;
         }
 
+        /// <summary>
+        /// Sets the dependent side of a HasOne relationship, which means that a
+        /// foreign key also will to be populated.
+        /// </summary>
         private void SetDependentSide(IIdentifiable entity, PropertyInfo foreignKey, HasOneAttribute attr, string id)
         {
             bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKey.PropertyType) != null
@@ -173,6 +206,10 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             foreignKey.SetValue(entity, convertedId);
         }
 
+        /// <summary>
+        /// Sets the principal side of a HasOne relationship, which means no
+        /// foreign key is involved
+        /// </summary>
         private void SetPrincipalSide(IIdentifiable entity, HasOneAttribute attr, string relatedId)
         {
             if (relatedId == null)
@@ -187,10 +224,12 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             }
         }
 
-
+        /// <summary>
+        /// Sets a HasMany relationship.
+        /// </summary>
         private object SetHasManyRelationship(IIdentifiable entity,
-            HasManyAttribute attr,
-            Dictionary<string, RelationshipData> relationships)
+                                              HasManyAttribute attr,
+                                              Dictionary<string, RelationshipData> relationships)
         {
             if (relationships.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData))
             {
@@ -210,6 +249,22 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             }
 
             return entity;
+        }
+
+        private object ConvertAttrValue(object newValue, Type targetType)
+        {
+            if (newValue is JContainer jObject)
+                // the attribute value is a complex type that needs additional deserialization
+                return DeserializeComplexType(jObject, targetType);
+
+            // the attribute value is a native C# type.
+            var convertedValue = TypeHelper.ConvertType(newValue, targetType);
+            return convertedValue;
+        }
+
+        private object DeserializeComplexType(JContainer obj, Type targetType)
+        {
+            return obj.ToObject(targetType);
         }
     }
 }

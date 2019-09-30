@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
 using Newtonsoft.Json;
 using Xunit;
 
