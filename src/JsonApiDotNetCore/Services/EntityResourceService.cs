@@ -267,7 +267,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// Actually include the relationships
+        /// Actually includes the relationships
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="relationships"></param>

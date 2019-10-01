@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Data
         IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IUpdatedFields _updatedFields;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
@@ -82,14 +82,14 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
-            return entities.Filter(new AttrFilterQuery(_requestManager, _resourceGraph, filterQuery));
+            return entities.Filter(new AttrFilterQuery(_currentRequest, _resourceGraph, filterQuery));
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
         {
             if (sortQueries != null && sortQueries.Count > 0)
-                return entities.Sort(_jsonApiContext, sortQueries);
+                return entities.Sort(_currentRequest.GetRequestResource(), _resourceGraph, sortQueries);
 
             if (_resourceDefinition != null)
             {
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Data
                     foreach (var sortProp in defaultSortOrder)
                     {
                         // this is dumb...add an overload, don't allocate for no reason
-                        entities.Sort(_jsonApiContext, new SortQuery(sortProp.Item2, sortProp.Item1.PublicAttributeName));
+                        entities.Sort(_currentRequest.GetRequestResource(), _resourceGraph, new SortQuery(sortProp.Item2, sortProp.Item1.PublicAttributeName));
                     }
                 }
             }
@@ -109,14 +109,14 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAsync(TId id)
         {
-            return await Select(Get(), _requestManager.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await Select(Get(), _currentRequest.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         /// <inheritdoc />
         public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
         {
             _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
-            var includedSet = Include(Select(Get(), _requestManager.QuerySet?.Fields), relationshipName);
+            var includedSet = Include(Select(Get(), _currentRequest.QuerySet?.Fields), relationshipName);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
             return result;
         }
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCore.Data
             // variables mutated in recursive loop
             // TODO: make recursive method
             string internalRelationshipPath = null;
-            var entity = _requestManager.GetRequestResource();
+            var entity = _currentRequest.GetRequestResource();
             for (var i = 0; i < relationshipChain.Length; i++)
             {
                 var requestedRelationship = relationshipChain[i];

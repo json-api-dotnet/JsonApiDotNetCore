@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 
@@ -29,42 +30,42 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, List<SortQuery> sortQueries)
+        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity requestResource, IContextEntityProvider provider, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)
                 return source;
 
-            var orderedEntities = source.Sort(jsonApiContext, sortQueries[0]);
+            var orderedEntities = source.Sort(requestResource, provider, sortQueries[0]);
 
             if (sortQueries.Count <= 1)
                 return orderedEntities;
 
             for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(jsonApiContext, sortQueries[i]);
+                orderedEntities = orderedEntities.Sort(requestResource, provider, sortQueries[i]);
 
             return orderedEntities;
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, IJsonApiContext jsonApiContext, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity requestResource, IContextEntityProvider provider, SortQuery sortQuery)
         {
             BaseAttrQuery attr;
             if (sortQuery.IsAttributeOfRelationship)
-                attr = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
+                attr = new RelatedAttrSortQuery(requestResource, provider, sortQuery);
             else
-                attr = new AttrSortQuery(jsonApiContext, sortQuery);
+                attr = new AttrSortQuery(requestResource, provider, sortQuery);
 
             return sortQuery.Direction == SortDirection.Descending
                 ? source.OrderByDescending(attr.GetPropertyPath())
                 : source.OrderBy(attr.GetPropertyPath());
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, IJsonApiContext jsonApiContext, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, ContextEntity requestResource, IContextEntityProvider provider, SortQuery sortQuery)
         {
             BaseAttrQuery attr;
             if (sortQuery.IsAttributeOfRelationship)
-                attr = new RelatedAttrSortQuery(jsonApiContext, sortQuery);
+                attr = new RelatedAttrSortQuery(requestResource, provider, sortQuery);
             else
-                attr = new AttrSortQuery(jsonApiContext, sortQuery);
+                attr = new AttrSortQuery(requestResource, provider, sortQuery);
 
             return sortQuery.Direction == SortDirection.Descending
                 ? source.ThenByDescending(attr.GetPropertyPath())

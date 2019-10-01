@@ -14,19 +14,14 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public abstract class BaseAttrQuery
     {
-        private readonly ICurrentRequest _requestManager;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IContextEntityProvider _provider;
+        private readonly ContextEntity _requestResource;
 
-        public BaseAttrQuery(ICurrentRequest requestManager, IResourceGraph resourceGraph, BaseQuery baseQuery)
+        public BaseAttrQuery(ContextEntity requestResource, IContextEntityProvider provider, BaseQuery baseQuery)
         {
-            _requestManager = requestManager ?? throw new ArgumentNullException(nameof(requestManager));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _requestResource = requestResource ?? throw new ArgumentNullException(nameof(requestResource));
             
-            if(_resourceGraph == null) 
-                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_resourceGraph)} cannot be null. "
-                    + "If this is a unit test, you need to construct a graph containing the resources being tested. "
-                    + "See this issue to check the current status of improved test guidelines: "
-                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(requestManager));
             
             if (baseQuery.IsAttributeOfRelationship)
             {
@@ -54,17 +49,17 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private AttrAttribute GetAttribute(string attribute)
         {
-            return _requestManager.GetRequestResource().Attributes.FirstOrDefault(attr => attr.Is(attribute));
+            return _requestResource.Attributes.FirstOrDefault(attr => attr.Is(attribute));
         }
 
         private RelationshipAttribute GetRelationship(string propertyName)
         {
-            return _requestManager.GetRequestResource().Relationships.FirstOrDefault(r => r.Is(propertyName));
+            return _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
         }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
-            var relatedContextEntity = _resourceGraph.GetContextEntity(relationship.DependentType);
+            var relatedContextEntity = _provider.GetContextEntity(relationship.DependentType);
             return relatedContextEntity.Attributes
               .FirstOrDefault(a => a.Is(attribute));
         }

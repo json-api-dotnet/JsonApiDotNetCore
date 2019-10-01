@@ -1,15 +1,15 @@
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
     public class RelatedAttrSortQuery : BaseAttrQuery
     {
-        public RelatedAttrSortQuery(
-            SortQuery sortQuery)
-            :base(jsonApiContext.RequestManager, jsonApiContext.ResourceGraph, sortQuery)
+        public RelatedAttrSortQuery(ContextEntity requestResource,
+                                    IContextEntityProvider provider,
+                                    SortQuery sortQuery) : base(requestResource, provider, sortQuery)
         {
             if (Relationship == null)
-                throw new JsonApiException(400, $"{sortQuery.Relationship} is not a valid relationship on {jsonApiContext.RequestEntity.EntityName}.");
+                throw new JsonApiException(400, $"{sortQuery.Relationship} is not a valid relationship on {requestResource.EntityName}.");
 
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{sortQuery.Attribute}' is not a valid attribute.");
