@@ -8,6 +8,7 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Builders;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
@@ -42,7 +43,9 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             ISerializableFields serializableFields,
             IIncludedQueryService includedQuery,
             IFieldsQueryService fieldQuery,
-            IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider)
+            IResourceGraph resourceGraph,
+            IContextEntityProvider provider,
+            ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider)
         {
             _includedQuery = includedQuery;
             _fieldQuery = fieldQuery;

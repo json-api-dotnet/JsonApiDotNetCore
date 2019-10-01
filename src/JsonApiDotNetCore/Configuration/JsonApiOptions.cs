@@ -178,6 +178,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </code>
         /// </example>
         public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
+        public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>
         /// Whether or not to allow json:api v1.1 operation requests.

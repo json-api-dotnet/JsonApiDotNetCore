@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -15,12 +16,14 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     {
         protected readonly IResourceGraph _resourceGraph;
         protected readonly IContextEntityProvider _provider;
+        private readonly ISerializerBehaviourProvider _behaviourProvider;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider)
+        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ISerializerBehaviourProvider behaviourProvider)
         {
             _resourceGraph = resourceGraph;
             _provider = provider;
+            _behaviourProvider = behaviourProvider;
         }
 
         /// <summary>

@@ -31,4 +31,17 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public bool AllowClientOverride { get; }
     }
+
+    public struct DefaultAttributeResponseBehavior
+    {
+
+        public DefaultAttributeResponseBehavior(bool omitNullValuedAttributes = false, bool allowClientOverride = false)
+        {
+            OmitDefaultValuedAttributes = omitNullValuedAttributes;
+            AllowClientOverride = allowClientOverride;
+        }
+
+        public bool OmitDefaultValuedAttributes { get; }
+        public bool AllowClientOverride { get; }
+    }
 }

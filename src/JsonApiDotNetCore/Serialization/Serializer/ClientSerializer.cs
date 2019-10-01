@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -22,7 +23,8 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly IExposedFieldExplorer _fieldExplorer;
         public ClientSerializer(IExposedFieldExplorer fieldExplorer,
                                 IContextEntityProvider provider,
-                                IResourceGraph resourceGraph) : base(resourceGraph, provider)
+                                IResourceGraph resourceGraph,
+                                ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider)
         {
             _fieldExplorer = fieldExplorer;
         }

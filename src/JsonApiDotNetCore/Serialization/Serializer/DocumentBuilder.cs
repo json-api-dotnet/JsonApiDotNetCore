@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     /// </summary>
     public abstract class DocumentBuilder : ResourceObjectBuilder
     {
-        protected DocumentBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider) { }
+        protected DocumentBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider) { }
 
         /// <summary>
         /// Builds a <see cref="Document"/> for <paramref name="entity"/>.

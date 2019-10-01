@@ -1,6 +1,4 @@
-using JsonApiDotNetCore.Configuration;
-
-namespace JsonApiDotNetCore.Builders
+namespace JsonApiDotNetCore.Serialization.Serializer
 {
     /// <summary>
     /// Options used to configure how a model gets serialized into
@@ -9,13 +7,10 @@ namespace JsonApiDotNetCore.Builders
     public class SerializerBehaviour 
     {
         /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
-        public SerializerBehaviour(ISerializerOptions options)
+        public SerializerBehaviour(bool omitNullValuedAttributes, bool omitDefaultValuedAttributes)
         {
-            OmitNullValuedAttributes = options.NullAttributeResponseBehavior.OmitNullValuedAttributes;
-            if (options.NullAttributeResponseBehavior.AllowClientOverride)
-            {
-
-            }
+            OmitNullValuedAttributes = omitNullValuedAttributes;
+            OmitDefaultValuedAttributes = omitDefaultValuedAttributes;
         }
 
         /// <summary>
@@ -28,12 +23,10 @@ namespace JsonApiDotNetCore.Builders
         /// options.NullAttributeResponseBehavior = new NullAttributeResponseBehavior(true);
         /// </code>
         /// </example>
-        public bool OmitNullValuedAttributes { get; private set; }
+        public bool OmitNullValuedAttributes { get; }
+
+        public bool OmitDefaultValuedAttributes { get; }
     }
 
-    public interface ISerializerOptions
-    {
-        NullAttributeResponseBehavior NullAttributeResponseBehavior  { get;set;}
-    }
 }
 

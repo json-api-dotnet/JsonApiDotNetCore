@@ -32,5 +32,6 @@ namespace JsonApiDotNetCore.Configuration
     public interface ISerializerOptions
     {
         NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
+        DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
     }
 }

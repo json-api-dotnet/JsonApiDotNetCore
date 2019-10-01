@@ -17,7 +17,8 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         public IncludedRelationshipsBuilder(ISerializableFields serializableFields,
                                            ILinkBuilder linkBuilder,
                                            IResourceGraph resourceGraph,
-                                           IContextEntityProvider provider) : base(resourceGraph, provider)
+                                           IContextEntityProvider provider,
+                                           ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider)
         {
             _included = new HashSet<ResourceObject>(new ResourceObjectComparer());
             _serializableFields = serializableFields;
