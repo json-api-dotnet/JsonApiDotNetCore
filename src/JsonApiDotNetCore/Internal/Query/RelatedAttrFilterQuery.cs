@@ -1,23 +1,17 @@
-using System;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
     public class RelatedAttrFilterQuery : BaseFilterQuery
     {
         public RelatedAttrFilterQuery(
-            ICurrentRequest requestManager,
-            IResourceGraph resourceGraph,
+            ContextEntity requestResource,
+            IContextEntityProvider provider,
             FilterQuery filterQuery)
-            : base(requestManager: requestManager,
-                  resourceGraph: resourceGraph,
-                  filterQuery: filterQuery)
+            : base(requestResource, provider, filterQuery)
         {
             if (Relationship == null)
-                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {requestManager.GetRequestResource().EntityName}.");
+                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {requestResource.EntityName}.");
 
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");

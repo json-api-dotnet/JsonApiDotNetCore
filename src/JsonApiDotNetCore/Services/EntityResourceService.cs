@@ -355,22 +355,19 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        public EntityResourceService(
-            IEntityRepository<TResource, TId> repository,
-            IJsonApiOptions apiOptions,
-            ICurrentRequest requestManager,
-            IResourceGraph resourceGraph,
-            IPageQueryService pageManager,
-            ILoggerFactory loggerFactory = null,
-            IResourceHookExecutor hookExecutor = null)
-            : base(repository: repository,
-                   options: apiOptions,
-                   requestManager: requestManager,
-                   pageManager: pageManager,
-                   loggerFactory: loggerFactory,
-                   resourceGraph: resourceGraph,
-                   hookExecutor: hookExecutor)
-        { }
+        public EntityResourceService(IEntityRepository<TResource, TId> repository,
+                                     IJsonApiOptions options,
+                                     IUpdatedFields updatedFields,
+                                     ICurrentRequest requestManager,
+                                     IPageQueryService pageManager,
+                                     IResourceGraph resourceGraph,
+                                     IResourceHookExecutor hookExecutor = null,
+                                     IResourceMapper mapper = null,
+                                     ILoggerFactory loggerFactory = null) :
+            base(repository, options, updatedFields, requestManager, pageManager,
+                resourceGraph, hookExecutor, mapper, loggerFactory)
+        {
+        }
     }
 
     /// <summary>

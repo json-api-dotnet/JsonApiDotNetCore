@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
@@ -26,6 +27,11 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IResourceGraph resourceGraph
         ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
+    }
+
+    public interface IDocumentBuilder
+    {
+        ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource);
     }
 
     public class CreateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>

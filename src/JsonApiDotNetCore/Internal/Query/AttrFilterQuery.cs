@@ -9,10 +9,10 @@ namespace JsonApiDotNetCore.Internal.Query
     public class AttrFilterQuery : BaseFilterQuery
     {
         public AttrFilterQuery(
-            ICurrentRequest requestManager,
-            IResourceGraph resourceGraph,
+            ContextEntity requestResource,
+            IContextEntityProvider provider,
             FilterQuery filterQuery)
-            : base(requestManager, resourceGraph, filterQuery)
+            : base(requestResource, provider, filterQuery)
         {
             if (Attribute == null)
                 throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");

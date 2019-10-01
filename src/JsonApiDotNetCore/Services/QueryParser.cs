@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Services
             {
                 if (relationship != default)
                 {
-                    var relationProperty = _resourceGraph.GetContextEntity(relationship.DependentType);
+                    var relationProperty = _provider.GetContextEntity(relationship.DependentType);
                     var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
                     if (attr == null)
                         throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");

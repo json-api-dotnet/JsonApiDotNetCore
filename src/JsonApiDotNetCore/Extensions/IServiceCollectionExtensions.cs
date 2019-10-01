@@ -22,6 +22,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
+using JsonApiDotNetCore.Serialization.Serializer;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.QueryServices;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -199,7 +205,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(ServerSerializer<>));
             services.AddScoped<ICurrentRequest, CurrentRequest>();
             services.AddScoped<IPageQueryService, PageQueryService>();
-            services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
@@ -209,7 +214,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
-            services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IIncludedQueryService, IncludedQueryService>();
             services.AddScoped<IInternalIncludedQueryService, IncludedQueryService>();
             services.AddScoped<IFieldsQueryService, FieldsQueryService>();

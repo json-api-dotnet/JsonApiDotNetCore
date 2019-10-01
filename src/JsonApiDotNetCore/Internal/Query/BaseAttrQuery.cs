@@ -1,7 +1,5 @@
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using System;
 using System.Linq;
 

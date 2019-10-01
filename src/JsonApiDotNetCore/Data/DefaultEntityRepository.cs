@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Data
                     return defaultQueryFilter(entities, filterQuery);
                 }
             }
-            return entities.Filter(new AttrFilterQuery(_currentRequest, _resourceGraph, filterQuery));
+            return entities.Filter(new AttrFilterQuery(_currentRequest.GetRequestResource(), _resourceGraph, filterQuery));
         }
 
         /// <inheritdoc />
@@ -556,21 +556,27 @@ namespace JsonApiDotNetCore.Data
         IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
-        //public DefaultEntityRepository(
-        //IUpdatedFields updatedFields,
-        //IDbContextResolver contextResolver,
-        //IResourceGraph resourceGraph,
-        //IGenericProcessorFactory genericProcessorFactory,
-        //ResourceDefinition<TEntity> resourceDefinition = null) : base (updatedFields CO)
-        //{ }
 
-        //public DefaultEntityRepository(
-        //    IUpdatedFields updatedFields,
-        //    ILoggerFactory loggerFactory,
-        //    IDbContextResolver contextResolver,
-        //    IResourceGraph resourceGraph,
-        //    IGenericProcessorFactory genericProcessorFactory,
-        //    ResourceDefinition<TEntity> resourceDefinition = null)
-        //{ }
+        public DefaultEntityRepository(
+            IUpdatedFields updatedFields,
+            IDbContextResolver contextResolver,
+            IResourceGraph resourceGraph,
+            IGenericProcessorFactory genericProcessorFactory,
+            ResourceDefinition<TEntity> resourceDefinition = null) :
+            base(updatedFields, contextResolver, resourceGraph,
+                genericProcessorFactory, resourceDefinition)
+        {
+        }
+
+        public DefaultEntityRepository(ILoggerFactory loggerFactory,
+                                       IUpdatedFields updatedFields,
+                                       IDbContextResolver contextResolver,
+                                       IResourceGraph resourceGraph,
+                                       IGenericProcessorFactory genericProcessorFactory,
+                                       ResourceDefinition<TEntity> resourceDefinition = null) :
+            base(loggerFactory, updatedFields, contextResolver, resourceGraph,
+                genericProcessorFactory, resourceDefinition)
+        {
+        }
     }
 }

@@ -134,7 +134,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             var relationshipType = _resourceGraph.GetContextEntity(operation.GetResourceTypeName())
                 .Relationships.Single(r => r.Is(operation.Ref.Relationship)).DependentType;
 
-            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipType);
+            var relatedContextEntity = _resourceGraph.GetContextEntity(relationshipType);
 
             if (result == null)
                 return null;
