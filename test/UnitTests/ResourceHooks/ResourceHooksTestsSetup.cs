@@ -312,17 +312,6 @@ namespace UnitTests.ResourceHooks
             .Verifiable();
         }
 
-        (Mock<IJsonApiContext>, Mock<IGenericProcessorFactory>) CreateContextAndProcessorMocks()
-        {
-            var processorFactory = new Mock<IGenericProcessorFactory>();
-            var context = new Mock<IJsonApiContext>();
-            context.Setup(c => c.GenericProcessorFactory).Returns(processorFactory.Object);
-            context.Setup(c => c.Options).Returns(new JsonApiOptions { LoaDatabaseValues = false });
-            context.Setup(c => c.ResourceGraph).Returns(ResourceGraph.Instance);
-
-            return (context, processorFactory);
-        }
-
         void SetupProcessorFactoryForResourceDefinition<TModel>(
         Mock<IGenericProcessorFactory> processorFactory,
         IResourceHookContainer<TModel> modelResource,
@@ -342,7 +331,7 @@ namespace UnitTests.ResourceHooks
                 var idType = TypeHelper.GetIdentifierType<TModel>();
                 if (idType == typeof(int))
                 {
-                    IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, new Mock<IJsonApiContext>().Object);
+                    IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext);
                     processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
@@ -354,12 +343,11 @@ namespace UnitTests.ResourceHooks
         }
 
         IEntityReadRepository<TModel, int> CreateTestRepository<TModel>(
-        AppDbContext dbContext,
-        IJsonApiContext apiContext
+        AppDbContext dbContext
         ) where TModel : class, IIdentifiable<int>
         {
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultEntityRepository<TModel, int>(null, apiContext, resolver);
+            return new DefaultEntityRepository<TModel, int>(null, resolver, null, null);
         }
 
         IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Serializer;
 using Xunit;
@@ -14,7 +13,7 @@ namespace UnitTests.Serialization.Serializer
 
         public ClientSerializerTests()
         {
-            _serializer = new ClientSerializer(_fieldExplorer, _resourceGraph, _resourceGraph);
+            _serializer = new ClientSerializer(_fieldExplorer, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
         }
 
 

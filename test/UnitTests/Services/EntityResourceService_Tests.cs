@@ -1,7 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
@@ -14,16 +18,19 @@ namespace UnitTests.Services
     {
         private readonly Mock<IEntityRepository<TodoItem>> _repositoryMock = new Mock<IEntityRepository<TodoItem>>();
         private readonly ILoggerFactory _loggerFactory = new Mock<ILoggerFactory>().Object;
+        private readonly Mock<ICurrentRequest> _crMock;
+        private readonly Mock<IPageQueryService> _pgsMock;
+        private readonly Mock<IUpdatedFields> _ufMock;
 
         public EntityResourceService_Tests()
         {
-            _jsonApiContextMock
-                .Setup(m => m.ResourceGraph)
-                .Returns(
-                    new ResourceGraphBuilder()
-                        .AddResource<TodoItem>("todo-items")
-                        .Build()
-                );
+            //_jsonApiContextMock
+            //    .Setup(m => m.ResourceGraph)
+            //    .Returns(
+            //        new ResourceGraphBuilder()
+            //            .AddResource<TodoItem>("todo-items")
+            //            .Build()
+            //    );
         }
 
         [Fact]
@@ -73,7 +80,7 @@ namespace UnitTests.Services
 
         private EntityResourceService<TodoItem> GetService()
         {
-            return new EntityResourceService<TodoItem>(_repositoryMock.Object,_jsonApiContextMock.Object.Options, _jsonApiContextMock.Object.RequestManager, _jsonApiContextMock.Object.PageManager, _jsonApiContextMock.Object.ResourceGraph, _loggerFactory, null);
+            return new EntityResourceService<TodoItem>(_repositoryMock.Object, new JsonApiOptions(), _ufMock.Object, _crMock.Object, _pgsMock.Object, null, null);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace UnitTests.Serialization.Serializer
             return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider()) ;
         }
 
-        private ISerializerSettingsProvider GetSerializerSettingsProvider()
+        protected ISerializerSettingsProvider GetSerializerSettingsProvider()
         {
             var mock = new Mock<ISerializerSettingsProvider>();
             return mock.Object;

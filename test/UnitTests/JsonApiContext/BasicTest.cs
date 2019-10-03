@@ -19,6 +19,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using System.Linq;
 using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization;
 
 namespace UnitTests.Services
 {
@@ -38,7 +39,6 @@ namespace UnitTests.Services
         public async Task GetAsync_Throw404OnNoEntityFound()
         {
             // Arrange
-            var jacMock = FetchContextMock();
             var loggerMock = new Mock<ILoggerFactory>();
             var jsonApiOptions = new JsonApiOptions
             {
@@ -48,7 +48,7 @@ namespace UnitTests.Services
             var queryManagerMock = new Mock<ICurrentRequest>();
             var pageManagerMock = new Mock<IPageQueryService>();
             var rgMock = new Mock<IResourceGraph>();
-            var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, queryManagerMock.Object, pageManagerMock.Object, rgMock.Object);
+            var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, null, queryManagerMock.Object, pageManagerMock.Object, rgMock.Object);
 
             // Act / Assert
             var toExecute = new Func<Task>(() =>
@@ -74,15 +74,15 @@ namespace UnitTests.Services
             } as IJsonApiOptions;
             var repositoryMock = new Mock<IEntityRepository<Article>>();
 
-            var currentRequest = new Mock<ICurrentRequest>();
+            var updatedFieldsMock = new Mock<IUpdatedFields>();
             var pageManagerMock = new Mock<IPageQueryService>();
-            currentRequest.Setup(qm => qm.GetRelationships()).Returns(new List<string>() { "cookies" });
-            currentRequest.SetupGet(rm => rm.QuerySet).Returns(new QuerySet
-            {
-                IncludedRelationships = new List<string> { "cookies" }
-            });
+            //updatedFieldsMock.Setup(qm => qm.Relationships).Returns(new List<string>() { "cookies" });
+            //updatedFieldsMock.SetupGet(rm => rm.QuerySet).Returns(new QuerySet
+            //{
+            //    IncludedRelationships = new List<string> { "cookies" }
+            //});
             var rgMock = new Mock<IResourceGraph>();
-            var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, currentRequest.Object, pageManagerMock.Object, rgMock.Object);
+            var service = new CustomArticleService(repositoryMock.Object, jsonApiOptions, updatedFieldsMock.Object, null, pageManagerMock.Object, rgMock.Object);
 
             // Act / Assert
             var toExecute = new Func<Task>(() =>
