@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 {
                     ro.Attributes = new Dictionary<string, object>();
                     foreach (var attr in attrs)
-                        ro.Attributes.Add(attr.PublicAttributeName, attr.GetValue(entity));
+                        AddAttribute(entity, ro, attr);
                 }
             }
 
@@ -65,6 +65,14 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             }
 
             return ro;
+        }
+
+
+        private void AddAttribute(IIdentifiable entity, ResourceObject ro, AttrAttribute attr)
+        {
+            var value = attr.GetValue(entity);
+            if ( !(value == default && _settings.OmitDefaultValuedAttributes) && !(value == null && _settings.OmitDefaultValuedAttributes))
+                ro.Attributes.Add(attr.PublicAttributeName, value);
         }
 
         /// <summary>
