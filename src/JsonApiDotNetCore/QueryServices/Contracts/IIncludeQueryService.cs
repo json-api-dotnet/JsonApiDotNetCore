@@ -14,7 +14,6 @@ namespace JsonApiDotNetCore.QueryServices.Contracts
         /// </summary>
         List<List<RelationshipAttribute>> Get();
     }
-
     /// <summary>
     /// Internal interface to register inclusion chains when parsing query params internally.
     /// This is to prevent the registering method from being exposed to the developer.
