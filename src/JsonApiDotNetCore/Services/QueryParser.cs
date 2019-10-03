@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
-        private readonly IInternalIncludedQueryService _includedQuery;
+        private readonly IInternalIncludeQueryService _includeQuery;
         private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
         private readonly ICurrentRequest _currentRequest;
@@ -29,14 +29,14 @@ namespace JsonApiDotNetCore.Services
         private readonly ContextEntity _requestResource;
         private readonly IContextEntityProvider _provider;
 
-        public QueryParser(IInternalIncludedQueryService includedRelationships,
+        public QueryParser(IInternalIncludeQueryService includedRelationships,
             IInternalFieldsQueryService fieldQuery,
             ICurrentRequest currentRequest,
             IPageQueryService pageQuery,
             IContextEntityProvider provider,
             IJsonApiOptions options)
         {
-            _includedQuery = includedRelationships;
+            _includeQuery = includedRelationships;
             _fieldQuery = fieldQuery;
             _currentRequest = currentRequest;
             _pageQuery = pageQuery;
@@ -213,7 +213,7 @@ namespace JsonApiDotNetCore.Services
                     parsedChain.Add(relationship);
                     resourceContext = _provider.GetContextEntity(relationship.PrincipalType);
                 }
-                _includedQuery.Register(parsedChain);
+                _includeQuery.Register(parsedChain);
             }
 
             return inclusions;

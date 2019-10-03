@@ -4,11 +4,11 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace JsonApiDotNetCore.QueryServices
 {
-    public class IncludedQueryService : IIncludedQueryService, IInternalIncludedQueryService
+    public class IncludeQueryService : IIncludeQueryService, IInternalIncludeQueryService
     {
         private readonly List<List<RelationshipAttribute>> _includedChains;
 
-        public IncludedQueryService()
+        public IncludeQueryService()
         {
             _includedChains = new List<List<RelationshipAttribute>>();
         }

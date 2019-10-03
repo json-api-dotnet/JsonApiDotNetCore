@@ -107,9 +107,9 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected IIncludedQueryService GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
+        protected IIncludeQueryService GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
         {
-            var mock = new Mock<IIncludedQueryService>();
+            var mock = new Mock<IIncludeQueryService>();
             if (inclusionChains != null)
                 mock.Setup(m => m.Get()).Returns(inclusionChains);
 

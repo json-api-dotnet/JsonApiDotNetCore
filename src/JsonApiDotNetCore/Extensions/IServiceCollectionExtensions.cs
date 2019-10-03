@@ -214,8 +214,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
-            services.AddScoped<IIncludedQueryService, IncludedQueryService>();
-            services.AddScoped<IInternalIncludedQueryService, IncludedQueryService>();
+            services.AddScoped<IIncludeQueryService, IncludeQueryService>();
+            services.AddScoped<IInternalIncludeQueryService, IncludeQueryService>();
             services.AddScoped<IFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IInternalFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IUpdatedFields, UpdatedFields>();

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
-        private readonly IIncludedQueryService _includedQuery;
+        private readonly IIncludeQueryService _includeQuery;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _requestResourceType;
@@ -38,13 +38,13 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                                 ILinkBuilder linkBuilder,
                                 IIncludedResourceObjectBuilder includedBuilder,
                                 IFieldsToSerialize fieldsToSerialize,
-                                IIncludedQueryService includedQuery,
+                                IIncludeQueryService includeQuery,
                                 IResourceGraph resourceGraph,
                                 IContextEntityProvider provider,
                                 ISerializerSettingsProvider settingsProvider)
             : base(resourceGraph, provider, settingsProvider.Get())
         {
-            _includedQuery = includedQuery;
+            _includeQuery = includeQuery;
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
@@ -184,12 +184,12 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         }
 
         /// <summary>
-        /// Inspects the included relationship chains (see <see cref="IIncludedQueryService"/>
+        /// Inspects the included relationship chains (see <see cref="IIncludeQueryService"/>
         /// to see if <paramref name="relationship"/> should be included or not.
         /// </summary>
         private bool ShouldInclude(RelationshipAttribute relationship, out List<RelationshipAttribute> inclusionChain)
         {
-            inclusionChain = _includedQuery.Get()?.SingleOrDefault(l => l.First().Equals(relationship));
+            inclusionChain = _includeQuery.Get()?.SingleOrDefault(l => l.First().Equals(relationship));
             if (inclusionChain == null)
                 return false;
             return true;

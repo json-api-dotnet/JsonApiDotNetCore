@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.QueryServices.Contracts
     /// <summary>
     /// Query service to access the inclusion chains.
     /// </summary>
-    public interface IIncludedQueryService
+    public interface IIncludeQueryService
     {
         /// <summary>
         /// Gets the list of included relationships chains for the current request.
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.QueryServices.Contracts
     /// Internal interface to register inclusion chains when parsing query params internally.
     /// This is to prevent the registering method from being exposed to the developer.
     /// </summary>
-    public interface IInternalIncludedQueryService
+    public interface IInternalIncludeQueryService
     {
         void Register(List<RelationshipAttribute> inclusionChain);
     }
