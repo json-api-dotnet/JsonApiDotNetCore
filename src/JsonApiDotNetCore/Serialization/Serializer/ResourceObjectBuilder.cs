@@ -42,8 +42,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
 
             // populating the top-level "attribute" member of a resource object
             if (attrs != null)
-            {
-                // never include "id" as an attribute
+            {   // never include "id" as an attribute
                 attrs = attrs.Where(attr => attr.InternalAttributeName != _identifiablePropertyName);
                 if (attrs.Any())
                 {
@@ -53,9 +52,8 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 }
             }
 
-            // populating the top-level "relationship" member of a resource object.
             if (rels != null && rels.Any())
-            {
+            {   // populating the top-level "relationship" member of a resource object.
                 foreach (var rel in rels)
                 {
                     var relData = GetRelationshipData(rel, entity);
