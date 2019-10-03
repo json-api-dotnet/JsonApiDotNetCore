@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using Xunit;
 using UnitTests.Serialization.Serializer;
@@ -9,7 +8,7 @@ using JsonApiDotNetCore.Serialization.Serializer;
 
 namespace UnitTests.Serialization.IncludedRelationshipBuilder
 {
-    public class IncludedRelationshipBuilderTests : SerializerTestsSetup
+    public class IncludedResourceObjectBuilderTests : SerializerTestsSetup
     {
         [Fact]
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
