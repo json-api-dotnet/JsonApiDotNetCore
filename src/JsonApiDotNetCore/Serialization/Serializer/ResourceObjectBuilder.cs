@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly SerializerSettings _settings;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings settings = null)
+        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings settings)
         {
             _resourceGraph = resourceGraph;
             _provider = provider;
@@ -31,8 +31,8 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// Adds the attributes and relationships that are enlisted in <paramref name="attrs"/> and <paramref name="rels"/>
         /// </summary>
         /// <param name="entity">Entity to build a Resource Object for</param>
-        /// <param name="attrs">Attributes to include in the building process</param>
-        /// <param name="rels">Relationships to include in the building process</param>
+        /// <param name="attributes">Attributes to include in the building process</param>
+        /// <param name="relationships">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
         protected ResourceObject BuildResourceObject(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, IEnumerable<RelationshipAttribute> relationships)
         {

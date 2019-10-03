@@ -61,6 +61,7 @@ namespace UnitTests.Serialization.Serializer
         protected ISerializerSettingsProvider GetSerializerSettingsProvider()
         {
             var mock = new Mock<ISerializerSettingsProvider>();
+            mock.Setup(m => m.Get()).Returns(new SerializerSettings());
             return mock.Object;
         }
 
@@ -101,7 +102,7 @@ namespace UnitTests.Serialization.Serializer
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), null)).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Attributes);
+            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>( (t, r) => _resourceGraph.GetContextEntity(t).Attributes);
             mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Relationships);
             return mock.Object;
         }
@@ -122,16 +123,16 @@ namespace UnitTests.Serialization.Serializer
         /// </summary>
         protected class TestSerializer : DocumentBuilder
         {
-            public TestSerializer(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, null) { }
+            public TestSerializer(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, new SerializerSettings()) { }
 
             public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
             {
-                return base.Build(entity, attributes, relationships);
+                return base.Build(entity, attributes ?? new List<AttrAttribute>(), relationships ?? new List<RelationshipAttribute>());
             }
 
             public new Document Build(IEnumerable entities, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
             {
-                return base.Build(entities, attributes, relationships);
+                return base.Build(entities, attributes ?? new List<AttrAttribute>(), relationships ?? new List<RelationshipAttribute>());
             }
         }
     }

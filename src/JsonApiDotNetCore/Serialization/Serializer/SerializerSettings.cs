@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     public class SerializerSettings 
     {
         /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
-        public SerializerSettings(bool omitNullValuedAttributes, bool omitDefaultValuedAttributes)
+        public SerializerSettings(bool omitNullValuedAttributes = false, bool omitDefaultValuedAttributes = false)
         {
             OmitNullValuedAttributes = omitNullValuedAttributes;
             OmitDefaultValuedAttributes = omitDefaultValuedAttributes;
