@@ -8,20 +8,22 @@ using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
+    /// <inheritdoc/>
     public class IncludedResourceObjectBuilder : ResourceObjectBuilder, IIncludedResourceObjectBuilder
     {
         private readonly HashSet<ResourceObject> _included;
-        private readonly IFieldsToSerialize _serializableFields;
+        private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly ILinkBuilder _linkBuilder;
 
-        public IncludedResourceObjectBuilder(IFieldsToSerialize serializableFields,
-                                           ILinkBuilder linkBuilder,
-                                           IResourceGraph resourceGraph,
-                                           IContextEntityProvider provider,
-                                           ISerializerSettingsProvider settingsProvider) : base(resourceGraph, provider, settingsProvider.Get())
+        public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize,
+                                             ILinkBuilder linkBuilder,
+                                             IResourceGraph resourceGraph,
+                                             IContextEntityProvider provider,
+                                             ISerializerSettingsProvider settingsProvider)
+            : base(resourceGraph, provider, settingsProvider.Get())
         {
             _included = new HashSet<ResourceObject>(new ResourceObjectComparer());
-            _serializableFields = serializableFields;
+            _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
         }
 
@@ -30,19 +32,17 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         {
             if (_included.Any())
             {
+                // cleans relationship dictionaries and adds links of resources.
                 foreach (var resourceObject in _included)
                 {
                     if (resourceObject.Relationships != null)
-                    {
+                    {   /// removes relationship entries (<see cref="RelationshipData"/>s) if they're completely empty.  
                         var pruned = resourceObject.Relationships.Where(p => p.Value.IsPopulated || p.Value.Links != null).ToDictionary(p => p.Key, p => p.Value);
-                        if (!pruned.Any())
-                            pruned = null;
+                        if (!pruned.Any()) pruned = null;
                         resourceObject.Relationships = pruned;
                     }
-
                     resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
                 }
-
                 return _included.ToList();
             }
             return null;
@@ -96,11 +96,15 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             return chainRemainder;
         }
 
-
+        /// <summary>
+        /// We only need a empty relationship object entry here. It will be populated in the
+        /// ProcessRelationships method.
+        /// </summary>
+        /// <param name="relationship"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         protected override RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
-            /// We only need a empty relationship object entry here. It will be populated in the
-            /// ProcessRelationships method.
             return new RelationshipData { };
         }
 
@@ -109,17 +113,16 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// If it was not already build, it is constructed and added to the included list.
         /// </summary>
         /// <param name="parent"></param>
-        /// <param name="attr"></param>
+        /// <param name="relationship"></param>
         /// <returns></returns>
-        private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute attr)
+        private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute relationship)
         {
-            /// @TODO: apply sparse field selection using relationship attr.
             var type = parent.GetType();
             var resourceName = _provider.GetContextEntity(type).EntityName;
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {
-                entry = BuildResourceObject(parent, _serializableFields.GetAllowedAttributes(type), _serializableFields.GetAllowedRelationships(type));
+                entry = BuildResourceObject(parent, _fieldsToSerialize.GetAllowedAttributes(type, relationship), _fieldsToSerialize.GetAllowedRelationships(type));
                 _included.Add(entry);
             }
             return entry;

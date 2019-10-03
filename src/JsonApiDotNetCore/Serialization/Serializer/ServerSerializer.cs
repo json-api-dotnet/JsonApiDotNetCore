@@ -28,27 +28,24 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IIncludedQueryService _includedQuery;
-        private readonly IFieldsQueryService _fieldQuery;
-        private readonly IFieldsToSerialize _serializableFields;
+        private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _requestResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
-        public ServerSerializer(
-            IMetaBuilder<TResource> metaBuilder,
-            ILinkBuilder linkBuilder,
-            IIncludedResourceObjectBuilder includedBuilder,
-            IFieldsToSerialize serializableFields,
-            IIncludedQueryService includedQuery,
-            IFieldsQueryService fieldQuery,
-            IResourceGraph resourceGraph,
-            IContextEntityProvider provider,
-            ISerializerSettingsProvider settingsProvider) : base(resourceGraph, provider, settingsProvider.Get())
+        public ServerSerializer(IMetaBuilder<TResource> metaBuilder,
+                                ILinkBuilder linkBuilder,
+                                IIncludedResourceObjectBuilder includedBuilder,
+                                IFieldsToSerialize fieldsToSerialize,
+                                IIncludedQueryService includedQuery,
+                                IResourceGraph resourceGraph,
+                                IContextEntityProvider provider,
+                                ISerializerSettingsProvider settingsProvider)
+            : base(resourceGraph, provider, settingsProvider.Get())
         {
             _includedQuery = includedQuery;
-            _fieldQuery = fieldQuery;
-            _serializableFields = serializableFields;
+            _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _includedBuilder = includedBuilder;
@@ -117,11 +114,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 return allowedAttributes;
 
             // Get the list of attributes to be exposed for this type
-            allowedAttributes = _serializableFields.GetAllowedAttributes(resourceType);
-            var fields = _fieldQuery.Get();
-            if (fields != null)
-                // from the allowed attributes, select the ones flagged by sparse field selection.
-                allowedAttributes = allowedAttributes.Where(attr => !fields.Contains(attr)).ToList();
+            allowedAttributes = _fieldsToSerialize.GetAllowedAttributes(resourceType);
 
             // add to cache so we we don't have to look this up next time.
             _attributesToSerializeCache.Add(resourceType, allowedAttributes);
@@ -141,7 +134,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 return allowedRelations;
 
             // Get the list of relationships to be exposed for this type
-            allowedRelations = _serializableFields.GetAllowedRelationships(resourceType);
+            allowedRelations = _fieldsToSerialize.GetAllowedRelationships(resourceType);
             // add to cache so we we don't have to look this up next time.
             _relationshipsToSerializeCache.Add(resourceType, allowedRelations);
             return allowedRelations;

@@ -2,39 +2,59 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using System.Linq;
 
 namespace JsonApiDotNetCore.Models
 {
     /// <inheritdoc/>
+    /// TODO: explore option out caching so we don't have to recalculate the list
+    /// of allowed attributes and relationships all the time. This is more efficient
+    /// for documents with many resource objects.
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IContextEntityProvider _resourceContextProvider;
+        private readonly IFieldsQueryService _fieldsQuery;
         private readonly IServiceProvider _provider;
         private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
         private readonly IFieldsExplorer _fieldExplorer;
 
         public FieldsToSerialize(IFieldsExplorer fieldExplorer,
-                                  IContextEntityProvider resourceContextProvider,
-                                  IServiceProvider provider)
+                                 IContextEntityProvider resourceContextProvider,
+                                 IFieldsQueryService fieldsQuery,
+                                 IServiceProvider provider)
         {
             _fieldExplorer = fieldExplorer;
             _resourceContextProvider = resourceContextProvider;
+            _fieldsQuery = fieldsQuery;
             _provider = provider;
         }
 
         /// <inheritdoc/>
-        public List<AttrAttribute> GetAllowedAttributes(Type type)
-        {
+        public List<AttrAttribute> GetAllowedAttributes(Type type, RelationshipAttribute relationship = null)
+        {   // get the list of all exposed atttributes for the given type.
+            var allowed = _fieldExplorer.GetAttributes(type);
+
             var resourceDefinition = GetResourceDefinition(type);
             if (resourceDefinition != null)
                 // The set of allowed attribrutes to be exposed was defined on the resource definition
-                return resourceDefinition.GetAllowedAttributes();
+                allowed = allowed.Except(resourceDefinition.GetAllowedAttributes()).ToList();
 
-            // The set of allowed attribrutes to be exposed was NOT defined on the resource definition: return all
-            return _fieldExplorer.GetAttributes(type);
+            var fields = _fieldsQuery.Get(relationship);
+            if (fields != null)
+                // from the allowed attributes, select the ones flagged by sparse field selection.
+                allowed = allowed.Where(attr => !fields.Contains(attr)).ToList();
+
+            return allowed;
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// Note: this method does NOT check if a relationship is included to determine
+        /// if it should be serialized. This is because completely hiding a relationship
+        /// is not the same as not including. In the case of the latter,
+        /// we may still want to add the relationship to expose the navigation link to the client.
+        /// </remarks>
         public List<RelationshipAttribute> GetAllowedRelationships(Type type)
         {
             var resourceDefinition = GetResourceDefinition(type);
@@ -46,6 +66,8 @@ namespace JsonApiDotNetCore.Models
             return _fieldExplorer.GetRelationships(type);
         }
 
+
+        /// consider to implement and inject a `ResourceDefinitionProvider` service.
         private IResourceDefinition GetResourceDefinition(Type resourceType)
         {
 

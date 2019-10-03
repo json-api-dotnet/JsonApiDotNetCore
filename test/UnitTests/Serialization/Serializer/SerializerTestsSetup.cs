@@ -43,13 +43,13 @@ namespace UnitTests.Serialization.Serializer
         {
             var meta = GetMetaBuilder<T>(metaDict);
             var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
-            var serializableFields = GetSerializableFields();
+            var fieldsToSerialize = GetSerializableFields();
             var sparseFields = GetFieldsQuery();
             var included = GetIncludedRelationships(inclusionChains);
             var provider = GetContextEntityProvider();
             var includedBuilder = GetIncludedBuilder();
 
-            return new ServerSerializer<T>(meta, link, includedBuilder, serializableFields, included, sparseFields, _resourceGraph, provider);
+            return new ServerSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, included, sparseFields, _resourceGraph, provider);
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()

@@ -12,21 +12,24 @@ namespace JsonApiDotNetCore.Serialization.Serializer
 {
     /// <summary>
     /// Client serializer implementation of <see cref="DocumentBuilder"/>
-    /// Note that this implementation does not override the default
-    /// <see cref="DocumentBuilder.GetRelationshipData"/>.
+    /// Note that this implementation does not override the default implementation
+    /// of <see cref="ResourceObjectBuilder.GetRelationshipData"/>.
     /// </summary>
     public class ClientSerializer : DocumentBuilder, IClientSerializer
     {
-        private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
-        private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
+        private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache;
+        private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache;
         private Type _currentTargetedResource;
         private readonly IFieldsExplorer _fieldExplorer;
         public ClientSerializer(IFieldsExplorer fieldExplorer,
                                 IContextEntityProvider provider,
                                 IResourceGraph resourceGraph,
-                                ISerializerSettingsProvider settingsProvider) : base(resourceGraph, provider, settingsProvider.Get())
+                                ISerializerSettingsProvider settingsProvider)
+            : base(resourceGraph, provider, settingsProvider.Get())
         {
             _fieldExplorer = fieldExplorer;
+            _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
+            _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         }
 
         /// <inheritdoc/>
