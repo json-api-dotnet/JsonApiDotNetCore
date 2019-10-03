@@ -5,11 +5,12 @@ using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.QueryServices.Contracts;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Serialization.Response.Contracts;
+using JsonApiDotNetCore.Serialization.Request.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization.Response
 {
     /// <summary>
     /// Server serializer implementation of <see cref="DocumentBuilder"/>
@@ -18,11 +19,11 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     /// Because in JsonApiDotNetCore every json:api request is associated with exactly one
     /// resource (the request resource, see <see cref="ICurrentRequest.GetRequestResource"/>),
     /// the serializer can leverage this information using generics.
-    /// See <see cref="ServerSerializerFactory"/> for how this is instantiated.
+    /// See <see cref="ResponseSerializerFactory"/> for how this is instantiated.
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
-    public class ServerSerializer<TResource> : DocumentBuilder, IJsonApiSerializer
+    public class ResponseSerializer<TResource> : DocumentBuilder, IJsonApiSerializer
         where TResource : class, IIdentifiable
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
@@ -34,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
-        public ServerSerializer(IMetaBuilder<TResource> metaBuilder,
+        public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
                                 ILinkBuilder linkBuilder,
                                 IIncludedResourceObjectBuilder includedBuilder,
                                 IFieldsToSerialize fieldsToSerialize,

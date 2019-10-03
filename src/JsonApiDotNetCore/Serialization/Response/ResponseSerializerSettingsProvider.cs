@@ -1,18 +1,18 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryServices.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization.Response
 {
     /// <summary>
     /// This implementation of the behaviour provider reads the query params that
     /// can, if provided, override the settings in <see cref="IJsonApiOptions"/>.
     /// </summary>
-    public class ServerSerializerSettingsProvider : ISerializerSettingsProvider
+    public class ResponseSerializerSettingsProvider : ISerializerSettingsProvider
     {
         private readonly IJsonApiOptions _options;
         private readonly IAttributeBehaviourQueryService _attributeBehaviour;
 
-        public ServerSerializerSettingsProvider(IJsonApiOptions options, IAttributeBehaviourQueryService attributeBehaviour)
+        public ResponseSerializerSettingsProvider(IJsonApiOptions options, IAttributeBehaviourQueryService attributeBehaviour)
         {
             _options = options;
             _attributeBehaviour = attributeBehaviour;

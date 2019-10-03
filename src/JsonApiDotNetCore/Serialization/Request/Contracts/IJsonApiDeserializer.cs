@@ -1,4 +1,5 @@
-namespace JsonApiDotNetCore.Serialization.Deserializer.Contracts
+using JsonApiDotNetCore.Models;
+namespace JsonApiDotNetCore.Serialization.Request.Contracts
 {
     /// <summary>
     /// Deserializer used internally in JsonApiDotNetCore to deserialize requests.

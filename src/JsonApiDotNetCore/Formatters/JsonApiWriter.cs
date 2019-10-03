@@ -1,10 +1,8 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization.Request.Contracts;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 

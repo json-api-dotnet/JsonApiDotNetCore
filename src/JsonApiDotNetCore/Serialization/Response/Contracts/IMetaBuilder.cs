@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
+namespace JsonApiDotNetCore.Serialization.Response.Contracts
 {
     /// <summary>
     /// Builds the top-level meta data object. This builder is generic to allow for

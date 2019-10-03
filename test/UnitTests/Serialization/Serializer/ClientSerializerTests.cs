@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Serializer;
+using JsonApiDotNetCore.Serialization.Request;
 using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class ClientSerializerTests : SerializerTestsSetup
+    public class RequestSerializerTests : SerializerTestsSetup
     {
-        private readonly ClientSerializer _serializer;
+        private readonly RequestSerializer _serializer;
 
-        public ClientSerializerTests()
+        public RequestSerializerTests()
         {
-            _serializer = new ClientSerializer(_fieldExplorer, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            _serializer = new RequestSerializer(_fieldExplorer, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
         }
 
 

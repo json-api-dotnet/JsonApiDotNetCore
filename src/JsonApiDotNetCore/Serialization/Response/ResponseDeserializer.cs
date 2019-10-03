@@ -5,16 +5,16 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
+using JsonApiDotNetCore.Serialization.Response.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Deserializer
+namespace JsonApiDotNetCore.Serialization.Response
 {
     /// <summary>
     /// Client deserializer implementation of the <see cref="DocumentParser"/>
     /// </summary>
-    public class ClientDeserializer : DocumentParser, IClientDeserializer
+    public class ResponseDeserializer : DocumentParser, IResponseDeserializer
     {
-        public ClientDeserializer(IContextEntityProvider provider) : base(provider) { }
+        public ResponseDeserializer(IContextEntityProvider provider) : base(provider) { }
 
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable

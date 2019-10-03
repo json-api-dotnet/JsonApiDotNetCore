@@ -1,13 +1,13 @@
 ﻿using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Deserializer.Contracts
+namespace JsonApiDotNetCore.Serialization.Response.Contracts
 {
     /// <summary>
     /// Client deserializer. Currently not used internally in JsonApiDotNetCore,
     /// except for in the tests. Exposed pubically to make testing easier or to implement
     /// server-to-server communication.
     /// </summary>
-    public interface IClientDeserializer
+    public interface IResponseDeserializer
     {
         /// <summary>
         /// Deserializes a response with a single resource (or null) as data.

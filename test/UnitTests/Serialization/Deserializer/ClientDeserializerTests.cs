@@ -3,19 +3,20 @@ using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.Serialization.Response;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.Serialization.Deserializer
 {
-    public class ClientDeserializerTests : DeserializerTestsSetup
+    public class ResponseDeserializerTests : DeserializerTestsSetup
     {
         private readonly Dictionary<string, string> _linkValues = new Dictionary<string, string>();
-        private readonly ClientDeserializer _deserializer;
+        private readonly ResponseDeserializer _deserializer;
 
-        public ClientDeserializerTests()
+        public ResponseDeserializerTests()
         {
-            _deserializer = new ClientDeserializer(_resourceGraph);
+            _deserializer = new ResponseDeserializer(_resourceGraph);
             _linkValues.Add("self", "http://example.com/articles");
             _linkValues.Add("next", "http://example.com/articles?page[offset]=2");
             _linkValues.Add("last", "http://example.com/articles?page[offset]=10");

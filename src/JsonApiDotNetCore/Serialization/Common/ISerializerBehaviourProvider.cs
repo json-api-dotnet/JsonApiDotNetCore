@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Serialization.Serializer
+﻿namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Service that provides the server serializer with <see cref="SerializerSettings"/> 

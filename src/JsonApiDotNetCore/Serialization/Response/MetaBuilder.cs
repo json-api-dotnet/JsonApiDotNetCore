@@ -3,10 +3,10 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.QueryServices.Contracts;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization.Response.Contracts;
 using JsonApiDotNetCore.Services;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization.Response
 {
     /// <inheritdoc/>
     public class MetaBuilder<T> : IMetaBuilder<T> where T : class, IIdentifiable

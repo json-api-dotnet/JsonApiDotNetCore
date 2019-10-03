@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
+namespace JsonApiDotNetCore.Serialization.Request.Contracts
 {
     /// <summary>
     /// Interface for client serializer that can be used to register with the DI, for usage in
     /// custom services or repositories.
     /// </summary>
-    public interface IClientSerializer
+    public interface IRequestSerializer
     {
         /// <summary>
         /// Creates and serializes a document for a single intance of a resource.

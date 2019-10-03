@@ -4,7 +4,7 @@ using UnitTests.Serialization.Serializer;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Serialization.Serializer;
+using JsonApiDotNetCore.Serialization.Response;
 
 namespace UnitTests.Serialization.IncludedRelationshipBuilder
 {

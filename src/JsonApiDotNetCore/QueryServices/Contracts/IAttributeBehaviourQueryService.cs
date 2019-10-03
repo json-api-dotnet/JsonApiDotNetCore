@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Serialization.Serializer;
+﻿using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.QueryServices.Contracts
 {

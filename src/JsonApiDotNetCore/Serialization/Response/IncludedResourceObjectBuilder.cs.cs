@@ -4,9 +4,9 @@ using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization.Response.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization.Response
 {
     /// <inheritdoc/>
     public class IncludedResourceObjectBuilder : ResourceObjectBuilder, IIncludedResourceObjectBuilder

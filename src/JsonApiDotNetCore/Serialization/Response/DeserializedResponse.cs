@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Serialization.Deserializer
+namespace JsonApiDotNetCore.Serialization.Response
 {
     /// Base class for "single data" and "many data" deserialized responses.
     /// TODO: Currently <see cref="ResourceLinks"/> and <see cref="RelationshipLinks"/>

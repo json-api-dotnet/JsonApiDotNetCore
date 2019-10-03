@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Options used to configure how fields of a model get serialized into

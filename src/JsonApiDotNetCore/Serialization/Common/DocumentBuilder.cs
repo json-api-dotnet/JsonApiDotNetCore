@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Abstract base class for serialization that extends <see cref="ResourceObjectBuilder"/>.

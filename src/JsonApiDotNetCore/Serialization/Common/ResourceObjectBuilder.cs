@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s

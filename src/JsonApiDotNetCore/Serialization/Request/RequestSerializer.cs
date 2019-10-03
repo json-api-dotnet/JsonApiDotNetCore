@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization.Request.Contracts;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Serialization.Serializer
+namespace JsonApiDotNetCore.Serialization.Request
 {
     /// <summary>
     /// Client serializer implementation of <see cref="DocumentBuilder"/>
     /// Note that this implementation does not override the default implementation
     /// of <see cref="ResourceObjectBuilder.GetRelationshipData"/>.
     /// </summary>
-    public class ClientSerializer : DocumentBuilder, IClientSerializer
+    public class RequestSerializer : DocumentBuilder, IRequestSerializer
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache;
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache;
         private Type _currentTargetedResource;
         private readonly IFieldsExplorer _fieldExplorer;
-        public ClientSerializer(IFieldsExplorer fieldExplorer,
+        public RequestSerializer(IFieldsExplorer fieldExplorer,
                                 IContextEntityProvider provider,
                                 IResourceGraph resourceGraph,
                                 ISerializerSettingsProvider settingsProvider)

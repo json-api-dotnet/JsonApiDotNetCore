@@ -8,7 +8,7 @@ using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class ServerSerializerTests : SerializerTestsSetup
+    public class ResponseSerializerTests : SerializerTestsSetup
     {
 
         [Fact]
@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
-            var serializer = GetServerSerializer<TestResource>();
+            var serializer = GetResponseSerializer<TestResource>();
 
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -50,7 +50,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
-            var serializer = GetServerSerializer<TestResource>();
+            var serializer = GetResponseSerializer<TestResource>();
 
             // act
             string serialized = serializer.SerializeMany(new List<TestResource> { entity });
@@ -89,7 +89,7 @@ namespace UnitTests.Serialization.Serializer
                 PopulatedToManies = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
             var chain = _fieldExplorer.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
-            var serializer = GetServerSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chain);
+            var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chain);
 
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -173,7 +173,7 @@ namespace UnitTests.Serialization.Serializer
                                     return chain;
                                 }).ToList();
 
-            var serializer = GetServerSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chains);
+            var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chains);
 
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -244,7 +244,7 @@ namespace UnitTests.Serialization.Serializer
         public void SerializeSingle_Null_CanSerialize()
         {
             // arrange
-            var serializer = GetServerSerializer<TestResource>();
+            var serializer = GetResponseSerializer<TestResource>();
             TestResource entity = null;
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -263,7 +263,7 @@ namespace UnitTests.Serialization.Serializer
         public void SerializeList_EmptyList_CanSerialize()
         {
             // arrange
-            var serializer = GetServerSerializer<TestResource>();
+            var serializer = GetResponseSerializer<TestResource>();
             // act
             string serialized = serializer.SerializeMany(new List<TestResource>());
 
@@ -284,7 +284,7 @@ namespace UnitTests.Serialization.Serializer
             var entity = new OneToManyPrincipal { Id = 10 };
             var includeRelationshipsOn = new List<Type> { typeof(OneToManyPrincipal) };
 
-            var serializer = GetServerSerializer<OneToManyPrincipal>(topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
             // act
             string serialized = serializer.SerializeSingle(entity);
 
@@ -329,7 +329,7 @@ namespace UnitTests.Serialization.Serializer
             // arrange
             var entity = new OneToManyPrincipal { Id = 10 };
 
-            var serializer = GetServerSerializer<OneToManyPrincipal>();
+            var serializer = GetResponseSerializer<OneToManyPrincipal>();
             // act
             string serialized = serializer.SerializeSingle(entity);
 
@@ -356,7 +356,7 @@ namespace UnitTests.Serialization.Serializer
             // arrange
             var meta = new Dictionary<string, object> { { "test", "meta" } };
             var entity = new OneToManyPrincipal { Id = 10 };
-            var serializer = GetServerSerializer<OneToManyPrincipal>(metaDict: meta);
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta);
             // act
             string serialized = serializer.SerializeSingle(entity);
 
@@ -385,7 +385,7 @@ namespace UnitTests.Serialization.Serializer
             // arrange
             var meta = new Dictionary<string, object> { { "test", "meta" } };
             OneToManyPrincipal entity = null;
-            var serializer = GetServerSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
             // act
             string serialized = serializer.SerializeSingle(entity);
 

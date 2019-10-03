@@ -1,18 +1,18 @@
 ﻿using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
+using JsonApiDotNetCore.Serialization.Request.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Deserializer
+namespace JsonApiDotNetCore.Serialization.Request
 {
     /// <summary>
     /// Server deserializer implementation of the <see cref="DocumentParser"/>
     /// </summary>
-    public class ServerDeserializer : DocumentParser, IJsonApiDeserializer
+    public class RequestDeserializer : DocumentParser, IJsonApiDeserializer
     {
         private readonly IUpdatedFields  _updatedFields;
 
-        public ServerDeserializer(IResourceGraph resourceGraph,
+        public RequestDeserializer(IResourceGraph resourceGraph,
                                   IUpdatedFields  updatedFields) : base(resourceGraph)
         {
             _updatedFields = updatedFields;

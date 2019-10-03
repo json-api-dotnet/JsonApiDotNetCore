@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JsonApiDotNetCore.Serialization.Deserializer
+namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Document"/>s
@@ -32,8 +32,8 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
         /// depending on the type of deserializers.
         /// </summary>
         /// <remarks>
-        /// See the impementation of this method in <see cref="ClientDeserializer"/>
-        /// and <see cref="ServerDeserializer"/> for examples.
+        /// See the impementation of this method in <see cref="ResponseDeserializer"/>
+        /// and <see cref="RequestDeserializer"/> for examples.
         /// </remarks>
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>

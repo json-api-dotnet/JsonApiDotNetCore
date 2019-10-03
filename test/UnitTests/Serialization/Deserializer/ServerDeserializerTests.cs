@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Deserializer;
+using JsonApiDotNetCore.Serialization.Request;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.Serialization.Deserializer
 {
-    public class ServerDeserializerTests : DeserializerTestsSetup
+    public class RequestDeserializerTests : DeserializerTestsSetup
     {
-        private readonly ServerDeserializer _deserializer;
+        private readonly RequestDeserializer _deserializer;
         private readonly Mock<IUpdatedFields> _fieldsManagerMock = new Mock<IUpdatedFields>();
-        public ServerDeserializerTests() : base()
+        public RequestDeserializerTests() : base()
         {
-            _deserializer = new ServerDeserializer(_resourceGraph, _fieldsManagerMock.Object);
+            _deserializer = new RequestDeserializer(_resourceGraph, _fieldsManagerMock.Object);
         }
 
         [Fact]

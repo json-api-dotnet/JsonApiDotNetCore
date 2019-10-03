@@ -23,11 +23,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.QueryServices.Contracts;
-using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
-using JsonApiDotNetCore.Serialization.Serializer;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using JsonApiDotNetCore.Serialization.Deserializer;
 using JsonApiDotNetCore.QueryServices;
+using JsonApiDotNetCore.Serialization.Response;
+using JsonApiDotNetCore.Serialization.Request.Contracts;
+using JsonApiDotNetCore.Serialization.Request;
+using JsonApiDotNetCore.Serialization.Response.Contracts;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -202,13 +203,13 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);
 
-            services.AddScoped(typeof(ServerSerializer<>));
+            services.AddScoped(typeof(ResponseSerializer<>));
             services.AddScoped<ICurrentRequest, CurrentRequest>();
             services.AddScoped<IPageQueryService, PageQueryService>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
-            services.AddScoped<IJsonApiDeserializer, ServerDeserializer>();
+            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
@@ -219,9 +220,9 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IInternalFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IUpdatedFields, UpdatedFields>();
-            services.AddScoped<IJsonApiSerializerFactory, ServerSerializerFactory>();
+            services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
             services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
-            services.AddScoped<IJsonApiDeserializer, ServerDeserializer>();
+            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
             services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();

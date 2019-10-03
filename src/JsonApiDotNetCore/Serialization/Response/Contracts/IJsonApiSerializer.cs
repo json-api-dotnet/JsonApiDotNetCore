@@ -1,5 +1,4 @@
-﻿
-namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
+﻿namespace JsonApiDotNetCore.Serialization.Request.Contracts
 {
     /// <summary>
     /// Serializer used internally in JsonApiDotNetCore to serialize responses.

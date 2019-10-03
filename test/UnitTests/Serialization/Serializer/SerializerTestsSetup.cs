@@ -6,8 +6,9 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.QueryServices.Contracts;
-using JsonApiDotNetCore.Serialization.Serializer;
-using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Response;
+using JsonApiDotNetCore.Serialization.Response.Contracts;
 using JsonApiDotNetCore.Services;
 using Moq;
 
@@ -41,7 +42,7 @@ namespace UnitTests.Serialization.Serializer
             };
         }
 
-        protected ServerSerializer<T> GetServerSerializer<T>(List<List<RelationshipAttribute>> inclusionChains = null, Dictionary<string, object> metaDict = null, TopLevelLinks topLinks = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) where T : class, IIdentifiable
+        protected ResponseSerializer<T> GetResponseSerializer<T>(List<List<RelationshipAttribute>> inclusionChains = null, Dictionary<string, object> metaDict = null, TopLevelLinks topLinks = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) where T : class, IIdentifiable
         {
             var meta = GetMetaBuilder<T>(metaDict);
             var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
@@ -50,7 +51,7 @@ namespace UnitTests.Serialization.Serializer
             var provider = GetContextEntityProvider();
             var includedBuilder = GetIncludedBuilder();
 
-            return new ServerSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, included, _resourceGraph, provider, GetSerializerSettingsProvider());
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, included, _resourceGraph, provider, GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
