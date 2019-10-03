@@ -1,8 +1,16 @@
 # Architectual overview of serializers and deserializers
 
-## Deserialization
+The main change is that now serializers and deserializers are split into 
+- base serializers (deserializers) that contain building (parsing) logic shared by server and client side implementations
+- server and client serializers (deserializers) that are responsible for any additional building (parsing) logic unique to their implementations.
 
-When deserializing a json:api `Document` ([see document spec](https://jsonapi.org/format/#document-structure)), some parts are relevant only for client-side parsing whereas others are only for server-side parsing. Eg. `Document.Included` is only ever parsed by clients. Other parts are used by both. Therefore, the `JsonApiDeSerializer` implementation is now split into a `ServerDeserializer` and `ClientDeserializer`. Both inherit from `DocumentParser` which does the shared parsing.
+In deserialization, some parts are relevant only for client-side parsing whereas others are only for server-side parsing. for example, a server deserializer will never have to deal with a `included` object list. Similarly, in serialization, a client serializer will for example never ever have to populate any other top-level members than the primary data (like `meta`, `included`). These are examples of implementation-specific parsing/building whose responsibility is moved to the corresponding implementation.
+
+Throughout the document and the code when referring to fields, members, object types, the technical language of json:api spec is used. At the core of (de)serialization is the 
+`Document` class, [see document spec](https://jsonapi.org/format/#document-structure).
+
+## Deserialization
+The previous `JsonApiDeSerializer` implementation is now split into a `ServerDeserializer` and `ClientDeserializer`. Both inherit from `DocumentParser` which does the shared parsing.
 
 #### DocumentParser
 Responsible for 
