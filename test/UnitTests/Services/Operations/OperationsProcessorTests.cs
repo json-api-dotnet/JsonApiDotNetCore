@@ -95,9 +95,9 @@ namespace UnitTests.Services
                 .Returns(opProcessorMock.Object);
 
             _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
-            var requestManagerMock = new Mock<IRequestManager>();
+            var currentRequestMock = new Mock<IRequestManager>();
             var resourceGraphMock = new Mock<IResourceGraph>();
-            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object, requestManagerMock.Object, resourceGraphMock.Object);
+            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object, currentRequestMock.Object, resourceGraphMock.Object);
 
             // act
             var results = await operationsProcessor.ProcessAsync(operations);
@@ -180,9 +180,9 @@ namespace UnitTests.Services
                 .Returns(updateOpProcessorMock.Object);
 
             _dbContextResolverMock.Setup(m => m.GetContext()).Returns(_dbContextMock.Object);
-            var requestManagerMock = new Mock<IRequestManager>();
+            var currentRequestMock = new Mock<IRequestManager>();
             var resourceGraphMock = new Mock<IResourceGraph>();
-            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object, requestManagerMock.Object, resourceGraphMock.Object);
+            var operationsProcessor = new OperationsProcessor(_resolverMock.Object, _dbContextResolverMock.Object, _jsonApiContextMock.Object, currentRequestMock.Object, resourceGraphMock.Object);
 
             // act
             var results = await operationsProcessor.ProcessAsync(operations);

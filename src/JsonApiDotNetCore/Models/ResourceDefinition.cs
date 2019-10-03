@@ -26,10 +26,10 @@ namespace JsonApiDotNetCore.Models
     public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
         private readonly ContextEntity _contextEntity;
-        private readonly IExposedFieldExplorer _fieldExplorer;
+        private readonly IFieldsExplorer _fieldExplorer;
         private List<AttrAttribute> _allowedAttributes;
         private List<RelationshipAttribute> _allowedRelationships;
-        public ResourceDefinition(IExposedFieldExplorer fieldExplorer, IResourceGraph graph)
+        public ResourceDefinition(IFieldsExplorer fieldExplorer, IResourceGraph graph)
         {
             _contextEntity = graph.GetContextEntity(typeof(TResource));
             _allowedAttributes = _contextEntity.Attributes;

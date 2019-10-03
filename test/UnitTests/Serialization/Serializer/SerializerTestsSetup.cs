@@ -13,7 +13,7 @@ namespace UnitTests.Serialization.Serializer
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
-        protected readonly IExposedFieldExplorer _fieldExplorer;
+        protected readonly IFieldsExplorer _fieldExplorer;
         protected readonly TopLevelLinks _dummyToplevelLinks;
         protected readonly ResourceLinks _dummyResourceLinks;
         protected readonly RelationshipLinks _dummyRelationshipLinks;
@@ -91,9 +91,9 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected ISerializableFields GetSerializableFields()
+        protected IFieldsToSerialize GetSerializableFields()
         {
-            var mock = new Mock<ISerializableFields>();
+            var mock = new Mock<IFieldsToSerialize>();
             mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Attributes);
             mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Relationships);
             return mock.Object;

@@ -15,19 +15,19 @@ namespace JsonApiDotNetCore.Middleware
     public class JsonApiActionFilter : IActionFilter
     {
         private readonly IResourceGraph _resourceGraph;
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IPageQueryService _pageManager;
         private readonly IQueryParser _queryParser;
         private readonly IJsonApiOptions _options;
         private HttpContext _httpContext;
         public JsonApiActionFilter(IResourceGraph resourceGraph,
-                                 ICurrentRequest requestManager,
+                                 ICurrentRequest currentRequest,
                                  IPageQueryService pageManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
         {
             _resourceGraph = resourceGraph;
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _pageManager = pageManager;
             _queryParser = queryParser;
             _options = options;
@@ -43,8 +43,8 @@ namespace JsonApiDotNetCore.Middleware
             // the contextEntity is null eg when we're using a non-JsonApiDotNetCore route. 
             if (contextEntityCurrent != null)
             {
-                _requestManager.SetRequestResource(contextEntityCurrent);
-                _requestManager.BasePath = GetBasePath(contextEntityCurrent.EntityName);
+                _currentRequest.SetRequestResource(contextEntityCurrent);
+                _currentRequest.BasePath = GetBasePath(contextEntityCurrent.EntityName);
                 HandleUriParameters();
             }
 
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Middleware
             if (_httpContext.Request.Query.Count > 0)
             {
                 var querySet = _queryParser.Parse(_httpContext.Request.Query);
-                _requestManager.QuerySet = querySet; //this shouldn't be exposed?
+                _currentRequest.QuerySet = querySet; //this shouldn't be exposed?
                 _pageManager.PageSize = querySet.PageQuery.PageSize ?? _pageManager.PageSize;
                 _pageManager.CurrentPage = querySet.PageQuery.PageOffset ?? _pageManager.CurrentPage;
 

@@ -23,7 +23,7 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksDummyData
     {
-        protected IExposedFieldExplorer _fieldExplorer;
+        protected IFieldsExplorer _fieldExplorer;
         protected IResourceGraph _graph;
         protected ResourceHook[] NoHooks = new ResourceHook[0];
         protected ResourceHook[] EnableDbValues = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };

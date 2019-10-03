@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph graph, IExposedFieldExplorer fieldExplorer) : base(fieldExplorer, graph) { }
+        public UserResource(IResourceGraph graph, IFieldsExplorer fieldExplorer) : base(fieldExplorer, graph) { }
 
         //protected override List<IResourceField> OutputAttrs()
         //    => Remove(user => user.Password);

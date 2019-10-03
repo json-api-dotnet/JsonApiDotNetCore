@@ -14,22 +14,22 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     /// <inheritdoc/>
     public class LinkBuilder : ILinkBuilder
     {
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly ILinksConfiguration _options;
         private readonly IPageQueryService _pageManager;
         private readonly ContextEntity _requestResourceContext;
         private readonly IContextEntityProvider _provider;
 
         public LinkBuilder(ILinksConfiguration options,
-                           ICurrentRequest requestManager,
+                           ICurrentRequest currentRequest,
                            IPageQueryService pageManager,
                            IContextEntityProvider provider)
         {
             _options = options;
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _pageManager = pageManager;
             _provider = provider;
-            _requestResourceContext = _requestManager.GetRequestResource();
+            _requestResourceContext = _currentRequest.GetRequestResource();
         }
 
         /// <inheritdoc/>
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private string GetPageLink(int pageOffset, int pageSize)
         {
             var filterQueryComposer = new QueryComposer();
-            var filters = filterQueryComposer.Compose(_requestManager);
+            var filters = filterQueryComposer.Compose(_currentRequest);
             return $"{GetBasePath()}/{_requestResourceContext.EntityName}?page[size]={pageSize}&page[number]={pageOffset}{filters}";
         }
 
@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         {
             if (_options.RelativeLinks)
                 return string.Empty;
-            return _requestManager.BasePath;
+            return _currentRequest.BasePath;
         }
     }
 }

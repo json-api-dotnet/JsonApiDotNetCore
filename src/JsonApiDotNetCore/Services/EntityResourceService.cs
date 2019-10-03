@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Services
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly IPageQueryService _pageManager;
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IJsonApiOptions _options;
         private readonly IUpdatedFields _updatedFields;
         private readonly IResourceGraph _resourceGraph;
@@ -40,14 +40,14 @@ namespace JsonApiDotNetCore.Services
                 IEntityRepository<TEntity, TId> repository,
                 IJsonApiOptions options,
                 IUpdatedFields updatedFields,
-                ICurrentRequest requestManager,
+                ICurrentRequest currentRequest,
                 IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
                 IResourceMapper mapper = null,
                 ILoggerFactory loggerFactory = null)
         {
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _pageManager = pageManager;
             _options = options;
             _updatedFields = updatedFields;
@@ -103,12 +103,12 @@ namespace JsonApiDotNetCore.Services
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
-                entities = IncludeRelationships(entities, _requestManager.QuerySet.IncludedRelationships);
+                entities = IncludeRelationships(entities, _currentRequest.QuerySet.IncludedRelationships);
 
             if (_options.IncludeTotalRecordCount)
                 _pageManager.TotalRecords = await _repository.CountAsync(entities);
 
-            entities = _repository.Select(entities, _requestManager.QuerySet?.Fields);
+            entities = _repository.Select(entities, _currentRequest.QuerySet?.Fields);
 
             if (!IsNull(_hookExecutor, entities))
             {
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TEntity> entities)
         {
-            if (!_pageManager.IsPaginated)
+            if (!(_pageManager.PageSize > 0))
             {
                 var allEntities = await _repository.ToListAsync(entities);
                 return (typeof(TResource) == typeof(TEntity)) ? allEntities as IEnumerable<TResource> :
@@ -252,9 +252,9 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual IQueryable<TEntity> ApplySortAndFilterQuery(IQueryable<TEntity> entities)
         {
-            var query = _requestManager.QuerySet;
+            var query = _currentRequest.QuerySet;
 
-            if (_requestManager.QuerySet == null)
+            if (_currentRequest.QuerySet == null)
                 return entities;
 
             if (query.Filters.Count > 0)
@@ -290,7 +290,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns></returns>
         private async Task<TEntity> GetWithRelationshipsAsync(TId id)
         {
-            var query = _repository.Select(_repository.Get(), _requestManager.QuerySet?.Fields).Where(e => e.Id.Equals(id));
+            var query = _repository.Select(_repository.Get(), _currentRequest.QuerySet?.Fields).Where(e => e.Id.Equals(id));
 
             foreach (var r in _updatedFields.Relationships)
                 query = _repository.Include(query, r.InternalRelationshipName);
@@ -358,13 +358,13 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(IEntityRepository<TResource, TId> repository,
                                      IJsonApiOptions options,
                                      IUpdatedFields updatedFields,
-                                     ICurrentRequest requestManager,
+                                     ICurrentRequest currentRequest,
                                      IPageQueryService pageManager,
                                      IResourceGraph resourceGraph,
                                      IResourceHookExecutor hookExecutor = null,
                                      IResourceMapper mapper = null,
                                      ILoggerFactory loggerFactory = null) :
-            base(repository, options, updatedFields, requestManager, pageManager,
+            base(repository, options, updatedFields, currentRequest, pageManager,
                 resourceGraph, hookExecutor, mapper, loggerFactory)
         {
         }
@@ -378,7 +378,7 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options, IUpdatedFields updatedFields, ICurrentRequest requestManager, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, requestManager, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
+        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options, IUpdatedFields updatedFields, ICurrentRequest currentRequest, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
         {
         }
     }

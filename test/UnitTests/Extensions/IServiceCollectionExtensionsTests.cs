@@ -44,11 +44,11 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
 
             // assert
-            var requestManager = provider.GetService<ICurrentRequest>();
-            Assert.NotNull(requestManager);
+            var currentRequest = provider.GetService<ICurrentRequest>();
+            Assert.NotNull(currentRequest);
             var graph = provider.GetService<IResourceGraph>();
             Assert.NotNull(graph);
-            requestManager.SetRequestResource(graph.GetContextEntity<TodoItem>());
+            currentRequest.SetRequestResource(graph.GetContextEntity<TodoItem>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));

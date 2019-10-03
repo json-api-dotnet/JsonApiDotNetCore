@@ -11,12 +11,12 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryComposer : IQueryComposer
     {
-        public string Compose(ICurrentRequest requestManager)
+        public string Compose(ICurrentRequest currentRequest)
         {
             string result = "";
-            if (requestManager != null && requestManager.QuerySet != null)
+            if (currentRequest != null && currentRequest.QuerySet != null)
             {
-                List<FilterQuery> filterQueries = requestManager.QuerySet.Filters;
+                List<FilterQuery> filterQueries = currentRequest.QuerySet.Filters;
                 if (filterQueries.Count > 0)
                 {
                     foreach (FilterQuery filter in filterQueries)

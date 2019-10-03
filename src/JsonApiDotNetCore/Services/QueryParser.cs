@@ -24,31 +24,31 @@ namespace JsonApiDotNetCore.Services
         private readonly IInternalIncludedQueryService _includedQuery;
         private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IJsonApiOptions _options;
         private readonly ContextEntity _requestResource;
         private readonly IContextEntityProvider _provider;
 
         public QueryParser(IInternalIncludedQueryService includedRelationships,
             IInternalFieldsQueryService fieldQuery,
-            ICurrentRequest requestManager,
+            ICurrentRequest currentRequest,
             IPageQueryService pageQuery,
             IContextEntityProvider provider,
             IJsonApiOptions options)
         {
             _includedQuery = includedRelationships;
             _fieldQuery = fieldQuery;
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _pageQuery = pageQuery;
             _provider = provider;
-            _requestResource = requestManager.GetRequestResource();
+            _requestResource = currentRequest.GetRequestResource();
             _options = options;
         }
 
         public virtual QuerySet Parse(IQueryCollection query)
         {
             var querySet = new QuerySet();
-            var disabledQueries = _requestManager.DisabledQueryParams;
+            var disabledQueries = _currentRequest.DisabledQueryParams;
             foreach (var pair in query)
             {
                 if (pair.Key.StartsWith(QueryConstants.FILTER, StringComparison.Ordinal))
@@ -198,7 +198,7 @@ namespace JsonApiDotNetCore.Services
             foreach (var chain in inclusions)
             {
                 var parsedChain = new List<RelationshipAttribute>();
-                var resourceContext = _requestManager.GetRequestResource();
+                var resourceContext = _currentRequest.GetRequestResource();
                 var splittedPath = chain.Split(QueryConstants.DOT);
                 foreach (var requestedRelationship in splittedPath)
                 {

@@ -1,7 +1,13 @@
 ﻿namespace JsonApiDotNetCore.Serialization.Serializer
 {
-    public interface ISerializerBehaviourProvider
+    /// <summary>
+    /// Service that provides the server serializer with <see cref="SerializerSettings"/> 
+    /// </summary>
+    public interface ISerializerSettingsProvider
     {
-        SerializerBehaviour GetBehaviour();
+        /// <summary>
+        /// Gets the behaviour for the serializer it is injected in.
+        /// </summary>
+        SerializerSettings Get();
     }
 }

@@ -1,12 +1,8 @@
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace JsonApiDotNetCore.QueryServices.Contracts
 {
+    /// <summary>
+    /// The former page manager. Needs some work.
+    /// </summary>
     public interface IPageQueryService
     {
         /// <summary>
@@ -25,12 +21,15 @@ namespace JsonApiDotNetCore.QueryServices.Contracts
         /// What page are we currently on
         /// </summary>
         int CurrentPage { get; set; }
+
         /// <summary>
-        /// Are we even paginating
+        /// Total amount of pages for request
         /// </summary>
-        bool IsPaginated { get; }
         int TotalPages { get; }
 
+        /// <summary>
+        /// Pagination is enabled
+        /// </summary>
         bool ShouldPaginate();
     }
 }

@@ -12,12 +12,12 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     /// </summary>
     public class ServerSerializerFactory : IJsonApiSerializerFactory
     {
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IScopedServiceProvider _provider;
 
-        public ServerSerializerFactory(ICurrentRequest requestManager, IScopedServiceProvider provider)
+        public ServerSerializerFactory(ICurrentRequest currentRequest, IScopedServiceProvider provider)
         {
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _provider = provider;
         }
 
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// </summary>
         public IJsonApiSerializer GetSerializer()
         {   
-            var serializerType = typeof(ServerSerializer<>).MakeGenericType(_requestManager.GetRequestResource().EntityType);
+            var serializerType = typeof(ServerSerializer<>).MakeGenericType(_currentRequest.GetRequestResource().EntityType);
             return (IJsonApiSerializer)_provider.GetRequiredService(serializerType);
         }
     }

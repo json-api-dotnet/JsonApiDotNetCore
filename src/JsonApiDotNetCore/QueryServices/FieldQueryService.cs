@@ -4,6 +4,7 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace JsonApiDotNetCore.QueryServices
 {
+ 
     public class FieldsQueryService : IFieldsQueryService, IInternalFieldsQueryService
     {
         private List<AttrAttribute> _selectedFields;
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCore.QueryServices
             _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();
         }
 
+        /// <inheritdoc/>
         public List<AttrAttribute> Get(RelationshipAttribute relationship = null)
         {
             if (relationship == null)
@@ -24,6 +26,7 @@ namespace JsonApiDotNetCore.QueryServices
             return fields;
         }
 
+        /// <inheritdoc/>
         public void Register(AttrAttribute selected, RelationshipAttribute relationship = null)
         {
             if (relationship == null)

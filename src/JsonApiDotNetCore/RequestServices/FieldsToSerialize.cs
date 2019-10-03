@@ -5,14 +5,15 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class SerializableFields : ISerializableFields
+    /// <inheritdoc/>
+    public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IContextEntityProvider _resourceContextProvider;
         private readonly IServiceProvider _provider;
         private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
-        private readonly IExposedFieldExplorer _fieldExplorer;
+        private readonly IFieldsExplorer _fieldExplorer;
 
-        public SerializableFields(IExposedFieldExplorer fieldExplorer,
+        public FieldsToSerialize(IFieldsExplorer fieldExplorer,
                                   IContextEntityProvider resourceContextProvider,
                                   IServiceProvider provider)
         {

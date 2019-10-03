@@ -15,14 +15,14 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     {
         protected readonly IResourceGraph _resourceGraph;
         protected readonly IContextEntityProvider _provider;
-        private readonly ISerializerBehaviourProvider _behaviourProvider;
+        private readonly SerializerSettings _settings;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ISerializerBehaviourProvider behaviourProvider)
+        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings settings = null)
         {
             _resourceGraph = resourceGraph;
             _provider = provider;
-            _behaviourProvider = behaviourProvider;
+            _settings = settings;
         }
 
         /// <summary>

@@ -23,19 +23,19 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public class QueryAccessor : IQueryAccessor
     {
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly ILogger<QueryAccessor> _logger;
 
         /// <summary>
         /// Creates an instance which can be used to access the qury
         /// </summary>
-        /// <param name="requestManager"></param>
+        /// <param name="currentRequest"></param>
         /// <param name="logger"></param>
         public QueryAccessor(
-            ICurrentRequest requestManager,
+            ICurrentRequest currentRequest,
             ILogger<QueryAccessor> logger)
         {
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _logger = logger;
         }
 
@@ -81,13 +81,13 @@ namespace JsonApiDotNetCore.Services
         }
 
         private string GetFilterValue(string key) {
-            var publicValue = _requestManager.QuerySet.Filters
+            var publicValue = _currentRequest.QuerySet.Filters
                 .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
             
             if(publicValue != null) 
                 return publicValue;
             
-            var internalValue = _requestManager.QuerySet.Filters
+            var internalValue = _currentRequest.QuerySet.Filters
                 .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
             
             if(internalValue != null) {

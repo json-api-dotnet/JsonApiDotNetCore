@@ -38,9 +38,9 @@ namespace Benchmarks.Serialization
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
             var resourceGraph = resourceGraphBuilder.Build();
-            var  requestManagerMock = new Mock<IRequestContext>();
+            var  currentRequestMock = new Mock<IRequestContext>();
 
-            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            currentRequestMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
 
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
@@ -52,7 +52,7 @@ namespace Benchmarks.Serialization
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
 
-            _jsonApideserializer = new JsonApideserializer(jsonApiContextMock.Object, requestManagerMock.Object);
+            _jsonApideserializer = new JsonApideserializer(jsonApiContextMock.Object, currentRequestMock.Object);
         }
 
         [Benchmark]

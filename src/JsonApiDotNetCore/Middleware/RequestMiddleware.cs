@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Middleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
-        private ICurrentRequest _requestManager;
+        private ICurrentRequest _currentRequest;
 
         public RequestMiddleware(RequestDelegate next)
         {
@@ -27,15 +27,15 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task Invoke(HttpContext httpContext,
-                                 ICurrentRequest requestManager)
+                                 ICurrentRequest currentRequest)
         {
             _httpContext = httpContext;
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
 
             if (IsValid())
             {
-                _requestManager.IsRelationshipPath = PathIsRelationship();
-                _requestManager.IsBulkRequest = PathIsBulk();
+                _currentRequest.IsRelationshipPath = PathIsRelationship();
+                _currentRequest.IsBulkRequest = PathIsBulk();
                 await _next(httpContext);
             }
         }

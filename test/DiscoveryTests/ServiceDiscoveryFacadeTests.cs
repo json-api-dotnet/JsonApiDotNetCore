@@ -101,11 +101,11 @@ namespace DiscoveryTests
             public TestModelService(
                 IEntityRepository<TestModel> repository,
                 IJsonApiOptions options,
-                IRequestContext requestManager,
+                IRequestContext currentRequest,
                 IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 ILoggerFactory loggerFactory = null,
-                IResourceHookExecutor hookExecutor = null) : base(repository, options, requestManager, pageManager, resourceGraph, loggerFactory, hookExecutor)
+                IResourceHookExecutor hookExecutor = null) : base(repository, options, currentRequest, pageManager, resourceGraph, loggerFactory, hookExecutor)
             {
             }
         }

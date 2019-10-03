@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Do not include null attributes in the response payload.
+        /// Do (not) include null attributes in the response payload.
         /// </summary>
         public bool OmitNullValuedAttributes { get; }
 
@@ -29,19 +29,6 @@ namespace JsonApiDotNetCore.Configuration
         /// Allows clients to specify a `omitNullValuedAttributes` boolean query param to control
         /// serialization behavior.
         /// </summary>
-        public bool AllowClientOverride { get; }
-    }
-
-    public struct DefaultAttributeResponseBehavior
-    {
-
-        public DefaultAttributeResponseBehavior(bool omitNullValuedAttributes = false, bool allowClientOverride = false)
-        {
-            OmitDefaultValuedAttributes = omitNullValuedAttributes;
-            AllowClientOverride = allowClientOverride;
-        }
-
-        public bool OmitDefaultValuedAttributes { get; }
         public bool AllowClientOverride { get; }
     }
 }

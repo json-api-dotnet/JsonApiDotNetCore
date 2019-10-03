@@ -4,7 +4,6 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace JsonApiDotNetCore.QueryServices
 {
-
     public class IncludedQueryService : IIncludedQueryService, IInternalIncludedQueryService
     {
         private readonly List<List<RelationshipAttribute>> _includedChains;
@@ -20,6 +19,7 @@ namespace JsonApiDotNetCore.QueryServices
             return _includedChains;
         }
 
+        /// <inheritdoc/>
         public void Register(List<RelationshipAttribute> chain)
         {
             _includedChains.Add(chain);

@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization
 {
+    /// <inheritdoc/>
     public class UpdatedFields : IUpdatedFields
     {
         /// <inheritdoc/>

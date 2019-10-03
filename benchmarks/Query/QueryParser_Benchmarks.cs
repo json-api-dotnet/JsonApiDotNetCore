@@ -59,8 +59,8 @@ namespace Benchmarks.Query {
         // this facade allows us to expose and micro-benchmark protected methods
         private class BenchmarkFacade : QueryParser {
             public BenchmarkFacade(
-                IRequestContext requestManager,
-                JsonApiOptions options) : base(requestManager, options) { }
+                IRequestContext currentRequest,
+                JsonApiOptions options) : base(currentRequest, options) { }
 
             public void _ParseSortParameters(string value) => base.ParseSortParameters(value);
         }

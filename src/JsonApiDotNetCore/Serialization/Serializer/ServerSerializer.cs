@@ -8,7 +8,6 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Builders;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IIncludedQueryService _includedQuery;
         private readonly IFieldsQueryService _fieldQuery;
-        private readonly ISerializableFields _serializableFields;
+        private readonly IFieldsToSerialize _serializableFields;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _requestResourceType;
         private readonly ILinkBuilder _linkBuilder;
@@ -40,12 +39,12 @@ namespace JsonApiDotNetCore.Serialization.Serializer
             IMetaBuilder<TResource> metaBuilder,
             ILinkBuilder linkBuilder,
             IIncludedResourceObjectBuilder includedBuilder,
-            ISerializableFields serializableFields,
+            IFieldsToSerialize serializableFields,
             IIncludedQueryService includedQuery,
             IFieldsQueryService fieldQuery,
             IResourceGraph resourceGraph,
             IContextEntityProvider provider,
-            ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider)
+            ISerializerSettingsProvider settingsProvider) : base(resourceGraph, provider, settingsProvider.Get())
         {
             _includedQuery = includedQuery;
             _fieldQuery = fieldQuery;
@@ -107,7 +106,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
         /// Note that the choice omitting null-values is not handled here,
-        /// but in <see cref="DocumentBuilderOptionsProvider (TODO)"/>.
+        /// but in <see cref="ISerializerSettingsProvider"/>.
         /// </summary>
         /// <param name="resourceType">Type of entity to be serialized</param>
         /// <returns>List of allowed attributes in the serialized result</returns>

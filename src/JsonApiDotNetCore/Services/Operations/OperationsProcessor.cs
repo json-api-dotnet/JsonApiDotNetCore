@@ -21,18 +21,18 @@ namespace JsonApiDotNetCore.Services.Operations
     {
         private readonly IOperationProcessorResolver _processorResolver;
         private readonly DbContext _dbContext;
-        private readonly ICurrentRequest _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IResourceGraph _resourceGraph;
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
             IDbContextResolver dbContextResolver,
-            ICurrentRequest requestManager,
+            ICurrentRequest currentRequest,
             IResourceGraph resourceGraph)
         {
             _processorResolver = processorResolver;
             _dbContext = dbContextResolver.GetContext();
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _resourceGraph = resourceGraph;
         }
 
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Services.Operations
             {
                 type = op.Ref.Type;
             }
-            _requestManager.SetRequestResource(_resourceGraph.GetEntityFromControllerName(type));
+            _currentRequest.SetRequestResource(_resourceGraph.GetEntityFromControllerName(type));
 
             var processor = GetOperationsProcessor(op);
             var resultOp = await processor.ProcessAsync(op);

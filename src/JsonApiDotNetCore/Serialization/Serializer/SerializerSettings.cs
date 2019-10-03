@@ -1,13 +1,15 @@
+using JsonApiDotNetCore.Models;
+
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
     /// <summary>
-    /// Options used to configure how a model gets serialized into
-    /// a json:api document.
+    /// Options used to configure how fields of a model get serialized into
+    /// a json:api <see cref="Document"/>.
     /// </summary>
-    public class SerializerBehaviour 
+    public class SerializerSettings 
     {
         /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
-        public SerializerBehaviour(bool omitNullValuedAttributes, bool omitDefaultValuedAttributes)
+        public SerializerSettings(bool omitNullValuedAttributes, bool omitDefaultValuedAttributes)
         {
             OmitNullValuedAttributes = omitNullValuedAttributes;
             OmitDefaultValuedAttributes = omitDefaultValuedAttributes;
@@ -15,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
 
         /// <summary>
         /// Prevent attributes with null values from being included in the response.
-        /// This type is mostly internal and if you want to enable this behavior, you
+        /// This property is internal and if you want to enable this behavior, you
         /// should do so on the <see ref="JsonApiDotNetCore.Configuration.JsonApiOptions" />.
         /// </summary>
         /// <example>
@@ -25,6 +27,16 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// </example>
         public bool OmitNullValuedAttributes { get; }
 
+        /// <summary>
+        /// Prevent attributes with default values from being included in the response.
+        /// This property is internal and if you want to enable this behavior, you
+        /// should do so on the <see ref="JsonApiDotNetCore.Configuration.JsonApiOptions" />.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// options.DefaultAttributeResponseBehavior = new DefaultAttributeResponseBehavior(true);
+        /// </code>
+        /// </example>
         public bool OmitDefaultValuedAttributes { get; }
     }
 

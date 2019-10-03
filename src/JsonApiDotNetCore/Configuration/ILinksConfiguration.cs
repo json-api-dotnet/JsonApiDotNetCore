@@ -2,6 +2,9 @@
 
 namespace JsonApiDotNetCore.Configuration
 {
+    /// <summary>
+    /// Options to configure links at a global level.
+    /// </summary>
     public interface ILinksConfiguration
     {
         /// <summary>

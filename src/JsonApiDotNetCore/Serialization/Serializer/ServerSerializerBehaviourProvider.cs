@@ -3,18 +3,23 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
-    public class ServerSerializerBehaviourProvider : ISerializerBehaviourProvider
+    /// <summary>
+    /// This implementation of the behaviour provider reads the query params that
+    /// can, if provided, override the settings in <see cref="IJsonApiOptions"/>.
+    /// </summary>
+    public class ServerSerializerSettingsProvider : ISerializerSettingsProvider
     {
         private readonly IJsonApiOptions _options;
-        private readonly IAttributeBehaviourQuery _attributeBehaviour;
+        private readonly IAttributeBehaviourQueryService _attributeBehaviour;
 
-        public ServerSerializerBehaviourProvider(IJsonApiOptions options, IAttributeBehaviourQuery attributeBehaviour)
+        public ServerSerializerSettingsProvider(IJsonApiOptions options, IAttributeBehaviourQueryService attributeBehaviour)
         {
             _options = options;
             _attributeBehaviour = attributeBehaviour;
         }
 
-        public SerializerBehaviour GetBehaviour()
+        /// <inheritdoc/>
+        public SerializerSettings Get()
         {
             bool omitNullConfig;
             if (_attributeBehaviour.OmitNullValuedAttributes.HasValue)
@@ -26,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 omitDefaultConfig = _attributeBehaviour.OmitDefaultValuedAttributes.Value;
             else omitDefaultConfig = _options.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes;
 
-            return new SerializerBehaviour(omitNullConfig, omitDefaultConfig);
+            return new SerializerSettings(omitNullConfig, omitDefaultConfig);
         }
     }
 }

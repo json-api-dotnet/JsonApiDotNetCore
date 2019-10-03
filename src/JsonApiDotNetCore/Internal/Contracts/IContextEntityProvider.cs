@@ -3,6 +3,9 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal.Contracts
 {
+    /// <summary>
+    /// Responsible for getting <see cref="ContextEntity"/>s from the <see cref="ResourceGraph"/>.
+    /// </summary>
     public interface IContextEntityProvider
     {
         /// <summary>

@@ -257,8 +257,8 @@
 //                    .Returns(new DocumentBuilderOptions(omitNullValuedAttributes.Value));
 //            }
 //            var pageManagerMock = new Mock<IPageManager>();
-//            var requestManagerMock = new Mock<IRequestManager>();
-//            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, pageManagerMock.Object, requestManagerMock.Object, documentBuilderOptionsProvider: omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
+//            var currentRequestMock = new Mock<IRequestManager>();
+//            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, pageManagerMock.Object, currentRequestMock.Object, documentBuilderOptionsProvider: omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
 //            var document = documentBuilder.Build(new Model() { StringProperty = attributeValue });
 
 //            Assert.Equal(resultContainsAttribute, document.Data.Attributes.ContainsKey("StringProperty"));

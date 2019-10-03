@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 namespace JsonApiDotNetCore.Managers.Contracts
 {
     /// <summary>
+    /// This is the former RequestManager. TODO: not done.
     /// Metadata associated to the current json:api request.
     /// </summary>
     public interface ICurrentRequest : IQueryRequest

@@ -20,11 +20,11 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private Type _currentTargetedResource;
-        private readonly IExposedFieldExplorer _fieldExplorer;
-        public ClientSerializer(IExposedFieldExplorer fieldExplorer,
+        private readonly IFieldsExplorer _fieldExplorer;
+        public ClientSerializer(IFieldsExplorer fieldExplorer,
                                 IContextEntityProvider provider,
                                 IResourceGraph resourceGraph,
-                                ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider)
+                                ISerializerSettingsProvider settingsProvider) : base(resourceGraph, provider, settingsProvider.Get())
         {
             _fieldExplorer = fieldExplorer;
         }

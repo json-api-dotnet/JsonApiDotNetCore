@@ -11,14 +11,14 @@ namespace JsonApiDotNetCore.Serialization.Serializer
     public class IncludedResourceObjectBuilder : ResourceObjectBuilder, IIncludedResourceObjectBuilder
     {
         private readonly HashSet<ResourceObject> _included;
-        private readonly ISerializableFields _serializableFields;
+        private readonly IFieldsToSerialize _serializableFields;
         private readonly ILinkBuilder _linkBuilder;
 
-        public IncludedResourceObjectBuilder(ISerializableFields serializableFields,
+        public IncludedResourceObjectBuilder(IFieldsToSerialize serializableFields,
                                            ILinkBuilder linkBuilder,
                                            IResourceGraph resourceGraph,
                                            IContextEntityProvider provider,
-                                           ISerializerBehaviourProvider behaviourProvider) : base(resourceGraph, provider, behaviourProvider)
+                                           ISerializerSettingsProvider settingsProvider) : base(resourceGraph, provider, settingsProvider.Get())
         {
             _included = new HashSet<ResourceObject>(new ResourceObjectComparer());
             _serializableFields = serializableFields;
