@@ -16,68 +16,19 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public class JsonApiOptions : IJsonApiOptions
     {
-        /// <summary>
-        /// Use relative links for all resources.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.RelativeLinks = true;
-        /// </code>
-        /// <code>
-        /// {
-        ///   "type": "articles",
-        ///   "id": "4309",
-        ///   "relationships": {
-        ///      "author": {
-        ///        "links": {
-        ///          "self": "/api/v1/articles/4309/relationships/author",
-        ///          "related": "/api/v1/articles/4309/author"
-        ///        }
-        ///      }
-        ///   }
-        /// }
-        /// </code>
-        /// </example>
+
+        /// <inheritdoc/>
         public bool RelativeLinks { get; set; } = false;
 
-        /// <summary>
-        /// Configures globally which links to show in the <see cref="RelationshipLinks"/>
-        /// object for a requested resource. Setting can be overriden per resource by
-        /// setting the <see cref="ContextEntity.RelationshipLinks"/> option or on the
-        /// RelationshipAttribute in the class definition of your model.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.DefaultRelationshipLinks = Link.None;
-        /// </code>
-        /// <code>
-        /// {
-        ///   "type": "articles",
-        ///   "id": "4309",
-        ///   "relationships": {
-        ///      "author": { "data": { "type": "people", "id": "1234" }
-        ///      }
-        ///   }
-        /// }
-        /// </code>
-        /// </example>
-        public Link RelationshipLinks { get; set; } = Link.All;
-
-
-        /// <summary>
-        /// Configures globally which links to show in the <see cref="TopLevelLinks"/>
-        /// object for a requested resource. Setting can be overriden per resource by
-        /// setting the <see cref="ContextEntity.TopLevelLinks"/> option.
-        /// </summary>
+        /// <inheritdoc/>
         public Link TopLevelLinks { get; set; } = Link.All;
 
-
-        /// <summary>
-        /// Configures globally which links to show in the <see cref="ResourceLinks"/>
-        /// object for a requested resource. Setting can be overriden per resource by
-        /// setting the <see cref="ContextEntity.ResourceLinks"/> option.
-        /// </summary>
+        /// <inheritdoc/>
         public Link ResourceLinks { get; set; } = Link.All;
+
+        /// <inheritdoc/>
+        public Link RelationshipLinks { get; set; } = Link.All;
+
 
         /// <summary>
         /// Provides an interface for formatting resource names by convention

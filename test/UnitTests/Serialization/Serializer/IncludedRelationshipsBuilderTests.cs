@@ -168,11 +168,11 @@ namespace UnitTests.Serialization.IncludedRelationshipBuilder
             return parsedChain;
         }
 
-        private IncludedRelationshipsBuilder GetBuilder()
+        private IncludedResourceObjectBuilder GetBuilder()
         {
             var fields = GetSerializableFields();
             var links = GetLinkBuilder();
-            return new IncludedRelationshipsBuilder(fields, links, _resourceGraph, _resourceGraph);
+            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, _resourceGraph);
         }
 
     }

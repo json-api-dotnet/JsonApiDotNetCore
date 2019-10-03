@@ -34,12 +34,12 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _requestResourceType;
         private readonly ILinkBuilder _linkBuilder;
-        private readonly IIncludedRelationshipsBuilder _includedBuilder;
+        private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
         public ServerSerializer(
             IMetaBuilder<TResource> metaBuilder,
             ILinkBuilder linkBuilder,
-            IIncludedRelationshipsBuilder includedBuilder,
+            IIncludedResourceObjectBuilder includedBuilder,
             ISerializableFields serializableFields,
             IIncludedQueryService includedQuery,
             IFieldsQueryService fieldQuery,

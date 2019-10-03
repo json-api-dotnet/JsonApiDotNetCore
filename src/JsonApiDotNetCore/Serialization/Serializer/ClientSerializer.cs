@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 

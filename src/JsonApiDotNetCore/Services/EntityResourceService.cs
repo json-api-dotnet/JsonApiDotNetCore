@@ -378,18 +378,8 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        /// <summary>
-        /// Constructor for  no mapping with integer as default
-        /// </summary>
-        public EntityResourceService(
-            IEntityRepository<TResource> repository,
-            IJsonApiOptions options,
-            ICurrentRequest requestManager,
-            IPageQueryService pageManager,
-            IResourceGraph resourceGraph,
-            ILoggerFactory loggerFactory = null,
-            IResourceHookExecutor hookExecutor = null) :
-            base(repository: repository, apiOptions: options, requestManager, resourceGraph, pageManager, loggerFactory, hookExecutor)
-        { }
+        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options, IUpdatedFields updatedFields, ICurrentRequest requestManager, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, requestManager, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
+        {
+        }
     }
 }

@@ -52,9 +52,9 @@ namespace UnitTests.Serialization.Serializer
             return new ServerSerializer<T>(meta, link, includedBuilder, serializableFields, included, sparseFields, _resourceGraph, provider);
         }
 
-        private IIncludedRelationshipsBuilder GetIncludedBuilder()
+        private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedRelationshipsBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph);
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph);
         }
 
         private IContextEntityProvider GetContextEntityProvider()

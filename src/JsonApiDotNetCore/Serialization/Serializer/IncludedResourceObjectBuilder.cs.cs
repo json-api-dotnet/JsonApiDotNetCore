@@ -8,13 +8,13 @@ using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Serializer
 {
-    public class IncludedRelationshipsBuilder : ResourceObjectBuilder, IIncludedRelationshipsBuilder
+    public class IncludedResourceObjectBuilder : ResourceObjectBuilder, IIncludedResourceObjectBuilder
     {
         private readonly HashSet<ResourceObject> _included;
         private readonly ISerializableFields _serializableFields;
         private readonly ILinkBuilder _linkBuilder;
 
-        public IncludedRelationshipsBuilder(ISerializableFields serializableFields,
+        public IncludedResourceObjectBuilder(ISerializableFields serializableFields,
                                            ILinkBuilder linkBuilder,
                                            IResourceGraph resourceGraph,
                                            IContextEntityProvider provider,

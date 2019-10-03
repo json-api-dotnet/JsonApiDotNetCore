@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization.Serializer.Contracts
 {
-    public interface IIncludedRelationshipsBuilder
+    public interface IIncludedResourceObjectBuilder
     {
         /// <summary>
         /// Gets the list of resource objects representing the included entities

@@ -220,7 +220,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IInternalFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IUpdatedFields, UpdatedFields>();
             services.AddScoped<IJsonApiSerializerFactory, ServerSerializerFactory>();
-            services.AddScoped<IIncludedRelationshipsBuilder, IncludedRelationshipsBuilder>();
+            services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
             services.AddScoped<IJsonApiDeserializer, ServerDeserializer>();
             services.AddScoped<ISerializableFields, SerializableFields>();
             services.AddScoped<IExposedFieldExplorer, ExposedFieldExplorer>();
