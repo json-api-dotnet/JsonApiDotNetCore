@@ -4,7 +4,7 @@ The main change is that now serializers and deserializers are split into
 - base serializers (deserializers) that contain building (parsing) logic shared by server and client side implementations
 - server and client serializers (deserializers) that are responsible for any additional building (parsing) logic unique to their implementations.
 
-In deserialization, some parts are relevant only for client-side parsing whereas others are only for server-side parsing. for example, a server deserializer will never have to deal with a `included` object list. Similarly, in serialization, a client serializer will for example never ever have to populate any other top-level members than the primary data (like `meta`, `included`). These are examples of implementation-specific parsing/building whose responsibility is moved to the corresponding implementation.
+In deserialization, some parts are relevant only for client-side parsing whereas others are only for server-side parsing. for example, a server deserializer will never have to deal with a `included` object list. Similarly, in serialization, a client serializer will for example never ever have to populate any other top-level members than the primary data (like `meta`, `included`). These are examples of implementation-specific parsing/building for which the responsibility is moved to the corresponding implementation.
 
 Throughout the document and the code when referring to fields, members, object types, the technical language of json:api spec is used. At the core of (de)serialization is the 
 `Document` class, [see document spec](https://jsonapi.org/format/#document-structure).
@@ -17,18 +17,16 @@ Responsible for
 - Converting the serialized string content into an intance of the `Document` class. 
 - Building instances of the corresponding resource class (eg `Article`) by going through the document's primary data (`Document.Data`, [see primary data spec](https://jsonapi.org/format/#document-top-level)).
 
-This base document parser is NOT responsible for any parsing that is unique to only client or server side parsing. That responsibility has been moved to its respective implementation through the abstract `DocumentParser.AfterProcessField()` method. This method is fired once each time after a `AttrAttribute` or `RelationshipAttribute` is processed. It allows a implementation of `DocumentParser` to intercept and complement the parsing of a resource with additional logic that is required for that specific implementation.
+Responsibility of any implementation-specific parsing is shifted through the abstract `DocumentParser.AfterProcessField()` method. This method is fired once each time after a `AttrAttribute` or `RelationshipAttribute` is processed. It allows a implementation of `DocumentParser` to intercept the parsing and add steps that are only required for clients/servers.
 
 #### ClientDeserializer
 The client deserializer complements the base deserialization  by
 * overriding the `AfterProcessField` method which takes care of the Included section
 	* after a relationship was deserialized, it finds the appended included object and adds it attributs and (nested) relationships
-* taking care of remaining top-level members. These are members of a json:api `Document` that will only ever be relevant to a client-side parser:
-	* Top-level meta data (`Document.Meta`)
-	* Server-side errors (`Document.Errors`)
+* taking care of remaining top-level members. that are only relevant to a client-side parser (meta data, server-side errors, links).
 
 #### ServerDeserializer
-For server-side parsing, no extra parsing needs to be done after the base deserialization is complerted. It only needs to keep track of which `AttrAttribute`s and `RelationshipAttribute`s were targeted by a request. This is needed for the internals of JADNC (eg the repository layer).
+For server-side parsing, no extra parsing needs to be done after the base deserialization is completed. It only needs to keep track of which `AttrAttribute`s and `RelationshipAttribute`s were targeted by a request. This is needed for the internals of JADNC (eg the repository layer).
 * The `AfterProcessField` method is overriden so that every attribute and relationship is registered with the `IUpdatedFields` service after it is processed.
 
 ## Serialization
@@ -42,9 +40,9 @@ ResourceObjectBuilder is responsible for
 	- Note: the resource object builder is NOT responsible for figuring out which attributes and relationships should be included in the serialization result, because this differs depending on an the implementation being client or server side.
 	  Instead, it is provided with the list.
 
-Additionally, client and server serializers also differ in how relationship members ([see relationship member spec](https://jsonapi.org/format/#document-resource-object-attributes) are formatted. The responsibility for this handling is moved to the respective implementation, this time by overriding the `ResourceObjectBuilder.GetRelationshipData()` method. This method is fired once each time a `RelationshipAttribute` is processed, allowing for additional serialization (like adding links or metadata).
+Additionally, client and server serializers also differ in how relationship members ([see relationship member spec](https://jsonapi.org/format/#document-resource-object-attributes) are formatted. The responsibility for handling this is again shifted, this time by virtual `ResourceObjectBuilder.GetRelationshipData()` method. This method is fired once each time a `RelationshipAttribute` is processed, allowing for additional serialization (like adding links or metadata).
 
-This time, the `GetRelationshipData()` method is not abstract, but virtual with a default implementation. This default implementation is to just create a `RelationshipData` with primary data (like `{"related-foo": { "data": { "id": 1" "type": "foobar"}}}`)
+This time, the `GetRelationshipData()` method is not abstract, but virtual with a default implementation. This default implementation is to just create a `RelationshipData` with primary data (like `{"related-foo": { "data": { "id": 1" "type": "foobar"}}}`). Some implementations (server, included builder) need additional logic, others don't (client).
 
 ### DocumentBuilder
 Responsible for
@@ -82,3 +80,5 @@ Like with the `ClientSerializer` and `ServerSerializer`, the `IncludedResourceOb
 - people that were included as reviewers from inclusion chain (1) should come with their `favorite-food` included, but not those from chain (2)
 - people that were included as authors from inclusion chain (2) should come with their `favorite-song` included, but not those from chain (1).
 - a person that was included as both an reviewer and author (i.e. targeted by both chain (1) and (2)), both `favorite-food` and `favorite-song` need to be present.
+To achieve this, the `IncludedResourceObjectBuilder` needs to recursively parse an inclusion chain. This strategy is different from that of the ServerSerializer, and for that reason it is a separate service.
+
