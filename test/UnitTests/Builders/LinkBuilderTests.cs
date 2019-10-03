@@ -9,6 +9,7 @@ using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
 using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization.Response;
 
 namespace UnitTests
 {
