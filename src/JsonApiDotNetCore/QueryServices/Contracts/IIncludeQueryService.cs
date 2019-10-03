@@ -4,7 +4,6 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.QueryServices.Contracts
 {
-
     /// <summary>
     /// Query service to access the inclusion chains.
     /// </summary>
