@@ -18,6 +18,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace UnitTests.ResourceHooks
 {
@@ -47,7 +48,7 @@ namespace UnitTests.ResourceHooks
                 .AddResource<TodoItemCollection, Guid>()
                 .Build();
 
-            _fieldExplorer = new ExposedFieldExplorer(_graph);
+            _fieldExplorer = new FieldsExplorer(_graph);
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);

@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         public string Serialize(IIdentifiable entity)
         {
             if (entity == null)
-                return JsonConvert.SerializeObject(Build(entity));
+                return JsonConvert.SerializeObject(Build(entity, new List<AttrAttribute>(), new List<RelationshipAttribute>()));
 
             _currentTargetedResource = entity?.GetType();
             var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
                 break;
             }
             if (entity == null)
-                return JsonConvert.SerializeObject(Build(entities));
+                return JsonConvert.SerializeObject(Build(entities, new List<AttrAttribute>(), new List<RelationshipAttribute>()));
 
             _currentTargetedResource = entity?.GetType();
             var attributes = GetAttributesToSerialize(entity);

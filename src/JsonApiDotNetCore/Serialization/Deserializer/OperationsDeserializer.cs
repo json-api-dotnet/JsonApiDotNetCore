@@ -24,12 +24,10 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
         private readonly JsonSerializer _jsonSerializer;
 
         public OperationsDeserializer(IUpdatedFields updatedFieldsManager,
-                                      IResourceGraph resourceGraph,
-                                      IJsonApiSerializerSettings serializerSettings)
+                                      IResourceGraph resourceGraph)
         {
             _updatedFieldsManager = updatedFieldsManager;
             _resourceGraph = resourceGraph;
-            _jsonSerializer = JsonSerializer.Create(serializerSettings.GetSettings());
         }
 
         public object Deserialize(string requestBody)

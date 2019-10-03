@@ -1,13 +1,9 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -20,8 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Serialization.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
+using JsonApiDotNetCore.Serialization.Deserializer.Contracts;
 
 namespace UnitTests.Extensions
 {
@@ -54,7 +51,6 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<IJsonApiOptions>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
-            Assert.NotNull(provider.GetService<IJsonApiContext>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
             Assert.NotNull(provider.GetService<IJsonApiSerializerFactory>());

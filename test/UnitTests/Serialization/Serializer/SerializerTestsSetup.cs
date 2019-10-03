@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Serialization.Serializer;
+using JsonApiDotNetCore.Serialization.Serializer.Contracts;
 using JsonApiDotNetCore.Services;
 using Moq;
 
@@ -19,7 +21,7 @@ namespace UnitTests.Serialization.Serializer
         protected readonly RelationshipLinks _dummyRelationshipLinks;
         public SerializerTestsSetup()
         {
-            _fieldExplorer = new ExposedFieldExplorer(_resourceGraph);
+            _fieldExplorer = new FieldsExplorer(_resourceGraph);
             _dummyToplevelLinks = new TopLevelLinks
             {
                 Self = "http://www.dummy.com/dummy-self-link",
@@ -44,17 +46,22 @@ namespace UnitTests.Serialization.Serializer
             var meta = GetMetaBuilder<T>(metaDict);
             var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
             var fieldsToSerialize = GetSerializableFields();
-            var sparseFields = GetFieldsQuery();
             var included = GetIncludedRelationships(inclusionChains);
             var provider = GetContextEntityProvider();
             var includedBuilder = GetIncludedBuilder();
 
-            return new ServerSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, included, sparseFields, _resourceGraph, provider);
+            return new ServerSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, included, _resourceGraph, provider, GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph);
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider()) ;
+        }
+
+        private ISerializerSettingsProvider GetSerializerSettingsProvider()
+        {
+            var mock = new Mock<ISerializerSettingsProvider>();
+            return mock.Object;
         }
 
         private IContextEntityProvider GetContextEntityProvider()
@@ -94,7 +101,7 @@ namespace UnitTests.Serialization.Serializer
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Attributes);
+            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), null)).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Attributes);
             mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Relationships);
             return mock.Object;
         }
@@ -115,7 +122,7 @@ namespace UnitTests.Serialization.Serializer
         /// </summary>
         protected class TestSerializer : DocumentBuilder
         {
-            public TestSerializer(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider) { }
+            public TestSerializer(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, null) { }
 
             public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
             {

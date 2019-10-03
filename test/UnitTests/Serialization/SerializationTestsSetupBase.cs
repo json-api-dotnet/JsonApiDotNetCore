@@ -17,7 +17,6 @@ namespace UnitTests.Serialization
         protected readonly Faker<Article> _articleFaker;
         protected readonly Faker<Blog> _blogFaker;
         protected readonly Faker<Person> _personFaker;
-        protected readonly JsonApiSerializerSettings _defaultSettings = new JsonApiSerializerSettings();
 
         public SerializationTestsSetupBase()
         {

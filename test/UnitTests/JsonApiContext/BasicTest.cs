@@ -18,6 +18,7 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using System.Linq;
+using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace UnitTests.Services
 {
@@ -66,7 +67,6 @@ namespace UnitTests.Services
         public async Task GetAsync_ShouldThrow404OnNoEntityFoundWithRelationships()
         {
             // Arrange
-            var jacMock = FetchContextMock();
             var loggerMock = new Mock<ILoggerFactory>();
             var jsonApiOptions = new JsonApiOptions
             {
@@ -93,10 +93,6 @@ namespace UnitTests.Services
             Assert.Equal(404, exception.GetStatusCode());
         }
 
-        public Mock<IJsonApiContext> FetchContextMock()
-        {
-            return new Mock<IJsonApiContext>();
-        }
 
     }
 }

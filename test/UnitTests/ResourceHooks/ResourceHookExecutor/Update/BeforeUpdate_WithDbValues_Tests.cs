@@ -82,7 +82,7 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var (_, ufMock, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            ufMock.Setup(c => c.Relationshipss)).Returns(_fieldExplorer.GetRelationships((TodoItem t) => t.ToOnePerson));
+            ufMock.Setup(c => c.Relationships).Returns(_fieldExplorer.GetRelationships((TodoItem t) => t.ToOnePerson));
 
             // act
             var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };

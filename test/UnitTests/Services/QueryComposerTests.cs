@@ -9,12 +9,6 @@ namespace UnitTests.Services
 {
     public class QueryComposerTests
     {
-        private readonly Mock<IJsonApiContext> _jsonApiContext;
-
-        public QueryComposerTests()
-        {
-            _jsonApiContext = new Mock<IJsonApiContext>();
-        }
 
         [Fact]
         public void Can_ComposeEqual_FilterStringForUrl()

@@ -8,11 +8,11 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc/>
-    public class FieldExplorer : IFieldsExplorer
+    public class FieldsExplorer : IFieldsExplorer
     {
         private readonly IContextEntityProvider _provider;
 
-        public FieldExplorer(IContextEntityProvider provider)
+        public FieldsExplorer(IContextEntityProvider provider)
         {
             _provider = provider;
         }
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// internally used only by <see cref="FieldExplorer"/>.
+        /// internally used only by <see cref="FieldsExplorer"/>.
         /// </summary>
         private enum FieldFilterType
         {

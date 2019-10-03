@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.Serialization.Serializer
 {
     /// <summary>
     /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s
+    /// given a list of attributes and relationships.
     /// </summary>
     public abstract class ResourceObjectBuilder
     {
@@ -33,34 +34,30 @@ namespace JsonApiDotNetCore.Serialization.Serializer
         /// <param name="attrs">Attributes to include in the building process</param>
         /// <param name="rels">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
-        protected ResourceObject BuildResourceObject(IIdentifiable entity, IEnumerable<AttrAttribute> attrs = null, IEnumerable<RelationshipAttribute> rels = null)
+        protected ResourceObject BuildResourceObject(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, IEnumerable<RelationshipAttribute> relationships)
         {
             var resourceContext = _provider.GetContextEntity(entity.GetType());
 
             // populating the top-level "type" and "id" members.
             var ro = new ResourceObject { Type = resourceContext.EntityName, Id = entity.StringId.NullIfEmpty() };
 
-            // populating the top-level "attribute" member of a resource object
-            if (attrs != null)
-            {   // never include "id" as an attribute
-                attrs = attrs.Where(attr => attr.InternalAttributeName != _identifiablePropertyName);
-                if (attrs.Any())
-                {
-                    ro.Attributes = new Dictionary<string, object>();
-                    foreach (var attr in attrs)
-                        AddAttribute(entity, ro, attr);
-                }
+            // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
+            attributes = attributes.Where(attr => attr.InternalAttributeName != _identifiablePropertyName);
+            if (attributes.Any())
+            {
+                ro.Attributes = new Dictionary<string, object>();
+                foreach (var attr in attributes)
+                    AddAttribute(entity, ro, attr);
             }
 
-            if (rels != null && rels.Any())
-            {   // populating the top-level "relationship" member of a resource object.
-                foreach (var rel in rels)
-                {
-                    var relData = GetRelationshipData(rel, entity);
-                    if (relData != null)
-                        (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipData>()).Add(rel.PublicRelationshipName, relData);
-                }
+            // populating the top-level "relationship" member of a resource object.
+            foreach (var rel in relationships)
+            {
+                var relData = GetRelationshipData(rel, entity);
+                if (relData != null)
+                    (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipData>()).Add(rel.PublicRelationshipName, relData);
             }
+            
 
             return ro;
         }

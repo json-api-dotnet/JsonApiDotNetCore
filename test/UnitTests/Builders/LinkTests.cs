@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Models.Links;
 using Xunit;
 
