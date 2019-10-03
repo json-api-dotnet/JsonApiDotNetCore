@@ -80,5 +80,6 @@ Like with the `ClientSerializer` and `ServerSerializer`, the `IncludedResourceOb
 - people that were included as reviewers from inclusion chain (1) should come with their `favorite-food` included, but not those from chain (2)
 - people that were included as authors from inclusion chain (2) should come with their `favorite-song` included, but not those from chain (1).
 - a person that was included as both an reviewer and author (i.e. targeted by both chain (1) and (2)), both `favorite-food` and `favorite-song` need to be present.
-To achieve this, the `IncludedResourceObjectBuilder` needs to recursively parse an inclusion chain. This strategy is different from that of the ServerSerializer, and for that reason it is a separate service.
+
+To achieve this all of this, the `IncludedResourceObjectBuilder` needs to recursively parse an inclusion chain and make sure it does not append the same included more than once. This strategy is different from that of the ServerSerializer, and for that reason it is a separate service.
 
