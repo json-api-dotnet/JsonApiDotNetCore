@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
+using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 

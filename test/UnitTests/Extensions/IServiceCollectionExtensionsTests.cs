@@ -17,8 +17,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Serialization.Response.Contracts;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
 
 namespace UnitTests.Extensions
 {

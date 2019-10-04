@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
+using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 

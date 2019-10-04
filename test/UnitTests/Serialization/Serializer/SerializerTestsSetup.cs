@@ -7,8 +7,8 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.QueryServices.Contracts;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Response;
-using JsonApiDotNetCore.Serialization.Response.Contracts;
+using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Services;
 using Moq;
 

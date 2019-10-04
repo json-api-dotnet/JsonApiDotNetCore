@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Deserializer;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
+using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 

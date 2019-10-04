@@ -7,8 +7,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.QueryServices.Contracts;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Serialization.Response.Contracts;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
+using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {

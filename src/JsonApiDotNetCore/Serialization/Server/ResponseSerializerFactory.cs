@@ -1,6 +1,5 @@
 ﻿using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -4,7 +4,6 @@ using System.Linq;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Response.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {

@@ -31,11 +31,6 @@ namespace UnitTests.Services
             _pageQueryMock = new Mock<IPageQueryService>();
         }
 
-        private QueryParser GetQueryParser()
-        {
-            return new QueryParser(_includeQuery, _fieldsQuery, _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
-        }
-
         [Fact]
         public void Can_Build_Filters()
         {
@@ -332,8 +327,6 @@ namespace UnitTests.Services
             var ex = Assert.Throws<JsonApiException>(() => queryParser.Parse(_queryCollectionMock.Object));
             Assert.Equal(400, ex.GetStatusCode());
         }
-
-
 
         [Theory]
         [InlineData("1", 1, false)]

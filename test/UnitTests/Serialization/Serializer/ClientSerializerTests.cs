@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Request;
+using JsonApiDotNetCore.Serialization.Client;
 using Xunit;
 
 namespace UnitTests.Serialization.Serializer

@@ -25,10 +25,8 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.QueryServices.Contracts;
 using JsonApiDotNetCore.Serialization.Deserializer;
 using JsonApiDotNetCore.QueryServices;
-using JsonApiDotNetCore.Serialization.Response;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
-using JsonApiDotNetCore.Serialization.Request;
-using JsonApiDotNetCore.Serialization.Response.Contracts;
+using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Serialization.Server;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -216,7 +214,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IIncludeQueryService, IncludeQueryService>();
-            services.AddScoped<IInternalIncludeQueryService, IncludeQueryService>();
+            services.AddScoped<IIncludeQueryService, IncludeQueryService>();
             services.AddScoped<IFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IInternalFieldsQueryService, FieldsQueryService>();
             services.AddScoped<IUpdatedFields, UpdatedFields>();
