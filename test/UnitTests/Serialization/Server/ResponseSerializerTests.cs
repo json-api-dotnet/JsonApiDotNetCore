@@ -406,14 +406,15 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeSingle_NullResultFromRelationshipPath_CanSerialize()
+        public void SerializeSingleWithRequestRelationship_NullToOneRelationship_CanSerialize()
         {
             // arrange
-            OneToOneDependent entity = null;
+            var entity = new OneToOnePrincipal() { Id = 2, Dependent = null };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
+            var requestRelationship = _fieldExplorer.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
 
             // act
-            string serialized = serializer.SerializeSingle(entity);
+            string serialized = serializer.SerializeSingle(entity, requestRelationship);
 
             // assert
             var expectedFormatted =
@@ -427,14 +428,15 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeSingle_PopulatedResultFromRelationshipPath_CanSerialize()
+        public void SerializeSingleWithRequestRelationship_PopulatedToOneRelationship_CanSerialize()
         {
             // arrange
-            var entity = new OneToOneDependent() { Id = 1 };
+            var entity = new OneToOnePrincipal() { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
+            var requestRelationship = _fieldExplorer.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
 
             // act
-            string serialized = serializer.SerializeSingle(entity);
+            string serialized = serializer.SerializeSingle(entity, requestRelationship);
 
             // assert
             var expectedFormatted =
@@ -451,14 +453,15 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeMany_NullResultFromRelationshipPath_CanSerialize()
+        public void SerializeSingleWithRequestRelationship_EmptyToManyRelationship_CanSerialize()
         {
             // arrange
-            var entities = new List<OneToManyRequiredDependent>();
+            var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent>() };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
+            var requestRelationship = _fieldExplorer.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
 
             // act
-            string serialized = serializer.SerializeMany(entities);
+            string serialized = serializer.SerializeSingle(entity, requestRelationship);
 
             // assert
             var expectedFormatted =
@@ -472,20 +475,21 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeMany_PopulatedResultFromRelationshipPath_CanSerialize()
+        public void SerializeSingleWithRequestRelationship_PopulatedToManyRelationship_CanSerialize()
         {
             // arrange
-            var entities = new List<OneToManyRequiredDependent> { new OneToManyRequiredDependent() { Id = 1 } };
+            var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 1 } }  };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
+            var requestRelationship = _fieldExplorer.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
 
             // act
-            string serialized = serializer.SerializeMany(entities);
+            string serialized = serializer.SerializeSingle(entity, requestRelationship);
 
             // assert
             var expectedFormatted =
             @"{
                ""data"":[{
-                  ""type"":""one-to-many-required-dependents"",
+                  ""type"":""one-to-many-dependents"",
                   ""id"":""1""
                }]
             }";

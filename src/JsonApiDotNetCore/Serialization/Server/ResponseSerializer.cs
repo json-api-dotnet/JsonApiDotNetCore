@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Query;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
-using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -34,15 +33,16 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Type _requestResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
+        private bool _requestRelationshipProvided;
 
         public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
-                                ILinkBuilder linkBuilder,
-                                IIncludedResourceObjectBuilder includedBuilder,
-                                IFieldsToSerialize fieldsToSerialize,
-                                IIncludeService includeQuery,
-                                IResourceGraph resourceGraph,
-                                IContextEntityProvider provider,
-                                ISerializerSettingsProvider settingsProvider)
+                                  ILinkBuilder linkBuilder,
+                                  IIncludedResourceObjectBuilder includedBuilder,
+                                  IFieldsToSerialize fieldsToSerialize,
+                                  IIncludeService includeQuery,
+                                  IResourceGraph resourceGraph,
+                                  IContextEntityProvider provider,
+                                  ISerializerSettingsProvider settingsProvider)
             : base(resourceGraph, provider, settingsProvider.Get())
         {
             _includeQuery = includeQuery;
@@ -54,11 +54,11 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <inheritdoc/>
-        public string Serialize(object data)
+        public string Serialize(object data, RelationshipAttribute requestRelationship = null)
         {
             if (data is IEnumerable entities)
                 return SerializeMany(entities);
-            return SerializeSingle((IIdentifiable)data);
+            return SerializeSingle((IIdentifiable)data, requestRelationship);
         }
 
         /// <summary>
@@ -67,21 +67,28 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <remarks>
         /// This method is set internal instead of private for easier testability.
         /// </remarks>
-        internal string SerializeSingle(IIdentifiable entity)
+        internal string SerializeSingle(IIdentifiable entity, RelationshipAttribute requestRelationship = null)
         {
-            var (attributes, relationships) = GetFieldsToSerialize(entity?.GetType());
+            if (requestRelationship != null)
+            {
+                _requestRelationshipProvided = true;
+                var data = GetRelationshipData(requestRelationship, entity);
+                return JsonConvert.SerializeObject(data);
+            }
+
+            var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entity, attributes, relationships);
             var resourceObject = document.SingleData;
-            if (resourceObject != null) resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+            if (resourceObject != null)
+                resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+
             AddTopLevelObjects(document);
             return JsonConvert.SerializeObject(document);
+
         }
 
-        private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize(Type targetType)
+        private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()
         {
-            if (targetType == null || targetType != _requestResourceType)
-                return (new List<AttrAttribute>(), new List<RelationshipAttribute>());
-
             return (GetAttributesToSerialize(_requestResourceType), GetRelationshipsToSerialize(_requestResourceType));
         }
 
@@ -93,7 +100,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeMany(IEnumerable entities)
         {
-            var (attributes, relationships) = GetFieldsToSerialize(TypeHelper.GetListInnerType(entities));
+            var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entities, attributes, relationships);
             foreach (ResourceObject resourceObject in (IEnumerable)document.Data)
             {
@@ -103,6 +110,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
                 resourceObject.Links = links;
             }
+
             AddTopLevelObjects(document);
             return JsonConvert.SerializeObject(document);
         }
@@ -159,18 +167,21 @@ namespace JsonApiDotNetCore.Serialization.Server
         protected override RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
             RelationshipData relationshipData = null;
-            /// if the relationship is included, populate the "data" field.
-            if (ShouldInclude(relationship, out var relationshipChain))
-            {
+
+            if (_requestRelationshipProvided)
+            {   // if serializing a request with a requestRelationship, always populate data field.
+                relationshipData = base.GetRelationshipData(relationship, entity);
+            }
+            else if (ShouldInclude(relationship, out var relationshipChain))
+            {   // if the relationship is included, populate the "data" field.
                 relationshipData = base.GetRelationshipData(relationship, entity);
                 if (relationshipData.HasData)
                     _includedBuilder.IncludeRelationshipChain(relationshipChain, entity);
             }
 
             var links = _linkBuilder.GetRelationshipLinks(relationship, entity);
-            /// if links relationshiplinks should be built for this entry, populate the "links" field.
             if (links != null)
-            {
+            {   // if links relationshiplinks should be built for this entry, populate the "links" field.
                 relationshipData = relationshipData ?? new RelationshipData();
                 relationshipData.Links = links;
             }

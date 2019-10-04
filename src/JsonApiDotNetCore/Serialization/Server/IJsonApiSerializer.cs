@@ -1,4 +1,6 @@
-﻿namespace JsonApiDotNetCore.Serialization.Server
+﻿using JsonApiDotNetCore.Models;
+
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Serializer used internally in JsonApiDotNetCore to serialize responses.
@@ -8,6 +10,6 @@
         /// <summary>
         /// Serializes a single entity or a list of entities.
         /// </summary>
-        string Serialize(object content);
+        string Serialize(object content, RelationshipAttribute requestRelationship = null);
     }
 }
