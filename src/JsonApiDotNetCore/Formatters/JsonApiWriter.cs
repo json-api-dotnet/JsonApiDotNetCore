@@ -12,14 +12,14 @@ namespace JsonApiDotNetCore.Formatters
     public class JsonApiWriter : IJsonApiWriter
     {
         private readonly ILogger<JsonApiWriter> _logger;
-        private readonly IJsonApiSerializer _serializer;
+        private readonly IJsonApiSerializerFactory _serializerFactory;
         private readonly ICurrentRequest _currentRequest;
 
         public JsonApiWriter(ICurrentRequest currentRequest,
                              IJsonApiSerializerFactory factory,
                              ILoggerFactory loggerFactory)
         {
-            _serializer = factory.GetSerializer();
+            _serializerFactory = factory;
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
             _currentRequest = currentRequest;
         }
@@ -50,7 +50,13 @@ namespace JsonApiDotNetCore.Formatters
             }
         }
 
-        private string GetResponseBody(object responseObject) => _serializer.Serialize(responseObject, _currentRequest.RequestRelationship);
+        private string GetResponseBody(object responseObject)
+        {
+            var serializer = _serializerFactory.GetSerializer(responseObject.GetType());
+            return serializer.Serialize(responseObject, _currentRequest.RequestRelationship);
+        }
+
+
         private string GetErrorResponse(Exception e)
         {
             var errors = new ErrorCollection();

@@ -30,42 +30,42 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity requestResource, IContextEntityProvider provider, List<SortQuery> sortQueries)
+        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity primaryResource, IContextEntityProvider provider, List<SortQuery> sortQueries)
         {
             if (sortQueries == null || sortQueries.Count == 0)
                 return source;
 
-            var orderedEntities = source.Sort(requestResource, provider, sortQueries[0]);
+            var orderedEntities = source.Sort(primaryResource, provider, sortQueries[0]);
 
             if (sortQueries.Count <= 1)
                 return orderedEntities;
 
             for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(requestResource, provider, sortQueries[i]);
+                orderedEntities = orderedEntities.Sort(primaryResource, provider, sortQueries[i]);
 
             return orderedEntities;
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity requestResource, IContextEntityProvider provider, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity primaryResource, IContextEntityProvider provider, SortQuery sortQuery)
         {
             BaseAttrQuery attr;
             if (sortQuery.IsAttributeOfRelationship)
-                attr = new RelatedAttrSortQuery(requestResource, provider, sortQuery);
+                attr = new RelatedAttrSortQuery(primaryResource, provider, sortQuery);
             else
-                attr = new AttrSortQuery(requestResource, provider, sortQuery);
+                attr = new AttrSortQuery(primaryResource, provider, sortQuery);
 
             return sortQuery.Direction == SortDirection.Descending
                 ? source.OrderByDescending(attr.GetPropertyPath())
                 : source.OrderBy(attr.GetPropertyPath());
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, ContextEntity requestResource, IContextEntityProvider provider, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, ContextEntity primaryResource, IContextEntityProvider provider, SortQuery sortQuery)
         {
             BaseAttrQuery attr;
             if (sortQuery.IsAttributeOfRelationship)
-                attr = new RelatedAttrSortQuery(requestResource, provider, sortQuery);
+                attr = new RelatedAttrSortQuery(primaryResource, provider, sortQuery);
             else
-                attr = new AttrSortQuery(requestResource, provider, sortQuery);
+                attr = new AttrSortQuery(primaryResource, provider, sortQuery);
 
             return sortQuery.Direction == SortDirection.Descending
                 ? source.ThenByDescending(attr.GetPropertyPath())

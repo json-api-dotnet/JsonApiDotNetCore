@@ -13,12 +13,12 @@ namespace JsonApiDotNetCore.Internal.Query
     public abstract class BaseAttrQuery
     {
         private readonly IContextEntityProvider _provider;
-        private readonly ContextEntity _requestResource;
+        private readonly ContextEntity _primaryResource;
 
-        public BaseAttrQuery(ContextEntity requestResource, IContextEntityProvider provider, BaseQuery baseQuery)
+        public BaseAttrQuery(ContextEntity primaryResource, IContextEntityProvider provider, BaseQuery baseQuery)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            _requestResource = requestResource ?? throw new ArgumentNullException(nameof(requestResource));
+            _primaryResource = primaryResource ?? throw new ArgumentNullException(nameof(primaryResource));
             
             
             if (baseQuery.IsAttributeOfRelationship)
@@ -47,12 +47,12 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private AttrAttribute GetAttribute(string attribute)
         {
-            return _requestResource.Attributes.FirstOrDefault(attr => attr.Is(attribute));
+            return _primaryResource.Attributes.FirstOrDefault(attr => attr.Is(attribute));
         }
 
         private RelationshipAttribute GetRelationship(string propertyName)
         {
-            return _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
+            return _primaryResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
         }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)

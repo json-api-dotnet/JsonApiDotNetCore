@@ -43,7 +43,7 @@ namespace UnitTests
             // arrange
             var config = GetConfiguration(resourceLinks: global);
             _provider.Setup(m => m.GetContextEntity("articles")).Returns(GetContextEntity<Article>(resourceLinks: resource));
-            var builder = new LinkBuilder(config, GetRequestManager(), _pageManager, _provider.Object);
+            var builder = new LinkBuilder(config, GetRequestManager(), _provider.Object);
 
             // act
             var links = builder.GetResourceLinks("articles", "123");
@@ -54,8 +54,6 @@ namespace UnitTests
             else
                 Assert.Equal(_resourceSelf, links.Self);
         }
-
-
 
         [Theory]
         [InlineData(Link.All, Link.NotConfigured, Link.NotConfigured, _relSelf, _relRelated)]
@@ -92,7 +90,7 @@ namespace UnitTests
             // arrange
             var config = GetConfiguration(relationshipLinks: global);
             _provider.Setup(m => m.GetContextEntity(typeof(Article))).Returns(GetContextEntity<Article>(relationshipLinks: resource));
-            var builder = new LinkBuilder(config, GetRequestManager(), _pageManager, _provider.Object);
+            var builder = new LinkBuilder(config, GetRequestManager(), _provider.Object);
             var attr = new HasOneAttribute(links: relationship) { DependentType = typeof(Author), PublicRelationshipName = "author" };
 
             // act
@@ -138,8 +136,9 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(topLevelLinks: global);
-            var resourceContext = GetContextEntity<Article>(topLevelLinks: resource);
-            var builder = new LinkBuilder(config, GetRequestManager(resourceContext), _pageManager, null);
+            _provider.Setup(m => m.GetContextEntity<Article>()).Returns(GetContextEntity<Article>(topLevelLinks: resource));
+
+            var builder = new PrimaryLinkBuilder<Article>(config, GetRequestManager(), _pageManager, _provider.Object);
 
             // act
             var links = builder.GetTopLevelLinks();

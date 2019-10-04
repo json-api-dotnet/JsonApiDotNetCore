@@ -150,10 +150,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         // triggered by GET /articles/1/relationships/{relationshipName}
-        public virtual async Task<TResource> GetRelationshipsAsync(TId id, string relationshipName) => await GetRelationshipAsync(id, relationshipName);
-
-        // triggered by GET /articles/1/{relationshipName}
-        public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
+        public virtual async Task<TResource> GetRelationshipsAsync(TId id, string relationshipName)
         {
             var relationship = GetRelationship(relationshipName);
 
@@ -175,6 +172,14 @@ namespace JsonApiDotNetCore.Services
             var resource = MapOut(entity);
 
             return resource;
+        }
+
+        // triggered by GET /articles/1/{relationshipName}
+        public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
+        {
+            var relationship = GetRelationship(relationshipName);
+            var resource = await GetRelationshipsAsync(id, relationshipName);
+            return _resourceGraph.GetRelationship(resource, relationship.InternalRelationshipName);
         }
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)

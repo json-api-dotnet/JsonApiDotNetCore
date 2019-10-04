@@ -47,9 +47,9 @@ namespace JsonApiDotNetCore.Managers
             return _contextEntity;
         }
 
-        public void SetRequestResource(ContextEntity requestResource)
+        public void SetRequestResource(ContextEntity primaryResource)
         {
-            _contextEntity = requestResource;
+            _contextEntity = primaryResource;
         }
     }
 }

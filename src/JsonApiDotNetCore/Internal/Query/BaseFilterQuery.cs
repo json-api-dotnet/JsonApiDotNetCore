@@ -9,10 +9,10 @@ namespace JsonApiDotNetCore.Internal.Query
     public class BaseFilterQuery : BaseAttrQuery
     {
         public BaseFilterQuery(
-            ContextEntity requestResource,
+            ContextEntity primaryResource,
             IContextEntityProvider provider,
             FilterQuery filterQuery)
-        : base(requestResource, provider, filterQuery)
+        : base(primaryResource, provider, filterQuery)
         {
             PropertyValue = filterQuery.Value;
             FilterOperation = GetFilterOperation(filterQuery.Operation);

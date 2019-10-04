@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Services
         private readonly ICurrentRequest _currentRequest;
         private readonly IContextEntityProvider _provider;
         private readonly IJsonApiOptions _options;
-        private readonly ContextEntity _requestResource;
+        private readonly ContextEntity _primaryResource;
 
         public QueryParser(IIncludeService includeQuery,
             IInternalFieldsQueryService fieldQuery,
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Services
             _currentRequest = currentRequest;
             _pageQuery = pageQuery;
             _provider = provider;
-            _requestResource = currentRequest.GetRequestResource();
+            _primaryResource = currentRequest.GetRequestResource();
             _options = options;
         }
 
@@ -201,8 +201,8 @@ namespace JsonApiDotNetCore.Services
             var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var includedFields = new List<string> { nameof(Identifiable.Id) };
 
-            var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(typeName));
-            if (relationship == default && string.Equals(typeName, _requestResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
+            var relationship = _primaryResource.Relationships.SingleOrDefault(a => a.Is(typeName));
+            if (relationship == default && string.Equals(typeName, _primaryResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 return includedFields;
 
             var fields = value.Split(QueryConstants.COMMA);
@@ -222,9 +222,9 @@ namespace JsonApiDotNetCore.Services
                 }
                 else
                 {
-                    var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
+                    var attr = _primaryResource.Attributes.SingleOrDefault(a => a.Is(field));
                     if (attr == null)
-                        throw new JsonApiException(400, $"'{_requestResource.EntityName}' does not contain '{field}'.");
+                        throw new JsonApiException(400, $"'{_primaryResource.EntityName}' does not contain '{field}'.");
 
                     _fieldQuery.Register(attr, relationship);
                     // e.g. "Name"
@@ -239,13 +239,13 @@ namespace JsonApiDotNetCore.Services
         {
             try
             {
-                return _requestResource
+                return _primaryResource
                     .Attributes
                     .Single(attr => attr.Is(propertyName));
             }
             catch (InvalidOperationException e)
             {
-                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_requestResource.EntityName}'", e);
+                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_primaryResource.EntityName}'", e);
             }
         }
 

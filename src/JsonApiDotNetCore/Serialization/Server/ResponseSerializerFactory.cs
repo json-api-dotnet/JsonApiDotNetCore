@@ -1,5 +1,8 @@
-﻿using JsonApiDotNetCore.Internal;
+﻿using System;
+using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,12 +14,10 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     public class ResponseSerializerFactory : IJsonApiSerializerFactory
     {
-        private readonly ICurrentRequest _currentRequest;
         private readonly IScopedServiceProvider _provider;
 
-        public ResponseSerializerFactory(ICurrentRequest currentRequest, IScopedServiceProvider provider)
+        public ResponseSerializerFactory(IScopedServiceProvider provider)
         {
-            _currentRequest = currentRequest;
             _provider = provider;
         }
 
@@ -24,10 +25,18 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// Initializes the server serializer using the <see cref="ContextEntity"/>
         /// associated with the current request.
         /// </summary>
-        public IJsonApiSerializer GetSerializer()
+        public IJsonApiSerializer GetSerializer(Type targetType)
         {   
-            var serializerType = typeof(ResponseSerializer<>).MakeGenericType(_currentRequest.GetRequestResource().EntityType);
+            var serializerType = typeof(ResponseSerializer<>).MakeGenericType(ExtractResourceType(targetType));
             return (IJsonApiSerializer)_provider.GetRequiredService(serializerType);
+        }
+
+        private Type ExtractResourceType(Type type)
+        {
+            if (type.Inherits<IIdentifiable>())
+                return type;
+
+            return TypeHelper.GetTypeOfList(type);
         }
     }
 }

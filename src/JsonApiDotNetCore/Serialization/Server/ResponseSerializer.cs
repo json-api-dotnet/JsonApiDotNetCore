@@ -30,13 +30,13 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly IIncludeService _includeQuery;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IMetaBuilder<TResource> _metaBuilder;
-        private readonly Type _requestResourceType;
-        private readonly ILinkBuilder _linkBuilder;
+        private readonly Type _primaryResourceType;
+        private readonly IPrimaryLinkBuilder<TResource> _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private bool _requestRelationshipProvided;
 
         public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
-                                  ILinkBuilder linkBuilder,
+                                  IPrimaryLinkBuilder<TResource> linkBuilder,
                                   IIncludedResourceObjectBuilder includedBuilder,
                                   IFieldsToSerialize fieldsToSerialize,
                                   IIncludeService includeQuery,
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _includedBuilder = includedBuilder;
-            _requestResourceType = typeof(TResource);
+            _primaryResourceType = typeof(TResource);
         }
 
         /// <inheritdoc/>
@@ -72,8 +72,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             if (requestRelationship != null)
             {
                 _requestRelationshipProvided = true;
-                var data = GetRelationshipData(requestRelationship, entity);
-                return JsonConvert.SerializeObject(data);
+                return JsonConvert.SerializeObject(GetRelationshipData(requestRelationship, entity));
             }
 
             var (attributes, relationships) = GetFieldsToSerialize();
@@ -89,7 +88,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()
         {
-            return (GetAttributesToSerialize(_requestResourceType), GetRelationshipsToSerialize(_requestResourceType));
+            return (GetAttributesToSerialize(_primaryResourceType), GetRelationshipsToSerialize(_primaryResourceType));
         }
 
         /// <summary>
