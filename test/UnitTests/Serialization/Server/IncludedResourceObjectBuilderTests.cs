@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Models;
 using Xunit;
-using UnitTests.Serialization.Serializer;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Query;

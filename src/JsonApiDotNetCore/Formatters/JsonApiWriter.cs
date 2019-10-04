@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,15 @@ namespace JsonApiDotNetCore.Formatters
     {
         private readonly ILogger<JsonApiWriter> _logger;
         private readonly IJsonApiSerializer _serializer;
+        private readonly ICurrentRequest _currentRequest;
 
-        public JsonApiWriter(
-            IJsonApiSerializerFactory factory, 
-            ILoggerFactory loggerFactory)
+        public JsonApiWriter(ICurrentRequest currentRequest,
+                             IJsonApiSerializerFactory factory,
+                             ILoggerFactory loggerFactory)
         {
             _serializer = factory.GetSerializer();
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
+            _currentRequest = currentRequest;
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
@@ -47,7 +50,7 @@ namespace JsonApiDotNetCore.Formatters
             }
         }
 
-        private string GetResponseBody(object responseObject) => _serializer.Serialize(responseObject);
+        private string GetResponseBody(object responseObject) => _serializer.Serialize(responseObject, _currentRequest.RequestRelationship);
         private string GetErrorResponse(Exception e)
         {
             var errors = new ErrorCollection();
