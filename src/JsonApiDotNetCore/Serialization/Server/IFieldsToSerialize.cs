@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Responsible for getting the set of fields that are to be included for a

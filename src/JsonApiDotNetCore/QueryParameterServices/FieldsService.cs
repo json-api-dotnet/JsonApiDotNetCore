@@ -5,12 +5,12 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 namespace JsonApiDotNetCore.QueryServices
 {
  
-    public class FieldsQueryService : IFieldsQueryService, IInternalFieldsQueryService
+    public class FieldsService : IFieldsService, IInternalFieldsQueryService
     {
         private List<AttrAttribute> _selectedFields;
         private readonly Dictionary<RelationshipAttribute, List<AttrAttribute>> _selectedRelationshipFields;
 
-        public FieldsQueryService()
+        public FieldsService()
         {
             _selectedFields = new List<AttrAttribute>();
             _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();

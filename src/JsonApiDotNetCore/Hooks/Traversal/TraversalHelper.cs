@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly IContextEntityProvider _provider;
-        private readonly IUpdatedFields _updatedFields;
+        private readonly ITargetedFields _targetedFields;
         /// <summary>
         /// Keeps track of which entities has already been traversed through, to prevent
         /// infinite loops in eg cyclic data structures.
@@ -39,9 +39,9 @@ namespace JsonApiDotNetCore.Hooks
         private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
         public TraversalHelper(
             IContextEntityProvider provider,
-            IUpdatedFields updatedFields)
+            ITargetedFields updatedFields)
         {
-            _updatedFields = updatedFields;
+            _targetedFields = updatedFields;
             _provider = provider;
         }
 
@@ -209,7 +209,7 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
                     bool isContextRelation = false;
-                    var relationshipsToUpdate = _updatedFields.Relationships;
+                    var relationshipsToUpdate = _targetedFields.Relationships;
                     if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.Contains(attr);
                     var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
                     RelationshipProxies[attr] = proxy;

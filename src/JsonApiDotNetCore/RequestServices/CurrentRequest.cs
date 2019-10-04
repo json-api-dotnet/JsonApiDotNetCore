@@ -6,9 +6,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.QueryServices;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace JsonApiDotNetCore.Managers
 {
@@ -21,7 +19,7 @@ namespace JsonApiDotNetCore.Managers
         public string BasePath { get; set; }
         public List<string> IncludedRelationships { get; set; }
         public QuerySet QuerySet { get; set; }
-        public PageQueryService PageManager { get; set; }
+        public PageService PageManager { get; set; }
         public IQueryCollection FullQuerySet { get; set; }
         public QueryParams DisabledQueryParams { get; set; }
         public bool IsRelationshipPath { get; set; }
@@ -41,7 +39,7 @@ namespace JsonApiDotNetCore.Managers
             return QuerySet?.IncludedRelationships;
         }
 
-        /// <summary>s
+        /// <summary>
         /// The main resource of the request.
         /// </summary>
         /// <returns></returns>

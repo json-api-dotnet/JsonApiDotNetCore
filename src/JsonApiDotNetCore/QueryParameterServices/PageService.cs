@@ -4,11 +4,11 @@ using JsonApiDotNetCore.QueryServices.Contracts;
 
 namespace JsonApiDotNetCore.QueryServices
 {
-    public class PageQueryService : IPageQueryService
+    public class PageService : IPageQueryService
     {
         private IJsonApiOptions _options;
 
-        public PageQueryService(IJsonApiOptions options)
+        public PageService(IJsonApiOptions options)
         {
             _options = options;
             DefaultPageSize = _options.DefaultPageSize;

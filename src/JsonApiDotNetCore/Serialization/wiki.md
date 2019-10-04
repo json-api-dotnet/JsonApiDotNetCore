@@ -27,7 +27,7 @@ The client deserializer complements the base deserialization  by
 
 #### RequestDeserializer
 For server-side parsing, no extra parsing needs to be done after the base deserialization is completed. It only needs to keep track of which `AttrAttribute`s and `RelationshipAttribute`s were targeted by a request. This is needed for the internals of JADNC (eg the repository layer).
-* The `AfterProcessField` method is overriden so that every attribute and relationship is registered with the `IUpdatedFields` service after it is processed.
+* The `AfterProcessField` method is overriden so that every attribute and relationship is registered with the `ITargetedFields` service after it is processed.
 
 ## Serialization
 Like with the deserializers, `JsonApiSerializer` is now split up into a `ResponseSerializer` and `RequestSerializer`. Both inherit from a shared `DocumentBuilder` class. Additionally, `DocumentBuilder` inherits from `ResourceObjectBuilder`, which is extended by `IncludedResourceObjectBuilder`.

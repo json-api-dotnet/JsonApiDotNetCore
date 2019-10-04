@@ -94,9 +94,9 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected IFieldsQueryService GetFieldsQuery()
+        protected IFieldsService GetFieldsQuery()
         {
-            var mock = new Mock<IFieldsQueryService>();
+            var mock = new Mock<IFieldsService>();
             return mock.Object;
         }
 
@@ -108,9 +108,9 @@ namespace UnitTests.Serialization.Serializer
             return mock.Object;
         }
 
-        protected IIncludeQueryService GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
+        protected IIncludeService GetIncludedRelationships(List<List<RelationshipAttribute>> inclusionChains = null)
         {
-            var mock = new Mock<IIncludeQueryService>();
+            var mock = new Mock<IIncludeService>();
             if (inclusionChains != null)
                 mock.Setup(m => m.Get()).Returns(inclusionChains);
 

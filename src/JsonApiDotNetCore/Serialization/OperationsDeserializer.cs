@@ -19,14 +19,14 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
     /// </summary>
     public class OperationsDeserializer : IOperationsDeserializer
     {
-        private readonly IUpdatedFields _updatedFieldsManager;
+        private readonly ITargetedFields _targetedFieldsManager;
         private readonly IResourceGraph _resourceGraph;
         private readonly JsonSerializer _jsonSerializer;
 
-        public OperationsDeserializer(IUpdatedFields updatedFieldsManager,
+        public OperationsDeserializer(ITargetedFields updatedFieldsManager,
                                       IResourceGraph resourceGraph)
         {
-            _updatedFieldsManager = updatedFieldsManager;
+            _targetedFieldsManager = updatedFieldsManager;
             _resourceGraph = resourceGraph;
         }
 
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
                         continue;
                     var convertedValue = ConvertAttrValue(newValue, attr.PropertyInfo.PropertyType);
                     attr.SetValue(entity, convertedValue);
-                    _updatedFieldsManager.Attributes.Add(attr);
+                    _targetedFieldsManager.Attributes.Add(attr);
                 }
             }
 
@@ -202,7 +202,7 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                if (convertedValue == null) _updatedFieldsManager.Relationships.Add(hasOneAttr);
+                if (convertedValue == null) _targetedFieldsManager.Relationships.Add(hasOneAttr);
             }
         }
 
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
                 /// store the updated relationship values in this property. For now 
                 /// just assigning null as value, will remove this property later as a whole.
                 /// see #512
-                _updatedFieldsManager.Relationships.Add(hasOneAttr);
+                _targetedFieldsManager.Relationships.Add(hasOneAttr);
             }
         }
 
@@ -254,7 +254,7 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
                 var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
 
                 attr.SetValue(entity, convertedCollection);
-                _updatedFieldsManager.Relationships.Add(attr);
+                _targetedFieldsManager.Relationships.Add(attr);
             }
 
             return entity;

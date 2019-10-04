@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
-        private readonly IIncludeQueryService _includeQuery;
+        private readonly IIncludeService _includeQuery;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _requestResourceType;
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                                 ILinkBuilder linkBuilder,
                                 IIncludedResourceObjectBuilder includedBuilder,
                                 IFieldsToSerialize fieldsToSerialize,
-                                IIncludeQueryService includeQuery,
+                                IIncludeService includeQuery,
                                 IResourceGraph resourceGraph,
                                 IContextEntityProvider provider,
                                 ISerializerSettingsProvider settingsProvider)
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <summary>
-        /// Inspects the included relationship chains (see <see cref="IIncludeQueryService"/>
+        /// Inspects the included relationship chains (see <see cref="IIncludeService"/>
         /// to see if <paramref name="relationship"/> should be included or not.
         /// </summary>
         private bool ShouldInclude(RelationshipAttribute relationship, out List<RelationshipAttribute> inclusionChain)

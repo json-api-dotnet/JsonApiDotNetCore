@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.QueryServices.Contracts
     /// <summary>
     /// Query service to access sparse field selection.
     /// </summary>
-    public interface IFieldsQueryService
+    public interface IFieldsService
     {
         /// <summary>
         /// Gets the list of targeted fields. In a relationship is supplied,

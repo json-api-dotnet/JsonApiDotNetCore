@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Container to register which attributes and relationships are targeted by the current operation.
     /// </summary>
-    public interface IUpdatedFields
+    public interface ITargetedFields
     {
         /// <summary>
         /// List of attributes that are updated by a request

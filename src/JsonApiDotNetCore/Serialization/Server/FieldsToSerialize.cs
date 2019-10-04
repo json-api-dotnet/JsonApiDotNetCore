@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.QueryServices.Contracts;
 using System.Linq;
+using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <inheritdoc/>
     /// TODO: explore option out caching so we don't have to recalculate the list
@@ -14,14 +15,14 @@ namespace JsonApiDotNetCore.Models
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IContextEntityProvider _resourceContextProvider;
-        private readonly IFieldsQueryService _fieldsQuery;
+        private readonly IFieldsService _fieldsQuery;
         private readonly IServiceProvider _provider;
         private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
         private readonly IFieldsExplorer _fieldExplorer;
 
         public FieldsToSerialize(IFieldsExplorer fieldExplorer,
                                  IContextEntityProvider resourceContextProvider,
-                                 IFieldsQueryService fieldsQuery,
+                                 IFieldsService fieldsQuery,
                                  IServiceProvider provider)
         {
             _fieldExplorer = fieldExplorer;

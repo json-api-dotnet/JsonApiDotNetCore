@@ -12,14 +12,14 @@ namespace UnitTests.Serialization.Deserializer
     public class RequestDeserializerTests : DeserializerTestsSetup
     {
         private readonly RequestDeserializer _deserializer;
-        private readonly Mock<IUpdatedFields> _fieldsManagerMock = new Mock<IUpdatedFields>();
+        private readonly Mock<ITargetedFields> _fieldsManagerMock = new Mock<ITargetedFields>();
         public RequestDeserializerTests() : base()
         {
             _deserializer = new RequestDeserializer(_resourceGraph, _fieldsManagerMock.Object);
         }
 
         [Fact]
-        public void DeserializeAttributes_VariousUpdatedMembers_RegistersUpdatedFields()
+        public void DeserializeAttributes_VariousUpdatedMembers_RegistersTargetedFields()
         {
             // arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);

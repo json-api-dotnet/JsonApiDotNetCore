@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     public class RequestDeserializer : DocumentParser, IJsonApiDeserializer
     {
-        private readonly IUpdatedFields  _updatedFields;
+        private readonly ITargetedFields  _targetedFields;
 
         public RequestDeserializer(IResourceGraph resourceGraph,
-                                  IUpdatedFields  updatedFields) : base(resourceGraph)
+                                  ITargetedFields  updatedFields) : base(resourceGraph)
         {
-            _updatedFields = updatedFields;
+            _targetedFields = updatedFields;
         }
 
         /// <inheritdoc/>
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         /// <summary>
         /// Additional procesing required for server deserialization. Flags a
-        /// processed attribute or relationship as updated using <see cref="IUpdatedFields"/>.
+        /// processed attribute or relationship as updated using <see cref="ITargetedFields"/>.
         /// </summary>
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
@@ -35,12 +35,12 @@ namespace JsonApiDotNetCore.Serialization.Server
             if (field is AttrAttribute attr)
             {
                 if (!attr.IsImmutable)
-                    _updatedFields.Attributes.Add(attr);
+                    _targetedFields.Attributes.Add(attr);
                 else
                     throw new InvalidOperationException($"Attribute {attr.PublicAttributeName} is immutable and therefore cannot be updated.");
             }
             else if (field is RelationshipAttribute relationship)
-                _updatedFields.Relationships.Add(relationship);
+                _targetedFields.Relationships.Add(relationship);
         }
     }
 }

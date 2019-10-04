@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Data
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly ICurrentRequest _currentRequest;
-        private readonly IUpdatedFields _updatedFields;
+        private readonly ITargetedFields _targetedFields;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
         private readonly ILogger _logger;
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Data
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
         public DefaultEntityRepository(
-            IUpdatedFields updatedFields,
+            ITargetedFields updatedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
@@ -44,14 +44,14 @@ namespace JsonApiDotNetCore.Data
 
         public DefaultEntityRepository(
             ILoggerFactory loggerFactory,
-            IUpdatedFields updatedFields,
+            ITargetedFields updatedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
             _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
-            _updatedFields = updatedFields;
+            _targetedFields = updatedFields;
             _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
             _context = contextResolver.GetContext();
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            foreach (var relationshipAttr in _updatedFields.Relationships)
+            foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCore.Data
         public void DetachRelationshipPointers(TEntity entity)
         {
 
-            foreach (var relationshipAttr in _updatedFields.Relationships)
+            foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 if (relationshipAttr is HasOneAttribute hasOneAttr)
                 {
@@ -247,10 +247,10 @@ namespace JsonApiDotNetCore.Data
             if (databaseEntity == null)
                 return null;
 
-            foreach (var attr in _updatedFields.Attributes)
+            foreach (var attr in _targetedFields.Attributes)
                 attr.SetValue(databaseEntity, attr.GetValue(updatedEntity));
 
-            foreach (var relationshipAttr in _updatedFields.Relationships)
+            foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 /// loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
@@ -357,6 +357,17 @@ namespace JsonApiDotNetCore.Data
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, params RelationshipAttribute[] inclusionChain)
+        {
+            string internalRelationshipPath = null;
+            foreach (var relationship in inclusionChain)
+                internalRelationshipPath = (internalRelationshipPath == null)
+                    ? relationship.RelationshipPath
+                    : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
+
+            return entities.Include(internalRelationshipPath);
         }
 
         /// <inheritdoc />
@@ -558,7 +569,7 @@ namespace JsonApiDotNetCore.Data
     {
 
         public DefaultEntityRepository(
-            IUpdatedFields updatedFields,
+            ITargetedFields updatedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
@@ -569,7 +580,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         public DefaultEntityRepository(ILoggerFactory loggerFactory,
-                                       IUpdatedFields updatedFields,
+                                       ITargetedFields updatedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
                                        IGenericProcessorFactory genericProcessorFactory,

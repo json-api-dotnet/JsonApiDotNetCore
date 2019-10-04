@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
-    public abstract class RelationshipAttribute : Attribute, IResourceField
+    public abstract class RelationshipAttribute : Attribute, IResourceField, IRelationshipField
     {
         protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude, string mappedBy)
         {

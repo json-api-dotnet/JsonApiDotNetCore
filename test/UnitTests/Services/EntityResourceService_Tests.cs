@@ -20,7 +20,7 @@ namespace UnitTests.Services
         private readonly ILoggerFactory _loggerFactory = new Mock<ILoggerFactory>().Object;
         private readonly Mock<ICurrentRequest> _crMock;
         private readonly Mock<IPageQueryService> _pgsMock;
-        private readonly Mock<IUpdatedFields> _ufMock;
+        private readonly Mock<ITargetedFields> _ufMock;
 
         public EntityResourceService_Tests()
         {
@@ -80,7 +80,7 @@ namespace UnitTests.Services
 
         private EntityResourceService<TodoItem> GetService()
         {
-            return new EntityResourceService<TodoItem>(_repositoryMock.Object, new JsonApiOptions(), _ufMock.Object, _crMock.Object, _pgsMock.Object, null, null);
+            return new EntityResourceService<TodoItem>(_repositoryMock.Object, new JsonApiOptions(), _ufMock.Object, _crMock.Object, null, _pgsMock.Object, null, null);
         }
     }
 }

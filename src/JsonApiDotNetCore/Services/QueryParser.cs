@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
-        private readonly IIncludeQueryService _includeQuery;
+        private readonly IIncludeService _includeQuery;
         private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
         private readonly ICurrentRequest _currentRequest;
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiOptions _options;
         private readonly ContextEntity _requestResource;
 
-        public QueryParser(IIncludeQueryService includeQuery,
+        public QueryParser(IIncludeService includeQuery,
             IInternalFieldsQueryService fieldQuery,
             ICurrentRequest currentRequest,
             IContextEntityProvider provider,

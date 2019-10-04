@@ -19,19 +19,19 @@ namespace JsonApiDotNetCore.Hooks
     {
         internal readonly IHookExecutorHelper _executorHelper;
         private readonly ITraversalHelper _traversalHelper;
-        private readonly IIncludeQueryService _includeQuery;
-        private readonly IUpdatedFields _updatedFields;
+        private readonly IIncludeService _includeQuery;
+        private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _graph;
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
-            IUpdatedFields updatedFields,
-            IIncludeQueryService includedRelationships,
+            ITargetedFields updatedFields,
+            IIncludeService includedRelationships,
             IResourceGraph resourceGraph)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
-            _updatedFields = updatedFields;
+            _targetedFields = updatedFields;
             _includeQuery = includedRelationships;
             _graph = resourceGraph;
         }
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                 var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _updatedFields);
+                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _targetedFields);
                 IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);

@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Extensions
 
             services.AddScoped(typeof(ResponseSerializer<>));
             services.AddScoped<ICurrentRequest, CurrentRequest>();
-            services.AddScoped<IPageQueryService, PageQueryService>();
+            services.AddScoped<IPageQueryService, PageService>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
@@ -213,11 +213,11 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
-            services.AddScoped<IIncludeQueryService, IncludeQueryService>();
-            services.AddScoped<IIncludeQueryService, IncludeQueryService>();
-            services.AddScoped<IFieldsQueryService, FieldsQueryService>();
-            services.AddScoped<IInternalFieldsQueryService, FieldsQueryService>();
-            services.AddScoped<IUpdatedFields, UpdatedFields>();
+            services.AddScoped<IIncludeService, IncludeService>();
+            services.AddScoped<IIncludeService, IncludeService>();
+            services.AddScoped<IFieldsService, FieldsService>();
+            services.AddScoped<IInternalFieldsQueryService, FieldsService>();
+            services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
             services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
             services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();

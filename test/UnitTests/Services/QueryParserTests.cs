@@ -21,7 +21,7 @@ namespace UnitTests.Services
         private readonly Mock<IQueryCollection> _queryCollectionMock;
         private readonly Mock<IPageQueryService> _pageQueryMock;
         private readonly IInternalFieldsQueryService _fieldsQuery = new Mock<IInternalFieldsQueryService>().Object;
-        private readonly IIncludeQueryService _includeQuery = new Mock<IIncludeQueryService>().Object;
+        private readonly IIncludeService _includeQuery = new Mock<IIncludeService>().Object;
         private readonly IContextEntityProvider _graph = new Mock<IContextEntityProvider>().Object;
 
         public QueryParserTests()

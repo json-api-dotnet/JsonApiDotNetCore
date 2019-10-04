@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <inheritdoc/>
-    public class UpdatedFields : IUpdatedFields
+    public class TargetedFields : ITargetedFields
     {
         /// <inheritdoc/>
         public List<AttrAttribute> Attributes { get; set; } = new List<AttrAttribute>();

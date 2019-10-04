@@ -142,17 +142,17 @@ namespace UnitTests.ResourceHooks
 
     public class HooksTestsSetup : HooksDummyData
     {
-        (IResourceGraph, Mock<IUpdatedFields>, Mock<IIncludeQueryService>, Mock<IGenericProcessorFactory>, IJsonApiOptions) CreateMocks()
+        (IResourceGraph, Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericProcessorFactory>, IJsonApiOptions) CreateMocks()
         {
             var pfMock = new Mock<IGenericProcessorFactory>();
             var graph = _graph;
-            var ufMock = new Mock<IUpdatedFields>();
-            var iqsMock = new Mock<IIncludeQueryService>();
+            var ufMock = new Mock<ITargetedFields>();
+            var iqsMock = new Mock<IIncludeService>();
             var optionsMock = new JsonApiOptions { LoaDatabaseValues = false };
             return (graph, ufMock, iqsMock, pfMock, optionsMock);
         }
 
-        internal (Mock<IIncludeQueryService>, ResourceHookExecutor, Mock<IResourceHookContainer<TMain>>) CreateTestObjects<TMain>(IHooksDiscovery<TMain> mainDiscovery = null)
+        internal (Mock<IIncludeService>, ResourceHookExecutor, Mock<IResourceHookContainer<TMain>>) CreateTestObjects<TMain>(IHooksDiscovery<TMain> mainDiscovery = null)
             where TMain : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
@@ -170,7 +170,7 @@ namespace UnitTests.ResourceHooks
             return (iqMock, hookExecutor, mainResource);
         }
 
-        protected (Mock<IIncludeQueryService>, Mock<IUpdatedFields>, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
+        protected (Mock<IIncludeService>, Mock<ITargetedFields>, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TNested>>)
         CreateTestObjects<TMain, TNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TNested> nestedDiscovery = null,
@@ -198,7 +198,7 @@ namespace UnitTests.ResourceHooks
             return (iqMock, ufMock, hookExecutor, mainResource, nestedResource);
         }
 
-        protected (Mock<IIncludeQueryService>, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TFirstNested>>, Mock<IResourceHookContainer<TSecondNested>>)
+        protected (Mock<IIncludeService>, IResourceHookExecutor, Mock<IResourceHookContainer<TMain>>, Mock<IResourceHookContainer<TFirstNested>>, Mock<IResourceHookContainer<TSecondNested>>)
         CreateTestObjects<TMain, TFirstNested, TSecondNested>(
             IHooksDiscovery<TMain> mainDiscovery = null,
             IHooksDiscovery<TFirstNested> firstNestedDiscovery = null,
