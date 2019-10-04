@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.QueryServices.Contracts
+﻿namespace JsonApiDotNetCore.Query
 {
     /// <summary>
     /// Base interface that all query parameter services should inherit.

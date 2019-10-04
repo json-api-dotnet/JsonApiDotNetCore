@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -36,6 +36,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceMapper _mapper;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
+        private readonly ContextEntity _currentRequestResource;
 
         public EntityResourceService(
                 IEntityRepository<TEntity, TId> repository,
@@ -63,6 +64,7 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor = hookExecutor;
             _mapper = mapper;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+            _currentRequestResource = resourceGraph.GetContextEntity<TResource>();
         }
 
         public virtual async Task<TResource> CreateAsync(TResource resource)
@@ -153,30 +155,35 @@ namespace JsonApiDotNetCore.Services
         // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
+            RelationshipAttribute relationship = GetRelationship(relationshipName);
+
+            // BeforeRead hook execution
             _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.GetRelationship, id.ToString());
-            var entity = await _repository.GetAndIncludeAsync(id, relationshipName);
+
+            // TODO: it would be better if we could distinguish whether or not the relationship was not found,
+            // vs the relationship not being set on the instance of T
+            var entity = await _repository.GetAndIncludeAsync(id, relationship);
+            if (entity == null)
+                throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
+
             if (!IsNull(_hookExecutor, entity))
-            {
+            {   // AfterRead and OnReturn resource hook execution.
                 _hookExecutor.AfterRead(AsList(entity), ResourcePipeline.GetRelationship);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.GetRelationship).SingleOrDefault();
             }
 
-            // TODO: it would be better if we could distinguish whether or not the relationship was not found,
-            // vs the relationship not being set on the instance of T
-            if (entity == null)
-            {
-                throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
-            }
-
             var resource = MapOut(entity);
 
-            // compound-property -> CompoundProperty
-            var navigationPropertyName = _resourceGraph.GetRelationshipName<TResource>(relationshipName);
-            if (navigationPropertyName == null)
-                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
-
-            var relationshipValue = _resourceGraph.GetRelationship(resource, navigationPropertyName);
+            var relationshipValue = _resourceGraph.GetRelationship(resource, relationship.InternalRelationshipName);
             return relationshipValue;
+        }
+
+        private RelationshipAttribute GetRelationship(string relationshipName)
+        {
+            var relationship = _currentRequestResource.Relationships.Single(r => r.Is(relationshipName));
+            if (relationship == null)
+                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+            return relationship;
         }
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
@@ -196,16 +203,14 @@ namespace JsonApiDotNetCore.Services
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<ResourceObject> relationships)
         {
-            var entity = await _repository.GetAndIncludeAsync(id, relationshipName);
+
+            RelationshipAttribute relationship = GetRelationship(relationshipName);
+
+            var entity = await _repository.GetAndIncludeAsync(id, relationship);
             if (entity == null)
             {
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
             }
-
-            var relationship = _resourceGraph
-                .GetContextEntity(typeof(TResource))
-                .Relationships
-                .FirstOrDefault(r => r.Is(relationshipName));
 
             var relationshipType = relationship.DependentType;
 
@@ -217,7 +222,8 @@ namespace JsonApiDotNetCore.Services
                     $"could not be found on entity.");
             }
 
-            /// Why are we changing this value on the attribute and setting it back below? This feels very hacky
+            /// Why are we changing this value on the attribute and setting it back below?
+            /// This feels extremely hacky
             relationship.Type = relationship.IsHasMany
                 ? entityProperty.PropertyType.GetGenericArguments()[0]
                 : entityProperty.PropertyType;

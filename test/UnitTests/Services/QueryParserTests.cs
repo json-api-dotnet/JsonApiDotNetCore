@@ -6,7 +6,8 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -33,7 +34,7 @@ namespace UnitTests.Services
 
         private QueryParser GetQueryParser()
         {
-            return new QueryParser(_includeQuery, _fieldsQuery, _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
+            return new QueryParser(new IncludeService(), _fieldsQuery, _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
         }
 
         [Fact]

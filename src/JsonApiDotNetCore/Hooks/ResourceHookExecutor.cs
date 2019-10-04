@@ -10,7 +10,7 @@ using DependentType = System.Type;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Hooks
 {

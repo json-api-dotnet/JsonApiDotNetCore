@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.QueryServices.Contracts
+namespace JsonApiDotNetCore.Query
 {
     /// <summary>
     /// Query service to access the inclusion chains.

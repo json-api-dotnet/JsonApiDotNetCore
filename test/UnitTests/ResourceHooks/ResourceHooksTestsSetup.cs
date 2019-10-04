@@ -18,7 +18,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 
 namespace UnitTests.ResourceHooks
 {

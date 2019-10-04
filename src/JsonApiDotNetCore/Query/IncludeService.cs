@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 
-namespace JsonApiDotNetCore.QueryServices
+namespace JsonApiDotNetCore.Query
 {
     public class IncludeService : IIncludeService, IQueryParameterService
     {
@@ -52,14 +52,14 @@ namespace JsonApiDotNetCore.QueryServices
             var parsedChain = new List<RelationshipAttribute>();
             var resourceContext = _currentRequest.GetRequestResource();
             var chainParts = chain.Split(QueryConstants.DOT);
-            foreach (var requestedRelationship in chainParts)
+            foreach (var relationshipName in chainParts)
             {
-                var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
+                var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == relationshipName);
                 if (relationship == null)
-                    ThrowInvalidRelationshipError(resourceContext, requestedRelationship);
+                    ThrowInvalidRelationshipError(resourceContext, relationshipName);
 
                 if (relationship.CanInclude == false)
-                    ThrowCannotIncludeError(resourceContext, requestedRelationship);
+                    ThrowCannotIncludeError(resourceContext, relationshipName);
 
                 parsedChain.Add(relationship);
                 resourceContext = _provider.GetContextEntity(relationship.PrincipalType);

@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders

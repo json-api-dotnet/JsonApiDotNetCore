@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 

@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace UnitTests

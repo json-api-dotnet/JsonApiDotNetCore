@@ -46,14 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\JsonApiDocuments\" />
-    <Folder Include="QueryParameterServices\" />
+    <Folder Include="Query\" />
     <Folder Include="Internal\Exceptions\" />
     <Folder Include="Models\Annotation\" />
     <Folder Include="Serialization\Common\" />
     <Folder Include="Serialization\Client\" />
     <Folder Include="Serialization\Server\" />
     <Folder Include="Serialization\Server\Builders\" />
-    <Folder Include="QueryParameterServices\Contracts\" />
-    <Folder Include="QueryParameterServices\Common\" />
+    <Folder Include="Query\Contracts\" />
+    <Folder Include="Query\Common\" />
   </ItemGroup>
 </Project>

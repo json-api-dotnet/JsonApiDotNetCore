@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -10,9 +10,9 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class ResponseSerializerSettingsProvider : ISerializerSettingsProvider
     {
         private readonly IJsonApiOptions _options;
-        private readonly IAttributeBehaviourQueryService _attributeBehaviour;
+        private readonly IAttributeBehaviourService _attributeBehaviour;
 
-        public ResponseSerializerSettingsProvider(IJsonApiOptions options, IAttributeBehaviourQueryService attributeBehaviour)
+        public ResponseSerializerSettingsProvider(IJsonApiOptions options, IAttributeBehaviourService attributeBehaviour)
         {
             _options = options;
             _attributeBehaviour = attributeBehaviour;

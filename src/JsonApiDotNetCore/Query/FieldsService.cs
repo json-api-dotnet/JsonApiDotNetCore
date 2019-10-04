@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 
-namespace JsonApiDotNetCore.QueryServices
+namespace JsonApiDotNetCore.Query
+
 {
  
     public class FieldsService : IFieldsService, IInternalFieldsQueryService

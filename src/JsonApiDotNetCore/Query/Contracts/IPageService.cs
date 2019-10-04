@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCore.QueryServices.Contracts
+namespace JsonApiDotNetCore.Query
 {
     /// <summary>
     /// The former page manager. Needs some work.

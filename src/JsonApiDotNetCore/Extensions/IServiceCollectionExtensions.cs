@@ -22,9 +22,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Deserializer;
-using JsonApiDotNetCore.QueryServices;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 
@@ -224,6 +224,8 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
             services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
+            services.AddScoped<ISerializerSettingsProvider, ResponseSerializerSettingsProvider>();
+            services.AddScoped<IAttributeBehaviourService, AttributeBehaviourService>();
 
             if (jsonApiOptions.EnableResourceHooks)
             {

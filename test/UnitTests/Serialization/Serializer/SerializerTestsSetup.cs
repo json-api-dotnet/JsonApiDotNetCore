@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCore.QueryServices.Contracts;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Server.Builders;
@@ -56,7 +56,7 @@ namespace UnitTests.Serialization.Serializer
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider()) ;
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
         }
 
         protected ISerializerSettingsProvider GetSerializerSettingsProvider()
@@ -103,7 +103,7 @@ namespace UnitTests.Serialization.Serializer
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>( (t, r) => _resourceGraph.GetContextEntity(t).Attributes);
+            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetContextEntity(t).Attributes);
             mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Relationships);
             return mock.Object;
         }

@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Data
             IGenericProcessorFactory genericProcessorFactory,
             ResourceDefinition<TEntity> resourceDefinition = null)
         {
-            _logger = loggerFactory.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
+            _logger = loggerFactory?.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
             _targetedFields = updatedFields;
             _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
@@ -113,10 +113,10 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName)
+        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship)
         {
-            _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationshipName})");
-            var includedSet = Include(Select(Get(), _currentRequest.QuerySet?.Fields), relationshipName);
+            _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationship.PublicRelationshipName})");
+            var includedSet = Include(Select(Get(), _currentRequest.QuerySet?.Fields), relationship);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
             return result;
         }

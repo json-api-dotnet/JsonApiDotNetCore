@@ -1,12 +1,12 @@
 ﻿using JsonApiDotNetCore.Serialization;
 
-namespace JsonApiDotNetCore.QueryServices.Contracts
+namespace JsonApiDotNetCore.Query
 {
     /// <summary>
     /// Encapsulates client overrides of omit null and omit default values behaviour
     /// in <see cref="SerializerSettings"/>
     /// </summary>
-    public interface IAttributeBehaviourQueryService
+    public interface IAttributeBehaviourService: IQueryParameterService
     {
         /// <summary>
         /// Value of client query param overriding the omit null values behaviour in the server serializer

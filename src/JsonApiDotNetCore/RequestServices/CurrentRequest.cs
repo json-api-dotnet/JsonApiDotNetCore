@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.QueryServices;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -14,8 +14,6 @@ namespace JsonApiDotNetCore.Managers
     class CurrentRequest : ICurrentRequest
     {
         private ContextEntity _contextEntity;
-        private IQueryParser _queryParser;
-
         public string BasePath { get; set; }
         public List<string> IncludedRelationships { get; set; }
         public QuerySet QuerySet { get; set; }
