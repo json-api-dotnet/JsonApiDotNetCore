@@ -6,7 +6,7 @@ using System.Linq;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 
-namespace UnitTests.Serialization.IncludedRelationshipBuilder
+namespace UnitTests.Serialization.Server
 {
     public class IncludedResourceObjectBuilderTests : SerializerTestsSetup
     {

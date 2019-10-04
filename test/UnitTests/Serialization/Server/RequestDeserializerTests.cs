@@ -7,7 +7,7 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace UnitTests.Serialization.Deserializer
+namespace UnitTests.Serialization.Server
 {
     public class RequestDeserializerTests : DeserializerTestsSetup
     {

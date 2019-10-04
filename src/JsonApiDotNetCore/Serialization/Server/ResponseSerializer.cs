@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Query;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -53,11 +54,11 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <inheritdoc/>
-        public string Serialize(object content)
+        public string Serialize(object data)
         {
-            if (content is IEnumerable entities)
+            if (data is IEnumerable entities)
                 return SerializeMany(entities);
-            return SerializeSingle((IIdentifiable)content);
+            return SerializeSingle((IIdentifiable)data);
         }
 
         /// <summary>
@@ -68,13 +69,20 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeSingle(IIdentifiable entity)
         {
-            var attributes = GetAttributesToSerialize(_requestResourceType);
-            var relationships = GetRelationshipsToSerialize(_requestResourceType);
+            var (attributes, relationships) = GetFieldsToSerialize(entity?.GetType());
             var document = Build(entity, attributes, relationships);
             var resourceObject = document.SingleData;
             if (resourceObject != null) resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
             AddTopLevelObjects(document);
             return JsonConvert.SerializeObject(document);
+        }
+
+        private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize(Type targetType)
+        {
+            if (targetType == null || targetType != _requestResourceType)
+                return (new List<AttrAttribute>(), new List<RelationshipAttribute>());
+
+            return (GetAttributesToSerialize(_requestResourceType), GetRelationshipsToSerialize(_requestResourceType));
         }
 
         /// <summary>
@@ -85,8 +93,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeMany(IEnumerable entities)
         {
-            var attributes = GetAttributesToSerialize(_requestResourceType);
-            var relationships = GetRelationshipsToSerialize(_requestResourceType);
+            var (attributes, relationships) = GetFieldsToSerialize(TypeHelper.GetListInnerType(entities));
             var document = Build(entities, attributes, relationships);
             foreach (ResourceObject resourceObject in (IEnumerable)document.Data)
             {
@@ -99,6 +106,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             AddTopLevelObjects(document);
             return JsonConvert.SerializeObject(document);
         }
+
 
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.

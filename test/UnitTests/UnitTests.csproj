@@ -23,7 +23,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Serialization\Serializer\" />
-    <Folder Include="Serialization\Deserializer\" />
+    <Folder Include="Serialization\Common\" />
+    <Folder Include="Serialization\Client\" />
+    <Folder Include="Serialization\Server\" />
   </ItemGroup>
 </Project>

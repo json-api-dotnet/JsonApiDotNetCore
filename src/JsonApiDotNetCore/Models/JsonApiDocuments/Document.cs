@@ -15,11 +15,19 @@ namespace JsonApiDotNetCore.Models
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }
 
+
+
         /// <summary>
         /// see "links" in https://jsonapi.org/format/#document-top-level
         /// </summary>
         [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public TopLevelLinks Links { get; set; }
+
+        ///// <summary>
+        ///// see "responses" in https://jsonapi.org/format/#fetching-relationships
+        ///// </summary>
+        //[JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
+        //public RelationshipLinks TopLevelRelationshipLinks { get; set; }
 
         /// <summary>
         /// see "included" in https://jsonapi.org/format/#document-top-level

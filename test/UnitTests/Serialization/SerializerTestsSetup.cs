@@ -12,7 +12,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Services;
 using Moq;
 
-namespace UnitTests.Serialization.Serializer
+namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {

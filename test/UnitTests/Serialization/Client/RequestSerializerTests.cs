@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using Xunit;
 
-namespace UnitTests.Serialization.Serializer
+namespace UnitTests.Serialization.Client
 {
     public class RequestSerializerTests : SerializerTestsSetup
     {

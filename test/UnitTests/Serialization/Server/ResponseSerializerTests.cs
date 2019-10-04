@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
 using Xunit;
 
-namespace UnitTests.Serialization.Serializer
+namespace UnitTests.Serialization.Server
 {
     public class ResponseSerializerTests : SerializerTestsSetup
     {
-
         [Fact]
-        public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
+        public void SerializeSingle_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
@@ -46,7 +44,7 @@ namespace UnitTests.Serialization.Serializer
         }
 
         [Fact]
-        public void SerializeMany_ResourceWithDefaultTargetFields_CanBuild()
+        public void SerializeMany_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
@@ -378,7 +376,6 @@ namespace UnitTests.Serialization.Serializer
             Assert.Equal(expected, serialized);
         }
 
-
         [Fact]
         public void SerializeSingle_NullWithLinksAndMeta_StillShowsLinksAndMeta()
         {
@@ -405,6 +402,96 @@ namespace UnitTests.Serialization.Serializer
             }";
 
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeSingle_NullResultFromRelationshipPath_CanSerialize()
+        {
+            // arrange
+            OneToOneDependent entity = null;
+            var serializer = GetResponseSerializer<OneToOnePrincipal>();
+
+            // act
+            string serialized = serializer.SerializeSingle(entity);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"": null
+            }";
+
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeSingle_PopulatedResultFromRelationshipPath_CanSerialize()
+        {
+            // arrange
+            var entity = new OneToOneDependent() { Id = 1 };
+            var serializer = GetResponseSerializer<OneToOnePrincipal>();
+
+            // act
+            string serialized = serializer.SerializeSingle(entity);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"":{
+                  ""type"":""one-to-one-dependents"",
+                  ""id"":""1""
+               }
+            }";
+
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeMany_NullResultFromRelationshipPath_CanSerialize()
+        {
+            // arrange
+            var entities = new List<OneToManyRequiredDependent>();
+            var serializer = GetResponseSerializer<OneToManyPrincipal>();
+
+            // act
+            string serialized = serializer.SerializeMany(entities);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"": []
+            }";
+
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+
+            Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void SerializeMany_PopulatedResultFromRelationshipPath_CanSerialize()
+        {
+            // arrange
+            var entities = new List<OneToManyRequiredDependent> { new OneToManyRequiredDependent() { Id = 1 } };
+            var serializer = GetResponseSerializer<OneToManyPrincipal>();
+
+            // act
+            string serialized = serializer.SerializeMany(entities);
+
+            // assert
+            var expectedFormatted =
+            @"{
+               ""data"":[{
+                  ""type"":""one-to-many-required-dependents"",
+                  ""id"":""1""
+               }]
+            }";
+
+            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
+
             Assert.Equal(expected, serialized);
         }
     }

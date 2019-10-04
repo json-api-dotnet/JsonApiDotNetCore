@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Deserializer;
 using System.Collections.Generic;
 
-namespace UnitTests.Serialization.Deserializer
+namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {

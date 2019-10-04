@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Serialization.Client;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace UnitTests.Serialization.Deserializer
+namespace UnitTests.Serialization.Client
 {
     public class ResponseDeserializerTests : DeserializerTestsSetup
     {
@@ -56,9 +56,10 @@ namespace UnitTests.Serialization.Deserializer
             // assert
             Assert.Null(result.Data);
             Assert.NotNull(result.Links);
-            Assert.Equal(_linkValues["self"], result.Links.Self);
-            Assert.Equal(_linkValues["next"], result.Links.Next);
-            Assert.Equal(_linkValues["last"], result.Links.Last);
+            TopLevelLinks links = (TopLevelLinks)result.Links;
+            Assert.Equal(_linkValues["self"], links.Self);
+            Assert.Equal(_linkValues["next"], links.Next);
+            Assert.Equal(_linkValues["last"], links.Last);
         }
 
         [Fact]
@@ -78,9 +79,10 @@ namespace UnitTests.Serialization.Deserializer
             // assert
             Assert.Empty(result.Data);
             Assert.NotNull(result.Links);
-            Assert.Equal(_linkValues["self"], result.Links.Self);
-            Assert.Equal(_linkValues["next"], result.Links.Next);
-            Assert.Equal(_linkValues["last"], result.Links.Last);
+            TopLevelLinks links = (TopLevelLinks)result.Links;
+            Assert.Equal(_linkValues["self"], links.Self);
+            Assert.Equal(_linkValues["next"], links.Next);
+            Assert.Equal(_linkValues["last"], links.Last);
         }
 
         [Fact]
