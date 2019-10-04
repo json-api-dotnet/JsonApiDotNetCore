@@ -25,18 +25,18 @@ namespace JsonApiDotNetCore.Services
         private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
         private readonly ICurrentRequest _currentRequest;
+        private readonly IContextEntityProvider _provider;
         private readonly IJsonApiOptions _options;
         private readonly ContextEntity _requestResource;
-        private readonly IContextEntityProvider _provider;
 
-        public QueryParser(IInternalIncludeQueryService includedRelationships,
+        public QueryParser(IInternalIncludeQueryService includeQuery,
             IInternalFieldsQueryService fieldQuery,
             ICurrentRequest currentRequest,
-            IPageQueryService pageQuery,
             IContextEntityProvider provider,
+            IPageQueryService pageQuery,
             IJsonApiOptions options)
         {
-            _includeQuery = includedRelationships;
+            _includeQuery = includeQuery;
             _fieldQuery = fieldQuery;
             _currentRequest = currentRequest;
             _pageQuery = pageQuery;
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Services
                 if (pair.Key.StartsWith(QueryConstants.INCLUDE, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
-                        querySet.IncludedRelationships = ParseIncludedRelationships(pair.Value);
+                        _includeQuery.Parse(pair.Value);
                     continue;
                 }
 
@@ -192,32 +192,6 @@ namespace JsonApiDotNetCore.Services
             return sortParameters;
         }
 
-        protected virtual List<string> ParseIncludedRelationships(string value)
-        {
-            var inclusions = value.Split(QueryConstants.COMMA).ToList();
-            foreach (var chain in inclusions)
-            {
-                var parsedChain = new List<RelationshipAttribute>();
-                var resourceContext = _currentRequest.GetRequestResource();
-                var splittedPath = chain.Split(QueryConstants.DOT);
-                foreach (var requestedRelationship in splittedPath)
-                {
-                    var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
-                    if (relationship == null)
-                        throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.EntityName}",
-                            $"{resourceContext.EntityName} does not have a relationship named {requestedRelationship}");
-
-                    if (relationship.CanInclude == false)
-                        throw new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.EntityName} is not allowed");
-
-                    parsedChain.Add(relationship);
-                    resourceContext = _provider.GetContextEntity(relationship.PrincipalType);
-                }
-                _includeQuery.Register(parsedChain);
-            }
-
-            return inclusions;
-        }
 
         protected virtual List<string> ParseFieldsQuery(string key, string value)
         {
