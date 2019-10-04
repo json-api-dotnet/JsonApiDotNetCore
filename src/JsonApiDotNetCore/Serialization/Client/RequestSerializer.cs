@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Serialization.Request.Contracts;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Serialization.Request
+namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
     /// Client serializer implementation of <see cref="DocumentBuilder"/>

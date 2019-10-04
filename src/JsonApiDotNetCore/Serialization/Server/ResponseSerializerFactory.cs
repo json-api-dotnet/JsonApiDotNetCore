@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Serialization.Request.Contracts;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonApiDotNetCore.Serialization.Response
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// A factory class to abstract away the initialization of the serializer from the

@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryServices.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Response
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// This implementation of the behaviour provider reads the query params that

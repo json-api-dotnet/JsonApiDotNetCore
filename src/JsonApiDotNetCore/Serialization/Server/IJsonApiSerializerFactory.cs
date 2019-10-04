@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Serialization.Request.Contracts
+﻿namespace JsonApiDotNetCore.Serialization.Server
 {
     public interface IJsonApiSerializerFactory
     {

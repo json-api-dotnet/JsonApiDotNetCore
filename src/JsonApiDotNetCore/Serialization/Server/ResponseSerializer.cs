@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Response.Contracts;
 using JsonApiDotNetCore.Serialization.Request.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Response
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Server serializer implementation of <see cref="DocumentBuilder"/>

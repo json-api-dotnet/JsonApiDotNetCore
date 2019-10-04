@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Serialization.Request.Contracts
+namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
     /// Interface for client serializer that can be used to register with the DI, for usage in

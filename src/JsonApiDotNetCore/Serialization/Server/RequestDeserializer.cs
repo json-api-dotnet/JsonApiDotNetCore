@@ -1,9 +1,8 @@
 ﻿using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Request.Contracts;
 
-namespace JsonApiDotNetCore.Serialization.Request
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Server deserializer implementation of the <see cref="DocumentParser"/>

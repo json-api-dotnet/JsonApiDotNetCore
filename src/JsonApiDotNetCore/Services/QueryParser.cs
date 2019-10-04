@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
-        private readonly IInternalIncludeQueryService _includeQuery;
+        private readonly IIncludeQueryService _includeQuery;
         private readonly IInternalFieldsQueryService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
         private readonly ICurrentRequest _currentRequest;
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiOptions _options;
         private readonly ContextEntity _requestResource;
 
-        public QueryParser(IInternalIncludeQueryService includeQuery,
+        public QueryParser(IIncludeQueryService includeQuery,
             IInternalFieldsQueryService fieldQuery,
             ICurrentRequest currentRequest,
             IContextEntityProvider provider,
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Services
                     continue;
                 }
 
-                if (pair.Key.StartsWith(QueryConstants.INCLUDE, StringComparison.Ordinal))
+                if (pair.Key.StartsWith(_includeQuery.Name, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
                         _includeQuery.Parse(pair.Value);
@@ -92,6 +92,8 @@ namespace JsonApiDotNetCore.Services
 
             return querySet;
         }
+
+
 
         protected virtual List<FilterQuery> ParseFilterQuery(string key, string value)
         {

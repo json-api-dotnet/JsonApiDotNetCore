@@ -45,15 +45,14 @@
     <PackageReference Include="docfx.console" Version="2.33.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Serialization\Request\" />
     <Folder Include="Models\JsonApiDocuments\" />
     <Folder Include="QueryServices\" />
     <Folder Include="QueryServices\Contracts\" />
     <Folder Include="Internal\Exceptions\" />
-    <Folder Include="Serialization\Request\Contracts\" />
     <Folder Include="Models\Annotation\" />
     <Folder Include="Serialization\Common\" />
-    <Folder Include="Serialization\Response\" />
-    <Folder Include="Serialization\Response\Contracts\" />
+    <Folder Include="Serialization\Client\" />
+    <Folder Include="Serialization\Server\" />
+    <Folder Include="Serialization\Server\Builders\" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
-namespace JsonApiDotNetCore.Serialization.Response.Contracts
+namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     /// <summary>
     /// Builds the top-level links, resource object links and relationship object links.

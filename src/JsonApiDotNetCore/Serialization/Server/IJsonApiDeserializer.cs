@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Models;
-namespace JsonApiDotNetCore.Serialization.Request.Contracts
+namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Deserializer used internally in JsonApiDotNetCore to deserialize requests.
