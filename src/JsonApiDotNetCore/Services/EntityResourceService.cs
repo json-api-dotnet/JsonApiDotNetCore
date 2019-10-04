@@ -150,12 +150,12 @@ namespace JsonApiDotNetCore.Services
         }
 
         // triggered by GET /articles/1/relationships/{relationshipName}
-        public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName) => await GetRelationshipAsync(id, relationshipName);
+        public virtual async Task<TResource> GetRelationshipsAsync(TId id, string relationshipName) => await GetRelationshipAsync(id, relationshipName);
 
         // triggered by GET /articles/1/{relationshipName}
-        public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
+        public virtual async Task<TResource> GetRelationshipAsync(TId id, string relationshipName)
         {
-            RelationshipAttribute relationship = GetRelationship(relationshipName);
+            var relationship = GetRelationship(relationshipName);
 
             // BeforeRead hook execution
             _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.GetRelationship, id.ToString());
@@ -163,7 +163,7 @@ namespace JsonApiDotNetCore.Services
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
             var entity = await _repository.GetAndIncludeAsync(id, relationship);
-            if (entity == null)
+            if (entity == null) // this does not make sense. If the parent entity is not found, this error is thrown?
                 throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
 
             if (!IsNull(_hookExecutor, entity))
@@ -174,16 +174,7 @@ namespace JsonApiDotNetCore.Services
 
             var resource = MapOut(entity);
 
-            var relationshipValue = _resourceGraph.GetRelationship(resource, relationship.InternalRelationshipName);
-            return relationshipValue;
-        }
-
-        private RelationshipAttribute GetRelationship(string relationshipName)
-        {
-            var relationship = _currentRequestResource.Relationships.Single(r => r.Is(relationshipName));
-            if (relationship == null)
-                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
-            return relationship;
+            return resource;
         }
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
@@ -203,8 +194,7 @@ namespace JsonApiDotNetCore.Services
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<ResourceObject> relationships)
         {
-
-            RelationshipAttribute relationship = GetRelationship(relationshipName);
+            var relationship = GetRelationship(relationshipName);
 
             var entity = await _repository.GetAndIncludeAsync(id, relationship);
             if (entity == null)
@@ -322,6 +312,14 @@ namespace JsonApiDotNetCore.Services
                 if (val == null) return true;
             }
             return false;
+        }
+
+        private RelationshipAttribute GetRelationship(string relationshipName)
+        {
+            var relationship = _currentRequestResource.Relationships.Single(r => r.Is(relationshipName));
+            if (relationship == null)
+                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+            return relationship;
         }
 
         /// <summary>

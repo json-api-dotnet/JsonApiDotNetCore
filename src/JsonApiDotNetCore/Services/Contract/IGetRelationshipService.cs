@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.Services
     public interface IGetRelationshipService<T, in TId>
         where T : class, IIdentifiable<TId>
     {
-        Task<object> GetRelationshipAsync(TId id, string relationshipName);
+        Task<T> GetRelationshipAsync(TId id, string relationshipName);
     }
 }

@@ -26,6 +26,7 @@ namespace JsonApiDotNetCore.Managers
         public Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
 
         public bool IsBulkRequest { get; set; } = false;
+        public RelationshipAttribute RequestRelationship { get; set; }
 
         public List<string> GetFields()
         {
