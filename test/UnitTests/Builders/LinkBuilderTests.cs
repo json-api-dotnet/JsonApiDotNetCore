@@ -42,8 +42,9 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(resourceLinks: global);
-            _provider.Setup(m => m.GetContextEntity("articles")).Returns(GetContextEntity<Article>(resourceLinks: resource));
-            var builder = new LinkBuilder(config, GetRequestManager(), _provider.Object);
+            var primaryResource = GetContextEntity<Article>(resourceLinks: resource);
+            _provider.Setup(m => m.GetContextEntity("articles")).Returns(primaryResource);
+            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
 
             // act
             var links = builder.GetResourceLinks("articles", "123");
@@ -89,8 +90,9 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(relationshipLinks: global);
-            _provider.Setup(m => m.GetContextEntity(typeof(Article))).Returns(GetContextEntity<Article>(relationshipLinks: resource));
-            var builder = new LinkBuilder(config, GetRequestManager(), _provider.Object);
+            var primaryResource = GetContextEntity<Article>(relationshipLinks: resource);
+            _provider.Setup(m => m.GetContextEntity(typeof(Article))).Returns(primaryResource);
+            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
             var attr = new HasOneAttribute(links: relationship) { DependentType = typeof(Author), PublicRelationshipName = "author" };
 
             // act
@@ -136,12 +138,13 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(topLevelLinks: global);
-            _provider.Setup(m => m.GetContextEntity<Article>()).Returns(GetContextEntity<Article>(topLevelLinks: resource));
+            var primaryResource = GetContextEntity<Article>(topLevelLinks: resource);
+            _provider.Setup(m => m.GetContextEntity<Article>()).Returns(primaryResource);
 
-            var builder = new PrimaryLinkBuilder<Article>(config, GetRequestManager(), _pageManager, _provider.Object);
+            var builder = new LinkBuilder(config, GetRequestManager(), _pageManager, _provider.Object);
 
             // act
-            var links = builder.GetTopLevelLinks();
+            var links = builder.GetTopLevelLinks(primaryResource);
 
             // assert
             if (!pages && expectedSelfLink == null)

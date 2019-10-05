@@ -1,24 +1,19 @@
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     /// <summary>
-    /// Builds the top-level links, resource object links and relationship object links.
-    /// </summary>
-    public interface IPrimaryLinkBuilder<TResource> : ILinkBuilder where TResource : class, IIdentifiable
-    {
-        /// <summary>
-        /// Builds the links object that is included in the top-level of the document.
-        /// </summary>
-        TopLevelLinks GetTopLevelLinks();
-    }
-
-    /// <summary>
     /// Builds resource object links and relationship object links.
     /// </summary>
     public interface ILinkBuilder
     {
+        /// <summary>
+        /// Builds the links object that is included in the top-level of the document.
+        /// </summary>
+        /// <param name="primaryResource">The primary resource of the response body</param>
+        TopLevelLinks GetTopLevelLinks(ContextEntity primaryResource);
         /// <summary>
         /// Builds the links object for resources in the primary data.
         /// </summary>

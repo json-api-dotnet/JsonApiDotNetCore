@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
@@ -46,7 +47,7 @@ namespace UnitTests.Serialization
         protected ResponseSerializer<T> GetResponseSerializer<T>(List<List<RelationshipAttribute>> inclusionChains = null, Dictionary<string, object> metaDict = null, TopLevelLinks topLinks = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) where T : class, IIdentifiable
         {
             var meta = GetMetaBuilder<T>(metaDict);
-            var link = GetPrimaryLinkBuilder<T>(topLinks, resourceLinks, relationshipLinks);
+            var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
             var fieldsToSerialize = GetSerializableFields();
             var included = GetIncludedRelationships(inclusionChains);
             var provider = GetContextEntityProvider();
@@ -57,7 +58,7 @@ namespace UnitTests.Serialization
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder<T>() where T : class, IIdentifiable
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetPrimaryLinkBuilder<T>(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
         }
 
         protected ISerializerSettingsProvider GetSerializerSettingsProvider()
@@ -86,18 +87,10 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected IPrimaryLinkBuilder<T> GetPrimaryLinkBuilder<T>(TopLevelLinks top = null, ResourceLinks resource = null, RelationshipLinks relationship = null) where T : class, IIdentifiable
-        {
-            var mock = new Mock<IPrimaryLinkBuilder<T>>();
-            mock.Setup(m => m.GetTopLevelLinks()).Returns(top);
-            mock.Setup(m => m.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
-            mock.Setup(m => m.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
-            return mock.Object;
-        }
-
         protected ILinkBuilder GetLinkBuilder(TopLevelLinks top = null, ResourceLinks resource = null, RelationshipLinks relationship = null)
         {
             var mock = new Mock<ILinkBuilder>();
+            mock.Setup(m => m.GetTopLevelLinks(It.IsAny<ContextEntity>())).Returns(top);
             mock.Setup(m => m.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
             mock.Setup(m => m.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
             return mock.Object;

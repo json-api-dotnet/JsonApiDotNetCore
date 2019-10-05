@@ -12,18 +12,82 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
     public class LinkBuilder : ILinkBuilder
     {
-        protected readonly ICurrentRequest _currentRequest;
-        protected readonly ILinksConfiguration _options;
-        protected readonly IContextEntityProvider _provider;
+        private readonly ICurrentRequest _currentRequest;
+        private readonly ILinksConfiguration _options;
+        private readonly IContextEntityProvider _provider;
+        private readonly IPageQueryService _pageManager;
 
         public LinkBuilder(ILinksConfiguration options,
                            ICurrentRequest currentRequest,
+                           IPageQueryService pageManager,
                            IContextEntityProvider provider)
         {
             _options = options;
             _currentRequest = currentRequest;
+            _pageManager = pageManager;
             _provider = provider;
         }
+
+        /// <inheritdoc/>
+        public TopLevelLinks GetTopLevelLinks(ContextEntity primaryResource)
+        {
+            TopLevelLinks topLevelLinks = null;
+            if (ShouldAddTopLevelLink(primaryResource, Link.Self))
+                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(primaryResource.EntityName) };
+
+            if (ShouldAddTopLevelLink(primaryResource, Link.Paging))
+                SetPageLinks(primaryResource, ref topLevelLinks);
+
+            return topLevelLinks;
+        }
+
+        /// <summary>
+        /// Checks if the top-level <paramref name="link"/> should be added by first checking
+        /// configuration on the <see cref="ContextEntity"/>, and if not configured, by checking with the
+        /// global configuration in <see cref="ILinksConfiguration"/>.
+        /// </summary>
+        /// <param name="link"></param>
+        private bool ShouldAddTopLevelLink(ContextEntity primaryResource, Link link)
+        {
+            if (primaryResource.TopLevelLinks != Link.NotConfigured)
+                return primaryResource.TopLevelLinks.HasFlag(link);
+            return _options.TopLevelLinks.HasFlag(link);
+        }
+
+        private void SetPageLinks(ContextEntity primaryResource, ref TopLevelLinks links)
+        {
+            if (!_pageManager.ShouldPaginate())
+                return;
+
+            links = links ?? new TopLevelLinks();
+
+            if (_pageManager.CurrentPage > 1)
+            {
+                links.First = GetPageLink(primaryResource, 1, _pageManager.PageSize);
+                links.Prev = GetPageLink(primaryResource, _pageManager.CurrentPage - 1, _pageManager.PageSize);
+            }
+
+
+            if (_pageManager.CurrentPage < _pageManager.TotalPages)
+                links.Next = GetPageLink(primaryResource, _pageManager.CurrentPage + 1, _pageManager.PageSize);
+
+
+            if (_pageManager.TotalPages > 0)
+                links.Last = GetPageLink(primaryResource, _pageManager.TotalPages, _pageManager.PageSize);
+        }
+
+        private string GetSelfTopLevelLink(string resourceName)
+        {
+            return $"{GetBasePath()}/{resourceName}";
+        }
+
+        private string GetPageLink(ContextEntity primaryResource, int pageOffset, int pageSize)
+        {
+            var filterQueryComposer = new QueryComposer();
+            var filters = filterQueryComposer.Compose(_currentRequest);
+            return $"{GetBasePath()}/{primaryResource.EntityName}?page[size]={pageSize}&page[number]={pageOffset}{filters}";
+        }
+
 
         /// <inheritdoc/>
         public ResourceLinks GetResourceLinks(string resourceName, string id)
@@ -103,84 +167,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             if (_options.RelativeLinks)
                 return string.Empty;
             return _currentRequest.BasePath;
-        }
-    }
-
-    /// <inheritdoc/>
-    public class PrimaryLinkBuilder<TResource> : LinkBuilder, IPrimaryLinkBuilder<TResource> where TResource : class, IIdentifiable
-    {
-        private readonly ContextEntity _primaryResource;
-        private readonly IPageQueryService _pageManager;
-
-        public PrimaryLinkBuilder(ILinksConfiguration options,
-                                  ICurrentRequest currentRequest,
-                                  IPageQueryService pageManager,
-                                  IContextEntityProvider provider)
-            : base(options, currentRequest, provider)
-        {
-            _primaryResource = _provider.GetContextEntity<TResource>();
-            _pageManager = pageManager;
-        }
-
-        /// <inheritdoc/>
-        public TopLevelLinks GetTopLevelLinks()
-        {
-            TopLevelLinks topLevelLinks = null;
-            if (ShouldAddTopLevelLink(Link.Self))
-                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(_primaryResource.EntityName) };
-
-            if (ShouldAddTopLevelLink(Link.Paging))
-                SetPageLinks(ref topLevelLinks);
-
-            return topLevelLinks;
-        }
-
-        /// <summary>
-        /// Checks if the top-level <paramref name="link"/> should be added by first checking
-        /// configuration on the <see cref="ContextEntity"/>, and if not configured, by checking with the
-        /// global configuration in <see cref="ILinksConfiguration"/>.
-        /// </summary>
-        /// <param name="link"></param>
-        private bool ShouldAddTopLevelLink(Link link)
-        {
-            if (_primaryResource.TopLevelLinks != Link.NotConfigured)
-                return _primaryResource.TopLevelLinks.HasFlag(link);
-            return _options.TopLevelLinks.HasFlag(link);
-        }
-
-        private void SetPageLinks(ref TopLevelLinks links)
-        {
-            if (!_pageManager.ShouldPaginate())
-                return;
-
-            links = links ?? new TopLevelLinks();
-
-            if (_pageManager.CurrentPage > 1)
-            {
-                links.First = GetPageLink(1, _pageManager.PageSize);
-                links.Prev = GetPageLink(_pageManager.CurrentPage - 1, _pageManager.PageSize);
-            }
-
-
-            if (_pageManager.CurrentPage < _pageManager.TotalPages)
-                links.Next = GetPageLink(_pageManager.CurrentPage + 1, _pageManager.PageSize);
-
-
-            if (_pageManager.TotalPages > 0)
-                links.Last = GetPageLink(_pageManager.TotalPages, _pageManager.PageSize);
-        }
-
-        private string GetSelfTopLevelLink(string resourceName)
-        {
-            return $"{GetBasePath()}/{resourceName}";
-        }
-
-
-        private string GetPageLink(int pageOffset, int pageSize)
-        {
-            var filterQueryComposer = new QueryComposer();
-            var filters = filterQueryComposer.Compose(_currentRequest);
-            return $"{GetBasePath()}/{_primaryResource.EntityName}?page[size]={pageSize}&page[number]={pageOffset}{filters}";
         }
     }
 }

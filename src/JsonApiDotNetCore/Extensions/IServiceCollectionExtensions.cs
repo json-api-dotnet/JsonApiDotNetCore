@@ -191,7 +191,6 @@ namespace JsonApiDotNetCore.Extensions
 
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
-            services.AddScoped(typeof(IPrimaryLinkBuilder<>), typeof(PrimaryLinkBuilder<>));
 
             services.AddScoped<ILinkBuilder, LinkBuilder>();
             services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
