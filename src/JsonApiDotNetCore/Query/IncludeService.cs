@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Query
             var chainParts = chain.Split(QueryConstants.DOT);
             foreach (var relationshipName in chainParts)
             {
-                var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == relationshipName);
+                var relationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
                 if (relationship == null)
                     ThrowInvalidRelationshipError(resourceContext, relationshipName);
 
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Query
                     ThrowCannotIncludeError(resourceContext, relationshipName);
 
                 parsedChain.Add(relationship);
-                resourceContext = _provider.GetContextEntity(relationship.PrincipalType);
+                resourceContext = _provider.GetContextEntity(relationship.DependentType);
             }
             _includedChains.Add(parsedChain);
         }

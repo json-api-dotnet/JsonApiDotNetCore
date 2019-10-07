@@ -150,11 +150,6 @@ namespace JsonApiDotNetCore.Hooks
             var repo = GetRepository<TEntity, TId>();
             var query = repo.Get().Where(e => ids.Contains(e.Id));
             return repo.Include(query, inclusionChain).ToList();
-            //foreach (var r in inclusionChain)
-            //{
-            //    query = query.Include(r);
-            //}
-            //return query.ToList();
         }
 
         IEntityReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>

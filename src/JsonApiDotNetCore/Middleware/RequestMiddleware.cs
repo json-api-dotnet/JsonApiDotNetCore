@@ -35,11 +35,7 @@ namespace JsonApiDotNetCore.Middleware
             if (IsValid())
             {
                 _currentRequest.IsBulkRequest = PathIsBulk();
-                if (PathIsRelationship())
-                {
-                    _currentRequest.RequestRelationship = null;
-                    throw new Exception(); // gotta retrieve the property in line above right here
-                }
+                _currentRequest.IsRelationshipPath = PathIsRelationship();
                 await _next(httpContext);
             }
         }

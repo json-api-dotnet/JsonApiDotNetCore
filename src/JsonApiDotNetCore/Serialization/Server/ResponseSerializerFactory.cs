@@ -15,9 +15,11 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class ResponseSerializerFactory : IJsonApiSerializerFactory
     {
         private readonly IScopedServiceProvider _provider;
+        private readonly ICurrentRequest _currentRequest;
 
-        public ResponseSerializerFactory(IScopedServiceProvider provider)
+        public ResponseSerializerFactory(ICurrentRequest currentRequest, IScopedServiceProvider provider)
         {
+            _currentRequest = currentRequest;
             _provider = provider;
         }
 
@@ -25,18 +27,23 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// Initializes the server serializer using the <see cref="ContextEntity"/>
         /// associated with the current request.
         /// </summary>
-        public IJsonApiSerializer GetSerializer(Type targetType)
-        {   
-            var serializerType = typeof(ResponseSerializer<>).MakeGenericType(ExtractResourceType(targetType));
-            return (IJsonApiSerializer)_provider.GetRequiredService(serializerType);
+        public IJsonApiSerializer GetSerializer()
+        {
+            var targetType = GetDocumentPrimaryType();
+            var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
+            var serializer = (IJsonApiDefaultSerializer)_provider.GetRequiredService(serializerType);
+            if (_currentRequest.RequestRelationship != null && _currentRequest.IsRelationshipPath)
+                serializer.SetRequestRelationship(_currentRequest.RequestRelationship);
+
+            return serializer;
         }
 
-        private Type ExtractResourceType(Type type)
+        private Type GetDocumentPrimaryType()
         {
-            if (type.Inherits<IIdentifiable>())
-                return type;
+            if (_currentRequest.RequestRelationship != null && !_currentRequest.IsRelationshipPath)
+                return _currentRequest.RequestRelationship.DependentType;
 
-            return TypeHelper.GetTypeOfList(type);
+            return _currentRequest.GetRequestResource().EntityType;
         }
     }
 }

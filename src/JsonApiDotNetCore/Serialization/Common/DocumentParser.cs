@@ -168,18 +168,27 @@ namespace JsonApiDotNetCore.Serialization
             // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
-            if (foreignKeyProperty == null)
-            {
-                /// there is no FK from the current entity pointing to the related object,
-                /// i.e. means we're populating the relationship from the principal side.
-                SetPrincipalSide(entity, attr, relatedId);
-            }
-            else
-            {
+            //if (foreignKeyProperty == null)
+            //{   /// there is no FK from the current entity pointing to the related object,
+            //    /// i.e. means we're populating the relationship from the principal side.
+            //    SetNavigation(entity, attr, relatedId);
+            //}
+            //else
+            //{
+            //    /// there is a FK from the current entity pointing to the related object,
+            //    /// i.e. we're populating the relationship from the dependent side.
+            //    SetDependentSide(entity, foreignKeyProperty, attr, relatedId);
+            //}
+
+            if (foreignKeyProperty != null)
                 /// there is a FK from the current entity pointing to the related object,
                 /// i.e. we're populating the relationship from the dependent side.
-                SetDependentSide(entity, foreignKeyProperty, attr, relatedId);
-            }
+                SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
+
+
+            SetNavigation(entity, attr, relatedId);
+            
+
 
             // allow for additional processing of relationships as required for the
             // serializer class that implements this abstract class.
@@ -192,7 +201,7 @@ namespace JsonApiDotNetCore.Serialization
         /// Sets the dependent side of a HasOne relationship, which means that a
         /// foreign key also will to be populated.
         /// </summary>
-        private void SetDependentSide(IIdentifiable entity, PropertyInfo foreignKey, HasOneAttribute attr, string id)
+        private void SetForeignKey(IIdentifiable entity, PropertyInfo foreignKey, HasOneAttribute attr, string id)
         {
             bool foreignKeyPropertyIsNullableType = Nullable.GetUnderlyingType(foreignKey.PropertyType) != null
                 || foreignKey.PropertyType == typeof(string);
@@ -210,7 +219,7 @@ namespace JsonApiDotNetCore.Serialization
         /// Sets the principal side of a HasOne relationship, which means no
         /// foreign key is involved
         /// </summary>
-        private void SetPrincipalSide(IIdentifiable entity, HasOneAttribute attr, string relatedId)
+        private void SetNavigation(IIdentifiable entity, HasOneAttribute attr, string relatedId)
         {
             if (relatedId == null)
             {

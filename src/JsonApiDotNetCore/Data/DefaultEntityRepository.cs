@@ -261,7 +261,7 @@ namespace JsonApiDotNetCore.Data
                 /// or replaced with the same set of todoItems from the EF Core change tracker, 
                 /// if they were already tracked
                 object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out bool wasAlreadyTracked);
-                /// loads into the db context any persons currently related 
+                /// loads into the db context any persons currentlresy related 
                 /// to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 /// assigns the updated relationship to the database entity
@@ -345,7 +345,7 @@ namespace JsonApiDotNetCore.Data
             // of the property...
             var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
                 ? hasManyThrough.ThroughType
-                : relationship.Type;
+                : relationship.DependentType;
 
             var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
@@ -364,6 +364,9 @@ namespace JsonApiDotNetCore.Data
 
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, params RelationshipAttribute[] inclusionChain)
         {
+            if (!inclusionChain.Any())
+                return entities;
+
             string internalRelationshipPath = null;
             foreach (var relationship in inclusionChain)
                 internalRelationshipPath = (internalRelationshipPath == null)

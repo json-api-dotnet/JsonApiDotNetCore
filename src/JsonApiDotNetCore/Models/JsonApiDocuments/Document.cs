@@ -15,8 +15,6 @@ namespace JsonApiDotNetCore.Models
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }
 
-
-
         /// <summary>
         /// see "links" in https://jsonapi.org/format/#document-top-level
         /// </summary>

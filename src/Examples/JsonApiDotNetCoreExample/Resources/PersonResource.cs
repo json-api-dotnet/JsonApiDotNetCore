@@ -22,12 +22,11 @@ namespace JsonApiDotNetCoreExample.Resources
             entitiesByRelationship.GetByRelationship<Passport>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
         }
 
-
         public Dictionary<string, object> GetMeta()
         {
             return new Dictionary<string, object> {
                 { "copyright", "Copyright 2015 Example Corp." },
-                { "authors", new string[] { "Jared Nance" } }
+                { "authors", new string[] { "Jared Nance", "Maurits Moeys" } }
             };
         }
     }

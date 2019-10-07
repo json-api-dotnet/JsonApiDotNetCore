@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Controllers
             return Ok(updatedEntity);
         }
 
-        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
+        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
             if (_updateRelationships == null) throw Exceptions.UnSupportedRequestMethod;
             await _updateRelationships.UpdateRelationshipsAsync(id, relationshipName, relationships);

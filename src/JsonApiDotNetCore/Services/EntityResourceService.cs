@@ -197,39 +197,24 @@ namespace JsonApiDotNetCore.Services
         }
 
         // triggered by PATCH /articles/1/relationships/{relationshipName}
-        public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<ResourceObject> relationships)
+        public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)
         {
             var relationship = GetRelationship(relationshipName);
-
             var entity = await _repository.GetAndIncludeAsync(id, relationship);
             if (entity == null)
-            {
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
-            }
 
-            var relationshipType = relationship.DependentType;
+            List<IIdentifiable> relatedEntities;
 
-            // update relationship type with internalname
-            var entityProperty = typeof(TEntity).GetProperty(relationship.InternalRelationshipName);
-            if (entityProperty == null)
-            {
-                throw new JsonApiException(404, $"Property {relationship.InternalRelationshipName} " +
-                    $"could not be found on entity.");
-            }
-
-            /// Why are we changing this value on the attribute and setting it back below?
-            /// This feels extremely hacky
-            relationship.Type = relationship.IsHasMany
-                ? entityProperty.PropertyType.GetGenericArguments()[0]
-                : entityProperty.PropertyType;
-
-            var relationshipIds = relationships.Select(r => r?.Id?.ToString());
+            if (relationship is HasOneAttribute)
+                relatedEntities = new List<IIdentifiable> { (IIdentifiable)related };
+            else relatedEntities = (List<IIdentifiable>)related;
+            var relationshipIds = relatedEntities.Select(r => r?.StringId);
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
             await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.PatchRelationship);
 
-            relationship.Type = relationshipType;
         }
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TEntity> entities)

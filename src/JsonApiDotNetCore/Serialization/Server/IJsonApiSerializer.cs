@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <summary>
         /// Serializes a single entity or a list of entities.
         /// </summary>
-        string Serialize(object content, RelationshipAttribute requestRelationship = null);
+        string Serialize(object content);
     }
 }

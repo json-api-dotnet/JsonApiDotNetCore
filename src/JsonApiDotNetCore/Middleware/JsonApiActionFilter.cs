@@ -116,7 +116,12 @@ namespace JsonApiDotNetCore.Middleware
         private ContextEntity GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
-            return _resourceGraph.GetEntityFromControllerName(controllerName);
+            var rd = _httpContext.GetRouteData().Values;
+            var requestResource = _resourceGraph.GetEntityFromControllerName(controllerName);
+
+            if (rd.TryGetValue("relationshipName", out object relationshipName))
+                _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+            return requestResource;
         }
 
 

@@ -7,6 +7,6 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <summary>
         /// Instantiates the serializer to process the servers response.
         /// </summary>
-        IJsonApiSerializer GetSerializer(Type targetType);
+        IJsonApiSerializer GetSerializer();
     }
 }

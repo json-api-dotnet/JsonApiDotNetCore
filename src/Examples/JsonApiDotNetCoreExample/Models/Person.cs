@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Models
 {
