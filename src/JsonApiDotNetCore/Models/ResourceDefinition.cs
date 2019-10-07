@@ -39,28 +39,30 @@ namespace JsonApiDotNetCore.Models
 
         public ResourceDefinition(IResourceGraph graph)
         {
+            _contextEntity = graph.GetContextEntity(typeof(TResource));
             _allowedAttributes = _contextEntity.Attributes;
             _allowedRelationships = _contextEntity.Relationships;
-            _contextEntity = graph.GetContextEntity(typeof(TResource));
         }
 
         public List<RelationshipAttribute> GetAllowedRelationships() => _allowedRelationships;
         public List<AttrAttribute> GetAllowedAttributes() => _allowedAttributes;
 
         /// <summary>
-        /// Allows POST / PATCH requests to set the value of an
-        /// attribute, but exclude the attribute in the response
-        /// this might be used if the incoming value gets hashed or
-        /// encrypted prior to being persisted and this value should
-        /// never be sent back to the client.
-        ///
-        /// Called once per filtered resource in request.
+        /// Hides specified attributes from the serialized output. Can be called directly in a resource definition implementation or
+        /// in any resource hook to combine it with eg authorization.
         /// </summary>
+        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Arttribute2 }</param>
         public void HideAttributes(Expression<Func<TResource, dynamic>> selector)
         {
             var attributesToHide = _fieldExplorer.GetAttributes(selector);
             _allowedAttributes = _allowedAttributes.Except(attributesToHide).ToList();
         }
+
+        /// <summary>
+        /// Hides specified relationships from the serialized output. Can be called directly in a resource definition implementation or
+        /// in any resource hook to combine it with eg authorization.
+        /// </summary>
+        /// <param name="selector">Should be of the form: (TResource e) => new { e.Relationship1, e.Relationship2 }</param>
         public void HideRelationships(Expression<Func<TResource, dynamic>> selector)
         {
             var relationshipsToHide = _fieldExplorer.GetRelationships(selector);

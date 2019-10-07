@@ -11,6 +11,7 @@ namespace JsonApiDotNetCore.Query
 {
     public class IncludeService : IIncludeService, IQueryParameterService
     {
+        /// todo: make readonly
         private readonly List<List<RelationshipAttribute>> _includedChains;
         private readonly ICurrentRequest _currentRequest;
         private readonly IContextEntityProvider _provider;
@@ -33,7 +34,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public List<List<RelationshipAttribute>> Get()
         {
-            return _includedChains;
+            return _includedChains.Select(chain => chain.ToList()).ToList();
         }
 
         /// <inheritdoc/>

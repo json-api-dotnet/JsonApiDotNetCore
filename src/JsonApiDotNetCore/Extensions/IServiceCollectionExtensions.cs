@@ -27,6 +27,7 @@ using JsonApiDotNetCore.Serialization.Deserializer;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Serialization.Client;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -154,7 +155,7 @@ namespace JsonApiDotNetCore.Extensions
 
             var graph = jsonApiOptions.ResourceGraph ?? jsonApiOptions.ResourceGraphBuilder.Build();
 
-            if (jsonApiOptions.ResourceGraph.UsesDbContext == false)
+            if (graph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
                 services.AddSingleton(new DbContextOptionsBuilder().Options);
@@ -218,14 +219,16 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IFieldsService, FieldsService>();
             services.AddScoped<IInternalFieldsQueryService, FieldsService>();
             services.AddScoped<ITargetedFields, TargetedFields>();
-            services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
-            services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
-            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
             services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
-            services.AddScoped<ISerializerSettingsProvider, ResponseSerializerSettingsProvider>();
             services.AddScoped<IAttributeBehaviourService, AttributeBehaviourService>();
+
+            services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
+            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
+            services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
+            services.AddScoped<ISerializerSettingsProvider, ResponseSerializerSettingsProvider>();
+            services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
 
             if (jsonApiOptions.EnableResourceHooks)
             {
@@ -233,6 +236,7 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
                 services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
                 services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
+                services.AddTransient<ITraversalHelper, TraversalHelper>();
             }
 
             services.AddScoped<IInverseRelationships, InverseRelationships>();

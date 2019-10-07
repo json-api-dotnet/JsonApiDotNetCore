@@ -104,7 +104,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <returns></returns>
         protected override RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
-            return new RelationshipData { };
+            return new RelationshipData { Links = _linkBuilder.GetRelationshipLinks(relationship, entity) };
         }
 
         /// <summary>

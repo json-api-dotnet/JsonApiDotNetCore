@@ -59,7 +59,7 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<object> GetRelationshipsAsync(int id, string relationshipName)
+        public Task<TodoItem> GetRelationshipsAsync(int id, string relationshipName)
         {
             throw new NotImplementedException();
         }

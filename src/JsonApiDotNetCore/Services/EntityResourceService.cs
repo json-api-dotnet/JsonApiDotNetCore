@@ -290,8 +290,8 @@ namespace JsonApiDotNetCore.Services
         {
             var query = _repository.Select(_repository.Get(), _currentRequest.QuerySet?.Fields).Where(e => e.Id.Equals(id));
 
-            foreach (var r in _targetedFields.Relationships)
-                query = _repository.Include(query, r);
+            foreach (var chain in _includeService.Get())
+                query = _repository.Include(query, chain.ToArray());
 
             TEntity value;
             // https://github.com/aspnet/EntityFrameworkCore/issues/6573

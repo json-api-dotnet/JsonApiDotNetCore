@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             var resourceDefinition = GetResourceDefinition(type);
             if (resourceDefinition != null)
                 // The set of allowed attribrutes to be exposed was defined on the resource definition
-                allowed = allowed.Except(resourceDefinition.GetAllowedAttributes()).ToList();
+                allowed = allowed.Intersect(resourceDefinition.GetAllowedAttributes()).ToList();
 
             var fields = _fieldsQuery.Get(relationship);
             if (fields != null)

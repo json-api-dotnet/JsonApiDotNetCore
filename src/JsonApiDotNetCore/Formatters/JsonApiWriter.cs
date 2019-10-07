@@ -52,6 +52,9 @@ namespace JsonApiDotNetCore.Formatters
 
         private string GetResponseBody(object responseObject)
         {
+            if (responseObject is ErrorCollection errorCollection)
+                return errorCollection.GetJson();
+
             var serializer = _serializerFactory.GetSerializer(responseObject.GetType());
             return serializer.Serialize(responseObject, _currentRequest.RequestRelationship);
         }

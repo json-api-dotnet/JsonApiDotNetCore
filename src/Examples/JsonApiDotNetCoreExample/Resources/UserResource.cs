@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
@@ -10,10 +9,10 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph graph, IFieldsExplorer fieldExplorer) : base(fieldExplorer, graph) { }
-
-        //protected override List<IResourceField> OutputAttrs()
-        //    => Remove(user => user.Password);
+        public UserResource(IResourceGraph graph, IFieldsExplorer fieldExplorer) : base(fieldExplorer, graph)
+        {
+            HideAttributes(u => u.Password);
+        }
 
         public override QueryFilters GetQueryFilters()
         {
