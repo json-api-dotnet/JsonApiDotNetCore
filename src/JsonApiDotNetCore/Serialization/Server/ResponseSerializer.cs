@@ -178,11 +178,12 @@ namespace JsonApiDotNetCore.Serialization.Server
             {   // if serializing a request with a requestRelationship, always populate data field.
                 relationshipData = base.GetRelationshipData(relationship, entity);
             }
-            else if (ShouldInclude(relationship, out var relationshipChain))
+            else if (ShouldInclude(relationship, out var relationshipChains))
             {   // if the relationship is included, populate the "data" field.
                 relationshipData = base.GetRelationshipData(relationship, entity);
                 if (relationshipData.HasData)
-                    _includedBuilder.IncludeRelationshipChain(relationshipChain, entity);
+                    foreach (var chain in relationshipChains)
+                        _includedBuilder.IncludeRelationshipChain(chain, entity);
             }
 
             var links = _linkBuilder.GetRelationshipLinks(relationship, entity);
@@ -212,9 +213,9 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// Inspects the included relationship chains (see <see cref="IIncludeService"/>
         /// to see if <paramref name="relationship"/> should be included or not.
         /// </summary>
-        private bool ShouldInclude(RelationshipAttribute relationship, out List<RelationshipAttribute> inclusionChain)
+        private bool ShouldInclude(RelationshipAttribute relationship, out List<List<RelationshipAttribute>> inclusionChain)
         {
-            inclusionChain = _includeQuery.Get()?.SingleOrDefault(l => l.First().Equals(relationship));
+            inclusionChain = _includeQuery.Get()?.Where(l => l.First().Equals(relationship)).ToList();
             if (inclusionChain == null)
                 return false;
             return true;
