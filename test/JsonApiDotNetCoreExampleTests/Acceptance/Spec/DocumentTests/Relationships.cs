@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var document = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
-            var data = document.Data;
+            var data = document.SingleData;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{data.Id}/relationships/owner";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{data.Id}/owner";
 
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<Document>(responseString).Data;
+            var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/relationships/owner";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/owner";
 
@@ -109,8 +109,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data[0];
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
+            var data = documents.ManyData.First();
             var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{data.Id}/relationships/todo-items";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{data.Id}/todo-items";
 
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<Document>(responseString).Data;
+            var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{personId}/relationships/todo-items";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{personId}/todo-items";
 

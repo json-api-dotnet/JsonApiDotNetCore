@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             // act
             var response = await client.SendAsync(request);
-            
+
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = JsonConvert.DeserializeObject<JObject>(body);
 
-            var result =  deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString();
+            var result = deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString();
             Assert.EndsWith($"{route}/owner", deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString());
         }
     }

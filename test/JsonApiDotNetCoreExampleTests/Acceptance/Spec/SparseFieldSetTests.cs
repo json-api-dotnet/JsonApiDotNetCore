@@ -18,9 +18,8 @@ using Xunit;
 using StringExtensions = JsonApiDotNetCoreExampleTests.Helpers.Extensions.StringExtensions;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
+using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Builders;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -110,10 +109,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
             // assert
-            Assert.Equal(todoItem.StringId, deserializeBody.Data.Id);
-            Assert.Equal(2, deserializeBody.Data.Attributes.Count);
-            Assert.Equal(todoItem.Description, deserializeBody.Data.Attributes["description"]);
-            Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.Data.Attributes["created-date"]).ToString("G"));
+            Assert.Equal(todoItem.StringId, deserializeBody.SingleData.Id);
+            Assert.Equal(2, deserializeBody.SingleData.Attributes.Count);
+            Assert.Equal(todoItem.Description, deserializeBody.SingleData.Attributes["description"]);
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.SingleData.Attributes["created-date"]).ToString("G"));
         }
 
         [Fact]
@@ -140,6 +139,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var route = $"/api/v1/todo-items?include=owner&fields[owner]=first-name,age";
             var request = new HttpRequestMessage(httpMethod, route);
+            var graph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todo-items").Build();
+            var deserializer = new ResponseDeserializer(graph);
 
             // act
             var response = await client.SendAsync(request);
@@ -147,11 +148,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedTodoItems = _fixture
-                .GetService<IJsonApiDeserializer>()
-                .DeserializeList<TodoItem>(body);
 
-            foreach(var item in deserializedTodoItems.Where(i => i.Owner != null))
+            var deserializedTodoItems = deserializer.DeserializeList<TodoItemClient>(body).Data;
+
+            foreach (var item in deserializedTodoItems.Where(i => i.Owner != null))
             {
                 Assert.Null(item.Owner.LastName);
                 Assert.NotNull(item.Owner.FirstName);
@@ -237,6 +237,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Assert.DoesNotContain("ordinal", includedItem.Attributes.Keys);
                 Assert.DoesNotContain("created-date", includedItem.Attributes.Keys);
             }
+        }
+
+        public class TodoItemClient : TodoItem
+        {
+            [Attr("calculated-value")]
+            public new string CalculatedValue { get; set; }
         }
     }
 }

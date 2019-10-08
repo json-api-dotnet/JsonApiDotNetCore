@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -16,13 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     public class FetchingRelationshipsTests
     {
         private TestFixture<TestStartup> _fixture;
-        private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
 
         public FetchingRelationshipsTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            _jsonApiContext = fixture.GetService<IJsonApiContext>();
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -46,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedBody = "{\"data\":null}";
+            var expectedBody = "{\"meta\":{\"copyright\":\"Copyright 2015 Example Corp.\",\"authors\":[\"Jared Nance\",\"Maurits Moeys\"]},\"links\":{\"self\":\"http://localhost/api/v1/people\"},\"data\":null}";
 
             // act
             var response = await client.SendAsync(request);

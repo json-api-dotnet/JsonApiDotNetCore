@@ -1,14 +1,13 @@
 using System;
 using System.Net.Http;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Data;
 using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Serialization.Client;
+using System.Linq.Expressions;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -27,14 +26,24 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             Client = _server.CreateClient();
             Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
-            deserializer = GetService<IJsonApiDeserializer>();
-            JsonApiContext = GetService<IJsonApiContext>();
         }
 
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
-        public IJsonApiDeserializer deserializer { get; private set; }
-        public IJsonApiContext JsonApiContext { get; private set; }
+        public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
+        {
+            var serializer =  GetService<IRequestSerializer>();
+            if (attributes != null)
+                serializer.SetAttributesToSerialize(attributes);
+            if (relationships != null)
+                serializer.SetRelationshipsToSerialize(relationships);
+            return serializer;
+        }
+        public IResponseDeserializer GetDeserializer()
+        {
+            return GetService<IResponseDeserializer>();
+        }
+
         public T GetService<T>() => (T)_services.GetService(typeof(T));
         
         public void ReloadDbContext()

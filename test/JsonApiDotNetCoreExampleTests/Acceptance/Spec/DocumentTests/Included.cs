@@ -19,15 +19,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Included
     {
-        private TestFixture<TestStartup> _fixture;
-        private AppDbContext _context;
-        private Bogus.Faker<Person> _personFaker;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<TodoItemCollection> _todoItemCollectionFaker;
+        private readonly AppDbContext _context;
+        private readonly Bogus.Faker<Person> _personFaker;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<TodoItemCollection> _todoItemCollectionFaker;
 
         public Included(TestFixture<TestStartup> fixture)
         {
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
@@ -67,13 +65,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             var json = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(json);
+            var documents = JsonConvert.DeserializeObject<Document>(json);
             // we only care about counting the todo-items that have owners
-            var expectedCount = documents.Data.Count(d => d.Relationships["owner"].SingleData != null);
+            var expectedCount = documents.ManyData.Count(d => d.Relationships["owner"].SingleData != null);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
             Assert.Equal(expectedCount, documents.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -108,6 +110,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(person.Id.ToString(), document.Included[0].Id);
             Assert.Equal(person.FirstName, document.Included[0].Attributes["first-name"]);
             Assert.Equal(person.LastName, document.Included[0].Attributes["last-name"]);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -134,13 +140,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data[0];
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
-            Assert.Equal(documents.Data.Count, documents.Included.Count);
+            Assert.Equal(documents.ManyData.Count, documents.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -169,12 +178,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
             Assert.Single(documents.Included);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -204,13 +216,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data;
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
             Assert.Single(documents.Included);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -247,6 +262,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(numberOfTodoItems, document.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -287,6 +306,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(numberOfTodoItems + 1, document.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -311,6 +334,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -335,6 +362,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -359,6 +390,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
@@ -391,25 +426,29 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(responseString);
+            var documents = JsonConvert.DeserializeObject<Document>(responseString);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Single(documents.Included);
 
-            var ownerValueNull = documents.Data
+            var ownerValueNull = documents.ManyData
                 .First(i => i.Id == todoItemWithNullOwner.StringId)
                 .Relationships.First(i => i.Key == "owner")
                 .Value.SingleData;
 
             Assert.Null(ownerValueNull);
 
-            var ownerValue = documents.Data
+            var ownerValue = documents.ManyData
                 .First(i => i.Id == todoItem.StringId)
                 .Relationships.First(i => i.Key == "owner")
                 .Value.SingleData;
 
             Assert.NotNull(ownerValue);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
     }
 }

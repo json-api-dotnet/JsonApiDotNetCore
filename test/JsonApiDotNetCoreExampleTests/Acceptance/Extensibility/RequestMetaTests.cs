@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using System.Collections;
 using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreExample.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
@@ -26,8 +27,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         public async Task Injecting_IRequestMeta_Adds_Meta_Data()
         {
             // arrange
-            var person = new Person();
-            var expectedMeta = person.GetMeta(null);
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
 
@@ -37,32 +36,33 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
+            var expectedMeta = (_fixture.GetService<ResourceDefinition<Person>>() as IHasMeta).GetMeta();
 
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(body);
-            
+            var meta = _fixture.GetDeserializer().DeserializeList<Person>(body).Meta;
+
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(documents.Meta);
+            Assert.NotNull(meta);
             Assert.NotNull(expectedMeta);
             Assert.NotEmpty(expectedMeta);
-            
-            foreach(var hash in expectedMeta)
+
+            foreach (var hash in expectedMeta)
             {
-                if(hash.Value is IList)
+                if (hash.Value is IList)
                 {
                     var listValue = (IList)hash.Value;
-                    for(var i=0; i < listValue.Count; i++)
-                        Assert.Equal(listValue[i].ToString(), ((IList)documents.Meta[hash.Key])[i].ToString());
+                    for (var i = 0; i < listValue.Count; i++)
+                        Assert.Equal(listValue[i].ToString(), ((IList)meta[hash.Key])[i].ToString());
                 }
                 else
                 {
-                    Assert.Equal(hash.Value, documents.Meta[hash.Key]);
+                    Assert.Equal(hash.Value, meta[hash.Key]);
                 }
             }
-            Assert.Equal("request-meta-value", documents.Meta["request-meta"]);
+            Assert.Equal("request-meta-value", meta["request-meta"]);
         }
     }
 }

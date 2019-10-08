@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -502,20 +505,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var content = new
-            {
-                data = new
-                {
-                    type = "person",
-                    id = $"{person.Id}"
-                }
-            };
+            var serializer = _fixture.GetSerializer<Person>(p => new { });
+            var content = serializer.Serialize(person);
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todo-items/{todoItem.Id}/relationships/owner";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act

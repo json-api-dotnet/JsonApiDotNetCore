@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,9 +6,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Contracts;
-
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.False(document.Data.Attributes.ContainsKey("password"));
+            Assert.False(document.SingleData.Attributes.ContainsKey("password"));
         }
 
         [Fact]
@@ -75,24 +71,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var user = _userFaker.Generate();
-            var content = new
-            {
-                data = new
-                {
-                    type = "users",
-                    attributes = new Dictionary<string, object>()
-                    {
-                        { "username", user.Username },
-                        { "password", user.Password },
-                    }
-                }
-            };
+            var serializer = _fixture.GetSerializer<User>(p => new { p.Password, p.Username });
 
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/users";
 
             var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content = new StringContent(serializer.Serialize(user));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -103,13 +88,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (User)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
+            var returnedUser = _fixture.GetDeserializer().DeserializeSingle<User>(body).Data;
             var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.False(document.Data.Attributes.ContainsKey("password"));
-            Assert.Equal(user.Username, document.Data.Attributes["username"]);
+            Assert.False(document.SingleData.Attributes.ContainsKey("password"));
+            Assert.Equal(user.Username, document.SingleData.Attributes["username"]);
 
             // db assertions
-            var dbUser = await _context.Users.FindAsync(deserializedBody.Id);
+            var dbUser = await _context.Users.FindAsync(returnedUser.Id);
             Assert.Equal(user.Username, dbUser.Username);
             Assert.Equal(user.Password, dbUser.Password);
         }
@@ -121,27 +106,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var user = _userFaker.Generate();
             _context.Users.Add(user);
             _context.SaveChanges();
-
-            var newPassword = _userFaker.Generate().Password;
-
-            var content = new
-            {
-                data = new
-                {
-                    type = "users",
-                    id = user.Id,
-                    attributes = new Dictionary<string, object>()
-                    {
-                        { "password", newPassword },
-                    }
-                }
-            };
-
+            user.Password = _userFaker.Generate().Password;
+            var serializer = _fixture.GetSerializer<User>(p => new { p.Password });
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/users/{user.Id}";
-
             var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content = new StringContent(serializer.Serialize(user));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -152,14 +122,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (User)_fixture.GetService<IJsonApiDeserializer>().Deserialize(body);
+            var returnedUser = _fixture.GetDeserializer().DeserializeSingle<User>(body).Data;
             var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.False(document.Data.Attributes.ContainsKey("password"));
-            Assert.Equal(user.Username, document.Data.Attributes["username"]);
+            Assert.False(document.SingleData.Attributes.ContainsKey("password"));
+            Assert.Equal(user.Username, document.SingleData.Attributes["username"]);
 
             // db assertions
             var dbUser = _context.Users.AsNoTracking().Single(u => u.Id == user.Id);
-            Assert.Equal(newPassword, dbUser.Password);
+            Assert.Equal(user.Password, dbUser.Password);
         }
 
         [Fact]

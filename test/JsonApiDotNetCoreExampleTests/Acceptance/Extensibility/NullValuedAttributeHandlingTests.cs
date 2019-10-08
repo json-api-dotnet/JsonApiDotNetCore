@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
             // assert. does response contain a null valued attribute
-            Assert.Equal(omitsNulls, !deserializeBody.Data.Attributes.ContainsKey("description"));
+            Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
             Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
 
         }
