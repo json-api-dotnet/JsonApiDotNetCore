@@ -147,7 +147,7 @@ namespace UnitTests.Extensions
             public Task<object> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> GetRelationshipsAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> UpdateAsync(int id, IntResource entity) => throw new NotImplementedException();
-            public Task UpdateRelationshipsAsync(int id, string relationshipName, List<ResourceObject> relationships) => throw new NotImplementedException();
+            public Task UpdateRelationshipsAsync(int id, string relationshipName, object relationships) => throw new NotImplementedException();
         }
 
         private class GuidResourceService : IResourceService<GuidResource, Guid>
@@ -159,7 +159,7 @@ namespace UnitTests.Extensions
             public Task<object> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> GetRelationshipsAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource entity) => throw new NotImplementedException();
-            public Task UpdateRelationshipsAsync(Guid id, string relationshipName, List<ResourceObject> relationships) => throw new NotImplementedException();
+            public Task UpdateRelationshipsAsync(Guid id, string relationshipName, object relationships) => throw new NotImplementedException();
         }
 
 

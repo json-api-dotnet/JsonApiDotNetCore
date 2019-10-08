@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Query;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -56,6 +57,8 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public string Serialize(object data)
         {
+            if (data is ErrorCollection error)
+                return error.GetJson();
             if (data is IEnumerable entities)
                 return SerializeMany(entities);
             return SerializeSingle((IIdentifiable)data);
@@ -216,7 +219,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         private bool ShouldInclude(RelationshipAttribute relationship, out List<List<RelationshipAttribute>> inclusionChain)
         {
             inclusionChain = _includeQuery.Get()?.Where(l => l.First().Equals(relationship)).ToList();
-            if (inclusionChain == null)
+            if (inclusionChain == null || !inclusionChain.Any())
                 return false;
             return true;
         }

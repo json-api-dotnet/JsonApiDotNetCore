@@ -274,7 +274,7 @@ namespace UnitTests.Serialization.Deserializer
         }
 
         [Fact]
-        public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationPropertyIsNullAndForeignKeyIsPopulated()
+        public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationPropertyAndForeignKeyArePopulated()
         {
             // arrange
             var content = CreateDocumentWithRelationships("one-to-one-dependents", "principal", "one-to-one-principals");
@@ -285,7 +285,8 @@ namespace UnitTests.Serialization.Deserializer
 
             // assert
             Assert.Equal(1, result.Id);
-            Assert.Null(result.Principal);
+            Assert.NotNull(result.Principal);
+            Assert.Equal(10, result.Principal.Id);
             Assert.Equal(10, result.PrincipalId);
             Assert.Null(result.AttributeMember);
         }
@@ -319,7 +320,7 @@ namespace UnitTests.Serialization.Deserializer
         }
 
         [Fact]
-        public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationIsNullAndForeignKeyIsPopulated()
+        public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationAndForeignKeyArePopulated()
         {
             // arrange
             var content = CreateDocumentWithRelationships("one-to-many-dependents", "principal", "one-to-many-principals");
@@ -330,7 +331,8 @@ namespace UnitTests.Serialization.Deserializer
 
             // assert
             Assert.Equal(1, result.Id);
-            Assert.Null(result.Principal);
+            Assert.NotNull(result.Principal);
+            Assert.Equal(10, result.Principal.Id);
             Assert.Equal(10, result.PrincipalId);
             Assert.Null(result.AttributeMember);
         }

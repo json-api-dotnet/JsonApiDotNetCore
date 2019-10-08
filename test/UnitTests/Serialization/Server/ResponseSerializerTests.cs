@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.Serialization.Server
@@ -412,9 +414,10 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToOnePrincipal() { Id = 2, Dependent = null };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
+            serializer.SetRequestRelationship(requestRelationship);
 
             // act
-            string serialized = serializer.SerializeSingle(entity, requestRelationship);
+            string serialized = serializer.SerializeSingle(entity);
 
             // assert
             var expectedFormatted =
@@ -434,9 +437,10 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToOnePrincipal() { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
+            serializer.SetRequestRelationship(requestRelationship);
 
             // act
-            string serialized = serializer.SerializeSingle(entity, requestRelationship);
+            string serialized = serializer.SerializeSingle(entity);
 
             // assert
             var expectedFormatted =
@@ -459,9 +463,10 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent>() };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
+            serializer.SetRequestRelationship(requestRelationship);
 
             // act
-            string serialized = serializer.SerializeSingle(entity, requestRelationship);
+            string serialized = serializer.SerializeSingle(entity);
 
             // assert
             var expectedFormatted =
@@ -481,9 +486,10 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 1 } }  };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
+            serializer.SetRequestRelationship(requestRelationship);
 
             // act
-            string serialized = serializer.SerializeSingle(entity, requestRelationship);
+            string serialized = serializer.SerializeSingle(entity);
 
             // assert
             var expectedFormatted =
@@ -497,6 +503,46 @@ namespace UnitTests.Serialization.Server
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
 
             Assert.Equal(expected, serialized);
+        }
+
+        [Fact]
+        public void Can_Return_Custom_Error_Types()
+        {
+            // arrange
+            var error = new CustomError(507, "title", "detail", "custom");
+            var errorCollection = new ErrorCollection();
+            errorCollection.Add(error);
+
+            var expectedJson = JsonConvert.SerializeObject(new
+            {
+                errors = new dynamic[] {
+                    new {
+                        myCustomProperty = "custom",
+                        title = "title",
+                        detail = "detail",
+                        status = "507"
+                    }
+                }
+            });
+            var serializer = GetResponseSerializer<OneToManyPrincipal>();
+
+
+            // act
+            var result = serializer.Serialize(errorCollection);
+
+            // assert
+            Assert.Equal(expectedJson, result);
+
+        }
+
+        class CustomError : Error
+        {
+            public CustomError(int status, string title, string detail, string myProp)
+            : base(status, title, detail)
+            {
+                MyCustomProperty = myProp;
+            }
+            public string MyCustomProperty { get; set; }
         }
     }
 }

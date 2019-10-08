@@ -2,22 +2,26 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Formatters
 {
+    /// <summary>
+    /// Formats the response data used  https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0.
+    /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
+    /// It onls depends on <see cref="IJsonApiSerializerFactory"/>.
+    /// </summary>
     public class JsonApiWriter : IJsonApiWriter
     {
         private readonly ILogger<JsonApiWriter> _logger;
-        private readonly IJsonApiSerializerFactory _serializerFactory;
+        private readonly IJsonApiSerializer _serializer;
 
         public JsonApiWriter(IJsonApiSerializerFactory factory,
                              ILoggerFactory loggerFactory)
         {
-            _serializerFactory = factory;
+            _serializer = factory.GetSerializer();
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
         }
 
@@ -33,34 +37,20 @@ namespace JsonApiDotNetCore.Formatters
                 string responseContent;
                 try
                 {
-                    responseContent = GetResponseBody(context.Object);
+                    responseContent = _serializer.Serialize(context.Object);
                 }
                 catch (Exception e)
                 {
                     _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
-                    responseContent = GetErrorResponse(e);
+                    var errors = new ErrorCollection();
+                    errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
+                    responseContent = _serializer.Serialize(errors);
                     response.StatusCode = 400;
                 }
 
                 await writer.WriteAsync(responseContent);
                 await writer.FlushAsync();
             }
-        }
-
-        private string GetResponseBody(object responseObject)
-        {
-            if (responseObject is ErrorCollection errorCollection)
-                return errorCollection.GetJson();
-
-            var serializer = _serializerFactory.GetSerializer();
-            return serializer.Serialize(responseObject);
-        }
-
-        private string GetErrorResponse(Exception e)
-        {
-            var errors = new ErrorCollection();
-            errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
-            return errors.GetJson();
         }
     }
 }
