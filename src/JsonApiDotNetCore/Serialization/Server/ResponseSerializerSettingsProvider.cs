@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// This implementation of the behaviour provider reads the query params that
     /// can, if provided, override the settings in <see cref="IJsonApiOptions"/>.
     /// </summary>
-    public class ResponseSerializerSettingsProvider : ISerializerSettingsProvider
+    public class ResponseSerializerSettingsProvider : IResourceObjectBuilderSettingsProvider
     {
         private readonly IJsonApiOptions _options;
         private readonly IAttributeBehaviourService _attributeBehaviour;
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <inheritdoc/>
-        public SerializerSettings Get()
+        public ResourceObjectBuilderSettings Get()
         {
             bool omitNullConfig;
             if (_attributeBehaviour.OmitNullValuedAttributes.HasValue)
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 omitDefaultConfig = _attributeBehaviour.OmitDefaultValuedAttributes.Value;
             else omitDefaultConfig = _options.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes;
 
-            return new SerializerSettings(omitNullConfig, omitDefaultConfig);
+            return new ResourceObjectBuilderSettings(omitNullConfig, omitDefaultConfig);
         }
     }
 }

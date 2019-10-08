@@ -52,8 +52,8 @@ namespace UnitTests.Serialization
             var included = GetIncludedRelationships(inclusionChains);
             var provider = GetContextEntityProvider();
             var includedBuilder = GetIncludedBuilder<T>();
-
-            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, included, _resourceGraph, provider, GetSerializerSettingsProvider());
+            var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, null, _resourceGraph, GetSerializerSettingsProvider());
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder<T>() where T : class, IIdentifiable
@@ -61,10 +61,10 @@ namespace UnitTests.Serialization
             return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
         }
 
-        protected ISerializerSettingsProvider GetSerializerSettingsProvider()
+        protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
         {
-            var mock = new Mock<ISerializerSettingsProvider>();
-            mock.Setup(m => m.Get()).Returns(new SerializerSettings());
+            var mock = new Mock<IResourceObjectBuilderSettingsProvider>();
+            mock.Setup(m => m.Get()).Returns(new ResourceObjectBuilderSettings());
             return mock.Object;
         }
 
@@ -119,23 +119,43 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
+        /// <summary>
+        /// Minimal implementation of abstract JsonApiSerializer base class, with
+        /// the purpose of testing the business logic for building the document structure.
+        /// </summary>
+        protected class TestDocumentBuilder : BaseDocumentBuilder
+        {
+            public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IContextEntityProvider provider) : base(resourceObjectBuilder, provider) { }
+
+            public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
+            {
+                return base.Build(entity, attributes ?? null, relationships ?? null);
+            }
+
+            public new Document Build(IEnumerable entities, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
+            {
+                return base.Build(entities, attributes ?? null, relationships ?? null) ;
+            }
+        }
+
+
 
         /// <summary>
         /// Minimal implementation of abstract JsonApiSerializer base class, with
         /// the purpose of testing the business logic for building the document structure.
         /// </summary>
-        protected class TestSerializer : BaseDocumentBuilder
+        protected class TestResourceObjectBuilder : BaseResourceObjectBuilder
         {
-            public TestSerializer(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, new SerializerSettings()) { }
+            public TestResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, new ResourceObjectBuilderSettings()) { }
 
-            public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
+            public new ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
             {
                 return base.Build(entity, attributes ?? new List<AttrAttribute>(), relationships ?? new List<RelationshipAttribute>());
             }
 
-            public new Document Build(IEnumerable entities, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
+            protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
             {
-                return base.Build(entities, attributes ?? new List<AttrAttribute>(), relationships ?? new List<RelationshipAttribute>());
+                return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, entity) };
             }
         }
     }

@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
         /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null);
+        protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null);
 
         /// <inheritdoc/>
         protected object Deserialize(string body)
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             if (_document.SingleData == null) return null;
-                return ParseResourceObject(_document.SingleData);
+            return ParseResourceObject(_document.SingleData);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
         /// <param name="relationshipAttributes">Exposed relatinships for <paramref name="entity"/></param>
         /// <returns></returns>
-        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipData> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
             if (relationshipsValues == null || relationshipsValues.Count == 0)
                 return entity;
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData) || !relationshipData.IsPopulated)
+                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
                 if (attr is HasOneAttribute hasOne)
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Serialization
         private object SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
-            RelationshipData relationshipData)
+            RelationshipEntry relationshipData)
         {
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id ?? null;
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCore.Serialization
                 SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
 
             SetNavigation(entity, attr, relatedId);
-           
+
             /// depending on if this base parser is used client-side or server-side,
             /// different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
@@ -222,7 +222,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private object SetHasManyRelationship(IIdentifiable entity,
                                               HasManyAttribute attr,
-                                              RelationshipData relationshipData)
+                                              RelationshipEntry relationshipData)
         {
             if (relationshipData.Data != null)
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.

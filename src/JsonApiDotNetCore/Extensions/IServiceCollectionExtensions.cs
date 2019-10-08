@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             services.AddScoped<IRequestSerializer, RequestSerializer>();
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
-            services.AddScoped<ISerializerSettingsProvider, ResponseSerializerSettingsProvider>();
+            services.AddScoped<IResourceObjectBuilderSettingsProvider, ResponseSerializerSettingsProvider>();
             services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
 
             if (jsonApiOptions.EnableResourceHooks)

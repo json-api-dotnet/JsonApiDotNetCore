@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 
@@ -23,9 +22,8 @@ namespace JsonApiDotNetCore.Serialization.Client
         private readonly IFieldsExplorer _fieldExplorer;
         public RequestSerializer(IFieldsExplorer fieldExplorer,
                                 IContextEntityProvider provider,
-                                IResourceGraph resourceGraph,
-                                ISerializerSettingsProvider settingsProvider)
-            : base(resourceGraph, provider, settingsProvider.Get())
+                                IResourceObjectBuilder resourceObjectBuilder)
+            : base(resourceObjectBuilder, provider)
         {
             _fieldExplorer = fieldExplorer;
             _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();

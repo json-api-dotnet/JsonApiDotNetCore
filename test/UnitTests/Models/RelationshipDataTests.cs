@@ -11,7 +11,7 @@ namespace UnitTests.Models
         public void Setting_ExposeData_To_List_Sets_ManyData()
         {
             // arrange
-            var relationshipData = new RelationshipData();
+            var relationshipData = new RelationshipEntry();
             var relationships = new List<ResourceIdentifierObject> {
                 new ResourceIdentifierObject {
                     Id = "9",
@@ -33,7 +33,7 @@ namespace UnitTests.Models
         public void Setting_ExposeData_To_JArray_Sets_ManyData()
         {
             // arrange
-            var relationshipData = new RelationshipData();
+            var relationshipData = new RelationshipEntry();
             var relationshipsJson = @"[
                 {
                     ""type"": ""authors"",
@@ -57,7 +57,7 @@ namespace UnitTests.Models
         public void Setting_ExposeData_To_RIO_Sets_SingleData()
         {
             // arrange
-            var relationshipData = new RelationshipData();
+            var relationshipData = new RelationshipEntry();
             var relationship = new ResourceIdentifierObject {
                 Id = "9",
                 Type = "authors"
@@ -77,7 +77,7 @@ namespace UnitTests.Models
         public void Setting_ExposeData_To_JObject_Sets_SingleData()
         {
             // arrange
-            var relationshipData = new RelationshipData();
+            var relationshipData = new RelationshipEntry();
             var relationshipJson = @"{
                     ""id"": ""9"",
                     ""type"": ""authors""

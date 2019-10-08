@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
         /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null)
+        protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null)
         {
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
