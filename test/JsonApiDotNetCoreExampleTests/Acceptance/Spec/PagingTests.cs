@@ -10,7 +10,6 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-
     [Collection("WebHostCollection")]
     public class PagingTests : TestFixture<TestStartup>
     {
@@ -24,7 +23,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             .RuleFor(t => t.Description, f => f.Lorem.Sentence())
             .RuleFor(t => t.Ordinal, f => f.Random.Number())
             .RuleFor(t => t.CreatedDate, f => f.Date.Past());
-
         }
 
         [Fact]

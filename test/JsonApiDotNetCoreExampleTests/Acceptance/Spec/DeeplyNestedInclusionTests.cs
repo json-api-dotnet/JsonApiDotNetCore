@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -34,7 +38,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             const string route = "/api/v1/todo-items?include=collection.owner";
-
+            var graph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
+            var deserializer = new ResponseDeserializer(graph);
             var todoItem = new TodoItem
             {
                 Collection = new TodoItemCollection
@@ -55,7 +60,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
+
+            var todoItems = deserializer.DeserializeList<TodoItem>(body).Data;
 
             var responseTodoItem = Assert.Single(todoItems);
             Assert.NotNull(responseTodoItem);

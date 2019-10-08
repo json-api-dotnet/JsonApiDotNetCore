@@ -20,6 +20,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -141,7 +142,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var request = new HttpRequestMessage(httpMethod, route);
             var graph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todo-items").Build();
             var deserializer = new ResponseDeserializer(graph);
-
             // act
             var response = await client.SendAsync(request);
 
@@ -237,12 +237,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Assert.DoesNotContain("ordinal", includedItem.Attributes.Keys);
                 Assert.DoesNotContain("created-date", includedItem.Attributes.Keys);
             }
-        }
-
-        public class TodoItemClient : TodoItem
-        {
-            [Attr("calculated-value")]
-            public new string CalculatedValue { get; set; }
         }
     }
 }
