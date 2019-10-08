@@ -96,10 +96,15 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
+                relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData);
+
+                if (relationshipData == null || !relationshipData.HasData)
+                    continue;
+
                 if (attr is HasOneAttribute hasOne)
-                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipsValues);
+                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipData);
                 else
-                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipsValues);
+                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
 
             }
             return entity;
@@ -152,16 +157,13 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entity"></param>
         /// <param name="entityProperties"></param>
         /// <param name="attr"></param>
-        /// <param name="relationships"></param>
+        /// <param name="relationshipData"></param>
         /// <returns></returns>
         private object SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
-            Dictionary<string, RelationshipData> relationships)
+            RelationshipData relationshipData)
         {
-            if (relationships.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData) == false)
-                return entity;
-
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id ?? null;
 
@@ -173,13 +175,10 @@ namespace JsonApiDotNetCore.Serialization
                 /// i.e. we're populating the relationship from the dependent side.
                 SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
 
-
             SetNavigation(entity, attr, relatedId);
-            
-
-
-            // allow for additional processing of relationships as required for the
-            // serializer class that implements this abstract class.
+           
+            /// depending on if this base parser is used client-side or server-side,
+            /// different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
 
             return entity;
@@ -226,24 +225,18 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private object SetHasManyRelationship(IIdentifiable entity,
                                               HasManyAttribute attr,
-                                              Dictionary<string, RelationshipData> relationships)
+                                              RelationshipData relationshipData)
         {
-            if (relationships.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData))
+            var relatedResources = relationshipData.ManyData.Select(rio =>
             {
-                if (!relationshipData.IsManyData)
-                    return entity;
+                var relatedInstance = attr.DependentType.New<IIdentifiable>();
+                relatedInstance.StringId = rio.Id;
+                return relatedInstance;
+            });
 
-                var relatedResources = relationshipData.ManyData.Select(rio =>
-                {
-                    var relatedInstance = attr.DependentType.New<IIdentifiable>();
-                    relatedInstance.StringId = rio.Id;
-                    return relatedInstance;
-                });
-
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
-                attr.SetValue(entity, convertedCollection);
-                AfterProcessField(entity, attr, relationshipData);
-            }
+            var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
+            attr.SetValue(entity, convertedCollection);
+            AfterProcessField(entity, attr, relationshipData);
 
             return entity;
         }

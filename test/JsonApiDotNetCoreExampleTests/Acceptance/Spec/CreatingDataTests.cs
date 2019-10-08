@@ -164,7 +164,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(clientDefinedId, deserializedBody.Id);
         }
 
-
         [Fact]
         public async Task Can_Create_Guid_Identifiable_Entity_With_Client_Defined_Id_If_Configured()
         {
@@ -176,34 +175,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
 
             var context = _fixture.GetService<AppDbContext>();
+            context.RemoveRange(context.TodoItemCollections);
+            await context.SaveChangesAsync();
 
-            var owner = new JsonApiDotNetCoreExample.Models.Person();
+            var owner = new Person();
             context.People.Add(owner);
             await context.SaveChangesAsync();
 
             var route = "/api/v1/todo-collections";
             var request = new HttpRequestMessage(httpMethod, route);
             var clientDefinedId = Guid.NewGuid();
-            var content = new
-            {
-                data = new
-                {
-                    type = "todo-collections",
-                    id = $"{clientDefinedId}",
-                    relationships = new
-                    {
-                        owner = new
-                        {
-                            data = new
-                            {
-                                type = "people",
-                                id = owner.Id.ToString()
-                            }
-                        }
-                    }
-                }
-            };
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+
+            var serializer = _fixture.GetSerializer<TodoItemCollection>(tic => new { }, tic => new { tic.Owner });
+            var todoItemCollection = new TodoItemCollection { Owner = owner, OwnerId = owner.Id, Id = clientDefinedId };
+            var content = serializer.Serialize(todoItemCollection);
+
+            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // act
