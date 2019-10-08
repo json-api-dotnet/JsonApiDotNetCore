@@ -126,13 +126,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var newTodoItem = _todoItemFaker.Generate();
-
+            newTodoItem.Id = todoItem.Id;
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var serializer = _fixture.GetSerializer<TodoItem>(p => new { p.Description, p.Ordinal });
 
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", serializer.Serialize(todoItem));
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", serializer.Serialize(newTodoItem));
 
             // Act
             var response = await client.SendAsync(request);
@@ -147,9 +147,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(newTodoItem.Description, document.SingleData.Attributes["description"]);
             Assert.Equal(newTodoItem.Ordinal, (long)document.SingleData.Attributes["ordinal"]);
             Assert.True(document.SingleData.Relationships.ContainsKey("owner"));
-            Assert.NotNull(document.SingleData.Relationships["owner"].SingleData);
-            Assert.Equal(person.Id.ToString(), document.SingleData.Relationships["owner"].SingleData.Id);
-            Assert.Equal("people", document.SingleData.Relationships["owner"].SingleData.Type);
+            Assert.Null(document.SingleData.Relationships["owner"].SingleData);
 
             // Assert -- database
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
