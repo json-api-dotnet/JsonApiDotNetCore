@@ -270,7 +270,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // act, assert
-            Assert.ThrowsAny<FormatException>(() => _deserializer.Deserialize(body));
+            Assert.Throws<FormatException>(() => _deserializer.Deserialize(body));
         }
 
         [Fact]
@@ -316,7 +316,7 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
             // act, assert
-            Assert.ThrowsAny<FormatException>(() => _deserializer.Deserialize(body));
+            Assert.Throws<FormatException>(() => _deserializer.Deserialize(body));
         }
 
         [Fact]

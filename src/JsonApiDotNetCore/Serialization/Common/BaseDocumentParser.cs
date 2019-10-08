@@ -96,9 +96,7 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
-                relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData);
-
-                if (relationshipData == null || !relationshipData.HasData)
+                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
                 if (attr is HasOneAttribute hasOne)
@@ -119,7 +117,6 @@ namespace JsonApiDotNetCore.Serialization
             }
             return jToken;
         }
-
 
         /// <summary>
         /// Creates an instance of the referenced type in <paramref name="data"/>
@@ -227,15 +224,18 @@ namespace JsonApiDotNetCore.Serialization
                                               HasManyAttribute attr,
                                               RelationshipData relationshipData)
         {
-            var relatedResources = relationshipData.ManyData.Select(rio =>
-            {
-                var relatedInstance = attr.DependentType.New<IIdentifiable>();
-                relatedInstance.StringId = rio.Id;
-                return relatedInstance;
-            });
+            if (relationshipData.Data != null)
+            {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
+                var relatedResources = relationshipData.ManyData.Select(rio =>
+                {
+                    var relatedInstance = attr.DependentType.New<IIdentifiable>();
+                    relatedInstance.StringId = rio.Id;
+                    return relatedInstance;
+                });
+                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
+                attr.SetValue(entity, convertedCollection);
+            }
 
-            var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
-            attr.SetValue(entity, convertedCollection);
             AfterProcessField(entity, attr, relationshipData);
 
             return entity;
