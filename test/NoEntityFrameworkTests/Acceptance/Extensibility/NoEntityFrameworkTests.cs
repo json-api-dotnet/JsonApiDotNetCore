@@ -39,7 +39,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.Server.GetService<IJsonApiDeserializer>()
+            var deserializedBody = _fixture.Server.GetDeserializer()
                 .DeserializeList<TodoItem>(responseBody);
 
             // assert
@@ -66,7 +66,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeserializer>()
+            var deserializedBody = (TodoItem)_fixture.Server.GetDeserializer()
                 .Deserialize(responseBody);
 
             // assert
@@ -103,7 +103,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.Server.GetService<IJsonApiDeserializer>()
+            var deserializedBody = (TodoItem)_fixture.Server.GetDeserializer()
                 .Deserialize(responseBody);
 
             // assert

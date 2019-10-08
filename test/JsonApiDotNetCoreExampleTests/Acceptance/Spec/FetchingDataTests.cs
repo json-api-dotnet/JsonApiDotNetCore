@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
             var items = result.Data;
             var meta = result.Meta;
 

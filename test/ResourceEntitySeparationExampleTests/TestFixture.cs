@@ -87,7 +87,7 @@ namespace ResourceEntitySeparationExampleTests
         {
             var response = await SendAsync(method, route, data);
             var json = await response.Content.ReadAsStringAsync();
-            var obj = (T)Server.GetService<IJsonApiDeserializer>().Deserialize(json);
+            var obj = (T)Server.GetDeserializer().Deserialize(json);
             return (response, obj);
         }
     }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
@@ -152,18 +153,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            //var deserializedTodoItems = _fixture
-            //    .GetService<IJsonApiDeserializer>()
-            //    .DeserializeList<TodoItem>(body);
+            var deserializedTodoItems = _fixture
+                .GetDeserializer()
+                .DeserializeList<TodoItem>(body).Data;
 
             // assert
-            //Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            //Assert.Equal(guids.Count(), deserializedTodoItems.Count());
-            //foreach (var item in deserializedTodoItems)
-            //{
-            //    Assert.Contains(item.GuidProperty, guids);
-            //    Assert.DoesNotContain(item.GuidProperty, notInGuids);
-            //}
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(guids.Count(), deserializedTodoItems.Count());
+            foreach (var item in deserializedTodoItems)
+            {
+                Assert.Contains(item.GuidProperty, guids);
+                Assert.DoesNotContain(item.GuidProperty, notInGuids);
+            }
         }
 
         [Fact]
@@ -189,59 +190,59 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            //var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            //var included = documents.Included;
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
+            var included = documents.Included;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            //Assert.Equal(ownerFirstNames.Count(), documents.Data.Count());
-            //Assert.NotNull(included);
-            //Assert.NotEmpty(included);
-            //foreach (var item in included)
-            //    Assert.Contains(item.Attributes["first-name"], ownerFirstNames);
+            Assert.Equal(ownerFirstNames.Count(), documents.ManyData.Count());
+            Assert.NotNull(included);
+            Assert.NotEmpty(included);
+            foreach (var item in included)
+                Assert.Contains(item.Attributes["first-name"], ownerFirstNames);
 
         }
 
-        //[Fact]
-        //public async Task Can_Filter_On_Not_In_Array_Values()
-        //{
-        //    // arrange
-        //    var context = _fixture.GetService<AppDbContext>();
-        //    context.TodoItems.RemoveRange(context.TodoItems);
-        //    context.SaveChanges();
-        //    var todoItems = _todoItemFaker.Generate(5);
-        //    var guids = new List<Guid>();
-        //    var notInGuids = new List<Guid>();
-        //    foreach (var item in todoItems)
-        //    {
-        //        context.TodoItems.Add(item);
-        //        // Exclude 2 items
-        //        if (guids.Count < (todoItems.Count() - 2))
-        //            guids.Add(item.GuidProperty);
-        //        else
-        //            notInGuids.Add(item.GuidProperty);
-        //    }
-        //    context.SaveChanges();
+        [Fact]
+        public async Task Can_Filter_On_Not_In_Array_Values()
+        {
+            // arrange
+            var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            context.SaveChanges();
+            var todoItems = _todoItemFaker.Generate(5);
+            var guids = new List<Guid>();
+            var notInGuids = new List<Guid>();
+            foreach (var item in todoItems)
+            {
+                context.TodoItems.Add(item);
+                // Exclude 2 items
+                if (guids.Count < (todoItems.Count() - 2))
+                    guids.Add(item.GuidProperty);
+                else
+                    notInGuids.Add(item.GuidProperty);
+            }
+            context.SaveChanges();
 
-        //    var totalCount = context.TodoItems.Count();
-        //    var httpMethod = new HttpMethod("GET");
-        //    var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[guid-property]=nin:{string.Join(",", notInGuids)}";
-        //    var request = new HttpRequestMessage(httpMethod, route);
+            var totalCount = context.TodoItems.Count();
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[guid-property]=nin:{string.Join(",", notInGuids)}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        //    // act
-        //    var response = await _fixture.Client.SendAsync(request);
-        //    var body = await response.Content.ReadAsStringAsync();
-        //    var deserializedTodoItems = _fixture
-        //        .GetService<IJsonApiDeserializer>()
-        //        .DeserializeList<TodoItem>(body);
+            // act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedTodoItems = _fixture
+                .GetDeserializer()
+                .DeserializeList<TodoItem>(body).Data;
 
-        //    // assert
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        //    Assert.Equal(totalCount - notInGuids.Count(), deserializedTodoItems.Count());
-        //    foreach (var item in deserializedTodoItems)
-        //    {
-        //        Assert.DoesNotContain(item.GuidProperty, notInGuids);
-        //    }
-        //}
+            // assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(totalCount - notInGuids.Count(), deserializedTodoItems.Count());
+            foreach (var item in deserializedTodoItems)
+            {
+                Assert.DoesNotContain(item.GuidProperty, notInGuids);
+            }
+        }
     }
 }

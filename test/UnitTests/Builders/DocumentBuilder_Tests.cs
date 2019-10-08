@@ -128,7 +128,7 @@
 //            var document = documentBuilder.Build(entity);
 
 //            // assert
-//            Assert.Null(document.Data.Relationships["related-model"].Links);
+//            Assert.Null(document.SingleData.Relationships["related-model"].Links);
 //        }
 
 //        [Fact]
@@ -152,7 +152,7 @@
 //            var document = documentBuilder.Build(entity);
 
 //            // assert
-//            Assert.Null(document.Data.Relationships["models"].Links);
+//            Assert.Null(document.SingleData.Relationships["models"].Links);
 //        }
 
 //        [Fact]
@@ -179,7 +179,7 @@
 //            var document = documentBuilder.Build(entity);
 
 //            // assert
-//            var relationshipData = document.Data.Relationships[relationshipName];
+//            var relationshipData = document.SingleData.Relationships[relationshipName];
 //            Assert.NotNull(relationshipData);
 //            Assert.NotNull(relationshipData.SingleData);
 //            Assert.NotNull(relationshipData.SingleData);
@@ -208,7 +208,7 @@
 //            var document = documentBuilder.Build(entity);
 
 //            // assert
-//            var relationshipData = document.Data.Relationships[relationshipName];
+//            var relationshipData = document.SingleData.Relationships[relationshipName];
 //            Assert.NotNull(relationshipData);
 //            Assert.NotNull(relationshipData.SingleData);
 //            Assert.NotNull(relationshipData.SingleData);
@@ -261,7 +261,7 @@
 //            var documentBuilder = new DocumentBuilder(_jsonApiContextMock.Object, pageManagerMock.Object, currentRequestMock.Object, documentBuilderOptionsProvider: omitNullValuedAttributes.HasValue ? documentBuilderBehaviourMock.Object : null);
 //            var document = documentBuilder.Build(new Model() { StringProperty = attributeValue });
 
-//            Assert.Equal(resultContainsAttribute, document.Data.Attributes.ContainsKey("StringProperty"));
+//            Assert.Equal(resultContainsAttribute, document.SingleData.Attributes.ContainsKey("StringProperty"));
 //        }
 
 //        private class Model : Identifiable
