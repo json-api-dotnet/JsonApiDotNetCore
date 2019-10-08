@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Internal;
 namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="DocumentBuilder"/>
+    /// Server serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// </summary>
     /// <remarks>
     /// Because in JsonApiDotNetCore every json:api request is associated with exactly one
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
-    public class ResponseSerializer<TResource> : DocumentBuilder, IJsonApiSerializer, IJsonApiDefaultSerializer
+    public class ResponseSerializer<TResource> : BaseDocumentBuilder, IJsonApiSerializer, IJsonApiDefaultSerializer
         where TResource : class, IIdentifiable
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();

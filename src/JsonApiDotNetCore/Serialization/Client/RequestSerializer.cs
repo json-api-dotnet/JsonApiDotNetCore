@@ -11,11 +11,11 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Client serializer implementation of <see cref="DocumentBuilder"/>
+    /// Client serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// Note that this implementation does not override the default implementation
     /// of <see cref="ResourceObjectBuilder.GetRelationshipData"/>.
     /// </summary>
-    public class RequestSerializer : DocumentBuilder, IRequestSerializer
+    public class RequestSerializer : BaseDocumentBuilder, IRequestSerializer
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache;
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache;

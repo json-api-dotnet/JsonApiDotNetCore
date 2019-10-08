@@ -9,9 +9,9 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization.Client
 {
     /// <summary>
-    /// Client deserializer implementation of the <see cref="DocumentParser"/>
+    /// Client deserializer implementation of the <see cref="BaseDocumentParser"/>
     /// </summary>
-    public class ResponseDeserializer : DocumentParser, IResponseDeserializer
+    public class ResponseDeserializer : BaseDocumentParser, IResponseDeserializer
     {
         public ResponseDeserializer(IContextEntityProvider provider) : base(provider) { }
 

@@ -23,13 +23,13 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         public CreateOpProcessor(
             ICreateService<T, int> service,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
         ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
     }
 
-    public interface IDocumentBuilder
+    public interface IBaseDocumentBuilder
     {
         ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource);
     }
@@ -39,13 +39,13 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         private readonly ICreateService<T, TId> _service;
         private readonly IOperationsDeserializer _deserializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public CreateOpProcessor(
             ICreateService<T, TId> service,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;

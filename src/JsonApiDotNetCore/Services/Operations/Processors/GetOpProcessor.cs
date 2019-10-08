@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetByIdService<T, int> getById,
             IGetRelationshipService<T, int> getRelationship,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
         ) : base(getAll, getById, getRelationship, deserializer, documentBuilder, resourceGraph)
         { }
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IGetByIdService<T, TId> _getById;
         private readonly IGetRelationshipService<T, TId> _getRelationship;
         private readonly IOperationsDeserializer _deserializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         /// <inheritdoc />
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetByIdService<T, TId> getById,
             IGetRelationshipService<T, TId> getRelationship,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _getAll = getAll;

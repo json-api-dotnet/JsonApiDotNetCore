@@ -7,11 +7,11 @@ using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class DocumentBuilderTests : SerializerTestsSetup
+    public class BaseDocumentBuilderTests : SerializerTestsSetup
     {
         private readonly TestSerializer _serializer;
 
-        public DocumentBuilderTests()
+        public BaseDocumentBuilderTests()
         {
             _serializer = new TestSerializer(_resourceGraph, _resourceGraph);
         }

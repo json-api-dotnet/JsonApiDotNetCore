@@ -10,14 +10,14 @@ Throughout the document and the code when referring to fields, members, object t
 `Document` class, [see document spec](https://jsonapi.org/format/#document-structure).
 
 ## Deserialization
-The previous `JsonApiDeSerializer` implementation is now split into a `RequestDeserializer` and `ResponseDeserializer`. Both inherit from `DocumentParser` which does the shared parsing.
+The previous `JsonApiDeSerializer` implementation is now split into a `RequestDeserializer` and `ResponseDeserializer`. Both inherit from `BaseDocumentParser` which does the shared parsing.
 
-#### DocumentParser
+#### BaseDocumentParser
 Responsible for 
 - Converting the serialized string content into an intance of the `Document` class. 
 - Building instances of the corresponding resource class (eg `Article`) by going through the document's primary data (`Document.Data`, [see primary data spec](https://jsonapi.org/format/#document-top-level)).
 
-Responsibility of any implementation-specific parsing is shifted through the abstract `DocumentParser.AfterProcessField()` method. This method is fired once each time after a `AttrAttribute` or `RelationshipAttribute` is processed. It allows a implementation of `DocumentParser` to intercept the parsing and add steps that are only required for clients/servers.
+Responsibility of any implementation-specific parsing is shifted through the abstract `BaseDocumentParser.AfterProcessField()` method. This method is fired once each time after a `AttrAttribute` or `RelationshipAttribute` is processed. It allows a implementation of `BaseDocumentParser` to intercept the parsing and add steps that are only required for clients/servers.
 
 #### ResponseDeserializer
 The client deserializer complements the base deserialization  by
@@ -30,7 +30,7 @@ For server-side parsing, no extra parsing needs to be done after the base deseri
 * The `AfterProcessField` method is overriden so that every attribute and relationship is registered with the `ITargetedFields` service after it is processed.
 
 ## Serialization
-Like with the deserializers, `JsonApiSerializer` is now split up into a `ResponseSerializer` and `RequestSerializer`. Both inherit from a shared `DocumentBuilder` class. Additionally, `DocumentBuilder` inherits from `ResourceObjectBuilder`, which is extended by `IncludedResourceObjectBuilder`.
+Like with the deserializers, `JsonApiSerializer` is now split up into a `ResponseSerializer` and `RequestSerializer`. Both inherit from a shared `BaseDocumentBuilder` class. Additionally, `BaseDocumentBuilder` inherits from `ResourceObjectBuilder`, which is extended by `IncludedResourceObjectBuilder`.
 
 ### ResourceObjectBuilder
 At the core of serialization is the `ResourceObject` class [see resource object spec](https://jsonapi.org/format/#document-resource-objects).
@@ -44,7 +44,7 @@ Additionally, client and server serializers also differ in how relationship memb
 
 This time, the `GetRelationshipData()` method is not abstract, but virtual with a default implementation. This default implementation is to just create a `RelationshipData` with primary data (like `{"related-foo": { "data": { "id": 1" "type": "foobar"}}}`). Some implementations (server, included builder) need additional logic, others don't (client).
 
-### DocumentBuilder
+### BaseDocumentBuilder
 Responsible for
 - Calling the base resource object serialization for one (or many) entities and wrapping the result in a `Document`.
 
@@ -70,7 +70,7 @@ The server serializer is also responsible for adding top-level meta data and lin
 
 
 ### IncludedResourceObjectBuilder
-Responsible for building the *included member* of a `Document`. Note that `IncludedResourceObjectBuilder` extends `ResourceObjectBuilder` and not `DocumentBuilder` because it does not need to build an entire document but only resource objects.
+Responsible for building the *included member* of a `Document`. Note that `IncludedResourceObjectBuilder` extends `ResourceObjectBuilder` and not `BaseDocumentBuilder` because it does not need to build an entire document but only resource objects.
 
 Relationship *inclusion chains* are at the core of building the included member. For example, consider the request `articles?included=author.blogs.reviewers.favorite-food,reviewer.blogs.author.favorite-song`. It contains the following (complex) inclusion chains:
 1. `author.blogs.reviewers.favorite-food`

@@ -8,11 +8,11 @@ using Xunit;
 
 namespace UnitTests.Serialization.Deserializer
 {
-    public class DocumentParserTests : DeserializerTestsSetup
+    public class BaseDocumentParserTests : DeserializerTestsSetup
     {
         private readonly TestDocumentParser _deserializer;
 
-        public DocumentParserTests()
+        public BaseDocumentParserTests()
         {
             _deserializer = new TestDocumentParser(_resourceGraph);
         }

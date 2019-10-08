@@ -124,7 +124,7 @@ namespace UnitTests.Serialization
         /// Minimal implementation of abstract JsonApiSerializer base class, with
         /// the purpose of testing the business logic for building the document structure.
         /// </summary>
-        protected class TestSerializer : DocumentBuilder
+        protected class TestSerializer : BaseDocumentBuilder
         {
             public TestSerializer(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, new SerializerSettings()) { }
 

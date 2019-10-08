@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
-    /// Server deserializer implementation of the <see cref="DocumentParser"/>
+    /// Server deserializer implementation of the <see cref="BaseDocumentParser"/>
     /// </summary>
-    public class RequestDeserializer : DocumentParser, IJsonApiDeserializer
+    public class RequestDeserializer : BaseDocumentParser, IJsonApiDeserializer
     {
         private readonly ITargetedFields  _targetedFields;
 

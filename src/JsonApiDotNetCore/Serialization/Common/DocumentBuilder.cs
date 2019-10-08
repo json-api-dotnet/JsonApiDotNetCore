@@ -9,9 +9,9 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for serialization that extends <see cref="ResourceObjectBuilder"/>.
     /// Converts entities in to <see cref="ResourceObject"/>s and wraps them in a <see cref="Document"/>.
     /// </summary>
-    public abstract class DocumentBuilder : ResourceObjectBuilder
+    public abstract class BaseDocumentBuilder : ResourceObjectBuilder
     {
-        protected DocumentBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings behaviour) : base(resourceGraph, provider, behaviour) { }
+        protected BaseDocumentBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings behaviour) : base(resourceGraph, provider, behaviour) { }
 
         /// <summary>
         /// Builds a <see cref="Document"/> for <paramref name="entity"/>.
