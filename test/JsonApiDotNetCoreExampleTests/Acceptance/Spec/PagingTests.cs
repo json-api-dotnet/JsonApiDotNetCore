@@ -10,12 +10,22 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
+
+    [Collection("WebHostCollection")]
     public class PagingTests : TestFixture<TestStartup>
     {
-        private readonly Faker<TodoItem> _todoItemFaker = new Faker<TodoItem>()
+        private TestFixture<TestStartup> _fixture;
+        private readonly Faker<TodoItem> _todoItemFaker;
+
+        public PagingTests(TestFixture<TestStartup> fixture)
+        {
+            _fixture = fixture;
+            _todoItemFaker = new Faker<TodoItem>()
             .RuleFor(t => t.Description, f => f.Lorem.Sentence())
             .RuleFor(t => t.Ordinal, f => f.Random.Number())
             .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+
+        }
 
         [Fact]
         public async Task Can_Paginate_TodoItems()
@@ -41,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body).Data;
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             Assert.NotEmpty(deserializedBody);
             Assert.Equal(expectedEntitiesPerPage, deserializedBody.Count);
@@ -72,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body).Data;
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             var expectedTodoItems = new[] { todoItems[0], todoItems[1] };
             Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
@@ -103,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = GetService<IJsonApiDeserializer>().DeserializeList<TodoItem>(body).Data;
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             var expectedTodoItems = new[] { todoItems[totalCount - 2], todoItems[totalCount - 1] };
             Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());

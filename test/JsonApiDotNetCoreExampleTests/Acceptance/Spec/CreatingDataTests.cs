@@ -690,7 +690,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var personResult = _fixture.GetDeserializer().Deserialize<Person>(body);
+            var personResult = _fixture.GetDeserializer().DeserializeSingle<Person>(body).Data;
 
             // Assert
             Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
