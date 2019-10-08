@@ -96,9 +96,9 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected IFieldsService GetFieldsQuery()
+        protected ISparseFieldsService GetFieldsQuery()
         {
-            var mock = new Mock<IFieldsService>();
+            var mock = new Mock<ISparseFieldsService>();
             return mock.Object;
         }
 

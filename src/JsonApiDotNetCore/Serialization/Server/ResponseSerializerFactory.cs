@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     public class ResponseSerializerFactory : IJsonApiSerializerFactory
     {
-        private readonly IScopedServiceProvider _provider;
+        private readonly IServiceProvider _provider;
         private readonly ICurrentRequest _currentRequest;
 
         public ResponseSerializerFactory(ICurrentRequest currentRequest, IScopedServiceProvider provider)
@@ -30,8 +30,11 @@ namespace JsonApiDotNetCore.Serialization.Server
         public IJsonApiSerializer GetSerializer()
         {
             var targetType = GetDocumentPrimaryType();
+            if (targetType == null)
+                return null;
+
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
-            var serializer = (IJsonApiDefaultSerializer)_provider.GetRequiredService(serializerType);
+            var serializer = (IJsonApiDefaultSerializer)_provider.GetService(serializerType);
             if (_currentRequest.RequestRelationship != null && _currentRequest.IsRelationshipPath)
                 serializer.SetRequestRelationship(_currentRequest.RequestRelationship);
 
@@ -43,7 +46,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             if (_currentRequest.RequestRelationship != null && !_currentRequest.IsRelationshipPath)
                 return _currentRequest.RequestRelationship.DependentType;
 
-            return _currentRequest.GetRequestResource().EntityType;
+            return _currentRequest.GetRequestResource()?.EntityType;
         }
     }
 }

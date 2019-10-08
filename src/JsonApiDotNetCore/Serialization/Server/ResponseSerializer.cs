@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.Server
     {
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
-        private readonly IIncludeService _includeQuery;
+        private readonly IIncludeService _includeService;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _primaryResourceType;
@@ -40,13 +40,13 @@ namespace JsonApiDotNetCore.Serialization.Server
                                   ILinkBuilder linkBuilder,
                                   IIncludedResourceObjectBuilder includedBuilder,
                                   IFieldsToSerialize fieldsToSerialize,
-                                  IIncludeService includeQuery,
+                                  IIncludeService includeService,
                                   IResourceGraph resourceGraph,
                                   IContextEntityProvider provider,
                                   ISerializerSettingsProvider settingsProvider)
             : base(resourceGraph, provider, settingsProvider.Get())
         {
-            _includeQuery = includeQuery;
+            _includeService = includeService;
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
@@ -218,7 +218,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </summary>
         private bool ShouldInclude(RelationshipAttribute relationship, out List<List<RelationshipAttribute>> inclusionChain)
         {
-            inclusionChain = _includeQuery.Get()?.Where(l => l.First().Equals(relationship)).ToList();
+            inclusionChain = _includeService.Get()?.Where(l => l.First().Equals(relationship)).ToList();
             if (inclusionChain == null || !inclusionChain.Any())
                 return false;
             return true;

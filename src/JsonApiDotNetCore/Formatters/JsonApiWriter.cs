@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
 {
@@ -35,17 +36,24 @@ namespace JsonApiDotNetCore.Formatters
             {
                 response.ContentType = Constants.ContentType;
                 string responseContent;
-                try
+                if (_serializer == null)
                 {
-                    responseContent = _serializer.Serialize(context.Object);
+                    responseContent = JsonConvert.SerializeObject(context.Object);
                 }
-                catch (Exception e)
+                else
                 {
-                    _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
-                    var errors = new ErrorCollection();
-                    errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
-                    responseContent = _serializer.Serialize(errors);
-                    response.StatusCode = 400;
+                    try
+                    {
+                        responseContent = _serializer.Serialize(context.Object);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
+                        var errors = new ErrorCollection();
+                        errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
+                        responseContent = _serializer.Serialize(errors);
+                        response.StatusCode = 400;
+                    }
                 }
 
                 await writer.WriteAsync(responseContent);

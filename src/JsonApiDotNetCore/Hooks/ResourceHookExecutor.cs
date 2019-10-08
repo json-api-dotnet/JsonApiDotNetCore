@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         internal readonly IHookExecutorHelper _executorHelper;
         private readonly ITraversalHelper _traversalHelper;
-        private readonly IIncludeService _includeQuery;
+        private readonly IIncludeService _includeService;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _graph;
         public ResourceHookExecutor(
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Hooks
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
             _targetedFields = updatedFields;
-            _includeQuery = includedRelationships;
+            _includeService = includedRelationships;
             _graph = resourceGraph;
         }
 
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks
             var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
             var calledContainers = new List<PrincipalType>() { typeof(TEntity) };
-            foreach (var chain in _includeQuery.Get())
+            foreach (var chain in _includeService.Get())
                 RecursiveBeforeRead(chain, pipeline, calledContainers);
         }
 

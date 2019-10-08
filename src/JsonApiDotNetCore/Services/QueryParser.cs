@@ -21,32 +21,32 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
-        private readonly IIncludeService _includeQuery;
-        private readonly IInternalFieldsQueryService _fieldQuery;
+        private readonly IIncludeService _includeService;
+        private readonly ISparseFieldsService _fieldQuery;
         private readonly IPageQueryService _pageQuery;
         private readonly ICurrentRequest _currentRequest;
         private readonly IContextEntityProvider _provider;
         private readonly IJsonApiOptions _options;
-        private readonly ContextEntity _primaryResource;
+        private ContextEntity _primaryResource;
 
-        public QueryParser(IIncludeService includeQuery,
-            IInternalFieldsQueryService fieldQuery,
+        public QueryParser(IIncludeService includeService,
+            ISparseFieldsService fieldQuery,
             ICurrentRequest currentRequest,
             IContextEntityProvider provider,
             IPageQueryService pageQuery,
             IJsonApiOptions options)
         {
-            _includeQuery = includeQuery;
+            _includeService = includeService;
             _fieldQuery = fieldQuery;
             _currentRequest = currentRequest;
             _pageQuery = pageQuery;
             _provider = provider;
-            _primaryResource = currentRequest.GetRequestResource();
             _options = options;
         }
 
         public virtual QuerySet Parse(IQueryCollection query)
         {
+            _primaryResource = _currentRequest.GetRequestResource();
             var querySet = new QuerySet();
             var disabledQueries = _currentRequest.DisabledQueryParams;
             foreach (var pair in query)
@@ -65,10 +65,10 @@ namespace JsonApiDotNetCore.Services
                     continue;
                 }
 
-                if (pair.Key.StartsWith(_includeQuery.Name, StringComparison.Ordinal))
+                if (pair.Key.StartsWith(_includeService.Name, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
-                        _includeQuery.Parse(pair.Value);
+                        _includeService.Parse(pair.Value);
                     continue;
                 }
 

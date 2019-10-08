@@ -15,19 +15,19 @@ namespace JsonApiDotNetCore.Serialization.Server
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IContextEntityProvider _resourceContextProvider;
-        private readonly IFieldsService _fieldsQuery;
+        private readonly ISparseFieldsService _sparseFieldsService ;
         private readonly IServiceProvider _provider;
         private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
         private readonly IFieldsExplorer _fieldExplorer;
 
         public FieldsToSerialize(IFieldsExplorer fieldExplorer,
                                  IContextEntityProvider resourceContextProvider,
-                                 IFieldsService fieldsQuery,
+                                 ISparseFieldsService sparseFieldsService,
                                  IServiceProvider provider)
         {
             _fieldExplorer = fieldExplorer;
             _resourceContextProvider = resourceContextProvider;
-            _fieldsQuery = fieldsQuery;
+            _sparseFieldsService  = sparseFieldsService;
             _provider = provider;
         }
 
@@ -41,10 +41,10 @@ namespace JsonApiDotNetCore.Serialization.Server
                 // The set of allowed attribrutes to be exposed was defined on the resource definition
                 allowed = allowed.Intersect(resourceDefinition.GetAllowedAttributes()).ToList();
 
-            var fields = _fieldsQuery.Get(relationship);
-            if (fields != null)
+            var sparseFieldsSelection = _sparseFieldsService.Get(relationship);
+            if (sparseFieldsSelection != null && sparseFieldsSelection.Any())
                 // from the allowed attributes, select the ones flagged by sparse field selection.
-                allowed = allowed.Where(attr => !fields.Contains(attr)).ToList();
+                allowed = allowed.Intersect(sparseFieldsSelection).ToList();
 
             return allowed;
         }

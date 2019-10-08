@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -21,8 +20,8 @@ namespace UnitTests.Services
         private readonly Mock<ICurrentRequest> _requestMock;
         private readonly Mock<IQueryCollection> _queryCollectionMock;
         private readonly Mock<IPageQueryService> _pageQueryMock;
-        private readonly IInternalFieldsQueryService _fieldsQuery = new Mock<IInternalFieldsQueryService>().Object;
-        private readonly IIncludeService _includeQuery = new Mock<IIncludeService>().Object;
+        private readonly ISparseFieldsService _sparseFieldsService  = new Mock<ISparseFieldsService>().Object;
+        private readonly IIncludeService _includeService = new Mock<IIncludeService>().Object;
         private readonly IContextEntityProvider _graph = new Mock<IContextEntityProvider>().Object;
 
         public QueryParserTests()
@@ -34,7 +33,7 @@ namespace UnitTests.Services
 
         private QueryParser GetQueryParser()
         {
-            return new QueryParser(new IncludeService(), _fieldsQuery, _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
+            return new QueryParser(new IncludeService(), _sparseFieldsService , _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
         }
 
         [Fact]

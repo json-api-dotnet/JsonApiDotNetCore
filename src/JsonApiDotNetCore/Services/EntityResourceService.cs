@@ -36,6 +36,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceMapper _mapper;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
+        private readonly ISparseFieldsService _sparseFieldsService;
         private readonly ContextEntity _currentRequestResource;
 
         public EntityResourceService(
@@ -44,6 +45,7 @@ namespace JsonApiDotNetCore.Services
                 ITargetedFields updatedFields,
                 ICurrentRequest currentRequest,
                 IIncludeService includeService,
+                ISparseFieldsService sparseFieldsService,
                 IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
@@ -52,6 +54,7 @@ namespace JsonApiDotNetCore.Services
         {
             _currentRequest = currentRequest;
             _includeService = includeService;
+            _sparseFieldsService = sparseFieldsService;
             _pageManager = pageManager;
             _options = options;
             _targetedFields = updatedFields;
@@ -273,14 +276,15 @@ namespace JsonApiDotNetCore.Services
         /// <returns></returns>
         private async Task<TEntity> GetWithRelationshipsAsync(TId id)
         {
-            var query = _repository.Select(_repository.Get(), _currentRequest.QuerySet?.Fields).Where(e => e.Id.Equals(id));
+            var sparseFieldset = _sparseFieldsService.Get();
+            var query = _repository.Select(_repository.Get(), sparseFieldset.Select(a => a.InternalAttributeName).ToList()).Where(e => e.Id.Equals(id));
 
             foreach (var chain in _includeService.Get())
                 query = _repository.Include(query, chain.ToArray());
 
             TEntity value;
             // https://github.com/aspnet/EntityFrameworkCore/issues/6573
-            if (_targetedFields.Attributes.Count() > 0)
+            if (sparseFieldset.Count() > 0)
                 value = query.FirstOrDefault();
             else
                 value = await _repository.FirstOrDefaultAsync(query);
@@ -346,7 +350,7 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        public EntityResourceService(IEntityRepository<TResource, TId> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
+        public EntityResourceService(IEntityRepository<TResource, TId> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, ISparseFieldsService sparseFieldsService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
         {
         }
     }
@@ -359,7 +363,7 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
+        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, ISparseFieldsService sparseFieldsService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
         {
         }
     }

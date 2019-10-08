@@ -216,8 +216,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IIncludeService, IncludeService>();
             services.AddScoped<IIncludeService, IncludeService>();
-            services.AddScoped<IFieldsService, FieldsService>();
-            services.AddScoped<IInternalFieldsQueryService, FieldsService>();
+            services.AddScoped<ISparseFieldsService, SparseFieldsService>();
             services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
