@@ -6,9 +6,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -130,6 +133,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var context = _fixture.GetService<AppDbContext>();
+            context.RemoveRange(context.TodoItems);
+            await context.SaveChangesAsync();
             var builder = new WebHostBuilder()
                 .UseStartup<ClientGeneratedIdsStartup>();
             var httpMethod = new HttpMethod("POST");
@@ -139,28 +144,20 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var request = new HttpRequestMessage(httpMethod, route);
             var todoItem = _todoItemFaker.Generate();
             const int clientDefinedId = 9999;
-            var content = new
-            {
-                data = new
-                {
-                    type = "todo-items",
-                    id = $"{clientDefinedId}",
-                    attributes = new
-                    {
-                        description = todoItem.Description,
-                        ordinal = todoItem.Ordinal,
-                        createdDate = DateTime.Now
-                    }
-                }
-            };
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.CreatedDate, ti.Description, ti.Ordinal });
+            todoItem.Id = clientDefinedId;
+            var content = serializer.Serialize(todoItem);
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            var graph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").Build();
+            var deserializer = new ResponseDeserializer(graph);
 
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItem>(body).Data;
+            var deserializedBody = deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);

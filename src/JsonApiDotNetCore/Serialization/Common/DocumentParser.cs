@@ -168,18 +168,6 @@ namespace JsonApiDotNetCore.Serialization
             // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
-            //if (foreignKeyProperty == null)
-            //{   /// there is no FK from the current entity pointing to the related object,
-            //    /// i.e. means we're populating the relationship from the principal side.
-            //    SetNavigation(entity, attr, relatedId);
-            //}
-            //else
-            //{
-            //    /// there is a FK from the current entity pointing to the related object,
-            //    /// i.e. we're populating the relationship from the dependent side.
-            //    SetDependentSide(entity, foreignKeyProperty, attr, relatedId);
-            //}
-
             if (foreignKeyProperty != null)
                 /// there is a FK from the current entity pointing to the related object,
                 /// i.e. we're populating the relationship from the dependent side.
