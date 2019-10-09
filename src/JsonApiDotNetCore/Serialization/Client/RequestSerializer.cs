@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         private readonly IFieldsExplorer _fieldExplorer;
         public RequestSerializer(IFieldsExplorer fieldExplorer,
                                 IContextEntityProvider provider,
-                                IResourceObjectBuilder resourceObjectBuilder)
+                                RequestResourceObjectBuilder resourceObjectBuilder)
             : base(resourceObjectBuilder, provider)
         {
             _fieldExplorer = fieldExplorer;
