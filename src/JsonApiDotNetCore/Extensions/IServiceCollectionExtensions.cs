@@ -240,19 +240,24 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             services.AddScoped<IResourceObjectBuilderSettingsProvider, ResourceObjectBuilderSettingsProvider>();
             services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
-            services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
-            services.AddScoped<ResponseResourceObjectBuilder>();
             services.AddScoped<ILinkBuilder, LinkBuilder>();
             services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
             services.AddScoped(typeof(ResponseSerializer<>));
             services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
+
+            services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
         }
 
         private static void AddClientSerialization(IServiceCollection services)
         {
-            services.AddScoped<IRequestSerializer, RequestSerializer>();
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
-            services.AddScoped<RequestResourceObjectBuilder>();
+
+            services.AddScoped<IRequestSerializer>(sp =>
+            {
+               var resourceObjectBuilder = new ResourceObjectBuilder(sp.GetService<IResourceGraph>(), sp.GetService<IContextEntityProvider>(), sp.GetService<IResourceObjectBuilderSettingsProvider>().Get());
+               return new RequestSerializer(sp.GetService<IFieldsExplorer>(), sp.GetService<IResourceGraph>(), resourceObjectBuilder);
+            });
+
         }
 
         private static void AddOperationServices(IServiceCollection services)

@@ -36,7 +36,6 @@ namespace UnitTests.Serialization.Deserializer
 
             // assert
             Assert.Equal(1, result.Id);
-
         }
 
         [Fact]

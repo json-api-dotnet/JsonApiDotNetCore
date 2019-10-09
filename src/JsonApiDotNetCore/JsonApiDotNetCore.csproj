@@ -56,4 +56,10 @@
     <Folder Include="Query\Contracts\" />
     <Folder Include="Query\Common\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Serialization\Client\RequestResourceObjectBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Serialization\Client\RequestResourceObjectBuilder.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+  </ItemGroup>
 </Project>

@@ -13,14 +13,14 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s
     /// given a list of attributes and relationships.
     /// </summary>
-    public abstract class BaseResourceObjectBuilder
+    public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         protected readonly IResourceGraph _resourceGraph;
         protected readonly IContextEntityProvider _provider;
         private readonly ResourceObjectBuilderSettings _settings;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        protected BaseResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ResourceObjectBuilderSettings settings)
         {
             _resourceGraph = resourceGraph;
             _provider = provider;
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">Attributes to include in the building process</param>
         /// <param name="relationships">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
-        public ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, IEnumerable<RelationshipAttribute> relationships)
+        public ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
         {
             var resourceContext = _provider.GetContextEntity(entity.GetType());
 
@@ -43,23 +43,31 @@ namespace JsonApiDotNetCore.Serialization
             var ro = new ResourceObject { Type = resourceContext.EntityName, Id = entity.StringId.NullIfEmpty() };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            attributes = attributes.Where(attr => attr.InternalAttributeName != _identifiablePropertyName);
-            if (attributes.Any())
-            {
-                ro.Attributes = new Dictionary<string, object>();
-                foreach (var attr in attributes)
-                    AddAttribute(entity, ro, attr);
-            }
+            if (attributes != null && (attributes = attributes.Where(attr => attr.InternalAttributeName != _identifiablePropertyName)).Any())
+                ProcessAttributes(entity, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.
+            if (relationships != null)
+                ProcessRelationships(entity, relationships, ro);
+
+            return ro;
+        }
+
+        private void ProcessRelationships(IIdentifiable entity, IEnumerable<RelationshipAttribute> relationships, ResourceObject ro)
+        {
             foreach (var rel in relationships)
             {
                 var relData = GetRelationshipData(rel, entity);
                 if (relData != null)
                     (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
             }
+        }
 
-            return ro;
+        private void ProcessAttributes(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, ResourceObject ro)
+        {
+            ro.Attributes = new Dictionary<string, object>();
+            foreach (var attr in attributes)
+                AddAttribute(entity, ro, attr);
         }
 
         private void AddAttribute(IIdentifiable entity, ResourceObject ro, AttrAttribute attr)
@@ -76,7 +84,10 @@ namespace JsonApiDotNetCore.Serialization
         /// Depending on the requirements of the implementation (server or client serializer),
         /// this may be overridden.
         /// </summary>
-        protected abstract RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity);
+        protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
+        {
+            return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, entity) };
+        }
 
         protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable entity)
         {

@@ -134,28 +134,7 @@ namespace UnitTests.Serialization
 
             public new Document Build(IEnumerable entities, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
             {
-                return base.Build(entities, attributes ?? null, relationships ?? null) ;
-            }
-        }
-
-
-
-        /// <summary>
-        /// Minimal implementation of abstract JsonApiSerializer base class, with
-        /// the purpose of testing the business logic for building the document structure.
-        /// </summary>
-        protected class TestResourceObjectBuilder : BaseResourceObjectBuilder
-        {
-            public TestResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider) : base(resourceGraph, provider, new ResourceObjectBuilderSettings()) { }
-
-            public new ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
-            {
-                return base.Build(entity, attributes ?? new List<AttrAttribute>(), relationships ?? new List<RelationshipAttribute>());
-            }
-
-            protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
-            {
-                return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, entity) };
+                return base.Build(entities, attributes ?? null, relationships ?? null);
             }
         }
     }

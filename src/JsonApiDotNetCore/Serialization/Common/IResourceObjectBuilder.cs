@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s
     /// given a list of attributes and relationships.
-    /// </summary>
+    /// </summary> 
     public interface IResourceObjectBuilder
     {
         /// <summary>

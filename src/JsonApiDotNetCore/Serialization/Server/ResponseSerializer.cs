@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
+
     /// <summary>
     /// Server serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// </summary>
@@ -40,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                                   ILinkBuilder linkBuilder,
                                   IIncludedResourceObjectBuilder includedBuilder,
                                   IFieldsToSerialize fieldsToSerialize,
-                                  ResponseResourceObjectBuilder resourceObjectBuilder,
+                                  IResourceObjectBuilder resourceObjectBuilder,
                                   IContextEntityProvider provider) :
             base(resourceObjectBuilder, provider)
         {

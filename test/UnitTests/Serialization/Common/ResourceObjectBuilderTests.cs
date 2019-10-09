@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization;
 using Xunit;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class BaseResourceObjectBuilderTests : SerializerTestsSetup
+    public class ResourceObjectBuilderTests : SerializerTestsSetup
     {
-        private readonly TestResourceObjectBuilder _builder;
+        private readonly ResourceObjectBuilder _builder;
 
-        public BaseResourceObjectBuilderTests()
+        public ResourceObjectBuilderTests()
         {
-            _builder = new TestResourceObjectBuilder(_resourceGraph, _resourceGraph);
+            _builder = new ResourceObjectBuilder(_resourceGraph, _resourceGraph, new ResourceObjectBuilderSettings());
         }
 
         [Fact]

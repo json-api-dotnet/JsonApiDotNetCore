@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
-    public class ResponseResourceObjectBuilder : BaseResourceObjectBuilder, IResourceObjectBuilder
+    public class ResponseResourceObjectBuilder : ResourceObjectBuilder, IResourceObjectBuilder
     {
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IIncludeService _includeService;
@@ -27,7 +27,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             _includeService = includeService;
         }
 
-
         public RelationshipEntry Build(IIdentifiable entity, RelationshipAttribute requestRelationship)
         {
             _requestRelationship = requestRelationship;
@@ -43,28 +42,25 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </summary>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
-            RelationshipEntry relationshipData = new RelationshipEntry();
-            if (relationship == _requestRelationship)
-            {   // if serializing a request with a requestRelationship, always populate the data field.
-                relationshipData.Data = GetRelatedResourceLinkage(relationship, entity);
-            }
-            else if (ShouldInclude(relationship, out var relationshipChains))
-            {   // if the relationship is included, populate the "data" field.
-                relationshipData.Data = GetRelatedResourceLinkage(relationship, entity);
-                if (relationshipData.HasResource)
+            RelationshipEntry relationshipEntry = null;
+            List<List<RelationshipAttribute>> relationshipChains = null;
+            if (relationship == _requestRelationship || ShouldInclude(relationship, out relationshipChains ))
+            {
+                relationshipEntry = base.GetRelationshipData(relationship, entity);
+                if (relationshipChains != null && relationshipEntry.HasResource)
                     foreach (var chain in relationshipChains)
-                        // traverses (recursively)  and extracts all (nested) related entities for the current inclusion chain.
+                        // traverses (recursively) and extracts all (nested) related entities for the current inclusion chain.
                         _includedBuilder.IncludeRelationshipChain(chain, entity);
             }
 
             var links = _linkBuilder.GetRelationshipLinks(relationship, entity);
             if (links != null)
                 // if links relationshiplinks should be built for this entry, populate the "links" field.
-                relationshipData.Links = links;
+                (relationshipEntry = relationshipEntry ?? new RelationshipEntry()).Links = links;
 
             /// if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
             /// (see the NullValueHandling settings on <see cref="ResourceObject"/>)
-            return (relationshipData.IsPopulated || relationshipData.Links != null) ? relationshipData : null;
+            return relationshipEntry;
         }
 
         /// <summary>

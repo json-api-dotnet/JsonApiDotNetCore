@@ -14,7 +14,7 @@ namespace UnitTests.Serialization.Client
 
         public RequestSerializerTests()
         {
-            var builder = new RequestResourceObjectBuilder(_resourceGraph, _resourceGraph);
+            var builder = new ResourceObjectBuilder(_resourceGraph, _resourceGraph, new ResourceObjectBuilderSettings());
             _serializer = new RequestSerializer(_fieldExplorer, _resourceGraph, builder);
         }
 

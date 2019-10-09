@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
+
     /// <summary>
     /// Client serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// Note that this implementation does not override the default implementation
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         private readonly IFieldsExplorer _fieldExplorer;
         public RequestSerializer(IFieldsExplorer fieldExplorer,
                                 IContextEntityProvider provider,
-                                RequestResourceObjectBuilder resourceObjectBuilder)
+                                IResourceObjectBuilder resourceObjectBuilder)
             : base(resourceObjectBuilder, provider)
         {
             _fieldExplorer = fieldExplorer;
