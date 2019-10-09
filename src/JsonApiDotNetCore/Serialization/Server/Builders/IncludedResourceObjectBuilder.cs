@@ -74,7 +74,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             var resourceObject = GetOrBuildResourceObject(parent, originRelationship);
             if (!inclusionChain.Any())
                 return;
-
             var nextRelationship = inclusionChain.First();
             var chainRemainder = inclusionChain.ToList();
             chainRemainder.RemoveAt(0);
@@ -84,6 +83,8 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             // add the relationship entry in the relationship object.
             if (!relationshipsObject.TryGetValue(nextRelationshipName, out var relationshipEntry))
                 relationshipsObject[nextRelationshipName] = (relationshipEntry = GetRelationshipData(nextRelationship, parent));
+
+            relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 
             if (relationshipEntry.HasResource)
             {   // if the relationship is set, continue parsing the chain.
@@ -108,7 +109,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <returns></returns>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
-            return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, entity), Data = GetRelatedResourceLinkage(relationship, entity) };
+            return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, entity) };
         }
 
         /// <summary>

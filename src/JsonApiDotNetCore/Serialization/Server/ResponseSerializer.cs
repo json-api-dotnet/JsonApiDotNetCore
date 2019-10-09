@@ -23,9 +23,10 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
-    public class ResponseSerializer<TResource> : BaseDocumentBuilder, IJsonApiSerializer, IJsonApiDefaultSerializer
+    public class ResponseSerializer<TResource> : BaseDocumentBuilder, IJsonApiSerializer, IResponseSerializer
         where TResource : class, IIdentifiable
     {
+        public RelationshipAttribute RequestRelationship { get; set; }
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IIncludeService _includeService;
@@ -34,13 +35,12 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
-        private RelationshipAttribute _requestRelationship;
 
         public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
                                   ILinkBuilder linkBuilder,
                                   IIncludedResourceObjectBuilder includedBuilder,
                                   IFieldsToSerialize fieldsToSerialize,
-                                  IResourceObjectBuilder resourceObjectBuilder,
+                                  ResponseResourceObjectBuilder resourceObjectBuilder,
                                   IContextEntityProvider provider) :
             base(resourceObjectBuilder, provider)
         {
@@ -69,10 +69,8 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeSingle(IIdentifiable entity)
         {
-            if (_requestRelationship != null)
-            {
-                var ro = _resourceObjectBuilder.Build(entity, new List<AttrAttribute>(), new List<RelationshipAttribute> { _requestRelationship });
-            }
+            if (RequestRelationship != null)
+               return JsonConvert.SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
 
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entity, attributes, relationships);
@@ -83,16 +81,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             AddTopLevelObjects(document);
             return JsonConvert.SerializeObject(document);
 
-        }
-
-        /// <summary>
-        /// Sets the designated request relationship in the case of requests of
-        /// the form a /articles/1/relationships/author.
-        /// </summary>
-        /// <param name="requestRelationship"></param>
-        public void SetRequestRelationship(RelationshipAttribute requestRelationship)
-        {
-            _requestRelationship = requestRelationship;
         }
 
         private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()

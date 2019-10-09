@@ -52,7 +52,7 @@ namespace UnitTests.Serialization
             var included = GetIncludedRelationships(inclusionChains);
             var provider = GetContextEntityProvider();
             var includedBuilder = GetIncludedBuilder<T>();
-            var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, null, _resourceGraph, GetSerializerSettingsProvider());
+            var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
         }
 

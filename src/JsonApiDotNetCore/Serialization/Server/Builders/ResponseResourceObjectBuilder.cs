@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
@@ -10,16 +9,15 @@ namespace JsonApiDotNetCore.Serialization.Server
 {
     public class ResponseResourceObjectBuilder : BaseResourceObjectBuilder, IResourceObjectBuilder
     {
-        private RelationshipAttribute _requestRelationship;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IIncludeService _includeService;
         private readonly ILinkBuilder _linkBuilder;
+        private RelationshipAttribute _requestRelationship;
 
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder,
                                              IIncludedResourceObjectBuilder includedBuilder,
                                              IIncludeService includeService,
                                              IResourceGraph resourceGraph,
-                                             ICurrentRequest currentRequest,
                                              IContextEntityProvider provider,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceGraph, provider, settingsProvider.Get())
@@ -27,8 +25,13 @@ namespace JsonApiDotNetCore.Serialization.Server
             _linkBuilder = linkBuilder;
             _includedBuilder = includedBuilder;
             _includeService = includeService;
-            if (currentRequest?.RequestRelationship != null && currentRequest.IsRelationshipPath)
-                _requestRelationship = currentRequest.RequestRelationship;
+        }
+
+
+        public RelationshipEntry Build(IIdentifiable entity, RelationshipAttribute requestRelationship)
+        {
+            _requestRelationship = requestRelationship;
+            return GetRelationshipData(requestRelationship, entity);
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace JsonApiDotNetCore.Serialization.Server
 
             /// if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
             /// (see the NullValueHandling settings on <see cref="ResourceObject"/>)
-            return relationshipData.IsPopulated ? relationshipData : null;
+            return (relationshipData.IsPopulated || relationshipData.Links != null) ? relationshipData : null;
         }
 
         /// <summary>

@@ -193,53 +193,66 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
-            services.AddScoped<ILinkBuilder, LinkBuilder>();
-            services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
 
             services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
             services.AddSingleton<ILinksConfiguration>(jsonApiOptions);
             services.AddSingleton(graph);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);
-
-            services.AddScoped(typeof(ResponseSerializer<>));
             services.AddScoped<ICurrentRequest, CurrentRequest>();
             services.AddScoped<IPageQueryService, PageService>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
-            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
             services.AddScoped<IIncludeService, IncludeService>();
-            services.AddScoped<IIncludeService, IncludeService>();
             services.AddScoped<ISparseFieldsService, SparseFieldsService>();
             services.AddScoped<ITargetedFields, TargetedFields>();
-            services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
             services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
             services.AddScoped<IAttributeBehaviourService, AttributeBehaviourService>();
+            services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
 
-            services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
-            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
-            services.AddScoped<IRequestSerializer, RequestSerializer>();
-            services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
-            services.AddScoped<IResourceObjectBuilderSettingsProvider, ResponseSerializerSettingsProvider>();
-            services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
-
+            AddServerSerialization(services);
+            AddClientSerialization(services);
             if (jsonApiOptions.EnableResourceHooks)
-            {
-                services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
-                services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
-                services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
-                services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
-                services.AddTransient<ITraversalHelper, TraversalHelper>();
-            }
+                AddResourceHooks(services);
 
             services.AddScoped<IInverseRelationships, InverseRelationships>();
+        }
+
+        private static void AddResourceHooks(IServiceCollection services)
+        {
+            services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
+            services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
+            services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
+            services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
+            services.AddTransient<ITraversalHelper, TraversalHelper>();
+        }
+
+        private static void AddServerSerialization(IServiceCollection services)
+        {
+            services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
+            services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
+            services.AddScoped<IResourceObjectBuilderSettingsProvider, ResourceObjectBuilderSettingsProvider>();
+            services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
+            services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
+            services.AddScoped<ResponseResourceObjectBuilder>();
+            services.AddScoped<ILinkBuilder, LinkBuilder>();
+            services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
+            services.AddScoped(typeof(ResponseSerializer<>));
+            services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
+        }
+
+        private static void AddClientSerialization(IServiceCollection services)
+        {
+            services.AddScoped<IRequestSerializer, RequestSerializer>();
+            services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
+            services.AddScoped<RequestResourceObjectBuilder>();
         }
 
         private static void AddOperationServices(IServiceCollection services)

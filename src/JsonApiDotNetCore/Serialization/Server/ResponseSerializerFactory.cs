@@ -34,11 +34,11 @@ namespace JsonApiDotNetCore.Serialization.Server
                 return null;
 
             var serializerType = typeof(ResponseSerializer<>).MakeGenericType(targetType);
-            var serializer = (IJsonApiDefaultSerializer)_provider.GetService(serializerType);
+            var serializer = (IResponseSerializer)_provider.GetService(serializerType);
             if (_currentRequest.RequestRelationship != null && _currentRequest.IsRelationshipPath)
-                serializer.SetRequestRelationship(_currentRequest.RequestRelationship);
+                serializer.RequestRelationship = _currentRequest.RequestRelationship;
 
-            return serializer;
+            return (IJsonApiSerializer)serializer;
         }
 
         private Type GetDocumentPrimaryType()

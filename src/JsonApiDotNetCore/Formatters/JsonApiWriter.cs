@@ -19,10 +19,10 @@ namespace JsonApiDotNetCore.Formatters
         private readonly ILogger<JsonApiWriter> _logger;
         private readonly IJsonApiSerializer _serializer;
 
-        public JsonApiWriter(IJsonApiSerializerFactory factory,
+        public JsonApiWriter(IJsonApiSerializer serializer,
                              ILoggerFactory loggerFactory)
         {
-            _serializer = factory.GetSerializer();
+            _serializer = serializer;
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
         }
 

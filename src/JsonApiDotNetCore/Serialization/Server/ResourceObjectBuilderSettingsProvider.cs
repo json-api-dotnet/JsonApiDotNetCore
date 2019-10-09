@@ -7,12 +7,12 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// This implementation of the behaviour provider reads the query params that
     /// can, if provided, override the settings in <see cref="IJsonApiOptions"/>.
     /// </summary>
-    public class ResponseSerializerSettingsProvider : IResourceObjectBuilderSettingsProvider
+    public class ResourceObjectBuilderSettingsProvider : IResourceObjectBuilderSettingsProvider
     {
         private readonly IJsonApiOptions _options;
         private readonly IAttributeBehaviourService _attributeBehaviour;
 
-        public ResponseSerializerSettingsProvider(IJsonApiOptions options, IAttributeBehaviourService attributeBehaviour)
+        public ResourceObjectBuilderSettingsProvider(IJsonApiOptions options, IAttributeBehaviourService attributeBehaviour)
         {
             _options = options;
             _attributeBehaviour = attributeBehaviour;
