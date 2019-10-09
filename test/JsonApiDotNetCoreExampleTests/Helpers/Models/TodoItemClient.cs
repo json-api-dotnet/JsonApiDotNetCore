@@ -17,7 +17,12 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Models
         public new string CalculatedValue { get; set; }
     }
 
-
+    //[Resource("todo-collections")]
+    //public class TodoItemCollectionClient : TodoItemCollection
+    //{
+    //    [HasMany("todo-items")]
+    //    public new List<TodoItemClient> TodoItems { get; set; }
+    //}
 
     [Resource("todo-collections")]
     public class TodoItemCollectionClient : Identifiable<Guid>

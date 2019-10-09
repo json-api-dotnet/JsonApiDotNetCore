@@ -120,12 +120,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Fields_Query_Selects_All_Fieldset_With_HasOne()
         {
             // arrange
+            _dbContext.TodoItems.RemoveRange(_dbContext.TodoItems);
+            _dbContext.SaveChanges();
             var owner = _personFaker.Generate();
-            var ordinal = _dbContext.TodoItems.Count();
             var todoItem = new TodoItem
             {
                 Description = "s",
-                Ordinal = ordinal,
+                Ordinal = 123,
                 CreatedDate = DateTime.Now,
                 Owner = owner
             };

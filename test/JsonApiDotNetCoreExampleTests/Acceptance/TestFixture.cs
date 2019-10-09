@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Serialization.Client;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -41,7 +44,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
         public IResponseDeserializer GetDeserializer()
         {
-            return GetService<IResponseDeserializer>();
+            var graph = new ResourceGraphBuilder()
+                .AddResource<PersonRole>()
+                .AddResource<Person>()
+                .AddResource<Passport>()
+                .AddResource<TodoItemClient>("todo-items")
+                .AddResource<TodoItemCollectionClient, Guid>().Build();
+            return new ResponseDeserializer(graph);
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));

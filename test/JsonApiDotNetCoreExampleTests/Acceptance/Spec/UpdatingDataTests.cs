@@ -31,6 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
+
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -119,6 +120,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Patch_Entity()
         {
             // arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            _context.SaveChanges();
+
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
@@ -153,7 +157,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                 .Include(t => t.Owner)
                 .SingleOrDefault(t => t.Id == todoItem.Id);
-
             Assert.Equal(person.Id, updatedTodoItem.OwnerId);
             Assert.Equal(newTodoItem.Description, updatedTodoItem.Description);
             Assert.Equal(newTodoItem.Ordinal, updatedTodoItem.Ordinal);

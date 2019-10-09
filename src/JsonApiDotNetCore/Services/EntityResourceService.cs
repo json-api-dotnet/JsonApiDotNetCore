@@ -113,9 +113,6 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities);
 
-            if (_options.IncludeTotalRecordCount)
-                _pageManager.TotalRecords = await _repository.CountAsync(entities);
-
             entities = _repository.Select(entities, _currentRequest.QuerySet?.Fields);
 
             if (!IsNull(_hookExecutor, entities))
