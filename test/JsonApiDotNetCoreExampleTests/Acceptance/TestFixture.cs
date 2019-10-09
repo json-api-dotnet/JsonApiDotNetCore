@@ -46,7 +46,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var graph = new ResourceGraphBuilder()
                 .AddResource<PersonRole>()
+                .AddResource<Article>()
+                .AddResource<Tag>()
+                .AddResource<CamelCasedModel>()
+                .AddResource<User>()
                 .AddResource<Person>()
+                .AddResource<Author>()
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todo-items")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();

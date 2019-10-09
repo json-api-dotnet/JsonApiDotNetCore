@@ -67,21 +67,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // Override some null handling options
             NullAttributeResponseBehavior nullAttributeResponseBehavior;
             if (omitNullValuedAttributes.HasValue && allowClientOverride.HasValue)
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitNullValuedAttributes.Value, allowClientOverride.Value);
-            }
             else if (omitNullValuedAttributes.HasValue)
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitNullValuedAttributes.Value);
-            }
             else if (allowClientOverride.HasValue)
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior(allowClientOverride: allowClientOverride.Value);
-            }
             else
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior();
-            }
+
             var jsonApiOptions = _fixture.GetService<IJsonApiOptions>();
             jsonApiOptions.NullAttributeResponseBehavior = nullAttributeResponseBehavior;
             jsonApiOptions.AllowCustomQueryParameters = true;
@@ -98,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
-            // assert. does response contain a null valued attribute
+            // assert: does response contain a null valued attribute?
             Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
             Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
 

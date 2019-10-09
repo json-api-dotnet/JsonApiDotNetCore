@@ -115,12 +115,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         }
 
-
         [Fact]
         public async Task Can_Patch_Entity()
         {
             // arrange
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            _context.RemoveRange(_context.TodoItemCollections);
+            _context.RemoveRange(_context.TodoItems);
+            _context.RemoveRange(_context.People);
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();

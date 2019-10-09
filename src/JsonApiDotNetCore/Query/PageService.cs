@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public bool ShouldPaginate()
         {
-            return !(PageSize > 0) || ((CurrentPage == 1 || CurrentPage == 0) && TotalPages <= 0);
+            return (PageSize > 0) || ((CurrentPage == 1 || CurrentPage == 0) && TotalPages <= 0);
         }
     }
 }

@@ -156,8 +156,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task GET_Included_DoesNot_Duplicate_Records_ForMultipleRelationshipsOfSameType()
         {
             // arrange
-            _context.People.RemoveRange(_context.People); // ensure all people have todo-items
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            _context.RemoveRange(_context.TodoItems);
+            _context.RemoveRange(_context.TodoItemCollections);
+            _context.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.SaveChanges();
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = person;
