@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     /// <inheritdoc/>
-    public class IncludedResourceObjectBuilder : ResourceObjectBuilder, IIncludedResourceObjectBuilder
+    public class IncludedResourceObjectBuilder : BaseResourceObjectBuilder, IIncludedResourceObjectBuilder
     {
         private readonly HashSet<ResourceObject> _included;
         private readonly IFieldsToSerialize _fieldsToSerialize;
@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                                              ILinkBuilder linkBuilder,
                                              IResourceGraph resourceGraph,
                                              IContextEntityProvider provider,
-                                             ISerializerSettingsProvider settingsProvider)
+                                             IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceGraph, provider, settingsProvider.Get())
         {
             _included = new HashSet<ResourceObject>(new ResourceObjectComparer());
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 foreach (var resourceObject in _included)
                 {
                     if (resourceObject.Relationships != null)
-                    {   /// removes relationship entries (<see cref="RelationshipData"/>s) if they're completely empty.  
+                    {   /// removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
                         var pruned = resourceObject.Relationships.Where(p => p.Value.IsPopulated || p.Value.Links != null).ToDictionary(p => p.Key, p => p.Value);
                         if (!pruned.Any()) pruned = null;
                         resourceObject.Relationships = pruned;
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             ProcessChain(relationship, related, chainRemainder);
         }
 
-        private void ProcessChain(RelationshipAttribute originRelationship, object related, List<RelationshipAttribute> inclusionChain )
+        private void ProcessChain(RelationshipAttribute originRelationship, object related, List<RelationshipAttribute> inclusionChain)
         {
             if (related is IEnumerable children)
                 foreach (IIdentifiable child in children)
@@ -74,15 +74,20 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             var resourceObject = GetOrBuildResourceObject(parent, originRelationship);
             if (!inclusionChain.Any())
                 return;
-
             var nextRelationship = inclusionChain.First();
             var chainRemainder = inclusionChain.ToList();
             chainRemainder.RemoveAt(0);
+
+            var nextRelationshipName = nextRelationship.PublicRelationshipName;
+            var relationshipsObject = resourceObject.Relationships;
             // add the relationship entry in the relationship object.
-            var relationshipData = base.GetRelationshipData(nextRelationship, parent);
-            resourceObject.Relationships[nextRelationship.PublicRelationshipName] = relationshipData;
-            if (relationshipData.HasData)
-            {   // if the relationship is populated, continue parsing the chain.
+            if (!relationshipsObject.TryGetValue(nextRelationshipName, out var relationshipEntry))
+                relationshipsObject[nextRelationshipName] = (relationshipEntry = GetRelationshipData(nextRelationship, parent));
+
+            relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
+
+            if (relationshipEntry.HasResource)
+            {   // if the relationship is set, continue parsing the chain.
                 var related = _resourceGraph.GetRelationshipValue(parent, nextRelationship);
                 ProcessChain(nextRelationship, related, chainRemainder);
             }
@@ -102,9 +107,9 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <param name="relationship"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        protected override RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
+        protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
         {
-            return new RelationshipData { Links = _linkBuilder.GetRelationshipLinks(relationship, entity) };
+            return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, entity) };
         }
 
         /// <summary>
@@ -121,7 +126,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {
-                entry = BuildResourceObject(parent, _fieldsToSerialize.GetAllowedAttributes(type, relationship), _fieldsToSerialize.GetAllowedRelationships(type));
+                entry = Build(parent, _fieldsToSerialize.GetAllowedAttributes(type, relationship), _fieldsToSerialize.GetAllowedRelationships(type));
                 _included.Add(entry);
             }
             return entry;

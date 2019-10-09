@@ -8,18 +8,19 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization
 {
+
     /// <summary>
     /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s
     /// given a list of attributes and relationships.
     /// </summary>
-    public abstract class ResourceObjectBuilder
+    public abstract class BaseResourceObjectBuilder
     {
         protected readonly IResourceGraph _resourceGraph;
         protected readonly IContextEntityProvider _provider;
-        private readonly SerializerSettings _settings;
+        private readonly ResourceObjectBuilderSettings _settings;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        protected ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings settings)
+        protected BaseResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ResourceObjectBuilderSettings settings)
         {
             _resourceGraph = resourceGraph;
             _provider = provider;
@@ -28,13 +29,13 @@ namespace JsonApiDotNetCore.Serialization
 
         /// <summary>
         /// Converts <paramref name="entity"/> into a <see cref="ResourceObject"/>.
-        /// Adds the attributes and relationships that are enlisted in <paramref name="attrs"/> and <paramref name="rels"/>
+        /// Adds the attributes and relationships that are enlisted in <paramref name="attributes"/> and <paramref name="relationships"/>
         /// </summary>
         /// <param name="entity">Entity to build a Resource Object for</param>
         /// <param name="attributes">Attributes to include in the building process</param>
         /// <param name="relationships">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
-        protected ResourceObject BuildResourceObject(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, IEnumerable<RelationshipAttribute> relationships)
+        public ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, IEnumerable<RelationshipAttribute> relationships)
         {
             var resourceContext = _provider.GetContextEntity(entity.GetType());
 
@@ -55,40 +56,40 @@ namespace JsonApiDotNetCore.Serialization
             {
                 var relData = GetRelationshipData(rel, entity);
                 if (relData != null)
-                    (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipData>()).Add(rel.PublicRelationshipName, relData);
+                    (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
             }
-            
 
             return ro;
         }
 
-
         private void AddAttribute(IIdentifiable entity, ResourceObject ro, AttrAttribute attr)
         {
             var value = attr.GetValue(entity);
-            if ( !(value == default && _settings.OmitDefaultValuedAttributes) && !(value == null && _settings.OmitDefaultValuedAttributes))
+            if (!(value == default && _settings.OmitDefaultValuedAttributes) && !(value == null && _settings.OmitDefaultValuedAttributes))
                 ro.Attributes.Add(attr.PublicAttributeName, value);
         }
 
         /// <summary>
-        /// Builds the <see cref="RelationshipData"/> entries of the "relationships
+        /// Builds the <see cref="RelationshipEntry"/> entries of the "relationships
         /// objects" The default behaviour is to just construct a resource linkage
         /// with the "data" field populated with "single" or "many" data.
         /// Depending on the requirements of the implementation (server or client serializer),
         /// this may be overridden.
         /// </summary>
-        protected virtual RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
+        protected abstract RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity);
+
+        protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable entity)
         {
             if (relationship is HasOneAttribute hasOne)
-                return new RelationshipData { Data = GetRelatedResourceIdentifier(hasOne, entity) };
+                return GetRelatedResourceLinkage(hasOne, entity);
 
-            return new RelationshipData { Data = GetRelatedResourceLinkage((HasManyAttribute)relationship, entity) };
+            return GetRelatedResourceLinkage((HasManyAttribute)relationship, entity);
         }
 
         /// <summary>
         /// Builds a <see cref="ResourceIdentifierObject"/> for a HasOne relationship
         /// </summary>
-        protected ResourceIdentifierObject GetRelatedResourceIdentifier(HasOneAttribute attr, IIdentifiable entity)
+        private ResourceIdentifierObject GetRelatedResourceLinkage(HasOneAttribute attr, IIdentifiable entity)
         {
             var relatedEntity = (IIdentifiable)_resourceGraph.GetRelationshipValue(entity, attr);
             if (relatedEntity == null && IsRequiredToOneRelationship(attr, entity))
@@ -103,7 +104,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship
         /// </summary>
-        protected List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute attr, IIdentifiable entity)
+        private List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute attr, IIdentifiable entity)
         {
             var relatedEntities = (IEnumerable)_resourceGraph.GetRelationshipValue(entity, attr);
             var manyData = new List<ResourceIdentifierObject>();

@@ -100,9 +100,7 @@ namespace UnitTests.Serialization.Server
                ""data"":{
                   ""type"":""multi-principals"",
                   ""id"":""1"",
-                  ""attributes"":{
-                     ""attribute-member"":null
-                  },
+                  ""attributes"":{ ""attribute-member"":null },
                   ""relationships"":{
                      ""populated-to-one"":{
                         ""data"":{
@@ -110,9 +108,7 @@ namespace UnitTests.Serialization.Server
                            ""id"":""10""
                         }
                      },
-                     ""empty-to-one"":{
-                        ""data"":null
-                     },
+                     ""empty-to-one"": { ""data"":null },
                      ""populated-to-manies"":{
                         ""data"":[
                            {
@@ -121,28 +117,20 @@ namespace UnitTests.Serialization.Server
                            }
                         ]
                      },
-                     ""empty-to-manies"":{
-                        ""data"":[ ]
-                     },
-                     ""multi"":{
-                        ""data"":null
-                     }
+                     ""empty-to-manies"": { ""data"":[ ] },
+                     ""multi"":{ ""data"":null }
                   }
                },
                ""included"":[
                   {
                      ""type"":""one-to-one-dependents"",
                      ""id"":""10"",
-                     ""attributes"":{
-                        ""attribute-member"":null
-                     }
+                     ""attributes"":{ ""attribute-member"":null }
                   },
                   {
                    ""type"":""one-to-many-dependents"",
                      ""id"":""20"",
-                     ""attributes"":{
-                        ""attribute-member"":null
-                     }
+                     ""attributes"":{ ""attribute-member"":null }
                   }
                ]
             }";
@@ -282,9 +270,8 @@ namespace UnitTests.Serialization.Server
         {
             // arrange
             var entity = new OneToManyPrincipal { Id = 10 };
-            var includeRelationshipsOn = new List<Type> { typeof(OneToManyPrincipal) };
-
             var serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+
             // act
             string serialized = serializer.SerializeSingle(entity);
 
@@ -414,7 +401,7 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToOnePrincipal() { Id = 2, Dependent = null };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
-            serializer.SetRequestRelationship(requestRelationship);
+            serializer.RequestRelationship = requestRelationship;
 
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -437,7 +424,8 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToOnePrincipal() { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
-            serializer.SetRequestRelationship(requestRelationship);
+            serializer.RequestRelationship = requestRelationship;
+
 
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -463,7 +451,8 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent>() };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
-            serializer.SetRequestRelationship(requestRelationship);
+            serializer.RequestRelationship = requestRelationship;
+
 
             // act
             string serialized = serializer.SerializeSingle(entity);
@@ -486,7 +475,8 @@ namespace UnitTests.Serialization.Server
             var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 1 } }  };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
             var requestRelationship = _fieldExplorer.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
-            serializer.SetRequestRelationship(requestRelationship);
+            serializer.RequestRelationship = requestRelationship;
+
 
             // act
             string serialized = serializer.SerializeSingle(entity);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Client;
 using Xunit;
 
@@ -13,7 +14,8 @@ namespace UnitTests.Serialization.Client
 
         public RequestSerializerTests()
         {
-            _serializer = new RequestSerializer(_fieldExplorer, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            var builder = new RequestResourceObjectBuilder(_resourceGraph, _resourceGraph);
+            _serializer = new RequestSerializer(_fieldExplorer, _resourceGraph, builder);
         }
 
 

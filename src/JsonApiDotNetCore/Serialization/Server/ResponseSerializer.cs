@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Internal;
 namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="DocumentBuilder"/>
+    /// Server serializer implementation of <see cref="BaseDocumentBuilder"/>
     /// </summary>
     /// <remarks>
     /// Because in JsonApiDotNetCore every json:api request is associated with exactly one
@@ -23,9 +23,10 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
-    public class ResponseSerializer<TResource> : DocumentBuilder, IJsonApiSerializer, IJsonApiDefaultSerializer
+    public class ResponseSerializer<TResource> : BaseDocumentBuilder, IJsonApiSerializer, IResponseSerializer
         where TResource : class, IIdentifiable
     {
+        public RelationshipAttribute RequestRelationship { get; set; }
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IIncludeService _includeService;
@@ -34,19 +35,15 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
-        private RelationshipAttribute _requestRelationship;
 
         public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
                                   ILinkBuilder linkBuilder,
                                   IIncludedResourceObjectBuilder includedBuilder,
                                   IFieldsToSerialize fieldsToSerialize,
-                                  IIncludeService includeService,
-                                  IResourceGraph resourceGraph,
-                                  IContextEntityProvider provider,
-                                  ISerializerSettingsProvider settingsProvider)
-            : base(resourceGraph, provider, settingsProvider.Get())
+                                  ResponseResourceObjectBuilder resourceObjectBuilder,
+                                  IContextEntityProvider provider) :
+            base(resourceObjectBuilder, provider)
         {
-            _includeService = includeService;
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
@@ -72,8 +69,8 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeSingle(IIdentifiable entity)
         {
-            if (_requestRelationship != null)
-                return JsonConvert.SerializeObject(GetRelationshipData(_requestRelationship, entity));
+            if (RequestRelationship != null)
+               return JsonConvert.SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
 
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entity, attributes, relationships);
@@ -84,16 +81,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             AddTopLevelObjects(document);
             return JsonConvert.SerializeObject(document);
 
-        }
-
-        /// <summary>
-        /// Sets the designated request relationship in the case of requests of
-        /// the form a /articles/1/relationships/author.
-        /// </summary>
-        /// <param name="requestRelationship"></param>
-        public void SetRequestRelationship(RelationshipAttribute requestRelationship)
-        {
-            _requestRelationship = requestRelationship;
         }
 
         private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()
@@ -128,7 +115,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
         /// Note that the choice omitting null-values is not handled here,
-        /// but in <see cref="ISerializerSettingsProvider"/>.
+        /// but in <see cref="IResourceObjectBuilderSettingsProvider"/>.
         /// </summary>
         /// <param name="resourceType">Type of entity to be serialized</param>
         /// <returns>List of allowed attributes in the serialized result</returns>
@@ -164,41 +151,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             _relationshipsToSerializeCache.Add(resourceType, allowedRelations);
             return allowedRelations;
 
-        }
-
-        /// <summary>
-        /// Builds the values of the relationships object on a resource object.
-        /// The server serializer only populates the "data" member when the relationship is included,
-        /// and adds links unless these are turned off. This means that if a relationship is not included
-        /// and links are turned off, the entry would be completely empty, ie { }, which is not conform
-        /// json:api spec. In that case we return null which will omit the entry from the output.
-        /// </summary>
-        protected override RelationshipData GetRelationshipData(RelationshipAttribute relationship, IIdentifiable entity)
-        {
-            RelationshipData relationshipData = null;
-
-            if (relationship == _requestRelationship)
-            {   // if serializing a request with a requestRelationship, always populate data field.
-                relationshipData = base.GetRelationshipData(relationship, entity);
-            }
-            else if (ShouldInclude(relationship, out var relationshipChains))
-            {   // if the relationship is included, populate the "data" field.
-                relationshipData = base.GetRelationshipData(relationship, entity);
-                if (relationshipData.HasData)
-                    foreach (var chain in relationshipChains)
-                        _includedBuilder.IncludeRelationshipChain(chain, entity);
-            }
-
-            var links = _linkBuilder.GetRelationshipLinks(relationship, entity);
-            if (links != null)
-            {   // if links relationshiplinks should be built for this entry, populate the "links" field.
-                relationshipData = relationshipData ?? new RelationshipData();
-                relationshipData.Links = links;
-            }
-
-            /// if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
-            /// (see the NullValueHandling settings on <see cref="ResourceObject"/>)
-            return relationshipData;
         }
 
         /// <summary>

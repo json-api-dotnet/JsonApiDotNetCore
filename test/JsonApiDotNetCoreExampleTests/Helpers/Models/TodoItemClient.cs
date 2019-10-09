@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 
@@ -13,5 +15,21 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Models
     {
         [Attr("calculated-value")]
         public new string CalculatedValue { get; set; }
+    }
+
+
+
+    [Resource("todo-collections")]
+    public class TodoItemCollectionClient : Identifiable<Guid>
+    {
+        [Attr("name")]
+        public string Name { get; set; }
+        public int OwnerId { get; set; }
+
+        [HasMany("todo-items")]
+        public virtual List<TodoItemClient> TodoItems { get; set; }
+
+        [HasOne("owner")]
+        public virtual Person Owner { get; set; }
     }
 }

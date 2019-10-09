@@ -6,10 +6,10 @@ namespace JsonApiDotNetCore.Serialization
     /// Options used to configure how fields of a model get serialized into
     /// a json:api <see cref="Document"/>.
     /// </summary>
-    public class SerializerSettings 
+    public class ResourceObjectBuilderSettings 
     {
         /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
-        public SerializerSettings(bool omitNullValuedAttributes = false, bool omitDefaultValuedAttributes = false)
+        public ResourceObjectBuilderSettings(bool omitNullValuedAttributes = false, bool omitDefaultValuedAttributes = false)
         {
             OmitNullValuedAttributes = omitNullValuedAttributes;
             OmitDefaultValuedAttributes = omitDefaultValuedAttributes;

@@ -9,9 +9,15 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for serialization that extends <see cref="ResourceObjectBuilder"/>.
     /// Converts entities in to <see cref="ResourceObject"/>s and wraps them in a <see cref="Document"/>.
     /// </summary>
-    public abstract class DocumentBuilder : ResourceObjectBuilder
+    public abstract class BaseDocumentBuilder
     {
-        protected DocumentBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, SerializerSettings behaviour) : base(resourceGraph, provider, behaviour) { }
+        protected readonly IContextEntityProvider _provider;
+        protected readonly IResourceObjectBuilder _resourceObjectBuilder;
+        protected BaseDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IContextEntityProvider provider)
+        {
+            _resourceObjectBuilder = resourceObjectBuilder;
+            _provider = provider;
+        }
 
         /// <summary>
         /// Builds a <see cref="Document"/> for <paramref name="entity"/>.
@@ -26,7 +32,7 @@ namespace JsonApiDotNetCore.Serialization
             if (entity == null)
                 return new Document();
 
-            return new Document { Data = BuildResourceObject(entity, attributes, relationships) };
+            return new Document { Data = _resourceObjectBuilder.Build(entity, attributes, relationships) };
         }
 
         /// <summary>
@@ -41,7 +47,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             var data = new List<ResourceObject>();
             foreach (IIdentifiable entity in entities)
-                data.Add(BuildResourceObject(entity, attributes, relationships));
+                data.Add(_resourceObjectBuilder.Build(entity, attributes, relationships));
 
             return new Document { Data = data };
         }

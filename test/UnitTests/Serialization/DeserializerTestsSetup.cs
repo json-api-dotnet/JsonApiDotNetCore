@@ -8,7 +8,7 @@ namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
-        protected class TestDocumentParser : DocumentParser
+        protected class TestDocumentParser : BaseDocumentParser
         {
             public TestDocumentParser(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
@@ -17,7 +17,7 @@ namespace UnitTests.Serialization
                 return base.Deserialize(body);
             }
 
-            protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null) { }
+            protected override void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null) { }
         }
 
         protected Document CreateDocumentWithRelationships(string mainType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
@@ -35,14 +35,14 @@ namespace UnitTests.Serialization
                 {
                     Id = "1",
                     Type = mainType,
-                    Relationships = new Dictionary<string, RelationshipData> { }
+                    Relationships = new Dictionary<string, RelationshipEntry> { }
                 }
             };
         }
 
-        protected RelationshipData CreateRelationshipData(string relatedType = null, bool isToManyData = false)
+        protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false)
         {
-            var data = new RelationshipData();
+            var data = new RelationshipEntry();
             var rio = relatedType == null ? null : new ResourceIdentifierObject { Id = "10", Type = relatedType };
 
             if (isToManyData)

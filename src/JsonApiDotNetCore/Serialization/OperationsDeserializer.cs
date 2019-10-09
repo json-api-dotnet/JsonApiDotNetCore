@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
         private object SetRelationships(
             object entity,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships,
+            Dictionary<string, RelationshipEntry> relationships,
             List<ResourceObject> included = null)
         {
             if (relationships == null || relationships.Count == 0)
@@ -145,12 +145,12 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships,
+            Dictionary<string, RelationshipEntry> relationships,
             List<ResourceObject> included = null)
         {
             var relationshipName = attr.PublicRelationshipName;
 
-            if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData) == false)
+            if (relationships.TryGetValue(relationshipName, out RelationshipEntry relationshipData) == false)
                 return entity;
 
             var rio = (ResourceIdentifierObject)relationshipData.Data;
@@ -235,12 +235,12 @@ namespace JsonApiDotNetCore.Serialization.Deserializer
             PropertyInfo[] entityProperties,
             HasManyAttribute attr,
             ContextEntity contextEntity,
-            Dictionary<string, RelationshipData> relationships,
+            Dictionary<string, RelationshipEntry> relationships,
             List<ResourceObject> included = null)
         {
             var relationshipName = attr.PublicRelationshipName;
 
-            if (relationships.TryGetValue(relationshipName, out RelationshipData relationshipData))
+            if (relationships.TryGetValue(relationshipName, out RelationshipEntry relationshipData))
             {
                 if (relationshipData.IsManyData == false)
                     return entity;

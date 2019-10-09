@@ -36,7 +36,7 @@ using JsonApiDotNetCore.Serialization.Contracts;
 
 //            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
-//            var documentBuilder = new DocumentBuilder(jsonApiContextMock.Object);
+//            var documentBuilder = new BaseDocumentBuilder(jsonApiContextMock.Object);
 //            _jsonApiSerializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);
 //        }
 

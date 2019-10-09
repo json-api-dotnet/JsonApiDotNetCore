@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         public UpdateOpProcessor(
             IUpdateService<T, int> service,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
         ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
@@ -33,13 +33,13 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         private readonly IUpdateService<T, TId> _service;
         private readonly IOperationsDeserializer _deserializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public UpdateOpProcessor(
             IUpdateService<T, TId> service,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;

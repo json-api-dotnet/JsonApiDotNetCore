@@ -203,7 +203,7 @@ namespace UnitTests.Serialization.Client
                     Type = "one-to-many-dependents",
                     Id = "10",
                     Attributes = new Dictionary<string, object>() { {"attribute-member", toManyAttributeValue } },
-                    Relationships = new Dictionary<string, RelationshipData> { { "principal", CreateRelationshipData("one-to-many-principals") } }
+                    Relationships = new Dictionary<string, RelationshipEntry> { { "principal", CreateRelationshipData("one-to-many-principals") } }
                 },
                 new ResourceObject()
                 {
@@ -247,14 +247,14 @@ namespace UnitTests.Serialization.Client
                     Type = "multi-principals",
                     Id = "10",
                     Attributes = new Dictionary<string, object>() { {"attribute-member", includedAttributeValue } },
-                    Relationships = new Dictionary<string, RelationshipData> { { "populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true) } }
+                    Relationships = new Dictionary<string, RelationshipEntry> { { "populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true) } }
                 },
                 new ResourceObject()
                 {
                     Type = "one-to-many-dependents",
                     Id = "10",
                     Attributes = new Dictionary<string, object>() { {"attribute-member", nestedIncludedAttributeValue } },
-                    Relationships = new Dictionary<string, RelationshipData> { { "principal", CreateRelationshipData("one-to-many-principals") } }
+                    Relationships = new Dictionary<string, RelationshipEntry> { { "principal", CreateRelationshipData("one-to-many-principals") } }
                 },
                 new ResourceObject()
                 {
@@ -299,14 +299,14 @@ namespace UnitTests.Serialization.Client
                     Type = "multi-principals",
                     Id = "10",
                     Attributes = new Dictionary<string, object>() { {"attribute-member", includedAttributeValue } },
-                    Relationships = new Dictionary<string, RelationshipData> { { "populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true) } }
+                    Relationships = new Dictionary<string, RelationshipEntry> { { "populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true) } }
                 },
                 new ResourceObject()
                 {
                     Type = "one-to-many-dependents",
                     Id = "10",
                     Attributes = new Dictionary<string, object>() { {"attribute-member", nestedIncludedAttributeValue } },
-                    Relationships = new Dictionary<string, RelationshipData> { { "principal", CreateRelationshipData("one-to-many-principals") } }
+                    Relationships = new Dictionary<string, RelationshipEntry> { { "principal", CreateRelationshipData("one-to-many-principals") } }
                 },
                 new ResourceObject()
                 {

@@ -18,12 +18,12 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         /// <remarks>
         /// Moving this method to the derived class where it is needed only in the
-        /// case of <see cref="RelationshipData"/> would make more sense, but
+        /// case of <see cref="RelationshipEntry"/> would make more sense, but
         /// Newtonsoft does not support this.
         /// </remarks>
         public bool ShouldSerializeData()
         {
-            if (GetType() == typeof(RelationshipData))
+            if (GetType() == typeof(RelationshipEntry))
                 return IsPopulated;
             return true;
         }
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         internal bool IsPopulated { get; private set; } = false;
 
-        internal bool HasData {  get { return IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null); } }
+        internal bool HasResource {  get { return IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null); } }
 
         /// <summary>
         /// Gets the "single" or "many" data depending on which one was

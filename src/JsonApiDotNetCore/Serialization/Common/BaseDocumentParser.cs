@@ -16,12 +16,12 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Document"/>s
     /// And constructs instances of the resource(s) in the document body.
     /// </summary>
-    public abstract class DocumentParser
+    public abstract class BaseDocumentParser
     {
         protected readonly IContextEntityProvider _provider;
         protected Document _document;
 
-        protected DocumentParser(IContextEntityProvider provider)
+        protected BaseDocumentParser(IContextEntityProvider provider)
         {
             _provider = provider;
         }
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entity">The entity that was constructed from the document's body</param>
         /// <param name="field">The metadata for the exposed field</param>
         /// <param name="data">Relationship data for <paramref name="entity"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/></param>
-        protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipData data = null);
+        protected abstract void AfterProcessField(IIdentifiable entity, IResourceField field, RelationshipEntry data = null);
 
         /// <inheritdoc/>
         protected object Deserialize(string body)
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             if (_document.SingleData == null) return null;
-                return ParseResourceObject(_document.SingleData);
+            return ParseResourceObject(_document.SingleData);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
         /// <param name="relationshipAttributes">Exposed relatinships for <paramref name="entity"/></param>
         /// <returns></returns>
-        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipData> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
+        protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
             if (relationshipsValues == null || relationshipsValues.Count == 0)
                 return entity;
@@ -96,10 +96,13 @@ namespace JsonApiDotNetCore.Serialization
             var entityProperties = entity.GetType().GetProperties();
             foreach (var attr in relationshipAttributes)
             {
+                if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
+                    continue;
+
                 if (attr is HasOneAttribute hasOne)
-                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipsValues);
+                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipData);
                 else
-                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipsValues);
+                    SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
 
             }
             return entity;
@@ -114,7 +117,6 @@ namespace JsonApiDotNetCore.Serialization
             }
             return jToken;
         }
-
 
         /// <summary>
         /// Creates an instance of the referenced type in <paramref name="data"/>
@@ -152,46 +154,28 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entity"></param>
         /// <param name="entityProperties"></param>
         /// <param name="attr"></param>
-        /// <param name="relationships"></param>
+        /// <param name="relationshipData"></param>
         /// <returns></returns>
         private object SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
-            Dictionary<string, RelationshipData> relationships)
+            RelationshipEntry relationshipData)
         {
-            if (relationships.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData) == false)
-                return entity;
-
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id ?? null;
 
             // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
-            //if (foreignKeyProperty == null)
-            //{   /// there is no FK from the current entity pointing to the related object,
-            //    /// i.e. means we're populating the relationship from the principal side.
-            //    SetNavigation(entity, attr, relatedId);
-            //}
-            //else
-            //{
-            //    /// there is a FK from the current entity pointing to the related object,
-            //    /// i.e. we're populating the relationship from the dependent side.
-            //    SetDependentSide(entity, foreignKeyProperty, attr, relatedId);
-            //}
-
             if (foreignKeyProperty != null)
                 /// there is a FK from the current entity pointing to the related object,
                 /// i.e. we're populating the relationship from the dependent side.
                 SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
 
-
             SetNavigation(entity, attr, relatedId);
-            
 
-
-            // allow for additional processing of relationships as required for the
-            // serializer class that implements this abstract class.
+            /// depending on if this base parser is used client-side or server-side,
+            /// different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
 
             return entity;
@@ -238,24 +222,21 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private object SetHasManyRelationship(IIdentifiable entity,
                                               HasManyAttribute attr,
-                                              Dictionary<string, RelationshipData> relationships)
+                                              RelationshipEntry relationshipData)
         {
-            if (relationships.TryGetValue(attr.PublicRelationshipName, out RelationshipData relationshipData))
-            {
-                if (!relationshipData.IsManyData)
-                    return entity;
-
+            if (relationshipData.Data != null)
+            {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
                     var relatedInstance = attr.DependentType.New<IIdentifiable>();
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-
                 var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
                 attr.SetValue(entity, convertedCollection);
-                AfterProcessField(entity, attr, relationshipData);
             }
+
+            AfterProcessField(entity, attr, relationshipData);
 
             return entity;
         }

@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         public RemoveOpProcessor(
             IDeleteService<T, int> service,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
         ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
@@ -33,13 +33,13 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         private readonly IDeleteService<T, TId> _service;
         private readonly IOperationsDeserializer _deserializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public RemoveOpProcessor(
             IDeleteService<T, TId> service,
             IOperationsDeserializer deserializer,
-            IDocumentBuilder documentBuilder,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;

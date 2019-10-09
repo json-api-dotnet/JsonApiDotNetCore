@@ -7,7 +7,7 @@
 
 //namespace UnitTests.Builders
 //{
-//    public class DocumentBuilderBehaviour_Tests
+//    public class BaseDocumentBuilderBehaviour_Tests
 //    {
 
 //        [Theory]
@@ -60,8 +60,8 @@
 //            var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
 //            httpContextAccessorMock.SetupGet(m => m.HttpContext).Returns(httpContext);
 
-//            var sut = new DocumentBuilderOptionsProvider(jsonApiContextMock.Object, httpContextAccessorMock.Object);
-//            var documentBuilderOptions = sut.GetDocumentBuilderOptions();
+//            var sut = new BaseDocumentBuilderOptionsProvider(jsonApiContextMock.Object, httpContextAccessorMock.Object);
+//            var documentBuilderOptions = sut.GetBaseDocumentBuilderOptions();
 
 //            Assert.Equal(omitsNulls, documentBuilderOptions.OmitNullValuedAttributes);
 //        }

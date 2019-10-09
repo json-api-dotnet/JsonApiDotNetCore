@@ -62,8 +62,7 @@ Additionally, client and server serializers also differ in how relationship memb
 
 This time, the `GetRelationshipData()` method is not abstract, but virtual with a default implementation. This default implementation is to just create a `RelationshipData` with primary data (like `{"related-foo": { "data": { "id": 1" "type": "foobar"}}}`). Some implementations (server, included builder) need additional logic, others don't (client).
 
-### DocumentBuilder
-
+### BaseDocumentBuilder
 Responsible for
 
 -   Calling the base resource object serialization for one (or many) entities and wrapping the result in a `Document`.
@@ -94,6 +93,7 @@ The server serializer is also responsible for adding top-level meta data and lin
 * it checks if the processed relationship needs to be enclosed in the `included` list. If so, it calls the `IIncludedResourceObjectBuilder` to take care of that.
 
 ### IncludedResourceObjectBuilder
+Responsible for building the *included member* of a `Document`. Note that `IncludedResourceObjectBuilder` extends `ResourceObjectBuilder` and not `BaseDocumentBuilder` because it does not need to build an entire document but only resource objects.
 
 Responsible for building the _included member_ of a `Document`. Note that `IncludedResourceObjectBuilder` extends `ResourceObjectBuilder` and not `DocumentBuilder` because it does not need to build an entire document but only resource objects.
 
