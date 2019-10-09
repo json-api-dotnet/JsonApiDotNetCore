@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
@@ -101,9 +102,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var person = new Person();
-            var todoItem = _todoItemFaker.Generate();
-            todoItem.Owner = person;
-            _context.TodoItems.Add(todoItem);
+            var todoItems = _todoItemFaker.Generate(3).ToList();
+            _context.TodoItems.AddRange(todoItems);
+            todoItems[0].Owner = person;
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
@@ -118,7 +119,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
-            Assert.Contains(deserializedBody, (i) => i.Owner.Id == person.Id);
+            Assert.Contains(deserializedBody, (i) => i.Id == todoItems[0].Id);
         }
 
         [Fact]
@@ -456,39 +457,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.People.Add(person);
             _context.SaveChanges();
 
+            var serializer = _fixture.GetSerializer<TodoItem>(e => new { e.Description, e.OffsetDate, e.Ordinal, e.CreatedDate }, e => new { e.Owner });
+
             var todoItem = _todoItemFaker.Generate();
             var nowOffset = new DateTimeOffset();
-            var content = new
-            {
-                data = new
-                {
-                    type = "todo-items",
-                    attributes = new Dictionary<string, object>()
-                    {
-                        { "description", todoItem.Description },
-                        { "ordinal", todoItem.Ordinal },
-                        { "created-date", todoItem.CreatedDate },
-                        { "offset-date", nowOffset }
-                    },
-                    relationships = new
-                    {
-                        owner = new
-                        {
-                            data = new
-                            {
-                                type = "people",
-                                id = person.Id.ToString()
-                            }
-                        }
-                    }
-                }
-            };
+            todoItem.OffsetDate = nowOffset;
 
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/todo-items";
 
             var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content = new StringContent(serializer.Serialize(todoItem));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -497,7 +476,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItem>(body).Data;
+            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItemClient>(body).Data;
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
