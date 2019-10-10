@@ -24,8 +24,7 @@ namespace JsonApiDotNetCore.Hooks
         /// layer just before creation of entities of type <typeparamref name="TResource"/>.
         /// <para />
         /// For the <see cref="ResourcePipeline.Post"/> pipeline, <paramref name="entities"/> 
-        /// will typically contain one entry. For <see cref="ResourcePipeline.BulkCreate"/>, 
-        /// <paramref name="entities"/> can contain multiple entities.
+        /// will typically contain one entry.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of <paramref name="entities"/>, in which case the operation of the 
@@ -55,8 +54,6 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// For the <see cref="ResourcePipeline.Patch"/> pipeline, the
         /// <paramref name="entities" /> will typically contain one entity. 
-        /// For <see cref="ResourcePipeline.BulkPatch"/>, this it may contain 
-        /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of the <see cref="DiffableEntityHashSet{TEntity}"/> property in parameter <paramref name="entities"/>, 
@@ -85,8 +82,6 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// For the <see cref="ResourcePipeline.Delete"/> pipeline,
         /// <paramref name="entities" /> will typically contain one entity. 
-        /// For <see cref="ResourcePipeline.BulkDelete"/>, this it may contain 
-        /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of <paramref name="entities"/>, in which case the operation of the 

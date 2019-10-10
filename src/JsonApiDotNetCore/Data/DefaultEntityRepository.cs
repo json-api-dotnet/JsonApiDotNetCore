@@ -171,20 +171,14 @@ namespace JsonApiDotNetCore.Data
             {
                 var relationEntry = _context.Entry((IIdentifiable)trackedRelationshipValue);
                 if (IsHasOneRelationship(hasOneAttr.InverseNavigation, trackedRelationshipValue.GetType()))
-                {
                     relationEntry.Reference(hasOneAttr.InverseNavigation).Load();
-                }
                 else
-                {
                     relationEntry.Collection(hasOneAttr.InverseNavigation).Load();
-                }
             }
             else if (relationshipAttr is HasManyAttribute hasManyAttr && !(relationshipAttr is HasManyThroughAttribute))
             {
                 foreach (IIdentifiable relationshipValue in (IList)trackedRelationshipValue)
-                {
                     _context.Entry(relationshipValue).Reference(hasManyAttr.InverseNavigation).Load();
-                }
             }
         }
 
@@ -193,15 +187,14 @@ namespace JsonApiDotNetCore.Data
             var relationshipAttr = _resourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
             if (relationshipAttr != null)
             {
-                if (relationshipAttr is HasOneAttribute) return true;
+                if (relationshipAttr is HasOneAttribute)
+                    return true;
+
                 return false;
             }
-            else
-            {
-                // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
-                // In this case we use relfection to figure out what kind of relationship is pointing back.
-                return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
-            }
+            // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
+            // In this case we use relfection to figure out what kind of relationship is pointing back.
+            return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
         }
 
 
@@ -213,22 +206,16 @@ namespace JsonApiDotNetCore.Data
             {
                 if (relationshipAttr is HasOneAttribute hasOneAttr)
                 {
-                    var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttr) ?? (IIdentifiable)hasOneAttr.GetValue(entity);
+                    var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(entity);
                     if (relationshipValue == null) continue;
                     _context.Entry(relationshipValue).State = EntityState.Detached;
                 }
                 else
                 {
                     IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
-                    /// This adds support for resource-entity separation in the case of one-to-many. 
-                    /// todo: currently there is no support for many to many relations.
-                    if (relationshipAttr is HasManyAttribute hasMany)
-                        relationshipValueList = GetEntityResourceSeparationValue(entity, hasMany) ?? relationshipValueList;
                     if (relationshipValueList == null) continue;
                     foreach (var pointer in relationshipValueList)
-                    {
                         _context.Entry(pointer).State = EntityState.Detached;
-                    }
                     /// detaching has many relationships is not sufficient to 
                     /// trigger a full reload of relationships: the navigation 
                     /// property actually needs to be nulled out, otherwise
@@ -286,45 +273,30 @@ namespace JsonApiDotNetCore.Data
             wasAlreadyAttached = false;
             if (relationshipAttr is HasOneAttribute hasOneAttr)
             {
-                /// This adds support for resource-entity separation in the case of one-to-one. 
-                var relationshipValue = GetEntityResourceSeparationValue(entity, hasOneAttr) ?? (IIdentifiable)hasOneAttr.GetValue(entity);
+                var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(entity);
                 if (relationshipValue == null)
                     return null;
                 return GetTrackedHasOneRelationshipValue(relationshipValue, hasOneAttr, ref wasAlreadyAttached);
             }
-            else
-            {
-                IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
-                /// This adds support for resource-entity separation in the case of one-to-many. 
-                /// todo: currently there is no support for many to many relations.
-                if (relationshipAttr is HasManyAttribute hasMany)
-                    relationshipValueList = GetEntityResourceSeparationValue(entity, hasMany) ?? relationshipValueList;
-                if (relationshipValueList == null) return null;
-                return GetTrackedManyRelationshipValue(relationshipValueList, relationshipAttr, ref wasAlreadyAttached);
-            }
+
+            IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
+            if (relationshipValueList == null)
+                return null;
+
+            return GetTrackedManyRelationshipValue(relationshipValueList, relationshipAttr, ref wasAlreadyAttached);
         }
 
-        // helper method used in GetTrackedRelationshipValue. See comments there.
+        // helper method used in GetTrackedRelationshipValue. See comments below.
         private IList GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
         {
             if (relationshipValueList == null) return null;
             bool _wasAlreadyAttached = false;
-            /// if we're not using entity resource separation, we can just read off the related type
-            /// from the RelationshipAttribute. If we DO use separation, RelationshipAttribute.DependentType
-            /// will point to the Resource, not the Entity, which is not the one we need here.
-            bool entityResourceSeparation = relationshipAttr.EntityPropertyName != null;
-            Type entityType = entityResourceSeparation ? null : relationshipAttr.DependentType;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
-            {
-                /// todo: we can't just use relationshipAttr.DependentType because
-                /// this will point to the Resource type in the case of entity resource
-                /// separation. We should consider to store entity type on 
-                /// the relationship attribute too.
-                entityType = entityType ?? pointer.GetType();
+            {   // convert each element in the value list to relationshipAttr.DependentType.
                 var tracked = AttachOrGetTracked(pointer);
                 if (tracked != null) _wasAlreadyAttached = true;
-                return Convert.ChangeType(tracked ?? pointer, entityType);
-            }).ToList().Cast(entityType);
+                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.DependentType);
+            }).ToList().Cast(relationshipAttr.DependentType);
             if (_wasAlreadyAttached) wasAlreadyAttached = true;
             return (IList)trackedPointerCollection;
         }
@@ -511,32 +483,6 @@ namespace JsonApiDotNetCore.Data
                 hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
                 throughRelationshipCollection.Add(throughInstance);
             }
-        }
-
-        /// <summary>
-        /// A helper method that gets the relationship value in the case of 
-        /// entity resource separation.
-        /// </summary>
-        private IIdentifiable GetEntityResourceSeparationValue(TEntity entity, HasOneAttribute attribute)
-        {
-            if (attribute.EntityPropertyName == null)
-            {
-                return null;
-            }
-            return (IIdentifiable)entity.GetType().GetProperty(attribute.EntityPropertyName)?.GetValue(entity);
-        }
-
-        /// <summary>
-        /// A helper method that gets the relationship value in the case of 
-        /// entity resource separation.
-        /// </summary>
-        private IEnumerable<IIdentifiable> GetEntityResourceSeparationValue(TEntity entity, HasManyAttribute attribute)
-        {
-            if (attribute.EntityPropertyName == null)
-            {
-                return null;
-            }
-            return ((IEnumerable)(entity.GetType().GetProperty(attribute.EntityPropertyName)?.GetValue(entity))).Cast<IIdentifiable>();
         }
 
         /// <summary>

@@ -15,15 +15,11 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Services.Operations;
-using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.Serialization.Deserializer;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
@@ -161,11 +157,6 @@ namespace JsonApiDotNetCore.Extensions
                 services.AddSingleton(new DbContextOptionsBuilder().Options);
             }
 
-            if (jsonApiOptions.EnableOperations)
-            {
-                AddOperationServices(services);
-            }
-
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
 
@@ -213,7 +204,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<ISparseFieldsService, SparseFieldsService>();
             services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
-            services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
             services.AddScoped<IAttributeBehaviourService, AttributeBehaviourService>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
 
@@ -262,25 +252,6 @@ namespace JsonApiDotNetCore.Extensions
                return new RequestSerializer(sp.GetService<IFieldsExplorer>(), sp.GetService<IResourceGraph>(), resourceObjectBuilder);
             });
 
-        }
-
-        private static void AddOperationServices(IServiceCollection services)
-        {
-            services.AddScoped<IOperationsProcessor, OperationsProcessor>();
-
-            services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
-            services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
-
-            services.AddScoped(typeof(IGetOpProcessor<>), typeof(GetOpProcessor<>));
-            services.AddScoped(typeof(IGetOpProcessor<,>), typeof(GetOpProcessor<,>));
-
-            services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
-            services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
-
-            services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
-            services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
-
-            services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)
