@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -27,6 +28,7 @@ namespace JsonApiDotNetCore.Services
         private readonly ICurrentRequest _currentRequest;
         private readonly IContextEntityProvider _provider;
         private readonly IJsonApiOptions _options;
+        private readonly IServiceProvider _sp;
         private ContextEntity _primaryResource;
 
         public QueryParser(IIncludeService includeService,
@@ -46,6 +48,13 @@ namespace JsonApiDotNetCore.Services
 
         public virtual QuerySet Parse(IQueryCollection query)
         {
+            var type = typeof(IQueryParameterService);
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => t.IsInterface && t.Inherits(type))
+                .Select(t => (IQueryParameterService)_sp.GetService(t));
+
+
             _primaryResource = _currentRequest.GetRequestResource();
             var querySet = new QuerySet();
             var disabledQueries = _currentRequest.DisabledQueryParams;

@@ -1,15 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Query
 {
-    public class IncludeService : IIncludeService, IQueryParameterService
+
+    public abstract class QueryParameterService : IQueryParameterService
+    {
+
+        /// <summary>
+        /// By default, the name is derived from the implementing type.
+        /// </summary>
+        /// <example>
+        /// The following query param service will match the query  displayed in URL
+        /// `?include=some-relationship`
+        /// <code>public class IncludeService : QueryParameterService  { /* ... */  } </code>
+        /// </example>
+        public virtual string Name { get { return GetParameterNameFromType(); } }
+
+        /// <inheritdoc/>
+        public abstract void Parse(string value);
+
+        /// <summary>
+        /// Gets the query parameter name from the implementing class name. Trims "Service"
+        /// from the name if present.
+        /// </summary>
+        private string GetParameterNameFromType() => new Regex("Service$").Replace(GetType().Name, string.Empty);
+    }
+
+    public class IncludeService : QueryParameterService, IIncludeService
     {
         /// todo: make readonly
         private readonly List<List<RelationshipAttribute>> _includedChains;
@@ -29,8 +53,6 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         internal IncludeService() : this(null, null) { }
 
-        public string Name => QueryConstants.INCLUDE;
-
         /// <inheritdoc/>
         public List<List<RelationshipAttribute>> Get()
         {
@@ -38,7 +60,7 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public void Parse(string value)
+        public override void Parse(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new JsonApiException(400, "Include parameter must not be empty if provided");
