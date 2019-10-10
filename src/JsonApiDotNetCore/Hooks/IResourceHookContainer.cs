@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Hooks
         /// changes of the properties on the entities.
         /// <para />
         /// If new relationships are to be created with the to-be-updated entities,
-        /// this will be reflected by the corresponding NavigationProperty beinƒg set. 
+        /// this will be reflected by the corresponding NavigationProperty being set. 
         /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
         /// hook is fired after the execution of this hook.
         /// <para />
