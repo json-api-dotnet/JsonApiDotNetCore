@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Services
 
     public interface IQueryParser
     {
-        QuerySet Parse(IQueryCollection query);
+        void Parse(IQueryCollection query);
     }
 
     public class QueryParser : IQueryParser
@@ -51,8 +51,6 @@ namespace JsonApiDotNetCore.Services
 
             _primaryResource = _currentRequest.GetRequestResource();
             var disabledQueries = _currentRequest.DisabledQueryParams;
-
-
 
             foreach (var pair in query)
             {
@@ -94,7 +92,6 @@ namespace JsonApiDotNetCore.Services
                 if (_options.AllowCustomQueryParameters == false)
                     throw new JsonApiException(400, $"{pair} is not a valid query.");
             }
-;
         }
 
         private void GetQueryParameterServices()
@@ -204,8 +201,6 @@ namespace JsonApiDotNetCore.Services
 
             return sortParameters;
         }
-
-
 
         protected virtual AttrAttribute GetAttribute(string propertyName)
         {

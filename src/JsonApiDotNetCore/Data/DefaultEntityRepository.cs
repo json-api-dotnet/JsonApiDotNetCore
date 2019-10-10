@@ -201,7 +201,6 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public void DetachRelationshipPointers(TEntity entity)
         {
-
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 if (relationshipAttr is HasOneAttribute hasOneAttr)

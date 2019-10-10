@@ -5,6 +5,8 @@ using System.Linq;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json;
 using Xunit;
+using UnitTests.TestModels;
+using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.Serialization.Deserializer
 {

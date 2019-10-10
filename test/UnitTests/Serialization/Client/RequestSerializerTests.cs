@@ -5,6 +5,8 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Client;
 using Xunit;
+using UnitTests.TestModels;
+using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.Serialization.Client
 {

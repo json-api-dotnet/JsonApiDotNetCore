@@ -191,7 +191,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);
             services.AddScoped<ICurrentRequest, CurrentRequest>();
-            services.AddScoped<IPageQueryService, PageService>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
@@ -200,20 +199,27 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(GenericProcessor<>));
             services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
-            services.AddScoped<IIncludeService, IncludeService>();
-            services.AddScoped<ISparseFieldsService, SparseFieldsService>();
+
             services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
-            services.AddScoped<IAttributeBehaviourService, OmitNullService>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
 
             AddServerSerialization(services);
-
+            AddQueryParameterServices(services);
             if (jsonApiOptions.EnableResourceHooks)
                 AddResourceHooks(services);
 
             services.AddScoped<IInverseRelationships, InverseRelationships>();
         }
+
+        private static void AddQueryParameterServices(IServiceCollection services)
+        {
+            services.AddScoped<IIncludeService, IncludeService>();
+            services.AddScoped<ISparseFieldsService, SparseFieldsService>();
+            services.AddScoped<IPageQueryService, PageService>();
+
+        }
+
 
         private static void AddResourceHooks(IServiceCollection services)
         {

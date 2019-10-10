@@ -26,5 +26,6 @@
     <Folder Include="Serialization\Common\" />
     <Folder Include="Serialization\Client\" />
     <Folder Include="Serialization\Server\" />
+    <Folder Include="QueryParameters\" />
   </ItemGroup>
 </Project>

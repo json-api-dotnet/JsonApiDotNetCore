@@ -57,11 +57,10 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (_httpContext.Request.Query.Count > 0)
             {
-                var querySet = _queryParser.Parse(_httpContext.Request.Query);
-                _currentRequest.QuerySet = querySet; //this shouldn't be exposed?
-                _pageManager.PageSize = querySet.PageQuery.PageSize ?? _pageManager.PageSize;
-                _pageManager.CurrentPage = querySet.PageQuery.PageOffset ?? _pageManager.CurrentPage;
-
+                 _queryParser.Parse(_httpContext.Request.Query);
+                //_currentRequest.QuerySet = querySet; //this shouldn't be exposed?
+                //_pageManager.PageSize = querySet.PageQuery.PageSize ?? _pageManager.PageSize;
+                //_pageManager.CurrentPage = querySet.PageQuery.PageOffset ?? _pageManager.CurrentPage;
             }
         }
 

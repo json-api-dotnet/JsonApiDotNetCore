@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
+
 namespace UnitTests.ResourceHooks
 {
     public class BeforeDelete_WithDbValues_Tests : HooksTestsSetup

@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Query
     /// Encapsulates client overrides of omit null and omit default values behaviour
     /// in <see cref="ResourceObjectBuilderSettings"/>
     /// </summary>
-    public interface IAttributeBehaviourService: IQueryParameterService
+    public interface IAttributeBehaviourService
     {
         /// <summary>
         /// Value of client query param overriding the omit null values behaviour in the server serializer

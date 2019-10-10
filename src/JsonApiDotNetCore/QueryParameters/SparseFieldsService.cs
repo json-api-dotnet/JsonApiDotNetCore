@@ -52,8 +52,8 @@ namespace JsonApiDotNetCore.Query
             var includedFields = new List<string> { nameof(Identifiable.Id) };
 
             var relationship = primaryResource.Relationships.SingleOrDefault(a => a.Is(typeName));
-            if (relationship == default && string.Equals(typeName, primaryResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
-                return; // includedFields;
+            if (relationship == null && string.Equals(typeName, primaryResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
+                throw new JsonApiException(400, $"fields[{typeName}] is invalid");
 
             var fields = value.Split(QueryConstants.COMMA);
             foreach (var field in fields)
@@ -68,9 +68,6 @@ namespace JsonApiDotNetCore.Query
                     if (!_selectedRelationshipFields.TryGetValue(relationship, out var registeredFields))
                         _selectedRelationshipFields.Add(relationship, registeredFields = new List<AttrAttribute>());
                     registeredFields.Add(attr);
-                    // e.g. "Owner.Name"
-                    //includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
-
                 }
                 else
                 {
@@ -79,9 +76,6 @@ namespace JsonApiDotNetCore.Query
                         throw new JsonApiException(400, $"'{primaryResource.EntityName}' does not contain '{field}'.");
 
                     (_selectedFields = _selectedFields ?? new List<AttrAttribute>()).Add(attr);
-
-                    // e.g. "Name"
-                    //includedFields.Add(attr.InternalAttributeName);
                 }
             }
         }

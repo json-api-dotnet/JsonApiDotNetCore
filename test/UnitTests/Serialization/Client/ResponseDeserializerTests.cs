@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Serialization.Client;
 using Newtonsoft.Json;
 using Xunit;
+using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Client
 {

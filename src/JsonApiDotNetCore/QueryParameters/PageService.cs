@@ -26,10 +26,11 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
-        public override void Parse(string value)
+        public override void Parse(string key, string value)
         {
             throw new NotImplementedException();
         }
+
 
         /// <inheritdoc/>
         public bool ShouldPaginate()
