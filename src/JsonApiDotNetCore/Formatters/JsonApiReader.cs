@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization.Deserializer;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
@@ -15,19 +14,13 @@ namespace JsonApiDotNetCore.Formatters
     /// <inheritdoc />
     public class JsonApiReader : IJsonApiReader
     {
-        private readonly IOperationsDeserializer _operationsDeserializer;
         private readonly IJsonApiDeserializer _deserializer;
-        private readonly ICurrentRequest _currentRequest;
         private readonly ILogger<JsonApiReader> _logger;
 
         public JsonApiReader(IJsonApiDeserializer deserializer,
-                             IOperationsDeserializer operationsDeserializer,
-                             ICurrentRequest currentRequest,
                              ILoggerFactory loggerFactory)
         {
             _deserializer = deserializer;
-            _operationsDeserializer = operationsDeserializer;
-            _currentRequest = currentRequest;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
 
@@ -43,12 +36,6 @@ namespace JsonApiDotNetCore.Formatters
             try
             {
                 var body = GetRequestBody(context.HttpContext.Request.Body);
-
-                if (_currentRequest.IsBulkRequest)
-                {
-                    var operations = _operationsDeserializer.Deserialize(body);
-                    return InputFormatterResult.SuccessAsync(operations);
-                }
 
                 object model = _deserializer.Deserialize(body);
 
@@ -115,7 +102,6 @@ namespace JsonApiDotNetCore.Formatters
                 }
             }
             return false;
-
         }
 
         private string GetRequestBody(Stream body)

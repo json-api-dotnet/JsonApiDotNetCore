@@ -132,17 +132,6 @@ namespace JsonApiDotNetCore.Configuration
         public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>
-        /// Whether or not to allow json:api v1.1 operation requests.
-        /// This is a beta feature and there may be breaking changes
-        /// in subsequent releases. For now, ijt should be considered
-        /// experimental.
-        /// </summary>
-        /// <remarks>
-        /// This will be enabled by default in a subsequent patch JsonApiDotNetCore v2.2.x
-        /// </remarks>
-        public bool EnableOperations { get; set; }
-
-        /// <summary>
         /// Whether or not to validate model state.
         /// </summary>
         /// <example>

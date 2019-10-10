@@ -19,28 +19,25 @@ namespace JsonApiDotNetCore.Services
     /// Entity mapping class
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
-    /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TId"></typeparam>
-    public class EntityResourceService<TResource, TEntity, TId> :
+    public class EntityResourceService<TResource, TId> :
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
-        where TEntity : class, IIdentifiable<TId>
     {
         private readonly IPageQueryService _pageManager;
         private readonly ICurrentRequest _currentRequest;
         private readonly IJsonApiOptions _options;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IEntityRepository<TEntity, TId> _repository;
+        private readonly IEntityRepository<TResource, TId> _repository;
         private readonly ILogger _logger;
-        private readonly IResourceMapper _mapper;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
         private readonly ISparseFieldsService _sparseFieldsService;
         private readonly ContextEntity _currentRequestResource;
 
         public EntityResourceService(
-                IEntityRepository<TEntity, TId> repository,
+                IEntityRepository<TResource, TId> repository,
                 IJsonApiOptions options,
                 ITargetedFields updatedFields,
                 ICurrentRequest currentRequest,
@@ -49,7 +46,6 @@ namespace JsonApiDotNetCore.Services
                 IPageQueryService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
-                IResourceMapper mapper = null,
                 ILoggerFactory loggerFactory = null)
         {
             _currentRequest = currentRequest;
@@ -60,19 +56,13 @@ namespace JsonApiDotNetCore.Services
             _targetedFields = updatedFields;
             _resourceGraph = resourceGraph;
             _repository = repository;
-            if (mapper == null && typeof(TResource) != typeof(TEntity))
-            {
-                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
-            }
             _hookExecutor = hookExecutor;
-            _mapper = mapper;
-            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TId>>();
             _currentRequestResource = resourceGraph.GetContextEntity<TResource>();
         }
 
-        public virtual async Task<TResource> CreateAsync(TResource resource)
+        public virtual async Task<TResource> CreateAsync(TResource entity)
         {
-            var entity = MapIn(resource);
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
             entity = await _repository.CreateAsync(entity);
 
@@ -81,22 +71,22 @@ namespace JsonApiDotNetCore.Services
             // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
             if (ShouldIncludeRelationships())
             {
-                if (_repository is IEntityFrameworkRepository<TEntity> efRepository)
+                if (_repository is IEntityFrameworkRepository<TResource> efRepository)
                     efRepository.DetachRelationshipPointers(entity);
 
                 entity = await GetWithRelationshipsAsync(entity.Id);
-
             }
+
             if (!IsNull(_hookExecutor, entity))
             {
                 _hookExecutor.AfterCreate(AsList(entity), ResourcePipeline.Post);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Get).SingleOrDefault();
             }
-            return MapOut(entity);
+            return entity;
         }
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            var entity = (TEntity)Activator.CreateInstance(typeof(TEntity));
+            var entity = (TResource)Activator.CreateInstance(typeof(TResource));
             entity.Id = id;
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
             var succeeded = await _repository.DeleteAsync(entity.Id);
@@ -105,7 +95,7 @@ namespace JsonApiDotNetCore.Services
         }
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
-            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.Get);
+            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
             var entities = _repository.Get();
 
             entities = ApplySortAndFilterQuery(entities);
@@ -133,9 +123,9 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task<TResource> GetAsync(TId id)
         {
             var pipeline = ResourcePipeline.GetSingle;
-            _hookExecutor?.BeforeRead<TEntity>(pipeline, id.ToString());
+            _hookExecutor?.BeforeRead<TResource>(pipeline, id.ToString());
 
-            TEntity entity;
+            TResource entity;
             if (ShouldIncludeRelationships())
                 entity = await GetWithRelationshipsAsync(id);
             else
@@ -146,7 +136,7 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterRead(AsList(entity), pipeline);
                 entity = _hookExecutor.OnReturn(AsList(entity), pipeline).SingleOrDefault();
             }
-            return MapOut(entity);
+            return entity;
         }
 
         // triggered by GET /articles/1/relationships/{relationshipName}
@@ -155,7 +145,7 @@ namespace JsonApiDotNetCore.Services
             var relationship = GetRelationship(relationshipName);
 
             // BeforeRead hook execution
-            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.GetRelationship, id.ToString());
+            _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
@@ -169,9 +159,7 @@ namespace JsonApiDotNetCore.Services
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.GetRelationship).SingleOrDefault();
             }
 
-            var resource = MapOut(entity);
-
-            return resource;
+            return entity;
         }
 
         // triggered by GET /articles/1/{relationshipName}
@@ -182,9 +170,8 @@ namespace JsonApiDotNetCore.Services
             return _resourceGraph.GetRelationship(resource, relationship.InternalRelationshipName);
         }
 
-        public virtual async Task<TResource> UpdateAsync(TId id, TResource resource)
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource entity)
         {
-            var entity = MapIn(resource);
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             entity = await _repository.UpdateAsync(entity);
@@ -193,7 +180,7 @@ namespace JsonApiDotNetCore.Services
                 _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.Patch);
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             }
-            return MapOut(entity);
+            return entity;
         }
 
         // triggered by PATCH /articles/1/relationships/{relationshipName}
@@ -217,13 +204,12 @@ namespace JsonApiDotNetCore.Services
 
         }
 
-        protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TEntity> entities)
+        protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
         {
             if (!(_pageManager.PageSize > 0))
             {
                 var allEntities = await _repository.ToListAsync(entities);
-                return (typeof(TResource) == typeof(TEntity)) ? allEntities as IEnumerable<TResource> :
-                    _mapper.Map<IEnumerable<TResource>>(allEntities);
+                return allEntities as IEnumerable<TResource>;
             }
 
             if (_logger?.IsEnabled(LogLevel.Information) == true)
@@ -232,12 +218,10 @@ namespace JsonApiDotNetCore.Services
                     $"with {_pageManager.PageSize} entities");
             }
 
-            var pagedEntities = await _repository.PageAsync(entities, _pageManager.PageSize, _pageManager.CurrentPage);
-
-            return MapOut(pagedEntities);
+            return await _repository.PageAsync(entities, _pageManager.PageSize, _pageManager.CurrentPage);
         }
 
-        protected virtual IQueryable<TEntity> ApplySortAndFilterQuery(IQueryable<TEntity> entities)
+        protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities)
         {
             var query = _currentRequest.QuerySet;
 
@@ -258,7 +242,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        protected virtual IQueryable<TEntity> IncludeRelationships(IQueryable<TEntity> entities)
+        protected virtual IQueryable<TResource> IncludeRelationships(IQueryable<TResource> entities)
         {
             foreach (var r in _includeService.Get())
                 entities = _repository.Include(entities, r.ToArray());
@@ -271,7 +255,7 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private async Task<TEntity> GetWithRelationshipsAsync(TId id)
+        private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var sparseFieldset = _sparseFieldsService.Get();
             var query = _repository.Select(_repository.Get(), sparseFieldset.Select(a => a.InternalAttributeName).ToList()).Where(e => e.Id.Equals(id));
@@ -279,7 +263,7 @@ namespace JsonApiDotNetCore.Services
             foreach (var chain in _includeService.Get())
                 query = _repository.Include(query, chain.ToArray());
 
-            TEntity value;
+            TResource value;
             // https://github.com/aspnet/EntityFrameworkCore/issues/6573
             if (sparseFieldset.Count() > 0)
                 value = query.FirstOrDefault();
@@ -313,42 +297,9 @@ namespace JsonApiDotNetCore.Services
             return relationship;
         }
 
-        /// <summary>
-        /// Casts the entity given to `TResource` or maps it to its equal
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        private TResource MapOut(TEntity entity)
+        private List<TResource> AsList(TResource entity)
         {
-            return (typeof(TResource) == typeof(TEntity)) ? entity as TResource : _mapper.Map<TResource>(entity);
-        }
-
-        private IEnumerable<TResource> MapOut(IEnumerable<TEntity> entities)
-            => (typeof(TResource) == typeof(TEntity))
-                ? entities as IEnumerable<TResource>
-                : _mapper.Map<IEnumerable<TResource>>(entities);
-
-        private TEntity MapIn(TResource resource)
-            => (typeof(TResource) == typeof(TEntity))
-                ? resource as TEntity
-                : _mapper.Map<TEntity>(resource);
-
-        private List<TEntity> AsList(TEntity entity)
-        {
-            return new List<TEntity> { entity };
-        }
-    }
-    /// <summary>
-    /// No mapping
-    /// </summary>
-    /// <typeparam name="TResource"></typeparam>
-    /// <typeparam name="TId"></typeparam>
-    public class EntityResourceService<TResource, TId> : EntityResourceService<TResource, TResource, TId>,
-        IResourceService<TResource, TId>
-        where TResource : class, IIdentifiable<TId>
-    {
-        public EntityResourceService(IEntityRepository<TResource, TId> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, ISparseFieldsService sparseFieldsService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
-        {
+            return new List<TResource> { entity };
         }
     }
 
@@ -360,7 +311,12 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, ISparseFieldsService sparseFieldsService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
+        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options,
+                                     ITargetedFields updatedFields, ICurrentRequest currentRequest,
+                                     IIncludeService includeService, ISparseFieldsService sparseFieldsService,
+                                     IPageQueryService pageManager, IResourceGraph resourceGraph,
+                                     IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
+            : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
         {
         }
     }

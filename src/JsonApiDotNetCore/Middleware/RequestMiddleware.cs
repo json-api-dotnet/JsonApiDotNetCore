@@ -33,16 +33,9 @@ namespace JsonApiDotNetCore.Middleware
 
             if (IsValid())
             {
-                _currentRequest.IsBulkRequest = PathIsBulk();
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
                 await _next(httpContext);
             }
-        }
-
-        private bool PathIsBulk()
-        {
-            var actionName = (string)_httpContext.GetRouteData().Values["action"];
-            return actionName.ToLower().Contains("bulk");
         }
 
         protected bool PathIsRelationship()
