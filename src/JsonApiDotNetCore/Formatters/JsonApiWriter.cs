@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Formatters
     /// <summary>
     /// Formats the response data used  https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0.
     /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
-    /// It onls depends on <see cref="IJsonApiSerializerFactory"/>.
+    /// It onls depends on <see cref="IJsonApiSerializer"/>.
     /// </summary>
     public class JsonApiWriter : IJsonApiWriter
     {

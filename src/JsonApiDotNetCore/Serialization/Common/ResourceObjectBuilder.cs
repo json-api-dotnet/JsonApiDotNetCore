@@ -9,10 +9,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization
 {
 
-    /// <summary>
-    /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s
-    /// given a list of attributes and relationships.
-    /// </summary>
+    /// <inheritdoc/> 
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         protected readonly IResourceGraph _resourceGraph;
@@ -27,14 +24,7 @@ namespace JsonApiDotNetCore.Serialization
             _settings = settings;
         }
 
-        /// <summary>
-        /// Converts <paramref name="entity"/> into a <see cref="ResourceObject"/>.
-        /// Adds the attributes and relationships that are enlisted in <paramref name="attributes"/> and <paramref name="relationships"/>
-        /// </summary>
-        /// <param name="entity">Entity to build a Resource Object for</param>
-        /// <param name="attributes">Attributes to include in the building process</param>
-        /// <param name="relationships">Relationships to include in the building process</param>
-        /// <returns>The resource object that was built</returns>
+        /// <inheritdoc/> 
         public ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
         {
             var resourceContext = _provider.GetContextEntity(entity.GetType());
@@ -53,30 +43,6 @@ namespace JsonApiDotNetCore.Serialization
             return ro;
         }
 
-        private void ProcessRelationships(IIdentifiable entity, IEnumerable<RelationshipAttribute> relationships, ResourceObject ro)
-        {
-            foreach (var rel in relationships)
-            {
-                var relData = GetRelationshipData(rel, entity);
-                if (relData != null)
-                    (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
-            }
-        }
-
-        private void ProcessAttributes(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, ResourceObject ro)
-        {
-            ro.Attributes = new Dictionary<string, object>();
-            foreach (var attr in attributes)
-                AddAttribute(entity, ro, attr);
-        }
-
-        private void AddAttribute(IIdentifiable entity, ResourceObject ro, AttrAttribute attr)
-        {
-            var value = attr.GetValue(entity);
-            if (!(value == default && _settings.OmitDefaultValuedAttributes) && !(value == null && _settings.OmitDefaultValuedAttributes))
-                ro.Attributes.Add(attr.PublicAttributeName, value);
-        }
-
         /// <summary>
         /// Builds the <see cref="RelationshipEntry"/> entries of the "relationships
         /// objects" The default behaviour is to just construct a resource linkage
@@ -89,6 +55,9 @@ namespace JsonApiDotNetCore.Serialization
             return new RelationshipEntry { Data = GetRelatedResourceLinkage(relationship, entity) };
         }
 
+        /// <summary>
+        /// Gets the value for the <see cref="RelationshipEntry.Data"/> property.
+        /// </summary>
         protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable entity)
         {
             if (relationship is HasOneAttribute hasOne)
@@ -149,6 +118,33 @@ namespace JsonApiDotNetCore.Serialization
                 return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Puts the relationships of the entity into the resource object.
+        /// </summary>
+        private void ProcessRelationships(IIdentifiable entity, IEnumerable<RelationshipAttribute> relationships, ResourceObject ro)
+        {
+            foreach (var rel in relationships)
+            {
+                var relData = GetRelationshipData(rel, entity);
+                if (relData != null)
+                    (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
+            }
+        }
+
+        /// <summary>
+        /// Puts the attributes of the entity into the resource object.
+        /// </summary>
+        private void ProcessAttributes(IIdentifiable entity, IEnumerable<AttrAttribute> attributes, ResourceObject ro)
+        {
+            ro.Attributes = new Dictionary<string, object>();
+            foreach (var attr in attributes)
+            {
+                var value = attr.GetValue(entity);
+                if (!(value == default && _settings.OmitDefaultValuedAttributes) && !(value == null && _settings.OmitDefaultValuedAttributes))
+                    ro.Attributes.Add(attr.PublicAttributeName, value);
+            }
         }
     }
 }

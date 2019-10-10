@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCoreExampleTests
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
+            services.AddClientSerialization();
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
             return services.BuildServiceProvider();
         }

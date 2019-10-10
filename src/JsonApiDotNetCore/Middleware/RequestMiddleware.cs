@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;

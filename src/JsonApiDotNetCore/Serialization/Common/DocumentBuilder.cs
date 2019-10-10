@@ -6,8 +6,8 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Abstract base class for serialization that extends <see cref="ResourceObjectBuilder"/>.
-    /// Converts entities in to <see cref="ResourceObject"/>s and wraps them in a <see cref="Document"/>.
+    /// Abstract base class for serialization.
+    /// Uses <see cref="IResourceObjectBuilder"/> to convert entities in to <see cref="ResourceObject"/>s and wraps them in a <see cref="Document"/>.
     /// </summary>
     public abstract class BaseDocumentBuilder
     {

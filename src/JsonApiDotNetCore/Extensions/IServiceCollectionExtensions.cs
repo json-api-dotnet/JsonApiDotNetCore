@@ -218,7 +218,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
 
             AddServerSerialization(services);
-            AddClientSerialization(services);
+
             if (jsonApiOptions.EnableResourceHooks)
                 AddResourceHooks(services);
 
@@ -244,11 +244,15 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IMetaBuilder<>), typeof(MetaBuilder<>));
             services.AddScoped(typeof(ResponseSerializer<>));
             services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
-
             services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
         }
 
-        private static void AddClientSerialization(IServiceCollection services)
+        /// <summary>
+        /// Enables client serializers for sending requests and receiving responses
+        /// in json:api format. Internally only used for testing.
+        /// Will be extended in the future to be part of a JsonApiClientDotNetCore package.
+        /// </summary>
+        public static void AddClientSerialization(this IServiceCollection services)
         {
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
 

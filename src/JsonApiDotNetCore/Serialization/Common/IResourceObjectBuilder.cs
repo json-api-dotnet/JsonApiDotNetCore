@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Abstract base class for serialization. Converts entities in to <see cref="ResourceObject"/>s
+    /// Responsible for converting entities in to <see cref="ResourceObject"/>s
     /// given a list of attributes and relationships.
     /// </summary> 
     public interface IResourceObjectBuilder

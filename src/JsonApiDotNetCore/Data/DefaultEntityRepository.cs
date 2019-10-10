@@ -13,6 +13,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 namespace JsonApiDotNetCore.Data
 {
     /// <summary>
