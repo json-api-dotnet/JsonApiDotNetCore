@@ -13,7 +13,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Examples/OperationsExample/OperationsExample.csproj" />
     <ProjectReference Include="../UnitTests/UnitTests.csproj" />
   </ItemGroup>
   <ItemGroup>

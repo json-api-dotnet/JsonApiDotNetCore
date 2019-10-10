@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
-    <ProjectReference Include="..\..\src\Examples\ResourceEntitySeparationExample\ResourceEntitySeparationExample.csproj" />
     <ProjectReference Include="..\JsonApiDotNetCoreExampleTests\JsonApiDotNetCoreExampleTests.csproj" />
     <ProjectReference Include="..\UnitTests\UnitTests.csproj" />
   </ItemGroup>
