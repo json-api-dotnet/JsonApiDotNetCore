@@ -16,8 +16,7 @@ namespace JsonApiDotNetCore.Query
         private readonly ICurrentRequest _currentRequest;
         private readonly IContextEntityProvider _provider;
 
-        public IncludeService(ICurrentRequest currentRequest,
-                                   IContextEntityProvider provider)
+        public IncludeService(ICurrentRequest currentRequest, IContextEntityProvider provider)
         {
             _currentRequest = currentRequest;
             _provider = provider;
@@ -36,7 +35,7 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public override void Parse(string value)
+        public override void Parse(string _, string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new JsonApiException(400, "Include parameter must not be empty if provided");

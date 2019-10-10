@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Query
@@ -15,11 +21,15 @@ namespace JsonApiDotNetCore.Query
         /// The selected field for any included relationships
         /// </summary>
         private readonly Dictionary<RelationshipAttribute, List<AttrAttribute>> _selectedRelationshipFields;
+        private readonly ICurrentRequest _currentRequest;
+        private readonly IContextEntityProvider _provider;
 
-        public SparseFieldsService()
+        public SparseFieldsService(ICurrentRequest currentRequest, IContextEntityProvider provider)
         {
             _selectedFields = new List<AttrAttribute>();
             _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();
+            _currentRequest = currentRequest;
+            _provider = provider;
         }
 
         /// <inheritdoc/>
@@ -33,19 +43,46 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        //public override Parse(AttrAttribute selected, RelationshipAttribute relationship = null)
-        public override void Parse(string value)
+        public override void Parse(string key, string value)
         {
-            if (relationship == null)
-            {
-                _selectedFields = _selectedFields ?? new List<AttrAttribute>();
-                _selectedFields.Add(selected);
-            } else
-            {
-            if (!_selectedRelationshipFields.TryGetValue(relationship, out var fields))
-                _selectedRelationshipFields.Add(relationship, fields = new List<AttrAttribute>());
+            var primaryResource = _currentRequest.GetRequestResource();
 
-            fields.Add(selected);
+            // expected: fields[TYPE]=prop1,prop2
+            var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var includedFields = new List<string> { nameof(Identifiable.Id) };
+
+            var relationship = primaryResource.Relationships.SingleOrDefault(a => a.Is(typeName));
+            if (relationship == default && string.Equals(typeName, primaryResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
+                return; // includedFields;
+
+            var fields = value.Split(QueryConstants.COMMA);
+            foreach (var field in fields)
+            {
+                if (relationship != default)
+                {
+                    var relationProperty = _provider.GetContextEntity(relationship.DependentType);
+                    var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
+                    if (attr == null)
+                        throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
+
+                    if (!_selectedRelationshipFields.TryGetValue(relationship, out var registeredFields))
+                        _selectedRelationshipFields.Add(relationship, registeredFields = new List<AttrAttribute>());
+                    registeredFields.Add(attr);
+                    // e.g. "Owner.Name"
+                    //includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
+
+                }
+                else
+                {
+                    var attr = primaryResource.Attributes.SingleOrDefault(a => a.Is(field));
+                    if (attr == null)
+                        throw new JsonApiException(400, $"'{primaryResource.EntityName}' does not contain '{field}'.");
+
+                    (_selectedFields = _selectedFields ?? new List<AttrAttribute>()).Add(attr);
+
+                    // e.g. "Name"
+                    //includedFields.Add(attr.InternalAttributeName);
+                }
             }
         }
     }

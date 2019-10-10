@@ -22,87 +22,89 @@ namespace JsonApiDotNetCore.Services
 
     public class QueryParser : IQueryParser
     {
-        private readonly IIncludeService _includeService;
-        private readonly ISparseFieldsService _fieldQuery;
-        private readonly IPageQueryService _pageQuery;
+        private readonly IncludeService _includeService;
+        private readonly SparseFieldsService _sparseFieldsService;
+        private readonly FilterService _filterService;
+        private readonly SortService _sortService;
+        private readonly OmitDefaultService _omitDefaultService;
+        private readonly OmitNullService _omitNull;
+        private readonly PageService _pageService;
+
         private readonly ICurrentRequest _currentRequest;
         private readonly IContextEntityProvider _provider;
         private readonly IJsonApiOptions _options;
         private readonly IServiceProvider _sp;
         private ContextEntity _primaryResource;
 
-        public QueryParser(IIncludeService includeService,
-            ISparseFieldsService fieldQuery,
+        public QueryParser(
             ICurrentRequest currentRequest,
             IContextEntityProvider provider,
-            IPageQueryService pageQuery,
             IJsonApiOptions options)
         {
-            _includeService = includeService;
-            _fieldQuery = fieldQuery;
             _currentRequest = currentRequest;
-            _pageQuery = pageQuery;
             _provider = provider;
             _options = options;
         }
 
-        public virtual QuerySet Parse(IQueryCollection query)
+        public virtual void Parse(IQueryCollection query)
         {
-            var type = typeof(IQueryParameterService);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsInterface && t.Inherits(type))
-                .Select(t => (IQueryParameterService)_sp.GetService(t));
-
 
             _primaryResource = _currentRequest.GetRequestResource();
-            var querySet = new QuerySet();
             var disabledQueries = _currentRequest.DisabledQueryParams;
+
+
+
             foreach (var pair in query)
             {
                 if (pair.Key.StartsWith(QueryConstants.FILTER, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Filters) == false)
-                        querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
+                        //querySet.Filters.AddRange(ParseFilterQuery(pair.Key, pair.Value));
                     continue;
                 }
 
                 if (pair.Key.StartsWith(QueryConstants.SORT, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Sort) == false)
-                        querySet.SortParameters = ParseSortParameters(pair.Value);
+                        //querySet.SortParameters = ParseSortParameters(pair.Value);
                     continue;
                 }
 
                 if (pair.Key.StartsWith(_includeService.Name, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Include) == false)
-                        _includeService.Parse(pair.Value);
+                        _includeService.Parse(null, pair.Value);
                     continue;
                 }
 
                 if (pair.Key.StartsWith(QueryConstants.PAGE, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Page) == false)
-                        querySet.PageQuery = ParsePageQuery(querySet.PageQuery, pair.Key, pair.Value);
+                        //querySet.PageQuery = ParsePageQuery(querySet.PageQuery, pair.Key, pair.Value);
                     continue;
                 }
 
                 if (pair.Key.StartsWith(QueryConstants.FIELDS, StringComparison.Ordinal))
                 {
                     if (disabledQueries.HasFlag(QueryParams.Fields) == false)
-                        querySet.Fields = ParseFieldsQuery(pair.Key, pair.Value);
+                        _sparseFieldsService.Parse(pair.Key, pair.Value);
                     continue;
                 }
 
                 if (_options.AllowCustomQueryParameters == false)
                     throw new JsonApiException(400, $"{pair} is not a valid query.");
             }
-
-            return querySet;
+;
         }
 
-
+        private void GetQueryParameterServices()
+        {
+            var type = typeof(IQueryParameterService);
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => t.IsInterface && t.Inherits(type))
+                .Select(t => (IQueryParameterService)_sp.GetService(t));
+        }
 
         protected virtual List<FilterQuery> ParseFilterQuery(string key, string value)
         {
@@ -204,45 +206,6 @@ namespace JsonApiDotNetCore.Services
         }
 
 
-        protected virtual List<string> ParseFieldsQuery(string key, string value)
-        {
-            // expected: fields[TYPE]=prop1,prop2
-            var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
-            var includedFields = new List<string> { nameof(Identifiable.Id) };
-
-            var relationship = _primaryResource.Relationships.SingleOrDefault(a => a.Is(typeName));
-            if (relationship == default && string.Equals(typeName, _primaryResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
-                return includedFields;
-
-            var fields = value.Split(QueryConstants.COMMA);
-            foreach (var field in fields)
-            {
-                if (relationship != default)
-                {
-                    var relationProperty = _provider.GetContextEntity(relationship.DependentType);
-                    var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
-                    if (attr == null)
-                        throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
-
-                    _fieldQuery.Register(attr, relationship);
-                    // e.g. "Owner.Name"
-                    includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
-
-                }
-                else
-                {
-                    var attr = _primaryResource.Attributes.SingleOrDefault(a => a.Is(field));
-                    if (attr == null)
-                        throw new JsonApiException(400, $"'{_primaryResource.EntityName}' does not contain '{field}'.");
-
-                    _fieldQuery.Register(attr, relationship);
-                    // e.g. "Name"
-                    includedFields.Add(attr.InternalAttributeName);
-                }
-            }
-
-            return includedFields;
-        }
 
         protected virtual AttrAttribute GetAttribute(string propertyName)
         {

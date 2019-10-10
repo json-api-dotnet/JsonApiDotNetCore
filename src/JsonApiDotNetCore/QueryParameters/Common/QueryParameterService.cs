@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Query
         public virtual string Name { get { return GetParameterNameFromType(); } }
 
         /// <inheritdoc/>
-        public abstract void Parse(string value);
+        public abstract void Parse(string key, string value);
 
         /// <summary>
         /// Gets the query parameter name from the implementing class name. Trims "Service"
