@@ -7,9 +7,8 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class IncludedServiceTests : QueryParametersUnitTestCollection
+    public class IncludeServiceTests : QueryParametersUnitTestCollection
     {
-
         public IncludeService GetService(ContextEntity resourceContext = null)
         {
             return new IncludeService(resourceContext ?? _articleResourceContext , _graph);

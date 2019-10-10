@@ -66,7 +66,7 @@ namespace UnitTests.TestModels
         [Attr] public string AttributeMember { get; set; }
     }
 
-    internal class MultipleRelationshipsPrincipalPart : IdentifiableWithAttribute
+    public class MultipleRelationshipsPrincipalPart : IdentifiableWithAttribute
     {
         [HasOne] public OneToOneDependent PopulatedToOne { get; set; }
         [HasOne] public OneToOneDependent EmptyToOne { get; set; }

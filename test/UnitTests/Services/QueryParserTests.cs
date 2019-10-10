@@ -20,7 +20,7 @@
 //        private readonly Mock<ICurrentRequest> _requestMock;
 //        private readonly Mock<IQueryCollection> _queryCollectionMock;
 //        private readonly Mock<IPageQueryService> _pageQueryMock;
-//        private readonly ISparseFieldsService _sparseFieldsService  = new Mock<ISparseFieldsService>().Object;
+//        private readonly ISparseFieldsService _sparseFieldsService = new Mock<ISparseFieldsService>().Object;
 //        private readonly IIncludeService _includeService = new Mock<IIncludeService>().Object;
 //        private readonly IContextEntityProvider _graph = new Mock<IContextEntityProvider>().Object;
 
@@ -33,7 +33,7 @@
 
 //        private QueryParser GetQueryParser()
 //        {
-//            return new QueryParser(new IncludeService(), _sparseFieldsService , _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
+//            return new QueryParser(new IncludeService(), _sparseFieldsService, _requestMock.Object, _graph, _pageQueryMock.Object, new JsonApiOptions());
 //        }
 
 //        [Fact]
@@ -186,31 +186,6 @@
 
 //            // assert
 //            Assert.Empty(querySet.SortParameters);
-//        }
-
-//        [Fact]
-//        public void Can_Disable_Include()
-//        {
-//            // arrange
-//            var query = new Dictionary<string, StringValues> {
-//                { "include", new StringValues("key") }
-//            };
-
-//            _queryCollectionMock
-//                .Setup(m => m.GetEnumerator())
-//                .Returns(query.GetEnumerator());
-
-//            _requestMock
-//                .Setup(m => m.DisabledQueryParams)
-//                .Returns(QueryParams.Include);
-
-//            var queryParser = GetQueryParser();
-
-//            // act
-//            var querySet = queryParser.Parse(_queryCollectionMock.Object);
-
-//            // assert
-//            Assert.Empty(querySet.IncludedRelationships);
 //        }
 
 //        [Fact]
