@@ -213,7 +213,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<ISparseFieldsService, SparseFieldsService>();
             services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
-            services.AddScoped<IOperationsDeserializer, OperationsDeserializer>();
             services.AddScoped<IAttributeBehaviourService, AttributeBehaviourService>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
 
@@ -262,25 +261,6 @@ namespace JsonApiDotNetCore.Extensions
                return new RequestSerializer(sp.GetService<IFieldsExplorer>(), sp.GetService<IResourceGraph>(), resourceObjectBuilder);
             });
 
-        }
-
-        private static void AddOperationServices(IServiceCollection services)
-        {
-            services.AddScoped<IOperationsProcessor, OperationsProcessor>();
-
-            services.AddScoped(typeof(ICreateOpProcessor<>), typeof(CreateOpProcessor<>));
-            services.AddScoped(typeof(ICreateOpProcessor<,>), typeof(CreateOpProcessor<,>));
-
-            services.AddScoped(typeof(IGetOpProcessor<>), typeof(GetOpProcessor<>));
-            services.AddScoped(typeof(IGetOpProcessor<,>), typeof(GetOpProcessor<,>));
-
-            services.AddScoped(typeof(IRemoveOpProcessor<>), typeof(RemoveOpProcessor<>));
-            services.AddScoped(typeof(IRemoveOpProcessor<,>), typeof(RemoveOpProcessor<,>));
-
-            services.AddScoped(typeof(IUpdateOpProcessor<>), typeof(UpdateOpProcessor<>));
-            services.AddScoped(typeof(IUpdateOpProcessor<,>), typeof(UpdateOpProcessor<,>));
-
-            services.AddScoped<IOperationProcessorResolver, OperationProcessorResolver>();
         }
 
         public static void SerializeAsJsonApi(this MvcOptions options, JsonApiOptions jsonApiOptions)

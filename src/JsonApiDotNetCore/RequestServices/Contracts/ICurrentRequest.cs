@@ -49,7 +49,6 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// Which query params are filtered
         /// </summary>
         QueryParams DisabledQueryParams { get; set; }
-        bool IsBulkRequest { get; set; }
 
     }
 }
