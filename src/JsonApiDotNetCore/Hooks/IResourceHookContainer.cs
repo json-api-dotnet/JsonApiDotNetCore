@@ -24,8 +24,7 @@ namespace JsonApiDotNetCore.Hooks
         /// layer just before creation of entities of type <typeparamref name="TResource"/>.
         /// <para />
         /// For the <see cref="ResourcePipeline.Post"/> pipeline, <paramref name="entities"/> 
-        /// will typically contain one entry. For <see cref="ResourcePipeline.BulkCreate"/>, 
-        /// <paramref name="entities"/> can contain multiple entities.
+        /// will typically contain one entry.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of <paramref name="entities"/>, in which case the operation of the 
@@ -55,8 +54,6 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// For the <see cref="ResourcePipeline.Patch"/> pipeline, the
         /// <paramref name="entities" /> will typically contain one entity. 
-        /// For <see cref="ResourcePipeline.BulkPatch"/>, this it may contain 
-        /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of the <see cref="DiffableEntityHashSet{TEntity}"/> property in parameter <paramref name="entities"/>, 
@@ -65,7 +62,7 @@ namespace JsonApiDotNetCore.Hooks
         /// changes of the properties on the entities.
         /// <para />
         /// If new relationships are to be created with the to-be-updated entities,
-        /// this will be reflected by the corresponding NavigationProperty being set. 
+        /// this will be reflected by the corresponding NavigationProperty beinƒg set. 
         /// For each of these relationships, the <see cref="ResourceDefinition{T}.BeforeUpdateRelationship"/>
         /// hook is fired after the execution of this hook.
         /// <para />
@@ -85,8 +82,6 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// For the <see cref="ResourcePipeline.Delete"/> pipeline,
         /// <paramref name="entities" /> will typically contain one entity. 
-        /// For <see cref="ResourcePipeline.BulkDelete"/>, this it may contain 
-        /// multiple entities.
         /// <para />
         /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
         /// of <paramref name="entities"/>, in which case the operation of the 

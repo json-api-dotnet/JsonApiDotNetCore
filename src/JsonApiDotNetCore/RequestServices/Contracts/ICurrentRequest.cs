@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Managers.Contracts
     /// This is the former RequestManager. TODO: not done.
     /// Metadata associated to the current json:api request.
     /// </summary>
-    public interface ICurrentRequest : IQueryRequest
+    public interface ICurrentRequest
     {
         /// <summary>
         /// The request namespace. This may be an absolute or relative path

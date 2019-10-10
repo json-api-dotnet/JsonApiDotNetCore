@@ -15,15 +15,11 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCore.Services.Operations;
-using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.Serialization.Deserializer;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
@@ -159,11 +155,6 @@ namespace JsonApiDotNetCore.Extensions
             {
                 services.AddScoped<DbContext>();
                 services.AddSingleton(new DbContextOptionsBuilder().Options);
-            }
-
-            if (jsonApiOptions.EnableOperations)
-            {
-                AddOperationServices(services);
             }
 
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
