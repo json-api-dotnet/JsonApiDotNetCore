@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization;
 using DependentType = System.Type;
 using PrincipalType = System.Type;
 
@@ -20,12 +21,12 @@ namespace JsonApiDotNetCore.Hooks
     /// It creates nodes for each layer. 
     /// Typically, the first layer is homogeneous (all entities have the same type),
     /// and further nodes can be mixed.
-    /// 
     /// </summary>
     internal class TraversalHelper : ITraversalHelper
     {
-        private readonly IResourceGraph _graph;
-        private readonly IRequestManager _requestManager;
+        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IContextEntityProvider _provider;
+        private readonly ITargetedFields _targetedFields;
         /// <summary>
         /// Keeps track of which entities has already been traversed through, to prevent
         /// infinite loops in eg cyclic data structures.
@@ -37,11 +38,11 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
         public TraversalHelper(
-            IResourceGraph graph,
-            IRequestManager requestManager)
+            IContextEntityProvider provider,
+            ITargetedFields updatedFields)
         {
-            _requestManager = requestManager;
-            _graph = graph;
+            _targetedFields = updatedFields;
+            _provider = provider;
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="type">The type to parse</param>
         void RegisterRelationshipProxies(DependentType type)
         {
-            var contextEntity = _graph.GetContextEntity(type);
+            var contextEntity = _provider.GetContextEntity(type);
             foreach (RelationshipAttribute attr in contextEntity.Relationships)
             {
                 if (!attr.CanInclude) continue;
@@ -208,8 +209,8 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     DependentType dependentType = GetDependentTypeFromRelationship(attr);
                     bool isContextRelation = false;
-                    var relationshipsToUpdate = _requestManager.GetUpdatedRelationships();
-                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.ContainsKey(attr);
+                    var relationshipsToUpdate = _targetedFields.Relationships;
+                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.Contains(attr);
                     var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
                     RelationshipProxies[attr] = proxy;
                 }
@@ -252,7 +253,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="entityType">Entity type.</param>
         HashSet<TEntity> UniqueInTree<TEntity>(IEnumerable<TEntity> entities, Type entityType) where TEntity : class, IIdentifiable
         {
-            var newEntities = entities.Except(GetProcessedEntities(entityType), ResourceHookExecutor.Comparer).Cast<TEntity>();
+            var newEntities = entities.Except(GetProcessedEntities(entityType), _comparer).Cast<TEntity>();
             return new HashSet<TEntity>(newEntities);
         }
 

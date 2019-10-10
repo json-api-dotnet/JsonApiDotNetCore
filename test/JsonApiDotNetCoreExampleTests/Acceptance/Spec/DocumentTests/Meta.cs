@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(responseBody);
+            var documents = JsonConvert.DeserializeObject<Document>(responseBody);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(responseBody);
+            var documents = JsonConvert.DeserializeObject<Document>(responseBody);
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -169,10 +169,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task EntityThatImplements_IHasMeta_Contains_MetaData()
         {
             // arrange
-            var person = new Person();
-            var expectedMeta = person.GetMeta(null);
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+                .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/people";
@@ -180,10 +178,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
+            var expectedMeta = (_fixture.GetService<ResourceDefinition<Person>>() as IHasMeta).GetMeta();
 
             // act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

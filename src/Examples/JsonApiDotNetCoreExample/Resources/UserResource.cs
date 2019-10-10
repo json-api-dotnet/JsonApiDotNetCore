@@ -1,19 +1,18 @@
-using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Internal.Contracts;
-
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph graph) : base(graph) { }
-
-        protected override List<AttrAttribute> OutputAttrs()
-            => Remove(user => user.Password);
+        public UserResource(IResourceGraph graph, IFieldsExplorer fieldExplorer) : base(fieldExplorer, graph)
+        {
+            HideFields(u => u.Password);
+        }
 
         public override QueryFilters GetQueryFilters()
         {

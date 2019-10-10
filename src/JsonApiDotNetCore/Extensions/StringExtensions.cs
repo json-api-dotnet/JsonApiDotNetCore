@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Extensions
                 {
                     if ((chars[i]) == '-')
                     {
-                        i = i + 1;
+                        i++;
                         builder.Append(char.ToUpper(chars[i]));
                     }
                     else
@@ -49,6 +49,17 @@ namespace JsonApiDotNetCore.Extensions
                 return builder.ToString();
             }
             return str;
+        }
+
+        public static string Camelize(this string str)
+        {
+            return char.ToLowerInvariant(str[0]) + str.Substring(1);
+        }
+
+        public static string NullIfEmpty(this string value)
+        {
+            if (value == "") return null;
+            return value;
         }
     }
 }

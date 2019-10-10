@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -59,12 +57,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var document = JsonConvert.DeserializeObject<Documents>(body);
+            var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.NotEmpty(document.Included);
 
-            var articleResponseList = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<Article>(body);
+            var articleResponseList = _fixture.GetDeserializer().DeserializeList<Article>(body).Data;
             Assert.NotNull(articleResponseList);
-            
+
             var articleResponse = articleResponseList.FirstOrDefault(a => a.Id == article.Id);
             Assert.NotNull(articleResponse);
             Assert.Equal(article.Name, articleResponse.Name);
@@ -97,11 +95,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.NotEmpty(document.Included);
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
             Assert.NotNull(articleResponse);
             Assert.Equal(article.Id, articleResponse.Id);
 
@@ -135,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
             var document = JsonConvert.DeserializeObject<Document>(body);
-            Assert.Null(document.Data.Relationships["tags"].ManyData);
+            Assert.Null(document.SingleData.Relationships["tags"].ManyData);
         }
 
         [Fact]
@@ -190,9 +188,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
             Assert.NotNull(articleResponse);
-            
+
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)
                 .SingleAsync(a => a.Id == articleResponse.Id);
@@ -242,10 +240,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+
+            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
             Assert.NotNull(articleResponse);
-            
+
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)
@@ -303,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
             Assert.NotNull(articleResponse);
 
             _fixture.ReloadDbContext();
@@ -366,13 +364,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 
-            var articleResponse = _fixture.GetService<IJsonApiDeSerializer>().Deserialize<Article>(body);
+            var articleResponse = _fixture.GetDeserializer().DeserializeSingle<Article>(body).Data;
             Assert.NotNull(articleResponse);
 
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)
-                .SingleOrDefaultAsync( a => a.Id == article.Id);
+                .SingleOrDefaultAsync(a => a.Id == article.Id);
             var tags = persistedArticle.ArticleTags.Select(at => at.Tag).ToList();
             Assert.Equal(2, tags.Count);
         }
@@ -392,11 +390,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var request = new HttpRequestMessage(new HttpMethod("PATCH"), route);
             var content = new
             {
-                data = new [] { 
+                data = new[] {
                     new {
                         type = "tags",
                         id = tag.StringId
-                    } 
+                    }
                 }
             };
 
@@ -409,7 +407,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-            
+
             _fixture.ReloadDbContext();
             var persistedArticle = await _fixture.Context.Articles
                 .Include(a => a.ArticleTags)

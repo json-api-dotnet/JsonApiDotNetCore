@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -68,7 +67,7 @@ namespace JsonApiDotNetCore.Controllers
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipsAsync(
-            TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
+            TId id, string relationshipName, [FromBody] object relationships)
             => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]
@@ -81,23 +80,6 @@ namespace JsonApiDotNetCore.Controllers
     /// <typeparam name="T"></typeparam>
     public class JsonApiController<T> : JsonApiController<T, int> where T : class, IIdentifiable<int>
     {
-        private IJsonApiOptions jsonApiOptions;
-        private IJsonApiContext jsonApiContext;
-        private IResourceService<T> resourceService;
-        private ILoggerFactory loggerFactory;
-
-
-        /// <summary>
-        /// Normal constructor with int as default (old fashioned)
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="resourceService"></param>
-        [Obsolete("JsonApiContext is Obsolete, use constructor without jsonApiContext")]
-        public JsonApiController(
-            IJsonApiContext context,
-            IResourceService<T> resourceService) : base(context.Options,context.ResourceGraph,resourceService) {
-        }
-
         /// <summary>
         /// Base constructor with int as default
         /// </summary>

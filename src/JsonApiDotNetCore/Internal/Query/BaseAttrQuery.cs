@@ -1,7 +1,5 @@
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using System;
 using System.Linq;
 
@@ -14,19 +12,14 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public abstract class BaseAttrQuery
     {
-        private readonly IRequestManager _requestManager;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IContextEntityProvider _provider;
+        private readonly ContextEntity _primaryResource;
 
-        public BaseAttrQuery(IRequestManager requestManager, IResourceGraph resourceGraph, BaseQuery baseQuery)
+        public BaseAttrQuery(ContextEntity primaryResource, IContextEntityProvider provider, BaseQuery baseQuery)
         {
-            _requestManager = requestManager ?? throw new ArgumentNullException(nameof(requestManager));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _primaryResource = primaryResource ?? throw new ArgumentNullException(nameof(primaryResource));
             
-            if(_resourceGraph == null) 
-                throw new ArgumentException($"{nameof(IJsonApiContext)}.{nameof(_resourceGraph)} cannot be null. "
-                    + "If this is a unit test, you need to construct a graph containing the resources being tested. "
-                    + "See this issue to check the current status of improved test guidelines: "
-                    + "https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/251", nameof(requestManager));
             
             if (baseQuery.IsAttributeOfRelationship)
             {
@@ -54,17 +47,17 @@ namespace JsonApiDotNetCore.Internal.Query
 
         private AttrAttribute GetAttribute(string attribute)
         {
-            return _requestManager.GetContextEntity().Attributes.FirstOrDefault(attr => attr.Is(attribute));
+            return _primaryResource.Attributes.FirstOrDefault(attr => attr.Is(attribute));
         }
 
         private RelationshipAttribute GetRelationship(string propertyName)
         {
-            return _requestManager.GetContextEntity().Relationships.FirstOrDefault(r => r.Is(propertyName));
+            return _primaryResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
         }
 
         private AttrAttribute GetAttribute(RelationshipAttribute relationship, string attribute)
         {
-            var relatedContextEntity = _resourceGraph.GetContextEntity(relationship.DependentType);
+            var relatedContextEntity = _provider.GetContextEntity(relationship.DependentType);
             return relatedContextEntity.Attributes
               .FirstOrDefault(a => a.Is(attribute));
         }

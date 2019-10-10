@@ -12,10 +12,8 @@ namespace JsonApiDotNetCore.Controllers
     {
         public JsonApiCmdController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService)
-            : base(jsonApiOptions, 
-                  jsonApiContext, resourceService)
+            : base(jsonApiOptions, resourceService)
         { }
     }
 
@@ -24,7 +22,6 @@ namespace JsonApiDotNetCore.Controllers
     {
         public JsonApiCmdController(
             IJsonApiOptions jsonApiOptions,
-            IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         : base(jsonApiOptions, resourceService)
         { }
@@ -39,7 +36,7 @@ namespace JsonApiDotNetCore.Controllers
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipsAsync(
-            TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
+            TId id, string relationshipName, [FromBody] object relationships)
             => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]

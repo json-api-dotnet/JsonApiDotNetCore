@@ -15,7 +15,7 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
+            (var _, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();
             // act
@@ -31,7 +31,7 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
+            (var _, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();
             // act

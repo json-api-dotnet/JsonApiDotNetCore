@@ -21,21 +21,18 @@ namespace JsonApiDotNetCore.Services.Operations
     {
         private readonly IOperationProcessorResolver _processorResolver;
         private readonly DbContext _dbContext;
-        private readonly IJsonApiContext _jsonApiContext;
-        private readonly IRequestManager _requestManager;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IResourceGraph _resourceGraph;
 
         public OperationsProcessor(
             IOperationProcessorResolver processorResolver,
             IDbContextResolver dbContextResolver,
-            IJsonApiContext jsonApiContext,
-            IRequestManager requestManager,
+            ICurrentRequest currentRequest,
             IResourceGraph resourceGraph)
         {
             _processorResolver = processorResolver;
             _dbContext = dbContextResolver.GetContext();
-            _jsonApiContext = jsonApiContext;
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _resourceGraph = resourceGraph;
         }
 
@@ -51,7 +48,7 @@ namespace JsonApiDotNetCore.Services.Operations
                 {
                     foreach (var op in inputOps)
                     {
-                        _jsonApiContext.BeginOperation();
+                        //_jsonApiContext.BeginOperation();
 
                         lastAttemptedOperation = op.Op;
                         await ProcessOperation(op, outputOps);
@@ -83,11 +80,12 @@ namespace JsonApiDotNetCore.Services.Operations
             if (op.Op == OperationCode.add || op.Op == OperationCode.update)
             {
                 type = op.DataObject.Type;
-            } else if (op.Op == OperationCode.get || op.Op == OperationCode.remove)
+            }
+            else if (op.Op == OperationCode.get || op.Op == OperationCode.remove)
             {
                 type = op.Ref.Type;
             }
-            _requestManager.SetContextEntity(_resourceGraph.GetEntityFromControllerName(type));
+            _currentRequest.SetRequestResource(_resourceGraph.GetEntityFromControllerName(type));
 
             var processor = GetOperationsProcessor(op);
             var resultOp = await processor.ProcessAsync(op);
@@ -115,7 +113,7 @@ namespace JsonApiDotNetCore.Services.Operations
             {
                 foreach (var relationshipDictionary in resourceObject.Relationships)
                 {
-                    if (relationshipDictionary.Value.IsHasMany)
+                    if (relationshipDictionary.Value.IsManyData)
                     {
                         foreach (var relationship in relationshipDictionary.Value.ManyData)
                             if (HasLocalId(relationship))

@@ -4,17 +4,31 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Models.Links;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Configuration
 {
+
     /// <summary>
     /// Global options
     /// </summary>
     public class JsonApiOptions : IJsonApiOptions
     {
+
+        /// <inheritdoc/>
+        public bool RelativeLinks { get; set; } = false;
+
+        /// <inheritdoc/>
+        public Link TopLevelLinks { get; set; } = Link.All;
+
+        /// <inheritdoc/>
+        public Link ResourceLinks { get; set; } = Link.All;
+
+        /// <inheritdoc/>
+        public Link RelationshipLinks { get; set; } = Link.All;
+
 
         /// <summary>
         /// Provides an interface for formatting resource names by convention
@@ -49,7 +63,7 @@ namespace JsonApiDotNetCore.Configuration
         /// 
         /// Defaults to <see langword="false"/>.
         /// </summary>
-        public bool LoadDatabaseValues { get; set; } = false;
+        public bool LoaDatabaseValues { get; set; } = false;
 
         /// <summary>
         /// The base URL Namespace
@@ -95,50 +109,6 @@ namespace JsonApiDotNetCore.Configuration
         public IResourceGraph ResourceGraph { get; set; }
 
         /// <summary>
-        /// Use relative links for all resources.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.RelativeLinks = true;
-        /// </code>
-        /// <code>
-        /// {
-        ///   "type": "articles",
-        ///   "id": "4309",
-        ///   "relationships": {
-        ///      "author": {
-        ///        "links": {
-        ///          "self": "/api/v1/articles/4309/relationships/author",
-        ///          "related": "/api/v1/articles/4309/author"
-        ///        }
-        ///      }
-        ///   }
-        /// }
-        /// </code>
-        /// </example>
-        public bool RelativeLinks { get; set; }
-
-        /// <summary>
-        /// Which links to include in relationships. Defaults to <see cref="Link.All"/>.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.DefaultRelationshipLinks = Link.None;
-        /// </code>
-        /// <code>
-        /// {
-        ///   "type": "articles",
-        ///   "id": "4309",
-        ///   "relationships": {
-        ///      "author": {}
-        ///      }
-        ///   }
-        /// }
-        /// </code>
-        /// </example>
-        public Link DefaultRelationshipLinks { get; set; } = Link.All;
-
-        /// <summary>
         /// Whether or not to allow all custom query parameters.
         /// </summary>
         /// <example>
@@ -159,11 +129,12 @@ namespace JsonApiDotNetCore.Configuration
         /// </code>
         /// </example>
         public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
+        public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>
         /// Whether or not to allow json:api v1.1 operation requests.
         /// This is a beta feature and there may be breaking changes
-        /// in subsequent releases. For now, it should be considered
+        /// in subsequent releases. For now, ijt should be considered
         /// experimental.
         /// </summary>
         /// <remarks>
@@ -183,8 +154,7 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
         {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new DasherizedResolver()
+            NullValueHandling = NullValueHandling.Ignore
         };
 
         public void BuildResourceGraph<TContext>(Action<IResourceGraphBuilder> builder) where TContext : DbContext

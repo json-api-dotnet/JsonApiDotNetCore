@@ -1,16 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -31,55 +25,55 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
           .RuleFor(u => u.Password, f => f.Internet.Password());
       }
 
-      [Fact]
-      public async Task FiltersWithCustomQueryFiltersEquals()
-      {
-        // Arrange
-        var user = _userFaker.Generate();
-        var firstUsernameCharacter = user.Username[0];
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        [Fact]
+        public async Task FiltersWithCustomQueryFiltersEquals()
+        {
+            // Arrange
+            var user = _userFaker.Generate();
+            var firstUsernameCharacter = user.Username[0];
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
-        var httpMethod = new HttpMethod("GET");
-        var route = $"/api/v1/users?filter[first-character]=eq:{firstUsernameCharacter}";
-        var request = new HttpRequestMessage(httpMethod, route);
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/users?filter[first-character]=eq:{firstUsernameCharacter}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        // Act
-        var response = await _fixture.Client.SendAsync(request);
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var body = await response.Content.ReadAsStringAsync();
-        var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
-        var usersWithFirstCharacter = _context.Users.Where(u => u.Username[0] == firstUsernameCharacter);
-        Assert.True(deserializedBody.All(u => u.Username[0] == firstUsernameCharacter));
-      }
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<User>(body).Data;
+            var usersWithFirstCharacter = _context.Users.Where(u => u.Username[0] == firstUsernameCharacter);
+            Assert.True(deserializedBody.All(u => u.Username[0] == firstUsernameCharacter));
+        }
 
-      [Fact]
-      public async Task FiltersWithCustomQueryFiltersLessThan()
-      {
-        // Arrange
-        var aUser = _userFaker.Generate();
-        aUser.Username = "alfred";
-        var zUser = _userFaker.Generate();
-        zUser.Username = "zac";
-        _context.Users.AddRange(aUser, zUser);
-        _context.SaveChanges();
+        [Fact]
+        public async Task FiltersWithCustomQueryFiltersLessThan()
+        {
+            // Arrange
+            var aUser = _userFaker.Generate();
+            aUser.Username = "alfred";
+            var zUser = _userFaker.Generate();
+            zUser.Username = "zac";
+            _context.Users.AddRange(aUser, zUser);
+            _context.SaveChanges();
 
-        var median = 'h';
+            var median = 'h';
 
-        var httpMethod = new HttpMethod("GET");
-        var route = $"/api/v1/users?filter[first-character]=lt:{median}";
-        var request = new HttpRequestMessage(httpMethod, route);
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/users?filter[first-character]=lt:{median}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        // Act
-        var response = await _fixture.Client.SendAsync(request);
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var body = await response.Content.ReadAsStringAsync();
-        var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
-        Assert.True(deserializedBody.All(u => u.Username[0] < median));
-      }
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<User>(body).Data;
+            Assert.True(deserializedBody.All(u => u.Username[0] < median));
+        }
     }
 }

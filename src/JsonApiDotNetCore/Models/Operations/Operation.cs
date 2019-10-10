@@ -1,12 +1,22 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Models.Operations
 {
-    public class Operation : DocumentBase
+    public class Operation
     {
+        [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
+        public TopLevelLinks Links { get; set; }
+
+        [JsonProperty("included", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ResourceObject> Included { get; set; }
+
+        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> Meta { get; set; }
+
         [JsonProperty("op"), JsonConverter(typeof(StringEnumConverter))]
         public OperationCode Op { get; set; }
 

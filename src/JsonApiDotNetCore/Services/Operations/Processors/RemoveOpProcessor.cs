@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Deserializer;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -21,10 +21,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         public RemoveOpProcessor(
             IDeleteService<T, int> service,
-            IJsonApiDeSerializer deSerializer,
-            IDocumentBuilder documentBuilder,
+            IOperationsDeserializer deserializer,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
-        ) : base(service, deSerializer, documentBuilder, resourceGraph)
+        ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -32,18 +32,18 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
          where T : class, IIdentifiable<TId>
     {
         private readonly IDeleteService<T, TId> _service;
-        private readonly IJsonApiDeSerializer _deSerializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IOperationsDeserializer _deserializer;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public RemoveOpProcessor(
             IDeleteService<T, TId> service,
-            IJsonApiDeSerializer deSerializer,
-            IDocumentBuilder documentBuilder,
+            IOperationsDeserializer deserializer,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;
-            _deSerializer = deSerializer;
+            _deserializer = deserializer;
             _documentBuilder = documentBuilder;
             _resourceGraph = resourceGraph;
         }

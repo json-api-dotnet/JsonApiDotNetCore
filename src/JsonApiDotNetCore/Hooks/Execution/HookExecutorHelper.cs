@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <inheritdoc/>
     internal class HookExecutorHelper : IHookExecutorHelper
     {
+        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly IJsonApiOptions _options;
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
         protected readonly IResourceGraph _graph;
@@ -80,16 +81,15 @@ namespace JsonApiDotNetCore.Hooks
             return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
         }
 
-        public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships)
+        public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] inclusionChain)
         {
-            var paths = relationships.Select(p => p.RelationshipPath).ToArray();
             var idType = TypeHelper.GetIdentifierType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityTypeForRepository, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
             var ids = casted.Select(e => e.StringId).Cast(idType);
-            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, paths });
+            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, inclusionChain });
             if (values == null) return null;
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
         }
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCore.Hooks
             }
             else
             {
-                return _options.LoadDatabaseValues;
+                return _options.LoaDatabaseValues;
             }
         }
 
@@ -145,15 +145,11 @@ namespace JsonApiDotNetCore.Hooks
             return discovery;
         }
 
-        IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, string[] relationshipPaths) where TEntity : class, IIdentifiable<TId>
+        IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, RelationshipAttribute[] inclusionChain) where TEntity : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TEntity, TId>();
             var query = repo.Get().Where(e => ids.Contains(e.Id));
-            foreach (var path in relationshipPaths)
-            {
-                query = query.Include(path);
-            }
-            return query.ToList();
+            return repo.Include(query, inclusionChain).ToList();
         }
 
         IEntityReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>
@@ -188,7 +184,7 @@ namespace JsonApiDotNetCore.Hooks
                         dbDependentEntityList = (IList)relationshipValue;
                     }
                     var dbDependentEntityListCasted = dbDependentEntityList.Cast<IIdentifiable>().ToList();
-                    if (existingDependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(existingDependentEntities.Cast<IIdentifiable>(), ResourceHookExecutor.Comparer).ToList();
+                    if (existingDependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(existingDependentEntities.Cast<IIdentifiable>(), _comparer).ToList();
 
                     if (dbDependentEntityListCasted.Any())
                     {

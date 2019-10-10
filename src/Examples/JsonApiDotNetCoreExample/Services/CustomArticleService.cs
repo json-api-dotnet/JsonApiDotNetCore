@@ -4,6 +4,9 @@ using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
@@ -13,16 +16,9 @@ namespace JsonApiDotNetCoreExample.Services
 {
     public class CustomArticleService : EntityResourceService<Article>
     {
-        public CustomArticleService(
-            IEntityRepository<Article> repository,
-            IJsonApiOptions jsonApiOptions,
-            IRequestManager queryManager,
-            IPageManager pageManager,
-            IResourceGraph resourceGraph,
-            IResourceHookExecutor resourceHookExecutor = null,
-            ILoggerFactory loggerFactory = null
-        ) : base(repository: repository, jsonApiOptions, queryManager, pageManager, resourceGraph:resourceGraph, loggerFactory, resourceHookExecutor)
-        { }
+        public CustomArticleService(IEntityRepository<Article, int> repository, IJsonApiOptions options, ITargetedFields updatedFields, ICurrentRequest currentRequest, IIncludeService includeService, ISparseFieldsService sparseFieldsService, IPageQueryService pageManager, IResourceGraph resourceGraph, IResourceHookExecutor hookExecutor = null, IResourceMapper mapper = null, ILoggerFactory loggerFactory = null) : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, mapper, loggerFactory)
+        {
+        }
 
         public override async Task<Article> GetAsync(int id)
         {

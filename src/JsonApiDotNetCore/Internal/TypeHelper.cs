@@ -17,22 +17,28 @@ namespace JsonApiDotNetCore.Internal
                 list.Add(ConvertType(item, targetType));
             return list;
         }
-
+        public static bool IsNullable(Type type)
+        {
+            return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
+        }
         public static object ConvertType(object value, Type type)
         {
+            if (value == null && !IsNullable(type))
+                throw new FormatException($"Cannot convert null to a non-nullable type");
+
             if (value == null)
                 return null;
 
-            var valueType = value.GetType();
+            Type typeOfValue = value.GetType();
 
             try
             {
-                if (valueType == type || type.IsAssignableFrom(valueType))
+                if (typeOfValue == type || type.IsAssignableFrom(typeOfValue))
                     return value;
 
                 type = Nullable.GetUnderlyingType(type) ?? type;
 
-                var stringValue = value.ToString();
+                var stringValue = value?.ToString();
 
                 if (string.IsNullOrEmpty(stringValue))
                     return GetDefaultType(type);
@@ -54,7 +60,7 @@ namespace JsonApiDotNetCore.Internal
             }
             catch (Exception e)
             {
-                throw new FormatException($"{ valueType } cannot be converted to { type }", e);
+                throw new FormatException($"{ typeOfValue } cannot be converted to { type }", e);
             }
         }
 
@@ -157,9 +163,9 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         /// <param name="attributes"></param>
         /// <param name="entities"></param>
-        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(Dictionary<AttrAttribute, object> attributes, HashSet<TValueOut> entities)
+        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(List<AttrAttribute> attributes, HashSet<TValueOut> entities)
         {
-            return attributes?.ToDictionary(p => p.Key.PropertyInfo, p => entities);
+            return attributes?.ToDictionary(attr => attr.PropertyInfo, attr => entities);
         }
 
         /// <summary>

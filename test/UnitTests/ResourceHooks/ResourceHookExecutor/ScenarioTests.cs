@@ -16,8 +16,7 @@ namespace UnitTests.ResourceHooks
             // arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var person1 = new Person();
             var todo = new TodoItem { Owner = person1 };
             var person2 = new Person { AssignedTodoItems = new List<TodoItem>() { todo } };
@@ -40,7 +39,7 @@ namespace UnitTests.ResourceHooks
         {
             // arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);            
+            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
             todo.ParentTodoItem = todo;
             todo.ChildrenTodoItems = new List<TodoItem> { todo };
@@ -66,8 +65,8 @@ namespace UnitTests.ResourceHooks
             var grandChild = new TodoItem() { ParentTodoItem = child, Id = 3 };
             child.ChildrenTodoItems = new List<TodoItem> { grandChild };
             var greatGrandChild = new TodoItem() { ParentTodoItem = grandChild, Id = 4 };
-            grandChild.ChildrenTodoItems = new List<TodoItem> { greatGrandChild }; 
-            greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo }; 
+            grandChild.ChildrenTodoItems = new List<TodoItem> { greatGrandChild };
+            greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo };
             var todoList = new List<TodoItem>() { rootTodo };
 
             // act

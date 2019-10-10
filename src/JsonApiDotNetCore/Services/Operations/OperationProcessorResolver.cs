@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models.Operations;
 using JsonApiDotNetCore.Services.Operations.Processors;
@@ -35,15 +36,15 @@ namespace JsonApiDotNetCore.Services.Operations
     public class OperationProcessorResolver : IOperationProcessorResolver
     {
         private readonly IGenericProcessorFactory _processorFactory;
-        private readonly IJsonApiContext _context;
+        private readonly IContextEntityProvider _provider;
 
         /// <nodoc />
         public OperationProcessorResolver(
             IGenericProcessorFactory processorFactory,
-            IJsonApiContext context)
+            IContextEntityProvider provider)
         {
             _processorFactory = processorFactory;
-            _context = context;
+            _provider = provider;
         }
 
         /// <inheritdoc />
@@ -104,7 +105,7 @@ namespace JsonApiDotNetCore.Services.Operations
 
         private ContextEntity GetResourceMetadata(string resourceName)
         {
-            var contextEntity = _context.ResourceGraph.GetContextEntity(resourceName);
+            var contextEntity = _provider.GetContextEntity(resourceName);
             if(contextEntity == null)
                 throw new JsonApiException(400, $"This API does not expose a resource of type '{resourceName}'.");
 

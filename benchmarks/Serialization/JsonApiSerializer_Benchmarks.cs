@@ -6,6 +6,8 @@
 //using JsonApiDotNetCore.Internal.Generics;
 //using JsonApiDotNetCore.Models;
 //using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 //using JsonApiDotNetCore.Services;
 //using Moq;
 //using Newtonsoft.Json.Serialization;
@@ -34,7 +36,7 @@
 
 //            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
 
-//            var documentBuilder = new DocumentBuilder(jsonApiContextMock.Object);
+//            var documentBuilder = new BaseDocumentBuilder(jsonApiContextMock.Object);
 //            _jsonApiSerializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);
 //        }
 

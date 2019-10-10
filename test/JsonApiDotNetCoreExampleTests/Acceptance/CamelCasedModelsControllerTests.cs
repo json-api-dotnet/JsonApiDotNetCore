@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -21,14 +19,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     {
         private TestFixture<TestStartup> _fixture;
         private AppDbContext _context;
-        private IJsonApiContext _jsonApiContext;
         private Faker<CamelCasedModel> _faker;
 
         public CamelCasedModelsControllerTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
-            _jsonApiContext = fixture.GetService<IJsonApiContext>();
             _faker = new Faker<CamelCasedModel>()
                 .RuleFor(m => m.CompoundAttr, f => f.Lorem.Sentence());
         }
@@ -52,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<CamelCasedModel>(body);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<CamelCasedModel>(body).Data;
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -79,8 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeSerializer>()
-                .Deserialize(body);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<CamelCasedModel>(body).Data;
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -123,8 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotNull(body);
             Assert.NotEmpty(body);
 
-            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeSerializer>()
-                .Deserialize(body);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<CamelCasedModel>(body).Data;
             Assert.Equal(model.CompoundAttr, deserializedBody.CompoundAttr);
         }
 
@@ -167,8 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotNull(body);
             Assert.NotEmpty(body);
 
-            var deserializedBody = (CamelCasedModel)_fixture.GetService<IJsonApiDeSerializer>()
-                .Deserialize(body);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<CamelCasedModel>(body).Data;
             Assert.Equal(newModel.CompoundAttr, deserializedBody.CompoundAttr);
         }
     }

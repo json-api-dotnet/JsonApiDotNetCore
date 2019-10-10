@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Startups
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
                     options.EnableResourceHooks = true;
-                    options.LoadDatabaseValues = true;
+                    options.LoaDatabaseValues = true;
                     options.AllowClientGeneratedIds = true;
                 },
                 discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),

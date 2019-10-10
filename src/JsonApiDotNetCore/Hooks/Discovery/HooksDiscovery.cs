@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCore.Hooks
                     if (method.DeclaringType != parameterizedResourceDefinition)
                     {
                         implementedHooks.Add(hook);
-                        var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValues>().SingleOrDefault();
+                        var attr = method.GetCustomAttributes(true).OfType<LoaDatabaseValues>().SingleOrDefault();
                         if (attr != null)
                         {
                             if (!_databaseValuesAttributeAllowed.Contains(hook))

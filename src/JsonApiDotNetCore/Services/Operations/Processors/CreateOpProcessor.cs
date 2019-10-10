@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Deserializer;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -22,36 +22,42 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     {
         public CreateOpProcessor(
             ICreateService<T, int> service,
-            IJsonApiDeSerializer deSerializer,
-            IDocumentBuilder documentBuilder,
+            IOperationsDeserializer deserializer,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph
-        ) : base(service, deSerializer, documentBuilder, resourceGraph)
+        ) : base(service, deserializer, documentBuilder, resourceGraph)
         { }
+    }
+
+    public interface IBaseDocumentBuilder
+    {
+        ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource);
     }
 
     public class CreateOpProcessor<T, TId> : ICreateOpProcessor<T, TId>
          where T : class, IIdentifiable<TId>
     {
         private readonly ICreateService<T, TId> _service;
-        private readonly IJsonApiDeSerializer _deSerializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IOperationsDeserializer _deserializer;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
 
         public CreateOpProcessor(
             ICreateService<T, TId> service,
-            IJsonApiDeSerializer deSerializer,
-            IDocumentBuilder documentBuilder,
+            IOperationsDeserializer deserializer,
+            IBaseDocumentBuilder documentBuilder,
             IResourceGraph resourceGraph)
         {
             _service = service;
-            _deSerializer = deSerializer;
+            _deserializer = deserializer;
             _documentBuilder = documentBuilder;
             _resourceGraph = resourceGraph;
         }
 
         public async Task<Operation> ProcessAsync(Operation operation)
         {
-            var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
+
+            var model = (T)_deserializer.DocumentToObject(operation.DataObject);
             var result = await _service.CreateAsync(model);
 
             var operationResult = new Operation
@@ -67,7 +73,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             // can locate the result of this operation by its localId
             operationResult.DataObject.LocalId = operation.DataObject.LocalId;
 
-            return operationResult;
+            return null;
+            //return operationResult;
         }
     }
 }

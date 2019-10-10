@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -30,18 +32,44 @@ namespace JsonApiDotNetCore.Internal
         public Type ResourceType { get; set; }
 
         /// <summary>
-        /// Exposed resource attributes
+        /// Exposed resource attributes.
+        /// See https://jsonapi.org/format/#document-resource-object-attributes.
         /// </summary>
         public List<AttrAttribute> Attributes { get; set; }
 
         /// <summary>
-        /// Exposed resource relationships
+        /// Exposed resource relationships.
+        /// See https://jsonapi.org/format/#document-resource-object-relationships
         /// </summary>
         public List<RelationshipAttribute> Relationships { get; set; }
 
+        private List<IResourceField> _fields;
+        public List<IResourceField> Fields { get { _fields = _fields ?? Attributes.Cast<IResourceField>().Concat(Relationships).ToList(); return _fields;  } }
+
         /// <summary>
-        /// Links to include in resource responses
+        /// Configures which links to show in the <see cref="TopLevelLinks"/>
+        /// object for this resource. If set to <see cref="Link.NotConfigured"/>,
+        /// the configuration will be read from <see cref="IGlobalLinksConfiguration"/>.
+        ///  Defaults to <see cref="Link.NotConfigured"/>.
         /// </summary>
-        public Link Links { get; set; } = Link.All;
+        public Link TopLevelLinks { get; internal set; } = Link.NotConfigured;
+
+        /// <summary>
+        /// Configures which links to show in the <see cref="ResourceLinks"/>
+        /// object for this resource. If set to <see cref="Link.NotConfigured"/>,
+        /// the configuration will be read from <see cref="IGlobalLinksConfiguration"/>.
+        /// Defaults to <see cref="Link.NotConfigured"/>.
+        /// </summary>
+        public Link ResourceLinks { get; internal set; } = Link.NotConfigured;
+
+        /// <summary>
+        /// Configures which links to show in the <see cref="RelationshipLinks"/>
+        /// for all relationships of the resource for which this attribute was instantiated.
+        /// If set to <see cref="Link.NotConfigured"/>, the configuration will
+        /// be read from <see cref="RelationshipAttribute.RelationshipLinks"/>  or
+        /// <see cref="IGlobalLinksConfiguration"/>. Defaults to <see cref="Link.NotConfigured"/>.
+        /// </summary>
+        public Link RelationshipLinks { get; internal set; } = Link.NotConfigured;
+
     }
 }

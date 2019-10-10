@@ -1,4 +1,6 @@
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCoreExample.Models.Entities;
 using JsonApiDotNetCoreExample.Models.Resources;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
@@ -32,7 +34,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             // act
             var response = await _fixture.SendAsync("GET", route, null);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = _fixture.Server.GetDeserializer()
                 .DeserializeList<CourseResource>(responseBody);
 
             // assert
@@ -116,7 +118,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             // act
             var response = await _fixture.SendAsync("GET", route, null);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = _fixture.Server.GetDeserializer()
                 .DeserializeList<DepartmentResource>(responseBody);
 
             // assert
@@ -190,7 +192,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             // act
             var response = await _fixture.SendAsync("GET", route, null);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = _fixture.Server.GetDeserializer()
                 .DeserializeList<StudentResource>(responseBody);
 
             // assert
@@ -215,7 +217,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             // act
             var response = await _fixture.Server.CreateClient().SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (StudentResource)_fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (StudentResource)_fixture.Server.GetDeserializer()
                 .Deserialize(responseBody);
 
             // assert
@@ -249,7 +251,7 @@ namespace ResourceEntitySeparationExampleTests.Acceptance
             // act
             var response = await _fixture.Server.CreateClient().SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (StudentResource)_fixture.Server.GetService<IJsonApiDeSerializer>()
+            var deserializedBody = (StudentResource)_fixture.Server.GetDeserializer()
                 .Deserialize(responseBody);
 
             // assert

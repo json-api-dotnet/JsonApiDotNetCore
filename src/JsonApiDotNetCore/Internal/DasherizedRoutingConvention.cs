@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class DasherizedRoutingConvention : IApplicationModelConvention
+    public class CamelizedRoutingConvention : IApplicationModelConvention
     {
         private readonly string _namespace;
-        public DasherizedRoutingConvention(string nspace)
+        public CamelizedRoutingConvention(string nspace)
         {
             _namespace = nspace;
         }
@@ -19,10 +19,10 @@ namespace JsonApiDotNetCore.Internal
         {
             foreach (var controller in application.Controllers)
             {
-                if (IsDasherizedJsonApiController(controller) == false)
+                if (IsCamelizedJsonApiController(controller) == false)
                     continue;
 
-                var template = $"{_namespace}/{controller.ControllerName.Dasherize()}";
+                var template = $"{_namespace}/{controller.ControllerName.Camelize()}";
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {
                     Template = template
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Internal
             }
         }
 
-        private bool IsDasherizedJsonApiController(ControllerModel controller)
+        private bool IsCamelizedJsonApiController(ControllerModel controller)
         {
             var type = controller.ControllerType;
             var notDisabled = type.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;

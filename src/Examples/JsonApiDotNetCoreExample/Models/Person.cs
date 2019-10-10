@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCoreExample.Models
 {
@@ -11,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Models
         public Person Person { get; set; }
     }
 
-    public class Person : Identifiable, IHasMeta, IIsLockable
+    public class Person : Identifiable, IIsLockable
     {
         public bool IsLocked { get; set; }
 
@@ -45,21 +44,13 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual TodoItem StakeHolderTodo { get; set; }
         public virtual int? StakeHolderTodoId { get; set; }
 
-        [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
+        [HasOne("unincludeable-item", links: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
 
         public int? PassportId { get; set; }
 
         [HasOne("passport")]
         public virtual Passport Passport { get; set; }
-
-        public Dictionary<string, object> GetMeta(IJsonApiContext context)
-        {
-            return new Dictionary<string, object> {
-                { "copyright", "Copyright 2015 Example Corp." },
-                { "authors", new string[] { "Jared Nance" } }
-            };
-        }
 
     }
 }

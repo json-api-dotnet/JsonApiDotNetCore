@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -21,14 +18,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     public class FetchingDataTests
     {
         private TestFixture<TestStartup> _fixture;
-        private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
         public FetchingDataTests(TestFixture<TestStartup> fixture)
         {
             _fixture = fixture;
-            _jsonApiContext = fixture.GetService<IJsonApiContext>();
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -53,23 +48,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedBody = JsonConvert.SerializeObject(new
-            {
-                data = new List<object>(),
-                meta = new Dictionary<string, int> { { "total-records", 0 } }
-            });
 
             // act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+            var items = result.Data;
+            var meta = result.Meta;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
-            Assert.Empty(deserializedBody);
-            Assert.Equal(expectedBody, body);
-
+            Assert.Empty(items);
+            Assert.Equal(0, int.Parse(meta["total-records"].ToString()));
             context.Dispose();
         }
 

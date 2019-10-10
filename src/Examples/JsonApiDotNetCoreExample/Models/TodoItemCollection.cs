@@ -9,12 +9,12 @@ namespace JsonApiDotNetCoreExample.Models
     {
         [Attr("name")]
         public string Name { get; set; }
-        public int OwnerId { get; set; }
 
         [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
 
         [HasOne("owner")]
         public virtual Person Owner { get; set; }
+        public int? OwnerId { get; set; }
     }
 }

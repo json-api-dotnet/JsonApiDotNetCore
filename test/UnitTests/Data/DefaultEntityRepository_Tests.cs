@@ -8,24 +8,22 @@ using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Models;
-using Microsoft.Extensions.Logging;
-using JsonApiDotNetCore.Services;
 using System.Threading.Tasks;
 using System.Linq;
-using JsonApiDotNetCore.Request;
+using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Managers.Contracts;
 
 namespace UnitTests.Data
 {
     public class DefaultEntityRepository_Tests : JsonApiControllerMixin
     {
-        private readonly Mock<IJsonApiContext> _jsonApiContextMock;
-        private readonly Mock<ILoggerFactory> _loggFactoryMock;
+        private readonly Mock<ICurrentRequest> _currentRequestMock; 
         private readonly Mock<DbSet<TodoItem>> _dbSetMock;
         private readonly Mock<DbContext> _contextMock;
+        private readonly Mock<ITargetedFields> _targetedFieldsMock;
         private readonly Mock<IDbContextResolver> _contextResolverMock;
         private readonly TodoItem _todoItem;
-        private Dictionary<AttrAttribute, object> _attrsToUpdate = new Dictionary<AttrAttribute, object>();
-        private Dictionary<RelationshipAttribute, object> _relationshipsToUpdate = new Dictionary<RelationshipAttribute, object>();
 
         public DefaultEntityRepository_Tests()
         {
@@ -35,11 +33,11 @@ namespace UnitTests.Data
                 Description = Guid.NewGuid().ToString(),
                 Ordinal = 10
             };
-            _jsonApiContextMock = new Mock<IJsonApiContext>();
-            _loggFactoryMock = new Mock<ILoggerFactory>();
-            _dbSetMock = DbSetMock.Create<TodoItem>(new[] { _todoItem });
+            _currentRequestMock = new Mock<ICurrentRequest>();
+            _dbSetMock = DbSetMock.Create(new[] { _todoItem });
             _contextMock = new Mock<DbContext>();
             _contextResolverMock = new Mock<IDbContextResolver>();
+            _targetedFieldsMock = new Mock<ITargetedFields>();
         }
 
         [Fact]
@@ -54,14 +52,8 @@ namespace UnitTests.Data
 
             var descAttr = new AttrAttribute("description", "Description");
             descAttr.PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description));
-
-            _attrsToUpdate = new Dictionary<AttrAttribute, object> 
-            {
-                {
-                    descAttr,
-                    null //todoItemUpdates.Description
-                }
-            };
+            _targetedFieldsMock.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
+            _targetedFieldsMock.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
 
             var repository = GetRepository();
 
@@ -85,26 +77,14 @@ namespace UnitTests.Data
                 .Setup(m => m.GetContext())
                 .Returns(_contextMock.Object);
 
-            _jsonApiContextMock
-               .Setup(m => m.RequestManager.GetUpdatedAttributes())
-               .Returns(_attrsToUpdate);
+            var graph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
 
-            _jsonApiContextMock
-                .Setup(m => m.RequestManager.GetUpdatedRelationships())
-                .Returns(_relationshipsToUpdate);
-
-            _jsonApiContextMock
-                .Setup(m => m.HasManyRelationshipPointers)
-                .Returns(new HasManyRelationshipPointers());
-
-            _jsonApiContextMock
-                .Setup(m => m.HasOneRelationshipPointers)
-                .Returns(new HasOneRelationshipPointers());
 
             return new DefaultEntityRepository<TodoItem>(
-                _loggFactoryMock.Object,
-                _jsonApiContextMock.Object,
-                _contextResolverMock.Object);
+                _currentRequestMock.Object,
+                _targetedFieldsMock.Object,
+                _contextResolverMock.Object,
+                graph, null, null);
         }
 
         [Theory]
@@ -167,7 +147,7 @@ namespace UnitTests.Data
             var repository = GetRepository();
 
             var result = await repository.PageAsync(todoItems, pageSize, pageNumber);
-            
+
             Assert.Equal(TodoItems(expectedIds), result, new IdComparer<TodoItem>());
         }
 

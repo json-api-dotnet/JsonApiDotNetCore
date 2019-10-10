@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
@@ -13,6 +14,7 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal class RootNode<TEntity> : INode where TEntity : class, IIdentifiable
     {
+        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TEntity> _uniqueEntities;
         public Type EntityType { get; internal set; }
@@ -54,7 +56,7 @@ namespace JsonApiDotNetCore.Hooks
         public void UpdateUnique(IEnumerable updated)
         {
             var casted = updated.Cast<TEntity>().ToList();
-            var intersected = _uniqueEntities.Intersect(casted, ResourceHookExecutor.Comparer).Cast<TEntity>();
+            var intersected = _uniqueEntities.Intersect(casted, _comparer).Cast<TEntity>();
             _uniqueEntities = new HashSet<TEntity>(intersected);
         }
 

@@ -1,11 +1,9 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -18,7 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
-
+using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Serialization.Server.Builders;
+using JsonApiDotNetCore.Serialization.Server;
 
 namespace UnitTests.Extensions
 {
@@ -32,7 +32,7 @@ namespace UnitTests.Extensions
             var jsonApiOptions = new JsonApiOptions();
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
-
+            services.AddScoped<ResourceDefinition<TodoItem>>();
             // act
             services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);
             // this is required because the DbContextResolver requires access to the current HttpContext
@@ -41,20 +41,23 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
 
             // assert
+            var currentRequest = provider.GetService<ICurrentRequest>();
+            Assert.NotNull(currentRequest);
+            var graph = provider.GetService<IResourceGraph>();
+            Assert.NotNull(graph);
+            currentRequest.SetRequestResource(graph.GetContextEntity<TodoItem>());
+            Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<IJsonApiOptions>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
-            Assert.NotNull(provider.GetService<IJsonApiContext>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
-            Assert.NotNull(provider.GetService<IMetaBuilder>());
-            Assert.NotNull(provider.GetService<IDocumentBuilder>());
-            Assert.NotNull(provider.GetService<IJsonApiSerializer>());
+            Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
+            Assert.NotNull(provider.GetService<IJsonApiSerializerFactory>());
             Assert.NotNull(provider.GetService<IJsonApiWriter>());
             Assert.NotNull(provider.GetService<IJsonApiReader>());
-            Assert.NotNull(provider.GetService<IJsonApiDeSerializer>());
+            Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
             Assert.NotNull(provider.GetService<IGenericProcessorFactory>());
-            Assert.NotNull(provider.GetService<IDocumentBuilderOptionsProvider>());
             Assert.NotNull(provider.GetService(typeof(GenericProcessor<TodoItem>)));
         }
 
@@ -66,7 +69,7 @@ namespace UnitTests.Extensions
 
             // act
             services.AddResourceService<IntResourceService>();
-            
+
             // assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceService<IntResource>)));
@@ -89,7 +92,7 @@ namespace UnitTests.Extensions
 
             // act
             services.AddResourceService<GuidResourceService>();
-            
+
             // assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceService<GuidResource, Guid>)));
@@ -109,7 +112,7 @@ namespace UnitTests.Extensions
         {
             // arrange
             var services = new ServiceCollection();
-            
+
             // act, assert
             Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
         }
@@ -142,9 +145,9 @@ namespace UnitTests.Extensions
             public Task<IEnumerable<IntResource>> GetAsync() => throw new NotImplementedException();
             public Task<IntResource> GetAsync(int id) => throw new NotImplementedException();
             public Task<object> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
-            public Task<object> GetRelationshipsAsync(int id, string relationshipName) => throw new NotImplementedException();
+            public Task<IntResource> GetRelationshipsAsync(int id, string relationshipName) => throw new NotImplementedException();
             public Task<IntResource> UpdateAsync(int id, IntResource entity) => throw new NotImplementedException();
-            public Task UpdateRelationshipsAsync(int id, string relationshipName, List<ResourceObject> relationships) => throw new NotImplementedException();
+            public Task UpdateRelationshipsAsync(int id, string relationshipName, object relationships) => throw new NotImplementedException();
         }
 
         private class GuidResourceService : IResourceService<GuidResource, Guid>
@@ -154,13 +157,13 @@ namespace UnitTests.Extensions
             public Task<IEnumerable<GuidResource>> GetAsync() => throw new NotImplementedException();
             public Task<GuidResource> GetAsync(Guid id) => throw new NotImplementedException();
             public Task<object> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();
-            public Task<object> GetRelationshipsAsync(Guid id, string relationshipName) => throw new NotImplementedException();
+            public Task<GuidResource> GetRelationshipsAsync(Guid id, string relationshipName) => throw new NotImplementedException();
             public Task<GuidResource> UpdateAsync(Guid id, GuidResource entity) => throw new NotImplementedException();
-            public Task UpdateRelationshipsAsync(Guid id, string relationshipName, List<ResourceObject> relationships) => throw new NotImplementedException();
+            public Task UpdateRelationshipsAsync(Guid id, string relationshipName, object relationships) => throw new NotImplementedException();
         }
 
 
-        public class TestContext : DbContext 
+        public class TestContext : DbContext
         {
             public DbSet<IntResource> Resource { get; set; }
         }

@@ -36,11 +36,6 @@ namespace JsonApiDotNetCore.Internal
             Instance = this;
         }
 
-        public ContextEntity GetEntityType(string entityName)
-        {
-            return Entities.Where(e => e.EntityName == entityName).FirstOrDefault();
-        }
-
         // eventually, this is the planned public constructor
         // to avoid breaking changes, we will be leaving the original constructor in place
         // until the context graph validation process is completed
@@ -56,14 +51,6 @@ namespace JsonApiDotNetCore.Internal
 
         /// <inheritdoc />
         public bool UsesDbContext { get; }
-
-        /// <inheritdoc />
-        public ContextEntity GetContextEntity(string entityName)
-            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
-
-        /// <inheritdoc />
-        public ContextEntity GetContextEntity(Type entityType)
-            => Entities.SingleOrDefault(e => e.EntityType == entityType);
 
         /// <inheritdoc />
         public object GetRelationship<TParent>(TParent entity, string relationshipName)
@@ -151,5 +138,16 @@ namespace JsonApiDotNetCore.Internal
                 return Entities.FirstOrDefault(e => e.EntityName.ToLower().Replace("-", "") == controllerName.ToLower());
             }
         }
+
+        /// <inheritdoc />
+        public ContextEntity GetContextEntity(string entityName)
+            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
+
+        /// <inheritdoc />
+        public ContextEntity GetContextEntity(Type entityType)
+            => Entities.SingleOrDefault(e => e.EntityType == entityType);
+        /// <inheritdoc />
+        public ContextEntity GetContextEntity<TResource>() where TResource : class, IIdentifiable
+            => GetContextEntity(typeof(TResource));
     }
 }

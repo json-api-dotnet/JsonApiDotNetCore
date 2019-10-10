@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Deserializer;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -37,11 +37,10 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IGetAllService<T, int> getAll,
             IGetByIdService<T, int> getById,
             IGetRelationshipService<T, int> getRelationship,
-            IJsonApiDeSerializer deSerializer,
-            IDocumentBuilder documentBuilder,
-            IResourceGraph resourceGraph,
-            IJsonApiContext jsonApiContext
-        ) : base(getAll, getById, getRelationship, deSerializer, documentBuilder, resourceGraph, jsonApiContext)
+            IOperationsDeserializer deserializer,
+            IBaseDocumentBuilder documentBuilder,
+            IResourceGraph resourceGraph
+        ) : base(getAll, getById, getRelationship, deserializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -52,28 +51,25 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IGetAllService<T, TId> _getAll;
         private readonly IGetByIdService<T, TId> _getById;
         private readonly IGetRelationshipService<T, TId> _getRelationship;
-        private readonly IJsonApiDeSerializer _deSerializer;
-        private readonly IDocumentBuilder _documentBuilder;
+        private readonly IOperationsDeserializer _deserializer;
+        private readonly IBaseDocumentBuilder _documentBuilder;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IJsonApiContext _jsonApiContext;
 
         /// <inheritdoc />
         public GetOpProcessor(
             IGetAllService<T, TId> getAll,
             IGetByIdService<T, TId> getById,
             IGetRelationshipService<T, TId> getRelationship,
-            IJsonApiDeSerializer deSerializer,
-            IDocumentBuilder documentBuilder,
-            IResourceGraph resourceGraph,
-            IJsonApiContext jsonApiContext)
+            IOperationsDeserializer deserializer,
+            IBaseDocumentBuilder documentBuilder,
+            IResourceGraph resourceGraph)
         {
             _getAll = getAll;
             _getById = getById;
             _getRelationship = getRelationship;
-            _deSerializer = deSerializer;
+            _deserializer = deserializer;
             _documentBuilder = documentBuilder;
             _resourceGraph = resourceGraph;
-            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
         }
 
         /// <inheritdoc />
@@ -138,7 +134,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             var relationshipType = _resourceGraph.GetContextEntity(operation.GetResourceTypeName())
                 .Relationships.Single(r => r.Is(operation.Ref.Relationship)).DependentType;
 
-            var relatedContextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipType);
+            var relatedContextEntity = _resourceGraph.GetContextEntity(relationshipType);
 
             if (result == null)
                 return null;

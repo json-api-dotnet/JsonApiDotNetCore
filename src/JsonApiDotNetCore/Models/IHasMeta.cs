@@ -5,6 +5,6 @@ namespace JsonApiDotNetCore.Models
 {
     public interface IHasMeta
     {
-        Dictionary<string, object> GetMeta(IJsonApiContext context);
+        Dictionary<string, object> GetMeta();
     }
 }

@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Repositories\" />
+    <Folder Include="Helpers\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Helpers\Repositories\AuthorizedTodoItemsRepository.cs" />

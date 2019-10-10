@@ -31,6 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
+
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -53,18 +54,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
-            var content = new
-            {
-                date = new
-                {
-                    id = todoItem.Id,
-                    type = "todo-items",
-                    attributes = new
-                    {
-                        calculatedAttribute = "lol"
-                    }
-                }
-            };
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.CalculatedValue });
+            var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
 
             // Act
@@ -81,26 +72,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
+            todoItem.Id = maxPersonId + 100;
+            todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var content = new
-            {
-                data = new
-                {
-                    id = maxPersonId + 100,
-                    type = "todo-items",
-                    attributes = new
-                    {
-                        description = todoItem.Description,
-                        ordinal = todoItem.Ordinal,
-                        createdDate = DateTime.Now
-                    }
-                }
-            };
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
+            var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId + 100}", content);
 
             // Act
@@ -116,25 +97,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
+            todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-
-            var content = new
-            {
-                data = new
-                {
-                    type = "todo-items",
-                    attributes = new
-                    {
-                        description = todoItem.Description,
-                        ordinal = todoItem.Ordinal,
-                        createdDate = DateTime.Now
-                    }
-                }
-            };
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
+            var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId}", content);
 
             // Act
@@ -145,11 +115,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
         }
 
-
         [Fact]
         public async Task Can_Patch_Entity()
         {
             // arrange
+            _context.RemoveRange(_context.TodoItemCollections);
+            _context.RemoveRange(_context.TodoItems);
+            _context.RemoveRange(_context.People);
+            _context.SaveChanges();
+
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
@@ -157,25 +131,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var newTodoItem = _todoItemFaker.Generate();
-
+            newTodoItem.Id = todoItem.Id;
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
+            var serializer = _fixture.GetSerializer<TodoItem>(p => new { p.Description, p.Ordinal });
 
-            var content = new
-            {
-                data = new
-                {
-                    id = todoItem.Id,
-                    type = "todo-items",
-                    attributes = new
-                    {
-                        description = newTodoItem.Description,
-                        ordinal = newTodoItem.Ordinal
-                    }
-                }
-            };
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", serializer.Serialize(newTodoItem));
 
             // Act
             var response = await client.SendAsync(request);
@@ -186,19 +148,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.NotNull(document);
             Assert.NotNull(document.Data);
-            Assert.NotNull(document.Data.Attributes);
-            Assert.Equal(newTodoItem.Description, document.Data.Attributes["description"]);
-            Assert.Equal(newTodoItem.Ordinal, (long)document.Data.Attributes["ordinal"]);
-            Assert.True(document.Data.Relationships.ContainsKey("owner"));
-            Assert.NotNull(document.Data.Relationships["owner"].SingleData);
-            Assert.Equal(person.Id.ToString(), document.Data.Relationships["owner"].SingleData.Id);
-            Assert.Equal("people", document.Data.Relationships["owner"].SingleData.Type);
+            Assert.NotNull(document.SingleData.Attributes);
+            Assert.Equal(newTodoItem.Description, document.SingleData.Attributes["description"]);
+            Assert.Equal(newTodoItem.Ordinal, (long)document.SingleData.Attributes["ordinal"]);
+            Assert.True(document.SingleData.Relationships.ContainsKey("owner"));
+            Assert.Null(document.SingleData.Relationships["owner"].SingleData);
 
             // Assert -- database
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                 .Include(t => t.Owner)
                 .SingleOrDefault(t => t.Id == todoItem.Id);
-
             Assert.Equal(person.Id, updatedTodoItem.OwnerId);
             Assert.Equal(newTodoItem.Description, updatedTodoItem.Description);
             Assert.Equal(newTodoItem.Ordinal, updatedTodoItem.Ordinal);
@@ -207,13 +166,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
         {
-            /// @TODO: if we add a BeforeUpate resource hook to PersonDefinition
-            /// with database values enabled, this test will fail because todo-items
-            /// will be included in the person instance in the database-value loading. 
-            /// This is then attached in the EF dbcontext, so when the query is executed and returned,
-            /// that entity will still have the relationship included even though the repo didn't include it.
-
-
             // arrange
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
@@ -222,26 +174,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _context.SaveChanges();
 
             var newPerson = _personFaker.Generate();
-
+            newPerson.Id = person.Id;
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
+            var serializer = _fixture.GetSerializer<Person>(p => new { p.LastName, p.FirstName });
 
-            var content = new
-            {
-                data = new
-                {
-                    type = "people",
-                    id = person.Id,
-
-                    attributes = new Dictionary<string, object>
-                    {
-                        { "last-name",  newPerson.LastName },
-                        { "first-name",  newPerson.FirstName},
-                    }
-                }
-            };
-            var request = PrepareRequest("PATCH", $"/api/v1/people/{person.Id}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/people/{person.Id}", serializer.Serialize(newPerson));
 
             // Act
             var response = await client.SendAsync(request);
@@ -253,12 +192,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Console.WriteLine(body);
             Assert.NotNull(document);
             Assert.NotNull(document.Data);
-            Assert.NotNull(document.Data.Attributes);
-            Assert.Equal(newPerson.LastName, document.Data.Attributes["last-name"]);
-            Assert.Equal(newPerson.FirstName, document.Data.Attributes["first-name"]);
-            Assert.True(document.Data.Relationships.ContainsKey("todo-items"));
-            Assert.Null(document.Data.Relationships["todo-items"].ManyData);
-            Assert.Null(document.Data.Relationships["todo-items"].SingleData);
+            Assert.NotNull(document.SingleData.Attributes);
+            Assert.Equal(newPerson.LastName, document.SingleData.Attributes["last-name"]);
+            Assert.Equal(newPerson.FirstName, document.SingleData.Attributes["first-name"]);
+            Assert.True(document.SingleData.Relationships.ContainsKey("todo-items"));
+            Assert.Null(document.SingleData.Relationships["todo-items"].Data);
         }
 
         [Fact]
@@ -266,41 +204,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             var todoItem = _todoItemFaker.Generate();
+            todoItem.CreatedDate = DateTime.Now;
             var person = _personFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.People.Add(person);
             _context.SaveChanges();
+            todoItem.Owner = person;
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-
-            var content = new
-            {
-                data = new
-                {
-                    type = "todo-items",
-                    id = todoItem.Id,
-                    attributes = new
-                    {
-                        description = todoItem.Description,
-                        ordinal = todoItem.Ordinal,
-                        createdDate = DateTime.Now
-                    },
-                    relationships = new
-                    {
-                        owner = new
-                        {
-                            data = new
-                            {
-                                type = "people",
-                                id = person.Id.ToString()
-                            }
-                        }
-                    }
-                }
-            };
+            var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate }, ti => new { ti.Owner });
+            var content = serializer.Serialize(todoItem);
             var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
 
             // Act
@@ -314,12 +230,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(person.Id, updatedTodoItem.OwnerId);
         }
 
-        private HttpRequestMessage PrepareRequest(string method, string route, object content)
+        private HttpRequestMessage PrepareRequest(string method, string route, string content)
         {
             var httpMethod = new HttpMethod(method);
             var request = new HttpRequestMessage(httpMethod, route);
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
             return request;
         }

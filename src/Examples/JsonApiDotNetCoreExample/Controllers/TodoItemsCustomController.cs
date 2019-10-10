@@ -13,10 +13,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class TodoItemsCustomController : CustomJsonApiController<TodoItem>
     {
         public TodoItemsCustomController(
-            IJsonApiContext jsonApiContext,
             IResourceService<TodoItem> resourceService,
             ILoggerFactory loggerFactory) 
-            : base(jsonApiContext, resourceService, loggerFactory)
+            : base(resourceService, loggerFactory)
         { }
     }
 
@@ -24,10 +23,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     : CustomJsonApiController<T, int> where T : class, IIdentifiable<int>
     {
         public CustomJsonApiController(
-            IJsonApiContext jsonApiContext,
             IResourceService<T, int> resourceService,
             ILoggerFactory loggerFactory)
-            : base(jsonApiContext, resourceService, loggerFactory)
+            : base(resourceService, loggerFactory)
         { }
     }
 
@@ -36,7 +34,6 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         private readonly ILogger _logger;
         private readonly IResourceService<T, TId> _resourceService;
-        private readonly IJsonApiContext _jsonApiContext;
 
         protected IActionResult Forbidden()
         {
@@ -44,20 +41,16 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         public CustomJsonApiController(
-            IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService,
             ILoggerFactory loggerFactory)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _resourceService = resourceService;
             _logger = loggerFactory.CreateLogger<JsonApiDotNetCore.Controllers.JsonApiController<T, TId>>();
         }
 
         public CustomJsonApiController(
-            IJsonApiContext jsonApiContext,
             IResourceService<T, TId> resourceService)
         {
-            _jsonApiContext = jsonApiContext.ApplyContext<T>(this);
             _resourceService = resourceService;
         }
 
@@ -102,8 +95,8 @@ namespace JsonApiDotNetCoreExample.Controllers
             if (entity == null)
                 return UnprocessableEntity();
 
-            if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
-                return Forbidden();
+            //if (!_jsonApiContext.Options.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
+            //    return Forbidden();
 
             entity = await _resourceService.CreateAsync(entity);
 

@@ -22,4 +22,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Serialization\Common\" />
+    <Folder Include="Serialization\Client\" />
+    <Folder Include="Serialization\Server\" />
+  </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using DependentType = System.Type;
 
@@ -13,6 +14,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <typeparam name="TEntity"></typeparam>
     internal class ChildNode<TEntity> : INode where TEntity : class, IIdentifiable
     {
+        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         /// <inheritdoc />
         public DependentType EntityType { get; private set; }
         /// <inheritdoc />
@@ -50,7 +52,7 @@ namespace JsonApiDotNetCore.Hooks
             List<TEntity> casted = updated.Cast<TEntity>().ToList();
             foreach (var rpfl in _relationshipsFromPreviousLayer)
             {
-                rpfl.DependentEntities = new HashSet<TEntity>(rpfl.DependentEntities.Intersect(casted, ResourceHookExecutor.Comparer).Cast<TEntity>());
+                rpfl.DependentEntities = new HashSet<TEntity>(rpfl.DependentEntities.Intersect(casted, _comparer).Cast<TEntity>());
             }
         }
 
@@ -72,12 +74,12 @@ namespace JsonApiDotNetCore.Hooks
 
                     if (currentValue is IEnumerable<IIdentifiable> relationshipCollection)
                     {
-                        var newValue = relationshipCollection.Intersect(unique, ResourceHookExecutor.Comparer).Cast(proxy.DependentType);
+                        var newValue = relationshipCollection.Intersect(unique, _comparer).Cast(proxy.DependentType);
                         proxy.SetValue(principal, newValue);
                     }
                     else if (currentValue is IIdentifiable relationshipSingle)
                     {
-                        if (!unique.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, ResourceHookExecutor.Comparer).Any())
+                        if (!unique.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, _comparer).Any())
                         {
                             proxy.SetValue(principal, null);
                         }

@@ -3,8 +3,6 @@ using JsonApiDotNetCore.Models;
 using System.Collections;
 using JsonApiDotNetCore.Internal;
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Immutable;
 using System.Linq.Expressions;
 
 namespace JsonApiDotNetCore.Hooks

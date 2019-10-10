@@ -34,6 +34,8 @@ namespace JsonApiDotNetCore.Data
         /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
         /// </code>
         /// </example>
+        IQueryable<TEntity> Include(IQueryable<TEntity> entities, params RelationshipAttribute[] inclusionChain);
+        [Obsolete]
         IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName);
 
         /// <summary>
@@ -60,13 +62,13 @@ namespace JsonApiDotNetCore.Data
         /// Get the entity with the specified id and include the relationship.
         /// </summary>
         /// <param name="id">The entity id</param>
-        /// <param name="relationshipName">The exposed relationship name</param>
+        /// <param name="relationship">The exposed relationship</param>
         /// <example>
         /// <code>
         /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
         /// </code>
         /// </example>
-        Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName);
+        Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship);
 
         /// <summary>
         /// Count the total number of records

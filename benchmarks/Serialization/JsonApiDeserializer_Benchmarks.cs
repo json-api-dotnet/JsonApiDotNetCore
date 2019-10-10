@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
+
 using JsonApiDotNetCore.Services;
 using Moq;
 using Newtonsoft.Json;
@@ -15,7 +17,7 @@ using Newtonsoft.Json.Serialization;
 namespace Benchmarks.Serialization
 {
     [MarkdownExporter]
-    public class JsonApiDeserializer_Benchmarks {
+    public class JsonApideserializer_Benchmarks {
         private const string TYPE_NAME = "simple-types";
         private static readonly string Content = JsonConvert.SerializeObject(new Document {
             Data = new ResourceObject {
@@ -30,15 +32,15 @@ namespace Benchmarks.Serialization
             }
         });
 
-        private readonly JsonApiDeSerializer _jsonApiDeSerializer;
+        private readonly JsonApideserializer _jsonApideserializer;
 
-        public JsonApiDeserializer_Benchmarks() {
+        public JsonApideserializer_Benchmarks() {
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
             var resourceGraph = resourceGraphBuilder.Build();
-            var  requestManagerMock = new Mock<IRequestManager>();
+            var  currentRequestMock = new Mock<IRequestContext>();
 
-            requestManagerMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
+            currentRequestMock.Setup(m => m.GetUpdatedAttributes()).Returns(new Dictionary<AttrAttribute, object>());
 
             var jsonApiContextMock = new Mock<IJsonApiContext>();
             jsonApiContextMock.SetupAllProperties();
@@ -50,11 +52,11 @@ namespace Benchmarks.Serialization
             jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
 
-            _jsonApiDeSerializer = new JsonApiDeSerializer(jsonApiContextMock.Object, requestManagerMock.Object);
+            _jsonApideserializer = new JsonApideserializer(jsonApiContextMock.Object, currentRequestMock.Object);
         }
 
         [Benchmark]
-        public object DeserializeSimpleObject() => _jsonApiDeSerializer.Deserialize<SimpleType>(Content);
+        public object DeserializeSimpleObject() => _jsonApideserializer.Deserialize<SimpleType>(Content);
 
         private class SimpleType : Identifiable {
             [Attr("name")]

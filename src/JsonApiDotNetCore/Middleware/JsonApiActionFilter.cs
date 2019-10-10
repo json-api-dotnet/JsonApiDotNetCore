@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -13,21 +14,20 @@ namespace JsonApiDotNetCore.Middleware
 {
     public class JsonApiActionFilter : IActionFilter
     {
-        private readonly IJsonApiContext _jsonApiContext;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IRequestManager _requestManager;
-        private readonly IPageManager _pageManager;
+        private readonly ICurrentRequest _currentRequest;
+        private readonly IPageQueryService _pageManager;
         private readonly IQueryParser _queryParser;
         private readonly IJsonApiOptions _options;
         private HttpContext _httpContext;
         public JsonApiActionFilter(IResourceGraph resourceGraph,
-                                 IRequestManager requestManager,
-                                 IPageManager pageManager,
+                                 ICurrentRequest currentRequest,
+                                 IPageQueryService pageManager,
                                  IQueryParser queryParser,
                                  IJsonApiOptions options)
         {
             _resourceGraph = resourceGraph;
-            _requestManager = requestManager;
+            _currentRequest = currentRequest;
             _pageManager = pageManager;
             _queryParser = queryParser;
             _options = options;
@@ -43,13 +43,12 @@ namespace JsonApiDotNetCore.Middleware
             // the contextEntity is null eg when we're using a non-JsonApiDotNetCore route. 
             if (contextEntityCurrent != null)
             {
-                _requestManager.SetContextEntity(contextEntityCurrent);
-                _requestManager.BasePath = GetBasePath(contextEntityCurrent.EntityName);
+                _currentRequest.SetRequestResource(contextEntityCurrent);
+                _currentRequest.BasePath = GetBasePath(contextEntityCurrent.EntityName);
                 HandleUriParameters();
             }
 
         }
-
 
         /// <summary>
         /// Parses the uri
@@ -59,13 +58,12 @@ namespace JsonApiDotNetCore.Middleware
             if (_httpContext.Request.Query.Count > 0)
             {
                 var querySet = _queryParser.Parse(_httpContext.Request.Query);
-                _requestManager.QuerySet = querySet; //this shouldn't be exposed?
+                _currentRequest.QuerySet = querySet; //this shouldn't be exposed?
                 _pageManager.PageSize = querySet.PageQuery.PageSize ?? _pageManager.PageSize;
                 _pageManager.CurrentPage = querySet.PageQuery.PageOffset ?? _pageManager.CurrentPage;
-                _requestManager.IncludedRelationships = _requestManager.QuerySet.IncludedRelationships;
+
             }
         }
-
 
         private string GetBasePath(string entityName)
         {
@@ -118,7 +116,12 @@ namespace JsonApiDotNetCore.Middleware
         private ContextEntity GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
-            return _resourceGraph.GetEntityFromControllerName(controllerName);
+            var rd = _httpContext.GetRouteData().Values;
+            var requestResource = _resourceGraph.GetEntityFromControllerName(controllerName);
+
+            if (rd.TryGetValue("relationshipName", out object relationshipName))
+                _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+            return requestResource;
         }
 
 
