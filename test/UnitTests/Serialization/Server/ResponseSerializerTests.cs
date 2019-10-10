@@ -238,11 +238,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(entity);
 
             // assert
-            var expectedFormatted =
-            @"{ 
-               ""data"": null
-            }";
-
+            var expectedFormatted = @"{ ""data"": null }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
             Assert.Equal(expected, serialized);
         }
@@ -256,11 +252,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeMany(new List<TestResource>());
 
             // assert
-            var expectedFormatted =
-            @"{ 
-               ""data"": []
-            }";
-
+            var expectedFormatted = @"{ ""data"": [] }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
             Assert.Equal(expected, serialized);
         }
@@ -275,7 +267,6 @@ namespace UnitTests.Serialization.Server
             // act
             string serialized = serializer.SerializeSingle(entity);
 
-            Console.WriteLine(serialized);
             // assert
             var expectedFormatted =
             @"{
@@ -311,43 +302,16 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeSingle_ResourceNoLinksNoRelationships_DoesNotSerializeRelationshipMember()
-        {
-            // arrange
-            var entity = new OneToManyPrincipal { Id = 10 };
-
-            var serializer = GetResponseSerializer<OneToManyPrincipal>();
-            // act
-            string serialized = serializer.SerializeSingle(entity);
-
-            Console.WriteLine(serialized);
-            // assert
-            var expectedFormatted =
-            @"{
-                ""data"":{
-                    ""type"":""one-to-many-principals"",
-                    ""id"":""10"",
-                    ""attributes"":{
-                        ""attribute-member"":null
-                    }
-                }
-            }";
-
-            var expected = Regex.Replace(expectedFormatted, @"\s+", "");
-            Assert.Equal(expected, serialized);
-        }
-
-        [Fact]
         public void SerializeSingle_ResourceWithMeta_IncludesMetaInResult()
         {
             // arrange
             var meta = new Dictionary<string, object> { { "test", "meta" } };
             var entity = new OneToManyPrincipal { Id = 10 };
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta);
+
             // act
             string serialized = serializer.SerializeSingle(entity);
 
-            Console.WriteLine(serialized);
             // assert
             var expectedFormatted =
             @"{
@@ -407,13 +371,8 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(entity);
 
             // assert
-            var expectedFormatted =
-            @"{
-               ""data"": null
-            }";
-
+            var expectedFormatted = @"{ ""data"": null}";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
-
             Assert.Equal(expected, serialized);
         }
 
@@ -458,13 +417,8 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(entity);
 
             // assert
-            var expectedFormatted =
-            @"{
-               ""data"": []
-            }";
-
+            var expectedFormatted = @"{ ""data"": [] }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
-
             Assert.Equal(expected, serialized);
         }
 
@@ -496,7 +450,7 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void Can_Return_Custom_Error_Types()
+        public void SerializeError_CustomError_CanSerialize()
         {
             // arrange
             var error = new CustomError(507, "title", "detail", "custom");
@@ -516,13 +470,11 @@ namespace UnitTests.Serialization.Server
             });
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
 
-
             // act
             var result = serializer.Serialize(errorCollection);
 
             // assert
             Assert.Equal(expectedJson, result);
-
         }
 
         class CustomError : Error

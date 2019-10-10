@@ -18,7 +18,6 @@ namespace UnitTests.Serialization.Client
             _serializer = new RequestSerializer(_fieldExplorer, _resourceGraph, builder);
         }
 
-
         [Fact]
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {

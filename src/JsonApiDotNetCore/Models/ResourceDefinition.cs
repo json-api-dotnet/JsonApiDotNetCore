@@ -48,27 +48,16 @@ namespace JsonApiDotNetCore.Models
         public List<AttrAttribute> GetAllowedAttributes() => _allowedAttributes;
 
         /// <summary>
-        /// Hides specified attributes from the serialized output. Can be called directly in a resource definition implementation or
+        /// Hides specified attributes and relationships from the serialized output. Can be called directly in a resource definition implementation or
         /// in any resource hook to combine it with eg authorization.
         /// </summary>
-        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Arttribute2 }</param>
-        public void HideAttributes(Expression<Func<TResource, dynamic>> selector)
+        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Arttribute2, e.Relationship1, e.Relationship2 }</param>
+        public void HideFields(Expression<Func<TResource, dynamic>> selector)
         {
-            var attributesToHide = _fieldExplorer.GetAttributes(selector);
-            _allowedAttributes = _allowedAttributes.Except(attributesToHide).ToList();
+            var fieldsToHide = _fieldExplorer.GetFields(selector);
+            _allowedAttributes = _allowedAttributes.Except(fieldsToHide.Where(f => f is AttrAttribute)).Cast<AttrAttribute>().ToList();
+            _allowedRelationships = _allowedRelationships.Except(fieldsToHide.Where(f => f is RelationshipAttribute)).Cast<RelationshipAttribute>().ToList();
         }
-
-        /// <summary>
-        /// Hides specified relationships from the serialized output. Can be called directly in a resource definition implementation or
-        /// in any resource hook to combine it with eg authorization.
-        /// </summary>
-        /// <param name="selector">Should be of the form: (TResource e) => new { e.Relationship1, e.Relationship2 }</param>
-        public void HideRelationships(Expression<Func<TResource, dynamic>> selector)
-        {
-            var relationshipsToHide = _fieldExplorer.GetRelationships(selector);
-            _allowedRelationships = _allowedRelationships.Except(relationshipsToHide).ToList();
-        }
-
 
         /// <summary>
         /// Define a set of custom query expressions that can be applied

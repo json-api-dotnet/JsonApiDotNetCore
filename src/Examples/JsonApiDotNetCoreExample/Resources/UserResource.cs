@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Resources
     {
         public UserResource(IResourceGraph graph, IFieldsExplorer fieldExplorer) : base(fieldExplorer, graph)
         {
-            HideAttributes(u => u.Password);
+            HideFields(u => u.Password);
         }
 
         public override QueryFilters GetQueryFilters()
