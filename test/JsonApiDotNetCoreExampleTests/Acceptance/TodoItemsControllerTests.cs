@@ -203,7 +203,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var todoItems = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             // Assert
             Assert.NotEmpty(todoItems);
@@ -263,7 +263,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            var todoItems = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             // Assert
             Assert.NotEmpty(todoItems);
