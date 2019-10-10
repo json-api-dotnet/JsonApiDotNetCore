@@ -15,6 +15,5 @@ namespace JsonApiDotNetCore.Query
         /// <param name="relationship"></param>
         /// <returns></returns>
         List<AttrAttribute> Get(RelationshipAttribute relationship = null);
-        void Register(AttrAttribute selected, RelationshipAttribute relationship = null);
     }
 }

@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Query
 
 {
     /// <inheritdoc/>
-    public class SparseFieldsService : ISparseFieldsService
+    public class SparseFieldsService : QueryParameterService, ISparseFieldsService
     {
         /// <summary>
         /// The selected fields for the primary resource of this request.
@@ -33,7 +33,8 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public void Register(AttrAttribute selected, RelationshipAttribute relationship = null)
+        //public override Parse(AttrAttribute selected, RelationshipAttribute relationship = null)
+        public override void Parse(string value)
         {
             if (relationship == null)
             {

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Query;
 namespace JsonApiDotNetCore.Query
 
 {
-    public class PageService : IPageQueryService
+    public class PageService : QueryParameterService, IPageQueryService
     {
         private IJsonApiOptions _options;
 
@@ -25,6 +25,12 @@ namespace JsonApiDotNetCore.Query
         public int CurrentPage { get; set; }
         /// <inheritdoc/>
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
+
+        public override void Parse(string value)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public bool ShouldPaginate()
         {
