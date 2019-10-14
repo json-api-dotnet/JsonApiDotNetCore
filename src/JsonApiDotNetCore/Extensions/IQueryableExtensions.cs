@@ -113,9 +113,7 @@ namespace JsonApiDotNetCore.Extensions
             return (IOrderedQueryable<TSource>)result;
         }
 
-
-
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, BaseFilterQuery filterQuery)
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, FilterQuery filterQuery)
         {
             if (filterQuery == null)
                 return source;

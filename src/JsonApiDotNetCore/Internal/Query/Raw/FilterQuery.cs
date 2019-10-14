@@ -5,8 +5,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
-    /// Allows you to filter the query, via the methods shown at
-    /// <see href="https://json-api-dotnet.github.io/#/filtering">HERE</see>
+    /// Represents the filter[field]=op:value query from the URL.
     /// </summary>
     public class FilterQuery : BaseQuery
     {

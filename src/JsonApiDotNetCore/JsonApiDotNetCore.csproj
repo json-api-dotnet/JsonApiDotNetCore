@@ -56,5 +56,6 @@
     <Folder Include="QueryParameters\Contracts\" />
     <Folder Include="QueryParameters\Common\" />
     <Folder Include="Serialization\Server\Contracts\" />
+    <Folder Include="Internal\Query\Raw\" />
   </ItemGroup>
 </Project>

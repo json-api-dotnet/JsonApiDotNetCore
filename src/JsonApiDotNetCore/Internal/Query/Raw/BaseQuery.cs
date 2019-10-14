@@ -1,10 +1,9 @@
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
-using System;
-using System.Linq;
-
 namespace JsonApiDotNetCore.Internal.Query
 {
+    /// <summary>
+    /// represents what FilterQuery and SortQuery have in common:
+    /// attribute, relationship (optional for both)
+    /// </summary>
     public abstract class BaseQuery
     {
         public BaseQuery(string attribute)

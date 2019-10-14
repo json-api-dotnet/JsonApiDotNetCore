@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public class JsonApiActionFilter : IActionFilter
+    public class QueryParameterFilter : IActionFilter
     {
         private readonly IResourceGraph _resourceGraph;
         private readonly ICurrentRequest _currentRequest;
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Middleware
         private readonly IQueryParser _queryParser;
         private readonly IJsonApiOptions _options;
         private HttpContext _httpContext;
-        public JsonApiActionFilter(IResourceGraph resourceGraph,
+        public QueryParameterFilter(IResourceGraph resourceGraph,
                                  ICurrentRequest currentRequest,
                                  IPageQueryService pageManager,
                                  IQueryParser queryParser,

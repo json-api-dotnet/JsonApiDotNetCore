@@ -29,6 +29,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiOptions _options;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
+        private readonly IFilterService _filterService;
         private readonly IEntityRepository<TResource, TId> _repository;
         private readonly ILogger _logger;
         private readonly IResourceHookExecutor _hookExecutor;
@@ -37,6 +38,7 @@ namespace JsonApiDotNetCore.Services
         private readonly ContextEntity _currentRequestResource;
 
         public EntityResourceService(
+                IFilterService filterService,
                 IEntityRepository<TResource, TId> repository,
                 IJsonApiOptions options,
                 ITargetedFields updatedFields,
@@ -55,6 +57,7 @@ namespace JsonApiDotNetCore.Services
             _options = options;
             _targetedFields = updatedFields;
             _resourceGraph = resourceGraph;
+            _filterService = filterService;
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TId>>();
@@ -223,16 +226,10 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities)
         {
-            var query = _currentRequest.QuerySet;
+            foreach (var filter in _filterService.Get())
+                entities = _repository.Filter(entities, filter);
 
-            if (_currentRequest.QuerySet == null)
-                return entities;
-
-            if (query.Filters.Count > 0)
-                foreach (var filter in query.Filters)
-                    entities = _repository.Filter(entities, filter);
-
-            entities = _repository.Sort(entities, query.SortParameters);
+            //entities = _repository.Sort(entities, query.SortParameters);
 
             return entities;
         }

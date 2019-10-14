@@ -3,7 +3,7 @@
     /// <summary>
     /// Base interface that all query parameter services should inherit.
     /// </summary>
-    internal interface IQueryParameterService
+    public interface IParsableQueryParameter
     {
         /// <summary>
         /// Parses the value of the query parameter. Invoked in the middleware.

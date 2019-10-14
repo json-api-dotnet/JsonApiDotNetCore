@@ -82,9 +82,8 @@ namespace JsonApiDotNetCore.Data
             {
                 var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
                 if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
-                {
                     return defaultQueryFilter(entities, filterQuery);
-                }
+
             }
             return entities.Filter(new AttrFilterQuery(_currentRequest.GetRequestResource(), _resourceGraph, filterQuery));
         }

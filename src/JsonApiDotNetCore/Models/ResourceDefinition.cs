@@ -7,13 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Services;
+using System.Collections;
 
 namespace JsonApiDotNetCore.Models
 {
-    public interface IResourceDefinition
+    internal interface IResourceDefinition
     {
         List<AttrAttribute> GetAllowedAttributes();
         List<RelationshipAttribute> GetAllowedRelationships();
+        IEnumerable<string> GetCustomQueryFilterKeys();
     }
 
     /// <summary>
@@ -96,6 +98,11 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
+        public IEnumerable<string> GetCustomQueryFilterKeys()
+        {
+            return GetQueryFilters()?.Keys;
+        }
+
         /// <inheritdoc/>
         public virtual void AfterCreate(HashSet<TResource> entities, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
@@ -167,7 +174,6 @@ namespace JsonApiDotNetCore.Models
 
             return null;
         }
-
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
