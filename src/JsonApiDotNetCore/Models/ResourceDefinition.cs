@@ -11,11 +11,12 @@ using System.Collections;
 
 namespace JsonApiDotNetCore.Models
 {
-    internal interface IResourceDefinition
+    public interface IResourceDefinition
     {
         List<AttrAttribute> GetAllowedAttributes();
         List<RelationshipAttribute> GetAllowedRelationships();
-        IEnumerable<string> GetCustomQueryFilterKeys();
+        bool HasCustomQueryFilter(string key);
+        List<(AttrAttribute, SortDirection)> DefaultSort();
     }
 
     /// <summary>
@@ -98,9 +99,9 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
-        public IEnumerable<string> GetCustomQueryFilterKeys()
+        public bool HasCustomQueryFilter(string key)
         {
-            return GetQueryFilters()?.Keys;
+            return GetQueryFilters()?.Keys.Contains(key) ?? false;
         }
 
         /// <inheritdoc/>
@@ -160,14 +161,7 @@ namespace JsonApiDotNetCore.Models
             {
                 var order = new List<(AttrAttribute, SortDirection)>();
                 foreach (var sortProp in defaultSortOrder)
-                {
-                    // TODO: error handling, log or throw?
-                    if (sortProp.Item1.Body is MemberExpression memberExpression)
-                        order.Add(
-                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name),
-                            sortProp.Item2)
-                        );
-                }
+                    order.Add((_fieldExplorer.GetAttributes(sortProp.Item1).Single(), sortProp.Item2));
 
                 return order;
             }
