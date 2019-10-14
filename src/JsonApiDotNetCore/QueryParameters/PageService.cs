@@ -1,11 +1,11 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Query;
 
 namespace JsonApiDotNetCore.Query
-
 {
-    public class PageService : QueryParameterService, IPageQueryService
+    public class PageService : QueryParameterService, IPageService
     {
         private IJsonApiOptions _options;
 
@@ -28,7 +28,27 @@ namespace JsonApiDotNetCore.Query
 
         public override void Parse(string key, string value)
         {
-            throw new NotImplementedException();
+            // expected input = page[size]=10
+            //                  page[number]=1
+            var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+
+            const string SIZE = "size";
+            const string NUMBER = "number";
+
+            if (propertyName == SIZE)
+            {
+                if (int.TryParse(value, out var size))
+                    PageSize = size;
+                else 
+                    throw new JsonApiException(400, $"Invalid page size '{value}'");
+            }
+            else if (propertyName == NUMBER)
+            {
+                if (int.TryParse(value, out var size))
+                    CurrentPage = size;
+                else
+                    throw new JsonApiException(400, $"Invalid page number '{value}'");
+            }
         }
 
 

@@ -13,22 +13,10 @@ namespace JsonApiDotNetCore.Query
     {
         /// todo: use read-only lists.
         private readonly List<List<RelationshipAttribute>> _includedChains;
-        private readonly ICurrentRequest _currentRequest;
-        private readonly IContextEntityProvider _provider;
-        private ContextEntity _primaryResourceContext;
-        public IncludeService(ICurrentRequest currentRequest, IContextEntityProvider provider)
-        {
-            _currentRequest = currentRequest;
-            _provider = provider;
-            _includedChains = new List<List<RelationshipAttribute>>();
-        }
 
-        /// <summary>
-        /// This constructor is used internally for testing.
-        /// </summary>
-        internal IncludeService(ContextEntity primaryResourceContext, IContextEntityProvider provider) : this(currentRequest: null, provider: provider)
+        public IncludeService(IContextEntityProvider contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
         {
-            _primaryResourceContext = primaryResourceContext;
+            _includedChains = new List<List<RelationshipAttribute>>();
         }
 
         /// <inheritdoc/>
@@ -50,11 +38,10 @@ namespace JsonApiDotNetCore.Query
 
         private void ParseChain(string chain)
         {
-            _primaryResourceContext = _primaryResourceContext ?? _currentRequest.GetRequestResource();
 
             var parsedChain = new List<RelationshipAttribute>();
             var chainParts = chain.Split(QueryConstants.DOT);
-            var resourceContext = _primaryResourceContext;
+            var resourceContext = _requestResource;
             foreach (var relationshipName in chainParts)
             {
                 var relationship = resourceContext.Relationships.SingleOrDefault(r => r.PublicRelationshipName == relationshipName);
@@ -65,7 +52,7 @@ namespace JsonApiDotNetCore.Query
                     throw CannotIncludeError(resourceContext, relationshipName);
 
                 parsedChain.Add(relationship);
-                resourceContext = _provider.GetContextEntity(relationship.DependentType);
+                resourceContext = _contextEntityProvider.GetContextEntity(relationship.DependentType);
             }
             _includedChains.Add(parsedChain);
         }
