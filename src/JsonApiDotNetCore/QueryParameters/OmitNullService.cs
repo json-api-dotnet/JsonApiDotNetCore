@@ -1,22 +1,30 @@
 using System;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Query
 {
-    public class OmitNullService : QueryParameterService
+    public class OmitNullService : QueryParameterService, IOmitNullService
     {
-        private readonly IOmitAttributeValueService _attributeBehaviourService;
+        private readonly IJsonApiOptions _options;
 
-        public OmitNullService(IOmitAttributeValueService attributeBehaviourService)
+        public OmitNullService(IJsonApiOptions options)
         {
-            _attributeBehaviourService = attributeBehaviourService;
+            Config = options.NullAttributeResponseBehavior.OmitNullValuedAttributes;
+            _options = options;
         }
+
+        public bool Config { get; private set; }
 
         public override void Parse(string key, string value)
         {
+            if (!_options.NullAttributeResponseBehavior.AllowClientOverride)
+                return;
+
             if (!bool.TryParse(value, out var config))
-                throw new JsonApiException(400, $"{config} is not a valid option");
-            _attributeBehaviourService.OmitNullValuedAttributes = config;
+                return;
+
+            Config = config;
         }
     }
 }
