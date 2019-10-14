@@ -1,10 +1,6 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
@@ -24,8 +20,6 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// Relative: /api/v1
         /// </example>
         string BasePath { get; set; }
-        QuerySet QuerySet { get; set; }
-        IQueryCollection FullQuerySet { get; set; }
 
         /// <summary>
         /// If the request is on the `{id}/relationships/{relationshipName}` route
@@ -45,10 +39,5 @@ namespace JsonApiDotNetCore.Managers.Contracts
         void SetRequestResource(ContextEntity contextEntityCurrent);
 
         ContextEntity GetRequestResource();
-        /// <summary>
-        /// Which query params are filtered
-        /// </summary>
-        QueryParams DisabledQueryParams { get; set; }
-
     }
 }

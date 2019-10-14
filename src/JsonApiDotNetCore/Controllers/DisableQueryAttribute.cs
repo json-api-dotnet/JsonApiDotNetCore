@@ -6,9 +6,14 @@ namespace JsonApiDotNetCore.Controllers
     { 
         public DisableQueryAttribute(QueryParams queryParams)
         {
-            QueryParams = queryParams;
+            QueryParams = queryParams.ToString("G").ToLower();
         }
 
-        public QueryParams QueryParams { get; set; }
+        public DisableQueryAttribute(string customQueryParams)
+        {
+            QueryParams = customQueryParams.ToLower();
+        }
+
+        public string QueryParams { get; }
     }
 }
