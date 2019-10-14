@@ -1,4 +1,5 @@
-namespace JsonApiDotNetCore.Internal.Query{
+namespace JsonApiDotNetCore.Internal.Query
+{
     public static class QueryConstants {
         public const string FILTER = "filter";
         public const string SORT = "sort";

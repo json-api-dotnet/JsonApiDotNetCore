@@ -1,66 +1,69 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Query
 {
-    /// <summary>
-    /// Abstracts away the creation of the corresponding generic type and usage
-    /// of the service provider in order to get a <see cref="ResourceDefinition{TResource}"/>
-    /// service.
-    /// </summary>
-    internal class ResourceDefinitionProvider : IResourceDefinitionProvider
-    {
-        private readonly IScopedServiceProvider _sp;
-        private readonly IContextEntityProvider _rcp;
-
-        public ResourceDefinitionProvider(IContextEntityProvider resourceContextProvider, IScopedServiceProvider serviceProvider)
-        {
-            _sp = serviceProvider;
-            _rcp = resourceContextProvider;
-        }
-
-        /// <inheritdoc/>
-        public IResourceDefinition Get(Type resourceType)
-        {
-            return (IResourceDefinition)_sp.GetService(_rcp.GetContextEntity(resourceType).ResourceType);
-        }
-    }
-
-
     public class FilterService : QueryParameterService, IFilterService
     {
 
-        private readonly List<FilterQuery> _filters;
-        public FilterService(ICurrentRequest currentRequest, IResourceDefinitionProvider rdProvider)
+        private readonly List<FilterQueryContext> _filters;
+        private IResourceDefinition _requestResourceDefinition;
+
+        public FilterService(IResourceDefinitionProvider resourceDefinitionProvider, IContextEntityProvider contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
         {
-            _filters = new List<FilterQuery>();
+            _requestResourceDefinition = resourceDefinitionProvider.Get(_requestResource.EntityType);
+            _filters = new List<FilterQueryContext>();
         }
 
-        public List<FilterQuery> Get()
+        public List<FilterQueryContext> Get()
         {
             return _filters;
         }
 
         public override void Parse(string key, string value)
         {
+            var queries = GetFilterQueries(key, value);
+            _filters.AddRange(queries.Select(GetQueryContexts));
+        }
+
+        private FilterQueryContext GetQueryContexts(FilterQuery query)
+        {
+            var queryContext = new FilterQueryContext(query);
+            if (_requestResourceDefinition != null && _requestResourceDefinition.HasCustomQueryFilter(query.Target))
+            {
+                queryContext.IsCustom = true;
+                return queryContext;
+            }
+
+            queryContext.Relationship = GetRelationship(query.Relationship);
+            var attribute = GetAttribute(query.Attribute, queryContext.Relationship);
+
+            if (attribute.IsFilterable == false)
+                throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
+            queryContext.Attribute = attribute;
+
+            return queryContext;
+        }
+
+        /// todo: this could be simplified a bunch 
+        private List<FilterQuery> GetFilterQueries(string key, string value)
+        {
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
-            var queries = new List<FilterQuery>();
             var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
-
+            var queries = new List<FilterQuery>();
             // InArray case
             string op = GetFilterOperation(value);
-            if (string.Equals(op, FilterOperations.@in.ToString(), StringComparison.OrdinalIgnoreCase)
-                || string.Equals(op, FilterOperations.nin.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(op, FilterOperation.@in.ToString(), StringComparison.OrdinalIgnoreCase)
+                || string.Equals(op, FilterOperation.nin.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 (var _, var filterValue) = ParseFilterOperation(value);
-                // should add logic to check if propertyNamer even exists.
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
             }
             else
@@ -72,10 +75,10 @@ namespace JsonApiDotNetCore.Query
                     queries.Add(new FilterQuery(propertyName, filterValue, operation));
                 }
             }
-
-            _filters.AddRange(queries);
+            return queries;
         }
 
+        /// todo: this could be simplified a bunch 
         private (string operation, string value) ParseFilterOperation(string value)
         {
             if (value.Length < 3)
@@ -92,6 +95,7 @@ namespace JsonApiDotNetCore.Query
             return (operation, value);
         }
 
+        /// todo: this could be simplified a bunch 
         private string GetFilterOperation(string value)
         {
             var values = value.Split(QueryConstants.COLON);
@@ -101,7 +105,7 @@ namespace JsonApiDotNetCore.Query
 
             var operation = values[0];
             // remove prefix from value
-            if (Enum.TryParse(operation, out FilterOperations op) == false)
+            if (Enum.TryParse(operation, out FilterOperation  op) == false)
                 return string.Empty;
 
             return operation;

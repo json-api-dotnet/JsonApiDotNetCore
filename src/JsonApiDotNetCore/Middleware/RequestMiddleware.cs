@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -14,28 +16,84 @@ namespace JsonApiDotNetCore.Middleware
     /// 
     /// This sets all necessary parameters relating to the HttpContext for JADNC
     /// </summary>
-    public class RequestMiddleware
+    public class CurrentRequestMiddleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
         private ICurrentRequest _currentRequest;
+        private IResourceGraph _resourceGraph;
+        private IJsonApiOptions _options;
 
-        public RequestMiddleware(RequestDelegate next)
+        public CurrentRequestMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
         public async Task Invoke(HttpContext httpContext,
-                                 ICurrentRequest currentRequest)
-        {
+                                IJsonApiOptions options,
+                                 ICurrentRequest currentRequest,
+                                 IResourceGraph resourceGraph)
+        { 
             _httpContext = httpContext;
             _currentRequest = currentRequest;
+            _resourceGraph = resourceGraph;
+            _options = options;
+            var requestResource = GetCurrentEntity();
+            if (requestResource != null)
+            {
+                _currentRequest.SetRequestResource(GetCurrentEntity());
+                _currentRequest.IsRelationshipPath = PathIsRelationship();
+                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().EntityName);
+            } 
 
             if (IsValid())
             {
-                _currentRequest.IsRelationshipPath = PathIsRelationship();
                 await _next(httpContext);
             }
+        }
+
+
+        private string GetBasePath(string entityName)
+        {
+            var r = _httpContext.Request;
+            if (_options.RelativeLinks)
+            {
+                return GetNamespaceFromPath(r.Path, entityName);
+            }
+            else
+            {
+                return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
+            }
+        }
+        internal static string GetNamespaceFromPath(string path, string entityName)
+        {
+            var entityNameSpan = entityName.AsSpan();
+            var pathSpan = path.AsSpan();
+            const char delimiter = '/';
+            for (var i = 0; i < pathSpan.Length; i++)
+            {
+                if (pathSpan[i].Equals(delimiter))
+                {
+                    var nextPosition = i + 1;
+                    if (pathSpan.Length > i + entityNameSpan.Length)
+                    {
+                        var possiblePathSegment = pathSpan.Slice(nextPosition, entityNameSpan.Length);
+                        if (entityNameSpan.SequenceEqual(possiblePathSegment))
+                        {
+                            // check to see if it's the last position in the string
+                            //   or if the next character is a /
+                            var lastCharacterPosition = nextPosition + entityNameSpan.Length;
+
+                            if (lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition].Equals(delimiter))
+                            {
+                                return pathSpan.Slice(0, i).ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return string.Empty;
         }
 
         protected bool PathIsRelationship()
@@ -43,7 +101,8 @@ namespace JsonApiDotNetCore.Middleware
             var actionName = (string)_httpContext.GetRouteData().Values["action"];
             return actionName.ToLower().Contains("relationships");
         }
-            private bool IsValid()
+
+        private bool IsValid()
         {
             return IsValidContentTypeHeader(_httpContext) && IsValidAcceptHeader(_httpContext);
         }
@@ -98,6 +157,23 @@ namespace JsonApiDotNetCore.Middleware
         {
             context.Response.StatusCode = statusCode;
             context.Response.Body.Flush();
+        }
+
+        /// <summary>
+        /// Gets the current entity that we need for serialization and deserialization.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="resourceGraph"></param>
+        /// <returns></returns>
+        private ContextEntity GetCurrentEntity()
+        {
+            var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
+            var rd = _httpContext.GetRouteData().Values;
+            var requestResource = _resourceGraph.GetEntityFromControllerName(controllerName);
+
+            if (rd.TryGetValue("relationshipName", out object relationshipName))
+                _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+            return requestResource;
         }
     }
 }
