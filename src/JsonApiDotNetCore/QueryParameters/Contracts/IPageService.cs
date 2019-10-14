@@ -3,7 +3,7 @@ namespace JsonApiDotNetCore.Query
     /// <summary>
     /// The former page manager. Needs some work.
     /// </summary>
-    public interface IPageQueryService
+    public interface IPageService : IParsableQueryParameter
     {
         /// <summary>
         /// What the total records are for this output
