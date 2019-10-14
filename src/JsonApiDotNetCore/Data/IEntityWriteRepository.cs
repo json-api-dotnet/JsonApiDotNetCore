@@ -17,9 +17,6 @@ namespace JsonApiDotNetCore.Data
 
         Task<TEntity> UpdateAsync(TEntity entity);
 
-        [Obsolete("Use overload UpdateAsync(TEntity updatedEntity): providing parameter ID does no longer add anything relevant")]
-        Task<TEntity> UpdateAsync(TId id, TEntity entity);
-
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
 
         Task<bool> DeleteAsync(TId id);

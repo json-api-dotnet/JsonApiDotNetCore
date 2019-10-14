@@ -30,46 +30,57 @@ namespace JsonApiDotNetCore.Extensions
             }
         }
 
-        public static IQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity primaryResource, IContextEntityProvider provider, List<SortQuery> sortQueries)
+        public static IQueryable<T> PageForward<T>(this IQueryable<T> source, int pageSize, int pageNumber)
         {
-            if (sortQueries == null || sortQueries.Count == 0)
+            if (pageSize > 0)
+            {
+                if (pageNumber == 0)
+                    pageNumber = 1;
+
+                if (pageNumber > 0)
+                    return source
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize);
+            }
+
+            return source;
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        {
+            foreach (T item in enumeration)
+            {
+                action(item);
+            }
+        }
+
+        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, FilterQueryContext filterQuery)
+        {
+            if (filterQuery == null)
                 return source;
 
-            var orderedEntities = source.Sort(primaryResource, provider, sortQueries[0]);
+            if (filterQuery.Operation == FilterOperation.@in || filterQuery.Operation == FilterOperation.nin)
+                return CallGenericWhereContainsMethod(source, filterQuery);
 
-            if (sortQueries.Count <= 1)
-                return orderedEntities;
-
-            for (var i = 1; i < sortQueries.Count; i++)
-                orderedEntities = orderedEntities.Sort(primaryResource, provider, sortQueries[i]);
-
-            return orderedEntities;
+            return CallGenericWhereMethod(source, filterQuery);
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, ContextEntity primaryResource, IContextEntityProvider provider, SortQuery sortQuery)
-        {
-            BaseAttrQuery attr;
-            if (sortQuery.IsAttributeOfRelationship)
-                attr = new RelatedAttrSortQuery(primaryResource, provider, sortQuery);
-            else
-                attr = new AttrSortQuery(primaryResource, provider, sortQuery);
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<AttrAttribute> columns)
+            => CallGenericSelectMethod(source, columns.Select(attr => attr.InternalAttributeName).ToList());
 
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)
+        {
             return sortQuery.Direction == SortDirection.Descending
-                ? source.OrderByDescending(attr.GetPropertyPath())
-                : source.OrderBy(attr.GetPropertyPath());
+                ? source.OrderByDescending(sortQuery.GetPropertyPath())
+                : source.OrderBy(sortQuery.GetPropertyPath());
         }
 
-        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, ContextEntity primaryResource, IContextEntityProvider provider, SortQuery sortQuery)
+        public static IOrderedQueryable<TSource> Sort<TSource>(this IOrderedQueryable<TSource> source, SortQueryContext sortQuery)
         {
-            BaseAttrQuery attr;
-            if (sortQuery.IsAttributeOfRelationship)
-                attr = new RelatedAttrSortQuery(primaryResource, provider, sortQuery);
-            else
-                attr = new AttrSortQuery(primaryResource, provider, sortQuery);
 
             return sortQuery.Direction == SortDirection.Descending
-                ? source.ThenByDescending(attr.GetPropertyPath())
-                : source.ThenBy(attr.GetPropertyPath());
+                ? source.ThenByDescending(sortQuery.GetPropertyPath())
+                : source.ThenBy(sortQuery.GetPropertyPath());
         }
 
         public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string propertyName)
@@ -113,50 +124,39 @@ namespace JsonApiDotNetCore.Extensions
             return (IOrderedQueryable<TSource>)result;
         }
 
-        public static IQueryable<TSource> Filter<TSource>(this IQueryable<TSource> source, FilterQuery filterQuery)
-        {
-            if (filterQuery == null)
-                return source;
-
-            if (filterQuery.FilterOperation == FilterOperations.@in || filterQuery.FilterOperation == FilterOperations.nin)
-                return CallGenericWhereContainsMethod(source, filterQuery);
-            else
-                return CallGenericWhereMethod(source, filterQuery);
-        }
-
-        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperations operation)
+        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperation  operation)
         {
             Expression body;
             switch (operation)
             {
-                case FilterOperations.eq:
+                case FilterOperation.eq:
                     // {model.Id == 1}
                     body = Expression.Equal(left, right);
                     break;
-                case FilterOperations.lt:
+                case FilterOperation.lt:
                     // {model.Id < 1}
                     body = Expression.LessThan(left, right);
                     break;
-                case FilterOperations.gt:
+                case FilterOperation.gt:
                     // {model.Id > 1}
                     body = Expression.GreaterThan(left, right);
                     break;
-                case FilterOperations.le:
+                case FilterOperation.le:
                     // {model.Id <= 1}
                     body = Expression.LessThanOrEqual(left, right);
                     break;
-                case FilterOperations.ge:
+                case FilterOperation.ge:
                     // {model.Id >= 1}
                     body = Expression.GreaterThanOrEqual(left, right);
                     break;
-                case FilterOperations.like:
+                case FilterOperation.like:
                     body = Expression.Call(left, "Contains", null, right);
                     break;
                 // {model.Id != 1}
-                case FilterOperations.ne:
+                case FilterOperation.ne:
                     body = Expression.NotEqual(left, right);
                     break;
-                case FilterOperations.isnotnull:
+                case FilterOperation.isnotnull:
                     // {model.Id != null}
                     if (left.Type.IsValueType &&
                         !(left.Type.IsGenericType && left.Type.GetGenericTypeDefinition() == typeof(Nullable<>)))
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCore.Extensions
                         body = Expression.NotEqual(left, right);
                     }
                     break;
-                case FilterOperations.isnull:
+                case FilterOperation.isnull:
                     // {model.Id == null}
                     if (left.Type.IsValueType &&
                         !(left.Type.IsGenericType && left.Type.GetGenericTypeDefinition() == typeof(Nullable<>)))
@@ -189,14 +189,14 @@ namespace JsonApiDotNetCore.Extensions
             return body;
         }
 
-        private static IQueryable<TSource> CallGenericWhereContainsMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
+        private static IQueryable<TSource> CallGenericWhereContainsMethod<TSource>(IQueryable<TSource> source, FilterQueryContext filter)
         {
             var concreteType = typeof(TSource);
             var property = concreteType.GetProperty(filter.Attribute.InternalAttributeName);
 
             try
             {
-                var propertyValues = filter.PropertyValue.Split(QueryConstants.COMMA);
+                var propertyValues = filter.Value.Split(QueryConstants.COMMA);
                 ParameterExpression entity = Expression.Parameter(concreteType, "entity");
                 MemberExpression member;
                 if (filter.IsAttributeOfRelationship)
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCore.Extensions
                 var method = ContainsMethod.MakeGenericMethod(member.Type);
                 var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
 
-                if (filter.FilterOperation == FilterOperations.@in)
+                if (filter.Operation == FilterOperation.@in)
                 {
                     // Where(i => arr.Contains(i.column))
                     var contains = Expression.Call(method, new Expression[] { Expression.Constant(obj), member });
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}");
+                throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
             }
         }
 
@@ -241,9 +241,9 @@ namespace JsonApiDotNetCore.Extensions
         /// <param name="source"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        private static IQueryable<TSource> CallGenericWhereMethod<TSource>(IQueryable<TSource> source, BaseFilterQuery filter)
+        private static IQueryable<TSource> CallGenericWhereMethod<TSource>(IQueryable<TSource> source, FilterQueryContext filter)
         {
-            var op = filter.FilterOperation;
+            var op = filter.Operation;
             var concreteType = typeof(TSource);
             PropertyInfo relationProperty = null;
             PropertyInfo property = null;
@@ -281,30 +281,27 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                if (op == FilterOperations.isnotnull || op == FilterOperations.isnull)
+                if (op == FilterOperation.isnotnull || op == FilterOperation.isnull)
                     right = Expression.Constant(null);
                 else
                 {
                     // convert the incoming value to the target value type
                     // "1" -> 1
-                    var convertedValue = TypeHelper.ConvertType(filter.PropertyValue, property.PropertyType);
+                    var convertedValue = TypeHelper.ConvertType(filter.Value, property.PropertyType);
                     // {1}
                     right = Expression.Constant(convertedValue, property.PropertyType);
                 }
 
-                var body = GetFilterExpressionLambda(left, right, filter.FilterOperation);
+                var body = GetFilterExpressionLambda(left, right, filter.Operation);
                 var lambda = Expression.Lambda<Func<TSource, bool>>(body, parameter);
 
                 return source.Where(lambda);
             }
             catch (FormatException)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}");
+                throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
             }
         }
-
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<string> columns)
-            => CallGenericSelectMethod(source, columns);
 
         private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
         {
@@ -410,30 +407,5 @@ namespace JsonApiDotNetCore.Extensions
                 source.Expression,
                 Expression.Quote(finalBody)));
         }
-
-        public static IQueryable<T> PageForward<T>(this IQueryable<T> source, int pageSize, int pageNumber)
-        {
-            if (pageSize > 0)
-            {
-                if (pageNumber == 0)
-                    pageNumber = 1;
-
-                if (pageNumber > 0)
-                    return source
-                        .Skip((pageNumber - 1) * pageSize)
-                        .Take(pageSize);
-            }
-
-            return source;
-        }
-
-        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
-        {
-            foreach (T item in enumeration)
-            {
-                action(item);
-            }
-        }
-
     }
 }

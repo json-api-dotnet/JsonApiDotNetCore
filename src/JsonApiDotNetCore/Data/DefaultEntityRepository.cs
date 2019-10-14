@@ -65,9 +65,9 @@ namespace JsonApiDotNetCore.Data
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get() => _dbSet;
-
+        
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields)
+        public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields)
         {
             if (fields?.Count > 0)
                 return entities.Select(fields);
@@ -76,50 +76,36 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery)
+        public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQueryContext filterQueryContext)
         {
-            if (_resourceDefinition != null)
-            {
+            if (filterQueryContext.IsCustom)
+            {   // todo: consider to move this business logic to service layer
+                var filterQuery = filterQueryContext.Query;
                 var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
-                if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Attribute, out var defaultQueryFilter) == true)
+                if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Target, out var defaultQueryFilter) == true)
                     return defaultQueryFilter(entities, filterQuery);
 
             }
-            return entities.Filter(new AttrFilterQuery(_currentRequest.GetRequestResource(), _resourceGraph, filterQuery));
+            return entities.Filter(filterQueryContext);
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries)
+        public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, SortQueryContext sortQueryContext)
         {
-            if (sortQueries != null && sortQueries.Count > 0)
-                return entities.Sort(_currentRequest.GetRequestResource(), _resourceGraph, sortQueries);
-
-            if (_resourceDefinition != null)
-            {
-                var defaultSortOrder = _resourceDefinition.DefaultSort();
-                if (defaultSortOrder != null && defaultSortOrder.Count > 0)
-                {
-                    foreach (var sortProp in defaultSortOrder)
-                    {
-                        // this is dumb...add an overload, don't allocate for no reason
-                        entities.Sort(_currentRequest.GetRequestResource(), _resourceGraph, new SortQuery(sortProp.Item2, sortProp.Item1.PublicAttributeName));
-                    }
-                }
-            }
-            return entities;
+            return entities.Sort(sortQueryContext);
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> GetAsync(TId id)
+        public virtual async Task<TEntity> GetAsync(TId id, List<AttrAttribute> fields = null)
         {
-            return await Select(Get(), _currentRequest.QuerySet?.Fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
+            return await Select(Get(), fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship)
+        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship, List<AttrAttribute> fields = null)
         {
             _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationship.PublicRelationshipName})");
-            var includedSet = Include(Select(Get(), _currentRequest.QuerySet?.Fields), relationship);
+            var includedSet = Include(Select(Get(), fields), relationship);
             var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
             return result;
         }
@@ -221,12 +207,6 @@ namespace JsonApiDotNetCore.Data
                     relationshipAttr.SetValue(entity, null);
                 }
             }
-        }
-
-        [Obsolete("Use overload UpdateAsync(TEntity updatedEntity): providing parameter ID does no longer add anything relevant")]
-        public virtual async Task<TEntity> UpdateAsync(TId id, TEntity updatedEntity)
-        {
-            return await UpdateAsync(updatedEntity);
         }
 
         /// <inheritdoc />

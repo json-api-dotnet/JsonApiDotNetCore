@@ -24,6 +24,7 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Controllers;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -127,9 +128,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             options.Filters.Add(typeof(JsonApiExceptionFilter));
             options.Filters.Add(typeof(TypeMatchFilter));
-            options.Filters.Add(typeof(JsonApiActionFilter));
             options.SerializeAsJsonApi(config);
-
         }
 
         public static void AddJsonApiInternals<TContext>(
@@ -184,7 +183,6 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
-
             services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
             services.AddSingleton<ILinksConfiguration>(jsonApiOptions);
             services.AddSingleton(graph);
@@ -197,12 +195,12 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
-            services.AddScoped<IQueryAccessor, QueryAccessor>();
             services.AddScoped<IQueryParser, QueryParser>();
-
             services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
+            services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
             services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
+            services.AddScoped<IQueryParameterActionFilter, QueryParameterActionFilter>();
 
             AddServerSerialization(services);
             AddQueryParameterServices(services);
@@ -215,9 +213,20 @@ namespace JsonApiDotNetCore.Extensions
         private static void AddQueryParameterServices(IServiceCollection services)
         {
             services.AddScoped<IIncludeService, IncludeService>();
+            services.AddScoped<IFilterService, FilterService>();
+            services.AddScoped<ISortService, SortService>();
             services.AddScoped<ISparseFieldsService, SparseFieldsService>();
-            services.AddScoped<IPageQueryService, PageService>();
+            services.AddScoped<IPageService, PageService>();
+            services.AddScoped<IOmitDefaultService, OmitDefaultService>();
+            services.AddScoped<IOmitNullService, OmitNullService>();
 
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IIncludeService>());
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IFilterService>());
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<ISortService>());
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<ISparseFieldsService>());
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IPageService>());
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IOmitDefaultService>());
+            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IOmitNullService>());
         }
 
 

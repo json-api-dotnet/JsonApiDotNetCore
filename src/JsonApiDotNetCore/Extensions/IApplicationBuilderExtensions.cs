@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Extensions
 
             app.UseEndpointRouting();
 
-            app.UseMiddleware<RequestMiddleware>();
+            app.UseMiddleware<CurrentRequestMiddleware>();
 
             if (useMvc)
             {
