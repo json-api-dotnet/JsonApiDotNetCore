@@ -190,6 +190,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.Assignee = null;
 
+            _context.RemoveRange(_context.TodoItems);
             _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
             _context.SaveChanges();
 
@@ -203,11 +204,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
+            var list = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             // Assert
-            Assert.NotEmpty(todoItems);
-            Assert.All(todoItems, t => Assert.NotNull(t.Assignee));
+            Assert.Equal(todoItem.Id, list.Single().Id);
         }
 
         [Fact]

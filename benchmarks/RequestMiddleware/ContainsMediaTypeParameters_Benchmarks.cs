@@ -14,7 +14,7 @@ namespace Benchmarks.RequestMiddleware
 
         [Benchmark]
         public void Current() 
-            => JsonApiDotNetCore.Middleware.RequestMiddleware.ContainsMediaTypeParameters(MEDIA_TYPE);
+            => JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.ContainsMediaTypeParameters(MEDIA_TYPE);
 
         private bool UsingSplitImpl(string mediaType)
         {

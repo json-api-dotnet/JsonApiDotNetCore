@@ -1,6 +1,8 @@
 ﻿using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
+using Moq;
 using UnitTests.TestModels;
 
 namespace UnitTests.QueryParameters
@@ -20,6 +22,16 @@ namespace UnitTests.QueryParameters
             builder.AddResource<Song>();
             _graph = builder.Build();
             _articleResourceContext = _graph.GetContextEntity<Article>();
+        }
+
+        public ICurrentRequest CurrentRequestMockFactory(ContextEntity requestResource = null)
+        {
+            var mock = new Mock<ICurrentRequest>();
+
+            if (requestResource != null)
+                mock.Setup(m => m.GetRequestResource()).Returns(requestResource);
+
+            return mock.Object;
         }
     }
 }

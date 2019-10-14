@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCoreExample.Controllers.Restricted
 {
+
     [Route("[controller]")]
     [HttpReadOnly]
     public class ReadOnlyController : ControllerBase

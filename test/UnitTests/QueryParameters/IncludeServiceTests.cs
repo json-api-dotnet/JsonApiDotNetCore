@@ -9,9 +9,10 @@ namespace UnitTests.QueryParameters
 {
     public class IncludeServiceTests : QueryParametersUnitTestCollection
     {
+
         public IncludeService GetService(ContextEntity resourceContext = null)
         {
-            return new IncludeService(resourceContext ?? _articleResourceContext , _graph);
+            return new IncludeService(_graph, CurrentRequestMockFactory(resourceContext ?? _articleResourceContext));
         }
 
         [Fact]

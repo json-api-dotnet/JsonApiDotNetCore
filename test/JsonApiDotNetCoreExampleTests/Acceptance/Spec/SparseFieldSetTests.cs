@@ -21,6 +21,7 @@ using System.Net;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -29,6 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     {
         private TestFixture<TestStartup> _fixture;
         private readonly AppDbContext _dbContext;
+        private IFieldsExplorer _explorer;
         private Faker<Person> _personFaker;
         private Faker<TodoItem> _todoItemFaker;
 
@@ -36,6 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
+            _explorer = fixture.GetService<IFieldsExplorer>();
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                 .RuleFor(p => p.LastName, f => f.Name.LastName())
@@ -69,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var query = _dbContext
                 .TodoItems
                 .Where(t => t.Id == todoItem.Id)
-                .Select(fields);
+                .Select(_explorer.GetAttributes<TodoItem>(e => new { e.Id, e.Description, e.CreatedDate, e.AchievedDate } ).ToList());
 
             var resultSql = StringExtensions.Normalize(query.ToSql());
             var result = await query.FirstAsync();

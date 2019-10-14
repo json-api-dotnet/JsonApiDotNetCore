@@ -21,14 +21,14 @@ namespace UnitTests.Services
         private readonly Mock<IEntityRepository<TodoItem>> _repositoryMock = new Mock<IEntityRepository<TodoItem>>();
         private readonly ILoggerFactory _loggerFactory = new Mock<ILoggerFactory>().Object;
         private readonly Mock<ICurrentRequest> _crMock;
-        private readonly Mock<IPageQueryService> _pgsMock;
+        private readonly Mock<IPageService> _pgsMock;
         private readonly Mock<ITargetedFields> _ufMock;
         private readonly IResourceGraph _resourceGraph;
 
         public EntityResourceService_Tests()
         {
             _crMock = new Mock<ICurrentRequest>();
-            _pgsMock = new Mock<IPageQueryService>();
+            _pgsMock = new Mock<IPageService>();
             _ufMock = new Mock<ITargetedFields>();
             _resourceGraph = new ResourceGraphBuilder()
                                 .AddResource<TodoItem>()
@@ -45,7 +45,7 @@ namespace UnitTests.Services
             const string relationshipName = "collection";
             var relationship = new HasOneAttribute(relationshipName);
 
-            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship))
+            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
                 .ReturnsAsync(new TodoItem());
 
             var service = GetService();
@@ -54,7 +54,7 @@ namespace UnitTests.Services
             await service.GetRelationshipAsync(id, relationshipName);
 
             // assert
-            _repositoryMock.Verify(m => m.GetAndIncludeAsync(id, relationship), Times.Once);
+            _repositoryMock.Verify(m => m.GetAndIncludeAsync(id, relationship, null), Times.Once);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace UnitTests.Services
                 Collection = new TodoItemCollection { Id = Guid.NewGuid() }
             };
 
-            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship))
+            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
                 .ReturnsAsync(todoItem);
 
             var repository = GetService();
@@ -86,7 +86,7 @@ namespace UnitTests.Services
 
         private EntityResourceService<TodoItem> GetService()
         {
-            return new EntityResourceService<TodoItem>(_repositoryMock.Object, new JsonApiOptions(), _ufMock.Object, _crMock.Object, null, null, _pgsMock.Object, _resourceGraph);
+            return new EntityResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), _crMock.Object, null, null, _pgsMock.Object, _resourceGraph);
         }
     }
 }
