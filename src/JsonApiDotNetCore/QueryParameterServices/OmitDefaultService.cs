@@ -4,6 +4,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
+    /// <inheritdoc/>
     public class OmitDefaultService : QueryParameterService, IOmitDefaultService
     {
         private readonly IJsonApiOptions _options;
@@ -14,8 +15,10 @@ namespace JsonApiDotNetCore.Query
             _options = options;
         }
 
+        /// <inheritdoc/>
         public bool Config { get; private set; }
 
+        /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             if (!_options.DefaultAttributeResponseBehavior.AllowClientOverride)

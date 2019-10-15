@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
+    /// <inheritdoc/>
     public class OmitNullService : QueryParameterService, IOmitNullService
     {
         private readonly IJsonApiOptions _options;
@@ -16,8 +15,10 @@ namespace JsonApiDotNetCore.Query
             _options = options;
         }
 
+        /// <inheritdoc/>
         public bool Config { get; private set; }
 
+        /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             if (!_options.NullAttributeResponseBehavior.AllowClientOverride)

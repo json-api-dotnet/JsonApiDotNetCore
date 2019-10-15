@@ -9,7 +9,6 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
-
     public class IncludeService : QueryParameterService, IIncludeService
     {
         /// todo: use read-only lists.

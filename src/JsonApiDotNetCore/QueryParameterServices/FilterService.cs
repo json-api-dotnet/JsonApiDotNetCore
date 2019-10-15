@@ -10,9 +10,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
+    /// <inheritdoc/>
     public class FilterService : QueryParameterService, IFilterService
     {
-
         private readonly List<FilterQueryContext> _filters;
         private IResourceDefinition _requestResourceDefinition;
 
@@ -22,11 +22,13 @@ namespace JsonApiDotNetCore.Query
             _filters = new List<FilterQueryContext>();
         }
 
+        /// <inheritdoc/>
         public List<FilterQueryContext> Get()
         {
             return _filters;
         }
 
+        /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             var queries = GetFilterQueries(queryParameter);

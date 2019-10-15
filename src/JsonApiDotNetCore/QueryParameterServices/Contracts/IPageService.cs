@@ -1,7 +1,7 @@
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// The former page manager. Needs some work.
+    /// Query parameter service responsible for url queries of the form ?page[size]=X&page[number]=Y
     /// </summary>
     public interface IPageService : IQueryParameterService
     {
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Query
         int TotalPages { get; }
 
         /// <summary>
-        /// Pagination is enabled
+        /// Checks if pagination is enabled
         /// </summary>
         bool ShouldPaginate();
     }

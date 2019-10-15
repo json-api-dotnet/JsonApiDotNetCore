@@ -64,7 +64,6 @@ namespace JsonApiDotNetCore.Query
             return attribute;
         }
 
-
         /// <summary>
         /// Helper method for parsing query parameters into relationships attributes
         /// </summary>

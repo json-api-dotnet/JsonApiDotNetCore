@@ -7,6 +7,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
+    /// <inheritdoc/>
     public class PageService : QueryParameterService, IPageService
     {
         private IJsonApiOptions _options;
@@ -28,7 +29,8 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
-        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
+        /// <inheritdoc/>
+        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             // expected input = page[size]=10
             //                  page[number]=1
@@ -52,7 +54,6 @@ namespace JsonApiDotNetCore.Query
                     throw new JsonApiException(400, $"Invalid page number '{queryParameter.Value}'");
             }
         }
-
 
         /// <inheritdoc/>
         public bool ShouldPaginate()

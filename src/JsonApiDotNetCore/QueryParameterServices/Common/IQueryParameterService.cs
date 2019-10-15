@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Parses the value of the query parameter. Invoked in the middleware.
         /// </summary>
-        /// <param name="queryParameter">the value of the query parameter as parsed from the url</param>
+        /// <param name="queryParameter">the value of the query parameter as retrieved from the url</param>
         void Parse(KeyValuePair<string, StringValues> queryParameter);
         /// <summary>
         /// The name of the query parameter as matched in the URL query string.

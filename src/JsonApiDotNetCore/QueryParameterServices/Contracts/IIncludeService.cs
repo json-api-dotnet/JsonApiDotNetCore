@@ -4,12 +4,12 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// Query service to access the inclusion chains.
+    /// Query parameter service responsible for url queries of the form ?include=X.Y.Z,U.V.W
     /// </summary>
     public interface IIncludeService : IQueryParameterService
     {
         /// <summary>
-        /// Gets the list of included relationships chains for the current request.
+        /// Gets the parsed relationship inclusion chains.
         /// </summary>
         List<List<RelationshipAttribute>> Get();
     }

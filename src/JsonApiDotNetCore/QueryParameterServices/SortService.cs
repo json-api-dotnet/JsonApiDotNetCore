@@ -8,6 +8,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
+    /// <inheritdoc/>
     public class SortService : QueryParameterService, ISortService
     {
         const char DESCENDING_SORT_OPERATOR = '-';
