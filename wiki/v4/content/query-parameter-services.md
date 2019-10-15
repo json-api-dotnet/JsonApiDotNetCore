@@ -16,7 +16,7 @@ Below is a list of the query parameters that are supported. Each supported query
 | `IPageService`            | `?page[size]=10&page[number]=3`  | pagination of the resultset                           |
 | `ISortService`            | `?sort=-title`                   | sorting the resultset                                 |
 | `ISparseFieldsService`    | `?fields[article]=title,summary` | sparse field selection                                |
-| `IOmitDefaultService`     | `?omitDefault=true`              | omitting default values from the serialization result |
+| `IOmitDefaultService`     | `?omitDefault=true`              | omitting default values from the serialization result, eg `guid-value": "00000000-0000-0000-0000-000000000000"` |
 | `IOmitNullService`        | `?omitNull=false`                | omitting null values from the serialization result    |
 
 
@@ -43,7 +43,7 @@ public interface IQueryParameterService
 }
 ``` 
 
-The piece of internals that is responsible for calling the `Parse` method is the `IQueryParameterParser` service (formally known as `QueryParser`). This service injects every registered implementation of `IQueryParameterService` and calls the parse method with the appropiate part of the url querystring.
+The piece of internals that is responsible for calling the `Parse` method is the `IQueryParameterDiscovery` service (formally known as `QueryParser`). This service injects every registered implementation of `IQueryParameterService` and calls the parse method with the appropiate part of the url querystring.
 
 
 ## 2. Customizing behaviour
