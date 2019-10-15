@@ -80,7 +80,7 @@ public interface ITeapotService
 
 // TeapotService.cs
 public class TeapotService : IQueryParameterService, ITeapotService
-{							// ^^^ must inherit this interface
+{	// ^^^ must inherit the IQueryParameterService interface
 	pubic bool ShouldThrowTeapot { get; }
 
 	public string Name => "teapot";
