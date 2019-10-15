@@ -1,13 +1,15 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
-    public abstract class QueryParameterService : IParsableQueryParameter
+    public abstract class QueryParameterService
     {
         protected readonly IContextEntityProvider _contextEntityProvider;
         protected readonly ContextEntity _requestResource;
@@ -30,7 +32,8 @@ namespace JsonApiDotNetCore.Query
         public virtual string Name { get { return GetParameterNameFromType(); } }
 
         /// <inheritdoc/>
-        public abstract void Parse(string key, string value);
+        public abstract void Parse(KeyValuePair<string, StringValues> queryParameter);
+
 
         /// <summary>
         /// Gets the query parameter name from the implementing class name. Trims "Service"

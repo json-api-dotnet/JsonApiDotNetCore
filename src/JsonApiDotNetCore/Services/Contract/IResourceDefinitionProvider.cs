@@ -4,8 +4,9 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// Service to retrieve resource definitions. Goal is to encapsulate
-    /// the service provider that needs to be injected for this purpose.
+    /// Retrieves a <see cref="ResourceDefinition{TResource}"/> from the DI container.
+    /// Abstracts away the creation of the corresponding generic type and usage
+    /// of the service provider to do so.
     /// </summary>
     public interface IResourceDefinitionProvider
     {

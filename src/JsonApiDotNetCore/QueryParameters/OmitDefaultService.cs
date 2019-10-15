@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -14,12 +16,12 @@ namespace JsonApiDotNetCore.Query
 
         public bool Config { get; private set; }
 
-        public override void Parse(string key, string value)
+        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             if (!_options.DefaultAttributeResponseBehavior.AllowClientOverride)
                 return;
 
-            if (!bool.TryParse(value, out var config))
+            if (!bool.TryParse(queryParameter.Value, out var config))
                 return;
 
             Config = config;

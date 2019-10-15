@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Services
                     if (pair.Key.ToLower().StartsWith(service.Name, StringComparison.Ordinal))
                     {
                         if (disabledQuery == null || !IsDisabled(disabledQuery, service))
-                            service.Parse(pair.Key, pair.Value);
+                            service.Parse(pair);
                         parsed = true;
                         break;
                     }

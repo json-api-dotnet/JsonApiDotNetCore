@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -26,28 +28,28 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
-        public override void Parse(string key, string value)
+        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             // expected input = page[size]=10
             //                  page[number]=1
-            var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             const string SIZE = "size";
             const string NUMBER = "number";
 
             if (propertyName == SIZE)
             {
-                if (int.TryParse(value, out var size))
+                if (int.TryParse(queryParameter.Value, out var size))
                     PageSize = size;
                 else 
-                    throw new JsonApiException(400, $"Invalid page size '{value}'");
+                    throw new JsonApiException(400, $"Invalid page size '{queryParameter.Value}'");
             }
             else if (propertyName == NUMBER)
             {
-                if (int.TryParse(value, out var size))
+                if (int.TryParse(queryParameter.Value, out var size))
                     CurrentPage = size;
                 else
-                    throw new JsonApiException(400, $"Invalid page number '{value}'");
+                    throw new JsonApiException(400, $"Invalid page number '{queryParameter.Value}'");
             }
         }
 

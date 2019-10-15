@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -40,17 +41,17 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public override void Parse(string key, string value)
+        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             // expected: fields[TYPE]=prop1,prop2
-            var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var typeName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var includedFields = new List<string> { nameof(Identifiable.Id) };
 
             var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(typeName));
             if (relationship == null && string.Equals(typeName, _requestResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 throw new JsonApiException(400, $"fields[{typeName}] is invalid");
 
-            var fields = value.Split(QueryConstants.COMMA);
+            var fields = ((string)queryParameter.Value).Split(QueryConstants.COMMA);
             foreach (var field in fields)
             {
                 if (relationship != default)

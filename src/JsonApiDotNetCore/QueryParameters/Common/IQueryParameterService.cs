@@ -1,4 +1,7 @@
-﻿namespace JsonApiDotNetCore.Query
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Primitives;
+
+namespace JsonApiDotNetCore.Query
 {
     /// <summary>
     /// Base interface that all query parameter services should inherit.
@@ -8,8 +11,8 @@
         /// <summary>
         /// Parses the value of the query parameter. Invoked in the middleware.
         /// </summary>
-        /// <param name="value">the value of the query parameter as parsed from the url</param>
-        void Parse(string key, string value);
+        /// <param name="queryParameter">the value of the query parameter as parsed from the url</param>
+        void Parse(KeyValuePair<string, StringValues> queryParameter);
         /// <summary>
         /// The name of the query parameter as matched in the URL.
         /// </summary>

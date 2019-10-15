@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -26,8 +27,9 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public override void Parse(string _, string value)
+        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
+            var value = (string)queryParameter.Value;
             if (string.IsNullOrWhiteSpace(value))
                 throw new JsonApiException(400, "Include parameter must not be empty if provided");
 

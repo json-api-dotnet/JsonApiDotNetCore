@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -30,12 +31,10 @@ namespace JsonApiDotNetCore.Query
             _isProcessed = true;
         }
 
-        public override void Parse(string key, string value)
+        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
-
             CheckIfProcessed();
-
-            var queries = BuildQueries(value);
+            var queries = BuildQueries(queryParameter.Value);
 
             _queries = queries.Select(BuildQueryContext).ToList();
 

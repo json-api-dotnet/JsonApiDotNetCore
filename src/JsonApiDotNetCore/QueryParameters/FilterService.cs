@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -26,9 +27,9 @@ namespace JsonApiDotNetCore.Query
             return _filters;
         }
 
-        public override void Parse(string key, string value)
+        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
-            var queries = GetFilterQueries(key, value);
+            var queries = GetFilterQueries(queryParameter);
             _filters.AddRange(queries.Select(GetQueryContexts));
         }
 
@@ -52,23 +53,23 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// todo: this could be simplified a bunch 
-        private List<FilterQuery> GetFilterQueries(string key, string value)
+        private List<FilterQuery> GetFilterQueries(KeyValuePair<string, StringValues> queryParameter)
         {
             // expected input = filter[id]=1
             // expected input = filter[id]=eq:1
-            var propertyName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var queries = new List<FilterQuery>();
             // InArray case
-            string op = GetFilterOperation(value);
+            string op = GetFilterOperation(queryParameter.Value);
             if (string.Equals(op, FilterOperation.@in.ToString(), StringComparison.OrdinalIgnoreCase)
                 || string.Equals(op, FilterOperation.nin.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                (var _, var filterValue) = ParseFilterOperation(value);
+                (var _, var filterValue) = ParseFilterOperation(queryParameter.Value);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
             }
             else
             {
-                var values = value.Split(QueryConstants.COMMA);
+                var values = ((string)queryParameter.Value).Split(QueryConstants.COMMA);
                 foreach (var val in values)
                 {
                     (var operation, var filterValue) = ParseFilterOperation(val);
@@ -105,7 +106,7 @@ namespace JsonApiDotNetCore.Query
 
             var operation = values[0];
             // remove prefix from value
-            if (Enum.TryParse(operation, out FilterOperation  op) == false)
+            if (Enum.TryParse(operation, out FilterOperation op) == false)
                 return string.Empty;
 
             return operation;

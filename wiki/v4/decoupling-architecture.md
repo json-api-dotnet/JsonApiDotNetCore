@@ -4,5 +4,5 @@ We upgraded to .NET Core 3.0. Furthermore, for V4 we have some explaining to do,
 
 - [Serialization](./content/serialization.md)
 - [Extendability](./content/extendability.md)
-- [Testing](./content/testing.md) sdf
+- [Testing](./content/testing.md) 
 - [Deprecation](./content/deprecation.md)
