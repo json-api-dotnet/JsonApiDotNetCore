@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -51,13 +50,8 @@ namespace JsonApiDotNetCore.Controllers
             _update = resourceService;
             _updateRelationships = resourceService;
             _delete = resourceService;
-            ParseQueryParams();
         }
 
-        private void ParseQueryParams()
-        {
-
-        }
 
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,

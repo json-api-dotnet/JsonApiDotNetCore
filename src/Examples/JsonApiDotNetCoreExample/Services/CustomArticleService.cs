@@ -16,12 +16,19 @@ namespace JsonApiDotNetCoreExample.Services
 {
     public class CustomArticleService : EntityResourceService<Article>
     {
-        public CustomArticleService(IEntityRepository<Article, int> repository, IJsonApiOptions options,
-                                    ITargetedFields updatedFields, ICurrentRequest currentRequest,
-                                    IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                    IPageQueryService pageManager, IResourceGraph resourceGraph,
-                                    IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
+        public CustomArticleService(ISortService sortService,
+                                    IFilterService filterService,
+                                    IEntityRepository<Article, int> repository,
+                                    IJsonApiOptions options,
+                                    ICurrentRequest currentRequest,
+                                    IIncludeService includeService,
+                                    ISparseFieldsService sparseFieldsService,
+                                    IPageService pageManager,
+                                    IResourceGraph resourceGraph,
+                                    IResourceHookExecutor hookExecutor = null,
+                                    ILoggerFactory loggerFactory = null)
+            : base(sortService, filterService, repository, options, currentRequest, includeService, sparseFieldsService,
+                   pageManager, resourceGraph, hookExecutor, loggerFactory)
         {
         }
 

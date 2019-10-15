@@ -119,11 +119,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var list = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data.First();
+            var list = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            //Assert.DoesNotContain(deserializedTodoItems, x => x.Ordinal == todoItem.Ordinal);
+            Assert.DoesNotContain(list, x => x.Ordinal == todoItem.Ordinal);
         }
 
         [Fact]

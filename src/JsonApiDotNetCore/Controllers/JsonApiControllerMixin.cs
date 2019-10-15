@@ -1,8 +1,10 @@
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    [ServiceFilter(typeof(IQueryParameterActionFilter))]
     public abstract class JsonApiControllerMixin : ControllerBase
     {
         protected IActionResult Forbidden()

@@ -66,7 +66,7 @@ namespace UnitTests.TestModels
         [Attr] public string AttributeMember { get; set; }
     }
 
-    internal class MultipleRelationshipsPrincipalPart : IdentifiableWithAttribute
+    public class MultipleRelationshipsPrincipalPart : IdentifiableWithAttribute
     {
         [HasOne] public OneToOneDependent PopulatedToOne { get; set; }
         [HasOne] public OneToOneDependent EmptyToOne { get; set; }
@@ -92,6 +92,8 @@ namespace UnitTests.TestModels
         [Attr] public string Title { get; set; }
         [HasOne] public Person Reviewer { get; set; }
         [HasOne] public Person Author { get; set; }
+
+        [HasOne(canInclude: false)] public Person CannotInclude { get; set; }
     }
 
     public class Person : Identifiable

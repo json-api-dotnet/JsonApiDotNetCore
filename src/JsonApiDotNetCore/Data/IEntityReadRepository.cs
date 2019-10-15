@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Apply fields to the provided queryable
         /// </summary>
-        IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields);
+        IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields);
 
         /// <summary>
         /// Include a relationship in the query
@@ -41,12 +41,12 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Apply a filter to the provided queryable
         /// </summary>
-        IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery);
+        IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQueryContext filterQuery);
 
         /// <summary>
         /// Apply a sort to the provided queryable
         /// </summary>
-        IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries);
+        IQueryable<TEntity> Sort(IQueryable<TEntity> entities, SortQueryContext sortQueries);
 
         /// <summary>
         /// Paginate the provided queryable
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Get the entity by id
         /// </summary>
-        Task<TEntity> GetAsync(TId id);
+        Task<TEntity> GetAsync(TId id, List<AttrAttribute> fields = null);
 
         /// <summary>
         /// Get the entity with the specified id and include the relationship.
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Data
         /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
         /// </code>
         /// </example>
-        Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship);
+        Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship, List<AttrAttribute> fields = null);
 
         /// <summary>
         /// Count the total number of records

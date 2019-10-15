@@ -15,7 +15,7 @@ namespace UnitTests
 {
     public class LinkBuilderTests
     {
-        private readonly IPageQueryService _pageManager;
+        private readonly IPageService _pageManager;
         private readonly Mock<IContextEntityProvider> _provider = new Mock<IContextEntityProvider>();
         private const string _host = "http://www.example.com";
         private const string _topSelf = "http://www.example.com/articles";
@@ -189,9 +189,9 @@ namespace UnitTests
             return config.Object;
         }
 
-        private IPageQueryService GetPageManager()
+        private IPageService GetPageManager()
         {
-            var mock = new Mock<IPageQueryService>();
+            var mock = new Mock<IPageService>();
             mock.Setup(m => m.ShouldPaginate()).Returns(true);
             mock.Setup(m => m.CurrentPage).Returns(2);
             mock.Setup(m => m.TotalPages).Returns(3);

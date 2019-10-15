@@ -9,29 +9,20 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// </summary>
     public class ResourceObjectBuilderSettingsProvider : IResourceObjectBuilderSettingsProvider
     {
-        private readonly IJsonApiOptions _options;
-        private readonly IAttributeBehaviourService _attributeBehaviour;
+        private readonly IOmitDefaultService _defaultAttributeValues;
+        private readonly IOmitNullService _nullAttributeValues;
 
-        public ResourceObjectBuilderSettingsProvider(IJsonApiOptions options, IAttributeBehaviourService attributeBehaviour)
+        public ResourceObjectBuilderSettingsProvider(IOmitDefaultService defaultAttributeValues,
+                                                     IOmitNullService nullAttributeValues)
         {
-            _options = options;
-            _attributeBehaviour = attributeBehaviour;
+            _defaultAttributeValues = defaultAttributeValues;
+            _nullAttributeValues = nullAttributeValues;
         }
 
         /// <inheritdoc/>
         public ResourceObjectBuilderSettings Get()
         {
-            bool omitNullConfig;
-            if (_attributeBehaviour.OmitNullValuedAttributes.HasValue)
-                omitNullConfig = _attributeBehaviour.OmitNullValuedAttributes.Value;
-            else omitNullConfig = _options.NullAttributeResponseBehavior.OmitNullValuedAttributes;
-
-            bool omitDefaultConfig;
-            if (_attributeBehaviour.OmitDefaultValuedAttributes.HasValue)
-                omitDefaultConfig = _attributeBehaviour.OmitDefaultValuedAttributes.Value;
-            else omitDefaultConfig = _options.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes;
-
-            return new ResourceObjectBuilderSettings(omitNullConfig, omitDefaultConfig);
+            return new ResourceObjectBuilderSettings(_nullAttributeValues.Config, _defaultAttributeValues.Config);
         }
     }
 }

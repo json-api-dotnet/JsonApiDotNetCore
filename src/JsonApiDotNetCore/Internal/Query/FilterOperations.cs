@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public enum FilterOperations
+    public enum FilterOperation
     {
         eq = 0,
         lt = 1,

@@ -24,11 +24,12 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        private readonly IPageQueryService _pageManager;
+        private readonly IPageService _pageManager;
         private readonly ICurrentRequest _currentRequest;
         private readonly IJsonApiOptions _options;
-        private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
+        private readonly IFilterService _filterService;
+        private readonly ISortService _sortService;
         private readonly IEntityRepository<TResource, TId> _repository;
         private readonly ILogger _logger;
         private readonly IResourceHookExecutor _hookExecutor;
@@ -37,13 +38,14 @@ namespace JsonApiDotNetCore.Services
         private readonly ContextEntity _currentRequestResource;
 
         public EntityResourceService(
+                ISortService sortService,
+                IFilterService filterService,
                 IEntityRepository<TResource, TId> repository,
                 IJsonApiOptions options,
-                ITargetedFields updatedFields,
                 ICurrentRequest currentRequest,
                 IIncludeService includeService,
                 ISparseFieldsService sparseFieldsService,
-                IPageQueryService pageManager,
+                IPageService pageManager,
                 IResourceGraph resourceGraph,
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
@@ -53,8 +55,9 @@ namespace JsonApiDotNetCore.Services
             _sparseFieldsService = sparseFieldsService;
             _pageManager = pageManager;
             _options = options;
-            _targetedFields = updatedFields;
             _resourceGraph = resourceGraph;
+            _sortService = sortService;
+            _filterService = filterService;
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TId>>();
@@ -103,7 +106,10 @@ namespace JsonApiDotNetCore.Services
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities);
 
-            entities = _repository.Select(entities, _currentRequest.QuerySet?.Fields);
+
+            var fields = _sparseFieldsService.Get();
+            if (fields.Any())
+                entities = _repository.Select(entities, fields);
 
             if (!IsNull(_hookExecutor, entities))
             {
@@ -223,16 +229,11 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities)
         {
-            var query = _currentRequest.QuerySet;
+            foreach (var query in _filterService.Get())
+                entities = _repository.Filter(entities, query);
 
-            if (_currentRequest.QuerySet == null)
-                return entities;
-
-            if (query.Filters.Count > 0)
-                foreach (var filter in query.Filters)
-                    entities = _repository.Filter(entities, filter);
-
-            entities = _repository.Sort(entities, query.SortParameters);
+            foreach (var query in _sortService.Get())
+                entities = _repository.Sort(entities, query);
 
             return entities;
         }
@@ -258,7 +259,7 @@ namespace JsonApiDotNetCore.Services
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var sparseFieldset = _sparseFieldsService.Get();
-            var query = _repository.Select(_repository.Get(), sparseFieldset.Select(a => a.InternalAttributeName).ToList()).Where(e => e.Id.Equals(id));
+            var query = _repository.Select(_repository.Get(), sparseFieldset).Where(e => e.Id.Equals(id));
 
             foreach (var chain in _includeService.Get())
                 query = _repository.Include(query, chain.ToArray());
@@ -278,7 +279,6 @@ namespace JsonApiDotNetCore.Services
         {
             return _includeService.Get().Count() > 0;
         }
-
 
         private bool IsNull(params object[] values)
         {
@@ -311,12 +311,12 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public EntityResourceService(IEntityRepository<TResource, int> repository, IJsonApiOptions options,
-                                     ITargetedFields updatedFields, ICurrentRequest currentRequest,
+        public EntityResourceService(ISortService sortService, IFilterService filterService, IEntityRepository<TResource, int> repository,
+                                     IJsonApiOptions options, ICurrentRequest currentRequest,
                                      IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                     IPageQueryService pageManager, IResourceGraph resourceGraph,
+                                     IPageService pageManager, IResourceGraph resourceGraph,
                                      IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(repository, options, updatedFields, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
+            : base(sortService, filterService, repository, options, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
         {
         }
     }

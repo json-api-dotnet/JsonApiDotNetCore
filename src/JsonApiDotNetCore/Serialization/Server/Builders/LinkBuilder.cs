@@ -5,21 +5,19 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
-
     public class LinkBuilder : ILinkBuilder
     {
         private readonly ICurrentRequest _currentRequest;
         private readonly ILinksConfiguration _options;
         private readonly IContextEntityProvider _provider;
-        private readonly IPageQueryService _pageManager;
+        private readonly IPageService _pageManager;
 
         public LinkBuilder(ILinksConfiguration options,
                            ICurrentRequest currentRequest,
-                           IPageQueryService pageManager,
+                           IPageService pageManager,
                            IContextEntityProvider provider)
         {
             _options = options;
@@ -67,7 +65,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 links.Prev = GetPageLink(primaryResource, _pageManager.CurrentPage - 1, _pageManager.PageSize);
             }
 
-
             if (_pageManager.CurrentPage < _pageManager.TotalPages)
                 links.Next = GetPageLink(primaryResource, _pageManager.CurrentPage + 1, _pageManager.PageSize);
 
@@ -83,9 +80,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private string GetPageLink(ContextEntity primaryResource, int pageOffset, int pageSize)
         {
-            var filterQueryComposer = new QueryComposer();
-            var filters = filterQueryComposer.Compose(_currentRequest);
-            return $"{GetBasePath()}/{primaryResource.EntityName}?page[size]={pageSize}&page[number]={pageOffset}{filters}";
+            return $"{GetBasePath()}/{primaryResource.EntityName}?page[size]={pageSize}&page[number]={pageOffset}";
         }
 
 

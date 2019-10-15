@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Services;
+using System.Collections;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -14,6 +15,8 @@ namespace JsonApiDotNetCore.Models
     {
         List<AttrAttribute> GetAllowedAttributes();
         List<RelationshipAttribute> GetAllowedRelationships();
+        bool HasCustomQueryFilter(string key);
+        List<(AttrAttribute, SortDirection)> DefaultSort();
     }
 
     /// <summary>
@@ -96,6 +99,11 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
+        public bool HasCustomQueryFilter(string key)
+        {
+            return GetQueryFilters()?.Keys.Contains(key) ?? false;
+        }
+
         /// <inheritdoc/>
         public virtual void AfterCreate(HashSet<TResource> entities, ResourcePipeline pipeline) { }
         /// <inheritdoc/>
@@ -153,21 +161,13 @@ namespace JsonApiDotNetCore.Models
             {
                 var order = new List<(AttrAttribute, SortDirection)>();
                 foreach (var sortProp in defaultSortOrder)
-                {
-                    // TODO: error handling, log or throw?
-                    if (sortProp.Item1.Body is MemberExpression memberExpression)
-                        order.Add(
-                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name),
-                            sortProp.Item2)
-                        );
-                }
+                    order.Add((_fieldExplorer.GetAttributes(sortProp.Item1).Single(), sortProp.Item2));
 
                 return order;
             }
 
             return null;
         }
-
 
         /// <summary>
         /// This is an alias type intended to simplify the implementation's

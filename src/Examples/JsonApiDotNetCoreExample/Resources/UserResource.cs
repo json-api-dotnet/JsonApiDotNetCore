@@ -24,13 +24,13 @@ namespace JsonApiDotNetCoreExample.Resources
 
         private IQueryable<User> FirstCharacterFilter(IQueryable<User> users, FilterQuery filterQuery)
         {
-          switch(filterQuery.Operation)
-          {
-            case "lt":
-              return users.Where(u => u.Username[0] < filterQuery.Value[0]);
-            default:
-              return users.Where(u => u.Username[0] == filterQuery.Value[0]);
-          }
+            switch (filterQuery.Operation)
+            {
+                case "lt":
+                    return users.Where(u => u.Username[0] < filterQuery.Value[0]);
+                default:
+                    return users.Where(u => u.Username[0] == filterQuery.Value[0]);
+            }
         }
     }
 }

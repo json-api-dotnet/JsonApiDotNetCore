@@ -11,12 +11,12 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
     public class MetaBuilder<T> : IMetaBuilder<T> where T : class, IIdentifiable
     {
         private Dictionary<string, object> _meta = new Dictionary<string, object>();
-        private readonly IPageQueryService _pageManager;
+        private readonly IPageService _pageManager;
         private readonly IJsonApiOptions _options;
         private readonly IRequestMeta _requestMeta;
         private readonly IHasMeta _resourceMeta;
 
-        public MetaBuilder(IPageQueryService pageManager,
+        public MetaBuilder(IPageService pageManager,
                            IJsonApiOptions options,
                            IRequestMeta requestMeta = null,
                            ResourceDefinition<T> resourceDefinition = null)

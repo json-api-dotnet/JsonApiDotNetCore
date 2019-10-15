@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             var httpMethod = new HttpMethod("GET");
             var queryString = allowClientOverride.HasValue
-                ? $"&omitNullValuedAttributes={clientOverride}"
+                ? $"&omitNull={clientOverride}"
                 : "";
             var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}";
             var request = new HttpRequestMessage(httpMethod, route);
