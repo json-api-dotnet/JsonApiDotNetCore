@@ -35,8 +35,6 @@ namespace JsonApiDotNetCore.Data
         /// </code>
         /// </example>
         IQueryable<TEntity> Include(IQueryable<TEntity> entities, params RelationshipAttribute[] inclusionChain);
-        [Obsolete]
-        IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName);
 
         /// <summary>
         /// Apply a filter to the provided queryable

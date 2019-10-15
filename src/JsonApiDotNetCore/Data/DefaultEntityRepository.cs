@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
@@ -12,6 +13,7 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
@@ -33,6 +35,7 @@ namespace JsonApiDotNetCore.Data
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
+        private readonly EntityType _efCoreEntityType;
 
         public DefaultEntityRepository(
             ICurrentRequest currentRequest,
@@ -61,8 +64,9 @@ namespace JsonApiDotNetCore.Data
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
             _resourceDefinition = resourceDefinition;
+            _efCoreEntityType =  _context.Model.GetEntityTypes(typeof(TEntity)).Single();
         }
-
+        
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get() => _dbSet;
         
@@ -212,19 +216,20 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
         {
-            var databaseEntity = await GetAsync(updatedEntity.Id);
+            var databaseEntity = await Get().SingleOrDefaultAsync(e => e.Id.Equals(updatedEntity.Id));
             if (databaseEntity == null)
                 return null;
 
-            foreach (var attr in _targetedFields.Attributes)
-                attr.SetValue(databaseEntity, attr.GetValue(updatedEntity));
+            var properties = GetUpdatedProperties(updatedEntity, databaseEntity);
+            foreach (var prop in properties)
+                prop.SetValue(databaseEntity, prop.GetValue(updatedEntity));
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 /// loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
                 /// trackedRelationshipValue is either equal to updatedPerson.todoItems 
-                /// or replaced with the same set of todoItems from the EF Core change tracker, 
+                /// or replaced with the same set of todoItems from the EF Core change tracker,
                 /// if they were already tracked
                 object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out bool wasAlreadyTracked);
                 /// loads into the db context any persons currentlresy related 
@@ -238,6 +243,24 @@ namespace JsonApiDotNetCore.Data
             return databaseEntity;
         }
 
+        /// <summary>
+        /// Compares values of the incoming updated entity with the database values.
+        /// </summary>
+        private List<PropertyInfo> GetUpdatedProperties(TEntity updatedEntity, TEntity databaseEntity)
+        {
+            var attributes = _efCoreEntityType.GetProperties().Select(p => p.PropertyInfo).ToList();
+            var targetedAttributes = _targetedFields.Attributes.Select(a => a.PropertyInfo).ToList();
+
+            foreach (var attribute in attributes)
+            {
+                if (targetedAttributes.Contains(attribute))
+                    continue;
+                if (attribute.GetValue(updatedEntity) != attribute.GetValue(databaseEntity))
+                    targetedAttributes.Add(attribute);
+            }
+
+            return targetedAttributes;
+        }
 
         /// <summary>
         /// Responsible for getting the relationship value for a given relationship 
@@ -302,7 +325,6 @@ namespace JsonApiDotNetCore.Data
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
-
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
@@ -323,33 +345,6 @@ namespace JsonApiDotNetCore.Data
                 internalRelationshipPath = (internalRelationshipPath == null)
                     ? relationship.RelationshipPath
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
-
-            return entities.Include(internalRelationshipPath);
-        }
-
-        /// <inheritdoc />
-        public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
-        {
-            if (string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(400, "Include parameter must not be empty if provided");
-
-            var relationshipChain = relationshipName.Split('.');
-
-            // variables mutated in recursive loop
-            // TODO: make recursive method
-            string internalRelationshipPath = null;
-            var entity = _currentRequest.GetRequestResource();
-            for (var i = 0; i < relationshipChain.Length; i++)
-            {
-                var requestedRelationship = relationshipChain[i];
-                var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
-
-                internalRelationshipPath = (internalRelationshipPath == null)
-                    ? relationship.RelationshipPath
-                    : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
-
-                if (i < relationshipChain.Length)
-                    entity = _resourceGraph.GetContextEntity(relationship.Type);
-            }
 
             return entities.Include(internalRelationshipPath);
         }
@@ -498,11 +493,24 @@ namespace JsonApiDotNetCore.Data
         IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
-        public DefaultEntityRepository(ICurrentRequest currentRequest, ITargetedFields updatedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IGenericProcessorFactory genericProcessorFactory, ResourceDefinition<TEntity> resourceDefinition = null) : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition)
+        public DefaultEntityRepository(ICurrentRequest currentRequest,
+                                       ITargetedFields updatedFields,
+                                       IDbContextResolver contextResolver,
+                                       IResourceGraph resourceGraph,
+                                       IGenericProcessorFactory genericProcessorFactory,
+                                       ResourceDefinition<TEntity> resourceDefinition = null)
+            : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition)
         {
         }
 
-        public DefaultEntityRepository(ICurrentRequest currentRequest, ITargetedFields updatedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IGenericProcessorFactory genericProcessorFactory, ResourceDefinition<TEntity> resourceDefinition = null, ILoggerFactory loggerFactory = null) : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, loggerFactory)
+        public DefaultEntityRepository(ICurrentRequest currentRequest,
+                                       ITargetedFields updatedFields,
+                                       IDbContextResolver contextResolver,
+                                       IResourceGraph resourceGraph,
+                                       IGenericProcessorFactory genericProcessorFactory,
+                                       ResourceDefinition<TEntity> resourceDefinition = null,
+                                       ILoggerFactory loggerFactory = null)
+            : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, loggerFactory)
         {
         }
     }
