@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Query
 
         public bool Config { get; private set; }
 
-        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             if (!_options.NullAttributeResponseBehavior.AllowClientOverride)
                 return;

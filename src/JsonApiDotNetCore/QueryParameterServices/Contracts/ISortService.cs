@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Internal.Query;
 
 namespace JsonApiDotNetCore.Query
 {
-    public interface ISortService : IParsableQueryParameter
+    public interface ISortService : IQueryParameterService
     {
         List<SortQueryContext> Get();
     }

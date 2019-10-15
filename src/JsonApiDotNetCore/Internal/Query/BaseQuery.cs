@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Internal.Query
     /// </summary>
     public abstract class BaseQuery
     {
-        public BaseQuery(string target)
+        protected BaseQuery(string target)
         {
             Target = target;
             var properties = target.Split(QueryConstants.DOT);

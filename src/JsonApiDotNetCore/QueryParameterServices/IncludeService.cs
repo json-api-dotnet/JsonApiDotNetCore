@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             var value = (string)queryParameter.Value;
             if (string.IsNullOrWhiteSpace(value))
@@ -40,7 +40,6 @@ namespace JsonApiDotNetCore.Query
 
         private void ParseChain(string chain)
         {
-
             var parsedChain = new List<RelationshipAttribute>();
             var chainParts = chain.Split(QueryConstants.DOT);
             var resourceContext = _requestResource;

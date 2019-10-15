@@ -2,6 +2,10 @@
 
 namespace JsonApiDotNetCore.Internal.Query
 {
+    /// <summary>
+    /// Wrapper class for filter queries. Provides the internals
+    /// with metadata it needs to perform the url filter queries on the targeted dataset.
+    /// </summary>
     public class FilterQueryContext : BaseQueryContext<FilterQuery>
     {
         public FilterQueryContext(FilterQuery query) : base(query) { }

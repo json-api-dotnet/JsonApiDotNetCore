@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Query
     /// <summary>
     /// Query service to access sparse field selection.
     /// </summary>
-    public interface ISparseFieldsService : IParsableQueryParameter
+    public interface ISparseFieldsService : IQueryParameterService
     {
         /// <summary>
         /// Gets the list of targeted fields. In a relationship is supplied,

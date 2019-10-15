@@ -8,17 +8,23 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
 {
-    public class QueryParser : IQueryParser
+    /// <inheritdoc/>
+    public class QueryParameterParser : IQueryParameterParser
     {
         private readonly IJsonApiOptions _options;
-        private readonly IEnumerable<IParsableQueryParameter> _queryServices;
+        private readonly IEnumerable<IQueryParameterService> _queryServices;
 
-        public QueryParser(IJsonApiOptions options, IEnumerable<IParsableQueryParameter> queryServices)
+        public QueryParameterParser(IJsonApiOptions options, IEnumerable<IQueryParameterService> queryServices)
         {
             _options = options;
             _queryServices = queryServices;
         }
 
+        /// <summary>
+        /// For a query parameter in <paramref name="query"/>, calls
+        /// the <see cref="IQueryParameterService.Parse(KeyValuePair{string, Microsoft.Extensions.Primitives.StringValues})"/>
+        /// method of the corresponding service.
+        /// </summary>
         public virtual void Parse(IQueryCollection query, DisableQueryAttribute disabled)
         {
             var disabledQuery = disabled?.QueryParams;
@@ -44,7 +50,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private bool IsDisabled(string disabledQuery, IParsableQueryParameter targetsService)
+        private bool IsDisabled(string disabledQuery, IQueryParameterService targetsService)
         {
             if (disabledQuery == QueryParams.All.ToString("G").ToLower())
                 return true;

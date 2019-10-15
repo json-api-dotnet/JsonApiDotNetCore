@@ -3,12 +3,12 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
-    /// A context class that provides extra meta data for a <see cref="TQuery"/>.
-    /// Used internally.
+    /// A context class that provides extra meta data for a <see cref="TQuery"/>
+    /// that is used when applying url queries internally.
     /// </summary>
     public abstract class BaseQueryContext<TQuery> where TQuery : BaseQuery
     {
-        public BaseQueryContext(TQuery query)
+        protected BaseQueryContext(TQuery query)
         {
             Query = query;
         }
@@ -24,8 +24,8 @@ namespace JsonApiDotNetCore.Internal.Query
         {
             if (IsAttributeOfRelationship)
                 return string.Format("{0}.{1}", Relationship.InternalRelationshipName, Attribute.InternalAttributeName);
-            else
-                return Attribute.InternalAttributeName;
+
+            return Attribute.InternalAttributeName;
         }
     }
 }

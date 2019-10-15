@@ -9,6 +9,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
+    /// <summary>
+    /// Base clas for query parameters.
+    /// </summary>
     public abstract class QueryParameterService
     {
         protected readonly IContextEntityProvider _contextEntityProvider;
@@ -21,8 +24,9 @@ namespace JsonApiDotNetCore.Query
         }
 
         protected QueryParameterService() { }
+
         /// <summary>
-        /// By default, the name is derived from the implementing type.
+        /// Derives the name of the query parameter from the name of the implementing type.
         /// </summary>
         /// <example>
         /// The following query param service will match the query  displayed in URL
@@ -31,16 +35,15 @@ namespace JsonApiDotNetCore.Query
         /// </example>
         public virtual string Name { get { return GetParameterNameFromType(); } }
 
-        /// <inheritdoc/>
-        public abstract void Parse(KeyValuePair<string, StringValues> queryParameter);
-
-
         /// <summary>
         /// Gets the query parameter name from the implementing class name. Trims "Service"
         /// from the name if present.
         /// </summary>
         private string GetParameterNameFromType() => new Regex("Service$").Replace(GetType().Name, string.Empty).ToLower();
 
+        /// <summary>
+        /// Helper method for parsing query parameters into attributes
+        /// </summary>
         protected AttrAttribute GetAttribute(string target, RelationshipAttribute relationship = null)
         {
             AttrAttribute attribute;
@@ -58,17 +61,19 @@ namespace JsonApiDotNetCore.Query
             if (attribute == null)
                 throw new JsonApiException(400, $"'{target}' is not a valid attribute.");
 
-
             return attribute;
         }
 
+
+        /// <summary>
+        /// Helper method for parsing query parameters into relationships attributes
+        /// </summary>
         protected RelationshipAttribute GetRelationship(string propertyName)
         {
             if (propertyName == null) return null;
             var relationship = _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
             if (relationship == null)
                 throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.EntityName}.");
-
 
             return relationship;
         }

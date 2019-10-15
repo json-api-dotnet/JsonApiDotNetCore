@@ -4,7 +4,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -16,30 +15,25 @@ namespace JsonApiDotNetCore.Query
         private List<SortQueryContext> _queries;
         private bool _isProcessed;
 
-
-        public SortService(IResourceDefinitionProvider resourceDefinitionProvider, IContextEntityProvider contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
+        public SortService(IResourceDefinitionProvider resourceDefinitionProvider,
+                           IContextEntityProvider contextEntityProvider,
+                           ICurrentRequest currentRequest)
+            : base(contextEntityProvider, currentRequest)
         {
             _resourceDefinitionProvider = resourceDefinitionProvider;
             _queries = new List<SortQueryContext>();
         }
 
-        private void CheckIfProcessed()
+        /// <inheritdoc/>
+        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
-            if (_isProcessed)
-                throw new JsonApiException(400, "The sort query parameter occured in the URI more than once.");
-
-            _isProcessed = true;
-        }
-
-        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
-        {
-            CheckIfProcessed();
+            CheckIfProcessed(); // disallow multiple sort parameters.
             var queries = BuildQueries(queryParameter.Value);
 
             _queries = queries.Select(BuildQueryContext).ToList();
-
         }
 
+        /// <inheritdoc/>
         public List<SortQueryContext> Get()
         {
             if (_queries == null)
@@ -59,7 +53,6 @@ namespace JsonApiDotNetCore.Query
             if (sortSegments.Any(s => s == string.Empty))
                 throw new JsonApiException(400, "The sort URI segment contained a null value.");
 
-
             foreach (var sortSegment in sortSegments)
             {
                 var propertyName = sortSegment;
@@ -72,7 +65,7 @@ namespace JsonApiDotNetCore.Query
                 }
 
                 sortParameters.Add(new SortQuery(propertyName, direction));
-            };
+            }
 
             return sortParameters;
         }
@@ -91,5 +84,14 @@ namespace JsonApiDotNetCore.Query
                 Relationship = relationship
             };
         }
+
+        private void CheckIfProcessed()
+        {
+            if (_isProcessed)
+                throw new JsonApiException(400, "The sort query parameter occured in the URI more than once.");
+
+            _isProcessed = true;
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace JsonApiDotNetCore.Query
 {
-    public interface IOmitDefaultService : IParsableQueryParameter
+    public interface IOmitDefaultService : IQueryParameterService
     {
         bool Config { get; }
     }

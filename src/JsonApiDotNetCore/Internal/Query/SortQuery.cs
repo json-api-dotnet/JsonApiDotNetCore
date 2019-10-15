@@ -1,7 +1,7 @@
 ﻿namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
-    /// Internal representation of the articles?sort[field] query from the URL.
+    /// Internal representation of the raw articles?sort[field] query from the URL.
     /// </summary>
     public class SortQuery : BaseQuery
     {
@@ -16,6 +16,4 @@
         /// </summary>
         public SortDirection Direction { get; set; }
     }
-
-
 }

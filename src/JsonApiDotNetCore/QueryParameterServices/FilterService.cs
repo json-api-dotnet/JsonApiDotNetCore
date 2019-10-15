@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Query
             return _filters;
         }
 
-        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             var queries = GetFilterQueries(queryParameter);
             _filters.AddRange(queries.Select(GetQueryContexts));

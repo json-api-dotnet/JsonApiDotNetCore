@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public override void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             // expected: fields[TYPE]=prop1,prop2
             var typeName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];

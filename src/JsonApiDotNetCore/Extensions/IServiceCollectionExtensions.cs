@@ -195,7 +195,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
             services.AddScoped(typeof(GenericProcessor<>));
-            services.AddScoped<IQueryParser, QueryParser>();
+            services.AddScoped<IQueryParameterParser, QueryParameterParser>();
             services.AddScoped<ITargetedFields, TargetedFields>();
             services.AddScoped<IFieldsExplorer, FieldsExplorer>();
             services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
@@ -220,13 +220,13 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IOmitDefaultService, OmitDefaultService>();
             services.AddScoped<IOmitNullService, OmitNullService>();
 
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IIncludeService>());
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IFilterService>());
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<ISortService>());
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<ISparseFieldsService>());
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IPageService>());
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IOmitDefaultService>());
-            services.AddScoped<IParsableQueryParameter>(sp => sp.GetService<IOmitNullService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<IIncludeService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<IFilterService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<ISortService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<ISparseFieldsService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<IPageService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<IOmitDefaultService>());
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<IOmitNullService>());
         }
 
 
