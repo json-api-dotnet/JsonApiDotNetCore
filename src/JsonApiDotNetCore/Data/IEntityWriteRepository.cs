@@ -17,6 +17,9 @@ namespace JsonApiDotNetCore.Data
 
         Task<TEntity> UpdateAsync(TEntity entity);
 
+        [Obsolete("Use method UpdateAsync(TEntity) instead. See @MIGRATION_LINK for details.")]
+        Task<TEntity> UpdateAsync(TId id, TEntity entity);
+
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
 
         Task<bool> DeleteAsync(TId id);

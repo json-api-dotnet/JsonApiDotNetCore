@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Internal.Query
     public class FilterQueryContext : BaseQueryContext<FilterQuery>
     {
         public FilterQueryContext(FilterQuery query) : base(query) { }
-
+        public object CustomQuery { get; set; }
         public string Value => Query.Value;
         public FilterOperation Operation
         {

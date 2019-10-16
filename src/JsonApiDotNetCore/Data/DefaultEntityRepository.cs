@@ -18,9 +18,7 @@ namespace JsonApiDotNetCore.Data
     /// Provides a default repository implementation and is responsible for
     /// abstracting any EF Core APIs away from the service layer.
     /// </summary>
-    public class DefaultEntityRepository<TEntity, TId>
-        : IEntityRepository<TEntity, TId>,
-        IEntityFrameworkRepository<TEntity>
+    public class DefaultEntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly ITargetedFields _targetedFields;
@@ -28,15 +26,13 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TEntity> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
-        private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
         public DefaultEntityRepository(
             ITargetedFields updatedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericProcessorFactory genericProcessorFactory,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-            : this(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, null)
+            IGenericProcessorFactory genericProcessorFactory)
+            : this(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
         { }
 
         public DefaultEntityRepository(
@@ -44,7 +40,6 @@ namespace JsonApiDotNetCore.Data
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
-            ResourceDefinition<TEntity> resourceDefinition = null,
             ILoggerFactory loggerFactory = null)
         {
             _targetedFields = updatedFields;
@@ -52,7 +47,6 @@ namespace JsonApiDotNetCore.Data
             _genericProcessorFactory = genericProcessorFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
-            _resourceDefinition = resourceDefinition;
         }
 
         /// <inheritdoc />
@@ -73,12 +67,9 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQueryContext filterQueryContext)
         {
             if (filterQueryContext.IsCustom)
-            {   // todo: consider to move this business logic to service layer
-                var filterQuery = filterQueryContext.Query;
-                var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
-                if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Target, out var defaultQueryFilter) == true)
-                    return defaultQueryFilter(entities, filterQuery);
-
+            {
+                var query = (Func<IQueryable<TEntity>, FilterQuery, IQueryable<TEntity>>)filterQueryContext.CustomQuery;
+                return query(entities, filterQueryContext.Query);
             }
             return entities.Filter(filterQueryContext);
         }
@@ -164,10 +155,6 @@ namespace JsonApiDotNetCore.Data
             // In this case we use relfection to figure out what kind of relationship is pointing back.
             return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
         }
-
-        /// <inheritdoc />
-        [Obsolete("This has been removed, see @TODO_MIGRATION_GUIDE_LINK", true)]
-        public void DetachRelationshipPointers(TEntity entity) { }
 
         private void DetachRelationships(TEntity entity)
         {
@@ -446,20 +433,34 @@ namespace JsonApiDotNetCore.Data
             _context.Entry(relationshipValue).State = EntityState.Unchanged;
             return null;
         }
+
+        [Obsolete("Use method Select(IQueryable<TEntity>, List<AttrAttribute>) instead. See @MIGRATION_LINK for details.", true)]
+        public IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields) => throw new NotImplementedException();
+        [Obsolete("Use method Include(IQueryable<TEntity>, params RelationshipAttribute[]) instead. See @MIGRATION_LINK for details.", true)]
+        public IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName) => throw new NotImplementedException();
+        [Obsolete("Use method Filter(IQueryable<TEntity>, FilterQueryContext) instead. See @MIGRATION_LINK for details.", true)]
+        public IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery) => throw new NotImplementedException();
+        [Obsolete("Use method Sort(IQueryable<TEntity>, SortQueryContext) instead. See @MIGRATION_LINK for details.", true)]
+        public IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries) => throw new NotImplementedException();
+        [Obsolete("Use method Get(TId id) and FirstOrDefaultAsync(IQueryable<TEntity>) separatedly instead. See @MIGRATION_LINK for details.", true)]
+        public Task<TEntity> GetAsync(TId id) => throw new NotImplementedException();
+        [Obsolete("Use methods Get(TId id) and Include(IQueryable<TEntity>, params RelationshipAttribute[]) separatedly instead. See @MIGRATION_LINK for details.", true)]
+        public Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName) => throw new NotImplementedException();
+        [Obsolete("Use method UpdateAsync(TEntity) instead. See @MIGRATION_LINK for details.")]
+        public Task<TEntity> UpdateAsync(TId id, TEntity entity) => throw new NotImplementedException();
+        [Obsolete("This has been removed, see @TODO_MIGRATION_LINK for details", true)]
+        public void DetachRelationshipPointers(TEntity entity) { }
     }
 
     /// <inheritdoc />
-    public class DefaultEntityRepository<TEntity>
-        : DefaultEntityRepository<TEntity, int>,
-        IEntityRepository<TEntity>
+    public class DefaultEntityRepository<TEntity> : DefaultEntityRepository<TEntity, int>, IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
         public DefaultEntityRepository(ITargetedFields updatedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
-                                       IGenericProcessorFactory genericProcessorFactory,
-                                       ResourceDefinition<TEntity> resourceDefinition = null)
-            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition)
+                                       IGenericProcessorFactory genericProcessorFactory)
+            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory)
         {
         }
 
@@ -467,9 +468,8 @@ namespace JsonApiDotNetCore.Data
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
                                        IGenericProcessorFactory genericProcessorFactory,
-                                       ResourceDefinition<TEntity> resourceDefinition = null,
                                        ILoggerFactory loggerFactory = null)
-            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, loggerFactory)
+            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, loggerFactory)
         {
         }
     }

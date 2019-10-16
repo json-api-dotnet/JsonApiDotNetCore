@@ -81,7 +81,6 @@ namespace UnitTests.Data
 
 
             return new DefaultEntityRepository<TodoItem>(
-                _currentRequestMock.Object,
                 _targetedFieldsMock.Object,
                 _contextResolverMock.Object,
                 graph, null, null);
