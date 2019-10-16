@@ -12,9 +12,9 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly ITargetedFields  _targetedFields;
 
         public RequestDeserializer(IResourceGraph resourceGraph,
-                                  ITargetedFields  updatedFields) : base(resourceGraph)
+                                  ITargetedFields  targetedFields) : base(resourceGraph)
         {
-            _targetedFields = updatedFields;
+            _targetedFields = targetedFields;
         }
 
         /// <inheritdoc/>

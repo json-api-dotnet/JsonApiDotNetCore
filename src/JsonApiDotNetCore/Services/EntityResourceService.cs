@@ -213,7 +213,6 @@ namespace JsonApiDotNetCore.Services
         [Obsolete("Use separate EntityResourceService.Filter and EntityResourceService.Sort methods", true)]
         protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities) => entities;
 
-
         /// <summary>
         /// Includes the relationships
         /// </summary>

@@ -45,14 +45,14 @@ namespace JsonApiDotNetCore.Query
         {
             // expected: fields[TYPE]=prop1,prop2
             var typeName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
-            var includedFields = new List<string> { nameof(Identifiable.Id) };
+            var fields = new List<string> { nameof(Identifiable.Id) };
 
             var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(typeName));
             if (relationship == null && string.Equals(typeName, _requestResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 throw new JsonApiException(400, $"fields[{typeName}] is invalid");
 
-            includedFields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
-            foreach (var field in includedFields)
+            fields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
+            foreach (var field in fields)
             {
                 if (relationship != default)
                 {

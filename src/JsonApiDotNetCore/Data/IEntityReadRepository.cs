@@ -27,6 +27,7 @@ namespace JsonApiDotNetCore.Data
         Task<TEntity> GetAsync(TId id);
         [Obsolete("Use methods Get(TId id) and Include(IQueryable<TEntity>, params RelationshipAttribute[]) separatedly instead. See @MIGRATION_LINK for details.", true)]
         Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName);
+
         /// <summary>
         /// The base GET query. This is a good place to apply rules that should affect all reads, 
         /// such as authorization of resources.

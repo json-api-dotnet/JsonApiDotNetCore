@@ -28,21 +28,21 @@ namespace JsonApiDotNetCore.Data
         private readonly IGenericProcessorFactory _genericProcessorFactory;
 
         public DefaultEntityRepository(
-            ITargetedFields updatedFields,
+            ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory)
-            : this(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
+            : this(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
         { }
 
         public DefaultEntityRepository(
-            ITargetedFields updatedFields,
+            ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
             ILoggerFactory loggerFactory = null)
         {
-            _targetedFields = updatedFields;
+            _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
             _context = contextResolver.GetContext();
@@ -456,20 +456,20 @@ namespace JsonApiDotNetCore.Data
     public class DefaultEntityRepository<TEntity> : DefaultEntityRepository<TEntity, int>, IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
-        public DefaultEntityRepository(ITargetedFields updatedFields,
+        public DefaultEntityRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
                                        IGenericProcessorFactory genericProcessorFactory)
-            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory)
+            : base(targetedFields, contextResolver, resourceGraph, genericProcessorFactory)
         {
         }
 
-        public DefaultEntityRepository(ITargetedFields updatedFields,
+        public DefaultEntityRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
                                        IGenericProcessorFactory genericProcessorFactory,
                                        ILoggerFactory loggerFactory = null)
-            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, loggerFactory)
         {
         }
     }

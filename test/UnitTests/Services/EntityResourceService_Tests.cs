@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
@@ -37,52 +39,61 @@ namespace UnitTests.Services
 
         }
 
-        //[Fact]
-        //public async Task GetRelationshipAsync_Passes_Public_ResourceName_To_Repository()
-        //{
-        //    // arrange
-        //    const int id = 1;
-        //    const string relationshipName = "collection";
-        //    var relationship = new HasOneAttribute(relationshipName);
+        [Fact]
+        public async Task GetRelationshipAsync_Passes_Public_ResourceName_To_Repository()
+        {
+            // arrange
+            const int id = 1;
+            const string relationshipName = "collection";
+            var relationship = new HasOneAttribute(relationshipName);
 
-        //    _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
-        //        .ReturnsAsync(new TodoItem());
+            var todoItem = new TodoItem();
+            var query = new List<TodoItem> { todoItem }.AsQueryable();
 
-        //    var service = GetService();
+            _repositoryMock.Setup(m => m.Get(id)).Returns(query);
+            _repositoryMock.Setup(m => m.Include(query, relationship)).Returns(query);
+            _repositoryMock.Setup(m => m.FirstOrDefaultAsync(query)).ReturnsAsync(todoItem);
 
-        //    // act
-        //    await service.GetRelationshipAsync(id, relationshipName);
+            var service = GetService();
 
-        //    // assert
-        //    _repositoryMock.Verify(m => m.GetAndIncludeAsync(id, relationship, null), Times.Once);
-        //}
+            // act
+            await service.GetRelationshipAsync(id, relationshipName);
 
-        //[Fact]
-        //public async Task GetRelationshipAsync_Returns_Relationship_Value()
-        //{
-        //    // arrange
-        //    const int id = 1;
-        //    const string relationshipName = "collection";
-        //    var relationship = new HasOneAttribute(relationshipName);
+            // assert
+            _repositoryMock.Verify(m => m.Get(id), Times.Once);
+            _repositoryMock.Verify(m => m.Include(query, relationship), Times.Once);
+            _repositoryMock.Verify(m => m.FirstOrDefaultAsync(query), Times.Once);
+        }
 
-        //    var todoItem = new TodoItem
-        //    {
-        //        Collection = new TodoItemCollection { Id = Guid.NewGuid() }
-        //    };
+        [Fact]
+        public async Task GetRelationshipAsync_Returns_Relationship_Value()
+        {
+            // arrange
+            const int id = 1;
+            const string relationshipName = "collection";
+            var relationship = new HasOneAttribute(relationshipName);
 
-        //    _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
-        //        .ReturnsAsync(todoItem);
+            var todoItem = new TodoItem
+            {
+                Collection = new TodoItemCollection { Id = Guid.NewGuid() }
+            };
 
-        //    var repository = GetService();
+            var query = new List<TodoItem> { todoItem }.AsQueryable();
 
-        //    // act
-        //    var result = await repository.GetRelationshipAsync(id, relationshipName);
+            _repositoryMock.Setup(m => m.Get(id)).Returns(query);
+            _repositoryMock.Setup(m => m.Include(query, relationship)).Returns(query);
+            _repositoryMock.Setup(m => m.FirstOrDefaultAsync(query)).ReturnsAsync(todoItem);
 
-        //    // assert
-        //    Assert.NotNull(result);
-        //    var collection = Assert.IsType<TodoItemCollection>(result);
-        //    Assert.Equal(todoItem.Collection.Id, collection.Id);
-        //}
+            var repository = GetService();
+
+            // act
+            var result = await repository.GetRelationshipAsync(id, relationshipName);
+
+            // assert
+            Assert.NotNull(result);
+            var collection = Assert.IsType<TodoItemCollection>(result);
+            Assert.Equal(todoItem.Collection.Id, collection.Id);
+        }
 
         private EntityResourceService<TodoItem> GetService()
         {
