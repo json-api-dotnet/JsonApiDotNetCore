@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Query;
 
 namespace JsonApiDotNetCore.Services
@@ -25,7 +24,6 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IPageService _pageManager;
-        private readonly ICurrentRequest _currentRequest;
         private readonly IJsonApiOptions _options;
         private readonly IResourceGraph _resourceGraph;
         private readonly IFilterService _filterService;
@@ -50,7 +48,6 @@ namespace JsonApiDotNetCore.Services
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
-            _currentRequest = currentRequest;
             _includeService = includeService;
             _sparseFieldsService = sparseFieldsService;
             _pageManager = pageManager;
@@ -69,16 +66,8 @@ namespace JsonApiDotNetCore.Services
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
             entity = await _repository.CreateAsync(entity);
 
-            // this ensures relationships get reloaded from the database if they have
-            // been requested
-            // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
-            if (ShouldIncludeRelationships())
-            {
-                if (_repository is IEntityFrameworkRepository<TResource> efRepository)
-                    efRepository.DetachRelationshipPointers(entity);
-
+            if (_includeService.Get().Any())
                 entity = await GetWithRelationshipsAsync(entity.Id);
-            }
 
             if (!IsNull(_hookExecutor, entity))
             {
@@ -87,6 +76,7 @@ namespace JsonApiDotNetCore.Services
             }
             return entity;
         }
+
         public virtual async Task<bool> DeleteAsync(TId id)
         {
             var entity = (TResource)Activator.CreateInstance(typeof(TResource));
@@ -96,33 +86,29 @@ namespace JsonApiDotNetCore.Services
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
             return succeeded;
         }
+
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
-            var entities = _repository.Get();
 
-            entities = ApplySortAndFilterQuery(entities);
+            var entityQuery = _repository.Get();
+            entityQuery = Filter(entityQuery);
+            entityQuery = Sort(entityQuery);
+            entityQuery = IncludeRelationships(entityQuery);
+            entityQuery = SelectFields(entityQuery);
 
-            if (ShouldIncludeRelationships())
-                entities = IncludeRelationships(entities);
-
-
-            var fields = _sparseFieldsService.Get();
-            if (fields.Any())
-                entities = _repository.Select(entities, fields);
-
-            if (!IsNull(_hookExecutor, entities))
+            if (!IsNull(_hookExecutor, entityQuery))
             {
-                var result = entities.ToList();
-                _hookExecutor.AfterRead(result, ResourcePipeline.Get);
-                entities = _hookExecutor.OnReturn(result, ResourcePipeline.Get).AsQueryable();
+                var entities = await _repository.ToListAsync(entityQuery);
+                _hookExecutor.AfterRead(entities, ResourcePipeline.Get);
+                entityQuery = _hookExecutor.OnReturn(entities, ResourcePipeline.Get).AsQueryable();
             }
 
             if (_options.IncludeTotalRecordCount)
-                _pageManager.TotalRecords = await _repository.CountAsync(entities);
+                _pageManager.TotalRecords = await _repository.CountAsync(entityQuery);
 
             // pagination should be done last since it will execute the query
-            var pagedEntities = await ApplyPageQueryAsync(entities);
+            var pagedEntities = await ApplyPageQueryAsync(entityQuery);
             return pagedEntities;
         }
 
@@ -131,11 +117,10 @@ namespace JsonApiDotNetCore.Services
             var pipeline = ResourcePipeline.GetSingle;
             _hookExecutor?.BeforeRead<TResource>(pipeline, id.ToString());
 
-            TResource entity;
-            if (ShouldIncludeRelationships())
-                entity = await GetWithRelationshipsAsync(id);
-            else
-                entity = await _repository.GetAsync(id);
+            var entityQuery = _repository.Get(id);
+            entityQuery = IncludeRelationships(entityQuery);
+            entityQuery = SelectFields(entityQuery);
+            var entity = await _repository.FirstOrDefaultAsync(entityQuery);
 
             if (!IsNull(_hookExecutor, entity))
             {
@@ -155,7 +140,8 @@ namespace JsonApiDotNetCore.Services
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
-            var entity = await _repository.GetAndIncludeAsync(id, relationship);
+            var entityQuery = _repository.Include(_repository.Get(id), relationship);
+            var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null) // this does not make sense. If the parent entity is not found, this error is thrown?
                 throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
 
@@ -178,7 +164,6 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource entity)
         {
-
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             entity = await _repository.UpdateAsync(entity);
             if (!IsNull(_hookExecutor, entity))
@@ -193,7 +178,8 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)
         {
             var relationship = GetRelationship(relationshipName);
-            var entity = await _repository.GetAndIncludeAsync(id, relationship);
+            var entityQuery = _repository.Include(_repository.Get(id), relationship);
+            var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
 
@@ -207,7 +193,6 @@ namespace JsonApiDotNetCore.Services
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
             await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.PatchRelationship);
-
         }
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
@@ -227,26 +212,66 @@ namespace JsonApiDotNetCore.Services
             return await _repository.PageAsync(entities, _pageManager.PageSize, _pageManager.CurrentPage);
         }
 
-        protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities)
-        {
-            foreach (var query in _filterService.Get())
-                entities = _repository.Filter(entities, query);
+        [Obsolete("Use separate EntityResourceService.Filter and EntityResourceService.Sort methods", true)]
+        protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities) => entities;
 
-            foreach (var query in _sortService.Get())
-                entities = _repository.Sort(entities, query);
+
+        /// <summary>
+        /// Includes the relationships
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        protected virtual IQueryable<TResource> Sort(IQueryable<TResource> entities)
+        {
+            var queries = _sortService.Get();
+            if (queries != null && queries.Any())
+                foreach (var query in queries)
+                    entities = _repository.Sort(entities, query);
 
             return entities;
         }
 
         /// <summary>
-        /// Actually includes the relationships
+        /// Includes the relationships
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        protected virtual IQueryable<TResource> Filter(IQueryable<TResource> entities)
+        {
+            var queries = _filterService.Get();
+            if (queries != null && queries.Any())
+                foreach (var query in queries)
+                    entities = _repository.Filter(entities, query);
+
+            return entities;
+        }
+
+
+        /// <summary>
+        /// Includes the relationships
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
         protected virtual IQueryable<TResource> IncludeRelationships(IQueryable<TResource> entities)
         {
-            foreach (var r in _includeService.Get())
-                entities = _repository.Include(entities, r.ToArray());
+            var chains = _includeService.Get();
+            if (chains != null && chains.Any())
+                foreach (var r in chains)
+                    entities = _repository.Include(entities, r.ToArray());
+
+            return entities;
+        }
+
+        /// <summary>
+        /// Applies sparse field selection
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        protected virtual IQueryable<TResource> SelectFields(IQueryable<TResource> entities)
+        {
+            var fields = _sparseFieldsService.Get();
+            if (fields != null && fields.Any())
+                entities = _repository.Select(entities, fields);
 
             return entities;
         }
@@ -259,7 +284,7 @@ namespace JsonApiDotNetCore.Services
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var sparseFieldset = _sparseFieldsService.Get();
-            var query = _repository.Select(_repository.Get(), sparseFieldset).Where(e => e.Id.Equals(id));
+            var query = _repository.Select(_repository.Get(id), sparseFieldset);
 
             foreach (var chain in _includeService.Get())
                 query = _repository.Include(query, chain.ToArray());
@@ -273,11 +298,6 @@ namespace JsonApiDotNetCore.Services
 
 
             return value;
-        }
-
-        private bool ShouldIncludeRelationships()
-        {
-            return _includeService.Get().Count() > 0;
         }
 
         private bool IsNull(params object[] values)

@@ -51,8 +51,8 @@ namespace JsonApiDotNetCore.Query
             if (relationship == null && string.Equals(typeName, _requestResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 throw new JsonApiException(400, $"fields[{typeName}] is invalid");
 
-            var fields = ((string)queryParameter.Value).Split(QueryConstants.COMMA);
-            foreach (var field in fields)
+            includedFields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
+            foreach (var field in includedFields)
             {
                 if (relationship != default)
                 {

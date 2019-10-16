@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -35,7 +34,6 @@ namespace JsonApiDotNetCore.Data
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
-        private readonly EntityType _efCoreEntityType;
 
         public DefaultEntityRepository(
             ICurrentRequest currentRequest,
@@ -64,12 +62,13 @@ namespace JsonApiDotNetCore.Data
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
             _resourceDefinition = resourceDefinition;
-            _efCoreEntityType =  _context.Model.GetEntityTypes(typeof(TEntity)).Single();
         }
-        
+
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get() => _dbSet;
-        
+        /// <inheritdoc />
+        public virtual IQueryable<TEntity> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
+
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields)
         {
@@ -100,21 +99,6 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> GetAsync(TId id, List<AttrAttribute> fields = null)
-        {
-            return await Select(Get(), fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship, List<AttrAttribute> fields = null)
-        {
-            _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationship.PublicRelationshipName})");
-            var includedSet = Include(Select(Get(), fields), relationship);
-            var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
-            return result;
-        }
-
-        /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
@@ -137,6 +121,10 @@ namespace JsonApiDotNetCore.Data
             }
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
+
+            // this ensures relationships get reloaded from the database if they have
+            // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
+            DetachRelationships(entity);
 
             return entity;
         }
@@ -186,9 +174,11 @@ namespace JsonApiDotNetCore.Data
             return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
         }
 
-
         /// <inheritdoc />
-        public void DetachRelationshipPointers(TEntity entity)
+        [Obsolete("This has been removed, see @TODO_MIGRATION_GUIDE_LINK", true)]
+        public void DetachRelationshipPointers(TEntity entity) { }
+
+        private void DetachRelationships(TEntity entity)
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -216,13 +206,12 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
         {
-            var databaseEntity = await Get().SingleOrDefaultAsync(e => e.Id.Equals(updatedEntity.Id));
+            var databaseEntity = await Get(updatedEntity.Id).SingleOrDefaultAsync();
             if (databaseEntity == null)
                 return null;
 
-            var properties = GetUpdatedProperties(updatedEntity, databaseEntity);
-            foreach (var prop in properties)
-                prop.SetValue(databaseEntity, prop.GetValue(updatedEntity));
+            foreach (var attribute in _targetedFields.Attributes)
+                attribute.SetValue(databaseEntity, attribute.GetValue(updatedEntity));
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -241,25 +230,6 @@ namespace JsonApiDotNetCore.Data
 
             await _context.SaveChangesAsync();
             return databaseEntity;
-        }
-
-        /// <summary>
-        /// Compares values of the incoming updated entity with the database values.
-        /// </summary>
-        private List<PropertyInfo> GetUpdatedProperties(TEntity updatedEntity, TEntity databaseEntity)
-        {
-            var attributes = _efCoreEntityType.GetProperties().Select(p => p.PropertyInfo).ToList();
-            var targetedAttributes = _targetedFields.Attributes.Select(a => a.PropertyInfo).ToList();
-
-            foreach (var attribute in attributes)
-            {
-                if (targetedAttributes.Contains(attribute))
-                    continue;
-                if (attribute.GetValue(updatedEntity) != attribute.GetValue(databaseEntity))
-                    targetedAttributes.Add(attribute);
-            }
-
-            return targetedAttributes;
         }
 
         /// <summary>
@@ -328,7 +298,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            var entity = await GetAsync(id);
+            var entity = await Get(id).SingleOrDefaultAsync();
             if (entity == null) return false;
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();

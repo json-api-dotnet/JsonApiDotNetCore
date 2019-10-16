@@ -37,52 +37,52 @@ namespace UnitTests.Services
 
         }
 
-        [Fact]
-        public async Task GetRelationshipAsync_Passes_Public_ResourceName_To_Repository()
-        {
-            // arrange
-            const int id = 1;
-            const string relationshipName = "collection";
-            var relationship = new HasOneAttribute(relationshipName);
+        //[Fact]
+        //public async Task GetRelationshipAsync_Passes_Public_ResourceName_To_Repository()
+        //{
+        //    // arrange
+        //    const int id = 1;
+        //    const string relationshipName = "collection";
+        //    var relationship = new HasOneAttribute(relationshipName);
 
-            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
-                .ReturnsAsync(new TodoItem());
+        //    _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
+        //        .ReturnsAsync(new TodoItem());
 
-            var service = GetService();
+        //    var service = GetService();
 
-            // act
-            await service.GetRelationshipAsync(id, relationshipName);
+        //    // act
+        //    await service.GetRelationshipAsync(id, relationshipName);
 
-            // assert
-            _repositoryMock.Verify(m => m.GetAndIncludeAsync(id, relationship, null), Times.Once);
-        }
+        //    // assert
+        //    _repositoryMock.Verify(m => m.GetAndIncludeAsync(id, relationship, null), Times.Once);
+        //}
 
-        [Fact]
-        public async Task GetRelationshipAsync_Returns_Relationship_Value()
-        {
-            // arrange
-            const int id = 1;
-            const string relationshipName = "collection";
-            var relationship = new HasOneAttribute(relationshipName);
+        //[Fact]
+        //public async Task GetRelationshipAsync_Returns_Relationship_Value()
+        //{
+        //    // arrange
+        //    const int id = 1;
+        //    const string relationshipName = "collection";
+        //    var relationship = new HasOneAttribute(relationshipName);
 
-            var todoItem = new TodoItem
-            {
-                Collection = new TodoItemCollection { Id = Guid.NewGuid() }
-            };
+        //    var todoItem = new TodoItem
+        //    {
+        //        Collection = new TodoItemCollection { Id = Guid.NewGuid() }
+        //    };
 
-            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
-                .ReturnsAsync(todoItem);
+        //    _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
+        //        .ReturnsAsync(todoItem);
 
-            var repository = GetService();
+        //    var repository = GetService();
 
-            // act
-            var result = await repository.GetRelationshipAsync(id, relationshipName);
+        //    // act
+        //    var result = await repository.GetRelationshipAsync(id, relationshipName);
 
-            // assert
-            Assert.NotNull(result);
-            var collection = Assert.IsType<TodoItemCollection>(result);
-            Assert.Equal(todoItem.Collection.Id, collection.Id);
-        }
+        //    // assert
+        //    Assert.NotNull(result);
+        //    var collection = Assert.IsType<TodoItemCollection>(result);
+        //    Assert.Equal(todoItem.Collection.Id, collection.Id);
+        //}
 
         private EntityResourceService<TodoItem> GetService()
         {

@@ -22,6 +22,11 @@ namespace JsonApiDotNetCore.Data
         IQueryable<TEntity> Get();
 
         /// <summary>
+        /// Get the entity by id
+        /// </summary>
+        IQueryable<TEntity> Get(TId id);
+
+        /// <summary>
         /// Apply fields to the provided queryable
         /// </summary>
         IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields);
@@ -51,22 +56,6 @@ namespace JsonApiDotNetCore.Data
         /// </summary>
         Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber);
 
-        /// <summary>
-        /// Get the entity by id
-        /// </summary>
-        Task<TEntity> GetAsync(TId id, List<AttrAttribute> fields = null);
-
-        /// <summary>
-        /// Get the entity with the specified id and include the relationship.
-        /// </summary>
-        /// <param name="id">The entity id</param>
-        /// <param name="relationship">The exposed relationship</param>
-        /// <example>
-        /// <code>
-        /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
-        /// </code>
-        /// </example>
-        Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship, List<AttrAttribute> fields = null);
 
         /// <summary>
         /// Count the total number of records
@@ -82,5 +71,6 @@ namespace JsonApiDotNetCore.Data
         /// Convert the collection to a materialized list
         /// </summary>
         Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities);
+       
     }
 }
