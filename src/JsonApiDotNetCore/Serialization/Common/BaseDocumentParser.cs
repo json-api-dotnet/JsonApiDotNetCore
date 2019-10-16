@@ -113,6 +113,7 @@ namespace JsonApiDotNetCore.Serialization
             JToken jToken;
             using (JsonReader jsonReader = new JsonTextReader(new StringReader(body)))
             {
+                // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/509
                 jsonReader.DateParseHandling = DateParseHandling.None;
                 jToken = JToken.Load(jsonReader);
             }
