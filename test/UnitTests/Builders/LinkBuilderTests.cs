@@ -15,7 +15,7 @@ namespace UnitTests
 {
     public class LinkBuilderTests
     {
-        private readonly IPageService _pageManager;
+        private readonly IPageService _pageService;
         private readonly Mock<IContextEntityProvider> _provider = new Mock<IContextEntityProvider>();
         private const string _host = "http://www.example.com";
         private const string _topSelf = "http://www.example.com/articles";
@@ -25,7 +25,7 @@ namespace UnitTests
 
         public LinkBuilderTests()
         {
-            _pageManager = GetPageManager();
+            _pageService = GetPageManager();
         }
 
         [Theory]
@@ -141,7 +141,7 @@ namespace UnitTests
             var primaryResource = GetContextEntity<Article>(topLevelLinks: resource);
             _provider.Setup(m => m.GetContextEntity<Article>()).Returns(primaryResource);
 
-            var builder = new LinkBuilder(config, GetRequestManager(), _pageManager, _provider.Object);
+            var builder = new LinkBuilder(config, GetRequestManager(), _pageService, _provider.Object);
 
             // act
             var links = builder.GetTopLevelLinks(primaryResource);

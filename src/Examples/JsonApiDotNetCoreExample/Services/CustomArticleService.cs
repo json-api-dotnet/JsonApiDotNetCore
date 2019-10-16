@@ -19,12 +19,12 @@ namespace JsonApiDotNetCoreExample.Services
                                     IJsonApiOptions options,
                                     IIncludeService includeService,
                                     ISparseFieldsService sparseFieldsService,
-                                    IPageService pageManager,
+                                    IPageService pageService,
                                     IResourceGraph resourceGraph,
                                     IResourceHookExecutor hookExecutor = null,
                                     ILoggerFactory loggerFactory = null)
             : base(sortService, filterService, repository, options, includeService, sparseFieldsService,
-                   pageManager, resourceGraph, hookExecutor, loggerFactory)
+                   pageService, resourceGraph, hookExecutor, loggerFactory)
         {
         }
 
