@@ -1,7 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
 using Microsoft.Extensions.Logging;
@@ -40,7 +39,6 @@ namespace JsonApiDotNetCore.Services
                 IFilterService filterService,
                 IEntityRepository<TResource, TId> repository,
                 IJsonApiOptions options,
-                ICurrentRequest currentRequest,
                 IIncludeService includeService,
                 ISparseFieldsService sparseFieldsService,
                 IPageService pageManager,
@@ -332,11 +330,10 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int>
     {
         public EntityResourceService(ISortService sortService, IFilterService filterService, IEntityRepository<TResource, int> repository,
-                                     IJsonApiOptions options, ICurrentRequest currentRequest,
-                                     IIncludeService includeService, ISparseFieldsService sparseFieldsService,
+                                     IJsonApiOptions options,IIncludeService includeService, ISparseFieldsService sparseFieldsService,
                                      IPageService pageManager, IResourceGraph resourceGraph,
                                      IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, repository, options, currentRequest, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
+            : base(sortService, filterService, repository, options, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
         {
         }
     }

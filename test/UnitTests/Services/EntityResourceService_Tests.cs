@@ -86,7 +86,7 @@ namespace UnitTests.Services
 
         private EntityResourceService<TodoItem> GetService()
         {
-            return new EntityResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), _crMock.Object, null, null, _pgsMock.Object, _resourceGraph);
+            return new EntityResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), null, null, _pgsMock.Object, _resourceGraph);
         }
     }
 }
