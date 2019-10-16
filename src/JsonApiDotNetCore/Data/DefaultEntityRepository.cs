@@ -2,17 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
@@ -26,27 +23,23 @@ namespace JsonApiDotNetCore.Data
         IEntityFrameworkRepository<TEntity>
         where TEntity : class, IIdentifiable<TId>
     {
-        private readonly ICurrentRequest _currentRequest;
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
-        private readonly ILogger _logger;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
         private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
         public DefaultEntityRepository(
-            ICurrentRequest currentRequest,
             ITargetedFields updatedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
             ResourceDefinition<TEntity> resourceDefinition = null)
-            : this(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, null)
+            : this(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, null)
         { }
 
         public DefaultEntityRepository(
-            ICurrentRequest currentRequest,
             ITargetedFields updatedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
@@ -54,8 +47,6 @@ namespace JsonApiDotNetCore.Data
             ResourceDefinition<TEntity> resourceDefinition = null,
             ILoggerFactory loggerFactory = null)
         {
-            _logger = loggerFactory?.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
-            _currentRequest = currentRequest;
             _targetedFields = updatedFields;
             _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
@@ -161,7 +152,7 @@ namespace JsonApiDotNetCore.Data
 
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _resourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
+            var relationshipAttr = _resourceGraph.GetContextEntity(type).Relationships.FirstOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
             if (relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute)
@@ -206,7 +197,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
         {
-            var databaseEntity = await Get(updatedEntity.Id).SingleOrDefaultAsync();
+            var databaseEntity = await Get(updatedEntity.Id).FirstOrDefaultAsync();
             if (databaseEntity == null)
                 return null;
 
@@ -298,7 +289,7 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            var entity = await Get(id).SingleOrDefaultAsync();
+            var entity = await Get(id).FirstOrDefaultAsync();
             if (entity == null) return false;
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
@@ -463,24 +454,22 @@ namespace JsonApiDotNetCore.Data
         IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
-        public DefaultEntityRepository(ICurrentRequest currentRequest,
-                                       ITargetedFields updatedFields,
+        public DefaultEntityRepository(ITargetedFields updatedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
                                        IGenericProcessorFactory genericProcessorFactory,
                                        ResourceDefinition<TEntity> resourceDefinition = null)
-            : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition)
+            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition)
         {
         }
 
-        public DefaultEntityRepository(ICurrentRequest currentRequest,
-                                       ITargetedFields updatedFields,
+        public DefaultEntityRepository(ITargetedFields updatedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
                                        IGenericProcessorFactory genericProcessorFactory,
                                        ResourceDefinition<TEntity> resourceDefinition = null,
                                        ILoggerFactory loggerFactory = null)
-            : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, loggerFactory)
+            : base(updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, loggerFactory)
         {
         }
     }
