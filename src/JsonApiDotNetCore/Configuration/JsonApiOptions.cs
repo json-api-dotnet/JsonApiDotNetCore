@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Configuration
         public Link RelationshipLinks { get; set; } = Link.All;
 
 
-        internal Type ResourceNameFormatterType { get; set; } = typeof(KebabResourceNameFormatter);
+        internal Type ResourceNameFormatterType { get; set; } = typeof(KebabCaseResourceNameFormatter);
 
         //public void UseResourceNameFormatter<TFormatter>() where TFormatter : class, IResourceNameFormatter
         //{
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Provides an interface for formatting resource names by convention
         /// </summary>
-        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new KebabResourceNameFormatter();
+        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new KebabCaseResourceNameFormatter();
 
         /// <summary>
         /// Provides an interface for formatting relationship id properties given the navigation property name

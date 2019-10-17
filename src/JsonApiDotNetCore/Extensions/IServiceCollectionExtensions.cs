@@ -156,7 +156,7 @@ namespace JsonApiDotNetCore.Extensions
         private static void AddStartupConfigurationServices(this IServiceCollection services, JsonApiOptions jsonApiOptions)
         {
             services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
-            services.TryAddSingleton<IResourceNameFormatter>(new KebabResourceNameFormatter());
+            services.TryAddSingleton<IResourceNameFormatter>(new KebabCaseResourceNameFormatter());
             services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
         }
 

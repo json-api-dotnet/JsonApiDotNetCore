@@ -27,7 +27,7 @@ namespace UnitTests
 
         public ResourceGraphBuilder_Tests()
         {
-            JsonApiOptions.ResourceNameFormatter = new KebabResourceNameFormatter();
+            JsonApiOptions.ResourceNameFormatter = new KebabCaseResourceNameFormatter();
         }
 
         [Fact]

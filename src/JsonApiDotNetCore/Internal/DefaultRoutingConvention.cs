@@ -1,6 +1,7 @@
 // REF: https://github.com/aspnet/Entropy/blob/dev/samples/Mvc.CustomRoutingConvention/NameSpaceRoutingConvention.cs
 // REF: https://github.com/aspnet/Mvc/issues/5691
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Internal
     {
         private readonly string _namespace;
         private readonly IResourceNameFormatter _formatter;
-
+        private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
         public DefaultRoutingConvention(IJsonApiOptions options, IResourceNameFormatter formatter)
         {
             _namespace = options.Namespace;
@@ -44,20 +45,11 @@ namespace JsonApiDotNetCore.Internal
                 if (RoutingConventionDisabled(controller) == false)
                     continue;
 
-                // derive the targeted resource by reflecting the controllers generic arguments.
-                var resourceType = GetResourceTypeFromController(controller.ControllerType);
-                string endpoint;
-                if (resourceType != null)
-                    endpoint = _formatter.FormatResourceName(resourceType);
-                else
-                    endpoint = _formatter.ApplyCasingConvention(controller.ControllerName);
+                var template = TemplateFromResource(controller) ?? TemplateFromController(controller);
+                if (template == null)
+                    throw new JsonApiSetupException($"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
 
-                // apply the registered resource name formatter to the discovered resource type.
-                var template = $"{_namespace}/{endpoint}";
-                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
-                {
-                    Template = template
-                };
+                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel { Template = template };
             }
         }
 
@@ -68,11 +60,29 @@ namespace JsonApiDotNetCore.Internal
             return notDisabled && type.IsSubclassOf(typeof(JsonApiControllerMixin));
         }
 
+        private string TemplateFromResource(ControllerModel model)
+        {
+            var resourceType = GetResourceTypeFromController(model.ControllerType);
+            if (resourceType != null)
+            {
+                var template = $"{_namespace}/{_formatter.FormatResourceName(resourceType)}";
+                if (_registeredTemplates.Add(template))
+                    return template;
+            }
+            return null;
+        }
 
-        public Type GetResourceTypeFromController(Type type)
+        private string TemplateFromController(ControllerModel model)
+        {
+            var template = $"{_namespace}/{_formatter.ApplyCasingConvention(model.ControllerName)}";
+            if (_registeredTemplates.Add(template))
+                return template;
+            return null;
+        }
+
+        private Type GetResourceTypeFromController(Type type)
         {
             var target = typeof(BaseJsonApiController<,>);
-            // return all inherited types
             var currentBaseType = type.BaseType;
             while (!currentBaseType.IsGenericType || currentBaseType.GetGenericTypeDefinition() != target)
             {

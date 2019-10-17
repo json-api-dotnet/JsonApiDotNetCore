@@ -6,7 +6,7 @@ using str = JsonApiDotNetCore.Extensions.StringExtensions;
 
 namespace JsonApiDotNetCore.Graph
 {
-    public class KebabResourceNameFormatter : IResourceNameFormatter
+    public class KebabCaseResourceNameFormatter : IResourceNameFormatter
     {
         /// <summary>
         /// Uses the internal type name to determine the external resource name.
