@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Configuration
 {
-
     /// <summary>
     /// Global options
     /// </summary>
@@ -30,10 +29,18 @@ namespace JsonApiDotNetCore.Configuration
         public Link RelationshipLinks { get; set; } = Link.All;
 
 
+        internal Type ResourceNameFormatterType { get; set; } = typeof(KebabResourceNameFormatter);
+
+        //public void UseResourceNameFormatter<TFormatter>() where TFormatter : class, IResourceNameFormatter
+        //{
+        //    ResourceNameFormatterType = typeof(TFormatter);
+        //}
+
+
         /// <summary>
         /// Provides an interface for formatting resource names by convention
         /// </summary>
-        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new DefaultResourceNameFormatter();
+        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new KebabResourceNameFormatter();
 
         /// <summary>
         /// Provides an interface for formatting relationship id properties given the navigation property name

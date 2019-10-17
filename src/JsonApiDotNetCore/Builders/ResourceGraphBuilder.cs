@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Builders
 
         public ResourceGraphBuilder(IResourceNameFormatter formatter = null)
         {
-            _resourceNameFormatter = formatter ?? new DefaultResourceNameFormatter();
+            _resourceNameFormatter = formatter ?? new KebabResourceNameFormatter();
         }
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Builders
             _entities.ForEach(SetResourceLinksOptions);
 
             List<ControllerResourceMap> controllerContexts = new List<ControllerResourceMap>() { };
-            foreach(var cm in _controllerMapper)
+            foreach (var cm in _controllerMapper)
             {
                 var model = cm.Key;
                 foreach (var controller in cm.Value)
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCore.Builders
                     // Article → ArticleTag.Tag
                     hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.DependentType)
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.DependentType}");
-                    
+
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)

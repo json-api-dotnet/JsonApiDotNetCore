@@ -25,6 +25,8 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Controllers;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -32,7 +34,6 @@ namespace JsonApiDotNetCore.Extensions
     public static class IServiceCollectionExtensions
     {
         static private readonly Action<JsonApiOptions> _noopConfig = opt => { };
-        static private JsonApiOptions _options { get { return new JsonApiOptions(); } }
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
                                                               IMvcCoreBuilder mvcBuilder = null)
             where TContext : DbContext
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCore.Extensions
                                                               IMvcCoreBuilder mvcBuilder = null)
             where TContext : DbContext
         {
-            var options = _options;
+            var options = new JsonApiOptions();
             // add basic Mvc functionality
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
             // set standard options
@@ -83,7 +84,7 @@ namespace JsonApiDotNetCore.Extensions
                                                     Action<JsonApiOptions> configureOptions,
                                                     IMvcCoreBuilder mvcBuilder = null)
         {
-            var options = _options;
+            var options = new JsonApiOptions();
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
             configureOptions(options);
 
@@ -107,7 +108,7 @@ namespace JsonApiDotNetCore.Extensions
                                                     Action<ServiceDiscoveryFacade> autoDiscover,
                                                     IMvcCoreBuilder mvcBuilder = null)
         {
-            var options = _options;
+            var options = new JsonApiOptions();
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
             configureOptions(options);
 
@@ -115,11 +116,20 @@ namespace JsonApiDotNetCore.Extensions
             var facade = new ServiceDiscoveryFacade(services, options.ResourceGraphBuilder);
             autoDiscover(facade);
 
-            // add JsonApi fitlers and serializer
+            // add JsonApi filters and serializers
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
+
+            // register services that allow user to override behaviour that is configured on startup
+            AddStartupConfigurationServices(services, options);
+
+            var intermediateProvider = services.BuildServiceProvider();
+            mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>()));
+            //intermediateProvider.Dispose();
 
             // register services
             AddJsonApiInternals(services, options);
+
+
             return services;
         }
 
@@ -143,11 +153,17 @@ namespace JsonApiDotNetCore.Extensions
             AddJsonApiInternals(services, jsonApiOptions);
         }
 
+        private static void AddStartupConfigurationServices(this IServiceCollection services, JsonApiOptions jsonApiOptions)
+        {
+            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
+            services.TryAddSingleton<IResourceNameFormatter>(new KebabResourceNameFormatter());
+            services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
+        }
+
         public static void AddJsonApiInternals(
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-
             var graph = jsonApiOptions.ResourceGraph ?? jsonApiOptions.ResourceGraphBuilder.Build();
 
             if (graph.UsesDbContext == false)
@@ -183,14 +199,13 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
-            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
             services.AddSingleton<ILinksConfiguration>(jsonApiOptions);
             services.AddSingleton(graph);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);
             services.AddScoped<ICurrentRequest, CurrentRequest>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
-            services.AddScoped<JsonApiRouteHandler>();
+            //services.AddScoped<JsonApiRouteHandler>();
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
@@ -273,7 +288,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
-            options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
+            //options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class CamelizedRoutingConvention : IApplicationModelConvention
+    public class CamelizedRoutingConvention :  IJsonApiRoutingConvention
     {
         private readonly string _namespace;
         public CamelizedRoutingConvention(string nspace)
@@ -37,4 +37,6 @@ namespace JsonApiDotNetCore.Internal
             return notDisabled && type.IsSubclassOf(typeof(JsonApiControllerMixin));
         }
     }
+
+    public interface IJsonApiRoutingConvention : IApplicationModelConvention { }
 }

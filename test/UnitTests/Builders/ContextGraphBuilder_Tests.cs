@@ -18,15 +18,16 @@ namespace UnitTests
 {
     public class ResourceGraphBuilder_Tests
     {
-        class NonDbResource : Identifiable {}
-        class DbResource : Identifiable {}
-        class TestContext : DbContext {
+        class NonDbResource : Identifiable { }
+        class DbResource : Identifiable { }
+        class TestContext : DbContext
+        {
             public DbSet<DbResource> DbResources { get; set; }
         }
 
         public ResourceGraphBuilder_Tests()
         {
-            JsonApiOptions.ResourceNameFormatter = new DefaultResourceNameFormatter();
+            JsonApiOptions.ResourceNameFormatter = new KebabResourceNameFormatter();
         }
 
         [Fact]
@@ -34,8 +35,10 @@ namespace UnitTests
         {
             // arrange
             var services = new ServiceCollection();
-            services.AddJsonApi<TestContext>(opt => {
-                opt.BuildResourceGraph(b => {
+            services.AddJsonApi<TestContext>(opt =>
+            {
+                opt.BuildResourceGraph(b =>
+                {
                     b.AddResource<NonDbResource>("non-db-resources");
                 });
             });
@@ -128,7 +131,8 @@ namespace UnitTests
             Assert.Equal("related-resources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);
         }
 
-        public class TestResource : Identifiable {
+        public class TestResource : Identifiable
+        {
             [Attr] public string CompoundAttribute { get; set; }
             [HasOne] public RelatedResource RelatedResource { get; set; }
             [HasMany] public List<RelatedResource> RelatedResources { get; set; }
