@@ -90,10 +90,10 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
 
             var entityQuery = _repository.Get();
-            entityQuery = Filter(entityQuery);
-            entityQuery = Sort(entityQuery);
-            entityQuery = IncludeRelationships(entityQuery);
-            entityQuery = SelectFields(entityQuery);
+            entityQuery = ApplyFilter(entityQuery);
+            entityQuery = ApplySort(entityQuery);
+            entityQuery = ApplyInclude(entityQuery);
+            entityQuery = ApplySelect(entityQuery);
 
             if (!IsNull(_hookExecutor, entityQuery))
             {
@@ -116,8 +116,8 @@ namespace JsonApiDotNetCore.Services
             _hookExecutor?.BeforeRead<TResource>(pipeline, id.ToString());
 
             var entityQuery = _repository.Get(id);
-            entityQuery = IncludeRelationships(entityQuery);
-            entityQuery = SelectFields(entityQuery);
+            entityQuery = ApplyInclude(entityQuery);
+            entityQuery = ApplySelect(entityQuery);
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
 
             if (!IsNull(_hookExecutor, entity))
@@ -211,11 +211,11 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// Includes the relationships
+        /// Applies sort queries
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        protected virtual IQueryable<TResource> Sort(IQueryable<TResource> entities)
+        protected virtual IQueryable<TResource> ApplySort(IQueryable<TResource> entities)
         {
             var queries = _sortService.Get();
             if (queries != null && queries.Any())
@@ -226,11 +226,11 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// Includes the relationships
+        /// Applies filter queries
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        protected virtual IQueryable<TResource> Filter(IQueryable<TResource> entities)
+        protected virtual IQueryable<TResource> ApplyFilter(IQueryable<TResource> entities)
         {
             var queries = _filterService.Get();
             if (queries != null && queries.Any())
@@ -242,11 +242,11 @@ namespace JsonApiDotNetCore.Services
 
 
         /// <summary>
-        /// Includes the relationships
+        /// Applies include queries
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        protected virtual IQueryable<TResource> IncludeRelationships(IQueryable<TResource> entities)
+        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities)
         {
             var chains = _includeService.Get();
             if (chains != null && chains.Any())
@@ -257,11 +257,11 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// Applies sparse field selection
+        /// Applies sparse field selection queries
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        protected virtual IQueryable<TResource> SelectFields(IQueryable<TResource> entities)
+        protected virtual IQueryable<TResource> ApplySelect(IQueryable<TResource> entities)
         {
             var fields = _sparseFieldsService.Get();
             if (fields != null && fields.Any())
@@ -273,7 +273,7 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Get the specified id with relationships provided in the post request
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id"></param>i
         /// <returns></returns>
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {

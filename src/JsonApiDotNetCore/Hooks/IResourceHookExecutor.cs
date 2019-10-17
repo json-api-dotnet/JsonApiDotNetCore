@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="EntityResourceService{T}"/>.
         /// <para />
-        /// Fires the <see cref="ResourceDefinition{T}.BeforeUpdate"/>
+        /// Fires the <see cref="ResourceDefinition{T}.BeforeUpdate(IDiffableEntityHashSet{T}, ResourcePipeline)"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.BeforeUpdateRelationship"/>
