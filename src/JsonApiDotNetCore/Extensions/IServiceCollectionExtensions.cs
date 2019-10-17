@@ -24,7 +24,7 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Client;
-using JsonApiDotNetCore.Controllers;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -32,7 +32,6 @@ namespace JsonApiDotNetCore.Extensions
     public static class IServiceCollectionExtensions
     {
         static private readonly Action<JsonApiOptions> _noopConfig = opt => { };
-        static private JsonApiOptions _options { get { return new JsonApiOptions(); } }
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
                                                               IMvcCoreBuilder mvcBuilder = null)
             where TContext : DbContext
@@ -48,25 +47,20 @@ namespace JsonApiDotNetCore.Extensions
         /// <param name="configureAction"></param>
         /// <returns></returns>
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
-                                                              Action<JsonApiOptions> configureAction,
+                                                              Action<JsonApiOptions> configureOptions,
                                                               IMvcCoreBuilder mvcBuilder = null)
             where TContext : DbContext
         {
-            var options = _options;
+            var options = new JsonApiOptions();
             // add basic Mvc functionality
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
-            // set standard options
-            configureAction(options);
-
+            // configures JsonApiOptions;
+            configureOptions(options);
             // ResourceGraphBuilder should not be exposed on JsonApiOptions.
             // Instead, ResourceGraphBuilder should consume JsonApiOptions
-
             // build the resource graph using ef core DbContext
             options.BuildResourceGraph(builder => builder.AddDbContext<TContext>());
-
-            // add JsonApi fitlers and serializer
-            mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
-
+            ConfigureMvc(services, mvcBuilder, options);
             // register services
             AddJsonApiInternals<TContext>(services, options);
             return services;
@@ -83,13 +77,12 @@ namespace JsonApiDotNetCore.Extensions
                                                     Action<JsonApiOptions> configureOptions,
                                                     IMvcCoreBuilder mvcBuilder = null)
         {
-            var options = _options;
+            var options = new JsonApiOptions();
+            // add basic Mvc functionality
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
+            // configures JsonApiOptions;
             configureOptions(options);
-
-            // add JsonApi fitlers and serializer
-            mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
-
+            ConfigureMvc(services, mvcBuilder, options);
             // register services
             AddJsonApiInternals(services, options);
             return services;
@@ -107,22 +100,29 @@ namespace JsonApiDotNetCore.Extensions
                                                     Action<ServiceDiscoveryFacade> autoDiscover,
                                                     IMvcCoreBuilder mvcBuilder = null)
         {
-            var options = _options;
+            var options = new JsonApiOptions();
+            // add basic Mvc functionality
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
+            // configures JsonApiOptions;
             configureOptions(options);
-
             // build the resource graph using auto discovery.
             var facade = new ServiceDiscoveryFacade(services, options.ResourceGraphBuilder);
             autoDiscover(facade);
-
-            // add JsonApi fitlers and serializer
-            mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
-
+            ConfigureMvc(services, mvcBuilder, options);
             // register services
             AddJsonApiInternals(services, options);
             return services;
         }
 
+        private static void ConfigureMvc(IServiceCollection services, IMvcCoreBuilder mvcBuilder, JsonApiOptions options)
+        {
+            // add JsonApi filters and serializers
+            mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
+            // register services that allow user to override behaviour that is configured on startup, like routing conventions
+            AddStartupConfigurationServices(services, options);
+            var intermediateProvider = services.BuildServiceProvider();
+            mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>()));
+        }
 
         private static void AddMvcOptions(MvcOptions options, JsonApiOptions config)
         {
@@ -143,11 +143,20 @@ namespace JsonApiDotNetCore.Extensions
             AddJsonApiInternals(services, jsonApiOptions);
         }
 
+        /// <summary>
+        /// Adds services to the container that need to be retrieved with an intermediate provider during Startup.
+        /// </summary>
+        private static void AddStartupConfigurationServices(this IServiceCollection services, JsonApiOptions jsonApiOptions)
+        {
+            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
+            services.TryAddSingleton<IResourceNameFormatter>(new KebabCaseFormatter());
+            services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
+        }
+
         public static void AddJsonApiInternals(
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-
             var graph = jsonApiOptions.ResourceGraph ?? jsonApiOptions.ResourceGraphBuilder.Build();
 
             if (graph.UsesDbContext == false)
@@ -183,14 +192,12 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
-            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
             services.AddSingleton<ILinksConfiguration>(jsonApiOptions);
             services.AddSingleton(graph);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);
             services.AddScoped<ICurrentRequest, CurrentRequest>();
-            services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
-            services.AddScoped<JsonApiRouteHandler>();
+            services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>(); 
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
@@ -273,7 +280,6 @@ namespace JsonApiDotNetCore.Extensions
         {
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
-            options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
         }
 
         /// <summary>

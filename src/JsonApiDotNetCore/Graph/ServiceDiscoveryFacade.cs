@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Graph
         }
 
         private string FormatResourceName(Type resourceType)
-            => JsonApiOptions.ResourceNameFormatter.FormatResourceName(resourceType);
+            => new KebabCaseFormatter().FormatResourceName(resourceType);
 
         /// <summary>
         /// Add <see cref="IResourceService{T, TId}"/> implementations to container.

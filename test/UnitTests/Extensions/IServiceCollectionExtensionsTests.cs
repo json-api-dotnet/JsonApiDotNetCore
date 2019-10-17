@@ -30,6 +30,7 @@ namespace UnitTests.Extensions
             // arrange
             var services = new ServiceCollection();
             var jsonApiOptions = new JsonApiOptions();
+            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddScoped<ResourceDefinition<TodoItem>>();
@@ -49,7 +50,6 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
-            Assert.NotNull(provider.GetService<IJsonApiOptions>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
