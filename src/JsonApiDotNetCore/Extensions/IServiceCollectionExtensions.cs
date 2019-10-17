@@ -28,7 +28,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace JsonApiDotNetCore.Extensions
 {
-
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
@@ -160,6 +159,9 @@ namespace JsonApiDotNetCore.Extensions
             AddJsonApiInternals(services, jsonApiOptions);
         }
 
+        /// <summary>
+        /// Adds services to the container that need to be retrieved with an intermediate provider during Startup.
+        /// </summary>
         private static void AddStartupConfigurationServices(this IServiceCollection services, JsonApiOptions jsonApiOptions)
         {
             services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
@@ -211,8 +213,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IContextEntityProvider>(graph);
             services.AddScoped<ICurrentRequest, CurrentRequest>();
-            services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
-            //services.AddScoped<JsonApiRouteHandler>();
+            services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>(); 
             services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             services.AddScoped<IJsonApiReader, JsonApiReader>();
             services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
