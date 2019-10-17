@@ -47,26 +47,20 @@ namespace JsonApiDotNetCore.Extensions
         /// <param name="configureAction"></param>
         /// <returns></returns>
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
-                                                              Action<JsonApiOptions> configureAction,
+                                                              Action<JsonApiOptions> configureOptions,
                                                               IMvcCoreBuilder mvcBuilder = null)
             where TContext : DbContext
         {
-
-            mvcBuilder = mvcBuilder ?? services.AddMvcCore();
             var options = new JsonApiOptions();
-
             // add basic Mvc functionality
-            // set standard options
-            configureAction(options);
-
+            mvcBuilder = mvcBuilder ?? services.AddMvcCore();
+            // configures JsonApiOptions;
+            configureOptions(options);
             // ResourceGraphBuilder should not be exposed on JsonApiOptions.
             // Instead, ResourceGraphBuilder should consume JsonApiOptions
-
             // build the resource graph using ef core DbContext
             options.BuildResourceGraph(builder => builder.AddDbContext<TContext>());
-
             ConfigureMvc(services, mvcBuilder, options);
-
             // register services
             AddJsonApiInternals<TContext>(services, options);
             return services;
@@ -84,11 +78,11 @@ namespace JsonApiDotNetCore.Extensions
                                                     IMvcCoreBuilder mvcBuilder = null)
         {
             var options = new JsonApiOptions();
+            // add basic Mvc functionality
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
+            // configures JsonApiOptions;
             configureOptions(options);
-
             ConfigureMvc(services, mvcBuilder, options);
-
             // register services
             AddJsonApiInternals(services, options);
             return services;
@@ -107,18 +101,16 @@ namespace JsonApiDotNetCore.Extensions
                                                     IMvcCoreBuilder mvcBuilder = null)
         {
             var options = new JsonApiOptions();
+            // add basic Mvc functionality
             mvcBuilder = mvcBuilder ?? services.AddMvcCore();
+            // configures JsonApiOptions;
             configureOptions(options);
-
             // build the resource graph using auto discovery.
             var facade = new ServiceDiscoveryFacade(services, options.ResourceGraphBuilder);
             autoDiscover(facade);
-
             ConfigureMvc(services, mvcBuilder, options);
-
             // register services
             AddJsonApiInternals(services, options);
-
             return services;
         }
 
