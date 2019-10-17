@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
@@ -112,7 +111,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             return JsonConvert.SerializeObject(document);
         }
 
-
         /// <summary>
         /// Gets the list of attributes to serialize for the given <paramref name="resourceType"/>.
         /// Note that the choice omitting null-values is not handled here,
@@ -163,18 +161,6 @@ namespace JsonApiDotNetCore.Serialization.Server
             document.Links = _linkBuilder.GetTopLevelLinks(_provider.GetContextEntity<TResource>());
             document.Meta = _metaBuilder.GetMeta();
             document.Included = _includedBuilder.Build();
-        }
-
-        /// <summary>
-        /// Inspects the included relationship chains (see <see cref="IIncludeService"/>
-        /// to see if <paramref name="relationship"/> should be included or not.
-        /// </summary>
-        private bool ShouldInclude(RelationshipAttribute relationship, out List<List<RelationshipAttribute>> inclusionChain)
-        {
-            inclusionChain = _includeService.Get()?.Where(l => l.First().Equals(relationship)).ToList();
-            if (inclusionChain == null || !inclusionChain.Any())
-                return false;
-            return true;
         }
     }
 }
