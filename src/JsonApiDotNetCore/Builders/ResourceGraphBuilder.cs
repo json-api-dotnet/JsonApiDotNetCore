@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Builders
 
         public ResourceGraphBuilder(IResourceNameFormatter formatter = null)
         {
-            _resourceNameFormatter = formatter ?? new KebabCaseResourceNameFormatter();
+            _resourceNameFormatter = formatter ?? new KebabCaseFormatter();
         }
 
         /// <inheritdoc />

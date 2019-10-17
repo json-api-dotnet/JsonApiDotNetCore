@@ -28,19 +28,10 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc/>
         public Link RelationshipLinks { get; set; } = Link.All;
 
-
-        internal Type ResourceNameFormatterType { get; set; } = typeof(KebabCaseResourceNameFormatter);
-
-        //public void UseResourceNameFormatter<TFormatter>() where TFormatter : class, IResourceNameFormatter
-        //{
-        //    ResourceNameFormatterType = typeof(TFormatter);
-        //}
-
-
         /// <summary>
         /// Provides an interface for formatting resource names by convention
         /// </summary>
-        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new KebabCaseResourceNameFormatter();
+        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new KebabCaseFormatter();
 
         /// <summary>
         /// Provides an interface for formatting relationship id properties given the navigation property name

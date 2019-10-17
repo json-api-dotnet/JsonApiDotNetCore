@@ -30,6 +30,7 @@ namespace UnitTests.Extensions
             // arrange
             var services = new ServiceCollection();
             var jsonApiOptions = new JsonApiOptions();
+            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddScoped<ResourceDefinition<TodoItem>>();

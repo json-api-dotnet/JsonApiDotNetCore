@@ -2,11 +2,10 @@
 using System.Reflection;
 using Humanizer;
 using JsonApiDotNetCore.Models;
-using str = JsonApiDotNetCore.Extensions.StringExtensions;
 
 namespace JsonApiDotNetCore.Graph
 {
-    public class KebabCaseResourceNameFormatter : IResourceNameFormatter
+    public abstract class BaseResourceNameFormatter : IResourceNameFormatter
     {
         /// <summary>
         /// Uses the internal type name to determine the external resource name.
@@ -15,7 +14,7 @@ namespace JsonApiDotNetCore.Graph
         /// <example>
         /// <code>
         /// _default.FormatResourceName(typeof(TodoItem)).Dump(); 
-        /// // > "todo-items"
+        /// // > "todoItems"
         /// </code>
         /// </example>
         public string FormatResourceName(Type type)
@@ -43,13 +42,13 @@ namespace JsonApiDotNetCore.Graph
         /// <example>
         /// <code>
         /// _default.ApplyCasingConvention("TodoItems"); 
-        /// // > "todo-items"
+        /// // > "todoItems"
         ///
         /// _default.ApplyCasingConvention("TodoItem"); 
-        /// // > "todo-item"
+        /// // > "todoItem"
         /// </code>
         /// </example>
-        public string ApplyCasingConvention(string properName) => str.Dasherize(properName);
+        public abstract string ApplyCasingConvention(string properName);
 
         /// <summary>
         /// Uses the internal PropertyInfo to determine the external resource name.
@@ -63,9 +62,9 @@ namespace JsonApiDotNetCore.Graph
         /// The public attribute will be formatted like so:
         /// <code>
         /// _default.FormatPropertyName(compoundProperty).Dump(); 
-        /// // > "compound-property"
+        /// // > "compoundProperty"
         /// </code>
         /// </example>
-        public string FormatPropertyName(PropertyInfo property) => str.Dasherize(property.Name);
+        public string FormatPropertyName(PropertyInfo property) => ApplyCasingConvention(property.Name);
     }
 }
