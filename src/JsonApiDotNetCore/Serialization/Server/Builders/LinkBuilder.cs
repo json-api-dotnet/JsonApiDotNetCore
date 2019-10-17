@@ -10,9 +10,9 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     public class LinkBuilder : ILinkBuilder
     {
-        private readonly ICurrentRequest _currentRequest;
-        private readonly ILinksConfiguration _options;
         private readonly IContextEntityProvider _provider;
+        private readonly ILinksConfiguration _options;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IPageService _pageService;
 
         public LinkBuilder(ILinksConfiguration options,

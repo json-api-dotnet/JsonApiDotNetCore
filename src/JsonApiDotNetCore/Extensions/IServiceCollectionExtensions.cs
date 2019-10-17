@@ -24,12 +24,11 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Client;
-using JsonApiDotNetCore.Controllers;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace JsonApiDotNetCore.Extensions
 {
+
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
@@ -53,9 +52,11 @@ namespace JsonApiDotNetCore.Extensions
                                                               IMvcCoreBuilder mvcBuilder = null)
             where TContext : DbContext
         {
+
+            mvcBuilder = mvcBuilder ?? services.AddMvcCore();
+
             var options = new JsonApiOptions();
             // add basic Mvc functionality
-            mvcBuilder = mvcBuilder ?? services.AddMvcCore();
             // set standard options
             configureAction(options);
 
@@ -67,6 +68,11 @@ namespace JsonApiDotNetCore.Extensions
 
             // add JsonApi fitlers and serializer
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
+
+            // register services that allow user to override behaviour that is configured on startup, like routing conventions
+            AddStartupConfigurationServices(services, options);
+            var intermediateProvider = services.BuildServiceProvider();
+            mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>()));
 
             // register services
             AddJsonApiInternals<TContext>(services, options);
@@ -90,6 +96,11 @@ namespace JsonApiDotNetCore.Extensions
 
             // add JsonApi fitlers and serializer
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
+
+            // register services that allow user to override behaviour that is configured on startup, like routing conventions
+            AddStartupConfigurationServices(services, options);
+            var intermediateProvider = services.BuildServiceProvider();
+            mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>()));
 
             // register services
             AddJsonApiInternals(services, options);
@@ -119,20 +130,16 @@ namespace JsonApiDotNetCore.Extensions
             // add JsonApi filters and serializers
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
 
-            // register services that allow user to override behaviour that is configured on startup
+            // register services that allow user to override behaviour that is configured on startup, like routing conventions
             AddStartupConfigurationServices(services, options);
-
             var intermediateProvider = services.BuildServiceProvider();
             mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>()));
-            //intermediateProvider.Dispose();
 
             // register services
             AddJsonApiInternals(services, options);
 
-
             return services;
         }
-
 
         private static void AddMvcOptions(MvcOptions options, JsonApiOptions config)
         {

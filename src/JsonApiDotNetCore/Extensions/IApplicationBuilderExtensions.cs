@@ -24,9 +24,7 @@ namespace JsonApiDotNetCore.Extensions
             app.UseMiddleware<CurrentRequestMiddleware>();
 
             if (useMvc)
-            {
                 app.UseMvc();
-            }
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
