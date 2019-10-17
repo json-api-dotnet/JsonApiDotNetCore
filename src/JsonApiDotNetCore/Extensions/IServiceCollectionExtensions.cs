@@ -296,7 +296,6 @@ namespace JsonApiDotNetCore.Extensions
         {
             options.InputFormatters.Insert(0, new JsonApiInputFormatter());
             options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
-            //options.Conventions.Insert(0, new DasherizedRoutingConvention(jsonApiOptions.Namespace));
         }
 
         /// <summary>
