@@ -116,10 +116,8 @@ namespace JsonApiDotNetCore.Extensions
 
         private static void ConfigureMvc(IServiceCollection services, IMvcCoreBuilder mvcBuilder, JsonApiOptions options)
         {
-
             // add JsonApi filters and serializers
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, options));
-
             // register services that allow user to override behaviour that is configured on startup, like routing conventions
             AddStartupConfigurationServices(services, options);
             var intermediateProvider = services.BuildServiceProvider();
