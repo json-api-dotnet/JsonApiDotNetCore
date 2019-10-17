@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = "/camelCasedModels";
+            var route = "api/v1/camelCasedModels";
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var server = new TestServer(builder);
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/camelCasedModels/{model.Id}";
+            var route = $"api/v1/camelCasedModels/{model.Id}";
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var server = new TestServer(builder);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 }
             };
             var httpMethod = new HttpMethod("POST");
-            var route = $"/camelCasedModels";
+            var route = $"api/v1/camelCasedModels";
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var server = new TestServer(builder);
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 }
             };
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/camelCasedModels/{model.Id}";
+            var route = $"api/v1/camelCasedModels/{model.Id}";
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
