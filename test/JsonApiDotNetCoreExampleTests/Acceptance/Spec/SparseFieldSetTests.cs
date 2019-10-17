@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description,created-date";
+            var route = $"/api/v1/todo-items/{todoItem.Id}?fields=description,created-date";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // act
@@ -117,6 +117,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(2, deserializeBody.SingleData.Attributes.Count);
             Assert.Equal(todoItem.Description, deserializeBody.SingleData.Attributes["description"]);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.SingleData.Attributes["created-date"]).ToString("G"));
+        }
+
+        [Fact]
+        public async Task Fields_Query_Selects_Sparse_Field_Sets_With_Type_As_Navigation()
+        {
+            // arrange
+            var todoItem = new TodoItem
+            {
+                Description = "description",
+                Ordinal = 1,
+                CreatedDate = DateTime.Now
+            };
+            _dbContext.TodoItems.Add(todoItem);
+            await _dbContext.SaveChangesAsync();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+            var httpMethod = new HttpMethod("GET");
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description,created-date";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains("relationships only", body);
         }
 
         [Fact]
