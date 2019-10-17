@@ -13,16 +13,16 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private readonly ICurrentRequest _currentRequest;
         private readonly ILinksConfiguration _options;
         private readonly IContextEntityProvider _provider;
-        private readonly IPageService _pageManager;
+        private readonly IPageService _pageService;
 
         public LinkBuilder(ILinksConfiguration options,
                            ICurrentRequest currentRequest,
-                           IPageService pageManager,
+                           IPageService pageService,
                            IContextEntityProvider provider)
         {
             _options = options;
             _currentRequest = currentRequest;
-            _pageManager = pageManager;
+            _pageService = pageService;
             _provider = provider;
         }
 
@@ -54,23 +54,23 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private void SetPageLinks(ContextEntity primaryResource, ref TopLevelLinks links)
         {
-            if (!_pageManager.ShouldPaginate())
+            if (!_pageService.ShouldPaginate())
                 return;
 
             links = links ?? new TopLevelLinks();
 
-            if (_pageManager.CurrentPage > 1)
+            if (_pageService.CurrentPage > 1)
             {
-                links.First = GetPageLink(primaryResource, 1, _pageManager.PageSize);
-                links.Prev = GetPageLink(primaryResource, _pageManager.CurrentPage - 1, _pageManager.PageSize);
+                links.First = GetPageLink(primaryResource, 1, _pageService.PageSize);
+                links.Prev = GetPageLink(primaryResource, _pageService.CurrentPage - 1, _pageService.PageSize);
             }
 
-            if (_pageManager.CurrentPage < _pageManager.TotalPages)
-                links.Next = GetPageLink(primaryResource, _pageManager.CurrentPage + 1, _pageManager.PageSize);
+            if (_pageService.CurrentPage < _pageService.TotalPages)
+                links.Next = GetPageLink(primaryResource, _pageService.CurrentPage + 1, _pageService.PageSize);
 
 
-            if (_pageManager.TotalPages > 0)
-                links.Last = GetPageLink(primaryResource, _pageManager.TotalPages, _pageManager.PageSize);
+            if (_pageService.TotalPages > 0)
+                links.Last = GetPageLink(primaryResource, _pageService.TotalPages, _pageService.PageSize);
         }
 
         private string GetSelfTopLevelLink(string resourceName)

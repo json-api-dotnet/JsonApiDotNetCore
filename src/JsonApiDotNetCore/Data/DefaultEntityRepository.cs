@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
@@ -20,52 +18,42 @@ namespace JsonApiDotNetCore.Data
     /// Provides a default repository implementation and is responsible for
     /// abstracting any EF Core APIs away from the service layer.
     /// </summary>
-    public class DefaultEntityRepository<TEntity, TId>
-        : IEntityRepository<TEntity, TId>,
-        IEntityFrameworkRepository<TEntity>
+    public class DefaultEntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
     {
-        private readonly ICurrentRequest _currentRequest;
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
-        private readonly ILogger _logger;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
-        private readonly ResourceDefinition<TEntity> _resourceDefinition;
 
         public DefaultEntityRepository(
-            ICurrentRequest currentRequest,
-            ITargetedFields updatedFields,
+            ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericProcessorFactory genericProcessorFactory,
-            ResourceDefinition<TEntity> resourceDefinition = null)
-            : this(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, null)
+            IGenericProcessorFactory genericProcessorFactory)
+            : this(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
         { }
 
         public DefaultEntityRepository(
-            ICurrentRequest currentRequest,
-            ITargetedFields updatedFields,
+            ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
-            ResourceDefinition<TEntity> resourceDefinition = null,
             ILoggerFactory loggerFactory = null)
         {
-            _logger = loggerFactory?.CreateLogger<DefaultEntityRepository<TEntity, TId>>();
-            _currentRequest = currentRequest;
-            _targetedFields = updatedFields;
+            _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
-            _resourceDefinition = resourceDefinition;
         }
 
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Get() => _dbSet;
-        
+        /// <inheritdoc />
+        public virtual IQueryable<TEntity> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
+
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields)
         {
@@ -79,12 +67,9 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQueryContext filterQueryContext)
         {
             if (filterQueryContext.IsCustom)
-            {   // todo: consider to move this business logic to service layer
-                var filterQuery = filterQueryContext.Query;
-                var defaultQueryFilters = _resourceDefinition.GetQueryFilters();
-                if (defaultQueryFilters != null && defaultQueryFilters.TryGetValue(filterQuery.Target, out var defaultQueryFilter) == true)
-                    return defaultQueryFilter(entities, filterQuery);
-
+            {
+                var query = (Func<IQueryable<TEntity>, FilterQuery, IQueryable<TEntity>>)filterQueryContext.CustomQuery;
+                return query(entities, filterQueryContext.Query);
             }
             return entities.Filter(filterQueryContext);
         }
@@ -96,43 +81,28 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> GetAsync(TId id, List<AttrAttribute> fields = null)
-        {
-            return await Select(Get(), fields).SingleOrDefaultAsync(e => e.Id.Equals(id));
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship, List<AttrAttribute> fields = null)
-        {
-            _logger?.LogDebug($"[JADN] GetAndIncludeAsync({id}, {relationship.PublicRelationshipName})");
-            var includedSet = Include(Select(Get(), fields), relationship);
-            var result = await includedSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
-            return result;
-        }
-
-        /// <inheritdoc />
         public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 if (wasAlreadyTracked)
-                {
                     /// We only need to reassign the relationship value to the to-be-added
                     /// entity when we're using a different instance (because this different one
                     /// was already tracked) than the one assigned to the to-be-created entity.
                     AssignRelationshipValue(entity, trackedRelationshipValue, relationshipAttr);
-                }
                 else if (relationshipAttr is HasManyThroughAttribute throughAttr)
-                {
                     /// even if we don't have to reassign anything because of already tracked 
                     /// entities, we still need to assign the "through" entities in the case of many-to-many.
                     AssignHasManyThrough(entity, throughAttr, (IList)trackedRelationshipValue);
-                }
             }
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
+
+            // this ensures relationships get reloaded from the database if they have
+            // been requested. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
+            DetachRelationships(entity);
 
             return entity;
         }
@@ -169,7 +139,7 @@ namespace JsonApiDotNetCore.Data
 
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _resourceGraph.GetContextEntity(type).Relationships.SingleOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
+            var relationshipAttr = _resourceGraph.GetContextEntity(type).Relationships.FirstOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
             if (relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute)
@@ -182,9 +152,7 @@ namespace JsonApiDotNetCore.Data
             return !(type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable)));
         }
 
-
-        /// <inheritdoc />
-        public void DetachRelationshipPointers(TEntity entity)
+        private void DetachRelationships(TEntity entity)
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -212,22 +180,22 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
         {
-            var databaseEntity = await GetAsync(updatedEntity.Id);
+            var databaseEntity = await Get(updatedEntity.Id).FirstOrDefaultAsync();
             if (databaseEntity == null)
                 return null;
 
-            foreach (var attr in _targetedFields.Attributes)
-                attr.SetValue(databaseEntity, attr.GetValue(updatedEntity));
+            foreach (var attribute in _targetedFields.Attributes)
+                attribute.SetValue(databaseEntity, attribute.GetValue(updatedEntity));
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
                 /// loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
-                /// trackedRelationshipValue is either equal to updatedPerson.todoItems 
-                /// or replaced with the same set of todoItems from the EF Core change tracker, 
-                /// if they were already tracked
-                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out bool wasAlreadyTracked);
-                /// loads into the db context any persons currentlresy related 
+                /// trackedRelationshipValue is either equal to updatedPerson.todoItems,
+                /// or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
+                /// which is the case if they were already tracked
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out _);
+                /// loads into the db context any persons currently related
                 /// to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 /// assigns the updated relationship to the database entity
@@ -237,7 +205,6 @@ namespace JsonApiDotNetCore.Data
             await _context.SaveChangesAsync();
             return databaseEntity;
         }
-
 
         /// <summary>
         /// Responsible for getting the relationship value for a given relationship 
@@ -302,11 +269,10 @@ namespace JsonApiDotNetCore.Data
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
         }
 
-
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            var entity = await GetAsync(id);
+            var entity = await Get(id).FirstOrDefaultAsync();
             if (entity == null) return false;
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
@@ -323,33 +289,6 @@ namespace JsonApiDotNetCore.Data
                 internalRelationshipPath = (internalRelationshipPath == null)
                     ? relationship.RelationshipPath
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
-
-            return entities.Include(internalRelationshipPath);
-        }
-
-        /// <inheritdoc />
-        public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
-        {
-            if (string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(400, "Include parameter must not be empty if provided");
-
-            var relationshipChain = relationshipName.Split('.');
-
-            // variables mutated in recursive loop
-            // TODO: make recursive method
-            string internalRelationshipPath = null;
-            var entity = _currentRequest.GetRequestResource();
-            for (var i = 0; i < relationshipChain.Length; i++)
-            {
-                var requestedRelationship = relationshipChain[i];
-                var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
-
-                internalRelationshipPath = (internalRelationshipPath == null)
-                    ? relationship.RelationshipPath
-                    : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
-
-                if (i < relationshipChain.Length)
-                    entity = _resourceGraph.GetContextEntity(relationship.Type);
-            }
 
             return entities.Include(internalRelationshipPath);
         }
@@ -493,16 +432,23 @@ namespace JsonApiDotNetCore.Data
     }
 
     /// <inheritdoc />
-    public class DefaultEntityRepository<TEntity>
-        : DefaultEntityRepository<TEntity, int>,
-        IEntityRepository<TEntity>
+    public class DefaultEntityRepository<TEntity> : DefaultEntityRepository<TEntity, int>, IEntityRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
-        public DefaultEntityRepository(ICurrentRequest currentRequest, ITargetedFields updatedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IGenericProcessorFactory genericProcessorFactory, ResourceDefinition<TEntity> resourceDefinition = null) : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition)
+        public DefaultEntityRepository(ITargetedFields targetedFields,
+                                       IDbContextResolver contextResolver,
+                                       IResourceGraph resourceGraph,
+                                       IGenericProcessorFactory genericProcessorFactory)
+            : base(targetedFields, contextResolver, resourceGraph, genericProcessorFactory)
         {
         }
 
-        public DefaultEntityRepository(ICurrentRequest currentRequest, ITargetedFields updatedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IGenericProcessorFactory genericProcessorFactory, ResourceDefinition<TEntity> resourceDefinition = null, ILoggerFactory loggerFactory = null) : base(currentRequest, updatedFields, contextResolver, resourceGraph, genericProcessorFactory, resourceDefinition, loggerFactory)
+        public DefaultEntityRepository(ITargetedFields targetedFields,
+                                       IDbContextResolver contextResolver,
+                                       IResourceGraph resourceGraph,
+                                       IGenericProcessorFactory genericProcessorFactory,
+                                       ILoggerFactory loggerFactory = null)
+            : base(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, loggerFactory)
         {
         }
     }

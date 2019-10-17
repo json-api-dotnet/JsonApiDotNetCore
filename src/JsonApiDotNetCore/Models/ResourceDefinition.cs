@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Models
     {
         List<AttrAttribute> GetAllowedAttributes();
         List<RelationshipAttribute> GetAllowedRelationships();
-        bool HasCustomQueryFilter(string key);
+        object GetCustomQueryFilter(string key);
         List<(AttrAttribute, SortDirection)> DefaultSort();
     }
 
@@ -99,9 +99,12 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
-        public bool HasCustomQueryFilter(string key)
+        public object GetCustomQueryFilter(string key)
         {
-            return GetQueryFilters()?.Keys.Contains(key) ?? false;
+            var customFilters = GetQueryFilters();
+            if (customFilters != null && customFilters.TryGetValue(key, out var query))
+                return query;
+            return null;
         }
 
         /// <inheritdoc/>

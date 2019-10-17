@@ -347,7 +347,7 @@ namespace UnitTests.ResourceHooks
         ) where TModel : class, IIdentifiable<int>
         {
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultEntityRepository<TModel, int>(null, null, resolver, null, null, null);
+            return new DefaultEntityRepository<TModel, int>(null, resolver, null, null, null);
         }
 
         IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

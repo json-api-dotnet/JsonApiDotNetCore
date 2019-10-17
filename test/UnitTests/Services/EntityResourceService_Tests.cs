@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
@@ -45,8 +47,12 @@ namespace UnitTests.Services
             const string relationshipName = "collection";
             var relationship = new HasOneAttribute(relationshipName);
 
-            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
-                .ReturnsAsync(new TodoItem());
+            var todoItem = new TodoItem();
+            var query = new List<TodoItem> { todoItem }.AsQueryable();
+
+            _repositoryMock.Setup(m => m.Get(id)).Returns(query);
+            _repositoryMock.Setup(m => m.Include(query, relationship)).Returns(query);
+            _repositoryMock.Setup(m => m.FirstOrDefaultAsync(query)).ReturnsAsync(todoItem);
 
             var service = GetService();
 
@@ -54,7 +60,9 @@ namespace UnitTests.Services
             await service.GetRelationshipAsync(id, relationshipName);
 
             // assert
-            _repositoryMock.Verify(m => m.GetAndIncludeAsync(id, relationship, null), Times.Once);
+            _repositoryMock.Verify(m => m.Get(id), Times.Once);
+            _repositoryMock.Verify(m => m.Include(query, relationship), Times.Once);
+            _repositoryMock.Verify(m => m.FirstOrDefaultAsync(query), Times.Once);
         }
 
         [Fact]
@@ -70,8 +78,11 @@ namespace UnitTests.Services
                 Collection = new TodoItemCollection { Id = Guid.NewGuid() }
             };
 
-            _repositoryMock.Setup(m => m.GetAndIncludeAsync(id, relationship, null))
-                .ReturnsAsync(todoItem);
+            var query = new List<TodoItem> { todoItem }.AsQueryable();
+
+            _repositoryMock.Setup(m => m.Get(id)).Returns(query);
+            _repositoryMock.Setup(m => m.Include(query, relationship)).Returns(query);
+            _repositoryMock.Setup(m => m.FirstOrDefaultAsync(query)).ReturnsAsync(todoItem);
 
             var repository = GetService();
 
@@ -86,7 +97,7 @@ namespace UnitTests.Services
 
         private EntityResourceService<TodoItem> GetService()
         {
-            return new EntityResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), _crMock.Object, null, null, _pgsMock.Object, _resourceGraph);
+            return new EntityResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), null, null, _pgsMock.Object, _resourceGraph);
         }
     }
 }

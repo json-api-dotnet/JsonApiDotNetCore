@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Hooks
         /// and by this the relationship to a different Person was implicitly removed, 
         /// this hook will be fired for the latter Person.
         /// <para />
-        /// See <see cref="ResourceDefinition{T}.BeforeUpdate"/> for information about
+        /// See <see cref="ResourceDefinition{T}.BeforeUpdate(IDiffableEntityHashSet{T}, ResourcePipeline)"/> for information about
         /// when this hook is fired.
         /// <para />
         /// </summary>

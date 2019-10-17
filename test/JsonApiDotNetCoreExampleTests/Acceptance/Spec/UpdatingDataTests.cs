@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                 .Include(t => t.Owner)
                 .SingleOrDefault(t => t.Id == todoItem.Id);
-            Assert.Equal(person.Id, updatedTodoItem.OwnerId);
+            Assert.Equal(person.Id, todoItem.OwnerId);
             Assert.Equal(newTodoItem.Description, updatedTodoItem.Description);
             Assert.Equal(newTodoItem.Ordinal, updatedTodoItem.Ordinal);
         }

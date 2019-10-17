@@ -39,9 +39,9 @@ namespace JsonApiDotNetCore.Hooks
         private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
         public TraversalHelper(
             IContextEntityProvider provider,
-            ITargetedFields updatedFields)
+            ITargetedFields targetedFields)
         {
-            _targetedFields = updatedFields;
+            _targetedFields = targetedFields;
             _provider = provider;
         }
 

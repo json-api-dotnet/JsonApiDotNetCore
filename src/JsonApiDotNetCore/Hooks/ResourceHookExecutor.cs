@@ -25,13 +25,13 @@ namespace JsonApiDotNetCore.Hooks
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
-            ITargetedFields updatedFields,
+            ITargetedFields targetedFields,
             IIncludeService includedRelationships,
             IResourceGraph resourceGraph)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
-            _targetedFields = updatedFields;
+            _targetedFields = targetedFields;
             _includeService = includedRelationships;
             _graph = resourceGraph;
         }

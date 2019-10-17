@@ -36,13 +36,14 @@ namespace UnitTests.QueryParameters
             const string attrName = "some-field";
             const string internalAttrName = "SomeField";
             var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
+            var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
 
             var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
 
             var contextEntity = new ContextEntity
             {
                 EntityName = type,
-                Attributes = new List<AttrAttribute> { attribute },
+                Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
             var service = GetService(contextEntity);
@@ -53,7 +54,8 @@ namespace UnitTests.QueryParameters
 
             // assert
             Assert.NotEmpty(result);
-            Assert.Equal(attribute, result.Single());
+            Assert.Equal(idAttribute, result.First());
+            Assert.Equal(attribute, result[1]);
         }
 
         [Fact]

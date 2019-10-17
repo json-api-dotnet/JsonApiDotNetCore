@@ -3,10 +3,7 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
@@ -20,15 +17,14 @@ namespace JsonApiDotNetCoreExample.Services
                                     IFilterService filterService,
                                     IEntityRepository<Article, int> repository,
                                     IJsonApiOptions options,
-                                    ICurrentRequest currentRequest,
                                     IIncludeService includeService,
                                     ISparseFieldsService sparseFieldsService,
-                                    IPageService pageManager,
+                                    IPageService pageService,
                                     IResourceGraph resourceGraph,
                                     IResourceHookExecutor hookExecutor = null,
                                     ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, repository, options, currentRequest, includeService, sparseFieldsService,
-                   pageManager, resourceGraph, hookExecutor, loggerFactory)
+            : base(sortService, filterService, repository, options, includeService, sparseFieldsService,
+                   pageService, resourceGraph, hookExecutor, loggerFactory)
         {
         }
 

@@ -38,10 +38,15 @@ namespace JsonApiDotNetCore.Query
         private FilterQueryContext GetQueryContexts(FilterQuery query)
         {
             var queryContext = new FilterQueryContext(query);
-            if (_requestResourceDefinition != null && _requestResourceDefinition.HasCustomQueryFilter(query.Target))
+            if (_requestResourceDefinition != null)
             {
-                queryContext.IsCustom = true;
-                return queryContext;
+                var customQuery = _requestResourceDefinition.GetCustomQueryFilter(query.Target);
+                if (customQuery != null)
+                {
+                    queryContext.IsCustom = true;
+                    queryContext.CustomQuery = customQuery;
+                    return queryContext;
+                }
             }
 
             queryContext.Relationship = GetRelationship(query.Relationship);

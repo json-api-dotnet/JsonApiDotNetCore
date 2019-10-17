@@ -20,12 +20,14 @@ namespace JsonApiDotNetCore.Data
         /// such as authorization of resources.
         /// </summary>
         IQueryable<TEntity> Get();
-
+        /// <summary>
+        /// Get the entity by id
+        /// </summary>
+        IQueryable<TEntity> Get(TId id);
         /// <summary>
         /// Apply fields to the provided queryable
         /// </summary>
         IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields);
-
         /// <summary>
         /// Include a relationship in the query
         /// </summary>
@@ -35,51 +37,26 @@ namespace JsonApiDotNetCore.Data
         /// </code>
         /// </example>
         IQueryable<TEntity> Include(IQueryable<TEntity> entities, params RelationshipAttribute[] inclusionChain);
-        [Obsolete]
-        IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName);
-
         /// <summary>
         /// Apply a filter to the provided queryable
         /// </summary>
         IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQueryContext filterQuery);
-
         /// <summary>
         /// Apply a sort to the provided queryable
         /// </summary>
         IQueryable<TEntity> Sort(IQueryable<TEntity> entities, SortQueryContext sortQueries);
-
         /// <summary>
         /// Paginate the provided queryable
         /// </summary>
         Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber);
-
-        /// <summary>
-        /// Get the entity by id
-        /// </summary>
-        Task<TEntity> GetAsync(TId id, List<AttrAttribute> fields = null);
-
-        /// <summary>
-        /// Get the entity with the specified id and include the relationship.
-        /// </summary>
-        /// <param name="id">The entity id</param>
-        /// <param name="relationship">The exposed relationship</param>
-        /// <example>
-        /// <code>
-        /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
-        /// </code>
-        /// </example>
-        Task<TEntity> GetAndIncludeAsync(TId id, RelationshipAttribute relationship, List<AttrAttribute> fields = null);
-
         /// <summary>
         /// Count the total number of records
         /// </summary>
         Task<int> CountAsync(IQueryable<TEntity> entities);
-
         /// <summary>
         /// Get the first element in the collection, return the default value if collection is empty
         /// </summary>
         Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities);
-
         /// <summary>
         /// Convert the collection to a materialized list
         /// </summary>

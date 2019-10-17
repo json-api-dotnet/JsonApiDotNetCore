@@ -52,9 +52,9 @@ namespace JsonApiDotNetCore.Hooks
         internal DiffableEntityHashSet(IEnumerable requestEntities,
                   IEnumerable databaseEntities,
                   Dictionary<RelationshipAttribute, IEnumerable> relationships,
-                  ITargetedFields updatedFields)
+                  ITargetedFields targetedFields)
             : this((HashSet<TResource>)requestEntities, (HashSet<TResource>)databaseEntities, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-              TypeHelper.ConvertAttributeDictionary(updatedFields.Attributes, (HashSet<TResource>)requestEntities))
+              TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestEntities))
         { }
 
 
