@@ -9,14 +9,7 @@ namespace JsonApiDotNetCore.Graph
     {
         /// <summary>
         /// Uses the internal type name to determine the external resource name.
-        /// By default we us Humanizer for pluralization and then we dasherize the name.
         /// </summary>
-        /// <example>
-        /// <code>
-        /// _default.FormatResourceName(typeof(TodoItem)).Dump(); 
-        /// // > "todoItems"
-        /// </code>
-        /// </example>
         public string FormatResourceName(Type type)
         {
             try
@@ -38,33 +31,12 @@ namespace JsonApiDotNetCore.Graph
         /// Aoplies the desired casing convention to the internal string.
         /// This is generally applied to the type name after pluralization.
         /// </summary>
-        ///
-        /// <example>
-        /// <code>
-        /// _default.ApplyCasingConvention("TodoItems"); 
-        /// // > "todoItems"
-        ///
-        /// _default.ApplyCasingConvention("TodoItem"); 
-        /// // > "todoItem"
-        /// </code>
-        /// </example>
         public abstract string ApplyCasingConvention(string properName);
 
         /// <summary>
         /// Uses the internal PropertyInfo to determine the external resource name.
         /// By default the name will be formatted to kebab-case.
         /// </summary>
-        /// <example>
-        /// Given the following property:
-        /// <code>
-        /// public string CompoundProperty { get; set; }
-        /// </code>
-        /// The public attribute will be formatted like so:
-        /// <code>
-        /// _default.FormatPropertyName(compoundProperty).Dump(); 
-        /// // > "compoundProperty"
-        /// </code>
-        /// </example>
         public string FormatPropertyName(PropertyInfo property) => ApplyCasingConvention(property.Name);
     }
 }
