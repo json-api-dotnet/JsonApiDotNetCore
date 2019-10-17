@@ -29,11 +29,6 @@ namespace JsonApiDotNetCore.Configuration
         public Link RelationshipLinks { get; set; } = Link.All;
 
         /// <summary>
-        /// Provides an interface for formatting resource names by convention
-        /// </summary>
-        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new KebabCaseFormatter();
-
-        /// <summary>
         /// Provides an interface for formatting relationship id properties given the navigation property name
         /// </summary>
         public static IRelatedIdMapper RelatedIdMapper { get; set; } = new DefaultRelatedIdMapper();

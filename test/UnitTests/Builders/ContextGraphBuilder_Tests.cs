@@ -25,11 +25,6 @@ namespace UnitTests
             public DbSet<DbResource> DbResources { get; set; }
         }
 
-        public ResourceGraphBuilder_Tests()
-        {
-            JsonApiOptions.ResourceNameFormatter = new KebabCaseFormatter();
-        }
-
         [Fact]
         public void Can_Build_ResourceGraph_Using_Builder()
         {
