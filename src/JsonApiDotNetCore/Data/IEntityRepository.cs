@@ -13,13 +13,6 @@ namespace JsonApiDotNetCore.Data
         IEntityWriteRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
     { }
-
-    [Obsolete("Do not use anymore. See @MIGRATION_LINK for details.", true)]
-    internal interface IEntityFrameworkRepository<TEntity>
-    {
-        [Obsolete("Do not use anymore. See @MIGRATION_LINK for details.", true)]
-        void DetachRelationshipPointers(TEntity entity);
-    }
 }
 
 

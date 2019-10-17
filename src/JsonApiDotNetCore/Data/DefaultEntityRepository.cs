@@ -85,21 +85,17 @@ namespace JsonApiDotNetCore.Data
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                var trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool wasAlreadyTracked);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 if (wasAlreadyTracked)
-                {
                     /// We only need to reassign the relationship value to the to-be-added
                     /// entity when we're using a different instance (because this different one
                     /// was already tracked) than the one assigned to the to-be-created entity.
                     AssignRelationshipValue(entity, trackedRelationshipValue, relationshipAttr);
-                }
                 else if (relationshipAttr is HasManyThroughAttribute throughAttr)
-                {
                     /// even if we don't have to reassign anything because of already tracked 
                     /// entities, we still need to assign the "through" entities in the case of many-to-many.
                     AssignHasManyThrough(entity, throughAttr, (IList)trackedRelationshipValue);
-                }
             }
             _dbSet.Add(entity);
             await _context.SaveChangesAsync();
@@ -195,11 +191,11 @@ namespace JsonApiDotNetCore.Data
             {
                 /// loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
-                /// trackedRelationshipValue is either equal to updatedPerson.todoItems 
-                /// or replaced with the same set of todoItems from the EF Core change tracker,
-                /// if they were already tracked
-                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out bool wasAlreadyTracked);
-                /// loads into the db context any persons currentlresy related 
+                /// trackedRelationshipValue is either equal to updatedPerson.todoItems,
+                /// or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
+                /// which is the case if they were already tracked
+                object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out _);
+                /// loads into the db context any persons currently related
                 /// to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 /// assigns the updated relationship to the database entity
@@ -433,23 +429,6 @@ namespace JsonApiDotNetCore.Data
             _context.Entry(relationshipValue).State = EntityState.Unchanged;
             return null;
         }
-
-        [Obsolete("Use method Select(IQueryable<TEntity>, List<AttrAttribute>) instead. See @MIGRATION_LINK for details.", true)]
-        public IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields) => throw new NotImplementedException();
-        [Obsolete("Use method Include(IQueryable<TEntity>, params RelationshipAttribute[]) instead. See @MIGRATION_LINK for details.", true)]
-        public IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName) => throw new NotImplementedException();
-        [Obsolete("Use method Filter(IQueryable<TEntity>, FilterQueryContext) instead. See @MIGRATION_LINK for details.", true)]
-        public IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQuery filterQuery) => throw new NotImplementedException();
-        [Obsolete("Use method Sort(IQueryable<TEntity>, SortQueryContext) instead. See @MIGRATION_LINK for details.", true)]
-        public IQueryable<TEntity> Sort(IQueryable<TEntity> entities, List<SortQuery> sortQueries) => throw new NotImplementedException();
-        [Obsolete("Use method Get(TId id) and FirstOrDefaultAsync(IQueryable<TEntity>) separatedly instead. See @MIGRATION_LINK for details.", true)]
-        public Task<TEntity> GetAsync(TId id) => throw new NotImplementedException();
-        [Obsolete("Use methods Get(TId id) and Include(IQueryable<TEntity>, params RelationshipAttribute[]) separatedly instead. See @MIGRATION_LINK for details.", true)]
-        public Task<TEntity> GetAndIncludeAsync(TId id, string relationshipName) => throw new NotImplementedException();
-        [Obsolete("Use method UpdateAsync(TEntity) instead. See @MIGRATION_LINK for details.")]
-        public Task<TEntity> UpdateAsync(TId id, TEntity entity) => throw new NotImplementedException();
-        [Obsolete("This has been removed, see @TODO_MIGRATION_LINK for details", true)]
-        public void DetachRelationshipPointers(TEntity entity) { }
     }
 
     /// <inheritdoc />

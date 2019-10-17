@@ -210,9 +210,6 @@ namespace JsonApiDotNetCore.Services
             return await _repository.PageAsync(entities, _pageManager.PageSize, _pageManager.CurrentPage);
         }
 
-        [Obsolete("Use separate EntityResourceService.Filter and EntityResourceService.Sort methods", true)]
-        protected virtual IQueryable<TResource> ApplySortAndFilterQuery(IQueryable<TResource> entities) => entities;
-
         /// <summary>
         /// Includes the relationships
         /// </summary>
