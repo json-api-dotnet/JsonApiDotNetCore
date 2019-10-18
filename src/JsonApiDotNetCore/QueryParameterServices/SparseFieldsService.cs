@@ -51,9 +51,11 @@ namespace JsonApiDotNetCore.Query
 
             var keySplitted = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
-            if (keySplitted.Count() == 1) // input format: fields=prop1,prop2
+            if (keySplitted.Count() == 1)
+            {   // input format: fields=prop1,prop2
                 foreach (var field in fields)
                     RegisterRequestResourceField(field);
+            }
             else
             {  // input format: fields[articles]=prop1,prop2
                 string navigation = keySplitted[1];
@@ -64,6 +66,9 @@ namespace JsonApiDotNetCore.Query
                     throw new JsonApiException(400, $"Use \"?fields=...\" instead of \"fields[{navigation}]\":" +
                         $" the square bracket navigations is now reserved " +
                         $"for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
+
+                if (navigation.Contains(QueryConstants.DOT))
+                    throw new JsonApiException(400, $"fields[{navigation}] is not valid: deeply nested sparse field selection is not yet supported.");
 
                 var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(navigation));
                 if (relationship == null)

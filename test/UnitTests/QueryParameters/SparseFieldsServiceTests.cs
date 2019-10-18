@@ -84,6 +84,32 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
+        public void Parse_DeeplyNestedSelection_ThrowsJsonApiException()
+        {
+            // arrange
+            const string type = "articles";
+            const string relationship = "author.employer";
+            const string attrName = "some-field";
+            const string internalAttrName = "SomeField";
+            var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
+            var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
+
+            var query = new KeyValuePair<string, StringValues>($"fields[{relationship}]", new StringValues(attrName));
+
+            var contextEntity = new ContextEntity
+            {
+                EntityName = type,
+                Attributes = new List<AttrAttribute> { attribute, idAttribute },
+                Relationships = new List<RelationshipAttribute>()
+            };
+            var service = GetService(contextEntity);
+
+            // act, assert
+            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            Assert.Contains("deeply nested", ex.Message);
+        }
+
+        [Fact]
         public void Parse_InvalidField_ThrowsJsonApiException()
         {
             // arrange
