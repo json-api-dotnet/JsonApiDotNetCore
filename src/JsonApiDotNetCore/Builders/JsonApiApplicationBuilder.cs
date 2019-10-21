@@ -38,7 +38,6 @@ namespace JsonApiDotNetCore.Builders
             _mvcBuilder = mvcBuilder;
         }
 
-
         public void ConfigureJsonApiOptions(Action<JsonApiOptions> configureOptions) => configureOptions(JsonApiOptions);
 
         public void ConfigureMvc()

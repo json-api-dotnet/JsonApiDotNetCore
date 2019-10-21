@@ -1,6 +1,5 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;

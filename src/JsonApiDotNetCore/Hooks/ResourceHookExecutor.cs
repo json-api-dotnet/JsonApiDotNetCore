@@ -21,19 +21,19 @@ namespace JsonApiDotNetCore.Hooks
         private readonly ITraversalHelper _traversalHelper;
         private readonly IIncludeService _includeService;
         private readonly ITargetedFields _targetedFields;
-        private readonly IInverseRelationships _inverseRelationships;
+        private readonly IResourceGraphExplorer _inverseRelationships;
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
             ITargetedFields targetedFields,
             IIncludeService includedRelationships,
-            IInverseRelationships inverseRelationships)
+            IResourceGraphExplorer graph)
         {
             _executorHelper = executorHelper;
             _traversalHelper = traversalHelper;
             _targetedFields = targetedFields;
             _includeService = includedRelationships;
-            _inverseRelationships = inverseRelationships;
+            _inverseRelationships = graph;
         }
 
         /// <inheritdoc/>

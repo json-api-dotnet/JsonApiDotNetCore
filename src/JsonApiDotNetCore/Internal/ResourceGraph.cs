@@ -66,6 +66,15 @@ namespace JsonApiDotNetCore.Internal
             return GetContextEntity(type).Relationships.ToList();
         }
 
+        /// <inheritdoc />
+        public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
+        {
+            if (relationship.InverseNavigation == null) return null;
+            return GetContextEntity(relationship.DependentType)
+                            .Relationships
+                            .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
+        }
+
         private IEnumerable<IResourceField> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
         {
             IEnumerable<IResourceField> available;

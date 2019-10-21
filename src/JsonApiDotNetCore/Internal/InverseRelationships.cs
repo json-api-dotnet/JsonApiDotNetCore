@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -26,13 +24,6 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         void Resolve();
 
-
-        /// <summary>
-        /// Traverses the resource graph for the inverse relationship of the provided
-        /// <paramref name="relationship"/>;
-        /// </summary>
-        /// <param name="relationship"></param>
-        RelationshipAttribute GetInverse(RelationshipAttribute relationship);
     }
 
     /// <inheritdoc />
@@ -45,15 +36,6 @@ namespace JsonApiDotNetCore.Internal
         {
             _provider = (ResourceGraph)provider;
             _resolver = resolver;
-        }
-
-        /// <inheritdoc />
-        public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
-        {
-            if (relationship.InverseNavigation == null) return null;
-            return _provider.GetContextEntity(relationship.DependentType)
-                            .Relationships
-                            .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
         }
 
         /// <inheritdoc />
@@ -81,9 +63,6 @@ namespace JsonApiDotNetCore.Internal
         /// If EF Core is not being used, we're expecting the resolver to not be registered.
         /// </summary>
         /// <returns><c>true</c>, if entity framework core was enabled, <c>false</c> otherwise.</returns>
-        private bool EntityFrameworkCoreIsEnabled()
-        {
-            return _resolver != null;
-        }
+        private bool EntityFrameworkCoreIsEnabled() => _resolver != null;
     }
 }

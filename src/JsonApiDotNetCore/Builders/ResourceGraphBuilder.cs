@@ -19,9 +19,6 @@ namespace JsonApiDotNetCore.Builders
     {
         private readonly List<ContextEntity> _entities = new List<ContextEntity>();
         private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
-        private readonly Dictionary<Type, List<Type>> _controllerMapper = new Dictionary<Type, List<Type>>() { };
-        private readonly List<Type> _undefinedMapper = new List<Type>() { };
-        private bool _usesDbContext;
         private readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
 
         public ResourceGraphBuilder() { }
@@ -184,25 +181,17 @@ namespace JsonApiDotNetCore.Builders
         /// <inheritdoc />
         public IResourceGraphBuilder AddDbContext<T>() where T : DbContext
         {
-            _usesDbContext = true;
-
             var contextType = typeof(T);
-
             var contextProperties = contextType.GetProperties();
-
             foreach (var property in contextProperties)
             {
                 var dbSetType = property.PropertyType;
-
                 if (dbSetType.GetTypeInfo().IsGenericType
                     && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
                 {
                     var entityType = dbSetType.GetGenericArguments()[0];
-
                     AssertEntityIsNotAlreadyDefined(entityType);
-
                     var (isJsonApiResource, idType) = GetIdType(entityType);
-
                     if (isJsonApiResource)
                         _entities.Add(GetEntity(GetResourceNameFromDbSetProperty(property, entityType), entityType, idType));
                 }

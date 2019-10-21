@@ -52,6 +52,13 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// </summary>
         /// <param name="type">The resource type. Must extend IIdentifiable.</param>
         List<RelationshipAttribute> GetRelationships(Type type);
+
+        /// <summary>
+        /// Traverses the resource graph for the inverse relationship of the provided
+        /// <paramref name="relationship"/>;
+        /// </summary>
+        /// <param name="relationship"></param>
+        RelationshipAttribute GetInverse(RelationshipAttribute relationship);
     }
 
     /// <summary>
