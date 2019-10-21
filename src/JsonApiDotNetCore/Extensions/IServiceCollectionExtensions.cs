@@ -121,7 +121,9 @@ namespace JsonApiDotNetCore.Extensions
             // register services that allow user to override behaviour that is configured on startup, like routing conventions
             AddStartupConfigurationServices(services, options);
             var intermediateProvider = services.BuildServiceProvider();
-            mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>()));
+            var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
+            mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, routingConvention));
+            services.AddSingleton(routingConvention);
         }
 
         private static void AddMvcOptions(MvcOptions options, JsonApiOptions config)

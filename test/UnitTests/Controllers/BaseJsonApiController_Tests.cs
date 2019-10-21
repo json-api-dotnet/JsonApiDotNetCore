@@ -146,8 +146,6 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
-
 
             var controller = new BaseJsonApiController<Resource>(new JsonApiOptions(), update: serviceMock.Object);
 
@@ -165,8 +163,6 @@ namespace UnitTests
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource>>();
-            //_resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
-
             var controller = new BaseJsonApiController<Resource>(new JsonApiOptions(), update: serviceMock.Object);
 
             // act
@@ -218,7 +214,6 @@ namespace UnitTests
             // arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            //            _resourceGraph.Setup(a => a.ApplyContext<Resource>(It.IsAny<BaseJsonApiController<Resource>>())).Returns(_resourceGraph.Object);
 
             var controller = new BaseJsonApiController<Resource>(new JsonApiOptions(), create: serviceMock.Object);
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);

@@ -21,8 +21,9 @@ namespace JsonApiDotNetCore.Middleware
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
         private ICurrentRequest _currentRequest;
-        private IResourceGraph _resourceGraph;
+        private IContextEntityProvider _contextEntityProvider;
         private IJsonApiOptions _options;
+        private IJsonApiRoutingConvention _routingConvention;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -30,13 +31,15 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task Invoke(HttpContext httpContext,
+                                IJsonApiRoutingConvention routingConvention,
                                 IJsonApiOptions options,
                                  ICurrentRequest currentRequest,
-                                 IResourceGraph resourceGraph)
+                                 IContextEntityProvider contextEntityProvider)
         { 
             _httpContext = httpContext;
             _currentRequest = currentRequest;
-            _resourceGraph = resourceGraph;
+            _routingConvention = routingConvention;
+            _contextEntityProvider = contextEntityProvider;
             _options = options;
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
@@ -60,10 +63,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 return GetNamespaceFromPath(r.Path, entityName);
             }
-            else
-            {
-                return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
-            }
+            return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
         internal static string GetNamespaceFromPath(string path, string entityName)
         {
@@ -162,15 +162,15 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Gets the current entity that we need for serialization and deserialization.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="resourceGraph"></param>
         /// <returns></returns>
         private ContextEntity GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
+            var resourceType = _routingConvention.GetAssociatedResource(controllerName);
+            var requestResource = _contextEntityProvider.GetContextEntity(resourceType);
+            if (requestResource == null)
+                return requestResource;
             var rd = _httpContext.GetRouteData().Values;
-            var requestResource = _resourceGraph.GetEntityFromControllerName(controllerName);
-
             if (rd.TryGetValue("relationshipName", out object relationshipName))
                 _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
             return requestResource;

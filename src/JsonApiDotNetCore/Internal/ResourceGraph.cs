@@ -35,10 +35,6 @@ namespace JsonApiDotNetCore.Internal
             Instance = this;
         }
 
-        // eventually, this is the planned public constructor
-        // to avoid breaking changes, we will be leaving the original constructor in place
-        // until the context graph validation process is completed
-        // you can track progress on this issue here: https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170
         internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults, List<ControllerResourceMap> controllerContexts)
         {
             ControllerResourceMap = controllerContexts;
@@ -55,23 +51,6 @@ namespace JsonApiDotNetCore.Internal
         {
             if (relationship.InverseNavigation == null) return null;
             return GetContextEntity(relationship.DependentType).Relationships.SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
-        }
-
-        public ContextEntity GetEntityFromControllerName(string controllerName)
-        {
-
-            if (ControllerResourceMap.Any()) 
-            {
-                // Autodiscovery was used, so there is a well defined mapping between exposed resources and their associated controllers
-                var resourceType = ControllerResourceMap.FirstOrDefault(cm => cm.ControllerName == controllerName)?.Resource;
-                if (resourceType == null) return null;
-                return Entities.First(e => e.EntityType == resourceType);
-
-            } else
-            {
-                // No autodiscovery: try to guess contextentity from controller name.
-                return Entities.FirstOrDefault(e => e.EntityName.ToLower().Replace("-", "") == controllerName.ToLower());
-            }
         }
 
         /// <inheritdoc />

@@ -6,7 +6,10 @@ using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
+using JsonApiDotNetCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace JsonApiDotNetCore.Internal
@@ -37,6 +40,7 @@ namespace JsonApiDotNetCore.Internal
         private readonly string _namespace;
         private readonly IResourceNameFormatter _formatter;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
+        private readonly Dictionary<string, Type> _registeredResources = new Dictionary<string, Type>();
         public DefaultRoutingConvention(IJsonApiOptions options, IResourceNameFormatter formatter)
         {
             _namespace = options.Namespace;
@@ -44,10 +48,21 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <inheritdoc/>
+        public Type GetAssociatedResource(string controllerName)
+        {
+            _registeredResources.TryGetValue(controllerName, out Type type);
+            return type;
+        }
+
+        /// <inheritdoc/>
         public void Apply(ApplicationModel application)
         {
             foreach (var controller in application.Controllers)
             {
+                var resourceType = GetResourceTypeFromController(controller.ControllerType);
+                if (resourceType != null)
+                    _registeredResources.Add(controller.ControllerName, resourceType);
+
                 if (RoutingConventionDisabled(controller) == false)
                     continue;
 
@@ -74,12 +89,12 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private string TemplateFromResource(ControllerModel model)
         {
-            var resourceType = GetResourceTypeFromController(model.ControllerType);
-            if (resourceType != null)
+            if (_registeredResources.TryGetValue(model.ControllerName, out Type resourceType))
             {
                 var template = $"{_namespace}/{_formatter.FormatResourceName(resourceType)}";
-                if (_registeredTemplates.Add(template))
+                if (_registeredTemplates.Add(template))                
                     return template;
+
             }
             return null;
         }
@@ -100,12 +115,30 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         private Type GetResourceTypeFromController(Type type)
         {
+            var controllerBase = typeof(ControllerBase);
+            var jsonApiMixin = typeof(JsonApiControllerMixin);
             var target = typeof(BaseJsonApiController<,>);
-            var currentBaseType = type.BaseType;
+            var identifiable = typeof(IIdentifiable);
+            var currentBaseType = type;
+            if (type.Name.Contains("TodoItemsCustom"))
+            {
+                var x = 123;
+            }
+                    
             while (!currentBaseType.IsGenericType || currentBaseType.GetGenericTypeDefinition() != target)
             {
-                currentBaseType = currentBaseType.BaseType;
-                if (currentBaseType == null) break;
+                var nextBaseType = currentBaseType.BaseType;
+
+                if ( (nextBaseType == controllerBase || nextBaseType == jsonApiMixin) && currentBaseType.IsGenericType)
+                {
+                    var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.Inherits(identifiable));
+                    if (potentialResource != null)
+                        return potentialResource;
+                }
+
+                currentBaseType = nextBaseType;
+                if (nextBaseType == null)
+                    break;
             }
             return currentBaseType?.GetGenericArguments().First();
         }
