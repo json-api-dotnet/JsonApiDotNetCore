@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Query
         /// todo: use read-only lists.
         private readonly List<List<RelationshipAttribute>> _includedChains;
 
-        public IncludeService(IContextEntityProvider contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
+        public IncludeService(IResourceGraphExplorer contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
         {
             _includedChains = new List<List<RelationshipAttribute>>();
         }

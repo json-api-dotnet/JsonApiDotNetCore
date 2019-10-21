@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Serializer
 
         public ResourceObjectBuilderTests()
         {
-            _builder = new ResourceObjectBuilder(_resourceGraph, new ResourceObjectBuilderSettings());
+            _builder = new ResourceObjectBuilder(_graph, new ResourceObjectBuilderSettings());
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new TestResource() { StringField = stringFieldValue, NullableIntField = intFieldValue };
-            var attrs = _fieldExplorer.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
+            var attrs = _graph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
 
             // act
             var resourceObject = _builder.Build(entity, attrs);
@@ -114,7 +114,7 @@ namespace UnitTests.Serialization.Serializer
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            var relationships = _fieldExplorer.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
+            var relationships = _graph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
 
             // act
             var resourceObject = _builder.Build(entity, relationships: relationships);
@@ -138,7 +138,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new OneToOneDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
-            var relationships = _fieldExplorer.GetRelationships<OneToOneDependent>(tr => tr.Principal);
+            var relationships = _graph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // act
             var resourceObject = _builder.Build(entity, relationships: relationships);
@@ -155,7 +155,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new OneToOneDependent { Principal = null, PrincipalId = 123 };
-            var relationships = _fieldExplorer.GetRelationships<OneToOneDependent>(tr => tr.Principal);
+            var relationships = _graph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
             // act
             var resourceObject = _builder.Build(entity, relationships: relationships);
@@ -169,7 +169,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new OneToOneRequiredDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
-            var relationships = _fieldExplorer.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
+            var relationships = _graph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // act
             var resourceObject = _builder.Build(entity, relationships: relationships);
@@ -186,7 +186,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new OneToOneRequiredDependent { Principal = null, PrincipalId = 123 };
-            var relationships = _fieldExplorer.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
+            var relationships = _graph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // act & assert
             Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(entity, relationships: relationships));
@@ -197,7 +197,7 @@ namespace UnitTests.Serialization.Serializer
         {
             // arrange
             var entity = new OneToOneRequiredDependent();
-            var relationships = _fieldExplorer.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
+            var relationships = _graph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
             // act & assert
             Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(entity, relationships: relationships));

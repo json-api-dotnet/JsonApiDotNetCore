@@ -14,19 +14,16 @@ namespace JsonApiDotNetCore.Serialization.Server
     /// for documents with many resource objects.
     public class FieldsToSerialize : IFieldsToSerialize
     {
-        private readonly IContextEntityProvider _resourceContextProvider;
+        private readonly IResourceGraphExplorer _graph;
         private readonly ISparseFieldsService _sparseFieldsService ;
         private readonly IServiceProvider _provider;
         private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
-        private readonly IFieldsExplorer _fieldExplorer;
 
-        public FieldsToSerialize(IFieldsExplorer fieldExplorer,
-                                 IContextEntityProvider resourceContextProvider,
+        public FieldsToSerialize(IResourceGraphExplorer graph,
                                  ISparseFieldsService sparseFieldsService,
                                  IServiceProvider provider)
         {
-            _fieldExplorer = fieldExplorer;
-            _resourceContextProvider = resourceContextProvider;
+            _graph = graph;
             _sparseFieldsService  = sparseFieldsService;
             _provider = provider;
         }
@@ -34,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public List<AttrAttribute> GetAllowedAttributes(Type type, RelationshipAttribute relationship = null)
         {   // get the list of all exposed atttributes for the given type.
-            var allowed = _fieldExplorer.GetAttributes(type);
+            var allowed = _graph.GetAttributes(type);
 
             var resourceDefinition = GetResourceDefinition(type);
             if (resourceDefinition != null)
@@ -64,7 +61,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                 return resourceDefinition.GetAllowedRelationships();
 
             // The set of allowed attribrutes to be exposed was NOT defined on the resource definition: return all
-            return _fieldExplorer.GetRelationships(type);
+            return _graph.GetRelationships(type);
         }
 
 
@@ -72,7 +69,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         private IResourceDefinition GetResourceDefinition(Type resourceType)
         {
 
-            var resourceDefinitionType = _resourceContextProvider.GetContextEntity(resourceType).ResourceType;
+            var resourceDefinitionType = _graph.GetContextEntity(resourceType).ResourceType;
             if (!_resourceDefinitionCache.TryGetValue(resourceDefinitionType, out IResourceDefinition resourceDefinition))
             {
                 resourceDefinition = _provider.GetService(resourceDefinitionType) as IResourceDefinition;

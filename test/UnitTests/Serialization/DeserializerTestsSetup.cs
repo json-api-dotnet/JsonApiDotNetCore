@@ -9,7 +9,7 @@ namespace UnitTests.Serialization
     {
         protected class TestDocumentParser : BaseDocumentParser
         {
-            public TestDocumentParser(IContextEntityProvider resourceGraph) : base(resourceGraph) { }
+            public TestDocumentParser(IResourceGraphExplorer resourceGraph) : base(resourceGraph) { }
 
             public new object Deserialize(string body)
             {

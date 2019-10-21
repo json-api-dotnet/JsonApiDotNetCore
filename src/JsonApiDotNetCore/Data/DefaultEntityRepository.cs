@@ -419,7 +419,7 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IContextEntityProvider contextEntityProvider,
+                                       IResourceGraphExplorer contextEntityProvider,
                                        IGenericProcessorFactory genericProcessorFactory)
             : base(targetedFields, contextResolver, contextEntityProvider, genericProcessorFactory)
         {
@@ -427,7 +427,7 @@ namespace JsonApiDotNetCore.Data
 
         public DefaultEntityRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IContextEntityProvider contextEntityProvider,
+                                       IResourceGraphExplorer contextEntityProvider,
                                        IGenericProcessorFactory genericProcessorFactory,
                                        ILoggerFactory loggerFactory = null)
             : base(targetedFields, contextResolver, contextEntityProvider, genericProcessorFactory, loggerFactory)

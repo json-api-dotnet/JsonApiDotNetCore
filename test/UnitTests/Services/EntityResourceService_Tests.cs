@@ -25,7 +25,7 @@ namespace UnitTests.Services
         private readonly Mock<ICurrentRequest> _crMock;
         private readonly Mock<IPageService> _pgsMock;
         private readonly Mock<ITargetedFields> _ufMock;
-        private readonly IContextEntityProvider _resourceGraph;
+        private readonly IResourceGraphExplorer _resourceGraph;
 
         public EntityResourceService_Tests()
         {

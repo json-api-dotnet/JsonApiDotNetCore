@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Formatters;
@@ -16,16 +13,13 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Serialization.Client;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using JsonApiDotNetCore.Builders;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -139,6 +133,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(graph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            _services.AddSingleton<IResourceGraphExplorer>(graph);
             _services.AddSingleton<IContextEntityProvider>(graph);
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
@@ -148,7 +143,6 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped(typeof(GenericProcessor<>));
             _services.AddScoped<IQueryParameterDiscovery, QueryParameterDiscovery>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
-            _services.AddScoped<IFieldsExplorer, FieldsExplorer>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
             _services.AddScoped<IQueryParameterActionFilter, QueryParameterActionFilter>();

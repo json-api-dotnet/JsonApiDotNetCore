@@ -16,7 +16,7 @@ namespace UnitTests
     public class LinkBuilderTests
     {
         private readonly IPageService _pageService;
-        private readonly Mock<IContextEntityProvider> _provider = new Mock<IContextEntityProvider>();
+        private readonly Mock<IResourceGraphExplorer> _provider = new Mock<IResourceGraphExplorer>();
         private const string _host = "http://www.example.com";
         private const string _topSelf = "http://www.example.com/articles";
         private const string _resourceSelf = "http://www.example.com/articles/123";

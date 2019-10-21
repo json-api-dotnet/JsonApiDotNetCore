@@ -18,13 +18,11 @@ namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
-        protected readonly IFieldsExplorer _fieldExplorer;
         protected readonly TopLevelLinks _dummyToplevelLinks;
         protected readonly ResourceLinks _dummyResourceLinks;
         protected readonly RelationshipLinks _dummyRelationshipLinks;
         public SerializerTestsSetup()
         {
-            _fieldExplorer = new FieldsExplorer(_resourceGraph);
             _dummyToplevelLinks = new TopLevelLinks
             {
                 Self = "http://www.dummy.com/dummy-self-link",
@@ -52,7 +50,7 @@ namespace UnitTests.Serialization
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
             var provider = GetContextEntityProvider();
-            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
+            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _graph, GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
         }
 
@@ -61,12 +59,12 @@ namespace UnitTests.Serialization
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             var included = GetIncludedRelationships(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
-            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
+            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _graph, GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _graph, GetSerializerSettingsProvider());
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
@@ -76,9 +74,9 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        private IContextEntityProvider GetContextEntityProvider()
+        private IResourceGraphExplorer GetContextEntityProvider()
         {
-            return _resourceGraph;
+            return _graph;
         }
 
         protected IMetaBuilder<T> GetMetaBuilder<T>(Dictionary<string, object> meta = null) where T : class, IIdentifiable
@@ -91,7 +89,7 @@ namespace UnitTests.Serialization
         protected ICurrentRequest GetRequestManager<T>() where T : class, IIdentifiable
         {
             var mock = new Mock<ICurrentRequest>();
-            mock.Setup(m => m.GetRequestResource()).Returns(_resourceGraph.GetContextEntity<T>());
+            mock.Setup(m => m.GetRequestResource()).Returns(_graph.GetContextEntity<T>());
             return mock.Object;
         }
 
@@ -113,8 +111,8 @@ namespace UnitTests.Serialization
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetContextEntity(t).Attributes);
-            mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Relationships);
+            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _graph.GetContextEntity(t).Attributes);
+            mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _graph.GetContextEntity(t).Relationships);
             return mock.Object;
         }
 

@@ -324,7 +324,7 @@ namespace JsonApiDotNetCore.Services
         where TResource : class, IIdentifiable<int>
     {
         public EntityResourceService(ISortService sortService, IFilterService filterService, IEntityRepository<TResource, int> repository,
-                                     IJsonApiOptions options,IIncludeService includeService, ISparseFieldsService sparseFieldsService,
+                                     IJsonApiOptions options, IIncludeService includeService, ISparseFieldsService sparseFieldsService,
                                      IPageService pageManager, IContextEntityProvider provider,
                                      IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
             : base(sortService, filterService, repository, options, includeService, sparseFieldsService, pageManager, provider, hookExecutor, loggerFactory)

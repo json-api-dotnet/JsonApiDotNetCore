@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IContextEntityProvider Build()
+        public IResourceGraphExplorer Build()
         {
             _entities.ForEach(SetResourceLinksOptions);
             var graph = new ResourceGraph(_entities, _validationResults);

@@ -24,8 +24,7 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksDummyData
     {
-        protected IFieldsExplorer _fieldExplorer;
-        protected IContextEntityProvider _graph;
+        protected IResourceGraphExplorer _graph;
         protected ResourceHook[] NoHooks = new ResourceHook[0];
         protected ResourceHook[] EnableDbValues = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
         protected ResourceHook[] DisableDbValues = new ResourceHook[0];
@@ -48,7 +47,7 @@ namespace UnitTests.ResourceHooks
                 .AddResource<TodoItemCollection, Guid>()
                 .Build();
 
-            _fieldExplorer = new FieldsExplorer(_graph);
+
 
             _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
             _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);

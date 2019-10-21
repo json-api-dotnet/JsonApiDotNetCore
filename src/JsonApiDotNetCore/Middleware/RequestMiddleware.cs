@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Middleware
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
         private ICurrentRequest _currentRequest;
-        private IContextEntityProvider _contextEntityProvider;
+        private IResourceGraphExplorer _contextEntityProvider;
         private IJsonApiOptions _options;
         private IJsonApiRoutingConvention _routingConvention;
 
@@ -34,8 +34,8 @@ namespace JsonApiDotNetCore.Middleware
                                 IJsonApiRoutingConvention routingConvention,
                                 IJsonApiOptions options,
                                  ICurrentRequest currentRequest,
-                                 IContextEntityProvider contextEntityProvider)
-        { 
+                                 IResourceGraphExplorer contextEntityProvider)
+        {
             _httpContext = httpContext;
             _currentRequest = currentRequest;
             _routingConvention = routingConvention;
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Middleware
                 _currentRequest.SetRequestResource(GetCurrentEntity());
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
                 _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().EntityName);
-            } 
+            }
 
             if (IsValid())
             {

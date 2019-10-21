@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
     /// <summary>
     /// A cache for the models in entity core
     /// </summary>
-    public interface IResourceGraph : IContextEntityProvider
+    public interface IResourceGraph : IResourceGraphExplorer
     {
 
     }

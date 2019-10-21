@@ -34,7 +34,7 @@ namespace UnitTests
             var container = services.BuildServiceProvider();
 
             // assert
-            var resourceGraph = container.GetRequiredService<IContextEntityProvider>();
+            var resourceGraph = container.GetRequiredService<IResourceGraphExplorer>();
             var dbResource = resourceGraph.GetContextEntity("db-resources");
             var nonDbResource = resourceGraph.GetContextEntity("non-db-resources");
             Assert.Equal(typeof(DbResource), dbResource.EntityType);

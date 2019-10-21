@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Query
 
         public override string Name => "fields";
 
-        public SparseFieldsService(IContextEntityProvider contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
+        public SparseFieldsService(IResourceGraphExplorer contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
         {
             _selectedFields = new List<AttrAttribute>();
             _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();

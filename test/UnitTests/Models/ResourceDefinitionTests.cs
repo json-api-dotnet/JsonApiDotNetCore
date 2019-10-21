@@ -10,7 +10,7 @@ namespace UnitTests.Models
 {
     public class ResourceDefinition_Scenario_Tests
     {
-        private readonly IContextEntityProvider _graph;
+        private readonly IResourceGraphExplorer _graph;
 
         public ResourceDefinition_Scenario_Tests()
         {
@@ -58,7 +58,7 @@ namespace UnitTests.Models
     {
         // this constructor will be resolved from the container
         // that means you can take on any dependency that is also defined in the container
-        public RequestFilteredResource(bool isAdmin) : base(new FieldsExplorer(new ResourceGraphBuilder().AddResource<Model>().Build()), new ResourceGraphBuilder().AddResource<Model>().Build())
+        public RequestFilteredResource(bool isAdmin) : base(new ResourceGraphBuilder().AddResource<Model>().Build())
         {
             if (isAdmin)
                 HideFields(m => m.AlwaysExcluded);
