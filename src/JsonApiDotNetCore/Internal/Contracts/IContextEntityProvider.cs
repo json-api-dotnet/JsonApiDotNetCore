@@ -9,6 +9,11 @@ namespace JsonApiDotNetCore.Internal.Contracts
     public interface IContextEntityProvider
     {
         /// <summary>
+        /// Gets all registered context entities
+        /// </summary>
+        ContextEntity[] GetContextEntities();
+
+        /// <summary>
         /// Get the resource metadata by the DbSet property name
         /// </summary>
         ContextEntity GetContextEntity(string exposedResourceName);
