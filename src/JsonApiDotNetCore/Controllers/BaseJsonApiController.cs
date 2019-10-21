@@ -115,18 +115,15 @@ namespace JsonApiDotNetCore.Controllers
             if (_getById == null) throw Exceptions.UnSupportedRequestMethod;
             var entity = await _getById.GetAsync(id);
             if (entity == null)
-            {
                 return NotFound();
-            }
+
             return Ok(entity);
         }
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
             if (_getRelationships == null)
-            {
                 throw Exceptions.UnSupportedRequestMethod;
-            }
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
                 return NotFound();
@@ -153,7 +150,7 @@ namespace JsonApiDotNetCore.Controllers
                 return Forbidden();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelStateExtensions.ConvertToErrorCollection<T>(ModelState, GetAssociatedResource()));
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(GetAssociatedResource()));
 
             entity = await _create.CreateAsync(entity);
 
@@ -167,7 +164,7 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelStateExtensions.ConvertToErrorCollection<T>(ModelState, GetAssociatedResource()));
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(GetAssociatedResource()));
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 
