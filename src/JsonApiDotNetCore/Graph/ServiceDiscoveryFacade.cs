@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Graph
 {
-    public class ServiceDiscoveryFacade
+    public class ServiceDiscoveryFacade : IServiceDiscoveryFacade
     {
         internal static HashSet<Type> ServiceInterfaces = new HashSet<Type> {
             typeof(IResourceService<>),
@@ -52,9 +52,7 @@ namespace JsonApiDotNetCore.Graph
         private readonly IResourceGraphBuilder _graphBuilder;
         private readonly List<ResourceDescriptor> _identifiables = new List<ResourceDescriptor>();
 
-        public ServiceDiscoveryFacade(
-            IServiceCollection services,
-            IResourceGraphBuilder graphBuilder)
+        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder graphBuilder)
         {
             _services = services;
             _graphBuilder = graphBuilder;
@@ -80,38 +78,9 @@ namespace JsonApiDotNetCore.Graph
                 AddServices(assembly, resourceDescriptor);
                 AddRepositories(assembly, resourceDescriptor);
             }
-
-            ScanControllers(assembly);
-
             return this;
         }
 
-        private void ScanControllers(Assembly assembly)
-        {
-            var baseTypes = new List<Type>() { typeof(ControllerBase), typeof(JsonApiControllerMixin), typeof(JsonApiController<>), typeof(BaseJsonApiController<>) };
-            List<Type> baseTypesSeen = new List<Type>() { };
-            var types = assembly.GetTypes().ToList();
-            //types.ForEach(t => baseTypesSeen.Add(t.BaseType.Name));
-
-            var controllerMapper = new Dictionary<Type, List<Type>>() { };
-            var undefinedMapper = new List<Type>() { };
-            var sdf = assembly.GetTypes()
-                .Where(type => typeof(ControllerBase).IsAssignableFrom(type) & !type.IsGenericType).ToList();
-            foreach (var controllerType in sdf)
-            {
-                // get generic parameter
-                var genericParameters = controllerType.BaseType.GetGenericArguments();
-                if (genericParameters.Count() > 0)
-                {
-
-                    _graphBuilder.AddControllerPairing(controllerType, genericParameters[0]);
-                }
-                else
-                {
-                    _graphBuilder.AddControllerPairing(controllerType);
-                }
-            }
-        }
 
         public IEnumerable<Type> FindDerivedTypes(Type baseType)
         {

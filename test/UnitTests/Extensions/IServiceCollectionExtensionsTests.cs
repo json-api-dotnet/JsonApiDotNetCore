@@ -29,13 +29,11 @@ namespace UnitTests.Extensions
         {
             // arrange
             var services = new ServiceCollection();
-            var jsonApiOptions = new JsonApiOptions();
-            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
-            services.AddScoped<ResourceDefinition<TodoItem>>();
+            services.AddJsonApi<AppDbContext>();
+
             // act
-            services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();

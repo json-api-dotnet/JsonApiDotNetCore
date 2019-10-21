@@ -17,16 +17,18 @@ namespace JsonApiDotNetCore.Builders
 {
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
-        private List<ContextEntity> _entities = new List<ContextEntity>();
-        private List<ValidationResult> _validationResults = new List<ValidationResult>();
-        private Dictionary<Type, List<Type>> _controllerMapper = new Dictionary<Type, List<Type>>() { };
-        private List<Type> _undefinedMapper = new List<Type>() { };
+        private readonly List<ContextEntity> _entities = new List<ContextEntity>();
+        private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
+        private readonly Dictionary<Type, List<Type>> _controllerMapper = new Dictionary<Type, List<Type>>() { };
+        private readonly List<Type> _undefinedMapper = new List<Type>() { };
         private bool _usesDbContext;
-        private IResourceNameFormatter _resourceNameFormatter;
+        private readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
 
-        public ResourceGraphBuilder(IResourceNameFormatter formatter = null)
+        public ResourceGraphBuilder() { }
+
+        public ResourceGraphBuilder(IResourceNameFormatter formatter)
         {
-            _resourceNameFormatter = formatter ?? new KebabCaseFormatter();
+            _resourceNameFormatter = formatter;
         }
 
         /// <inheritdoc />
@@ -262,31 +264,6 @@ namespace JsonApiDotNetCore.Builders
         {
             if (_entities.Any(e => e.EntityType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context graph, there is already an entity of that type configured.");
-        }
-
-        /// <inheritdoc />
-        public IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter)
-        {
-            _resourceNameFormatter = resourceNameFormatter;
-            return this;
-        }
-
-        public IResourceGraphBuilder AddControllerPairing(Type controller, Type model = null)
-        {
-            if (model == null)
-            {
-                _undefinedMapper.Add(controller);
-                return this;
-            }
-            if (_controllerMapper.Keys.Contains(model))
-            {
-                _controllerMapper[model].Add(controller);
-            }
-            else
-            {
-                _controllerMapper.Add(model, new List<Type>() { controller });
-            }
-            return this;
         }
     }
 }

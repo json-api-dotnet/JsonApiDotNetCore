@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Configuration
@@ -96,12 +93,6 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowClientGeneratedIds { get; set; }
 
         /// <summary>
-        /// The graph of all resources exposed by this application.
-        /// </summary>
-        [Obsolete("Use the standalone resourcegraph")]
-        public IResourceGraph ResourceGraph { get; set; }
-
-        /// <summary>
         /// Whether or not to allow all custom query parameters.
         /// </summary>
         /// <example>
@@ -138,24 +129,6 @@ namespace JsonApiDotNetCore.Configuration
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-
-        public void BuildResourceGraph<TContext>(Action<IResourceGraphBuilder> builder) where TContext : DbContext
-        {
-            BuildResourceGraph(builder);
-
-            ResourceGraphBuilder.AddDbContext<TContext>();
-
-            ResourceGraph = ResourceGraphBuilder.Build();
-        }
-
-        public void BuildResourceGraph(Action<IResourceGraphBuilder> builder)
-        {
-            if (builder == null) return;
-
-            builder(ResourceGraphBuilder);
-
-            ResourceGraph = ResourceGraphBuilder.Build();
-        }
 
         public void EnableExtension(JsonApiExtension extension)
             => EnabledExtensions.Add(extension);

@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -5,13 +6,23 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public class JsonApiExceptionFilter : ActionFilterAttribute, IExceptionFilter
+    public interface IJsonApiExceptionFilterProvider
+    {
+        Type Get();
+    }
+
+    public class JsonApiExceptionFilterProvider : IJsonApiExceptionFilterProvider
+    {
+        public Type Get() => typeof(DefaultExceptionFilter);
+    }
+
+    public class DefaultExceptionFilter : ActionFilterAttribute, IExceptionFilter
     {
         private readonly ILogger _logger;
 
-        public JsonApiExceptionFilter(ILoggerFactory loggerFactory)
+        public DefaultExceptionFilter(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<JsonApiExceptionFilter>();
+            _logger = loggerFactory.CreateLogger<DefaultExceptionFilter>();
         }
 
         public void OnException(ExceptionContext context)

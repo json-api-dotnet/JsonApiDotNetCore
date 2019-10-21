@@ -28,13 +28,7 @@ namespace UnitTests
         {
             // arrange
             var services = new ServiceCollection();
-            services.AddJsonApi<TestContext>(opt =>
-            {
-                opt.BuildResourceGraph(b =>
-                {
-                    b.AddResource<NonDbResource>("non-db-resources");
-                });
-            });
+            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("non-db-resources"));
 
             // act
             var container = services.BuildServiceProvider();
