@@ -6,57 +6,36 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class ControllerResourceMap
-    {
-        public string ControllerName { get; set; }
-        public Type Resource { get; set; }
-    }
-
     /// <summary>
     ///  keeps track of all the models/resources defined in JADNC
     /// </summary>
-    public class ResourceGraph : IResourceGraph
+    public class ResourceGraph : IContextEntityProvider
     {
-        internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
+        private List<ContextEntity> _entities { get; }
 
-        public List<ControllerResourceMap> ControllerResourceMap { get; internal set; }
-
-        [Obsolete("please instantiate properly, dont use the static constructor")]
-        internal static IResourceGraph Instance { get; set; }
-
-        public ResourceGraph() { }
-        [Obsolete("Use new one")]
-        public ResourceGraph(List<ContextEntity> entities, bool usesDbContext)
+        public ResourceGraph(List<ContextEntity> entities)
         {
-            Entities = entities;
-            UsesDbContext = usesDbContext;
+            _entities = entities;
             ValidationResults = new List<ValidationResult>();
-            Instance = this;
         }
 
-        internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults, List<ControllerResourceMap> controllerContexts)
+        public ResourceGraph(List<ContextEntity> entities, List<ValidationResult> validationResults)
         {
-            ControllerResourceMap = controllerContexts;
-            Entities = entities;
-            UsesDbContext = usesDbContext;
+            _entities = entities;
             ValidationResults = validationResults;
-            Instance = this;
         }
 
         /// <inheritdoc />
-        public bool UsesDbContext { get; }
-
-        /// <inheritdoc />
-        public ContextEntity[] GetContextEntities() => Entities.ToArray();
+        public ContextEntity[] GetContextEntities() => _entities.ToArray();
 
         /// <inheritdoc />
         public ContextEntity GetContextEntity(string entityName)
-            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
+            => _entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
 
         /// <inheritdoc />
         public ContextEntity GetContextEntity(Type entityType)
-            => Entities.SingleOrDefault(e => e.EntityType == entityType);
+            => _entities.SingleOrDefault(e => e.EntityType == entityType);
         /// <inheritdoc />
         public ContextEntity GetContextEntity<TResource>() where TResource : class, IIdentifiable
             => GetContextEntity(typeof(TResource));

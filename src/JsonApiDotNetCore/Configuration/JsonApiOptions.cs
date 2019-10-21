@@ -133,7 +133,6 @@ namespace JsonApiDotNetCore.Configuration
         public void EnableExtension(JsonApiExtension extension)
             => EnabledExtensions.Add(extension);
 
-        internal IResourceGraphBuilder ResourceGraphBuilder { get; } = new ResourceGraphBuilder();
         internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
     }
 }

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public abstract class LockableResource<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
     {
-        protected LockableResource(IResourceGraph graph) : base(graph) { }
+        protected LockableResource(IContextEntityProvider provider) : base(provider) { }
 
         protected void DisallowLocked(IEnumerable<T> entities)
         {

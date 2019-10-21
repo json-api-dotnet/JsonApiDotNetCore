@@ -10,9 +10,8 @@ namespace GettingStarted
     {
         public PeopleController(
             IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph,
             IResourceService<Person> resourceService)
-          : base(jsonApiOptions, resourceGraph, resourceService)
+          : base(jsonApiOptions, resourceService)
         { }
     }
 }

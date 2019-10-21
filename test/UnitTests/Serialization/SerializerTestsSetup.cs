@@ -52,7 +52,7 @@ namespace UnitTests.Serialization
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
             var provider = GetContextEntityProvider();
-            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
         }
 
@@ -61,12 +61,12 @@ namespace UnitTests.Serialization
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             var included = GetIncludedRelationships(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
-            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, GetSerializerSettingsProvider());
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()

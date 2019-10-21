@@ -7,9 +7,6 @@ namespace JsonApiDotNetCore.Internal.Contracts
     /// </summary>
     public interface IResourceGraph : IContextEntityProvider
     {
-        /// <summary>
-        /// Was built against an EntityFrameworkCore DbContext ?
-        /// </summary>
-        bool UsesDbContext { get; }
+
     }
 }

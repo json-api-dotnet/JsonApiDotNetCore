@@ -172,7 +172,7 @@ namespace UnitTests.Serialization.Server
         {
             var fields = GetSerializableFields();
             var links = GetLinkBuilder();
-            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, GetSerializerSettingsProvider());
         }
 
     }

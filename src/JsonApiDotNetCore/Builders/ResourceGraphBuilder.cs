@@ -32,27 +32,10 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IResourceGraph Build()
+        public IContextEntityProvider Build()
         {
             _entities.ForEach(SetResourceLinksOptions);
-
-            List<ControllerResourceMap> controllerContexts = new List<ControllerResourceMap>() { };
-            foreach (var cm in _controllerMapper)
-            {
-                var model = cm.Key;
-                foreach (var controller in cm.Value)
-                {
-                    var controllerName = controller.Name.Replace("Controller", "");
-
-                    controllerContexts.Add(new ControllerResourceMap
-                    {
-                        Resource = model,
-                        ControllerName = controllerName,
-                    });
-
-                }
-            }
-            var graph = new ResourceGraph(_entities, _usesDbContext, _validationResults, controllerContexts);
+            var graph = new ResourceGraph(_entities, _validationResults);
             return graph;
         }
 

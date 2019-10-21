@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Serializer
 
         public ResourceObjectBuilderTests()
         {
-            _builder = new ResourceObjectBuilder(_resourceGraph, _resourceGraph, new ResourceObjectBuilderSettings());
+            _builder = new ResourceObjectBuilder(_resourceGraph, new ResourceObjectBuilderSettings());
         }
 
         [Fact]

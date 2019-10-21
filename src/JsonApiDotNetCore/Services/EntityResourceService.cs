@@ -24,7 +24,6 @@ namespace JsonApiDotNetCore.Services
     {
         private readonly IPageService _pageManager;
         private readonly IJsonApiOptions _options;
-        private readonly IResourceGraph _resourceGraph;
         private readonly IFilterService _filterService;
         private readonly ISortService _sortService;
         private readonly IEntityRepository<TResource, TId> _repository;
@@ -42,7 +41,7 @@ namespace JsonApiDotNetCore.Services
                 IIncludeService includeService,
                 ISparseFieldsService sparseFieldsService,
                 IPageService pageManager,
-                IResourceGraph resourceGraph,
+                IContextEntityProvider provider,
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
@@ -50,13 +49,12 @@ namespace JsonApiDotNetCore.Services
             _sparseFieldsService = sparseFieldsService;
             _pageManager = pageManager;
             _options = options;
-            _resourceGraph = resourceGraph;
             _sortService = sortService;
             _filterService = filterService;
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TId>>();
-            _currentRequestResource = resourceGraph.GetContextEntity<TResource>();
+            _currentRequestResource = provider.GetContextEntity<TResource>();
         }
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
@@ -327,9 +325,9 @@ namespace JsonApiDotNetCore.Services
     {
         public EntityResourceService(ISortService sortService, IFilterService filterService, IEntityRepository<TResource, int> repository,
                                      IJsonApiOptions options,IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                     IPageService pageManager, IResourceGraph resourceGraph,
+                                     IPageService pageManager, IContextEntityProvider provider,
                                      IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, repository, options, includeService, sparseFieldsService, pageManager, resourceGraph, hookExecutor, loggerFactory)
+            : base(sortService, filterService, repository, options, includeService, sparseFieldsService, pageManager, provider, hookExecutor, loggerFactory)
         {
         }
     }

@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Models
         private readonly IFieldsExplorer _fieldExplorer;
         private List<AttrAttribute> _allowedAttributes;
         private List<RelationshipAttribute> _allowedRelationships;
-        public ResourceDefinition(IFieldsExplorer fieldExplorer, IResourceGraph graph)
+        public ResourceDefinition(IFieldsExplorer fieldExplorer, IContextEntityProvider graph)
         {
             _contextEntity = graph.GetContextEntity(typeof(TResource));
             _allowedAttributes = _contextEntity.Attributes;
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Models
             _fieldExplorer = fieldExplorer;
         }
 
-        public ResourceDefinition(IResourceGraph graph)
+        public ResourceDefinition(IContextEntityProvider graph)
         {
             _contextEntity = graph.GetContextEntity(typeof(TResource));
             _allowedAttributes = _contextEntity.Attributes;

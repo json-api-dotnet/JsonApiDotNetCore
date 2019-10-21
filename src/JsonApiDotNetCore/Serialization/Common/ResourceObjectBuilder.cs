@@ -12,14 +12,12 @@ namespace JsonApiDotNetCore.Serialization
     /// <inheritdoc/> 
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
-        protected readonly IResourceGraph _resourceGraph;
         protected readonly IContextEntityProvider _provider;
         private readonly ResourceObjectBuilderSettings _settings;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        public ResourceObjectBuilder(IResourceGraph resourceGraph, IContextEntityProvider provider, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IContextEntityProvider provider, ResourceObjectBuilderSettings settings)
         {
-            _resourceGraph = resourceGraph;
             _provider = provider;
             _settings = settings;
         }

@@ -80,8 +80,8 @@ namespace JsonApiDotNetCore.Extensions
 
             services.AddScoped<IRequestSerializer>(sp =>
             {
-                var resourceObjectBuilder = new ResourceObjectBuilder(sp.GetService<IResourceGraph>(), sp.GetService<IContextEntityProvider>(), sp.GetService<IResourceObjectBuilderSettingsProvider>().Get());
-                return new RequestSerializer(sp.GetService<IFieldsExplorer>(), sp.GetService<IResourceGraph>(), resourceObjectBuilder);
+                var resourceObjectBuilder = new ResourceObjectBuilder(sp.GetService<IContextEntityProvider>(), sp.GetService<IResourceObjectBuilderSettingsProvider>().Get());
+                return new RequestSerializer(sp.GetService<IFieldsExplorer>(), sp.GetService<IContextEntityProvider>(), resourceObjectBuilder);
             });
            return services;
         }

@@ -13,7 +13,7 @@ namespace UnitTests.QueryParameters
     public class QueryParametersUnitTestCollection
     {
         protected readonly ContextEntity _articleResourceContext;
-        protected readonly IResourceGraph _graph;
+        protected readonly IContextEntityProvider _graph;
 
         public QueryParametersUnitTestCollection()
         {

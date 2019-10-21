@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks
     public class HooksDummyData
     {
         protected IFieldsExplorer _fieldExplorer;
-        protected IResourceGraph _graph;
+        protected IContextEntityProvider _graph;
         protected ResourceHook[] NoHooks = new ResourceHook[0];
         protected ResourceHook[] EnableDbValues = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
         protected ResourceHook[] DisableDbValues = new ResourceHook[0];
@@ -358,7 +358,7 @@ namespace UnitTests.ResourceHooks
 
         void ResolveInverseRelationships(AppDbContext context)
         {
-            new InverseRelationships(ResourceGraph.Instance, new DbContextResolver<AppDbContext>(context)).Resolve();
+            new InverseRelationships(_graph, new DbContextResolver<AppDbContext>(context)).Resolve();
         }
 
         Mock<IResourceHookContainer<TModel>> CreateResourceDefinition

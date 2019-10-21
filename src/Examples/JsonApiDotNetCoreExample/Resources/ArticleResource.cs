@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class ArticleResource : ResourceDefinition<Article>
     {
-        public ArticleResource(IResourceGraph graph) : base(graph) { }
+        public ArticleResource(IContextEntityProvider provider) : base(provider) { }
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> entities, ResourcePipeline pipeline)
         {

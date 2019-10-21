@@ -71,7 +71,7 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
             _services.AddScoped((_) => new Mock<IRequestContext>().Object);
             _services.AddScoped((_) => new Mock<IPageQueryService>().Object);
-            _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
+            _services.AddScoped((_) => new Mock<IContextEntityProvider>().Object);
             _facade.AddCurrentAssembly();
 
             // assert
@@ -103,7 +103,7 @@ namespace DiscoveryTests
                 IJsonApiOptions options,
                 IRequestContext currentRequest,
                 IPageQueryService pageService,
-                IResourceGraph resourceGraph,
+                IContextEntityProvider resourceGraph,
                 ILoggerFactory loggerFactory = null,
                 IResourceHookExecutor hookExecutor = null) : base(repository, options, currentRequest, pageService, resourceGraph, loggerFactory, hookExecutor)
             {

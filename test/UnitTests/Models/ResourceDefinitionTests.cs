@@ -10,7 +10,7 @@ namespace UnitTests.Models
 {
     public class ResourceDefinition_Scenario_Tests
     {
-        private readonly IResourceGraph _graph;
+        private readonly IContextEntityProvider _graph;
 
         public ResourceDefinition_Scenario_Tests()
         {

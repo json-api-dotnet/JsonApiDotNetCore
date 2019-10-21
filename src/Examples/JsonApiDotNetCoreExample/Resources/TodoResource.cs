@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TodoResource : LockableResource<TodoItem>
     {
-        public TodoResource(IResourceGraph graph) : base(graph) { }
+        public TodoResource(IContextEntityProvider provider) : base(provider) { }
 
         public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {
