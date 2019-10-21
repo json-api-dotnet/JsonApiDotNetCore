@@ -69,10 +69,10 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Builds a <see cref="ResourceIdentifierObject"/> for a HasOne relationship
         /// </summary>
-        private ResourceIdentifierObject GetRelatedResourceLinkage(HasOneAttribute attr, IIdentifiable entity)
+        private ResourceIdentifierObject GetRelatedResourceLinkage(HasOneAttribute relationship, IIdentifiable entity)
         {
-            var relatedEntity = (IIdentifiable)_resourceGraph.GetRelationshipValue(entity, attr);
-            if (relatedEntity == null && IsRequiredToOneRelationship(attr, entity))
+            var relatedEntity = (IIdentifiable)relationship.GetValue(entity);
+            if (relatedEntity == null && IsRequiredToOneRelationship(relationship, entity))
                 throw new NotSupportedException("Cannot serialize a required to one relationship that is not populated but was included in the set of relationships to be serialized.");
 
             if (relatedEntity != null)
@@ -84,9 +84,9 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship
         /// </summary>
-        private List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute attr, IIdentifiable entity)
+        private List<ResourceIdentifierObject> GetRelatedResourceLinkage(HasManyAttribute relationship, IIdentifiable entity)
         {
-            var relatedEntities = (IEnumerable)_resourceGraph.GetRelationshipValue(entity, attr);
+            var relatedEntities = (IEnumerable)relationship.GetValue(entity);
             var manyData = new List<ResourceIdentifierObject>();
             if (relatedEntities != null)
                 foreach (IIdentifiable relatedEntity in relatedEntities)

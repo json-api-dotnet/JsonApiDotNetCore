@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Extensions
         /// </summary>
         /// <typeparam name="TContext"></typeparam>
         /// <param name="services"></param>
-        /// <param name="configureAction"></param>
+        /// <param name="configureOptions"></param>
         /// <returns></returns>
         public static IServiceCollection AddJsonApi<TContext>(this IServiceCollection services,
                                                               Action<JsonApiOptions> configureOptions,

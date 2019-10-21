@@ -66,34 +66,9 @@ namespace JsonApiDotNetCore.Models
         public bool CanInclude { get; }
         public string EntityPropertyName { get; }
 
-        public bool TryGetHasOne(out HasOneAttribute result)
-        {
-            if (IsHasOne)
-            {
-                result = (HasOneAttribute)this;
-                return true;
-            }
-            result = null;
-            return false;
-        }
-
-        public bool TryGetHasMany(out HasManyAttribute result)
-        {
-            if (IsHasMany)
-            {
-                result = (HasManyAttribute)this;
-                return true;
-            }
-            result = null;
-            return false;
-        }
-
         public abstract void SetValue(object entity, object newValue);
-        
-        public object GetValue(object entity) => entity
-            ?.GetType()?
-            .GetProperty(InternalRelationshipName)?
-            .GetValue(entity);
+
+        public abstract object GetValue(object entity);
 
         public override string ToString()
         {

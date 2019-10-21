@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Internal
 
         public static Type GetTypeOfList(Type type)
         {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            if (type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
                 return type.GetGenericArguments()[0];
             }

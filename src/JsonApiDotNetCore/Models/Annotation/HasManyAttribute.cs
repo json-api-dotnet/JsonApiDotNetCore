@@ -32,17 +32,30 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <summary>
+        /// Gets the value of the navigation property, defined by the relationshipName,
+        /// on the provided instance.
+        /// </summary>
+
+        public override object GetValue(object entity)
+        {
+           return entity?.GetType()?
+                .GetProperty(InternalRelationshipName)?
+                .GetValue(entity);
+        }
+
+
+        /// <summary>
         /// Sets the value of the property identified by this attribute
         /// </summary>
-        /// <param name="resource">The target object</param>
+        /// <param name="entity">The target object</param>
         /// <param name="newValue">The new property value</param>
-        public override void SetValue(object resource, object newValue)
+        public override void SetValue(object entity, object newValue)
         {
-            var propertyInfo = resource
+            var propertyInfo = entity
                 .GetType()
                 .GetProperty(InternalRelationshipName);
 
-            propertyInfo.SetValue(resource, newValue);
+            propertyInfo.SetValue(entity, newValue);
         }
     }
 }

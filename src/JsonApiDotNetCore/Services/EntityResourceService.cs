@@ -157,7 +157,7 @@ namespace JsonApiDotNetCore.Services
         {
             var relationship = GetRelationship(relationshipName);
             var resource = await GetRelationshipsAsync(id, relationshipName);
-            return _resourceGraph.GetRelationship(resource, relationship.InternalRelationshipName);
+            return relationship.GetValue(resource);
         }
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource entity)

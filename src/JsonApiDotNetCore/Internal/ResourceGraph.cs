@@ -53,58 +53,13 @@ namespace JsonApiDotNetCore.Internal
         public bool UsesDbContext { get; }
 
         /// <inheritdoc />
-        public object GetRelationship<TParent>(TParent entity, string relationshipName)
-        {
-            var parentEntityType = entity.GetType();
-
-            var navigationProperty = parentEntityType
-                .GetProperties()
-                .SingleOrDefault(p => string.Equals(p.Name, relationshipName, StringComparison.OrdinalIgnoreCase));
-
-            if (navigationProperty == null)
-                throw new JsonApiException(400, $"{parentEntityType} does not contain a relationship named {relationshipName}");
-
-            return navigationProperty.GetValue(entity);
-        }
-
-        public object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable
-        {
-            if (relationship is HasManyThroughAttribute hasManyThroughRelationship)
-            {
-                return GetHasManyThrough(resource, hasManyThroughRelationship);
-            }
-
-            return GetRelationship(resource, relationship.InternalRelationshipName);
-        }
-
-        private IEnumerable<IIdentifiable> GetHasManyThrough(IIdentifiable parent, HasManyThroughAttribute hasManyThrough)
-        {
-            var throughProperty = GetRelationship(parent, hasManyThrough.InternalThroughName);
-            if (throughProperty is IEnumerable hasManyNavigationEntity)
-            {
-                // wrap "yield return" in a sub-function so we can correctly return null if the property is null.
-                return GetHasManyThroughIter(hasManyThrough, hasManyNavigationEntity);
-            }
-            return null;
-        }
-
-        private IEnumerable<IIdentifiable> GetHasManyThroughIter(HasManyThroughAttribute hasManyThrough, IEnumerable hasManyNavigationEntity)
-        {
-            foreach (var includedEntity in hasManyNavigationEntity)
-            {
-                var targetValue = hasManyThrough.RightProperty.GetValue(includedEntity) as IIdentifiable;
-                yield return targetValue;
-            }
-        }
-
-        /// <inheritdoc />
         public string GetRelationshipName<TParent>(string relationshipName)
         {
             var entityType = typeof(TParent);
             return Entities
                 .SingleOrDefault(e => e.EntityType == entityType)
                 ?.Relationships
-                .SingleOrDefault(r => r.Is(relationshipName))
+                 .SingleOrDefault(r => r.Is(relationshipName))
                 ?.InternalRelationshipName;
         }
 
