@@ -35,7 +35,6 @@ namespace JsonApiDotNetCore.Models
         /// Gets the value of the navigation property, defined by the relationshipName,
         /// on the provided instance.
         /// </summary>
-
         public override object GetValue(object entity)
         {
            return entity?.GetType()?

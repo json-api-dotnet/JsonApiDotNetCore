@@ -1,6 +1,7 @@
 using System;
+using System.Reflection;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -8,7 +9,7 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class ModelStateExtensions
     {
-        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState, IResourceGraph resourceGraph)
+        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState, Type resourceType)
         {
             ErrorCollection collection = new ErrorCollection();
             foreach (var entry in modelState)
@@ -16,7 +17,8 @@ namespace JsonApiDotNetCore.Extensions
                 if (entry.Value.Errors.Any() == false)
                     continue;
 
-                var attrName = resourceGraph.GetPublicAttributeName<T>(entry.Key);
+                var targetedProperty = resourceType.GetProperty(entry.Key);
+                var attrName = targetedProperty.GetCustomAttribute<AttrAttribute>().PublicAttributeName;
 
                 foreach (var modelError in entry.Value.Errors)
                 {

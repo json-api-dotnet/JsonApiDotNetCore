@@ -52,25 +52,6 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc />
         public bool UsesDbContext { get; }
 
-        /// <inheritdoc />
-        public string GetRelationshipName<TParent>(string relationshipName)
-        {
-            var entityType = typeof(TParent);
-            return Entities
-                .SingleOrDefault(e => e.EntityType == entityType)
-                ?.Relationships
-                 .SingleOrDefault(r => r.Is(relationshipName))
-                ?.InternalRelationshipName;
-        }
-
-        public string GetPublicAttributeName<TParent>(string internalAttributeName)
-        {
-            return GetContextEntity(typeof(TParent))
-                .Attributes
-                .SingleOrDefault(a => a.InternalAttributeName == internalAttributeName)?
-                .PublicAttributeName;
-        }
-
         public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
         {
             if (relationship.InverseNavigation == null) return null;
