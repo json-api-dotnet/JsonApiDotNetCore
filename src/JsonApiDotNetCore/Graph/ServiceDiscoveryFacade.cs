@@ -41,12 +41,12 @@ namespace JsonApiDotNetCore.Graph
         };
 
         internal static HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
-            typeof(IEntityRepository<>),
-            typeof(IEntityRepository<,>),
+            typeof(IResourceRepository<>),
+            typeof(IResourceRepository<,>),
             typeof(IEntityWriteRepository<>),
-            typeof(IEntityWriteRepository<,>),
+            typeof(IResourceWriteRepository<,>),
             typeof(IEntityReadRepository<>),
-            typeof(IEntityReadRepository<,>)
+            typeof(IResourceReadRepository<,>)
         };
         private readonly IServiceCollection _services;
         private readonly IResourceGraphBuilder _resourceGraphBuilder;
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Add <see cref="IEntityRepository{T, TId}"/> implementations to container.
+        /// Add <see cref="IResourceRepository{T, TId}"/> implementations to container.
         /// </summary>
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddRepositories(Assembly assembly)

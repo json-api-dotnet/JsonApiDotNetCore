@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Builders
 
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
             _mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, routingConvention));
-            _services.AddSingleton<IControllerResourceMapping>(routingConvention); 
+            _services.AddSingleton<IControllerResourceMapping>(routingConvention);
         }
 
         /// <summary>
@@ -118,32 +118,32 @@ namespace JsonApiDotNetCore.Builders
                 _services.AddSingleton(new DbContextOptionsBuilder().Options);
             }
 
-            _services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
-            _services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
+            _services.AddScoped(typeof(IResourceRepository<>), typeof(DefaultResourceRepository<>));
+            _services.AddScoped(typeof(IResourceRepository<,>), typeof(DefaultResourceRepository<,>));
 
-            _services.AddScoped(typeof(IEntityReadRepository<,>), typeof(DefaultEntityRepository<,>));
-            _services.AddScoped(typeof(IEntityWriteRepository<,>), typeof(DefaultEntityRepository<,>));
+            _services.AddScoped(typeof(IResourceReadRepository<,>), typeof(DefaultResourceRepository<,>));
+            _services.AddScoped(typeof(IResourceWriteRepository<,>), typeof(DefaultResourceRepository<,>));
 
-            _services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(ICreateService<>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(ICreateService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IGetAllService<>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(IGetAllService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(IGetAllService<>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IGetAllService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IGetByIdService<>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(IGetByIdService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(IGetByIdService<>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IGetByIdService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IGetRelationshipService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IUpdateService<>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(IUpdateService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(IUpdateService<>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IUpdateService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IDeleteService<>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(IDeleteService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(IDeleteService<>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IDeleteService<,>), typeof(DefaultResourceService<,>));
 
-            _services.AddScoped(typeof(IResourceService<>), typeof(EntityResourceService<>));
-            _services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
+            _services.AddScoped(typeof(IResourceService<>), typeof(DefaultResourceService<>));
+            _services.AddScoped(typeof(IResourceService<,>), typeof(DefaultResourceService<,>));
 
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(resourceGraph);

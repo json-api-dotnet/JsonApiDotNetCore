@@ -20,7 +20,7 @@ namespace UnitTests.Services
 {
     public class EntityResourceService_Tests
     {
-        private readonly Mock<IEntityRepository<TodoItem>> _repositoryMock = new Mock<IEntityRepository<TodoItem>>();
+        private readonly Mock<IResourceRepository<TodoItem>> _repositoryMock = new Mock<IResourceRepository<TodoItem>>();
         private readonly ILoggerFactory _loggerFactory = new Mock<ILoggerFactory>().Object;
         private readonly Mock<ICurrentRequest> _crMock;
         private readonly Mock<IPageService> _pgsMock;
@@ -95,9 +95,9 @@ namespace UnitTests.Services
             Assert.Equal(todoItem.Collection.Id, collection.Id);
         }
 
-        private EntityResourceService<TodoItem> GetService()
+        private DefaultResourceService<TodoItem> GetService()
         {
-            return new EntityResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), null, null, _pgsMock.Object, _resourceGraph);
+            return new DefaultResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), null, null, _pgsMock.Object, _resourceGraph);
         }
     }
 }

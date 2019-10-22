@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Data
     /// Provides a default repository implementation and is responsible for
     /// abstracting any EF Core APIs away from the service layer.
     /// </summary>
-    public class DefaultEntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
+    public class DefaultResourceRepository<TEntity, TId> : IResourceRepository<TEntity, TId>
         where TEntity : class, IIdentifiable<TId>
     {
         private readonly ITargetedFields _targetedFields;
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Data
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
 
-        public DefaultEntityRepository(
+        public DefaultResourceRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Data
             : this(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
         { }
 
-        public DefaultEntityRepository(
+        public DefaultResourceRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
@@ -414,10 +414,10 @@ namespace JsonApiDotNetCore.Data
     }
 
     /// <inheritdoc />
-    public class DefaultEntityRepository<TEntity> : DefaultEntityRepository<TEntity, int>, IEntityRepository<TEntity>
+    public class DefaultResourceRepository<TEntity> : DefaultResourceRepository<TEntity, int>, IResourceRepository<TEntity>
         where TEntity : class, IIdentifiable<int>
     {
-        public DefaultEntityRepository(ITargetedFields targetedFields,
+        public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph contextEntityProvider,
                                        IGenericProcessorFactory genericProcessorFactory)
@@ -425,7 +425,7 @@ namespace JsonApiDotNetCore.Data
         {
         }
 
-        public DefaultEntityRepository(ITargetedFields targetedFields,
+        public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph contextEntityProvider,
                                        IGenericProcessorFactory genericProcessorFactory,

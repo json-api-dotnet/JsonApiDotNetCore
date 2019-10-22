@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +9,8 @@ namespace JsonApiDotNetCore.Controllers
 {
     public class JsonApiController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        /// <summary>
-        /// 
-        /// </summary>
+
         /// <param name="jsonApiOptions"></param>
-        /// <param name="resourceGraph"></param>
         /// <param name="resourceService"></param>
         /// <param name="loggerFactory"></param>
         public JsonApiController(

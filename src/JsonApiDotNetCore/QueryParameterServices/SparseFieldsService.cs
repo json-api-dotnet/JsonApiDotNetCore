@@ -75,7 +75,6 @@ namespace JsonApiDotNetCore.Query
 
                 foreach (var field in fields)
                     RegisterRelatedResourceField(field, relationship);
-
             }
         }
 

@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         /// <summary>
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
-        /// The returned set will be used in the actual operation in <see cref="EntityResourceService{T}"/>.
+        /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeCreate"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
@@ -45,12 +45,12 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <param name="stringId">StringId of the requested entity in the case of 
-        /// <see cref="EntityResourceService{X, Y, Z}.GetAsync(Z)"/>.</param>
+        /// <see cref="DefaultResourceService{X, Y, Z}.GetAsync(Z)"/>.</param>
         /// <typeparam name="TResource">The type of the request entity</typeparam>
         void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable;
         /// <summary>
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
-        /// The returned set will be used in the actual operation in <see cref="EntityResourceService{T}"/>.
+        /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeUpdate(IDiffableEntityHashSet{T}, ResourcePipeline)"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Hooks
         IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
         /// <summary>
         /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
-        /// The returned set will be used in the actual operation in <see cref="EntityResourceService{T}"/>.
+        /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeDelete"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.

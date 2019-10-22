@@ -147,9 +147,9 @@ namespace JsonApiDotNetCore.Hooks
             return repo.Include(query, inclusionChain).ToList();
         }
 
-        IEntityReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>
+        IResourceReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>
         {
-            return _genericProcessorFactory.GetProcessor<IEntityReadRepository<TEntity, TId>>(typeof(IEntityReadRepository<,>), typeof(TEntity), typeof(TId));
+            return _genericProcessorFactory.GetProcessor<IResourceReadRepository<TEntity, TId>>(typeof(IResourceReadRepository<,>), typeof(TEntity), typeof(TId));
         }
 
 

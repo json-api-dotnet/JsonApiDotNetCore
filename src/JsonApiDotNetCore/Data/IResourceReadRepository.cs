@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +6,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
-    public interface IEntityReadRepository<TEntity>
-       : IEntityReadRepository<TEntity, int>
+    public interface IResourceReadRepository<TEntity>
+       : IResourceReadRepository<TEntity, int>
        where TEntity : class, IIdentifiable<int>
     { }
 
-    public interface IEntityReadRepository<TEntity, in TId>
+    public interface IResourceReadRepository<TEntity, in TId>
         where TEntity : class, IIdentifiable<TId>
     {
         /// <summary>

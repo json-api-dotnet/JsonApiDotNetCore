@@ -5,12 +5,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
-     public interface IEntityWriteRepository<TEntity>
-        : IEntityWriteRepository<TEntity, int>
+     public interface IResourceWriteRepository<TEntity>
+        : IResourceWriteRepository<TEntity, int>
         where TEntity : class, IIdentifiable<int>
     { }
 
-    public interface IEntityWriteRepository<TEntity, in TId>
+    public interface IResourceWriteRepository<TEntity, in TId>
         where TEntity : class, IIdentifiable<TId>
     {
         Task<TEntity> CreateAsync(TEntity entity);

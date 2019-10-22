@@ -47,7 +47,7 @@ namespace UnitTests.Extensions
             currentRequest.SetRequestResource(resourceGraph.GetContextEntity<TodoItem>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
-            Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
+            Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());

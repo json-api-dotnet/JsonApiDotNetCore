@@ -329,8 +329,8 @@ namespace UnitTests.ResourceHooks
                 var idType = TypeHelper.GetIdentifierType<TModel>();
                 if (idType == typeof(int))
                 {
-                    IEntityReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext);
-                    processorFactory.Setup(c => c.GetProcessor<IEntityReadRepository<TModel, int>>(typeof(IEntityReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                    IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext);
+                    processorFactory.Setup(c => c.GetProcessor<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
                 {
@@ -340,12 +340,12 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        IEntityReadRepository<TModel, int> CreateTestRepository<TModel>(
+        IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
         AppDbContext dbContext
         ) where TModel : class, IIdentifiable<int>
         {
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultEntityRepository<TModel, int>(null, resolver, null, null, null);
+            return new DefaultResourceRepository<TModel, int>(null, resolver, null, null, null);
         }
 
         IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
