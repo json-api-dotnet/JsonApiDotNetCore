@@ -39,12 +39,11 @@ namespace JsonApiDotNetCore.Query
             _selectedRelationshipFields.TryGetValue(relationship, out var fields);
             return fields;
         }
-
         
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {   // expected: articles?fields=prop1,prop2
-            //           articles?fields[articles]=prop1,prop2
+            //           articles?fields[articles]=prop1,prop2  <-- this form in invalid UNLESS "articles" is actually a relationship on Article
             //           articles?fields[relationship]=prop1,prop2
             var fields = new List<string> { nameof(Identifiable.Id) };
             fields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
