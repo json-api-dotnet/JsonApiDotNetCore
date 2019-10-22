@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using JsonApiDotNetCore.Services;
-using System.Collections;
 
 namespace JsonApiDotNetCore.Models
 {

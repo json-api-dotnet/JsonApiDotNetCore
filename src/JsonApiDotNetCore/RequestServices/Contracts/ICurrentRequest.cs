@@ -1,11 +1,9 @@
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
     /// <summary>
-    /// This is the former RequestManager. TODO: not done.
     /// Metadata associated to the current json:api request.
     /// </summary>
     public interface ICurrentRequest

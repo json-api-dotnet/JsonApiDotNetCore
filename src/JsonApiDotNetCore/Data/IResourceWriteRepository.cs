@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
-     public interface IResourceWriteRepository<TResource>
+    public interface IResourceWriteRepository<TResource>
         : IResourceWriteRepository<TResource, int>
         where TResource : class, IIdentifiable<int>
     { }

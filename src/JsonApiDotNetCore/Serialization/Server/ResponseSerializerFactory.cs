@@ -1,10 +1,7 @@
 ﻿using System;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
