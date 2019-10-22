@@ -14,10 +14,10 @@ namespace JsonApiDotNetCore.Query
     /// </summary>
     public abstract class QueryParameterService
     {
-        protected readonly IResourceGraphExplorer _contextEntityProvider;
+        protected readonly IResourceGraph _contextEntityProvider;
         protected readonly ContextEntity _requestResource;
 
-        protected QueryParameterService(IResourceGraphExplorer contextEntityProvider, ICurrentRequest currentRequest)
+        protected QueryParameterService(IResourceGraph contextEntityProvider, ICurrentRequest currentRequest)
         {
             _contextEntityProvider = contextEntityProvider;
             _requestResource = currentRequest.GetRequestResource();

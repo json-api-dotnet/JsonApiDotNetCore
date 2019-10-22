@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Internal
     /// <summary>
     ///  keeps track of all the models/resources defined in JADNC
     /// </summary>
-    public class ResourceGraph : IResourceGraphExplorer
+    public class ResourceGraph : IResourceGraph
     {
         internal List<ValidationResult> ValidationResults { get; }
         private List<ContextEntity> _entities { get; }

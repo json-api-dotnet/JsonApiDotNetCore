@@ -29,11 +29,11 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IResourceGraphExplorer Build()
+        public IResourceGraph Build()
         {
             _entities.ForEach(SetResourceLinksOptions);
-            var graph = new ResourceGraph(_entities, _validationResults);
-            return graph;
+            var resourceGraph = new ResourceGraph(_entities, _validationResults);
+            return resourceGraph;
         }
 
         private void SetResourceLinksOptions(ContextEntity resourceContext)
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCore.Builders
         private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
             if (_entities.Any(e => e.EntityType == entityType))
-                throw new InvalidOperationException($"Cannot add entity type {entityType} to context graph, there is already an entity of that type configured.");
+                throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
         }
     }
 }

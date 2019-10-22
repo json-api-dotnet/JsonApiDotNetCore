@@ -49,13 +49,13 @@ namespace JsonApiDotNetCore.Graph
             typeof(IEntityReadRepository<,>)
         };
         private readonly IServiceCollection _services;
-        private readonly IResourceGraphBuilder _graphBuilder;
+        private readonly IResourceGraphBuilder _resourceGraphBuilder;
         private readonly List<ResourceDescriptor> _identifiables = new List<ResourceDescriptor>();
 
-        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder graphBuilder)
+        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
         {
             _services = services;
-            _graphBuilder = graphBuilder;
+            _resourceGraphBuilder = resourceGraphBuilder;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Adds resources to the graph and registers <see cref="ResourceDefinition{T}"/> types on the container.
+        /// Adds resources to the resourceGraph and registers <see cref="ResourceDefinition{T}"/> types on the container.
         /// </summary>
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddResources(Assembly assembly)
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCore.Graph
         private void AddResourceToGraph(ResourceDescriptor identifiable)
         {
             var resourceName = FormatResourceName(identifiable.ResourceType);
-            _graphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType, resourceName);
+            _resourceGraphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType, resourceName);
         }
 
         private string FormatResourceName(Type resourceType)

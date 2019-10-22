@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Builders
         /// <summary>
         /// Construct the <see cref="ResourceGraph"/>
         /// </summary>
-        IResourceGraphExplorer Build();
+        IResourceGraph Build();
 
         /// <summary>
         /// Add a json:api resource

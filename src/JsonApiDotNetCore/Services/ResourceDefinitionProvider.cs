@@ -8,10 +8,10 @@ namespace JsonApiDotNetCore.Query
     /// <inheritdoc/>
     internal class ResourceDefinitionProvider : IResourceDefinitionProvider
     {
-        private readonly IResourceGraphExplorer _resourceContextProvider;
+        private readonly IResourceGraph _resourceContextProvider;
         private readonly IScopedServiceProvider _serviceProvider;
 
-        public ResourceDefinitionProvider(IResourceGraphExplorer resourceContextProvider, IScopedServiceProvider serviceProvider)
+        public ResourceDefinitionProvider(IResourceGraph resourceContextProvider, IScopedServiceProvider serviceProvider)
         {
             _resourceContextProvider = resourceContextProvider;
             _serviceProvider = serviceProvider;

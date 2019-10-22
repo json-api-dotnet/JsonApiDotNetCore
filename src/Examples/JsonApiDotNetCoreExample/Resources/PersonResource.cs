@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PersonResource : LockableResource<Person>, IHasMeta
     {
-        public PersonResource(IResourceGraphExplorer graph) : base(graph) { }
+        public PersonResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<Person> BeforeUpdate(IDiffableEntityHashSet<Person> entities, ResourcePipeline pipeline)
         {

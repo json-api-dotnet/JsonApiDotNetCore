@@ -8,7 +8,7 @@ namespace UnitTests.Serialization
 {
     public class SerializationTestsSetupBase
     {
-        protected IResourceGraphExplorer _graph;
+        protected IResourceGraph _resourceGraph;
         protected readonly Faker<Food> _foodFaker;
         protected readonly Faker<Song> _songFaker;
         protected readonly Faker<Article> _articleFaker;
@@ -17,7 +17,7 @@ namespace UnitTests.Serialization
 
         public SerializationTestsSetupBase()
         {
-            _graph = BuildGraph();
+            _resourceGraph = BuildGraph();
             _articleFaker = new Faker<Article>()
                     .RuleFor(f => f.Title, f => f.Hacker.Phrase())
                     .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
@@ -35,7 +35,7 @@ namespace UnitTests.Serialization
                     .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
         }
 
-        protected IResourceGraphExplorer BuildGraph()
+        protected IResourceGraph BuildGraph()
         {
             var resourceGraphBuilder = new ResourceGraphBuilder();
             resourceGraphBuilder.AddResource<TestResource>("test-resource");

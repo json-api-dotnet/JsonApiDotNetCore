@@ -21,7 +21,7 @@ namespace DiscoveryTests
     public class ServiceDiscoveryFacadeTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
-        private readonly ResourceGraphBuilder _graphBuilder = new ResourceGraphBuilder();
+        private readonly ResourceGraphBuilder _resourceGraphBuilder = new ResourceGraphBuilder();
 
         public ServiceDiscoveryFacadeTests()
         {
@@ -31,7 +31,7 @@ namespace DiscoveryTests
             TestModelRepository._dbContextResolver = dbResolverMock.Object;
         }
 
-        private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _graphBuilder);
+        private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
 
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
@@ -40,10 +40,10 @@ namespace DiscoveryTests
             _facade.AddAssembly(typeof(Person).Assembly);
 
             // assert
-            var graph = _graphBuilder.Build();
-            var personResource = graph.GetContextEntity(typeof(Person));
-            var articleResource = graph.GetContextEntity(typeof(Article));
-            var modelResource = graph.GetContextEntity(typeof(Model));
+            var resourceGraph = _resourceGraphBuilder.Build();
+            var personResource = resourceGraph.GetContextEntity(typeof(Person));
+            var articleResource = resourceGraph.GetContextEntity(typeof(Article));
+            var modelResource = resourceGraph.GetContextEntity(typeof(Model));
 
             Assert.NotNull(personResource);
             Assert.NotNull(articleResource);
@@ -57,8 +57,8 @@ namespace DiscoveryTests
             _facade.AddCurrentAssembly();
 
             // assert
-            var graph = _graphBuilder.Build();
-            var testModelResource = graph.GetContextEntity(typeof(TestModel));
+            var resourceGraph = _resourceGraphBuilder.Build();
+            var testModelResource = resourceGraph.GetContextEntity(typeof(TestModel));
             Assert.NotNull(testModelResource);
         }
 
@@ -71,7 +71,7 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
             _services.AddScoped((_) => new Mock<IRequestContext>().Object);
             _services.AddScoped((_) => new Mock<IPageQueryService>().Object);
-            _services.AddScoped((_) => new Mock<IResourceGraphExplorer>().Object);
+            _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
             _facade.AddCurrentAssembly();
 
             // assert
@@ -103,7 +103,7 @@ namespace DiscoveryTests
                 IJsonApiOptions options,
                 IRequestContext currentRequest,
                 IPageQueryService pageService,
-                IResourceGraphExplorer resourceGraph,
+                IResourceGraph resourceGraph,
                 ILoggerFactory loggerFactory = null,
                 IResourceHookExecutor hookExecutor = null) : base(repository, options, currentRequest, pageService, resourceGraph, loggerFactory, hookExecutor)
             {

@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Extensions
         private static void LogResourceGraphValidations(IApplicationBuilder app)
         {
             var logger = app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>)) as ILogger;
-            var resourceGraph = app.ApplicationServices.GetService(typeof(IResourceGraphExplorer)) as ResourceGraph;
+            var resourceGraph = app.ApplicationServices.GetService(typeof(IResourceGraph)) as ResourceGraph;
 
             if (logger != null && resourceGraph != null)
             {

@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Query
         private bool _isProcessed;
 
         public SortService(IResourceDefinitionProvider resourceDefinitionProvider,
-                           IResourceGraphExplorer contextEntityProvider,
+                           IResourceGraph contextEntityProvider,
                            ICurrentRequest currentRequest)
             : base(contextEntityProvider, currentRequest)
         {

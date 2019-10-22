@@ -29,15 +29,15 @@ namespace JsonApiDotNetCore.Models
     public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
         private readonly ContextEntity _contextEntity;
-        private readonly IResourceGraphExplorer _graph;
+        private readonly IResourceGraph _resourceGraph;
         private List<AttrAttribute> _allowedAttributes;
         private List<RelationshipAttribute> _allowedRelationships;
-        public ResourceDefinition(IResourceGraphExplorer graph)
+        public ResourceDefinition(IResourceGraph resourceGraph)
         {
-            _contextEntity = graph.GetContextEntity(typeof(TResource));
+            _contextEntity = resourceGraph.GetContextEntity(typeof(TResource));
             _allowedAttributes = _contextEntity.Attributes;
             _allowedRelationships = _contextEntity.Relationships;
-            _graph = graph;
+            _resourceGraph = resourceGraph;
         }
 
 
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Arttribute2, e.Relationship1, e.Relationship2 }</param>
         public void HideFields(Expression<Func<TResource, dynamic>> selector)
         {
-            var fieldsToHide = _graph.GetFields(selector);
+            var fieldsToHide = _resourceGraph.GetFields(selector);
             _allowedAttributes = _allowedAttributes.Except(fieldsToHide.Where(f => f is AttrAttribute)).Cast<AttrAttribute>().ToList();
             _allowedRelationships = _allowedRelationships.Except(fieldsToHide.Where(f => f is RelationshipAttribute)).Cast<RelationshipAttribute>().ToList();
         }
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Models
             {
                 var order = new List<(AttrAttribute, SortDirection)>();
                 foreach (var sortProp in defaultSortOrder)
-                    order.Add((_graph.GetAttributes(sortProp.Item1).Single(), sortProp.Item2));
+                    order.Add((_resourceGraph.GetAttributes(sortProp.Item1).Single(), sortProp.Item2));
 
                 return order;
             }

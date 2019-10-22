@@ -7,9 +7,9 @@ namespace JsonApiDotNetCore.Internal.Contracts
 {
     /// <summary>
     /// Responsible for retrieving the exposed resource fields (attributes and
-    /// relationships) of registered resources in the resource graph.
+    /// relationships) of registered resources in the resource resourceGraph.
     /// </summary>
-    public interface IResourceGraphExplorer : IContextEntityProvider
+    public interface IResourceGraph : IContextEntityProvider
     {
         /// <summary>
         /// Gets all fields (attributes and relationships) for <typeparamref name="TResource"/>
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         List<RelationshipAttribute> GetRelationships(Type type);
 
         /// <summary>
-        /// Traverses the resource graph for the inverse relationship of the provided
+        /// Traverses the resource resourceGraph for the inverse relationship of the provided
         /// <paramref name="relationship"/>;
         /// </summary>
         /// <param name="relationship"></param>

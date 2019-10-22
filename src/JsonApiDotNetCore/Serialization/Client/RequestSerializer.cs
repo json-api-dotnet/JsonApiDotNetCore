@@ -17,12 +17,12 @@ namespace JsonApiDotNetCore.Serialization.Client
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache;
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache;
         private Type _currentTargetedResource;
-        private readonly IResourceGraphExplorer _graph;
-        public RequestSerializer(IResourceGraphExplorer graph,
+        private readonly IResourceGraph _resourceGraph;
+        public RequestSerializer(IResourceGraph resourceGraph,
                                 IResourceObjectBuilder resourceObjectBuilder)
-            : base(resourceObjectBuilder, graph)
+            : base(resourceObjectBuilder, resourceGraph)
         {
-            _graph = graph;
+            _resourceGraph = resourceGraph;
             _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
             _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         }
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public void SetAttributesToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
             where TResource : class, IIdentifiable
         {
-            var allowedAttributes = _graph.GetAttributes(filter);
+            var allowedAttributes = _resourceGraph.GetAttributes(filter);
             _attributesToSerializeCache[typeof(TResource)] = allowedAttributes;
         }
 
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public void SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
             where TResource : class, IIdentifiable
         {
-            var allowedRelationships = _graph.GetRelationships(filter);
+            var allowedRelationships = _resourceGraph.GetRelationships(filter);
             _relationshipsToSerializeCache[typeof(TResource)] = allowedRelationships;
         }
 
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCore.Serialization.Client
                 return new List<AttrAttribute>();
 
             if (!_attributesToSerializeCache.TryGetValue(resourceType, out var attributes))
-                return _graph.GetAttributes(resourceType);
+                return _resourceGraph.GetAttributes(resourceType);
 
             return attributes;
         }

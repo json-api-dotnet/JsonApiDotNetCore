@@ -157,13 +157,13 @@ namespace UnitTests.Serialization.Server
         private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
-            var resourceContext = _graph.GetContextEntity<Article>();
+            var resourceContext = _resourceGraph.GetContextEntity<Article>();
             var splittedPath = chain.Split(QueryConstants.DOT);
             foreach (var requestedRelationship in splittedPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
                 parsedChain.Add(relationship);
-                resourceContext = _graph.GetContextEntity(relationship.DependentType);
+                resourceContext = _resourceGraph.GetContextEntity(relationship.DependentType);
             }
             return parsedChain;
         }
@@ -172,7 +172,7 @@ namespace UnitTests.Serialization.Server
         {
             var fields = GetSerializableFields();
             var links = GetLinkBuilder();
-            return new IncludedResourceObjectBuilder(fields, links, _graph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(fields, links, _resourceGraph, GetSerializerSettingsProvider());
         }
 
     }

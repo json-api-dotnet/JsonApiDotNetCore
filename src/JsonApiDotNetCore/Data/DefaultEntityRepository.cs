@@ -24,26 +24,26 @@ namespace JsonApiDotNetCore.Data
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
-        private readonly IContextEntityProvider _provider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
 
         public DefaultEntityRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
-            IContextEntityProvider provider,
+            IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory)
-            : this(targetedFields, contextResolver, provider, genericProcessorFactory, null)
+            : this(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
         { }
 
         public DefaultEntityRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
-            IContextEntityProvider provider,
+            IResourceGraph resourceGraph,
             IGenericProcessorFactory genericProcessorFactory,
             ILoggerFactory loggerFactory = null)
         {
             _targetedFields = targetedFields;
-            _provider = provider;
+            _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TEntity>();
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Data
 
         private bool IsHasOneRelationship(string internalRelationshipName, Type type)
         {
-            var relationshipAttr = _provider.GetContextEntity(type).Relationships.FirstOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
+            var relationshipAttr = _resourceGraph.GetRelationships(type).FirstOrDefault(r => r.InternalRelationshipName == internalRelationshipName);
             if (relationshipAttr != null)
             {
                 if (relationshipAttr is HasOneAttribute)
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultEntityRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IResourceGraphExplorer contextEntityProvider,
+                                       IResourceGraph contextEntityProvider,
                                        IGenericProcessorFactory genericProcessorFactory)
             : base(targetedFields, contextResolver, contextEntityProvider, genericProcessorFactory)
         {
@@ -427,7 +427,7 @@ namespace JsonApiDotNetCore.Data
 
         public DefaultEntityRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IResourceGraphExplorer contextEntityProvider,
+                                       IResourceGraph contextEntityProvider,
                                        IGenericProcessorFactory genericProcessorFactory,
                                        ILoggerFactory loggerFactory = null)
             : base(targetedFields, contextResolver, contextEntityProvider, genericProcessorFactory, loggerFactory)

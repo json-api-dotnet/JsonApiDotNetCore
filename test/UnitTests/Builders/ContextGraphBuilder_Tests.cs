@@ -34,7 +34,7 @@ namespace UnitTests
             var container = services.BuildServiceProvider();
 
             // assert
-            var resourceGraph = container.GetRequiredService<IResourceGraphExplorer>();
+            var resourceGraph = container.GetRequiredService<IResourceGraph>();
             var dbResource = resourceGraph.GetContextEntity("db-resources");
             var nonDbResource = resourceGraph.GetContextEntity("non-db-resources");
             Assert.Equal(typeof(DbResource), dbResource.EntityType);
@@ -50,10 +50,10 @@ namespace UnitTests
             builder.AddResource<TestResource>();
 
             // act
-            var graph = builder.Build();
+            var resourceGraph = builder.Build();
 
             // assert
-            var resource = graph.GetContextEntity(typeof(TestResource));
+            var resource = resourceGraph.GetContextEntity(typeof(TestResource));
             Assert.Equal("test-resources", resource.EntityName);
         }
 
@@ -65,10 +65,10 @@ namespace UnitTests
             builder.AddResource<TestResource>();
 
             // act
-            var graph = builder.Build();
+            var resourceGraph = builder.Build();
 
             // assert
-            var resource = graph.GetContextEntity(typeof(TestResource));
+            var resource = resourceGraph.GetContextEntity(typeof(TestResource));
             Assert.Equal("testResources", resource.EntityName);
         }
 
@@ -80,10 +80,10 @@ namespace UnitTests
             builder.AddResource<TestResource>();
 
             // act
-            var graph = builder.Build();
+            var resourceGraph = builder.Build();
 
             // assert
-            var resource = graph.GetContextEntity(typeof(TestResource));
+            var resource = resourceGraph.GetContextEntity(typeof(TestResource));
             Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compound-attribute");
         }
 
@@ -95,10 +95,10 @@ namespace UnitTests
             builder.AddResource<TestResource>();
 
             // act
-            var graph = builder.Build();
+            var resourceGraph = builder.Build();
 
             // assert
-            var resource = graph.GetContextEntity(typeof(TestResource));
+            var resource = resourceGraph.GetContextEntity(typeof(TestResource));
             Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
 
@@ -110,10 +110,10 @@ namespace UnitTests
             builder.AddResource<TestResource>();
 
             // act
-            var graph = builder.Build();
+            var resourceGraph = builder.Build();
 
             // assert
-            var resource = graph.GetContextEntity(typeof(TestResource));
+            var resource = resourceGraph.GetContextEntity(typeof(TestResource));
             Assert.Equal("related-resource", resource.Relationships.Single(r => r.IsHasOne).PublicRelationshipName);
             Assert.Equal("related-resources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);
         }

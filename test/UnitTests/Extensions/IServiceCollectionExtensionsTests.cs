@@ -42,13 +42,13 @@ namespace UnitTests.Extensions
             // assert
             var currentRequest = provider.GetService<ICurrentRequest>();
             Assert.NotNull(currentRequest);
-            var graph = provider.GetService<IResourceGraphExplorer>();
-            Assert.NotNull(graph);
-            currentRequest.SetRequestResource(graph.GetContextEntity<TodoItem>());
-            Assert.NotNull(provider.GetService<IResourceGraphExplorer>());
+            var resourceGraph = provider.GetService<IResourceGraph>();
+            Assert.NotNull(resourceGraph);
+            currentRequest.SetRequestResource(resourceGraph.GetContextEntity<TodoItem>());
+            Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
-            Assert.NotNull(provider.GetService<IResourceGraphExplorer>());
+            Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
             Assert.NotNull(provider.GetService<IJsonApiSerializerFactory>());
@@ -128,8 +128,8 @@ namespace UnitTests.Extensions
 
             // assert
             var provider = services.BuildServiceProvider();
-            var graph = provider.GetService<IResourceGraphExplorer>();
-            var resource = graph.GetContextEntity(typeof(IntResource));
+            var resourceGraph = provider.GetService<IResourceGraph>();
+            var resource = resourceGraph.GetContextEntity(typeof(IntResource));
             Assert.Equal("resource", resource.EntityName);
         }
 

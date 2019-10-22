@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Hooks
     internal class TraversalHelper : ITraversalHelper
     {
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
-        private readonly IContextEntityProvider _provider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly ITargetedFields _targetedFields;
         /// <summary>
         /// Keeps track of which entities has already been traversed through, to prevent
@@ -38,11 +38,11 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
         public TraversalHelper(
-            IContextEntityProvider provider,
+            IResourceGraph resourceGraph,
             ITargetedFields targetedFields)
         {
             _targetedFields = targetedFields;
-            _provider = provider;
+            _resourceGraph = resourceGraph;
         }
 
         /// <summary>
@@ -196,13 +196,12 @@ namespace JsonApiDotNetCore.Hooks
 
         /// <summary>
         /// Parses all relationships from <paramref name="type"/> to
-        /// other models in the resource graphs by constructing RelationshipProxies .
+        /// other models in the resource resourceGraphs by constructing RelationshipProxies .
         /// </summary>
         /// <param name="type">The type to parse</param>
         void RegisterRelationshipProxies(DependentType type)
         {
-            var contextEntity = _provider.GetContextEntity(type);
-            foreach (RelationshipAttribute attr in contextEntity.Relationships)
+            foreach (RelationshipAttribute attr in _resourceGraph.GetRelationships(type))
             {
                 if (!attr.CanInclude) continue;
                 if (!RelationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))

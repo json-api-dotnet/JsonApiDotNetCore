@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class PassportResource : ResourceDefinition<Passport>
     {
-        public PassportResource(IResourceGraphExplorer graph) : base(graph)
+        public PassportResource(IResourceGraph resourceGraph) : base(resourceGraph)
         {
         }
 

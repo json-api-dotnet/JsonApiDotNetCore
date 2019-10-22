@@ -18,7 +18,7 @@ namespace UnitTests.Serialization.Server
         private readonly Mock<ITargetedFields> _fieldsManagerMock = new Mock<ITargetedFields>();
         public RequestDeserializerTests() : base()
         {
-            _deserializer = new RequestDeserializer(_graph, _fieldsManagerMock.Object);
+            _deserializer = new RequestDeserializer(_resourceGraph, _fieldsManagerMock.Object);
         }
 
         [Fact]

@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Internal
 
         public InverseRelationships(IContextEntityProvider provider, IDbContextResolver resolver = null)
         {
-            _provider = (ResourceGraph)provider;
+            _provider = provider;
             _resolver = resolver;
         }
 

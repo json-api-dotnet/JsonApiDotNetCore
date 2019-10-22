@@ -89,7 +89,7 @@ namespace UnitTests.Serialization.Server
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            var chain = _graph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
+            var chain = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
             var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chain);
 
             // act
@@ -152,13 +152,13 @@ namespace UnitTests.Serialization.Server
                 PopulatedToManies = new List<OneToManyDependent> { includedEntity }
             };
 
-            var chains = _graph.GetRelationships<MultipleRelationshipsPrincipalPart>()
+            var chains = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
                                 .Select(r =>
                                 {
                                     var chain = new List<RelationshipAttribute> { r };
                                     if (r.PublicRelationshipName != "populated-to-manies")
                                         return new List<RelationshipAttribute> { r };
-                                    chain.AddRange(_graph.GetRelationships<OneToManyDependent>());
+                                    chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
                                     return chain;
                                 }).ToList();
 
@@ -365,7 +365,7 @@ namespace UnitTests.Serialization.Server
             // arrange
             var entity = new OneToOnePrincipal() { Id = 2, Dependent = null };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
-            var requestRelationship = _graph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
+            var requestRelationship = _resourceGraph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
             serializer.RequestRelationship = requestRelationship;
 
             // act
@@ -383,7 +383,7 @@ namespace UnitTests.Serialization.Server
             // arrange
             var entity = new OneToOnePrincipal() { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
-            var requestRelationship = _graph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
+            var requestRelationship = _resourceGraph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
             serializer.RequestRelationship = requestRelationship;
 
 
@@ -410,7 +410,7 @@ namespace UnitTests.Serialization.Server
             // arrange
             var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent>() };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
-            var requestRelationship = _graph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
+            var requestRelationship = _resourceGraph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
             serializer.RequestRelationship = requestRelationship;
 
 
@@ -429,7 +429,7 @@ namespace UnitTests.Serialization.Server
             // arrange
             var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 1 } } };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
-            var requestRelationship = _graph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
+            var requestRelationship = _resourceGraph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
             serializer.RequestRelationship = requestRelationship;
 
 

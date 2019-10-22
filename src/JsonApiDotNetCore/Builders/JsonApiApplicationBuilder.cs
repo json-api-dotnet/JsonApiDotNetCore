@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Builders
 
         public void ConfigureServices()
         {
-            var graph = _resourceGraphBuilder.Build();
+            var resourceGraph = _resourceGraphBuilder.Build();
 
             if (!_usesDbContext)
             {
@@ -130,10 +130,10 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
-            _services.AddSingleton(graph);
+            _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddSingleton<IResourceGraphExplorer>(graph);
-            _services.AddSingleton<IContextEntityProvider>(graph);
+            _services.AddSingleton<IResourceGraph>(resourceGraph);
+            _services.AddSingleton<IContextEntityProvider>(resourceGraph);
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();

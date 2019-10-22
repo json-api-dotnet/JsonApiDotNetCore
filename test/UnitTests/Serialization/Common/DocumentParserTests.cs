@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Deserializer
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDocumentParser(_graph);
+            _deserializer = new TestDocumentParser(_resourceGraph);
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace UnitTests.Serialization.Deserializer
             var entity = (TestResource)_deserializer.Deserialize(body);
 
             // assert
-            var pi = _graph.GetContextEntity("test-resource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
+            var pi = _resourceGraph.GetContextEntity("test-resource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
             var deserializedValue = pi.GetValue(entity);
 
             if (member == "int-field")

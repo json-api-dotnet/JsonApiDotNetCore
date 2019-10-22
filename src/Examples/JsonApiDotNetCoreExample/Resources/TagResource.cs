@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Resources
 {
     public class TagResource : ResourceDefinition<Tag>
     {
-        public TagResource(IResourceGraphExplorer graph) : base(graph) { }
+        public TagResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<Tag> BeforeCreate(IEntityHashSet<Tag> affected, ResourcePipeline pipeline)
         {

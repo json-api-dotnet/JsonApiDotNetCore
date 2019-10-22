@@ -13,7 +13,7 @@ namespace UnitTests.QueryParameters
     public class QueryParametersUnitTestCollection
     {
         protected readonly ContextEntity _articleResourceContext;
-        protected readonly IResourceGraphExplorer _graph;
+        protected readonly IResourceGraph _resourceGraph;
 
         public QueryParametersUnitTestCollection()
         {
@@ -23,8 +23,8 @@ namespace UnitTests.QueryParameters
             builder.AddResource<Blog>();
             builder.AddResource<Food>();
             builder.AddResource<Song>();
-            _graph = builder.Build();
-            _articleResourceContext = _graph.GetContextEntity<Article>();
+            _resourceGraph = builder.Build();
+            _articleResourceContext = _resourceGraph.GetContextEntity<Article>();
         }
 
         public ICurrentRequest MockCurrentRequest(ContextEntity requestResource = null)
