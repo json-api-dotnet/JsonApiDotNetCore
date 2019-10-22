@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Builders
 
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
             _mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, routingConvention));
-            _services.AddSingleton((IControllerResourceMapping)routingConvention); 
+            _services.AddSingleton<IControllerResourceMapping>(routingConvention); 
         }
 
         /// <summary>
