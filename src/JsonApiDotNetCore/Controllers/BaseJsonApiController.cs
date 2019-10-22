@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -32,14 +31,11 @@ namespace JsonApiDotNetCore.Controllers
             IResourceService<T, TId> resourceService,
             ILoggerFactory loggerFactory)
         {
-            if(loggerFactory != null)
-            {
+            if (loggerFactory != null)
                 _logger = loggerFactory.CreateLogger<BaseJsonApiController<T, TId>>();
-            }
             else
-            {
                 _logger = new Logger<BaseJsonApiController<T, TId>>(new LoggerFactory());
-            }
+
             _jsonApiOptions = jsonApiOptions;
             _getAll = resourceService;
             _getById = resourceService;
@@ -50,7 +46,6 @@ namespace JsonApiDotNetCore.Controllers
             _updateRelationships = resourceService;
             _delete = resourceService;
         }
-
 
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
@@ -68,11 +63,7 @@ namespace JsonApiDotNetCore.Controllers
             _delete = cmdService;
         }
 
-        /// <summary>
-        /// Base constructor
-        /// </summary>
         /// <param name="jsonApiOptions"></param>
-        /// <param name="resourceGraph"></param>
         /// <param name="getAll"></param>
         /// <param name="getById"></param>
         /// <param name="getRelationship"></param>

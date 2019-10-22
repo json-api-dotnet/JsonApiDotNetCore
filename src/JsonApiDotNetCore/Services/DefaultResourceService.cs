@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
     /// <typeparam name="TId"></typeparam>
-    public class EntityResourceService<TResource, TId> :
+    public class DefaultResourceService<TResource, TId> :
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
@@ -26,22 +26,22 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiOptions _options;
         private readonly IFilterService _filterService;
         private readonly ISortService _sortService;
-        private readonly IEntityRepository<TResource, TId> _repository;
+        private readonly IResourceRepository<TResource, TId> _repository;
         private readonly ILogger _logger;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
         private readonly ISparseFieldsService _sparseFieldsService;
-        private readonly ContextEntity _currentRequestResource;
+        private readonly ResourceContext _currentRequestResource;
 
-        public EntityResourceService(
+        public DefaultResourceService(
                 ISortService sortService,
                 IFilterService filterService,
-                IEntityRepository<TResource, TId> repository,
                 IJsonApiOptions options,
                 IIncludeService includeService,
                 ISparseFieldsService sparseFieldsService,
                 IPageService pageManager,
-                IContextEntityProvider provider,
+                IResourceRepository<TResource, TId> repository,
+                IResourceContextProvider provider,
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
@@ -53,8 +53,8 @@ namespace JsonApiDotNetCore.Services
             _filterService = filterService;
             _repository = repository;
             _hookExecutor = hookExecutor;
-            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TId>>();
-            _currentRequestResource = provider.GetContextEntity<TResource>();
+            _logger = loggerFactory?.CreateLogger<DefaultResourceService<TResource, TId>>();
+            _currentRequestResource = provider.GetResourceContext<TResource>();
         }
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
@@ -263,7 +263,7 @@ namespace JsonApiDotNetCore.Services
         {
             var fields = _sparseFieldsService.Get();
             if (fields != null && fields.Any())
-                entities = _repository.Select(entities, fields);
+                entities = _repository.Select(entities, fields.ToArray());
 
             return entities;
         }
@@ -276,14 +276,14 @@ namespace JsonApiDotNetCore.Services
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var sparseFieldset = _sparseFieldsService.Get();
-            var query = _repository.Select(_repository.Get(id), sparseFieldset);
+            var query = _repository.Select(_repository.Get(id), sparseFieldset.ToArray());
 
             foreach (var chain in _includeService.Get())
                 query = _repository.Include(query, chain.ToArray());
 
             TResource value;
             // https://github.com/aspnet/EntityFrameworkCore/issues/6573
-            if (sparseFieldset.Count() > 0)
+            if (sparseFieldset.Any())
                 value = query.FirstOrDefault();
             else
                 value = await _repository.FirstOrDefaultAsync(query);
@@ -319,15 +319,15 @@ namespace JsonApiDotNetCore.Services
     /// No mapping with integer as default
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
-    public class EntityResourceService<TResource> : EntityResourceService<TResource, int>,
+    public class DefaultResourceService<TResource> : DefaultResourceService<TResource, int>,
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public EntityResourceService(ISortService sortService, IFilterService filterService, IEntityRepository<TResource, int> repository,
+        public DefaultResourceService(ISortService sortService, IFilterService filterService, IResourceRepository<TResource, int> repository,
                                      IJsonApiOptions options, IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                     IPageService pageManager, IContextEntityProvider provider,
+                                     IPageService pageManager, IResourceContextProvider provider,
                                      IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, repository, options, includeService, sparseFieldsService, pageManager, provider, hookExecutor, loggerFactory)
+            : base(sortService, filterService, options, includeService, sparseFieldsService, pageManager, repository, provider, hookExecutor, loggerFactory)
         {
         }
     }

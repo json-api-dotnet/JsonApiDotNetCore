@@ -1,7 +1,3 @@
-using System;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Models;
-
 namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>

@@ -5,9 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +39,9 @@ namespace DiscoveryTests
 
             // assert
             var resourceGraph = _resourceGraphBuilder.Build();
-            var personResource = resourceGraph.GetContextEntity(typeof(Person));
-            var articleResource = resourceGraph.GetContextEntity(typeof(Article));
-            var modelResource = resourceGraph.GetContextEntity(typeof(Model));
+            var personResource = resourceGraph.GetResourceContext(typeof(Person));
+            var articleResource = resourceGraph.GetResourceContext(typeof(Article));
+            var modelResource = resourceGraph.GetResourceContext(typeof(Model));
 
             Assert.NotNull(personResource);
             Assert.NotNull(articleResource);
@@ -58,7 +56,7 @@ namespace DiscoveryTests
 
             // assert
             var resourceGraph = _resourceGraphBuilder.Build();
-            var testModelResource = resourceGraph.GetContextEntity(typeof(TestModel));
+            var testModelResource = resourceGraph.GetResourceContext(typeof(TestModel));
             Assert.NotNull(testModelResource);
         }
 
@@ -88,18 +86,18 @@ namespace DiscoveryTests
 
             // assert
             var services = _services.BuildServiceProvider();
-            Assert.IsType<TestModelRepository>(services.GetService<IEntityRepository<TestModel>>());
+            Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
         }
 
         public class TestModel : Identifiable { }
 
-        public class TestModelService : EntityResourceService<TestModel>
+        public class TestModelService : DefaultResourceService<TestModel>
         {
-            private static IEntityRepository<TestModel> _repo = new Mock<IEntityRepository<TestModel>>().Object;
+            private static IResourceRepository<TestModel> _repo = new Mock<IResourceRepository<TestModel>>().Object;
             private static IJsonApiContext _jsonApiContext = new Mock<IJsonApiContext>().Object;
 
             public TestModelService(
-                IEntityRepository<TestModel> repository,
+                IResourceRepository<TestModel> repository,
                 IJsonApiOptions options,
                 IRequestContext currentRequest,
                 IPageQueryService pageService,
@@ -110,7 +108,7 @@ namespace DiscoveryTests
             }
         }
 
-        public class TestModelRepository : DefaultEntityRepository<TestModel>
+        public class TestModelRepository : DefaultResourceRepository<TestModel>
         {
             internal static IDbContextResolver _dbContextResolver;
             private static IJsonApiContext _jsonApiContext = new Mock<IJsonApiContext>().Object;

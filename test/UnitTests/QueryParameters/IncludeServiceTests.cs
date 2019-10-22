@@ -12,7 +12,7 @@ namespace UnitTests.QueryParameters
     public class IncludeServiceTests : QueryParametersUnitTestCollection
     {
 
-        public IncludeService GetService(ContextEntity resourceContext = null)
+        public IncludeService GetService(ResourceContext resourceContext = null)
         {
             return new IncludeService(_resourceGraph, MockCurrentRequest(resourceContext ?? _articleResourceContext));
         }
@@ -58,7 +58,7 @@ namespace UnitTests.QueryParameters
             // arrange
             const string chain = "author.blogs.reviewer.favorite-food,reviewer.blogs.author.favorite-song";
             var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
-            var service = GetService(_resourceGraph.GetContextEntity<Food>());
+            var service = GetService(_resourceGraph.GetResourceContext<Food>());
 
             // act, assert
             var exception = Assert.Throws<JsonApiException>( () => service.Parse(query));

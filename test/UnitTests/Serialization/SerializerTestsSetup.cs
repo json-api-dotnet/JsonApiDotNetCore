@@ -49,7 +49,7 @@ namespace UnitTests.Serialization
             var included = GetIncludedRelationships(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
-            var provider = GetContextEntityProvider();
+            var provider = GetResourceContextProvider();
             ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
         }
@@ -74,7 +74,7 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        private IResourceGraph GetContextEntityProvider()
+        private IResourceGraph GetResourceContextProvider()
         {
             return _resourceGraph;
         }
@@ -89,14 +89,14 @@ namespace UnitTests.Serialization
         protected ICurrentRequest GetRequestManager<T>() where T : class, IIdentifiable
         {
             var mock = new Mock<ICurrentRequest>();
-            mock.Setup(m => m.GetRequestResource()).Returns(_resourceGraph.GetContextEntity<T>());
+            mock.Setup(m => m.GetRequestResource()).Returns(_resourceGraph.GetResourceContext<T>());
             return mock.Object;
         }
 
         protected ILinkBuilder GetLinkBuilder(TopLevelLinks top = null, ResourceLinks resource = null, RelationshipLinks relationship = null)
         {
             var mock = new Mock<ILinkBuilder>();
-            mock.Setup(m => m.GetTopLevelLinks(It.IsAny<ContextEntity>())).Returns(top);
+            mock.Setup(m => m.GetTopLevelLinks(It.IsAny<ResourceContext>())).Returns(top);
             mock.Setup(m => m.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
             mock.Setup(m => m.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
             return mock.Object;
@@ -111,8 +111,8 @@ namespace UnitTests.Serialization
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetContextEntity(t).Attributes);
-            mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetContextEntity(t).Relationships);
+            mock.Setup(m => m.GetAllowedAttributes(It.IsAny<Type>(), It.IsAny<RelationshipAttribute>())).Returns<Type, RelationshipAttribute>((t, r) => _resourceGraph.GetResourceContext(t).Attributes);
+            mock.Setup(m => m.GetAllowedRelationships(It.IsAny<Type>())).Returns<Type>(t => _resourceGraph.GetResourceContext(t).Relationships);
             return mock.Object;
         }
 
@@ -131,7 +131,7 @@ namespace UnitTests.Serialization
         /// </summary>
         protected class TestDocumentBuilder : BaseDocumentBuilder
         {
-            public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IContextEntityProvider provider) : base(resourceObjectBuilder, provider) { }
+            public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider provider) : base(resourceObjectBuilder, provider) { }
 
             public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
             {

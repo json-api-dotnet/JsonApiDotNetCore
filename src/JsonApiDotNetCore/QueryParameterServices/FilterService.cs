@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Query
 
         public FilterService(IResourceDefinitionProvider resourceDefinitionProvider, IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
-            _requestResourceDefinition = resourceDefinitionProvider.Get(_requestResource.EntityType);
+            _requestResourceDefinition = resourceDefinitionProvider.Get(_requestResource.ResourceType);
             _filters = new List<FilterQueryContext>();
         }
 

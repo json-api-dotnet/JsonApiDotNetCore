@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     public class LinkBuilder : ILinkBuilder
     {
-        private readonly IContextEntityProvider _provider;
+        private readonly IResourceContextProvider _provider;
         private readonly ILinksConfiguration _options;
         private readonly ICurrentRequest _currentRequest;
         private readonly IPageService _pageService;
@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         public LinkBuilder(ILinksConfiguration options,
                            ICurrentRequest currentRequest,
                            IPageService pageService,
-                           IContextEntityProvider provider)
+                           IResourceContextProvider provider)
         {
             _options = options;
             _currentRequest = currentRequest;
@@ -27,11 +27,11 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         }
 
         /// <inheritdoc/>
-        public TopLevelLinks GetTopLevelLinks(ContextEntity primaryResource)
+        public TopLevelLinks GetTopLevelLinks(ResourceContext primaryResource)
         {
             TopLevelLinks topLevelLinks = null;
             if (ShouldAddTopLevelLink(primaryResource, Link.Self))
-                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(primaryResource.EntityName) };
+                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(primaryResource.ResourceName) };
 
             if (ShouldAddTopLevelLink(primaryResource, Link.Paging))
                 SetPageLinks(primaryResource, ref topLevelLinks);
@@ -41,18 +41,18 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         /// <summary>
         /// Checks if the top-level <paramref name="link"/> should be added by first checking
-        /// configuration on the <see cref="ContextEntity"/>, and if not configured, by checking with the
+        /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
         /// <param name="link"></param>
-        private bool ShouldAddTopLevelLink(ContextEntity primaryResource, Link link)
+        private bool ShouldAddTopLevelLink(ResourceContext primaryResource, Link link)
         {
             if (primaryResource.TopLevelLinks != Link.NotConfigured)
                 return primaryResource.TopLevelLinks.HasFlag(link);
             return _options.TopLevelLinks.HasFlag(link);
         }
 
-        private void SetPageLinks(ContextEntity primaryResource, ref TopLevelLinks links)
+        private void SetPageLinks(ResourceContext primaryResource, ref TopLevelLinks links)
         {
             if (!_pageService.ShouldPaginate())
                 return;
@@ -78,16 +78,16 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             return $"{GetBasePath()}/{resourceName}";
         }
 
-        private string GetPageLink(ContextEntity primaryResource, int pageOffset, int pageSize)
+        private string GetPageLink(ResourceContext primaryResource, int pageOffset, int pageSize)
         {
-            return $"{GetBasePath()}/{primaryResource.EntityName}?page[size]={pageSize}&page[number]={pageOffset}";
+            return $"{GetBasePath()}/{primaryResource.ResourceName}?page[size]={pageSize}&page[number]={pageOffset}";
         }
 
 
         /// <inheritdoc/>
         public ResourceLinks GetResourceLinks(string resourceName, string id)
         {
-            var resourceContext = _provider.GetContextEntity(resourceName);
+            var resourceContext = _provider.GetResourceContext(resourceName);
             if (ShouldAddResourceLink(resourceContext, Link.Self))
                 return new ResourceLinks { Self = GetSelfResourceLink(resourceName, id) };
 
@@ -97,16 +97,16 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <inheritdoc/>
         public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
         {
-            var parentResourceContext = _provider.GetContextEntity(parent.GetType());
+            var parentResourceContext = _provider.GetResourceContext(parent.GetType());
             var childNavigation = relationship.PublicRelationshipName;
             RelationshipLinks links = null;
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Related))
-                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.EntityName, parent.StringId, childNavigation) };
+                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation) };
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Self))
             {
                 links = links ?? new RelationshipLinks();
-                links.Self = GetSelfRelationshipLink(parentResourceContext.EntityName, parent.StringId, childNavigation);
+                links.Self = GetSelfRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation);
             }
 
             return links;
@@ -130,11 +130,11 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         /// <summary>
         /// Checks if the resource object level <paramref name="link"/> should be added by first checking
-        /// configuration on the <see cref="ContextEntity"/>, and if not configured, by checking with the
+        /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
         /// <param name="link"></param>
-        private bool ShouldAddResourceLink(ContextEntity resourceContext, Link link)
+        private bool ShouldAddResourceLink(ResourceContext resourceContext, Link link)
         {
             if (resourceContext.ResourceLinks != Link.NotConfigured)
                 return resourceContext.ResourceLinks.HasFlag(link);
@@ -144,11 +144,11 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <summary>
         /// Checks if the resource object level <paramref name="link"/> should be added by first checking
         /// configuration on the <paramref name="relationship"/> attribute, if not configured by checking
-        /// the <see cref="ContextEntity"/>, and if not configured by checking with the
+        /// the <see cref="ResourceContext"/>, and if not configured by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
         /// <param name="link"></param>
-        private bool ShouldAddRelationshipLink(ContextEntity resourceContext, RelationshipAttribute relationship, Link link)
+        private bool ShouldAddRelationshipLink(ResourceContext resourceContext, RelationshipAttribute relationship, Link link)
         {
             if (relationship.RelationshipLinks != Link.NotConfigured)
                 return relationship.RelationshipLinks.HasFlag(link);

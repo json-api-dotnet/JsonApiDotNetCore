@@ -34,7 +34,7 @@ using JsonApiDotNetCore.Serialization.Contracts;
 //            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 //            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-//            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+//            var genericServiceFactoryMock = new Mock<IGenericServiceFactory>();
 
 //            var documentBuilder = new BaseDocumentBuilder(jsonApiContextMock.Object);
 //            _jsonApiSerializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);

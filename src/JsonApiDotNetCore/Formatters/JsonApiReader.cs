@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc.Formatters;

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The root node.</returns>
         /// <param name="rootEntities">Root entities.</param>
-        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
-        RootNode<TEntity> CreateRootNode<TEntity>(IEnumerable<TEntity> rootEntities) where TEntity : class, IIdentifiable;
+        /// <typeparam name="TResource">The 1st type parameter.</typeparam>
+        RootNode<TResource> CreateRootNode<TResource>(IEnumerable<TResource> rootEntities) where TResource : class, IIdentifiable;
     }
 }

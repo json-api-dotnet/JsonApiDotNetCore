@@ -13,28 +13,25 @@ namespace JsonApiDotNetCore.Internal
     public class ResourceGraph : IResourceGraph
     {
         internal List<ValidationResult> ValidationResults { get; }
-        private List<ContextEntity> _entities { get; }
+        private List<ResourceContext> _resources { get; }
 
-        public ResourceGraph(List<ContextEntity> entities, List<ValidationResult> validationResults = null)
+        public ResourceGraph(List<ResourceContext> entities, List<ValidationResult> validationResults = null)
         {
-            _entities = entities;
+            _resources = entities;
             ValidationResults = validationResults;
         }
 
         /// <inheritdoc />
-        public ContextEntity[] GetContextEntities() => _entities.ToArray();
-
+        public ResourceContext[] GetResourceContexts() => _resources.ToArray();
         /// <inheritdoc />
-        public ContextEntity GetContextEntity(string entityName)
-            => _entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
-
+        public ResourceContext GetResourceContext(string entityName)
+            => _resources.SingleOrDefault(e => string.Equals(e.ResourceName, entityName, StringComparison.OrdinalIgnoreCase));
         /// <inheritdoc />
-        public ContextEntity GetContextEntity(Type entityType)
-            => _entities.SingleOrDefault(e => e.EntityType == entityType);
+        public ResourceContext GetResourceContext(Type entityType)
+            => _resources.SingleOrDefault(e => e.ResourceType == entityType);
         /// <inheritdoc />
-        public ContextEntity GetContextEntity<TResource>() where TResource : class, IIdentifiable
-            => GetContextEntity(typeof(TResource));
-
+        public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
+            => GetResourceContext(typeof(TResource));
         /// <inheritdoc/>
         public List<IResourceField> GetFields<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
         {
@@ -53,24 +50,23 @@ namespace JsonApiDotNetCore.Internal
         /// <inheritdoc/>
         public List<IResourceField> GetFields(Type type)
         {
-            return GetContextEntity(type).Fields.ToList();
+            return GetResourceContext(type).Fields.ToList();
         }
         /// <inheritdoc/>
         public List<AttrAttribute> GetAttributes(Type type)
         {
-            return GetContextEntity(type).Attributes.ToList();
+            return GetResourceContext(type).Attributes.ToList();
         }
         /// <inheritdoc/>
         public List<RelationshipAttribute> GetRelationships(Type type)
         {
-            return GetContextEntity(type).Relationships.ToList();
+            return GetResourceContext(type).Relationships.ToList();
         }
-
         /// <inheritdoc />
         public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
         {
             if (relationship.InverseNavigation == null) return null;
-            return GetContextEntity(relationship.DependentType)
+            return GetResourceContext(relationship.RightType)
                             .Relationships
                             .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
         }
@@ -79,11 +75,11 @@ namespace JsonApiDotNetCore.Internal
         {
             IEnumerable<IResourceField> available;
             if (type == FieldFilterType.Attribute)
-                available = GetContextEntity(typeof(T)).Attributes.Cast<IResourceField>();
+                available = GetResourceContext(typeof(T)).Attributes.Cast<IResourceField>();
             else if (type == FieldFilterType.Relationship)
-                available = GetContextEntity(typeof(T)).Relationships.Cast<IResourceField>();
+                available = GetResourceContext(typeof(T)).Relationships.Cast<IResourceField>();
             else
-                available = GetContextEntity(typeof(T)).Fields;
+                available = GetResourceContext(typeof(T)).Fields;
 
             if (selector == null)
                 return available;
@@ -144,7 +140,5 @@ namespace JsonApiDotNetCore.Internal
             Attribute,
             Relationship
         }
-
-
     }
 }

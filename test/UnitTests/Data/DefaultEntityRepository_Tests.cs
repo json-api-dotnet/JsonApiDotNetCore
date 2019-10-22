@@ -16,7 +16,7 @@ using JsonApiDotNetCore.Managers.Contracts;
 
 namespace UnitTests.Data
 {
-    public class DefaultEntityRepository_Tests : JsonApiControllerMixin
+    public class DefaultResourceRepository_Tests : JsonApiControllerMixin
     {
         private readonly Mock<ICurrentRequest> _currentRequestMock; 
         private readonly Mock<DbSet<TodoItem>> _dbSetMock;
@@ -25,7 +25,7 @@ namespace UnitTests.Data
         private readonly Mock<IDbContextResolver> _contextResolverMock;
         private readonly TodoItem _todoItem;
 
-        public DefaultEntityRepository_Tests()
+        public DefaultResourceRepository_Tests()
         {
             _todoItem = new TodoItem
             {
@@ -66,7 +66,7 @@ namespace UnitTests.Data
             Assert.Equal(todoItemUpdates.Description, updatedItem.Description);
         }
 
-        private DefaultEntityRepository<TodoItem> GetRepository()
+        private DefaultResourceRepository<TodoItem> GetRepository()
         {
 
             _contextMock
@@ -80,7 +80,7 @@ namespace UnitTests.Data
             var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
 
 
-            return new DefaultEntityRepository<TodoItem>(
+            return new DefaultResourceRepository<TodoItem>(
                 _targetedFieldsMock.Object,
                 _contextResolverMock.Object,
                 resourceGraph, null, null);

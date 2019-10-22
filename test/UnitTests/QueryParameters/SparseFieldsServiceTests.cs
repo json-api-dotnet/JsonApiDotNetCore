@@ -10,9 +10,9 @@ namespace UnitTests.QueryParameters
 {
     public class SparseFieldsServiceTests : QueryParametersUnitTestCollection
     {
-        public SparseFieldsService GetService(ContextEntity contextEntity = null)
+        public SparseFieldsService GetService(ResourceContext resourceContext = null)
         {
-            return new SparseFieldsService(_resourceGraph, MockCurrentRequest(contextEntity ?? _articleResourceContext));
+            return new SparseFieldsService(_resourceGraph, MockCurrentRequest(resourceContext ?? _articleResourceContext));
         }
 
         [Fact]
@@ -40,13 +40,13 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var resourceContext = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
-            var service = GetService(contextEntity);
+            var service = GetService(resourceContext);
 
             // act
             service.Parse(query);
@@ -70,13 +70,13 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var resourceContext = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
-            var service = GetService(contextEntity);
+            var service = GetService(resourceContext);
 
             // act, assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
@@ -96,13 +96,13 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields[{relationship}]", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var resourceContext = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
-            var service = GetService(contextEntity);
+            var service = GetService(resourceContext);
 
             // act, assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
@@ -118,14 +118,14 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var resourceContext = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute>(),
                 Relationships = new List<RelationshipAttribute>()
             };
 
-            var service = GetService(contextEntity);
+            var service = GetService(resourceContext);
 
             // act , assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));

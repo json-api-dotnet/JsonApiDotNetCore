@@ -12,8 +12,6 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Can be overwritten to help you out during testing
-    /// 
     /// This sets all necessary parameters relating to the HttpContext for JADNC
     /// </summary>
     public class CurrentRequestMiddleware
@@ -46,7 +44,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 _currentRequest.SetRequestResource(GetCurrentEntity());
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
-                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().EntityName);
+                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().ResourceName);
             }
 
             if (IsValid())
@@ -163,11 +161,11 @@ namespace JsonApiDotNetCore.Middleware
         /// Gets the current entity that we need for serialization and deserialization.
         /// </summary>
         /// <returns></returns>
-        private ContextEntity GetCurrentEntity()
+        private ResourceContext GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
             var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
-            var requestResource = _resourceGraph.GetContextEntity(resourceType);
+            var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
                 return requestResource;
             var rd = _httpContext.GetRouteData().Values;

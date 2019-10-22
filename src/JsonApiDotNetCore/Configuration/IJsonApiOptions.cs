@@ -1,5 +1,3 @@
-using JsonApiDotNetCore.Internal.Contracts;
-
 namespace JsonApiDotNetCore.Configuration
 {
     public interface IJsonApiOptions : ILinksConfiguration, ISerializerOptions

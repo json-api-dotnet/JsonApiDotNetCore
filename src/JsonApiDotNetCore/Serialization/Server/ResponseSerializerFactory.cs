@@ -1,10 +1,7 @@
 ﻿using System;
-using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -24,7 +21,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <summary>
-        /// Initializes the server serializer using the <see cref="ContextEntity"/>
+        /// Initializes the server serializer using the <see cref="ResourceContext"/>
         /// associated with the current request.
         /// </summary>
         public IJsonApiSerializer GetSerializer()
@@ -44,9 +41,9 @@ namespace JsonApiDotNetCore.Serialization.Server
         private Type GetDocumentPrimaryType()
         {
             if (_currentRequest.RequestRelationship != null && !_currentRequest.IsRelationshipPath)
-                return _currentRequest.RequestRelationship.DependentType;
+                return _currentRequest.RequestRelationship.RightType;
 
-            return _currentRequest.GetRequestResource()?.EntityType;
+            return _currentRequest.GetRequestResource()?.ResourceType;
         }
     }
 }

@@ -40,20 +40,20 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         {
             FirstToOneAttr = new HasOneAttribute("first-to-one")
             {
-                PrincipalType = typeof(Dummy),
-                DependentType = typeof(ToOne),
+                LeftType = typeof(Dummy),
+                RightType = typeof(ToOne),
                 InternalRelationshipName = "FirstToOne"
             };
             SecondToOneAttr = new HasOneAttribute("second-to-one")
             {
-                PrincipalType = typeof(Dummy),
-                DependentType = typeof(ToOne),
+                LeftType = typeof(Dummy),
+                RightType = typeof(ToOne),
                 InternalRelationshipName = "SecondToOne"
             };
             ToManyAttr = new HasManyAttribute("to-manies")
             {
-                PrincipalType = typeof(Dummy),
-                DependentType = typeof(ToMany),
+                LeftType = typeof(Dummy),
+                RightType = typeof(ToMany),
                 InternalRelationshipName = "ToManies"
             };
             Relationships.Add(FirstToOneAttr, FirstToOnesEntities);

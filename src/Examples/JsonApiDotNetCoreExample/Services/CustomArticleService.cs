@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace JsonApiDotNetCoreExample.Services
 {
-    public class CustomArticleService : EntityResourceService<Article>
+    public class CustomArticleService : DefaultResourceService<Article>
     {
         public CustomArticleService(ISortService sortService,
                                     IFilterService filterService,
-                                    IEntityRepository<Article, int> repository,
+                                    IResourceRepository<Article, int> repository,
                                     IJsonApiOptions options,
                                     IIncludeService includeService,
                                     ISparseFieldsService sparseFieldsService,
                                     IPageService pageService,
-                                    IContextEntityProvider provider,
+                                    IResourceContextProvider provider,
                                     IResourceHookExecutor hookExecutor = null,
                                     ILoggerFactory loggerFactory = null)
             : base(sortService, filterService, repository, options, includeService, sparseFieldsService,

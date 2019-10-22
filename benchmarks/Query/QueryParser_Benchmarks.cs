@@ -23,7 +23,7 @@ namespace Benchmarks.Query {
 
         public QueryParser_Benchmarks() {
             var requestMock = new Mock<IRequestContext>();
-            requestMock.Setup(m => m.GetRequestResource()).Returns(new ContextEntity {
+            requestMock.Setup(m => m.GetRequestResource()).Returns(new ResourceContext {
                 Attributes = new List<AttrAttribute> {
                     new AttrAttribute(ATTRIBUTE, ATTRIBUTE)
                 }

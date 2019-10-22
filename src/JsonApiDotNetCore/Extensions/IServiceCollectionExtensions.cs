@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +12,6 @@ using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization.Server;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Extensions
 {

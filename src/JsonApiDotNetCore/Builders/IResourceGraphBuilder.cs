@@ -1,5 +1,5 @@
 using System;
-using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Builders
         /// <param name="pluralizedTypeName">
         /// The pluralized name that should be exposed by the API. 
         /// If nothing is specified, the configured name formatter will be used.
-        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
+        /// See <see cref="IResourceNameFormatter" />.
         /// </param>
         IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
 
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Builders
         /// <param name="pluralizedTypeName">
         /// The pluralized name that should be exposed by the API. 
         /// If nothing is specified, the configured name formatter will be used.
-        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
+        /// See <see cref="IResourceNameFormatter" />.
         /// </param>
         IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>;
 
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Builders
         /// <param name="pluralizedTypeName">
         /// The pluralized name that should be exposed by the API. 
         /// If nothing is specified, the configured name formatter will be used.
-        /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
+        /// See <see cref="IResourceNameFormatter" />.
         /// </param>
         IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
 
