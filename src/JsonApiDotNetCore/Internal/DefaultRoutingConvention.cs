@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Internal
     /// public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
     /// // => /some-very-customs/relationship/related-resource
     /// </example>
-    public class DefaultRoutingConvention : IJsonApiRoutingConvention
+    public class DefaultRoutingConvention : IJsonApiRoutingConvention, IControllerResourceMapping
     {
         private readonly string _namespace;
         private readonly IResourceNameFormatter _formatter;
@@ -120,11 +120,6 @@ namespace JsonApiDotNetCore.Internal
             var target = typeof(BaseJsonApiController<,>);
             var identifiable = typeof(IIdentifiable);
             var currentBaseType = type;
-            if (type.Name.Contains("TodoItemsCustom"))
-            {
-                var x = 123;
-            }
-                    
             while (!currentBaseType.IsGenericType || currentBaseType.GetGenericTypeDefinition() != target)
             {
                 var nextBaseType = currentBaseType.BaseType;

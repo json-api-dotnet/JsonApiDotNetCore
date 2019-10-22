@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Hooks
         private readonly ITraversalHelper _traversalHelper;
         private readonly IIncludeService _includeService;
         private readonly ITargetedFields _targetedFields;
-        private readonly IResourceGraph _inverseRelationships;
+        private readonly IResourceGraph _resourceGraph;
         public ResourceHookExecutor(
             IHookExecutorHelper executorHelper,
             ITraversalHelper traversalHelper,
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Hooks
             _traversalHelper = traversalHelper;
             _targetedFields = targetedFields;
             _includeService = includedRelationships;
-            _inverseRelationships = resourceGraph;
+            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc/>
@@ -324,7 +324,7 @@ namespace JsonApiDotNetCore.Hooks
             /// If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
             /// currently cannot fire hooks for entities resolved through inverse relationships.
             var inversableRelationshipAttributes = entitiesByRelationship.Where(kvp => kvp.Key.InverseNavigation != null);
-            return inversableRelationshipAttributes.ToDictionary(kvp => _inverseRelationships.GetInverse(kvp.Key), kvp => kvp.Value);
+            return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverse(kvp.Key), kvp => kvp.Value);
         }
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace JsonApiDotNetCore.Hooks
             if (container == null) return;
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitEntities);
             if (!implicitAffected.Any()) return;
-            var inverse = implicitAffected.ToDictionary(kvp => _inverseRelationships.GetInverse(kvp.Key), kvp => kvp.Value);
+            var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverse(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(entityTypeToInclude, inverse);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline, });
         }

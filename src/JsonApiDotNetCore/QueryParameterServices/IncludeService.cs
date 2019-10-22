@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Query
         /// todo: use read-only lists.
         private readonly List<List<RelationshipAttribute>> _includedChains;
 
-        public IncludeService(IResourceGraph contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
+        public IncludeService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
             _includedChains = new List<List<RelationshipAttribute>>();
         }
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Query
                     throw CannotIncludeError(resourceContext, relationshipName);
 
                 parsedChain.Add(relationship);
-                resourceContext = _contextEntityProvider.GetContextEntity(relationship.DependentType);
+                resourceContext = _resourceGraph.GetContextEntity(relationship.DependentType);
             }
             _includedChains.Add(parsedChain);
         }

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Query
 
         public override string Name => "fields";
 
-        public SparseFieldsService(IResourceGraph contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
+        public SparseFieldsService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
             _selectedFields = new List<AttrAttribute>();
             _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Query
             var typeName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
             var fields = new List<string> { nameof(Identifiable.Id) };
 
-            var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(typeName));
+            var relationship = _requestResource.Relationships.FirstOrDefault(a => a.Is(typeName));
             if (relationship == null && string.Equals(typeName, _requestResource.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 throw new JsonApiException(400, $"fields[{typeName}] is invalid");
 
@@ -56,8 +56,8 @@ namespace JsonApiDotNetCore.Query
             {
                 if (relationship != default)
                 {
-                    var relationProperty = _contextEntityProvider.GetContextEntity(relationship.DependentType);
-                    var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
+                    var relationProperty = _resourceGraph.GetContextEntity(relationship.DependentType);
+                    var attr = relationProperty.Attributes.FirstOrDefault(a => a.Is(field));
                     if (attr == null)
                         throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
 
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Query
                 }
                 else
                 {
-                    var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
+                    var attr = _requestResource.Attributes.FirstOrDefault(a => a.Is(field));
                     if (attr == null)
                         throw new JsonApiException(400, $"'{_requestResource.EntityName}' does not contain '{field}'.");
 

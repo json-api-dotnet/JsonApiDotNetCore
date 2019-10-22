@@ -21,9 +21,9 @@ namespace JsonApiDotNetCore.Middleware
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
         private ICurrentRequest _currentRequest;
-        private IResourceGraph _contextEntityProvider;
+        private IResourceGraph _resourceGraph;
         private IJsonApiOptions _options;
-        private IJsonApiRoutingConvention _routingConvention;
+        private IControllerResourceMapping _controllerResourceMapping;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -31,15 +31,15 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task Invoke(HttpContext httpContext,
-                                IJsonApiRoutingConvention routingConvention,
-                                IJsonApiOptions options,
+                                 IControllerResourceMapping controllerResourceMapping,
+                                 IJsonApiOptions options,
                                  ICurrentRequest currentRequest,
-                                 IResourceGraph contextEntityProvider)
+                                 IResourceGraph resourceGraph)
         {
             _httpContext = httpContext;
             _currentRequest = currentRequest;
-            _routingConvention = routingConvention;
-            _contextEntityProvider = contextEntityProvider;
+            _controllerResourceMapping = controllerResourceMapping;
+            _resourceGraph = resourceGraph;
             _options = options;
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
@@ -166,8 +166,8 @@ namespace JsonApiDotNetCore.Middleware
         private ContextEntity GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
-            var resourceType = _routingConvention.GetAssociatedResource(controllerName);
-            var requestResource = _contextEntityProvider.GetContextEntity(resourceType);
+            var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
+            var requestResource = _resourceGraph.GetContextEntity(resourceType);
             if (requestResource == null)
                 return requestResource;
             var rd = _httpContext.GetRouteData().Values;
