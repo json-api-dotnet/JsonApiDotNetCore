@@ -37,24 +37,24 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void BeforeRead<TEntity>(ResourcePipeline pipeline, string stringId = null) where TEntity : class, IIdentifiable
+        public virtual void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable
         {
-            var hookContainer = _executorHelper.GetResourceHookContainer<TEntity>(ResourceHook.BeforeRead);
+            var hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
-            var calledContainers = new List<PrincipalType>() { typeof(TEntity) };
+            var calledContainers = new List<PrincipalType>() { typeof(TResource) };
             foreach (var chain in _includeService.Get())
                 RecursiveBeforeRead(chain, pipeline, calledContainers);
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeUpdate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeUpdate, entities, out var container, out var node))
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
-                var dbValues = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
-                var diff = new DiffableEntityHashSet<TEntity>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _targetedFields);
-                IEnumerable<TEntity> updated = container.BeforeUpdate(diff, pipeline);
+                var dbValues = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueEntities, ResourceHook.BeforeUpdate, relationships);
+                var diff = new DiffableEntityHashSet<TResource>(node.UniqueEntities, dbValues, node.PrincipalsToNextLayer(), _targetedFields);
+                IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -64,12 +64,12 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeCreate, entities, out var container, out var node))
             {
-                var affected = new EntityHashSet<TEntity>((HashSet<TEntity>)node.UniqueEntities, node.PrincipalsToNextLayer());
-                IEnumerable<TEntity> updated = container.BeforeCreate(affected, pipeline);
+                var affected = new EntityHashSet<TResource>((HashSet<TResource>)node.UniqueEntities, node.PrincipalsToNextLayer());
+                IEnumerable<TResource> updated = container.BeforeCreate(affected, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -78,15 +78,15 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> BeforeDelete<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.BeforeDelete, entities, out var container, out var node))
             {
                 var relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
-                var targetEntities = LoadDbValues(typeof(TEntity), (IEnumerable<TEntity>)node.UniqueEntities, ResourceHook.BeforeDelete, relationships) ?? node.UniqueEntities;
-                var affected = new EntityHashSet<TEntity>(targetEntities, node.PrincipalsToNextLayer());
+                var targetEntities = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueEntities, ResourceHook.BeforeDelete, relationships) ?? node.UniqueEntities;
+                var affected = new EntityHashSet<TResource>(targetEntities, node.PrincipalsToNextLayer());
 
-                IEnumerable<TEntity> updated = container.BeforeDelete(affected, pipeline);
+                IEnumerable<TResource> updated = container.BeforeDelete(affected, pipeline);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
             }
@@ -105,11 +105,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<TEntity> OnReturn<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.OnReturn, entities, out var container, out var node) && pipeline != ResourcePipeline.GetRelationship)
             {
-                IEnumerable<TEntity> updated = container.OnReturn((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueEntities, pipeline);
                 ValidateHookResponse(updated);
                 node.UpdateUnique(updated);
                 node.Reassign(entities);
@@ -125,11 +125,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterRead<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterRead<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterRead, entities, out var container, out var node))
             {
-                container.AfterRead((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                container.AfterRead((HashSet<TResource>)node.UniqueEntities, pipeline);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
@@ -139,11 +139,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterCreate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterCreate, entities, out var container, out var node))
             {
-                container.AfterCreate((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                container.AfterCreate((HashSet<TResource>)node.UniqueEntities, pipeline);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node),
@@ -152,11 +152,11 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterUpdate<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline) where TEntity : class, IIdentifiable
+        public virtual void AfterUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterUpdate, entities, out var container, out var node))
             {
-                container.AfterUpdate((HashSet<TEntity>)node.UniqueEntities, pipeline);
+                container.AfterUpdate((HashSet<TResource>)node.UniqueEntities, pipeline);
             }
 
             Traverse(_traversalHelper.CreateNextLayer(node),
@@ -165,28 +165,28 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public virtual void AfterDelete<TEntity>(IEnumerable<TEntity> entities, ResourcePipeline pipeline, bool succeeded) where TEntity : class, IIdentifiable
+        public virtual void AfterDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable
         {
             if (GetHook(ResourceHook.AfterDelete, entities, out var container, out var node))
             {
-                container.AfterDelete((HashSet<TEntity>)node.UniqueEntities, pipeline, succeeded);
+                container.AfterDelete((HashSet<TResource>)node.UniqueEntities, pipeline, succeeded);
             }
         }
 
         /// <summary>
         /// For a given <see cref="ResourceHook"/> target and for a given type 
-        /// <typeparamref name="TEntity"/>, gets the hook container if the target
+        /// <typeparamref name="TResource"/>, gets the hook container if the target
         /// hook was implemented and should be executed.
         /// <para />
         /// Along the way, creates a traversable node from the root entity set.
         /// </summary>
         /// <returns><c>true</c>, if hook was implemented, <c>false</c> otherwise.</returns>
-        bool GetHook<TEntity>(ResourceHook target, IEnumerable<TEntity> entities,
-            out IResourceHookContainer<TEntity> container,
-            out RootNode<TEntity> node) where TEntity : class, IIdentifiable
+        bool GetHook<TResource>(ResourceHook target, IEnumerable<TResource> entities,
+            out IResourceHookContainer<TResource> container,
+            out RootNode<TResource> node) where TResource : class, IIdentifiable
         {
             node = _traversalHelper.CreateRootNode(entities);
-            container = _executorHelper.GetResourceHookContainer<TEntity>(target);
+            container = _executorHelper.GetResourceHookContainer<TResource>(target);
             return container != null;
         }
 

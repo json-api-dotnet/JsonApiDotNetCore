@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Hooks
         /// For the <see cref="ResourcePipeline.Post"/> pipeline, <paramref name="entities"/> 
         /// will typically contain one entry.
         /// <para />
-        /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
+        /// The returned <see cref="IEnumerable{TResource}"/> may be a subset 
         /// of <paramref name="entities"/>, in which case the operation of the 
         /// pipeline will not be executed for the omitted entities. The returned 
         /// set may also contain custom changes of the properties on the entities.
@@ -55,8 +55,8 @@ namespace JsonApiDotNetCore.Hooks
         /// For the <see cref="ResourcePipeline.Patch"/> pipeline, the
         /// <paramref name="entities" /> will typically contain one entity. 
         /// <para />
-        /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
-        /// of the <see cref="DiffableEntityHashSet{TEntity}"/> property in parameter <paramref name="entities"/>, 
+        /// The returned <see cref="IEnumerable{TResource}"/> may be a subset 
+        /// of the <see cref="DiffableEntityHashSet{TResource}"/> property in parameter <paramref name="entities"/>, 
         /// in which case the operation of the  pipeline will not be executed 
         /// for the omitted entities. The returned set may also contain custom 
         /// changes of the properties on the entities.
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Hooks
         /// For the <see cref="ResourcePipeline.Delete"/> pipeline,
         /// <paramref name="entities" /> will typically contain one entity. 
         /// <para />
-        /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
+        /// The returned <see cref="IEnumerable{TResource}"/> may be a subset 
         /// of <paramref name="entities"/>, in which case the operation of the 
         /// pipeline will not be executed for the omitted entities.
         /// <para />
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Hooks
         /// and its author relationship was set to an existing Person, this hook will be fired
         /// for that particular Person.
         /// <para />
-        /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
+        /// The returned <see cref="IEnumerable{TResource}"/> may be a subset 
         /// of <paramref name="ids"/>, in which case the operation of the 
         /// pipeline will not be executed for any entity whose id was omitted
         /// <para />
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Hooks
         /// the entities of type <typeparamref name="TResource"/> from the 
         /// <see cref=" DefaultResourceService{T}"/> layer
         /// <para />
-        /// The returned <see cref="IEnumerable{TEntity}"/> may be a subset 
+        /// The returned <see cref="IEnumerable{TResource}"/> may be a subset 
         /// of <paramref name="entities"/> and may contain changes in properties
         /// of the encapsulated entities. 
         /// <para />

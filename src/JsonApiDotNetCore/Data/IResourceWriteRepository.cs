@@ -5,17 +5,17 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
-     public interface IResourceWriteRepository<TEntity>
-        : IResourceWriteRepository<TEntity, int>
-        where TEntity : class, IIdentifiable<int>
+     public interface IResourceWriteRepository<TResource>
+        : IResourceWriteRepository<TResource, int>
+        where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IResourceWriteRepository<TEntity, in TId>
-        where TEntity : class, IIdentifiable<TId>
+    public interface IResourceWriteRepository<TResource, in TId>
+        where TResource : class, IIdentifiable<TId>
     {
-        Task<TEntity> CreateAsync(TEntity entity);
+        Task<TResource> CreateAsync(TResource entity);
 
-        Task<TEntity> UpdateAsync(TEntity entity);
+        Task<TResource> UpdateAsync(TResource entity);
 
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
 

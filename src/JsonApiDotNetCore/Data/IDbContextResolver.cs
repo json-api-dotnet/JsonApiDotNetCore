@@ -7,8 +7,8 @@ namespace JsonApiDotNetCore.Data
     {
         DbContext GetContext();
 
-        [Obsolete("Use DbContext.Set<TEntity>() instead", error: true)]
-        DbSet<TEntity> GetDbSet<TEntity>() 
-            where TEntity : class;
+        [Obsolete("Use DbContext.Set<TResource>() instead", error: true)]
+        DbSet<TResource> GetDbSet<TResource>() 
+            where TResource : class;
     }
 }

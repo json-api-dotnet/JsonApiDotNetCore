@@ -228,10 +228,10 @@ namespace UnitTests.ResourceHooks
             return (iqMock, hookExecutor, mainResource, firstNestedResource, secondNestedResource);
         }
 
-        protected IHooksDiscovery<TEntity> SetDiscoverableHooks<TEntity>(ResourceHook[] implementedHooks, params ResourceHook[] enableDbValuesHooks)
-        where TEntity : class, IIdentifiable<int>
+        protected IHooksDiscovery<TResource> SetDiscoverableHooks<TResource>(ResourceHook[] implementedHooks, params ResourceHook[] enableDbValuesHooks)
+        where TResource : class, IIdentifiable<int>
         {
-            var mock = new Mock<IHooksDiscovery<TEntity>>();
+            var mock = new Mock<IHooksDiscovery<TResource>>();
             mock.Setup(discovery => discovery.ImplementedHooks)
             .Returns(implementedHooks);
 

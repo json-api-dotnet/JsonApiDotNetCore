@@ -2,14 +2,14 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
-    public interface IResourceRepository<TEntity>
-        : IResourceRepository<TEntity, int>
-        where TEntity : class, IIdentifiable<int>
+    public interface IResourceRepository<TResource>
+        : IResourceRepository<TResource, int>
+        where TResource : class, IIdentifiable<int>
     { }
 
-    public interface IResourceRepository<TEntity, in TId>
-        : IResourceReadRepository<TEntity, TId>,
-        IResourceWriteRepository<TEntity, TId>
-        where TEntity : class, IIdentifiable<TId>
+    public interface IResourceRepository<TResource, in TId>
+        : IResourceReadRepository<TResource, TId>,
+        IResourceWriteRepository<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     { }
 }

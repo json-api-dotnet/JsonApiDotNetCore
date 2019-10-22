@@ -21,10 +21,10 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
 
         private static readonly PropertyInfo DependenciesProperty = typeof(Database).GetTypeInfo().DeclaredProperties.Single(x => x.Name == "Dependencies");
 
-        public static string ToSql<TEntity>(this IQueryable<TEntity> queryable)
-            where TEntity : class
+        public static string ToSql<TResource>(this IQueryable<TResource> queryable)
+            where TResource : class
         {
-            if (!(queryable is EntityQueryable<TEntity>) && !(queryable is InternalDbSet<TEntity>))
+            if (!(queryable is EntityQueryable<TResource>) && !(queryable is InternalDbSet<TResource>))
                 throw new ArgumentException();
 
             var queryCompiler = (IQueryCompiler)QueryCompilerField.GetValue(queryable.Provider);
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
             var queryCompilationContextFactory = ((DatabaseDependencies)DependenciesProperty.GetValue(database)).QueryCompilationContextFactory;
             var queryCompilationContext = queryCompilationContextFactory.Create(false);
             var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();
-            modelVisitor.CreateQueryExecutor<TEntity>(queryModel);
+            modelVisitor.CreateQueryExecutor<TResource>(queryModel);
             return modelVisitor.Queries.Join(Environment.NewLine + Environment.NewLine);
         }
     }

@@ -12,11 +12,11 @@ namespace JsonApiDotNetCore.Hooks
     /// The root node class of the breadth-first-traversal of entity data structures
     /// as performed by the <see cref="ResourceHookExecutor"/>
     /// </summary>
-    internal class RootNode<TEntity> : INode where TEntity : class, IIdentifiable
+    internal class RootNode<TResource> : INode where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
-        private HashSet<TEntity> _uniqueEntities;
+        private HashSet<TResource> _uniqueEntities;
         public Type EntityType { get; internal set; }
         public IEnumerable UniqueEntities { get { return _uniqueEntities; } }
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
@@ -41,10 +41,10 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer { get { return null; } }
 
-        public RootNode(IEnumerable<TEntity> uniqueEntities, RelationshipProxy[] poplatedRelationships, RelationshipProxy[] allRelationships)
+        public RootNode(IEnumerable<TResource> uniqueEntities, RelationshipProxy[] poplatedRelationships, RelationshipProxy[] allRelationships)
         {
-            EntityType = typeof(TEntity);
-            _uniqueEntities = new HashSet<TEntity>(uniqueEntities);
+            EntityType = typeof(TResource);
+            _uniqueEntities = new HashSet<TResource>(uniqueEntities);
             RelationshipsToNextLayer = poplatedRelationships;
             _allRelationshipsToNextLayer = allRelationships;
         }
@@ -55,15 +55,15 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="updated">Updated.</param>
         public void UpdateUnique(IEnumerable updated)
         {
-            var casted = updated.Cast<TEntity>().ToList();
-            var intersected = _uniqueEntities.Intersect(casted, _comparer).Cast<TEntity>();
-            _uniqueEntities = new HashSet<TEntity>(intersected);
+            var casted = updated.Cast<TResource>().ToList();
+            var intersected = _uniqueEntities.Intersect(casted, _comparer).Cast<TResource>();
+            _uniqueEntities = new HashSet<TResource>(intersected);
         }
 
         public void Reassign(IEnumerable source = null)
         {
             var ids = _uniqueEntities.Select(ue => ue.StringId);
-            ((List<TEntity>)source).RemoveAll(se => !ids.Contains(se.StringId));
+            ((List<TResource>)source).RemoveAll(se => !ids.Contains(se.StringId));
         }
     }
 

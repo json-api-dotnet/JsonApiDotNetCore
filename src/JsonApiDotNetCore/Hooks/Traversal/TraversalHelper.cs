@@ -52,15 +52,15 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The root node.</returns>
         /// <param name="rootEntities">Root entities.</param>
-        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
-        public RootNode<TEntity> CreateRootNode<TEntity>(IEnumerable<TEntity> rootEntities) where TEntity : class, IIdentifiable
+        /// <typeparam name="TResource">The 1st type parameter.</typeparam>
+        public RootNode<TResource> CreateRootNode<TResource>(IEnumerable<TResource> rootEntities) where TResource : class, IIdentifiable
         {
             _processedEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
-            RegisterRelationshipProxies(typeof(TEntity));
+            RegisterRelationshipProxies(typeof(TResource));
             var uniqueEntities = ProcessEntities(rootEntities);
-            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TEntity), uniqueEntities.Cast<IIdentifiable>());
-            var allRelationshipsFromType = RelationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == typeof(TEntity)).ToArray();
-            return new RootNode<TEntity>(uniqueEntities, populatedRelationshipsToNextLayer, allRelationshipsFromType);
+            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TResource), uniqueEntities.Cast<IIdentifiable>());
+            var allRelationshipsFromType = RelationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == typeof(TResource)).ToArray();
+            return new RootNode<TResource>(uniqueEntities, populatedRelationshipsToNextLayer, allRelationshipsFromType);
         }
 
         /// <summary>
@@ -185,10 +185,10 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The entities.</returns>
         /// <param name="incomingEntities">Incoming entities.</param>
-        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
-        HashSet<TEntity> ProcessEntities<TEntity>(IEnumerable<TEntity> incomingEntities) where TEntity : class, IIdentifiable
+        /// <typeparam name="TResource">The 1st type parameter.</typeparam>
+        HashSet<TResource> ProcessEntities<TResource>(IEnumerable<TResource> incomingEntities) where TResource : class, IIdentifiable
         {
-            Type type = typeof(TEntity);
+            Type type = typeof(TResource);
             var newEntities = UniqueInTree(incomingEntities, type);
             RegisterProcessedEntities(newEntities, type);
             return newEntities;
@@ -250,10 +250,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The in tree.</returns>
         /// <param name="entities">Entities.</param>
         /// <param name="entityType">Entity type.</param>
-        HashSet<TEntity> UniqueInTree<TEntity>(IEnumerable<TEntity> entities, Type entityType) where TEntity : class, IIdentifiable
+        HashSet<TResource> UniqueInTree<TResource>(IEnumerable<TResource> entities, Type entityType) where TResource : class, IIdentifiable
         {
-            var newEntities = entities.Except(GetProcessedEntities(entityType), _comparer).Cast<TEntity>();
-            return new HashSet<TEntity>(newEntities);
+            var newEntities = entities.Except(GetProcessedEntities(entityType), _comparer).Cast<TResource>();
+            return new HashSet<TResource>(newEntities);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Reflective helper method to create an instance of <see cref="ChildNode{TEntity}"/>;
+        /// Reflective helper method to create an instance of <see cref="ChildNode{TResource}"/>;
         /// </summary>
         INode CreateNodeInstance(DependentType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {

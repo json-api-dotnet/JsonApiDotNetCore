@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Also caches the retrieves containers so we don't need to reflectively
         /// instantiate them multiple times.
         /// </summary>
-        IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable;
+        IResourceHookContainer<TResource> GetResourceHookContainer<TResource>(ResourceHook hook = ResourceHook.None) where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Load the implicitly affected entities from the database for a given set of target target entities and involved relationships

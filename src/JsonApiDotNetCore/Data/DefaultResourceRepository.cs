@@ -18,12 +18,12 @@ namespace JsonApiDotNetCore.Data
     /// Provides a default repository implementation and is responsible for
     /// abstracting any EF Core APIs away from the service layer.
     /// </summary>
-    public class DefaultResourceRepository<TEntity, TId> : IResourceRepository<TEntity, TId>
-        where TEntity : class, IIdentifiable<TId>
+    public class DefaultResourceRepository<TResource, TId> : IResourceRepository<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     {
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericProcessorFactory _genericProcessorFactory;
 
@@ -46,16 +46,16 @@ namespace JsonApiDotNetCore.Data
             _resourceGraph = resourceGraph;
             _genericProcessorFactory = genericProcessorFactory;
             _context = contextResolver.GetContext();
-            _dbSet = _context.Set<TEntity>();
+            _dbSet = _context.Set<TResource>();
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Get() => _dbSet;
+        public virtual IQueryable<TResource> Get() => _dbSet;
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
+        public virtual IQueryable<TResource> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<AttrAttribute> fields)
+        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, List<AttrAttribute> fields)
         {
             if (fields?.Count > 0)
                 return entities.Select(fields);
@@ -64,24 +64,24 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, FilterQueryContext filterQueryContext)
+        public virtual IQueryable<TResource> Filter(IQueryable<TResource> entities, FilterQueryContext filterQueryContext)
         {
             if (filterQueryContext.IsCustom)
             {
-                var query = (Func<IQueryable<TEntity>, FilterQuery, IQueryable<TEntity>>)filterQueryContext.CustomQuery;
+                var query = (Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>)filterQueryContext.CustomQuery;
                 return query(entities, filterQueryContext.Query);
             }
             return entities.Filter(filterQueryContext);
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TEntity> Sort(IQueryable<TEntity> entities, SortQueryContext sortQueryContext)
+        public virtual IQueryable<TResource> Sort(IQueryable<TResource> entities, SortQueryContext sortQueryContext)
         {
             return entities.Sort(sortQueryContext);
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> CreateAsync(TEntity entity)
+        public virtual async Task<TResource> CreateAsync(TResource entity)
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCore.Data
             return !type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable));
         }
 
-        private void DetachRelationships(TEntity entity)
+        private void DetachRelationships(TResource entity)
         {
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
@@ -176,7 +176,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> UpdateAsync(TEntity updatedEntity)
+        public virtual async Task<TResource> UpdateAsync(TResource updatedEntity)
         {
             var databaseEntity = await Get(updatedEntity.Id).FirstOrDefaultAsync();
             if (databaseEntity == null)
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCore.Data
         /// to the change tracker. It does so by checking if there already are
         /// instances of the to-be-attached entities in the change tracker.
         /// </summary>
-        private object GetTrackedRelationshipValue(RelationshipAttribute relationshipAttr, TEntity entity, out bool wasAlreadyAttached)
+        private object GetTrackedRelationshipValue(RelationshipAttribute relationshipAttr, TResource entity, out bool wasAlreadyAttached)
         {
             wasAlreadyAttached = false;
             if (relationshipAttr is HasOneAttribute hasOneAttr)
@@ -278,7 +278,7 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
-        public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, params RelationshipAttribute[] inclusionChain)
+        public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, params RelationshipAttribute[] inclusionChain)
         {
             if (!inclusionChain.Any())
                 return entities;
@@ -293,7 +293,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual async Task<IEnumerable<TEntity>> PageAsync(IQueryable<TEntity> entities, int pageSize, int pageNumber)
+        public virtual async Task<IEnumerable<TResource>> PageAsync(IQueryable<TResource> entities, int pageSize, int pageNumber)
         {
             if (pageNumber >= 0)
             {
@@ -315,25 +315,25 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public async Task<int> CountAsync(IQueryable<TEntity> entities)
+        public async Task<int> CountAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TEntity>)
+            return (entities is IAsyncEnumerable<TResource>)
                  ? await entities.CountAsync()
                  : entities.Count();
         }
 
         /// <inheritdoc />
-        public async Task<TEntity> FirstOrDefaultAsync(IQueryable<TEntity> entities)
+        public async Task<TResource> FirstOrDefaultAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TEntity>)
+            return (entities is IAsyncEnumerable<TResource>)
                ? await entities.FirstOrDefaultAsync()
                : entities.FirstOrDefault();
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<TEntity>> ToListAsync(IQueryable<TEntity> entities)
+        public async Task<IReadOnlyList<TResource>> ToListAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TEntity>)
+            return (entities is IAsyncEnumerable<TResource>)
                 ? await entities.ToListAsync()
                 : entities.ToList();
         }
@@ -351,7 +351,7 @@ namespace JsonApiDotNetCore.Data
         /// after which the reassignment  `p1.todoItems = [t3, t4]` will actually 
         /// make EF Core perform a complete replace. This method does the loading of `[t1, t2]`.
         /// </summary>
-        protected void LoadCurrentRelationships(TEntity oldEntity, RelationshipAttribute relationshipAttribute)
+        protected void LoadCurrentRelationships(TResource oldEntity, RelationshipAttribute relationshipAttribute)
         {
             if (relationshipAttribute is HasManyThroughAttribute throughAttribute)
             {
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCore.Data
         /// use the join table (ArticleTags). This methods assigns the relationship value to entity
         /// by taking care of that
         /// </summary>
-        private void AssignHasManyThrough(TEntity entity, HasManyThroughAttribute hasManyThrough, IList relationshipValue)
+        private void AssignHasManyThrough(TResource entity, HasManyThroughAttribute hasManyThrough, IList relationshipValue)
         {
             var pointers = relationshipValue.Cast<IIdentifiable>();
             var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
@@ -414,8 +414,8 @@ namespace JsonApiDotNetCore.Data
     }
 
     /// <inheritdoc />
-    public class DefaultResourceRepository<TEntity> : DefaultResourceRepository<TEntity, int>, IResourceRepository<TEntity>
-        where TEntity : class, IIdentifiable<int>
+    public class DefaultResourceRepository<TResource> : DefaultResourceRepository<TResource, int>, IResourceRepository<TResource>
+        where TResource : class, IIdentifiable<int>
     {
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,

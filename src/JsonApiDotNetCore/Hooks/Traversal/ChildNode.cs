@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.Hooks
     /// <summary>
     /// Child node in the tree
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    internal class ChildNode<TEntity> : INode where TEntity : class, IIdentifiable
+    /// <typeparam name="TResource"></typeparam>
+    internal class ChildNode<TResource> : INode where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             get
             {
-                return new HashSet<TEntity>(_relationshipsFromPreviousLayer.SelectMany(rfpl => rfpl.DependentEntities));
+                return new HashSet<TResource>(_relationshipsFromPreviousLayer.SelectMany(rfpl => rfpl.DependentEntities));
             }
         }
 
@@ -37,11 +37,11 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
-        private readonly RelationshipsFromPreviousLayer<TEntity> _relationshipsFromPreviousLayer;
+        private readonly RelationshipsFromPreviousLayer<TResource> _relationshipsFromPreviousLayer;
 
-        public ChildNode(RelationshipProxy[] nextLayerRelationships, RelationshipsFromPreviousLayer<TEntity> prevLayerRelationships)
+        public ChildNode(RelationshipProxy[] nextLayerRelationships, RelationshipsFromPreviousLayer<TResource> prevLayerRelationships)
         {
-            EntityType = typeof(TEntity);
+            EntityType = typeof(TResource);
             RelationshipsToNextLayer = nextLayerRelationships;
             _relationshipsFromPreviousLayer = prevLayerRelationships;
         }
@@ -49,10 +49,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
        public void UpdateUnique(IEnumerable updated)
         {
-            List<TEntity> casted = updated.Cast<TEntity>().ToList();
+            List<TResource> casted = updated.Cast<TResource>().ToList();
             foreach (var rpfl in _relationshipsFromPreviousLayer)
             {
-                rpfl.DependentEntities = new HashSet<TEntity>(rpfl.DependentEntities.Intersect(casted, _comparer).Cast<TEntity>());
+                rpfl.DependentEntities = new HashSet<TResource>(rpfl.DependentEntities.Intersect(casted, _comparer).Cast<TResource>());
             }
         }
 
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="updated"></param>
         public void Reassign(IEnumerable updated = null)
         {
-            var unique = (HashSet<TEntity>)UniqueEntities;
+            var unique = (HashSet<TResource>)UniqueEntities;
             foreach (var rfpl in _relationshipsFromPreviousLayer)
             {
                 var proxy = rfpl.Proxy;
