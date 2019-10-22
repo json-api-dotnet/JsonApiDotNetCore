@@ -1,9 +1,0 @@
-style: DefaultResourceRepository and DefaultEntityService as consiste… …
-style: rename old repository interfaces
-style: ContextEntity --> ResourceContext
-style: rename Entity to Resource
-style: TEntity --> TResource
-style: DependentType, PrincipalType --> RightType, LeftType
-style: replaced principal with left and dependent with right whenever… …
-chore: remove redundant bindings throughout entire codebase
-refactor: regroupe hook container and executors
