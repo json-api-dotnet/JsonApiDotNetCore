@@ -44,15 +44,15 @@ namespace JsonApiDotNetCore.Hooks
 
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type principalType)
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type leftType)
         {
-            return _relationships.GetByRelationship(principalType);
+            return _relationships.GetByRelationship(leftType);
         }
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRelatedResource>() where TRelatedResource : class, IIdentifiable
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRightResource>() where TRightResource : class, IIdentifiable
         {
-            return GetByRelationship(typeof(TRelatedResource));
+            return GetByRelationship(typeof(TRightResource));
         }
 
         /// <inheritdoc />

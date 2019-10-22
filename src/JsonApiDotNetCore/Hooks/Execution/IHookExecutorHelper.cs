@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Load the implicitly affected entities from the database for a given set of target target entities and involved relationships
         /// </summary>
         /// <returns>The implicitly affected entities by relationship</returns>
-        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> principalEntities, IEnumerable existingDependentEntities = null);
+        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> leftEntities, IEnumerable existingRightEntities = null);
 
         /// <summary>
         /// For a set of entities, loads current values from the database

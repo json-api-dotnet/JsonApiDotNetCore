@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
 {
-
     /// <summary>
     /// The root node class of the breadth-first-traversal of entity data structures
     /// as performed by the <see cref="ResourceHookExecutor"/>
@@ -17,21 +16,21 @@ namespace JsonApiDotNetCore.Hooks
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TResource> _uniqueEntities;
-        public Type EntityType { get; internal set; }
+        public Type ResourceType { get; internal set; }
         public IEnumerable UniqueEntities { get { return _uniqueEntities; } }
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
 
-        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> PrincipalsToNextLayerByRelationships()
+        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
         {
             return _allRelationshipsToNextLayer
-                    .GroupBy(proxy => proxy.DependentType)
+                    .GroupBy(proxy => proxy.RightType)
                     .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, p => UniqueEntities));
         }
 
         /// <summary>
         /// The current layer entities grouped by affected relationship to the next layer
         /// </summary>
-        public Dictionary<RelationshipAttribute, IEnumerable> PrincipalsToNextLayer()
+        public Dictionary<RelationshipAttribute, IEnumerable> LeftsToNextLayer()
         {
             return RelationshipsToNextLayer.ToDictionary(p => p.Attribute, p => UniqueEntities);
         }
@@ -43,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks
 
         public RootNode(IEnumerable<TResource> uniqueEntities, RelationshipProxy[] poplatedRelationships, RelationshipProxy[] allRelationships)
         {
-            EntityType = typeof(TResource);
+            ResourceType = typeof(TResource);
             _uniqueEntities = new HashSet<TResource>(uniqueEntities);
             RelationshipsToNextLayer = poplatedRelationships;
             _allRelationshipsToNextLayer = allRelationships;

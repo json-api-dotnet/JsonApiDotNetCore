@@ -239,8 +239,8 @@ namespace JsonApiDotNetCore.Data
             {   // convert each element in the value list to relationshipAttr.DependentType.
                 var tracked = AttachOrGetTracked(pointer);
                 if (tracked != null) _wasAlreadyAttached = true;
-                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.DependentType);
-            }).ToList().Cast(relationshipAttr.DependentType);
+                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
+            }).ToList().Cast(relationshipAttr.RightType);
             if (_wasAlreadyAttached) wasAlreadyAttached = true;
             return (IList)trackedPointerCollection;
         }
@@ -262,7 +262,7 @@ namespace JsonApiDotNetCore.Data
             // of the property...
             var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
                 ? hasManyThrough.ThroughType
-                : relationship.DependentType;
+                : relationship.RightType;
 
             var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
             await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
@@ -365,7 +365,7 @@ namespace JsonApiDotNetCore.Data
 
         /// <summary>
         /// The relationshipValue parameter contains the dependent side of the relationship (Tags).
-        /// We can't directly add them to the principal entity (Article): we need to 
+        /// We can't directly add them to the left entity (Article): we need to 
         /// use the join table (ArticleTags). This methods assigns the relationship value to entity
         /// by taking care of that
         /// </summary>

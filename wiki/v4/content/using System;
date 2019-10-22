@@ -215,6 +215,7 @@ namespace JsonApiDotNetCore.Hooks
             }
         }
 
+
         /// <summary>
         /// Registers the processed entities in the dictionary grouped by type
         /// </summary>

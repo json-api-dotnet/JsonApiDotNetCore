@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Internal
         public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
         {
             if (relationship.InverseNavigation == null) return null;
-            return GetResourceContext(relationship.DependentType)
+            return GetResourceContext(relationship.RightType)
                             .Relationships
                             .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
         }

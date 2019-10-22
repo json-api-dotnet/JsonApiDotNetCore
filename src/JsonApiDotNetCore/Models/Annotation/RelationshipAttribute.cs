@@ -26,8 +26,6 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
-        /// 
-        /// The technical language as used in EF Core is used here (dependent vs principal).
         /// </summary>
         /// 
         /// <example>
@@ -38,7 +36,7 @@ namespace JsonApiDotNetCore.Models
         public Type RightType { get; internal set; }
 
         /// <summary>
-        /// The parent entity type. The technical language as used in EF Core is used here (dependent vs principal).
+        /// The parent entity type. This is the type of the class in which this attribute was used.
         /// </summary>
         public Type LeftType { get; internal set; }
 
@@ -70,12 +68,7 @@ namespace JsonApiDotNetCore.Models
             }
             bool equalRelationshipName = PublicRelationshipName.Equals(attr.PublicRelationshipName);
 
-            bool equalPrincipalType = true;
-            if (LeftType != null)
-            {
-                equalPrincipalType = LeftType.Equals(attr.LeftType);
-            }
-            return IsHasMany == attr.IsHasMany && equalRelationshipName && equalPrincipalType;
+            return IsHasMany == attr.IsHasMany && equalRelationshipName;
         }
 
         /// <summary>
@@ -91,6 +84,5 @@ namespace JsonApiDotNetCore.Models
         /// In all cases except the HasManyThrough relationships, this will just be the <see cref="InternalRelationshipName" />.
         /// </remarks>
         public virtual string RelationshipPath => InternalRelationshipName;
-
     }
 }

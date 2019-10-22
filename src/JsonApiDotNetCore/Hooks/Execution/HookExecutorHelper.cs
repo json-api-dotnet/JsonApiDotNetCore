@@ -7,11 +7,9 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Extensions;
-using PrincipalType = System.Type;
-using DependentType = System.Type;
-using Microsoft.EntityFrameworkCore;
+using LeftType = System.Type;
+using RightType = System.Type;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Hooks
@@ -22,8 +20,8 @@ namespace JsonApiDotNetCore.Hooks
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly IJsonApiOptions _options;
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
-        protected readonly Dictionary<DependentType, IResourceHookContainer> _hookContainers;
-        protected readonly Dictionary<DependentType, IHooksDiscovery> _hookDiscoveries;
+        protected readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;
+        protected readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
 
         public HookExecutorHelper(IGenericProcessorFactory genericProcessorFactory,
@@ -31,22 +29,22 @@ namespace JsonApiDotNetCore.Hooks
         {
             _options = options;
             _genericProcessorFactory = genericProcessorFactory;
-            _hookContainers = new Dictionary<DependentType, IResourceHookContainer>();
-            _hookDiscoveries = new Dictionary<DependentType, IHooksDiscovery>();
+            _hookContainers = new Dictionary<RightType, IResourceHookContainer>();
+            _hookDiscoveries = new Dictionary<RightType, IHooksDiscovery>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();
         }
 
         /// <inheritdoc/>
-        public IResourceHookContainer GetResourceHookContainer(DependentType dependentType, ResourceHook hook = ResourceHook.None)
+        public IResourceHookContainer GetResourceHookContainer(RightType rightType, ResourceHook hook = ResourceHook.None)
         {
             /// checking the cache if we have a reference for the requested container, 
             /// regardless of the hook we will use it for. If the value is null, 
             /// it means there was no implementation IResourceHookContainer at all, 
             /// so we need not even bother.
-            if (!_hookContainers.TryGetValue(dependentType, out IResourceHookContainer container))
+            if (!_hookContainers.TryGetValue(rightType, out IResourceHookContainer container))
             {
-                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), dependentType));
-                _hookContainers[dependentType] = container;
+                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), rightType));
+                _hookContainers[rightType] = container;
             }
             if (container == null) return container;
 
@@ -65,7 +63,7 @@ namespace JsonApiDotNetCore.Hooks
 
             foreach (ResourceHook targetHook in targetHooks)
             {
-                if (ShouldExecuteHook(dependentType, targetHook)) return container;
+                if (ShouldExecuteHook(rightType, targetHook)) return container;
             }
             return null;
         }
@@ -76,7 +74,7 @@ namespace JsonApiDotNetCore.Hooks
             return (IResourceHookContainer<TResource>)GetResourceHookContainer(typeof(TResource), hook);
         }
 
-        public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] inclusionChain)
+        public IEnumerable LoadDbValues(LeftType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] inclusionChain)
         {
             var idType = TypeHelper.GetIdentifierType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
@@ -107,7 +105,7 @@ namespace JsonApiDotNetCore.Hooks
             return _options.LoaDatabaseValues;
         }
 
-        bool ShouldExecuteHook(DependentType entityType, ResourceHook hook)
+        bool ShouldExecuteHook(RightType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
             return discovery.ImplementedHooks.Contains(hook);
@@ -145,46 +143,46 @@ namespace JsonApiDotNetCore.Hooks
 
 
         public Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(
-            Dictionary<RelationshipAttribute, IEnumerable> principalEntitiesByRelation,
-            IEnumerable existingDependentEntities = null)
+            Dictionary<RelationshipAttribute, IEnumerable> leftEntitiesByRelation,
+            IEnumerable existingRightEntities = null)
         {
             var implicitlyAffected = new Dictionary<RelationshipAttribute, IEnumerable>();
-            foreach (var kvp in principalEntitiesByRelation)
+            foreach (var kvp in leftEntitiesByRelation)
             {
-                if (IsHasManyThrough(kvp, out var principals, out var relationship)) continue;
+                if (IsHasManyThrough(kvp, out var lefts, out var relationship)) continue;
 
                 // note that we dont't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
-                var includedPrincipals = LoadDbValues(relationship.PrincipalType, principals, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
+                var includedLefts = LoadDbValues(relationship.LeftType, lefts, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
 
-                foreach (IIdentifiable ip in includedPrincipals)
+                foreach (IIdentifiable ip in includedLefts)
                 {
-                    IList dbDependentEntityList = null;
+                    IList dbRightEntityList = null;
                     var relationshipValue = relationship.GetValue(ip);
                     if (!(relationshipValue is IEnumerable))
                     {
-                        dbDependentEntityList = TypeHelper.CreateListFor(relationship.DependentType);
-                        if (relationshipValue != null) dbDependentEntityList.Add(relationshipValue);
+                        dbRightEntityList = TypeHelper.CreateListFor(relationship.RightType);
+                        if (relationshipValue != null) dbRightEntityList.Add(relationshipValue);
                     }
                     else
                     {
-                        dbDependentEntityList = (IList)relationshipValue;
+                        dbRightEntityList = (IList)relationshipValue;
                     }
-                    var dbDependentEntityListCasted = dbDependentEntityList.Cast<IIdentifiable>().ToList();
-                    if (existingDependentEntities != null) dbDependentEntityListCasted = dbDependentEntityListCasted.Except(existingDependentEntities.Cast<IIdentifiable>(), _comparer).ToList();
+                    var dbRightEntityListCasted = dbRightEntityList.Cast<IIdentifiable>().ToList();
+                    if (existingRightEntities != null) dbRightEntityListCasted = dbRightEntityListCasted.Except(existingRightEntities.Cast<IIdentifiable>(), _comparer).ToList();
 
-                    if (dbDependentEntityListCasted.Any())
+                    if (dbRightEntityListCasted.Any())
                     {
                         if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
                         {
-                            affected = TypeHelper.CreateListFor(relationship.DependentType);
+                            affected = TypeHelper.CreateListFor(relationship.RightType);
                             implicitlyAffected[relationship] = affected;
                         }
-                        ((IList)affected).AddRange(dbDependentEntityListCasted);
+                        ((IList)affected).AddRange(dbRightEntityListCasted);
                     }
                 }
             }
 
-            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.DependentType, kvp.Value));
+            return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.RightType, kvp.Value));
 
         }
 
