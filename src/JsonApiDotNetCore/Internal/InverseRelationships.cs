@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -24,17 +23,18 @@ namespace JsonApiDotNetCore.Internal
         /// deal with resolving the inverse relationships. 
         /// </summary>
         void Resolve();
+
     }
 
     /// <inheritdoc />
     public class InverseRelationships : IInverseRelationships
     {
-        private readonly ResourceGraph _graph;
+        private readonly IContextEntityProvider _provider;
         private readonly IDbContextResolver _resolver;
 
-        public InverseRelationships(IResourceGraph graph, IDbContextResolver resolver = null)
+        public InverseRelationships(IContextEntityProvider provider, IDbContextResolver resolver = null)
         {
-            _graph = (ResourceGraph)graph;
+            _provider = provider;
             _resolver = resolver;
         }
 
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Internal
             {
                 DbContext context = _resolver.GetContext();
 
-                foreach (ContextEntity ce in _graph.Entities)
+                foreach (ContextEntity ce in _provider.GetContextEntities())
                 {
                     IEntityType meta = context.Model.FindEntityType(ce.EntityType);
                     if (meta == null) continue;
@@ -63,10 +63,6 @@ namespace JsonApiDotNetCore.Internal
         /// If EF Core is not being used, we're expecting the resolver to not be registered.
         /// </summary>
         /// <returns><c>true</c>, if entity framework core was enabled, <c>false</c> otherwise.</returns>
-        /// <param name="resolver">Resolver.</param>
-        private bool EntityFrameworkCoreIsEnabled()
-        {
-            return _resolver != null;
-        }
+        private bool EntityFrameworkCoreIsEnabled() => _resolver != null;
     }
 }

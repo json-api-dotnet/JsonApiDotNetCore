@@ -10,9 +10,8 @@ namespace GettingStarted
     {
         public ArticlesController(
             IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph,
             IResourceService<Article> resourceService)
-            : base(jsonApiOptions, resourceGraph, resourceService)
+            : base(jsonApiOptions, resourceService)
         { }
     }
 }

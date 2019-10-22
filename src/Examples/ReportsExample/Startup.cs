@@ -27,7 +27,7 @@ namespace ReportsExample
             var mvcBuilder = services.AddMvcCore();
             services.AddJsonApi(
                 opt => opt.Namespace = "api", 
-                discovery => discovery.AddCurrentAssembly(), mvcBuilder);
+                discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

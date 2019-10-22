@@ -22,20 +22,15 @@ namespace JsonApiDotNetCore.Hooks
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly IJsonApiOptions _options;
         protected readonly IGenericProcessorFactory _genericProcessorFactory;
-        protected readonly IResourceGraph _graph;
         protected readonly Dictionary<DependentType, IResourceHookContainer> _hookContainers;
         protected readonly Dictionary<DependentType, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
 
-        public HookExecutorHelper(
-            IGenericProcessorFactory genericProcessorFactory,
-            IResourceGraph graph,
-            IJsonApiOptions options
-            )
+        public HookExecutorHelper(IGenericProcessorFactory genericProcessorFactory,
+                                  IJsonApiOptions options)
         {
             _options = options;
             _genericProcessorFactory = genericProcessorFactory;
-            _graph = graph;
             _hookContainers = new Dictionary<DependentType, IResourceHookContainer>();
             _hookDiscoveries = new Dictionary<DependentType, IHooksDiscovery>();
             _targetedHooksForRelatedEntities = new List<ResourceHook>();

@@ -12,7 +12,7 @@ namespace UnitTests.QueryParameters
     {
         public SparseFieldsService GetService(ContextEntity contextEntity = null)
         {
-            return new SparseFieldsService(_graph, MockCurrentRequest(contextEntity ?? _articleResourceContext));
+            return new SparseFieldsService(_resourceGraph, MockCurrentRequest(contextEntity ?? _articleResourceContext));
         }
 
         [Fact]

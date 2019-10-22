@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Respond_400_If_IdNotInAttributeList()
+        public async Task Respond_422_If_IdNotInAttributeList()
         {
             // Arrange
             var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;

@@ -33,7 +33,7 @@ namespace UnitTests.ResourceHooks
         public class AnotherDummy : Identifiable { }
         public abstract class ResourceDefintionBase<T> : ResourceDefinition<T> where T : class, IIdentifiable
         {
-            protected ResourceDefintionBase(IResourceGraph graph) : base(graph) { }
+            protected ResourceDefintionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
             public override IEnumerable<T> BeforeDelete(IEntityHashSet<T> affected, ResourcePipeline pipeline) { return affected; }
             public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }

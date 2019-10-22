@@ -11,7 +11,7 @@ namespace UnitTests.QueryParameters
     {
         public FilterService GetService()
         {
-            return new FilterService(MockResourceDefinitionProvider(), _graph, MockCurrentRequest(_articleResourceContext));
+            return new FilterService(MockResourceDefinitionProvider(), _resourceGraph, MockCurrentRequest(_articleResourceContext));
         }
 
         [Fact]

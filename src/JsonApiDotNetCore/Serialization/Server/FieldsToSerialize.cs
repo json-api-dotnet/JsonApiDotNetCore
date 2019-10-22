@@ -9,24 +9,17 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <inheritdoc/>
-    /// TODO: explore option out caching so we don't have to recalculate the list
-    /// of allowed attributes and relationships all the time. This is more efficient
-    /// for documents with many resource objects.
     public class FieldsToSerialize : IFieldsToSerialize
     {
-        private readonly IContextEntityProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly ISparseFieldsService _sparseFieldsService ;
-        private readonly IServiceProvider _provider;
-        private readonly Dictionary<Type, IResourceDefinition> _resourceDefinitionCache = new Dictionary<Type, IResourceDefinition>();
-        private readonly IFieldsExplorer _fieldExplorer;
+        private readonly IResourceDefinitionProvider _provider;
 
-        public FieldsToSerialize(IFieldsExplorer fieldExplorer,
-                                 IContextEntityProvider resourceContextProvider,
+        public FieldsToSerialize(IResourceGraph resourceGraph,
                                  ISparseFieldsService sparseFieldsService,
-                                 IServiceProvider provider)
+                                 IResourceDefinitionProvider provider)
         {
-            _fieldExplorer = fieldExplorer;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _sparseFieldsService  = sparseFieldsService;
             _provider = provider;
         }
@@ -34,9 +27,9 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public List<AttrAttribute> GetAllowedAttributes(Type type, RelationshipAttribute relationship = null)
         {   // get the list of all exposed atttributes for the given type.
-            var allowed = _fieldExplorer.GetAttributes(type);
+            var allowed = _resourceGraph.GetAttributes(type);
 
-            var resourceDefinition = GetResourceDefinition(type);
+            var resourceDefinition = _provider.Get(type);
             if (resourceDefinition != null)
                 // The set of allowed attribrutes to be exposed was defined on the resource definition
                 allowed = allowed.Intersect(resourceDefinition.GetAllowedAttributes()).ToList();
@@ -58,27 +51,13 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         public List<RelationshipAttribute> GetAllowedRelationships(Type type)
         {
-            var resourceDefinition = GetResourceDefinition(type);
+            var resourceDefinition = _provider.Get(type);
             if (resourceDefinition != null)
                 // The set of allowed attribrutes to be exposed was defined on the resource definition
                 return resourceDefinition.GetAllowedRelationships();
 
             // The set of allowed attribrutes to be exposed was NOT defined on the resource definition: return all
-            return _fieldExplorer.GetRelationships(type);
-        }
-
-
-        /// consider to implement and inject a `ResourceDefinitionProvider` service.
-        private IResourceDefinition GetResourceDefinition(Type resourceType)
-        {
-
-            var resourceDefinitionType = _resourceContextProvider.GetContextEntity(resourceType).ResourceType;
-            if (!_resourceDefinitionCache.TryGetValue(resourceDefinitionType, out IResourceDefinition resourceDefinition))
-            {
-                resourceDefinition = _provider.GetService(resourceDefinitionType) as IResourceDefinition;
-                _resourceDefinitionCache.Add(resourceDefinitionType, resourceDefinition);
-            }
-            return resourceDefinition;
+            return _resourceGraph.GetRelationships(type);
         }
     }
 }

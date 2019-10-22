@@ -1,25 +1,24 @@
-using System;
+﻿using System;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public class TypeMatchFilter : IActionFilter
+    /// <summary>
+    /// Action filter used to verify the incoming type matches the target type, else return a 409
+    /// </summary>
+    public class DefaultTypeMatchFilter : IActionFilter
     {
-        private readonly IResourceGraph _resourceGraph;
+        private readonly IContextEntityProvider _provider;
 
-        public TypeMatchFilter(IResourceGraph resourceGraph)
+        public DefaultTypeMatchFilter(IContextEntityProvider provider)
         {
-            _resourceGraph = resourceGraph;
+            _provider = provider;
         }
 
-        /// <summary>
-        /// Used to verify the incoming type matches the target type, else return a 409
-        /// </summary>
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var request = context.HttpContext.Request;
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (deserializedType != null && targetType != null && deserializedType != targetType)
                 {
-                    var expectedJsonApiResource = _resourceGraph.GetContextEntity(targetType);
+                    var expectedJsonApiResource = _provider.GetContextEntity(targetType);
 
                     throw new JsonApiException(409,
                         $"Cannot '{context.HttpContext.Request.Method}' type '{deserializedType.Name}' "

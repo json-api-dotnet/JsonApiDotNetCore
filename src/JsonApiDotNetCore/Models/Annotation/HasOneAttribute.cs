@@ -37,6 +37,14 @@ namespace JsonApiDotNetCore.Models
             InverseNavigation = inverseNavigationProperty;
         }
 
+
+        public override object GetValue(object entity)
+        {
+            return entity?.GetType()?
+                 .GetProperty(InternalRelationshipName)?
+                 .GetValue(entity);
+        }
+
         private readonly string _explicitIdentifiablePropertyName;
 
         /// <summary>
@@ -49,23 +57,23 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Sets the value of the property identified by this attribute
         /// </summary>
-        /// <param name="resource">The target object</param>
+        /// <param name="entity">The target object</param>
         /// <param name="newValue">The new property value</param>
-        public override void SetValue(object resource, object newValue)
+        public override void SetValue(object entity, object newValue)
         {
             string propertyName = InternalRelationshipName;
             // if we're deleting the relationship (setting it to null),
             // we set the foreignKey to null. We could also set the actual property to null,
             // but then we would first need to load the current relationship, which requires an extra query.
             if (newValue == null) propertyName = IdentifiablePropertyName;
-            var resourceType = resource.GetType();
+            var resourceType = entity.GetType();
             var propertyInfo = resourceType.GetProperty(propertyName);
             if (propertyInfo == null)
             {
                 // we can't set the FK to null because there isn't any.
                 propertyInfo = resourceType.GetProperty(RelationshipPath);
             }
-            propertyInfo.SetValue(resource, newValue);
+            propertyInfo.SetValue(entity, newValue);
         }
 
         // HACK: this will likely require boxing

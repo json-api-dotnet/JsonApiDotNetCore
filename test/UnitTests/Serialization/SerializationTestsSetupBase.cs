@@ -9,7 +9,6 @@ namespace UnitTests.Serialization
     public class SerializationTestsSetupBase
     {
         protected IResourceGraph _resourceGraph;
-        protected IContextEntityProvider _provider;
         protected readonly Faker<Food> _foodFaker;
         protected readonly Faker<Song> _songFaker;
         protected readonly Faker<Article> _articleFaker;

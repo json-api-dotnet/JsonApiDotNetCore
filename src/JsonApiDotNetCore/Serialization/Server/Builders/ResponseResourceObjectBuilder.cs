@@ -17,10 +17,9 @@ namespace JsonApiDotNetCore.Serialization.Server
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder,
                                              IIncludedResourceObjectBuilder includedBuilder,
                                              IIncludeService includeService,
-                                             IResourceGraph resourceGraph,
                                              IContextEntityProvider provider,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(resourceGraph, provider, settingsProvider.Get())
+            : base(provider, settingsProvider.Get())
         {
             _linkBuilder = linkBuilder;
             _includedBuilder = includedBuilder;

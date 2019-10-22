@@ -18,13 +18,11 @@ namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
-        protected readonly IFieldsExplorer _fieldExplorer;
         protected readonly TopLevelLinks _dummyToplevelLinks;
         protected readonly ResourceLinks _dummyResourceLinks;
         protected readonly RelationshipLinks _dummyRelationshipLinks;
         public SerializerTestsSetup()
         {
-            _fieldExplorer = new FieldsExplorer(_resourceGraph);
             _dummyToplevelLinks = new TopLevelLinks
             {
                 Self = "http://www.dummy.com/dummy-self-link",
@@ -52,7 +50,7 @@ namespace UnitTests.Serialization
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
             var provider = GetContextEntityProvider();
-            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
         }
 
@@ -61,12 +59,12 @@ namespace UnitTests.Serialization
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             var included = GetIncludedRelationships(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
-            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            return new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, _resourceGraph, GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), _resourceGraph, GetSerializerSettingsProvider());
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
@@ -76,7 +74,7 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        private IContextEntityProvider GetContextEntityProvider()
+        private IResourceGraph GetContextEntityProvider()
         {
             return _resourceGraph;
         }

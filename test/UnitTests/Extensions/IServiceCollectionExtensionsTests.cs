@@ -29,13 +29,11 @@ namespace UnitTests.Extensions
         {
             // arrange
             var services = new ServiceCollection();
-            var jsonApiOptions = new JsonApiOptions();
-            services.AddSingleton<IJsonApiOptions>(jsonApiOptions);
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
-            services.AddScoped<ResourceDefinition<TodoItem>>();
+            services.AddJsonApi<AppDbContext>();
+
             // act
-            services.AddJsonApiInternals<AppDbContext>(jsonApiOptions);
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
@@ -44,9 +42,9 @@ namespace UnitTests.Extensions
             // assert
             var currentRequest = provider.GetService<ICurrentRequest>();
             Assert.NotNull(currentRequest);
-            var graph = provider.GetService<IResourceGraph>();
-            Assert.NotNull(graph);
-            currentRequest.SetRequestResource(graph.GetContextEntity<TodoItem>());
+            var resourceGraph = provider.GetService<IResourceGraph>();
+            Assert.NotNull(resourceGraph);
+            currentRequest.SetRequestResource(resourceGraph.GetContextEntity<TodoItem>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
@@ -130,8 +128,8 @@ namespace UnitTests.Extensions
 
             // assert
             var provider = services.BuildServiceProvider();
-            var graph = provider.GetService<IResourceGraph>();
-            var resource = graph.GetContextEntity(typeof(IntResource));
+            var resourceGraph = provider.GetService<IResourceGraph>();
+            var resource = resourceGraph.GetContextEntity(typeof(IntResource));
             Assert.Equal("resource", resource.EntityName);
         }
 

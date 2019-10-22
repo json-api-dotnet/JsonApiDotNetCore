@@ -32,14 +32,16 @@ namespace JsonApiDotNetCoreExample
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
                 .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
-                .AddJsonApi(options => {
-                    options.Namespace = "api/v1";
-                    options.DefaultPageSize = 5;
-                    options.IncludeTotalRecordCount = true;
-                    options.EnableResourceHooks = true;
-                    options.LoaDatabaseValues = true;
-                }, 
-                discovery => discovery.AddCurrentAssembly());
+                .AddJsonApi(
+                    options =>
+                    {
+                        options.Namespace = "api/v1";
+                        options.DefaultPageSize = 5;
+                        options.IncludeTotalRecordCount = true;
+                        options.EnableResourceHooks = true;
+                        options.LoaDatabaseValues = true;
+                    },
+                    discovery => discovery.AddCurrentAssembly());
  
             return services.BuildServiceProvider();
         }

@@ -10,7 +10,7 @@ namespace UnitTests.QueryParameters
     {
         public SortService GetService()
         {
-            return new SortService(MockResourceDefinitionProvider(), _graph, MockCurrentRequest(_articleResourceContext));
+            return new SortService(MockResourceDefinitionProvider(), _resourceGraph, MockCurrentRequest(_articleResourceContext));
         }
 
         [Fact]

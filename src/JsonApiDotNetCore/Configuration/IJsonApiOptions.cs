@@ -23,7 +23,6 @@ namespace JsonApiDotNetCore.Configuration
         int DefaultPageSize { get; }
         bool ValidateModelState { get; }
         bool AllowClientGeneratedIds { get; }
-        IResourceGraph ResourceGraph { get; set; }
         bool AllowCustomQueryParameters { get; set; }
         string Namespace { get; set; }
     }
