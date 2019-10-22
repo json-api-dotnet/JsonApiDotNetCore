@@ -59,7 +59,7 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Parse_TypeNameAsNavigation_ThrowsJsonApiException()
+        public void Parse_TypeNameAsNavigation_Throws400ErrorWithRelationshipsOnlyMessage()
         {
             // arrange
             const string type = "articles";
@@ -84,7 +84,7 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Parse_DeeplyNestedSelection_ThrowsJsonApiException()
+        public void Parse_DeeplyNestedSelection_Throws400ErrorWithDeeplyNestedMessage()
         {
             // arrange
             const string type = "articles";
