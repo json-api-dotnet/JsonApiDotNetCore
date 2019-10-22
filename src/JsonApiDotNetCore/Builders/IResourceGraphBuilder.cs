@@ -1,6 +1,5 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -26,7 +25,6 @@ namespace JsonApiDotNetCore.Builders
         /// </param>
         IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
 
-        IResourceGraphBuilder AddControllerPairing(Type controller, Type model = null);
 
         /// <summary>
         /// Add a json:api resource
@@ -57,14 +55,6 @@ namespace JsonApiDotNetCore.Builders
         /// that also implement <see cref="IIdentifiable"/>
         /// </summary>
         /// <typeparam name="T">The <see cref="DbContext"/> implementation type.</typeparam>
-        IResourceGraphBuilder AddDbContext<T>() where T : DbContext;
-
-        /// <summary>
-        /// Specify the <see cref="IResourceNameFormatter"/> used to format resource names.
-        /// </summary>
-        /// <param name="resourceNameFormatter">Formatter used to define exposed resource names by convention.</param>
-        IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter);
-
-   
+        IResourceGraphBuilder AddDbContext<T>() where T : DbContext;   
     }
 }

@@ -77,13 +77,13 @@ namespace UnitTests.Data
                 .Setup(m => m.GetContext())
                 .Returns(_contextMock.Object);
 
-            var graph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
 
 
             return new DefaultEntityRepository<TodoItem>(
                 _targetedFieldsMock.Object,
                 _contextResolverMock.Object,
-                graph, null, null);
+                resourceGraph, null, null);
         }
 
         [Theory]

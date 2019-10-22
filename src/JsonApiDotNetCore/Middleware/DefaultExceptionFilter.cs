@@ -1,17 +1,20 @@
-using JsonApiDotNetCore.Internal;
+﻿using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public class JsonApiExceptionFilter : ActionFilterAttribute, IExceptionFilter
+    /// <summary>
+    /// Global exception filter that wraps any thrown error with a JsonApiException.
+    /// </summary>
+    public class DefaultExceptionFilter : ActionFilterAttribute, IExceptionFilter
     {
         private readonly ILogger _logger;
 
-        public JsonApiExceptionFilter(ILoggerFactory loggerFactory)
+        public DefaultExceptionFilter(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<JsonApiExceptionFilter>();
+            _logger = loggerFactory.CreateLogger<DefaultExceptionFilter>();
         }
 
         public void OnException(ExceptionContext context)

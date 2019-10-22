@@ -17,13 +17,12 @@ namespace JsonApiDotNetCore.Serialization.Client
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache;
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache;
         private Type _currentTargetedResource;
-        private readonly IFieldsExplorer _fieldExplorer;
-        public RequestSerializer(IFieldsExplorer fieldExplorer,
-                                IContextEntityProvider provider,
+        private readonly IResourceGraph _resourceGraph;
+        public RequestSerializer(IResourceGraph resourceGraph,
                                 IResourceObjectBuilder resourceObjectBuilder)
-            : base(resourceObjectBuilder, provider)
+            : base(resourceObjectBuilder, resourceGraph)
         {
-            _fieldExplorer = fieldExplorer;
+            _resourceGraph = resourceGraph;
             _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
             _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         }
@@ -64,7 +63,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public void SetAttributesToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
             where TResource : class, IIdentifiable
         {
-            var allowedAttributes = _fieldExplorer.GetAttributes(filter);
+            var allowedAttributes = _resourceGraph.GetAttributes(filter);
             _attributesToSerializeCache[typeof(TResource)] = allowedAttributes;
         }
 
@@ -72,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public void SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
             where TResource : class, IIdentifiable
         {
-            var allowedRelationships = _fieldExplorer.GetRelationships(filter);
+            var allowedRelationships = _resourceGraph.GetRelationships(filter);
             _relationshipsToSerializeCache[typeof(TResource)] = allowedRelationships;
         }
 
@@ -90,7 +89,7 @@ namespace JsonApiDotNetCore.Serialization.Client
                 return new List<AttrAttribute>();
 
             if (!_attributesToSerializeCache.TryGetValue(resourceType, out var attributes))
-                return _fieldExplorer.GetAttributes(resourceType);
+                return _resourceGraph.GetAttributes(resourceType);
 
             return attributes;
         }

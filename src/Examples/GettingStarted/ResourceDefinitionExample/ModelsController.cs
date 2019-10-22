@@ -9,9 +9,8 @@ namespace GettingStarted.ResourceDefinitionExample
     {
         public ModelsController(
             IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph,
             IResourceService<Model> resourceService)
-          : base(jsonApiOptions, resourceGraph, resourceService)
+          : base(jsonApiOptions, resourceService)
         { }
     }
 }

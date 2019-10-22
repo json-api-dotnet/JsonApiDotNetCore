@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Services
+namespace JsonApiDotNetCore.Internal.Contracts
 {
     /// <summary>
     /// Responsible for retrieving the exposed resource fields (attributes and
-    /// relationships) of registered resources.
+    /// relationships) of registered resources in the resource resourceGraph.
     /// </summary>
-    public interface IFieldsExplorer
+    public interface IResourceGraph : IContextEntityProvider
     {
         /// <summary>
         /// Gets all fields (attributes and relationships) for <typeparamref name="TResource"/>
@@ -50,5 +50,12 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="type">The resource type. Must extend IIdentifiable.</param>
         List<RelationshipAttribute> GetRelationships(Type type);
+
+        /// <summary>
+        /// Traverses the resource resourceGraph for the inverse relationship of the provided
+        /// <paramref name="relationship"/>;
+        /// </summary>
+        /// <param name="relationship"></param>
+        RelationshipAttribute GetInverse(RelationshipAttribute relationship);
     }
 }

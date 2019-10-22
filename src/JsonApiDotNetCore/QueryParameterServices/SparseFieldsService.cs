@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Query
 
         public override string Name => "fields";
 
-        public SparseFieldsService(IContextEntityProvider contextEntityProvider, ICurrentRequest currentRequest) : base(contextEntityProvider, currentRequest)
+        public SparseFieldsService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
             _selectedFields = new List<AttrAttribute>();
             _selectedRelationshipFields = new Dictionary<RelationshipAttribute, List<AttrAttribute>>();
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship)
         {
-            var relationProperty = _contextEntityProvider.GetContextEntity(relationship.DependentType);
+            var relationProperty = _resourceGraph.GetContextEntity(relationship.DependentType);
             var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
                 throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");

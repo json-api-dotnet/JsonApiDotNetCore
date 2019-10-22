@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Graph
 {
-    public class ServiceDiscoveryFacade
+    public class ServiceDiscoveryFacade : IServiceDiscoveryFacade
     {
         internal static HashSet<Type> ServiceInterfaces = new HashSet<Type> {
             typeof(IResourceService<>),
@@ -49,15 +49,13 @@ namespace JsonApiDotNetCore.Graph
             typeof(IEntityReadRepository<,>)
         };
         private readonly IServiceCollection _services;
-        private readonly IResourceGraphBuilder _graphBuilder;
+        private readonly IResourceGraphBuilder _resourceGraphBuilder;
         private readonly List<ResourceDescriptor> _identifiables = new List<ResourceDescriptor>();
 
-        public ServiceDiscoveryFacade(
-            IServiceCollection services,
-            IResourceGraphBuilder graphBuilder)
+        public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
         {
             _services = services;
-            _graphBuilder = graphBuilder;
+            _resourceGraphBuilder = resourceGraphBuilder;
         }
 
         /// <summary>
@@ -80,38 +78,9 @@ namespace JsonApiDotNetCore.Graph
                 AddServices(assembly, resourceDescriptor);
                 AddRepositories(assembly, resourceDescriptor);
             }
-
-            ScanControllers(assembly);
-
             return this;
         }
 
-        private void ScanControllers(Assembly assembly)
-        {
-            var baseTypes = new List<Type>() { typeof(ControllerBase), typeof(JsonApiControllerMixin), typeof(JsonApiController<>), typeof(BaseJsonApiController<>) };
-            List<Type> baseTypesSeen = new List<Type>() { };
-            var types = assembly.GetTypes().ToList();
-            //types.ForEach(t => baseTypesSeen.Add(t.BaseType.Name));
-
-            var controllerMapper = new Dictionary<Type, List<Type>>() { };
-            var undefinedMapper = new List<Type>() { };
-            var sdf = assembly.GetTypes()
-                .Where(type => typeof(ControllerBase).IsAssignableFrom(type) & !type.IsGenericType).ToList();
-            foreach (var controllerType in sdf)
-            {
-                // get generic parameter
-                var genericParameters = controllerType.BaseType.GetGenericArguments();
-                if (genericParameters.Count() > 0)
-                {
-
-                    _graphBuilder.AddControllerPairing(controllerType, genericParameters[0]);
-                }
-                else
-                {
-                    _graphBuilder.AddControllerPairing(controllerType);
-                }
-            }
-        }
 
         public IEnumerable<Type> FindDerivedTypes(Type baseType)
         {
@@ -138,7 +107,7 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Adds resources to the graph and registers <see cref="ResourceDefinition{T}"/> types on the container.
+        /// Adds resources to the resourceGraph and registers <see cref="ResourceDefinition{T}"/> types on the container.
         /// </summary>
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddResources(Assembly assembly)
@@ -175,7 +144,7 @@ namespace JsonApiDotNetCore.Graph
         private void AddResourceToGraph(ResourceDescriptor identifiable)
         {
             var resourceName = FormatResourceName(identifiable.ResourceType);
-            _graphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType, resourceName);
+            _resourceGraphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType, resourceName);
         }
 
         private string FormatResourceName(Type resourceType)

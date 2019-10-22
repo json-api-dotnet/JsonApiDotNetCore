@@ -1,5 +1,10 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
@@ -63,6 +68,63 @@ namespace JsonApiDotNetCore.Models
         : base(publicName, documentLinks, canInclude, mappedBy)
         {
             InternalThroughName = internalThroughName;
+        }
+
+        /// <summary>
+        /// Traverses the through the provided entity and returns the 
+        /// value of the relationship on the other side of a join entity
+        /// (e.g. Articles.ArticleTags.Tag).
+        /// </summary>
+        public override object GetValue(object entity)
+        {
+            var throughNavigationProperty = entity.GetType()
+                                        .GetProperties()
+                                        .SingleOrDefault(p => string.Equals(p.Name, InternalThroughName, StringComparison.OrdinalIgnoreCase));
+
+            var throughEntities = throughNavigationProperty.GetValue(entity);
+
+            if (throughEntities == null)
+                // return an empty list for the right-type of the property.
+                return TypeHelper.CreateListFor(DependentType);
+
+            // the right entities are included on the navigation/through entities. Extract and return them.
+            var rightEntities = new List<IIdentifiable>();
+            foreach (var rightEntity in (IList)throughEntities)
+                rightEntities.Add((IIdentifiable)RightProperty.GetValue(rightEntity));
+
+            return rightEntities.Cast(DependentType);
+        }
+
+
+        /// <summary>
+        /// Sets the value of the property identified by this attribute
+        /// </summary>
+        /// <param name="entity">The target object</param>
+        /// <param name="newValue">The new property value</param>
+        public override void SetValue(object entity, object newValue)
+        {
+            var propertyInfo = entity
+                .GetType()
+                .GetProperty(InternalRelationshipName);
+            propertyInfo.SetValue(entity, newValue);
+
+            if (newValue == null)
+            {
+                ThroughProperty.SetValue(entity, null);
+            }
+            else
+            {
+                var throughRelationshipCollection = (IList)Activator.CreateInstance(ThroughProperty.PropertyType);
+                ThroughProperty.SetValue(entity, throughRelationshipCollection);
+
+                foreach (IIdentifiable pointer in (IList)newValue)
+                {
+                    var throughInstance = Activator.CreateInstance(ThroughType);
+                    LeftProperty.SetValue(throughInstance, entity);
+                    RightProperty.SetValue(throughInstance, pointer);
+                    throughRelationshipCollection.Add(throughInstance);
+                }
+            }
         }
 
         /// <summary>

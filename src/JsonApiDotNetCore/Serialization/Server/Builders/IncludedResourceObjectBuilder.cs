@@ -16,10 +16,9 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize,
                                              ILinkBuilder linkBuilder,
-                                             IResourceGraph resourceGraph,
                                              IContextEntityProvider provider,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(resourceGraph, provider, settingsProvider.Get())
+            : base(provider, settingsProvider.Get())
         {
             _included = new HashSet<ResourceObject>(new ResourceObjectComparer());
             _fieldsToSerialize = fieldsToSerialize;
@@ -55,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             /// starting from the first related entity.
             var relationship = inclusionChain.First();
             var chainRemainder = ShiftChain(inclusionChain);
-            var related = _resourceGraph.GetRelationshipValue(rootEntity, relationship);
+            var related = relationship.GetValue(rootEntity);
             ProcessChain(relationship, related, chainRemainder);
         }
 
@@ -88,7 +87,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
             if (relationshipEntry.HasResource)
             {   // if the relationship is set, continue parsing the chain.
-                var related = _resourceGraph.GetRelationshipValue(parent, nextRelationship);
+                var related = nextRelationship.GetValue(parent);
                 ProcessChain(nextRelationship, related, chainRemainder);
             }
         }

@@ -33,12 +33,11 @@ namespace NoEntityFrameworkExample
             // Add framework services.
             var mvcBuilder = services.AddMvcCore();
 
-            services.AddJsonApi(options => {
-                options.Namespace = "api/v1";
-                options.BuildResourceGraph((builder) => {
-                    builder.AddResource<TodoItem>("custom-todo-items");
-                });
-            }, mvcBuilder);
+            services.AddJsonApi(
+                options =>  options.Namespace = "api/v1",
+                resources: resources => resources.AddResource<TodoItem>("custom-todo-items"),
+                mvcBuilder: mvcBuilder
+            );
 
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
 

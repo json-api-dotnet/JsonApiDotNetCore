@@ -273,8 +273,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
-            var graph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
-            var _deserializer = new ResponseDeserializer(graph);
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
+            var _deserializer = new ResponseDeserializer(resourceGraph);
 
             var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todo-items", "people");
 

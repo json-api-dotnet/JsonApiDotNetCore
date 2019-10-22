@@ -38,8 +38,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // arrange
             const string route = "/api/v1/todo-items?include=collection.owner";
-            var graph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
-            var deserializer = new ResponseDeserializer(graph);
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
+            var deserializer = new ResponseDeserializer(resourceGraph);
             var todoItem = new TodoItem
             {
                 Collection = new TodoItemCollection

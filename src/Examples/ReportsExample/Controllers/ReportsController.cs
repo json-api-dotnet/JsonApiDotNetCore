@@ -12,9 +12,8 @@ namespace ReportsExample.Controllers
     {
         public ReportsController(
             IJsonApiOptions jsonApiOptions,
-            IResourceGraph resourceGraph, 
             IGetAllService<Report> getAll)
-        : base(jsonApiOptions, resourceGraph, getAll: getAll)
+        : base(jsonApiOptions, getAll: getAll)
         { }
 
         [HttpGet]

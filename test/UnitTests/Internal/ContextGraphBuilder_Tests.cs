@@ -19,7 +19,7 @@ namespace UnitTests.Internal
             var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
 
             // assert
-            Assert.Empty(resourceGraph.Entities);
+            Assert.Empty(resourceGraph.GetContextEntities());
         }
 
         [Fact]

@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
         public IResponseDeserializer GetDeserializer()
         {
-            var graph = new ResourceGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("todo-items")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
-            return new ResponseDeserializer(graph);
+            return new ResponseDeserializer(resourceGraph);
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));

@@ -23,6 +23,7 @@ namespace JsonApiDotNetCore.Middleware
         private ICurrentRequest _currentRequest;
         private IResourceGraph _resourceGraph;
         private IJsonApiOptions _options;
+        private IControllerResourceMapping _controllerResourceMapping;
 
         public CurrentRequestMiddleware(RequestDelegate next)
         {
@@ -30,12 +31,14 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task Invoke(HttpContext httpContext,
-                                IJsonApiOptions options,
+                                 IControllerResourceMapping controllerResourceMapping,
+                                 IJsonApiOptions options,
                                  ICurrentRequest currentRequest,
                                  IResourceGraph resourceGraph)
-        { 
+        {
             _httpContext = httpContext;
             _currentRequest = currentRequest;
+            _controllerResourceMapping = controllerResourceMapping;
             _resourceGraph = resourceGraph;
             _options = options;
             var requestResource = GetCurrentEntity();
@@ -44,7 +47,7 @@ namespace JsonApiDotNetCore.Middleware
                 _currentRequest.SetRequestResource(GetCurrentEntity());
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
                 _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().EntityName);
-            } 
+            }
 
             if (IsValid())
             {
@@ -60,10 +63,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 return GetNamespaceFromPath(r.Path, entityName);
             }
-            else
-            {
-                return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
-            }
+            return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
         internal static string GetNamespaceFromPath(string path, string entityName)
         {
@@ -162,15 +162,15 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Gets the current entity that we need for serialization and deserialization.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="resourceGraph"></param>
         /// <returns></returns>
         private ContextEntity GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
+            var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
+            var requestResource = _resourceGraph.GetContextEntity(resourceType);
+            if (requestResource == null)
+                return requestResource;
             var rd = _httpContext.GetRouteData().Values;
-            var requestResource = _resourceGraph.GetEntityFromControllerName(controllerName);
-
             if (rd.TryGetValue("relationshipName", out object relationshipName))
                 _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
             return requestResource;

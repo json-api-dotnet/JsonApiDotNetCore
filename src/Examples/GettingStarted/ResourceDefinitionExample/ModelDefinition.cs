@@ -6,7 +6,7 @@ namespace GettingStarted.ResourceDefinitionExample
 {
     public class ModelDefinition : ResourceDefinition<Model>
     {
-        public ModelDefinition(IResourceGraph graph) : base(graph)
+        public ModelDefinition(IContextEntityProvider provider) : base(provider)
         {
         }
 
