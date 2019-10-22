@@ -25,26 +25,26 @@ namespace JsonApiDotNetCore.Data
         private readonly DbContext _context;
         private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
-        private readonly IGenericProcessorFactory _genericProcessorFactory;
+        private readonly IGenericServiceFactory _genericServiceFactory;
 
         public DefaultResourceRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericProcessorFactory genericProcessorFactory)
-            : this(targetedFields, contextResolver, resourceGraph, genericProcessorFactory, null)
+            IGenericServiceFactory genericServiceFactory)
+            : this(targetedFields, contextResolver, resourceGraph, genericServiceFactory, null)
         { }
 
         public DefaultResourceRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericProcessorFactory genericProcessorFactory,
+            IGenericServiceFactory genericServiceFactory,
             ILoggerFactory loggerFactory = null)
         {
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
-            _genericProcessorFactory = genericProcessorFactory;
+            _genericServiceFactory = genericServiceFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TResource>();
         }
@@ -258,7 +258,7 @@ namespace JsonApiDotNetCore.Data
         {
             if (relationship is HasManyThroughAttribute hasManyThrough)
             {
-                var helper = _genericProcessorFactory.GetProcessor<IHasManyThroughUpdateHelper>(typeof(HasManyThroughUpdateHelper<>), hasManyThrough.ThroughType);
+                var helper = _genericServiceFactory.Get<IHasManyThroughUpdateHelper>(typeof(HasManyThroughUpdateHelper<>), hasManyThrough.ThroughType);
                 await helper.UpdateAsync((IIdentifiable)parent, hasManyThrough, relationshipIds);
                 return;
             }
@@ -424,17 +424,17 @@ namespace JsonApiDotNetCore.Data
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph contextEntityProvider,
-                                       IGenericProcessorFactory genericProcessorFactory)
-            : base(targetedFields, contextResolver, contextEntityProvider, genericProcessorFactory)
+                                       IGenericServiceFactory genericServiceFactory)
+            : base(targetedFields, contextResolver, contextEntityProvider, genericServiceFactory)
         {
         }
 
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph contextEntityProvider,
-                                       IGenericProcessorFactory genericProcessorFactory,
+                                       IGenericServiceFactory genericServiceFactory,
                                        ILoggerFactory loggerFactory = null)
-            : base(targetedFields, contextResolver, contextEntityProvider, genericProcessorFactory, loggerFactory)
+            : base(targetedFields, contextResolver, contextEntityProvider, genericServiceFactory, loggerFactory)
         {
         }
     }

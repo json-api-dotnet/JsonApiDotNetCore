@@ -141,9 +141,9 @@ namespace UnitTests.ResourceHooks
 
     public class HooksTestsSetup : HooksDummyData
     {
-        (Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericProcessorFactory>, IJsonApiOptions) CreateMocks()
+        (Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericServiceFactory>, IJsonApiOptions) CreateMocks()
         {
-            var pfMock = new Mock<IGenericProcessorFactory>();
+            var pfMock = new Mock<IGenericServiceFactory>();
             var ufMock = new Mock<ITargetedFields>();
             var iqsMock = new Mock<IIncludeService>();
             var optionsMock = new JsonApiOptions { LoaDatabaseValues = false };
@@ -156,7 +156,7 @@ namespace UnitTests.ResourceHooks
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
             var mainResource = CreateResourceDefinition(mainDiscovery);
 
-            // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
+            // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, null);
@@ -181,7 +181,7 @@ namespace UnitTests.ResourceHooks
             var mainResource = CreateResourceDefinition(mainDiscovery);
             var nestedResource = CreateResourceDefinition(nestedDiscovery);
 
-            // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
+            // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
@@ -212,7 +212,7 @@ namespace UnitTests.ResourceHooks
             var firstNestedResource = CreateResourceDefinition(firstNestedDiscovery);
             var secondNestedResource = CreateResourceDefinition(secondNestedDiscovery);
 
-            // mocking the GenericProcessorFactory and JsonApiContext and wiring them up.
+            // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
@@ -311,17 +311,17 @@ namespace UnitTests.ResourceHooks
         }
 
         void SetupProcessorFactoryForResourceDefinition<TModel>(
-        Mock<IGenericProcessorFactory> processorFactory,
+        Mock<IGenericServiceFactory> processorFactory,
         IResourceHookContainer<TModel> modelResource,
         IHooksDiscovery<TModel> discovery,
         AppDbContext dbContext = null
         )
         where TModel : class, IIdentifiable<int>
         {
-            processorFactory.Setup(c => c.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
+            processorFactory.Setup(c => c.Gett<<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
             .Returns(modelResource);
 
-            processorFactory.Setup(c => c.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
+            processorFactory.Setup(c => c.Gett<<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
             .Returns(discovery);
 
             if (dbContext != null)
@@ -330,7 +330,7 @@ namespace UnitTests.ResourceHooks
                 if (idType == typeof(int))
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext);
-                    processorFactory.Setup(c => c.GetProcessor<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                    processorFactory.Setup(c => c.Gett<<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
                 {

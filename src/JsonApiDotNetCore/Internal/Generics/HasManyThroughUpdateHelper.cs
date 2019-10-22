@@ -12,18 +12,17 @@ namespace JsonApiDotNetCore.Internal.Generics
 {
     /// <summary>
     /// A special helper service that gets instantiated for the right-type of a many-to-many relationship and is responsible for
-    /// processing updates for that relationships
+    /// processing updates for that relationships.
     /// </summary>
     public interface IHasManyThroughUpdateHelper
     {
+        /// <summary>
+        /// Processes updates of has many through relationship.
+        /// </summary>
         Task UpdateAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds);
     }
 
-    /// <summary>
-    /// A special processor that gets instantiated for a generic type (&lt;T&gt;)
-    /// when the actual type is not known until runtime. Specifically, this is used for updating
-    /// relationships.
-    /// </summary>
+    /// <inheritdoc/>
     public class HasManyThroughUpdateHelper<T> : IHasManyThroughUpdateHelper where T : class
     {
         private readonly DbContext _context;
@@ -32,6 +31,7 @@ namespace JsonApiDotNetCore.Internal.Generics
             _context = contextResolver.GetContext();
         }
 
+        /// <inheritdoc/>
         public virtual async Task UpdateAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
         {
             // we need to create a transaction for the HasManyThrough case so we can get and remove any existing
