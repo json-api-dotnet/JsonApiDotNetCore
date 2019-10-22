@@ -59,13 +59,13 @@ namespace JsonApiDotNetCore.Query
 
         private JsonApiException CannotIncludeError(ResourceContext resourceContext, string requestedRelationship)
         {
-           return new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.EntityName} is not allowed");
+           return new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.ResourceName} is not allowed");
         }
 
         private JsonApiException InvalidRelationshipError(ResourceContext resourceContext, string requestedRelationship)
         {
-           return new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.EntityName}",
-                $"{resourceContext.EntityName} does not have a relationship named {requestedRelationship}");
+           return new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.ResourceName}",
+                $"{resourceContext.ResourceName} does not have a relationship named {requestedRelationship}");
         }
     }
 }

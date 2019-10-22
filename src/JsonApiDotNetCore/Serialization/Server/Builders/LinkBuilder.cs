@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         {
             TopLevelLinks topLevelLinks = null;
             if (ShouldAddTopLevelLink(primaryResource, Link.Self))
-                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(primaryResource.EntityName) };
+                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(primaryResource.ResourceName) };
 
             if (ShouldAddTopLevelLink(primaryResource, Link.Paging))
                 SetPageLinks(primaryResource, ref topLevelLinks);
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private string GetPageLink(ResourceContext primaryResource, int pageOffset, int pageSize)
         {
-            return $"{GetBasePath()}/{primaryResource.EntityName}?page[size]={pageSize}&page[number]={pageOffset}";
+            return $"{GetBasePath()}/{primaryResource.ResourceName}?page[size]={pageSize}&page[number]={pageOffset}";
         }
 
 
@@ -101,12 +101,12 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             var childNavigation = relationship.PublicRelationshipName;
             RelationshipLinks links = null;
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Related))
-                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.EntityName, parent.StringId, childNavigation) };
+                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation) };
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Self))
             {
                 links = links ?? new RelationshipLinks();
-                links.Self = GetSelfRelationshipLink(parentResourceContext.EntityName, parent.StringId, childNavigation);
+                links.Self = GetSelfRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation);
             }
 
             return links;

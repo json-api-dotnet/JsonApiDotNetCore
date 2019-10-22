@@ -42,7 +42,7 @@ namespace UnitTests.QueryParameters
 
             var contextEntity = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
@@ -72,7 +72,7 @@ namespace UnitTests.QueryParameters
 
             var contextEntity = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
@@ -98,7 +98,7 @@ namespace UnitTests.QueryParameters
 
             var contextEntity = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
                 Relationships = new List<RelationshipAttribute>()
             };
@@ -120,7 +120,7 @@ namespace UnitTests.QueryParameters
 
             var contextEntity = new ResourceContext
             {
-                EntityName = type,
+                ResourceName = type,
                 Attributes = new List<AttrAttribute>(),
                 Relationships = new List<RelationshipAttribute>()
             };

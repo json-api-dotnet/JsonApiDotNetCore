@@ -37,9 +37,9 @@ namespace UnitTests
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
             var dbResource = resourceGraph.GetResourceContext("db-resources");
             var nonDbResource = resourceGraph.GetResourceContext("non-db-resources");
-            Assert.Equal(typeof(DbResource), dbResource.EntityType);
-            Assert.Equal(typeof(NonDbResource), nonDbResource.EntityType);
-            Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceType);
+            Assert.Equal(typeof(DbResource), dbResource.ResourceType);
+            Assert.Equal(typeof(NonDbResource), nonDbResource.ResourceType);
+            Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceDefinitionType);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace UnitTests
 
             // assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("test-resources", resource.EntityName);
+            Assert.Equal("test-resources", resource.ResourceName);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace UnitTests
 
             // assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("testResources", resource.EntityName);
+            Assert.Equal("testResources", resource.ResourceName);
         }
 
         [Fact]

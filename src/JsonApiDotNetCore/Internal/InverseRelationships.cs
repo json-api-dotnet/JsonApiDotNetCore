@@ -45,9 +45,9 @@ namespace JsonApiDotNetCore.Internal
             {
                 DbContext context = _resolver.GetContext();
 
-                foreach (ResourceContext ce in _provider.GetContextEntities())
+                foreach (ResourceContext ce in _provider.GetResourceContexts())
                 {
-                    IEntityType meta = context.Model.FindEntityType(ce.EntityType);
+                    IEntityType meta = context.Model.FindEntityType(ce.ResourceType);
                     if (meta == null) continue;
                     foreach (var attr in ce.Relationships)
                     {

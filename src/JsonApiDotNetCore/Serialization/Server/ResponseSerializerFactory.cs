@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             if (_currentRequest.RequestRelationship != null && !_currentRequest.IsRelationshipPath)
                 return _currentRequest.RequestRelationship.DependentType;
 
-            return _currentRequest.GetRequestResource()?.EntityType;
+            return _currentRequest.GetRequestResource()?.ResourceType;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 _currentRequest.SetRequestResource(GetCurrentEntity());
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
-                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().EntityName);
+                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().ResourceName);
             }
 
             if (IsValid())

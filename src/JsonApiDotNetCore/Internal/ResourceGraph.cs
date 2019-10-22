@@ -13,28 +13,25 @@ namespace JsonApiDotNetCore.Internal
     public class ResourceGraph : IResourceGraph
     {
         internal List<ValidationResult> ValidationResults { get; }
-        private List<ResourceContext> _entities { get; }
+        private List<ResourceContext> _resources { get; }
 
         public ResourceGraph(List<ResourceContext> entities, List<ValidationResult> validationResults = null)
         {
-            _entities = entities;
+            _resources = entities;
             ValidationResults = validationResults;
         }
 
         /// <inheritdoc />
-        public ResourceContext[] GetContextEntities() => _entities.ToArray();
-
+        public ResourceContext[] GetResourceContexts() => _resources.ToArray();
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string entityName)
-            => _entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
-
+            => _resources.SingleOrDefault(e => string.Equals(e.ResourceName, entityName, StringComparison.OrdinalIgnoreCase));
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type entityType)
-            => _entities.SingleOrDefault(e => e.EntityType == entityType);
+            => _resources.SingleOrDefault(e => e.ResourceType == entityType);
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
             => GetResourceContext(typeof(TResource));
-
         /// <inheritdoc/>
         public List<IResourceField> GetFields<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
         {
@@ -65,7 +62,6 @@ namespace JsonApiDotNetCore.Internal
         {
             return GetResourceContext(type).Relationships.ToList();
         }
-
         /// <inheritdoc />
         public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
         {
@@ -144,7 +140,5 @@ namespace JsonApiDotNetCore.Internal
             Attribute,
             Relationship
         }
-
-
     }
 }

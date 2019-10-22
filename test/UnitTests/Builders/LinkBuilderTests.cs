@@ -211,7 +211,7 @@ namespace UnitTests
                 ResourceLinks = resourceLinks,
                 TopLevelLinks = topLevelLinks,
                 RelationshipLinks = relationshipLinks,
-                EntityName = typeof(TResource).Name.Dasherize() + "s"
+                ResourceName = typeof(TResource).Name.Dasherize() + "s"
             };
         }
     }

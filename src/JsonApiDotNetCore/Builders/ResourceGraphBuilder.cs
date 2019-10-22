@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Builders
 
         private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
-            var attribute = (LinksAttribute)resourceContext.EntityType.GetCustomAttribute(typeof(LinksAttribute));
+            var attribute = (LinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(LinksAttribute));
             if (attribute != null)
             {
                 resourceContext.RelationshipLinks = attribute.RelationshipLinks;
@@ -69,12 +69,12 @@ namespace JsonApiDotNetCore.Builders
 
         private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
-            EntityName = pluralizedTypeName,
-            EntityType = entityType,
+            ResourceName = pluralizedTypeName,
+            ResourceType = entityType,
             IdentityType = idType,
             Attributes = GetAttributes(entityType),
             Relationships = GetRelationships(entityType),
-            ResourceType = GetResourceDefinitionType(entityType)
+            ResourceDefinitionType = GetResourceDefinitionType(entityType)
         };
 
 
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Builders
 
         private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
-            if (_entities.Any(e => e.EntityType == entityType))
+            if (_entities.Any(e => e.ResourceType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
         }
     }

@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Query
             if (propertyName == null) return null;
             var relationship = _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
             if (relationship == null)
-                throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.EntityName}.");
+                throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.ResourceName}.");
 
             return relationship;
         }

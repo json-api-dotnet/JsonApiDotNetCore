@@ -97,23 +97,14 @@ namespace JsonApiDotNetCore.Hooks
             return new HashSet<TEntity>(dbValues);
         }
 
-
         public bool ShouldLoadDbValues(Type entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
-
             if (discovery.DatabaseValuesDisabledHooks.Contains(hook))
-            {
                 return false;
-            }
             if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
-            {
                 return true;
-            }
-            else
-            {
-                return _options.LoaDatabaseValues;
-            }
+            return _options.LoaDatabaseValues;
         }
 
         bool ShouldExecuteHook(DependentType entityType, ResourceHook hook)

@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Middleware
 
                     throw new JsonApiException(409,
                         $"Cannot '{context.HttpContext.Request.Method}' type '{deserializedType.Name}' "
-                        + $"to '{expectedJsonApiResource?.EntityName}' endpoint.",
+                        + $"to '{expectedJsonApiResource?.ResourceName}' endpoint.",
                         detail: "Check that the request payload type matches the type expected by this endpoint.");
                 }
             }

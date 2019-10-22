@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Serialization
                              + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
             }
 
-            var entity = (IIdentifiable)Activator.CreateInstance(contextEntity.EntityType);
+            var entity = (IIdentifiable)Activator.CreateInstance(contextEntity.ResourceType);
 
             entity = SetAttributes(entity, data.Attributes, contextEntity.Attributes);
             entity = SetRelationships(entity, data.Relationships, contextEntity.Relationships);

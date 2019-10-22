@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute relationship)
         {
             var type = parent.GetType();
-            var resourceName = _provider.GetResourceContext(type).EntityName;
+            var resourceName = _provider.GetResourceContext(type).ResourceName;
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {
