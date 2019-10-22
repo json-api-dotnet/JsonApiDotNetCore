@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -7,28 +7,18 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public interface IJsonApiTypeMatchFilterProvider
-    {
-        Type Get();
-    }
-
-    public class JsonApiTypeMatchFilterProvider : IJsonApiTypeMatchFilterProvider
-    {
-        public Type Get() => typeof(TypeMatchFilter);
-    }
-
-    public class TypeMatchFilter : IActionFilter
+    /// <summary>
+    /// Action filter used to verify the incoming type matches the target type, else return a 409
+    /// </summary>
+    public class DefaultTypeMatchFilter : IActionFilter
     {
         private readonly IContextEntityProvider _provider;
 
-        public TypeMatchFilter(IContextEntityProvider provider)
+        public DefaultTypeMatchFilter(IContextEntityProvider provider)
         {
             _provider = provider;
         }
 
-        /// <summary>
-        /// Used to verify the incoming type matches the target type, else return a 409
-        /// </summary>
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var request = context.HttpContext.Request;
