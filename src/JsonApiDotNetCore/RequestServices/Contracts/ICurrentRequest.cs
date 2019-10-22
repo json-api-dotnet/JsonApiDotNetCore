@@ -1,11 +1,9 @@
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Managers.Contracts
 {
     /// <summary>
-    /// This is the former RequestManager. TODO: not done.
     /// Metadata associated to the current json:api request.
     /// </summary>
     public interface ICurrentRequest
@@ -35,9 +33,9 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// <summary>
         /// Sets the current context entity for this entire request
         /// </summary>
-        /// <param name="contextEntityCurrent"></param>
-        void SetRequestResource(ContextEntity contextEntityCurrent);
+        /// <param name="currentResourceContext"></param>
+        void SetRequestResource(ResourceContext currentResourceContext);
 
-        ContextEntity GetRequestResource();
+        ResourceContext GetRequestResource();
     }
 }

@@ -35,8 +35,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = _fixture.Server.GetDeserializer()
-                .DeserializeList<TodoItem>(responseBody);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(responseBody).Data;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -62,8 +61,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.Server.GetDeserializer()
-                .Deserialize(responseBody);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItem>(responseBody).Data;
 
             // assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -99,8 +97,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            var deserializedBody = (TodoItem)_fixture.Server.GetDeserializer()
-                .Deserialize(responseBody);
+            var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItem>(responseBody).Data;
 
             // assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);

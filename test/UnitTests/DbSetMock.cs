@@ -32,7 +32,7 @@ public static class ListExtensions
     }
 }
 
-internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
+internal class TestAsyncQueryProvider<TResource> : IAsyncQueryProvider
 {
     private readonly IQueryProvider _inner;
 
@@ -43,7 +43,7 @@ internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 
     public IQueryable CreateQuery(Expression expression)
     {
-        return new TestAsyncEnumerable<TEntity>(expression);
+        return new TestAsyncEnumerable<TResource>(expression);
     }
 
     public IQueryable<TElement> CreateQuery<TElement>(Expression expression)

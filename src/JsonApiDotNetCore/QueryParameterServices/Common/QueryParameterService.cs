@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Query
     public abstract class QueryParameterService
     {
         protected readonly IResourceGraph _resourceGraph;
-        protected readonly ContextEntity _requestResource;
+        protected readonly ResourceContext _requestResource;
 
         protected QueryParameterService(IResourceGraph resourceGraph, ICurrentRequest currentRequest)
         {
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Query
         {
             AttrAttribute attribute;
             if (relationship != null)
-                attribute = _resourceGraph.GetAttributes(relationship.DependentType).FirstOrDefault(a => a.Is(target));
+                attribute = _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => a.Is(target));
             else
                 attribute = _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
 
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Query
             if (propertyName == null) return null;
             var relationship = _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
             if (relationship == null)
-                throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.EntityName}.");
+                throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.ResourceName}.");
 
             return relationship;
         }

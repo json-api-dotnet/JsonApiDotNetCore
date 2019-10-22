@@ -4,11 +4,11 @@ namespace JsonApiDotNetCore.Hooks
 {
 
     /// <summary>
-    /// A singleton service for a particular TEntity that stores a field of 
+    /// A singleton service for a particular TResource that stores a field of 
     /// enums that represents which resource hooks have been implemented for that
     /// particular entity.
     /// </summary>
-    public interface IHooksDiscovery<TEntity> : IHooksDiscovery where TEntity : class, IIdentifiable
+    public interface IHooksDiscovery<TResource> : IHooksDiscovery where TResource : class, IIdentifiable
     {
 
     }
@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface IHooksDiscovery
     {
         /// <summary>
-        /// A list of the implemented hooks for resource TEntity
+        /// A list of the implemented hooks for resource TResource
         /// </summary>
         /// <value>The implemented hooks.</value>
         ResourceHook[] ImplementedHooks { get; }

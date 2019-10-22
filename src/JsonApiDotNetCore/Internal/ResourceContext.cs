@@ -6,17 +6,17 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class ContextEntity
+    public class ResourceContext
     {
         /// <summary>
         /// The exposed resource name
         /// </summary>
-        public string EntityName { get; set; }
+        public string ResourceName { get; set; }
 
         /// <summary>
         /// The data model type
         /// </summary>
-        public Type EntityType { get; set; }
+        public Type ResourceType { get; set; }
 
         /// <summary>
         /// The identity member type
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Internal
         /// The concrete <see cref="ResourceDefinition{T}"/> type.
         /// We store this so that we don't need to re-compute the generic type.
         /// </summary>
-        public Type ResourceType { get; set; }
+        public Type ResourceDefinitionType { get; set; }
 
         /// <summary>
         /// Exposed resource attributes.

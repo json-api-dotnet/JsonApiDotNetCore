@@ -12,11 +12,11 @@ namespace JsonApiDotNetCore.Serialization
     /// <inheritdoc/> 
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
-        protected readonly IContextEntityProvider _provider;
+        protected readonly IResourceContextProvider _provider;
         private readonly ResourceObjectBuilderSettings _settings;
         private const string _identifiablePropertyName = nameof(Identifiable.Id);
 
-        public ResourceObjectBuilder(IContextEntityProvider provider, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IResourceContextProvider provider, ResourceObjectBuilderSettings settings)
         {
             _provider = provider;
             _settings = settings;
@@ -25,10 +25,10 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc/> 
         public ResourceObject Build(IIdentifiable entity, IEnumerable<AttrAttribute> attributes = null, IEnumerable<RelationshipAttribute> relationships = null)
         {
-            var resourceContext = _provider.GetContextEntity(entity.GetType());
+            var resourceContext = _provider.GetResourceContext(entity.GetType());
 
             // populating the top-level "type" and "id" members.
-            var ro = new ResourceObject { Type = resourceContext.EntityName, Id = entity.StringId.NullIfEmpty() };
+            var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = entity.StringId.NullIfEmpty() };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
             if (attributes != null && (attributes = attributes.Where(attr => attr.InternalAttributeName != _identifiablePropertyName)).Any())
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable entity)
         {
-            var resourceName = _provider.GetContextEntity(entity.GetType()).EntityName;
+            var resourceName = _provider.GetResourceContext(entity.GetType()).ResourceName;
             return new ResourceIdentifierObject
             {
                 Type = resourceName,

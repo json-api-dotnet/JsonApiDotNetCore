@@ -1,5 +1,5 @@
 using System.Collections;
-using DependentType = System.Type;
+using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Each node representes the entities of a given type throughout a particular layer.
         /// </summary>
-        DependentType EntityType { get; }
+        RightType ResourceType { get; }
         /// <summary>
         /// The unique set of entities in this node. Note that these are all of the same type.
         /// </summary>

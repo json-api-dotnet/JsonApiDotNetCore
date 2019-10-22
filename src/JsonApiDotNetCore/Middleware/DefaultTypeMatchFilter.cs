@@ -12,9 +12,9 @@ namespace JsonApiDotNetCore.Middleware
     /// </summary>
     public class DefaultTypeMatchFilter : IActionFilter
     {
-        private readonly IContextEntityProvider _provider;
+        private readonly IResourceContextProvider _provider;
 
-        public DefaultTypeMatchFilter(IContextEntityProvider provider)
+        public DefaultTypeMatchFilter(IResourceContextProvider provider)
         {
             _provider = provider;
         }
@@ -29,11 +29,11 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (deserializedType != null && targetType != null && deserializedType != targetType)
                 {
-                    var expectedJsonApiResource = _provider.GetContextEntity(targetType);
+                    var expectedJsonApiResource = _provider.GetResourceContext(targetType);
 
                     throw new JsonApiException(409,
                         $"Cannot '{context.HttpContext.Request.Method}' type '{deserializedType.Name}' "
-                        + $"to '{expectedJsonApiResource?.EntityName}' endpoint.",
+                        + $"to '{expectedJsonApiResource?.ResourceName}' endpoint.",
                         detail: "Check that the request payload type matches the type expected by this endpoint.");
                 }
             }

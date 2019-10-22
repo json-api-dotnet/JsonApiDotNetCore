@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Builders
 {
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
-        private readonly List<ContextEntity> _entities = new List<ContextEntity>();
+        private readonly List<ResourceContext> _entities = new List<ResourceContext>();
         private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
         private readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
 
@@ -36,9 +36,9 @@ namespace JsonApiDotNetCore.Builders
             return resourceGraph;
         }
 
-        private void SetResourceLinksOptions(ContextEntity resourceContext)
+        private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
-            var attribute = (LinksAttribute)resourceContext.EntityType.GetCustomAttribute(typeof(LinksAttribute));
+            var attribute = (LinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(LinksAttribute));
             if (attribute != null)
             {
                 resourceContext.RelationshipLinks = attribute.RelationshipLinks;
@@ -67,14 +67,14 @@ namespace JsonApiDotNetCore.Builders
             return this;
         }
 
-        private ContextEntity GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ContextEntity
+        private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
-            EntityName = pluralizedTypeName,
-            EntityType = entityType,
+            ResourceName = pluralizedTypeName,
+            ResourceType = entityType,
             IdentityType = idType,
             Attributes = GetAttributes(entityType),
             Relationships = GetRelationships(entityType),
-            ResourceType = GetResourceDefinitionType(entityType)
+            ResourceDefinitionType = GetResourceDefinitionType(entityType)
         };
 
 
@@ -125,8 +125,8 @@ namespace JsonApiDotNetCore.Builders
 
                 attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? _resourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
-                attribute.DependentType = GetRelationshipType(attribute, prop);
-                attribute.PrincipalType = entityType;
+                attribute.RightType = GetRelationshipType(attribute, prop);
+                attribute.LeftType = entityType;
                 attributes.Add(attribute);
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
@@ -160,13 +160,13 @@ namespace JsonApiDotNetCore.Builders
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
 
                     // Article → ArticleTag.Tag
-                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.DependentType)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.DependentType}");
+                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.RightType}");
 
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.DependentType} with name {rightIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.RightType} with name {rightIdPropertyName}");
                 }
             }
 
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCore.Builders
 
         private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
-            if (_entities.Any(e => e.EntityType == entityType))
+            if (_entities.Any(e => e.ResourceType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
         }
     }

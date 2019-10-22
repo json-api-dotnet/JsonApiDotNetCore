@@ -85,14 +85,14 @@ namespace JsonApiDotNetCore.Models
 
             if (throughEntities == null)
                 // return an empty list for the right-type of the property.
-                return TypeHelper.CreateListFor(DependentType);
+                return TypeHelper.CreateListFor(RightType);
 
             // the right entities are included on the navigation/through entities. Extract and return them.
             var rightEntities = new List<IIdentifiable>();
             foreach (var rightEntity in (IList)throughEntities)
                 rightEntities.Add((IIdentifiable)RightProperty.GetValue(rightEntity));
 
-            return rightEntities.Cast(DependentType);
+            return rightEntities.Cast(RightType);
         }
 
 

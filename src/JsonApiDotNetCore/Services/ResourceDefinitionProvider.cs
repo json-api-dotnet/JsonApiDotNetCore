@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public IResourceDefinition Get(Type resourceType)
         {
-            return (IResourceDefinition)_serviceProvider.GetService(_resourceContextProvider.GetContextEntity(resourceType).ResourceType);
+            return (IResourceDefinition)_serviceProvider.GetService(_resourceContextProvider.GetResourceContext(resourceType).ResourceDefinitionType);
         }
     }
 }

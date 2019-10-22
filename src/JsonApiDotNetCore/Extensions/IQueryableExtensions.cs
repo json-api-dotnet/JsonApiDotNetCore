@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 
@@ -65,7 +64,7 @@ namespace JsonApiDotNetCore.Extensions
             return CallGenericWhereMethod(source, filterQuery);
         }
 
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, List<AttrAttribute> columns)
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<AttrAttribute> columns)
             => CallGenericSelectMethod(source, columns.Select(attr => attr.InternalAttributeName).ToList());
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)
@@ -124,7 +123,7 @@ namespace JsonApiDotNetCore.Extensions
             return (IOrderedQueryable<TSource>)result;
         }
 
-        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperation  operation)
+        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperation operation)
         {
             Expression body;
             switch (operation)
@@ -259,7 +258,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
-                var relatedType = filter.Relationship.DependentType;
+                var relatedType = filter.Relationship.RightType;
                 property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
                 if (property == null)
                     throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");

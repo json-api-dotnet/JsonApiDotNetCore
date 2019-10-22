@@ -11,9 +11,9 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public abstract class BaseDocumentBuilder
     {
-        protected readonly IContextEntityProvider _provider;
+        protected readonly IResourceContextProvider _provider;
         protected readonly IResourceObjectBuilder _resourceObjectBuilder;
-        protected BaseDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IContextEntityProvider provider)
+        protected BaseDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider provider)
         {
             _resourceObjectBuilder = resourceObjectBuilder;
             _provider = provider;

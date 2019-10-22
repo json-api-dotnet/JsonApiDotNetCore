@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Query
             _selectedRelationshipFields.TryGetValue(relationship, out var fields);
             return fields;
         }
-        
+
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {   // expected: articles?fields=prop1,prop2
@@ -61,8 +61,8 @@ namespace JsonApiDotNetCore.Query
                 // it is possible that the request resource has a relationship
                 // that is equal to the resource name, like with self-referering data types (eg directory structures)
                 // if not, no longer support this type of sparse field selection.
-                if (navigation == _requestResource.EntityName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
-                    throw new JsonApiException(400, $"Use \"?fields=...\" instead of \"fields[{navigation}]\":" +
+                if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
+                    throw new JsonApiException(400, $"Use '?fields=...' instead of 'fields[{navigation}]':" +
                         $" the square bracket navigations is now reserved " +
                         $"for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
 
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Query
 
                 var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(navigation));
                 if (relationship == null)
-                    throw new JsonApiException(400, $"\"{navigation}\" in \"fields[{navigation}]\" is not a valid relationship of {_requestResource.EntityName}");
+                    throw new JsonApiException(400, $"'{navigation}' in 'fields[{navigation}]' is not a valid relationship of {_requestResource.ResourceName}");
 
                 foreach (var field in fields)
                     RegisterRelatedResourceField(field, relationship);
@@ -83,10 +83,10 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship)
         {
-            var relationProperty = _resourceGraph.GetContextEntity(relationship.DependentType);
+            var relationProperty = _resourceGraph.GetResourceContext(relationship.RightType);
             var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
-                throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
+                throw new JsonApiException(400, $"'{relationship.RightType.Name}' does not contain '{field}'.");
 
             if (!_selectedRelationshipFields.TryGetValue(relationship, out var registeredFields))
                 _selectedRelationshipFields.Add(relationship, registeredFields = new List<AttrAttribute>());
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Query
         {
             var attr = _requestResource.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
-                throw new JsonApiException(400, $"'{_requestResource.EntityName}' does not contain '{field}'.");
+                throw new JsonApiException(400, $"'{_requestResource.ResourceName}' does not contain '{field}'.");
 
             (_selectedFields = _selectedFields ?? new List<AttrAttribute>()).Add(attr);
         }

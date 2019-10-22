@@ -44,10 +44,10 @@ namespace UnitTests.Extensions
             Assert.NotNull(currentRequest);
             var resourceGraph = provider.GetService<IResourceGraph>();
             Assert.NotNull(resourceGraph);
-            currentRequest.SetRequestResource(resourceGraph.GetContextEntity<TodoItem>());
+            currentRequest.SetRequestResource(resourceGraph.GetResourceContext<TodoItem>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
-            Assert.NotNull(provider.GetService(typeof(IEntityRepository<TodoItem>)));
+            Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IHttpContextAccessor>());
             Assert.NotNull(provider.GetService<IMetaBuilder<TodoItem>>());
@@ -55,8 +55,8 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IJsonApiWriter>());
             Assert.NotNull(provider.GetService<IJsonApiReader>());
             Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
-            Assert.NotNull(provider.GetService<IGenericProcessorFactory>());
-            Assert.NotNull(provider.GetService(typeof(GenericProcessor<TodoItem>)));
+            Assert.NotNull(provider.GetService<IGenericServiceFactory>());
+            Assert.NotNull(provider.GetService(typeof(HasManyThroughUpdateHelper<TodoItem>)));
         }
 
         [Fact]
@@ -129,8 +129,8 @@ namespace UnitTests.Extensions
             // assert
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
-            var resource = resourceGraph.GetContextEntity(typeof(IntResource));
-            Assert.Equal("resource", resource.EntityName);
+            var resource = resourceGraph.GetResourceContext(typeof(IntResource));
+            Assert.Equal("resource", resource.ResourceName);
         }
 
         public class IntResource : Identifiable { }

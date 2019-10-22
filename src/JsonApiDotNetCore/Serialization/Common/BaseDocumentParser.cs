@@ -18,10 +18,10 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public abstract class BaseDocumentParser
     {
-        protected readonly IContextEntityProvider _provider;
+        protected readonly IResourceContextProvider _provider;
         protected Document _document;
 
-        protected BaseDocumentParser(IContextEntityProvider provider)
+        protected BaseDocumentParser(IResourceContextProvider provider)
         {
             _provider = provider;
         }
@@ -128,8 +128,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed entity</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var contextEntity = _provider.GetContextEntity(data.Type);
-            if (contextEntity == null)
+            var resourceContext = _provider.GetResourceContext(data.Type);
+            if (resourceContext == null)
             {
                 throw new JsonApiException(400,
                      message: $"This API does not contain a json:api resource named '{data.Type}'.",
@@ -138,10 +138,10 @@ namespace JsonApiDotNetCore.Serialization
                              + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
             }
 
-            var entity = (IIdentifiable)Activator.CreateInstance(contextEntity.EntityType);
+            var entity = (IIdentifiable)Activator.CreateInstance(resourceContext.ResourceType);
 
-            entity = SetAttributes(entity, data.Attributes, contextEntity.Attributes);
-            entity = SetRelationships(entity, data.Relationships, contextEntity.Relationships);
+            entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
+            entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
 
             if (data.Id != null)
                 entity.StringId = data.Id?.ToString();
@@ -213,7 +213,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             else
             {
-                var relatedInstance = attr.DependentType.New<IIdentifiable>();
+                var relatedInstance = attr.RightType.New<IIdentifiable>();
                 relatedInstance.StringId = relatedId;
                 attr.SetValue(entity, relatedInstance);
             }
@@ -230,11 +230,11 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
-                    var relatedInstance = attr.DependentType.New<IIdentifiable>();
+                    var relatedInstance = attr.RightType.New<IIdentifiable>();
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
+                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.RightType);
                 attr.SetValue(entity, convertedCollection);
             }
 

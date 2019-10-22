@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// </summary>
     public class ResponseDeserializer : BaseDocumentParser, IResponseDeserializer
     {
-        public ResponseDeserializer(IContextEntityProvider provider) : base(provider) { }
+        public ResponseDeserializer(IResourceContextProvider provider) : base(provider) { }
 
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
-                var values = TypeHelper.CreateListFor(hasManyAttr.DependentType);
+                var values = TypeHelper.CreateListFor(hasManyAttr.RightType);
                 foreach (var rio in data.ManyData)
                     values.Add(ParseIncludedRelationship(hasManyAttr, rio));
 
@@ -84,19 +84,19 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
-            var relatedInstance = relationshipAttr.DependentType.New<IIdentifiable>();
+            var relatedInstance = relationshipAttr.RightType.New<IIdentifiable>();
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);
             if (includedResource == null)
                 return relatedInstance;
 
-            var contextEntity = _provider.GetContextEntity(relatedResourceIdentifier.Type);
-            if (contextEntity == null)
-                throw new InvalidOperationException($"Included type '{relationshipAttr.DependentType}' is not a registered json:api resource.");
+            var resourceContext = _provider.GetResourceContext(relatedResourceIdentifier.Type);
+            if (resourceContext == null)
+                throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 
-            SetAttributes(relatedInstance, includedResource.Attributes, contextEntity.Attributes);
-            SetRelationships(relatedInstance, includedResource.Relationships, contextEntity.Relationships);
+            SetAttributes(relatedInstance, includedResource.Attributes, resourceContext.Attributes);
+            SetRelationships(relatedInstance, includedResource.Relationships, resourceContext.Relationships);
             return relatedInstance;
         }
 

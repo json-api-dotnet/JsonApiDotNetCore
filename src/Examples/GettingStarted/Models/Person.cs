@@ -7,7 +7,6 @@ namespace GettingStarted.Models
     {
         [Attr] 
         public string Name { get; set; }
-
         [HasMany] 
         public List<Article> Articles { get; set; }
     }
