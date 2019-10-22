@@ -423,18 +423,18 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IResourceGraph contextEntityProvider,
+                                       IResourceGraph resourceContextProvider,
                                        IGenericServiceFactory genericServiceFactory)
-            : base(targetedFields, contextResolver, contextEntityProvider, genericServiceFactory)
+            : base(targetedFields, contextResolver, resourceContextProvider, genericServiceFactory)
         {
         }
 
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IResourceGraph contextEntityProvider,
+                                       IResourceGraph resourceContextProvider,
                                        IGenericServiceFactory genericServiceFactory,
                                        ILoggerFactory loggerFactory = null)
-            : base(targetedFields, contextResolver, contextEntityProvider, genericServiceFactory, loggerFactory)
+            : base(targetedFields, contextResolver, resourceContextProvider, genericServiceFactory, loggerFactory)
         {
         }
     }

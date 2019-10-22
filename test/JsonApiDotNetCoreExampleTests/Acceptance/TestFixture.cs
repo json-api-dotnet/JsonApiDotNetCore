@@ -18,7 +18,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     {
         private readonly TestServer _server;
         private IServiceProvider _services;
-
         public TestFixture()
         {
             var builder = new WebHostBuilder()

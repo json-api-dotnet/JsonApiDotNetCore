@@ -33,8 +33,8 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// <summary>
         /// Sets the current context entity for this entire request
         /// </summary>
-        /// <param name="contextEntityCurrent"></param>
-        void SetRequestResource(ResourceContext contextEntityCurrent);
+        /// <param name="currentResourceContext"></param>
+        void SetRequestResource(ResourceContext currentResourceContext);
 
         ResourceContext GetRequestResource();
     }

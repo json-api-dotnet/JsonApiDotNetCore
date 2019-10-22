@@ -55,7 +55,7 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IJsonApiWriter>());
             Assert.NotNull(provider.GetService<IJsonApiReader>());
             Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
-            Assert.NotNull(provider.GetService<IGenericProcessorFactory>());
+            Assert.NotNull(provider.GetService<IGenericServiceFactory>());
             Assert.NotNull(provider.GetService(typeof(HasManyThroughUpdateHelper<TodoItem>)));
         }
 

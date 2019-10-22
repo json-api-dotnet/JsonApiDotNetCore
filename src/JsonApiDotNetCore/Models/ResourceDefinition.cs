@@ -26,15 +26,15 @@ namespace JsonApiDotNetCore.Models
     /// <typeparam name="TResource">The resource type</typeparam>
     public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
-        private readonly ResourceContext _contextEntity;
+        private readonly ResourceContext _resourceContext;
         private readonly IResourceGraph _resourceGraph;
         private List<AttrAttribute> _allowedAttributes;
         private List<RelationshipAttribute> _allowedRelationships;
         public ResourceDefinition(IResourceGraph resourceGraph)
         {
-            _contextEntity = resourceGraph.GetResourceContext(typeof(TResource));
-            _allowedAttributes = _contextEntity.Attributes;
-            _allowedRelationships = _contextEntity.Relationships;
+            _resourceContext = resourceGraph.GetResourceContext(typeof(TResource));
+            _allowedAttributes = _resourceContext.Attributes;
+            _allowedRelationships = _resourceContext.Relationships;
             _resourceGraph = resourceGraph;
         }
 

@@ -12,8 +12,6 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Can be overwritten to help you out during testing
-    /// 
     /// This sets all necessary parameters relating to the HttpContext for JADNC
     /// </summary>
     public class CurrentRequestMiddleware

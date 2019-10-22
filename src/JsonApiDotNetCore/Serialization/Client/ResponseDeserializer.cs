@@ -91,12 +91,12 @@ namespace JsonApiDotNetCore.Serialization.Client
             if (includedResource == null)
                 return relatedInstance;
 
-            var contextEntity = _provider.GetResourceContext(relatedResourceIdentifier.Type);
-            if (contextEntity == null)
+            var resourceContext = _provider.GetResourceContext(relatedResourceIdentifier.Type);
+            if (resourceContext == null)
                 throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 
-            SetAttributes(relatedInstance, includedResource.Attributes, contextEntity.Attributes);
-            SetRelationships(relatedInstance, includedResource.Relationships, contextEntity.Relationships);
+            SetAttributes(relatedInstance, includedResource.Attributes, resourceContext.Attributes);
+            SetRelationships(relatedInstance, includedResource.Relationships, resourceContext.Relationships);
             return relatedInstance;
         }
 

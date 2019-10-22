@@ -128,8 +128,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed entity</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var contextEntity = _provider.GetResourceContext(data.Type);
-            if (contextEntity == null)
+            var resourceContext = _provider.GetResourceContext(data.Type);
+            if (resourceContext == null)
             {
                 throw new JsonApiException(400,
                      message: $"This API does not contain a json:api resource named '{data.Type}'.",
@@ -138,10 +138,10 @@ namespace JsonApiDotNetCore.Serialization
                              + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
             }
 
-            var entity = (IIdentifiable)Activator.CreateInstance(contextEntity.ResourceType);
+            var entity = (IIdentifiable)Activator.CreateInstance(resourceContext.ResourceType);
 
-            entity = SetAttributes(entity, data.Attributes, contextEntity.Attributes);
-            entity = SetRelationships(entity, data.Relationships, contextEntity.Relationships);
+            entity = SetAttributes(entity, data.Attributes, resourceContext.Attributes);
+            entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
 
             if (data.Id != null)
                 entity.StringId = data.Id?.ToString();

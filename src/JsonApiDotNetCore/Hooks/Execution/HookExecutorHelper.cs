@@ -19,12 +19,12 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
         private readonly IJsonApiOptions _options;
-        protected readonly IGenericProcessorFactory _genericProcessorFactory;
+        protected readonly IGenericServiceFactory _genericProcessorFactory;
         protected readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;
         protected readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
         protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
 
-        public HookExecutorHelper(IGenericProcessorFactory genericProcessorFactory,
+        public HookExecutorHelper(IGenericServiceFactory genericProcessorFactory,
                                   IJsonApiOptions options)
         {
             _options = options;
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Hooks
             /// so we need not even bother.
             if (!_hookContainers.TryGetValue(rightType, out IResourceHookContainer container))
             {
-                container = (_genericProcessorFactory.GetProcessor<IResourceHookContainer>(typeof(ResourceDefinition<>), rightType));
+                container = (_genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), rightType));
                 _hookContainers[rightType] = container;
             }
             if (container == null) return container;
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
             {
-                discovery = _genericProcessorFactory.GetProcessor<IHooksDiscovery>(typeof(IHooksDiscovery<>), entityType);
+                discovery = _genericProcessorFactory.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), entityType);
                 _hookDiscoveries[entityType] = discovery;
             }
             return discovery;
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Hooks
 
         IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
         {
-            return _genericProcessorFactory.GetProcessor<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
+            return _genericProcessorFactory.Get<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
         }
 
 

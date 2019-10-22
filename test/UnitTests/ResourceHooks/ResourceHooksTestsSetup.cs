@@ -318,10 +318,10 @@ namespace UnitTests.ResourceHooks
         )
         where TModel : class, IIdentifiable<int>
         {
-            processorFactory.Setup(c => c.Gett<<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
+            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), typeof(TModel)))
             .Returns(modelResource);
 
-            processorFactory.Setup(c => c.Gett<<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
+            processorFactory.Setup(c => c.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
             .Returns(discovery);
 
             if (dbContext != null)
@@ -330,7 +330,7 @@ namespace UnitTests.ResourceHooks
                 if (idType == typeof(int))
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext);
-                    processorFactory.Setup(c => c.Gett<<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+                    processorFactory.Setup(c => c.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
                 {
