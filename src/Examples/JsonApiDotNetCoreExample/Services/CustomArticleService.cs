@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExample.Services
                                     IIncludeService includeService,
                                     ISparseFieldsService sparseFieldsService,
                                     IPageService pageService,
-                                    IContextEntityProvider provider,
+                                    IResourceContextProvider provider,
                                     IResourceHookExecutor hookExecutor = null,
                                     ILoggerFactory loggerFactory = null)
             : base(sortService, filterService, repository, options, includeService, sparseFieldsService,

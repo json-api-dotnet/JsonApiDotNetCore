@@ -12,7 +12,7 @@ namespace UnitTests.QueryParameters
 {
     public class QueryParametersUnitTestCollection
     {
-        protected readonly ContextEntity _articleResourceContext;
+        protected readonly ResourceContext _articleResourceContext;
         protected readonly IResourceGraph _resourceGraph;
 
         public QueryParametersUnitTestCollection()
@@ -24,10 +24,10 @@ namespace UnitTests.QueryParameters
             builder.AddResource<Food>();
             builder.AddResource<Song>();
             _resourceGraph = builder.Build();
-            _articleResourceContext = _resourceGraph.GetContextEntity<Article>();
+            _articleResourceContext = _resourceGraph.GetResourceContext<Article>();
         }
 
-        public ICurrentRequest MockCurrentRequest(ContextEntity requestResource = null)
+        public ICurrentRequest MockCurrentRequest(ResourceContext requestResource = null)
         {
             var mock = new Mock<ICurrentRequest>();
 

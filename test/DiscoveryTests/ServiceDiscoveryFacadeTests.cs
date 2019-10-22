@@ -41,9 +41,9 @@ namespace DiscoveryTests
 
             // assert
             var resourceGraph = _resourceGraphBuilder.Build();
-            var personResource = resourceGraph.GetContextEntity(typeof(Person));
-            var articleResource = resourceGraph.GetContextEntity(typeof(Article));
-            var modelResource = resourceGraph.GetContextEntity(typeof(Model));
+            var personResource = resourceGraph.GetResourceContext(typeof(Person));
+            var articleResource = resourceGraph.GetResourceContext(typeof(Article));
+            var modelResource = resourceGraph.GetResourceContext(typeof(Model));
 
             Assert.NotNull(personResource);
             Assert.NotNull(articleResource);
@@ -58,7 +58,7 @@ namespace DiscoveryTests
 
             // assert
             var resourceGraph = _resourceGraphBuilder.Build();
-            var testModelResource = resourceGraph.GetContextEntity(typeof(TestModel));
+            var testModelResource = resourceGraph.GetResourceContext(typeof(TestModel));
             Assert.NotNull(testModelResource);
         }
 

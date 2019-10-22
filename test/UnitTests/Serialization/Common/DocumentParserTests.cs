@@ -132,7 +132,7 @@ namespace UnitTests.Serialization.Deserializer
             var entity = (TestResource)_deserializer.Deserialize(body);
 
             // assert
-            var pi = _resourceGraph.GetContextEntity("test-resource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
+            var pi = _resourceGraph.GetResourceContext("test-resource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
             var deserializedValue = pi.GetValue(entity);
 
             if (member == "int-field")

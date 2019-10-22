@@ -42,8 +42,8 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(resourceLinks: global);
-            var primaryResource = GetContextEntity<Article>(resourceLinks: resource);
-            _provider.Setup(m => m.GetContextEntity("articles")).Returns(primaryResource);
+            var primaryResource = GetResourceContext<Article>(resourceLinks: resource);
+            _provider.Setup(m => m.GetResourceContext("articles")).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
 
             // act
@@ -90,8 +90,8 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(relationshipLinks: global);
-            var primaryResource = GetContextEntity<Article>(relationshipLinks: resource);
-            _provider.Setup(m => m.GetContextEntity(typeof(Article))).Returns(primaryResource);
+            var primaryResource = GetResourceContext<Article>(relationshipLinks: resource);
+            _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
             var attr = new HasOneAttribute(links: relationship) { DependentType = typeof(Author), PublicRelationshipName = "author" };
 
@@ -138,8 +138,8 @@ namespace UnitTests
         {
             // arrange
             var config = GetConfiguration(topLevelLinks: global);
-            var primaryResource = GetContextEntity<Article>(topLevelLinks: resource);
-            _provider.Setup(m => m.GetContextEntity<Article>()).Returns(primaryResource);
+            var primaryResource = GetResourceContext<Article>(topLevelLinks: resource);
+            _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
             var builder = new LinkBuilder(config, GetRequestManager(), _pageService, _provider.Object);
 
@@ -170,7 +170,7 @@ namespace UnitTests
             return links.First == null && links.Prev == null && links.Next == null && links.Last == null;
         }
 
-        private ICurrentRequest GetRequestManager(ContextEntity resourceContext = null)
+        private ICurrentRequest GetRequestManager(ResourceContext resourceContext = null)
         {
             var mock = new Mock<ICurrentRequest>();
             mock.Setup(m => m.BasePath).Returns(_host);
@@ -202,11 +202,11 @@ namespace UnitTests
 
 
 
-        private ContextEntity GetContextEntity<TResource>(Link resourceLinks = Link.NotConfigured,
+        private ResourceContext GetResourceContext<TResource>(Link resourceLinks = Link.NotConfigured,
                                                           Link topLevelLinks = Link.NotConfigured,
                                                           Link relationshipLinks = Link.NotConfigured) where TResource : class, IIdentifiable
         {
-            return new ContextEntity
+            return new ResourceContext
             {
                 ResourceLinks = resourceLinks,
                 TopLevelLinks = topLevelLinks,

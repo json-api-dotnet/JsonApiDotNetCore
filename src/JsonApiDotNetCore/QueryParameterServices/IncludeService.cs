@@ -52,17 +52,17 @@ namespace JsonApiDotNetCore.Query
                     throw CannotIncludeError(resourceContext, relationshipName);
 
                 parsedChain.Add(relationship);
-                resourceContext = _resourceGraph.GetContextEntity(relationship.DependentType);
+                resourceContext = _resourceGraph.GetResourceContext(relationship.DependentType);
             }
             _includedChains.Add(parsedChain);
         }
 
-        private JsonApiException CannotIncludeError(ContextEntity resourceContext, string requestedRelationship)
+        private JsonApiException CannotIncludeError(ResourceContext resourceContext, string requestedRelationship)
         {
            return new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.EntityName} is not allowed");
         }
 
-        private JsonApiException InvalidRelationshipError(ContextEntity resourceContext, string requestedRelationship)
+        private JsonApiException InvalidRelationshipError(ResourceContext resourceContext, string requestedRelationship)
         {
            return new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.EntityName}",
                 $"{resourceContext.EntityName} does not have a relationship named {requestedRelationship}");

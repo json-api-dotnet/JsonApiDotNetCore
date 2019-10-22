@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Builders
 {
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
-        private readonly List<ContextEntity> _entities = new List<ContextEntity>();
+        private readonly List<ResourceContext> _entities = new List<ResourceContext>();
         private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
         private readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
 
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Builders
             return resourceGraph;
         }
 
-        private void SetResourceLinksOptions(ContextEntity resourceContext)
+        private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
             var attribute = (LinksAttribute)resourceContext.EntityType.GetCustomAttribute(typeof(LinksAttribute));
             if (attribute != null)
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Builders
             return this;
         }
 
-        private ContextEntity GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ContextEntity
+        private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
             EntityName = pluralizedTypeName,
             EntityType = entityType,

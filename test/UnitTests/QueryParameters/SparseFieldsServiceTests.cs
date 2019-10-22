@@ -10,7 +10,7 @@ namespace UnitTests.QueryParameters
 {
     public class SparseFieldsServiceTests : QueryParametersUnitTestCollection
     {
-        public SparseFieldsService GetService(ContextEntity contextEntity = null)
+        public SparseFieldsService GetService(ResourceContext contextEntity = null)
         {
             return new SparseFieldsService(_resourceGraph, MockCurrentRequest(contextEntity ?? _articleResourceContext));
         }
@@ -40,7 +40,7 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var contextEntity = new ResourceContext
             {
                 EntityName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
@@ -70,7 +70,7 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var contextEntity = new ResourceContext
             {
                 EntityName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
@@ -96,7 +96,7 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields[{relationship}]", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var contextEntity = new ResourceContext
             {
                 EntityName = type,
                 Attributes = new List<AttrAttribute> { attribute, idAttribute },
@@ -118,7 +118,7 @@ namespace UnitTests.QueryParameters
 
             var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
 
-            var contextEntity = new ContextEntity
+            var contextEntity = new ResourceContext
             {
                 EntityName = type,
                 Attributes = new List<AttrAttribute>(),

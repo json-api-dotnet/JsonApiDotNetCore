@@ -18,10 +18,10 @@ namespace JsonApiDotNetCore.Serialization
     /// </summary>
     public abstract class BaseDocumentParser
     {
-        protected readonly IContextEntityProvider _provider;
+        protected readonly IResourceContextProvider _provider;
         protected Document _document;
 
-        protected BaseDocumentParser(IContextEntityProvider provider)
+        protected BaseDocumentParser(IResourceContextProvider provider)
         {
             _provider = provider;
         }
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The parsed entity</returns>
         private IIdentifiable ParseResourceObject(ResourceObject data)
         {
-            var contextEntity = _provider.GetContextEntity(data.Type);
+            var contextEntity = _provider.GetResourceContext(data.Type);
             if (contextEntity == null)
             {
                 throw new JsonApiException(400,

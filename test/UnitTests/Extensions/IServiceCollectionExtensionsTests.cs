@@ -44,7 +44,7 @@ namespace UnitTests.Extensions
             Assert.NotNull(currentRequest);
             var resourceGraph = provider.GetService<IResourceGraph>();
             Assert.NotNull(resourceGraph);
-            currentRequest.SetRequestResource(resourceGraph.GetContextEntity<TodoItem>());
+            currentRequest.SetRequestResource(resourceGraph.GetResourceContext<TodoItem>());
             Assert.NotNull(provider.GetService<IResourceGraph>());
             Assert.NotNull(provider.GetService<IDbContextResolver>());
             Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));
@@ -129,7 +129,7 @@ namespace UnitTests.Extensions
             // assert
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
-            var resource = resourceGraph.GetContextEntity(typeof(IntResource));
+            var resource = resourceGraph.GetResourceContext(typeof(IntResource));
             Assert.Equal("resource", resource.EntityName);
         }
 

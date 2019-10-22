@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship)
         {
-            var relationProperty = _resourceGraph.GetContextEntity(relationship.DependentType);
+            var relationProperty = _resourceGraph.GetResourceContext(relationship.DependentType);
             var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
                 throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");

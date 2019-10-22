@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Query
     public abstract class QueryParameterService
     {
         protected readonly IResourceGraph _resourceGraph;
-        protected readonly ContextEntity _requestResource;
+        protected readonly ResourceContext _requestResource;
 
         protected QueryParameterService(IResourceGraph resourceGraph, ICurrentRequest currentRequest)
         {

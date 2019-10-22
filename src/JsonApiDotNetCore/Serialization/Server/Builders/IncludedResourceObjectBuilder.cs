@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize,
                                              ILinkBuilder linkBuilder,
-                                             IContextEntityProvider provider,
+                                             IResourceContextProvider provider,
                                              IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(provider, settingsProvider.Get())
         {
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         private ResourceObject GetOrBuildResourceObject(IIdentifiable parent, RelationshipAttribute relationship)
         {
             var type = parent.GetType();
-            var resourceName = _provider.GetContextEntity(type).EntityName;
+            var resourceName = _provider.GetResourceContext(type).EntityName;
             var entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
             if (entry == null)
             {

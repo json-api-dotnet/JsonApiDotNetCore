@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
         private readonly ISparseFieldsService _sparseFieldsService;
-        private readonly ContextEntity _currentRequestResource;
+        private readonly ResourceContext _currentRequestResource;
 
         public DefaultResourceService(
                 ISortService sortService,
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Services
                 ISparseFieldsService sparseFieldsService,
                 IPageService pageManager,
                 IResourceRepository<TResource, TId> repository,
-                IContextEntityProvider provider,
+                IResourceContextProvider provider,
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Services
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<DefaultResourceService<TResource, TId>>();
-            _currentRequestResource = provider.GetContextEntity<TResource>();
+            _currentRequestResource = provider.GetResourceContext<TResource>();
         }
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
@@ -325,7 +325,7 @@ namespace JsonApiDotNetCore.Services
     {
         public DefaultResourceService(ISortService sortService, IFilterService filterService, IResourceRepository<TResource, int> repository,
                                      IJsonApiOptions options, IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                     IPageService pageManager, IContextEntityProvider provider,
+                                     IPageService pageManager, IResourceContextProvider provider,
                                      IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
             : base(sortService, filterService, options, includeService, sparseFieldsService, pageManager, repository, provider, hookExecutor, loggerFactory)
         {

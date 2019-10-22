@@ -383,13 +383,13 @@ namespace UnitTests.ResourceHooks
         protected List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
-            var resourceContext = _resourceGraph.GetContextEntity<TodoItem>();
+            var resourceContext = _resourceGraph.GetResourceContext<TodoItem>();
             var splittedPath = chain.Split(QueryConstants.DOT);
             foreach (var requestedRelationship in splittedPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
                 parsedChain.Add(relationship);
-                resourceContext = _resourceGraph.GetContextEntity(relationship.DependentType);
+                resourceContext = _resourceGraph.GetResourceContext(relationship.DependentType);
             }
             return parsedChain;
         }

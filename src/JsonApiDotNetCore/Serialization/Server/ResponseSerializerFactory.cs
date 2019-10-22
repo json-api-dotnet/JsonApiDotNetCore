@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <summary>
-        /// Initializes the server serializer using the <see cref="ContextEntity"/>
+        /// Initializes the server serializer using the <see cref="ResourceContext"/>
         /// associated with the current request.
         /// </summary>
         public IJsonApiSerializer GetSerializer()

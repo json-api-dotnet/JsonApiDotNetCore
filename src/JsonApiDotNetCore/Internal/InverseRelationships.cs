@@ -29,10 +29,10 @@ namespace JsonApiDotNetCore.Internal
     /// <inheritdoc />
     public class InverseRelationships : IInverseRelationships
     {
-        private readonly IContextEntityProvider _provider;
+        private readonly IResourceContextProvider _provider;
         private readonly IDbContextResolver _resolver;
 
-        public InverseRelationships(IContextEntityProvider provider, IDbContextResolver resolver = null)
+        public InverseRelationships(IResourceContextProvider provider, IDbContextResolver resolver = null)
         {
             _provider = provider;
             _resolver = resolver;
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Internal
             {
                 DbContext context = _resolver.GetContext();
 
-                foreach (ContextEntity ce in _provider.GetContextEntities())
+                foreach (ResourceContext ce in _provider.GetContextEntities())
                 {
                     IEntityType meta = context.Model.FindEntityType(ce.EntityType);
                     if (meta == null) continue;

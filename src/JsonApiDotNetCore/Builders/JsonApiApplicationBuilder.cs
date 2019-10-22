@@ -149,7 +149,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             _services.AddSingleton<IResourceGraph>(resourceGraph);
-            _services.AddSingleton<IContextEntityProvider>(resourceGraph);
+            _services.AddSingleton<IResourceContextProvider>(resourceGraph);
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();

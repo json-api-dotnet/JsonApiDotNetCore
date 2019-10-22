@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Managers
 {
     class CurrentRequest : ICurrentRequest
     {
-        private ContextEntity _contextEntity;
+        private ResourceContext _contextEntity;
         public string BasePath { get; set; }
         public bool IsRelationshipPath { get; set; }
         public RelationshipAttribute RequestRelationship { get; set; }
@@ -15,12 +15,12 @@ namespace JsonApiDotNetCore.Managers
         /// The main resource of the request.
         /// </summary>
         /// <returns></returns>
-        public ContextEntity GetRequestResource()
+        public ResourceContext GetRequestResource()
         {
             return _contextEntity;
         }
 
-        public void SetRequestResource(ContextEntity primaryResource)
+        public void SetRequestResource(ResourceContext primaryResource)
         {
             _contextEntity = primaryResource;
         }

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class ContextEntity
+    public class ResourceContext
     {
         /// <summary>
         /// The exposed resource name

@@ -163,11 +163,11 @@ namespace JsonApiDotNetCore.Middleware
         /// Gets the current entity that we need for serialization and deserialization.
         /// </summary>
         /// <returns></returns>
-        private ContextEntity GetCurrentEntity()
+        private ResourceContext GetCurrentEntity()
         {
             var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
             var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
-            var requestResource = _resourceGraph.GetContextEntity(resourceType);
+            var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
                 return requestResource;
             var rd = _httpContext.GetRouteData().Values;

@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization.Server
                                   IIncludedResourceObjectBuilder includedBuilder,
                                   IFieldsToSerialize fieldsToSerialize,
                                   IResourceObjectBuilder resourceObjectBuilder,
-                                  IContextEntityProvider provider) :
+                                  IResourceContextProvider provider) :
             base(resourceObjectBuilder, provider)
         {
             _fieldsToSerialize = fieldsToSerialize;
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </summary>
         private void AddTopLevelObjects(Document document)
         {
-            document.Links = _linkBuilder.GetTopLevelLinks(_provider.GetContextEntity<TResource>());
+            document.Links = _linkBuilder.GetTopLevelLinks(_provider.GetResourceContext<TResource>());
             document.Meta = _metaBuilder.GetMeta();
             document.Included = _includedBuilder.Build();
         }

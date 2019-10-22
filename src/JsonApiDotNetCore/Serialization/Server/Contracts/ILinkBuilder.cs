@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// Builds the links object that is included in the top-level of the document.
         /// </summary>
         /// <param name="primaryResource">The primary resource of the response body</param>
-        TopLevelLinks GetTopLevelLinks(ContextEntity primaryResource);
+        TopLevelLinks GetTopLevelLinks(ResourceContext primaryResource);
         /// <summary>
         /// Builds the links object for resources in the primary data.
         /// </summary>
