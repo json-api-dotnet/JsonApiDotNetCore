@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Query
                     throw CannotIncludeError(resourceContext, relationshipName);
 
                 parsedChain.Add(relationship);
-                resourceContext = _resourceGraph.GetResourceContext(relationship.DependentType);
+                resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             }
             _includedChains.Add(parsedChain);
         }

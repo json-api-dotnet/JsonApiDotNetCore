@@ -213,7 +213,7 @@ namespace JsonApiDotNetCore.Serialization
             }
             else
             {
-                var relatedInstance = attr.DependentType.New<IIdentifiable>();
+                var relatedInstance = attr.RightType.New<IIdentifiable>();
                 relatedInstance.StringId = relatedId;
                 attr.SetValue(entity, relatedInstance);
             }
@@ -230,11 +230,11 @@ namespace JsonApiDotNetCore.Serialization
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
                 var relatedResources = relationshipData.ManyData.Select(rio =>
                 {
-                    var relatedInstance = attr.DependentType.New<IIdentifiable>();
+                    var relatedInstance = attr.RightType.New<IIdentifiable>();
                     relatedInstance.StringId = rio.Id;
                     return relatedInstance;
                 });
-                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.DependentType);
+                var convertedCollection = TypeHelper.ConvertCollection(relatedResources, attr.RightType);
                 attr.SetValue(entity, convertedCollection);
             }
 

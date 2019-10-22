@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Query
             _selectedRelationshipFields.TryGetValue(relationship, out var fields);
             return fields;
         }
-        
+
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {   // expected: articles?fields=prop1,prop2
@@ -83,10 +83,10 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship)
         {
-            var relationProperty = _resourceGraph.GetResourceContext(relationship.DependentType);
+            var relationProperty = _resourceGraph.GetResourceContext(relationship.RightType);
             var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
             if (attr == null)
-                throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
+                throw new JsonApiException(400, $"'{relationship.RightType.Name}' does not contain '{field}'.");
 
             if (!_selectedRelationshipFields.TryGetValue(relationship, out var registeredFields))
                 _selectedRelationshipFields.Add(relationship, registeredFields = new List<AttrAttribute>());

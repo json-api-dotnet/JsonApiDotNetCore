@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Extensions
             return (IOrderedQueryable<TSource>)result;
         }
 
-        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperation  operation)
+        private static Expression GetFilterExpressionLambda(Expression left, Expression right, FilterOperation operation)
         {
             Expression body;
             switch (operation)
@@ -259,7 +259,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
-                var relatedType = filter.Relationship.DependentType;
+                var relatedType = filter.Relationship.RightType;
                 property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
                 if (property == null)
                     throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");

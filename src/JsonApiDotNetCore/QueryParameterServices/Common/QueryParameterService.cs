@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Query
         {
             AttrAttribute attribute;
             if (relationship != null)
-                attribute = _resourceGraph.GetAttributes(relationship.DependentType).FirstOrDefault(a => a.Is(target));
+                attribute = _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => a.Is(target));
             else
                 attribute = _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
 

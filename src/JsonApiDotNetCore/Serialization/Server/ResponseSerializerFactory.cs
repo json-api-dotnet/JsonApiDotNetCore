@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         private Type GetDocumentPrimaryType()
         {
             if (_currentRequest.RequestRelationship != null && !_currentRequest.IsRelationshipPath)
-                return _currentRequest.RequestRelationship.DependentType;
+                return _currentRequest.RequestRelationship.RightType;
 
             return _currentRequest.GetRequestResource()?.ResourceType;
         }

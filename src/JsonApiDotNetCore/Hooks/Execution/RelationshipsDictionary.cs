@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type relatedType)
         {
-            return this.Where(p => p.Key.DependentType == relatedType).ToDictionary(p => p.Key, p => p.Value);
+            return this.Where(p => p.Key.RightType == relatedType).ToDictionary(p => p.Key, p => p.Value);
         }
 
         /// <inheritdoc />

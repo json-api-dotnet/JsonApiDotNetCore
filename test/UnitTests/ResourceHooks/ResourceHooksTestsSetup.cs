@@ -389,7 +389,7 @@ namespace UnitTests.ResourceHooks
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
                 parsedChain.Add(relationship);
-                resourceContext = _resourceGraph.GetResourceContext(relationship.DependentType);
+                resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             }
             return parsedChain;
         }

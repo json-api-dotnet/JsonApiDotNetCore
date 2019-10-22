@@ -93,7 +93,7 @@ namespace UnitTests
             var primaryResource = GetResourceContext<Article>(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
-            var attr = new HasOneAttribute(links: relationship) { DependentType = typeof(Author), PublicRelationshipName = "author" };
+            var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
 
             // act
             var links = builder.GetRelationshipLinks(attr, new Article { Id = 123 });

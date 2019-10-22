@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
-                var values = TypeHelper.CreateListFor(hasManyAttr.DependentType);
+                var values = TypeHelper.CreateListFor(hasManyAttr.RightType);
                 foreach (var rio in data.ManyData)
                     values.Add(ParseIncludedRelationship(hasManyAttr, rio));
 
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// </summary>
         private IIdentifiable ParseIncludedRelationship(RelationshipAttribute relationshipAttr, ResourceIdentifierObject relatedResourceIdentifier)
         {
-            var relatedInstance = relationshipAttr.DependentType.New<IIdentifiable>();
+            var relatedInstance = relationshipAttr.RightType.New<IIdentifiable>();
             relatedInstance.StringId = relatedResourceIdentifier.Id;
 
             var includedResource = GetLinkedResource(relatedResourceIdentifier);
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Serialization.Client
 
             var contextEntity = _provider.GetResourceContext(relatedResourceIdentifier.Type);
             if (contextEntity == null)
-                throw new InvalidOperationException($"Included type '{relationshipAttr.DependentType}' is not a registered json:api resource.");
+                throw new InvalidOperationException($"Included type '{relationshipAttr.RightType}' is not a registered json:api resource.");
 
             SetAttributes(relatedInstance, includedResource.Attributes, contextEntity.Attributes);
             SetRelationships(relatedInstance, includedResource.Relationships, contextEntity.Relationships);

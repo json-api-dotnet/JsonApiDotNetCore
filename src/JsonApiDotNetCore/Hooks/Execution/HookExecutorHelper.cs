@@ -71,9 +71,9 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc/>
-        public IResourceHookContainer<TEntity> GetResourceHookContainer<TEntity>(ResourceHook hook = ResourceHook.None) where TEntity : class, IIdentifiable
+        public IResourceHookContainer<TResource> GetResourceHookContainer<TResource>(ResourceHook hook = ResourceHook.None) where TResource : class, IIdentifiable
         {
-            return (IResourceHookContainer<TEntity>)GetResourceHookContainer(typeof(TEntity), hook);
+            return (IResourceHookContainer<TResource>)GetResourceHookContainer(typeof(TResource), hook);
         }
 
         public IEnumerable LoadDbValues(PrincipalType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] inclusionChain)
@@ -89,12 +89,12 @@ namespace JsonApiDotNetCore.Hooks
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
         }
 
-        public HashSet<TEntity> LoadDbValues<TEntity>(IEnumerable<TEntity> entities, ResourceHook hook, params RelationshipAttribute[] relationships) where TEntity : class, IIdentifiable
+        public HashSet<TResource> LoadDbValues<TResource>(IEnumerable<TResource> entities, ResourceHook hook, params RelationshipAttribute[] relationships) where TResource : class, IIdentifiable
         {
-            var entityType = typeof(TEntity);
-            var dbValues = LoadDbValues(entityType, entities, hook, relationships)?.Cast<TEntity>();
+            var entityType = typeof(TResource);
+            var dbValues = LoadDbValues(entityType, entities, hook, relationships)?.Cast<TResource>();
             if (dbValues == null) return null;
-            return new HashSet<TEntity>(dbValues);
+            return new HashSet<TResource>(dbValues);
         }
 
         public bool ShouldLoadDbValues(Type entityType, ResourceHook hook)
@@ -131,16 +131,16 @@ namespace JsonApiDotNetCore.Hooks
             return discovery;
         }
 
-        IEnumerable<TEntity> GetWhereAndInclude<TEntity, TId>(IEnumerable<TId> ids, RelationshipAttribute[] inclusionChain) where TEntity : class, IIdentifiable<TId>
+        IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] inclusionChain) where TResource : class, IIdentifiable<TId>
         {
-            var repo = GetRepository<TEntity, TId>();
+            var repo = GetRepository<TResource, TId>();
             var query = repo.Get().Where(e => ids.Contains(e.Id));
             return repo.Include(query, inclusionChain).ToList();
         }
 
-        IResourceReadRepository<TEntity, TId> GetRepository<TEntity, TId>() where TEntity : class, IIdentifiable<TId>
+        IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
         {
-            return _genericProcessorFactory.GetProcessor<IResourceReadRepository<TEntity, TId>>(typeof(IResourceReadRepository<,>), typeof(TEntity), typeof(TId));
+            return _genericProcessorFactory.GetProcessor<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
         }
 
 

@@ -26,19 +26,6 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// The related entity type. This does not necessarily match the navigation property type.
         /// In the case of a HasMany relationship, this value will be the generic argument type.
-        /// </summary>
-        /// 
-        /// <example>
-        /// <code>
-        /// public List&lt;Tag&gt; Tags { get; sit; } // Type => Tag
-        /// </code>
-        /// </example>
-        [Obsolete("Use property DependentType")]
-        public Type Type { get { return DependentType; } internal set { DependentType = value; } }
-
-        /// <summary>
-        /// The related entity type. This does not necessarily match the navigation property type.
-        /// In the case of a HasMany relationship, this value will be the generic argument type.
         /// 
         /// The technical language as used in EF Core is used here (dependent vs principal).
         /// </summary>
@@ -48,12 +35,12 @@ namespace JsonApiDotNetCore.Models
         /// public List&lt;Tag&gt; Tags { get; set; } // Type => Tag
         /// </code>
         /// </example>
-        public Type DependentType { get; internal set; }
+        public Type RightType { get; internal set; }
 
         /// <summary>
         /// The parent entity type. The technical language as used in EF Core is used here (dependent vs principal).
         /// </summary>
-        public Type PrincipalType { get; internal set; }
+        public Type LeftType { get; internal set; }
 
         public bool IsHasMany => GetType() == typeof(HasManyAttribute) || GetType().Inherits(typeof(HasManyAttribute));
         public bool IsHasOne => GetType() == typeof(HasOneAttribute);
@@ -84,9 +71,9 @@ namespace JsonApiDotNetCore.Models
             bool equalRelationshipName = PublicRelationshipName.Equals(attr.PublicRelationshipName);
 
             bool equalPrincipalType = true;
-            if (PrincipalType != null)
+            if (LeftType != null)
             {
-                equalPrincipalType = PrincipalType.Equals(attr.PrincipalType);
+                equalPrincipalType = LeftType.Equals(attr.LeftType);
             }
             return IsHasMany == attr.IsHasMany && equalRelationshipName && equalPrincipalType;
         }

@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Identifiable) or it is the righthand side (when the jointable is not identifiable)
         /// </summary>
         public Type DependentType { get; private set; }
-        public Type PrincipalType { get { return Attribute.PrincipalType; } }
+        public Type PrincipalType { get { return Attribute.LeftType; } }
         public bool IsContextRelation { get; private set; }
 
         public RelationshipAttribute Attribute { get; set; }

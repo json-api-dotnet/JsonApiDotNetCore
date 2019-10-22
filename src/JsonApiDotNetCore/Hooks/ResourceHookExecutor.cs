@@ -215,10 +215,10 @@ namespace JsonApiDotNetCore.Hooks
         void RecursiveBeforeRead(List<RelationshipAttribute> relationshipChain, ResourcePipeline pipeline, List<PrincipalType> calledContainers)
         {
             var relationship = relationshipChain.First();
-            if (!calledContainers.Contains(relationship.DependentType))
+            if (!calledContainers.Contains(relationship.RightType))
             {
-                calledContainers.Add(relationship.DependentType);
-                var container = _executorHelper.GetResourceHookContainer(relationship.DependentType, ResourceHook.BeforeRead);
+                calledContainers.Add(relationship.RightType);
+                var container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
                 if (container != null)
                     CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
             }
@@ -306,7 +306,7 @@ namespace JsonApiDotNetCore.Hooks
                     /// the root layer is ALWAYS homogenous, so we safely assume 
                     /// that for every relationship to the previous layer, the 
                     /// principal type is the same.
-                    PrincipalType principalEntityType = currenEntitiesGrouped.First().Key.PrincipalType;
+                    PrincipalType principalEntityType = currenEntitiesGrouped.First().Key.LeftType;
                     FireForAffectedImplicits(principalEntityType, currentEntitiesGroupedInverse, pipeline);
                 }
             }
@@ -403,8 +403,8 @@ namespace JsonApiDotNetCore.Hooks
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
-                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.PrincipalType);
-                prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.PrincipalType, replaced);
+                var replaced = prevLayerRelationships[key].Cast<IIdentifiable>().Select(entity => dbValues.Single(dbEntity => dbEntity.StringId == entity.StringId)).Cast(key.LeftType);
+                prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.LeftType, replaced);
             }
             return prevLayerRelationships;
         }

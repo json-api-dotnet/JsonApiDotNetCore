@@ -270,7 +270,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 return throughAttr.ThroughType;
             }
-            return attr.DependentType;
+            return attr.RightType;
         }
 
         void AddToRelationshipGroup(Dictionary<RelationshipProxy, List<IIdentifiable>> target, RelationshipProxy proxy, IEnumerable<IIdentifiable> newEntities)
