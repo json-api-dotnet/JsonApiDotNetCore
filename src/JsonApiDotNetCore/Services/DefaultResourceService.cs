@@ -136,7 +136,7 @@ namespace JsonApiDotNetCore.Services
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
-            var entityQuery = _repository.Include(_repository.Get(id), relationship);
+            var entityQuery = _repository.Include(_repository.Get(id), new RelationshipAttribute[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null) // this does not make sense. If the parent entity is not found, this error is thrown?
                 throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)
         {
             var relationship = GetRelationship(relationshipName);
-            var entityQuery = _repository.Include(_repository.Get(id), relationship);
+            var entityQuery = _repository.Include(_repository.Get(id), new RelationshipAttribute[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");

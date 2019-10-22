@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Extensions
             return CallGenericWhereMethod(source, filterQuery);
         }
 
-        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, AttrAttribute[] columns)
+        public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<AttrAttribute> columns)
             => CallGenericSelectMethod(source, columns.Select(attr => attr.InternalAttributeName).ToList());
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)

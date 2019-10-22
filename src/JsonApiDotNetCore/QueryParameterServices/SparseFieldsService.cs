@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Query
                 // that is equal to the resource name, like with self-referering data types (eg directory structures)
                 // if not, no longer support this type of sparse field selection.
                 if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
-                    throw new JsonApiException(400, $"Use \"?fields=...\" instead of \"fields[{navigation}]\":" +
+                    throw new JsonApiException(400, $"Use '?fields=...' instead of 'fields[{navigation}]':" +
                         $" the square bracket navigations is now reserved " +
                         $"for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
 
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Query
 
                 var relationship = _requestResource.Relationships.SingleOrDefault(a => a.Is(navigation));
                 if (relationship == null)
-                    throw new JsonApiException(400, $"\"{navigation}\" in \"fields[{navigation}]\" is not a valid relationship of {_requestResource.ResourceName}");
+                    throw new JsonApiException(400, $"'{navigation}' in 'fields[{navigation}]' is not a valid relationship of {_requestResource.ResourceName}");
 
                 foreach (var field in fields)
                     RegisterRelatedResourceField(field, relationship);

@@ -45,7 +45,7 @@ namespace UnitTests.Services
             // arrange
             const int id = 1;
             const string relationshipName = "collection";
-            var relationship = new HasOneAttribute(relationshipName);
+            var relationship = new RelationshipAttribute[] { new HasOneAttribute(relationshipName) };
 
             var todoItem = new TodoItem();
             var query = new List<TodoItem> { todoItem }.AsQueryable();
@@ -71,7 +71,7 @@ namespace UnitTests.Services
             // arrange
             const int id = 1;
             const string relationshipName = "collection";
-            var relationship = new HasOneAttribute(relationshipName);
+            var relationship = new RelationshipAttribute[] { new HasOneAttribute(relationshipName) };
 
             var todoItem = new TodoItem
             {

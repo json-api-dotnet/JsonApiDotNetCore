@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Data
         /// <summary>
         /// Apply fields to the provided queryable
         /// </summary>
-        IQueryable<TResource> Select(IQueryable<TResource> entities, params AttrAttribute[] fields);
+        IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields);
         /// <summary>
         /// Include a relationship in the query
         /// </summary>
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Data
         /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
         /// </code>
         /// </example>
-        IQueryable<TResource> Include(IQueryable<TResource> entities, params RelationshipAttribute[] inclusionChain);
+        IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain);
         /// <summary>
         /// Apply a filter to the provided queryable
         /// </summary>

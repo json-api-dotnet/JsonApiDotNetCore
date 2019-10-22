@@ -55,9 +55,9 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TResource> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, params AttrAttribute[] fields)
+        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields = null)
         {
-            if (fields.Any())
+            if (fields != null && fields.Any())
                 return entities.Select(fields);
 
             return entities;
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCore.Data
                 var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(entity);
                 if (relationshipValue == null)
                     return null;
-                return GetTrackedHasOneRelationshipValue(relationshipValue, hasOneAttr, ref wasAlreadyAttached);
+                return GetTrackedHasOneRelationshipValue(relationshipValue, ref wasAlreadyAttached);
             }
 
             IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         // helper method used in GetTrackedRelationshipValue. See comments there.
-        private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, HasOneAttribute hasOneAttr, ref bool wasAlreadyAttached)
+        private IIdentifiable GetTrackedHasOneRelationshipValue(IIdentifiable relationshipValue, ref bool wasAlreadyAttached)
         {
             var tracked = AttachOrGetTracked(relationshipValue);
             if (tracked != null) wasAlreadyAttached = true;
@@ -282,9 +282,9 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
-        public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, params RelationshipAttribute[] inclusionChain)
+        public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain = null)
         {
-            if (!inclusionChain.Any())
+            if (inclusionChain == null || !inclusionChain.Any())
                 return entities;
 
             string internalRelationshipPath = null;
