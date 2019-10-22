@@ -368,27 +368,6 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// The relationshipValue parameter contains the dependent side of the relationship (Tags).
-        /// We can't directly add them to the left entity (Article): we need to 
-        /// use the join table (ArticleTags). This methods assigns the relationship value to entity
-        /// by taking care of that
-        /// </summary>
-        private void AssignHasManyThrough(TResource entity, HasManyThroughAttribute hasManyThrough, IList relationshipValue)
-        {
-            var pointers = relationshipValue.Cast<IIdentifiable>();
-            var throughRelationshipCollection = Activator.CreateInstance(hasManyThrough.ThroughProperty.PropertyType) as IList;
-            hasManyThrough.ThroughProperty.SetValue(entity, throughRelationshipCollection);
-
-            foreach (var pointer in pointers)
-            {
-                var throughInstance = Activator.CreateInstance(hasManyThrough.ThroughType);
-                hasManyThrough.LeftProperty.SetValue(throughInstance, entity);
-                hasManyThrough.RightProperty.SetValue(throughInstance, pointer);
-                throughRelationshipCollection.Add(throughInstance);
-            }
-        }
-
-        /// <summary>
         /// Given a iidentifiable relationshipvalue, verify if an entity of the underlying 
         /// type with the same ID is already attached to the dbContext, and if so, return it.
         /// If not, attach the relationship value to the dbContext.
@@ -423,19 +402,15 @@ namespace JsonApiDotNetCore.Data
     {
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IResourceGraph resourceContextProvider,
+                                       IResourceGraph resourceGraph,
                                        IGenericServiceFactory genericServiceFactory)
-            : base(targetedFields, contextResolver, resourceContextProvider, genericServiceFactory)
-        {
-        }
+            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory) { }
 
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
-                                       IResourceGraph resourceContextProvider,
+                                       IResourceGraph resourceGraph,
                                        IGenericServiceFactory genericServiceFactory,
                                        ILoggerFactory loggerFactory = null)
-            : base(targetedFields, contextResolver, resourceContextProvider, genericServiceFactory, loggerFactory)
-        {
-        }
+            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) { }
     }
 }
