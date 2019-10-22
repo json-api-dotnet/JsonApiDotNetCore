@@ -263,7 +263,7 @@ namespace JsonApiDotNetCore.Services
         {
             var fields = _sparseFieldsService.Get();
             if (fields != null && fields.Any())
-                entities = _repository.Select(entities, fields);
+                entities = _repository.Select(entities, fields.ToArray());
 
             return entities;
         }
@@ -276,7 +276,7 @@ namespace JsonApiDotNetCore.Services
         private async Task<TResource> GetWithRelationshipsAsync(TId id)
         {
             var sparseFieldset = _sparseFieldsService.Get();
-            var query = _repository.Select(_repository.Get(id), sparseFieldset);
+            var query = _repository.Select(_repository.Get(id), sparseFieldset.ToArray());
 
             foreach (var chain in _includeService.Get())
                 query = _repository.Include(query, chain.ToArray());

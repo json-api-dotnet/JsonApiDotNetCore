@@ -55,9 +55,9 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TResource> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, List<AttrAttribute> fields)
+        public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, params AttrAttribute[] fields)
         {
-            if (fields?.Count > 0)
+            if (fields.Any())
                 return entities.Select(fields);
 
             return entities;
@@ -256,16 +256,20 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            // TODO: it would be better to let this be determined within the relationship attribute...
-            // need to think about the right way to do that since HasMany doesn't need to think about this
-            // and setting the HasManyThrough.Type to the join type (ArticleTag instead of Tag) for this changes the semantics
-            // of the property...
-            var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
-                ? hasManyThrough.ThroughType
-                : relationship.RightType;
+            if (relationship is HasManyThroughAttribute hasManyThrough)
+            {
+                var helper = _genericProcessorFactory.GetProcessor<IHasManyThroughUpdateHelper>(typeof(HasManyThroughUpdateHelper<>), hasManyThrough.ThroughType);
+                await helper.UpdateAsync((IIdentifiable)parent, hasManyThrough, relationshipIds);
+                return;
+            }
 
-            var genericProcessor = _genericProcessorFactory.GetProcessor<IGenericProcessor>(typeof(GenericProcessor<>), typeToUpdate);
-            await genericProcessor.UpdateRelationshipsAsync(parent, relationship, relationshipIds);
+            var context = _context.Set(relationship.RightType);
+            var updatedValue = relationship is HasManyAttribute
+                ? context.Where(e => relationshipIds.Contains(((IIdentifiable)e).StringId)).Cast(relationship.RightType)
+                : context.FirstOrDefault(e => relationshipIds.First() == ((IIdentifiable)e).StringId);
+
+            relationship.SetValue(parent, updatedValue);
+            await _context.SaveChangesAsync();
         }
 
         /// <inheritdoc />

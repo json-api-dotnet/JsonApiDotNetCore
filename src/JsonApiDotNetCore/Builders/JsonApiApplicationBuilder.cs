@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<IGenericProcessorFactory, GenericProcessorFactory>();
-            _services.AddScoped(typeof(GenericProcessor<>));
+            _services.AddScoped(typeof(HasManyThroughUpdateHelper<>));
             _services.AddScoped<IQueryParameterDiscovery, QueryParameterDiscovery>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();

@@ -73,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var query = _dbContext
                 .TodoItems
                 .Where(t => t.Id == todoItem.Id)
-                .Select(_resourceGraph.GetAttributes<TodoItem>(e => new { e.Id, e.Description, e.CreatedDate, e.AchievedDate } ).ToList());
+                .Select(_resourceGraph.GetAttributes<TodoItem>(e => new { e.Id, e.Description, e.CreatedDate, e.AchievedDate } ).ToArray());
 
             var resultSql = StringExtensions.Normalize(query.ToSql());
             var result = await query.FirstAsync();
