@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <NetCoreAppVersion>netcoreapp2.2</NetCoreAppVersion>
+    <NetCoreAppVersion>netcoreapp3.0</TargetFramework>
     <NetStandardVersion>netstandard2.0</NetStandardVersion>
     <AspNetCoreVersion>2.2.*</AspNetCoreVersion>
     <MicrosoftLoggingVersion>2.2.*</MicrosoftLoggingVersion>
