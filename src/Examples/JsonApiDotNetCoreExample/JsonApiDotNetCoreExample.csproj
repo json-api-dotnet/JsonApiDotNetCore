@@ -5,6 +5,7 @@
     <AssemblyName>JsonApiDotNetCoreExample</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>JsonApiDotNetCoreExample</PackageId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
