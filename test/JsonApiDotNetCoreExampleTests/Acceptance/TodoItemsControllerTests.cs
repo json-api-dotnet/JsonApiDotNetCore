@@ -200,7 +200,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Act
             var response = await _fixture.Client.SendAsync(request);
-
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
