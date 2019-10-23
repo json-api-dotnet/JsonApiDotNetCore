@@ -7,26 +7,20 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JsonApiDotNetCoreExample.Services
 {
     public class CustomArticleService : DefaultResourceService<Article>
     {
-        public CustomArticleService(ISortService sortService,
-                                    IFilterService filterService,
-                                    IResourceRepository<Article, int> repository,
+        public CustomArticleService(IEnumerable<IQueryParameterService> queryParameters,
                                     IJsonApiOptions options,
-                                    IIncludeService includeService,
-                                    ISparseFieldsService sparseFieldsService,
-                                    IPageService pageService,
+                                    IResourceRepository<Article, int> repository,
                                     IResourceContextProvider provider,
                                     IResourceHookExecutor hookExecutor = null,
                                     ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, repository, options, includeService, sparseFieldsService,
-                   pageService, provider, hookExecutor, loggerFactory)
-        {
-        }
+            : base(queryParameters, options, repository, provider, hookExecutor, loggerFactory) { }
 
         public override async Task<Article> GetAsync(int id)
         {

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -34,28 +35,25 @@ namespace JsonApiDotNetCore.Services
         private readonly ResourceContext _currentRequestResource;
 
         public DefaultResourceService(
-                ISortService sortService,
-                IFilterService filterService,
+                IEnumerable<IQueryParameterService> queryParameters,
                 IJsonApiOptions options,
-                IIncludeService includeService,
-                ISparseFieldsService sparseFieldsService,
-                IPageService pageManager,
                 IResourceRepository<TResource, TId> repository,
                 IResourceContextProvider provider,
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
-            _includeService = includeService;
-            _sparseFieldsService = sparseFieldsService;
-            _pageManager = pageManager;
+            _includeService = queryParameters.FirstOrDefault<IIncludeService>();
+            _sparseFieldsService = queryParameters.FirstOrDefault<ISparseFieldsService>();
+            _pageManager = queryParameters.FirstOrDefault<IPageService>();
+            _sortService = queryParameters.FirstOrDefault<ISortService>();
+            _filterService = queryParameters.FirstOrDefault<IFilterService>();
             _options = options;
-            _sortService = sortService;
-            _filterService = filterService;
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<DefaultResourceService<TResource, TId>>();
             _currentRequestResource = provider.GetResourceContext<TResource>();
         }
+
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {
@@ -323,12 +321,12 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceService(ISortService sortService, IFilterService filterService, IResourceRepository<TResource, int> repository,
-                                     IJsonApiOptions options, IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                     IPageService pageManager, IResourceContextProvider provider,
-                                     IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, options, includeService, sparseFieldsService, pageManager, repository, provider, hookExecutor, loggerFactory)
-        {
-        }
+        public DefaultResourceService(IEnumerable<IQueryParameterService> queryParameters,
+                                      IJsonApiOptions options,
+                                      IResourceRepository<TResource, int> repository,
+                                      IResourceContextProvider provider,
+                                      IResourceHookExecutor hookExecutor = null,
+                                      ILoggerFactory loggerFactory = null)
+            : base(queryParameters, options, repository, provider, hookExecutor, loggerFactory) { }
     }
 }

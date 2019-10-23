@@ -97,7 +97,7 @@ namespace UnitTests.Services
 
         private DefaultResourceService<TodoItem> GetService()
         {
-            return new DefaultResourceService<TodoItem>(null, null, _repositoryMock.Object, new JsonApiOptions(), null, null, _pgsMock.Object, _resourceGraph);
+            return new DefaultResourceService<TodoItem>(new List<IQueryParameterService>(), new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
         }
     }
 }
