@@ -13,7 +13,6 @@ using JsonApiDotNetCore.Services;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-
 namespace Benchmarks.Serialization
 {
     [MarkdownExporter]

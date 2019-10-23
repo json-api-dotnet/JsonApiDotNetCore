@@ -57,7 +57,7 @@ namespace NoEntityFrameworkExample
 
             context.Database.EnsureCreated();
 
-            app.UseMvc();
+            app.UseJsonApi();
         }
     }
 }

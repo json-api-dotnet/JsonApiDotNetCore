@@ -46,13 +46,12 @@ namespace NoEntityFrameworkTests
                 .AddResource<Person>()
                 .AddResource<Author>()
                 .AddResource<Passport>()
-                .AddResource<TodoItemClient>("todo-items")
+                .AddResource<TodoItemClient>("custom-todo-items")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
             return new ResponseDeserializer(resourceGraph);
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));
-
 
         public void Dispose()
         {
