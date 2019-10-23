@@ -38,33 +38,7 @@ namespace UnitTests.Data
             _targetedFieldsMock = new Mock<ITargetedFields>();
         }
 
-        [Fact]
-        public async Task UpdateAsync_Updates_Attributes_In_AttributesToUpdate()
-        {
-            // arrange
-            var todoItemUpdates = new TodoItem
-            {
-                Id = _todoItem.Id,
-                Description = Guid.NewGuid().ToString()
-            };
 
-            var descAttr = new AttrAttribute("description", "Description")
-            {
-                PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
-            };
-            _targetedFieldsMock.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
-            _targetedFieldsMock.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
-
-            var repository = GetRepository();
-
-            // act
-            var updatedItem = await repository.UpdateAsync(todoItemUpdates);
-
-            // assert
-            Assert.NotNull(updatedItem);
-            Assert.Equal(_todoItem.Ordinal, updatedItem.Ordinal);
-            Assert.Equal(todoItemUpdates.Description, updatedItem.Description);
-        }
 
         private DefaultResourceRepository<TodoItem> GetRepository()
         {

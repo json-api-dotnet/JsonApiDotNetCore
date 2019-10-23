@@ -27,10 +27,6 @@
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-xunit" Version="$(XUnitVersion)" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Repositories\" />
     <Folder Include="Helpers\Models\" />
