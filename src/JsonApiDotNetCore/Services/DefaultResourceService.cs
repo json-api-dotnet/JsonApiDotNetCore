@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -41,17 +42,18 @@ namespace JsonApiDotNetCore.Services
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
-            _includeService = queryParameters.FirstOrDefault(qp => qp is IIncludeService) as IIncludeService;
-            _sparseFieldsService = queryParameters.FirstOrDefault(qp => qp is ISparseFieldsService) as ISparseFieldsService;
-            _pageManager = queryParameters.FirstOrDefault(qp => qp is IPageService) as IPageService;
-            _sortService = queryParameters.FirstOrDefault(qp => qp is ISortService) as ISortService;
-            _filterService = queryParameters.FirstOrDefault(qp => qp is IFilterService) as IFilterService;
+            _includeService = queryParameters.FirstOrDefault<IIncludeService>();
+            _sparseFieldsService = queryParameters.FirstOrDefault<ISparseFieldsService>();
+            _pageManager = queryParameters.FirstOrDefault<IPageService>();
+            _sortService = queryParameters.FirstOrDefault<ISortService>();
+            _filterService = queryParameters.FirstOrDefault<IFilterService>();
             _options = options;
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<DefaultResourceService<TResource, TId>>();
             _currentRequestResource = provider.GetResourceContext<TResource>();
         }
+
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {

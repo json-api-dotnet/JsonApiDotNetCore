@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
 {
+
     // ReSharper disable once InconsistentNaming
     public static class IQueryableExtensions
     {
