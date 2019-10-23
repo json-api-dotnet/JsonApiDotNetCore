@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup>
     <NetCoreAppVersion>netcoreapp3.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.1</NetStandardVersion>
