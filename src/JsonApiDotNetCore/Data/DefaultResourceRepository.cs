@@ -307,10 +307,13 @@ namespace JsonApiDotNetCore.Data
             }
 
             // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
-            int numberOfEntities = await this.CountAsync(entities);
+
+
+            entities = entities.Reverse();
+
 
             // may be negative
-            int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
+            int virtualFirstIndex = pageSize * Math.Abs(pageNumber);
             int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
 
             return await ToListAsync(entities
