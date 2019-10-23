@@ -1,21 +1,16 @@
 <Project>
 
   <PropertyGroup>
-    <NetCoreAppVersion>netcoreapp2.1</NetCoreAppVersion>
+    <NetCoreAppVersion>netcoreapp2.2</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.0</NetStandardVersion>
-
-    <AspNetCoreVersion>2.*</AspNetCoreVersion>
-
-    <MicrosoftLoggingVersion>2.*</MicrosoftLoggingVersion>
-    <MicrosoftConfigurationVersion>2.*</MicrosoftConfigurationVersion>
-    <MicrosoftOptionsVersion>2.*</MicrosoftOptionsVersion>
-
-    <EFCoreVersion>2.*</EFCoreVersion>
-    <EFCoreToolsVersion>2.*</EFCoreToolsVersion>
-
+    <AspNetCoreVersion>2.2.*</AspNetCoreVersion>
+    <MicrosoftLoggingVersion>2.2.*</MicrosoftLoggingVersion>
+    <MicrosoftConfigurationVersion>2.2.*</MicrosoftConfigurationVersion>
+    <MicrosoftOptionsVersion>2.2.*</MicrosoftOptionsVersion>
+    <EFCoreVersion>2.2.*</EFCoreVersion>
+    <EFCoreToolsVersion>2.2.*</EFCoreToolsVersion>
     <NpgsqlVersion>4.0.0</NpgsqlVersion>
     <NpgsqlPostgreSQLVersion>2.1.0</NpgsqlPostgreSQLVersion>
-
     <TuplesVersion>4.5.0</TuplesVersion>
   </PropertyGroup>
 
@@ -26,5 +21,4 @@
     <BogusVersion>22.1.2</BogusVersion>
     <MoqVersion>4.8.3</MoqVersion>
   </PropertyGroup>
-
 </Project>
