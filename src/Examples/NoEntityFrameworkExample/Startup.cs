@@ -32,31 +32,28 @@ namespace NoEntityFrameworkExample
         {
             // Add framework services.
             var mvcBuilder = services.AddMvcCore();
-
-            services.AddJsonApi(
-                options =>  options.Namespace = "api/v1",
-                resources: resources => resources.AddResource<TodoItem>("custom-todo-items"),
-                mvcBuilder: mvcBuilder
-            );
-
+            services.AddLogging(builder =>
+                {
+                    builder.AddConfiguration(Configuration.GetSection("Logging"));
+                    builder.AddConsole();
+                }).AddJsonApi(
+                    options =>  options.Namespace = "api/v1",
+                    resources: resources => resources.AddResource<TodoItem>("custom-todo-items"),
+                    mvcBuilder: mvcBuilder
+                );
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
-
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
             optionsBuilder.UseNpgsql(Configuration.GetValue<string>("Data:DefaultConnection")); 
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<DbContextOptions<AppDbContext>>(optionsBuilder.Options);
+            services.AddSingleton(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
-
             return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, AppDbContext context)
+        public void Configure(IApplicationBuilder app, AppDbContext context)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-
             context.Database.EnsureCreated();
-
             app.UseJsonApi();
         }
     }
