@@ -345,10 +345,11 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task<IReadOnlyList<TResource>> ToListAsync(IQueryable<TResource> entities)
         {
-            if(entities is IAsyncEnumerable<TResource>)
+            if (entities is IAsyncEnumerable<TResource>)
             {
                 return await entities.ToListAsync();
-            } else
+            }
+            else
             {
                 return entities.ToList();
             }

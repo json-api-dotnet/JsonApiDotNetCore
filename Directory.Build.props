@@ -15,8 +15,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <TestSdkVersion>15.7.2</TestSdkVersion>
-    <XUnitVersion>2.3.1</XUnitVersion>
+    <TestSdkVersion>16.3.0</TestSdkVersion>
+    <XUnitVersion>2.4.1</XUnitVersion>
     <BogusVersion>22.1.2</BogusVersion>
     <MoqVersion>4.8.3</MoqVersion>
   </PropertyGroup>
