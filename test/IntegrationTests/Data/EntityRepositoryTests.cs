@@ -19,8 +19,10 @@ namespace IntegrationTests.Data
             var todoItems = DbSetMock.Create(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9)).Object;
             var repository = GetRepository();
 
+            // Act
             var result = await repository.PageAsync(todoItems, pageSize, pageNumber);
 
+            // Assert
             Assert.Equal(TodoItems(expectedIds), result, new IdComparer<TodoItem>());
         }
     }

@@ -135,9 +135,6 @@ namespace UnitTests.Data
 
             Assert.Equal(TodoItems(expectedResult), result, new IdComparer<TodoItem>());
         }
-
-
-
         private static TodoItem[] TodoItems(params int[] ids)
         {
             return ids.Select(id => new TodoItem { Id = id }).ToArray();
