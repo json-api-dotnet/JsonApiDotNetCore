@@ -1,9 +1,9 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace JsonApiDotNetCore.Extensions
 {

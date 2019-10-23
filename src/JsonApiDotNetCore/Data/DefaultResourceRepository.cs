@@ -321,9 +321,14 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task<int> CountAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TResource>)
-                 ? await entities.CountAsync()
-                 : entities.Count();
+            if (entities is IAsyncEnumerable<TResource>)
+            {
+                return await entities.CountAsync();
+            }
+            else
+            {
+                return entities.Count();
+            }
         }
 
         /// <inheritdoc />
@@ -337,9 +342,13 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task<IReadOnlyList<TResource>> ToListAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TResource>)
-                ? await entities.ToListAsync()
-                : entities.ToList();
+            if(entities is IAsyncEnumerable<TResource>)
+            {
+                return await entities.ToListAsync();
+            } else
+            {
+                return entities.ToList();
+            }
         }
 
         /// <summary>

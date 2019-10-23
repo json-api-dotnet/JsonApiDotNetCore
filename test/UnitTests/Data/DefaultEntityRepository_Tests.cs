@@ -16,16 +16,15 @@ using JsonApiDotNetCore.Managers.Contracts;
 
 namespace UnitTests.Data
 {
-    public class DefaultResourceRepository_Tests : JsonApiControllerMixin
+    public class DefaultResourceRepositoryTests : JsonApiControllerMixin
     {
-        private readonly Mock<ICurrentRequest> _currentRequestMock; 
         private readonly Mock<DbSet<TodoItem>> _dbSetMock;
         private readonly Mock<DbContext> _contextMock;
         private readonly Mock<ITargetedFields> _targetedFieldsMock;
         private readonly Mock<IDbContextResolver> _contextResolverMock;
         private readonly TodoItem _todoItem;
 
-        public DefaultResourceRepository_Tests()
+        public DefaultResourceRepositoryTests()
         {
             _todoItem = new TodoItem
             {
@@ -33,7 +32,6 @@ namespace UnitTests.Data
                 Description = Guid.NewGuid().ToString(),
                 Ordinal = 10
             };
-            _currentRequestMock = new Mock<ICurrentRequest>();
             _dbSetMock = DbSetMock.Create(new[] { _todoItem });
             _contextMock = new Mock<DbContext>();
             _contextResolverMock = new Mock<IDbContextResolver>();
@@ -50,8 +48,10 @@ namespace UnitTests.Data
                 Description = Guid.NewGuid().ToString()
             };
 
-            var descAttr = new AttrAttribute("description", "Description");
-            descAttr.PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description));
+            var descAttr = new AttrAttribute("description", "Description")
+            {
+                PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
+            };
             _targetedFieldsMock.Setup(m => m.Attributes).Returns(new List<AttrAttribute> { descAttr });
             _targetedFieldsMock.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
 
@@ -140,7 +140,7 @@ namespace UnitTests.Data
         [InlineData(6, -1, new[] { 4, 5, 6, 7, 8, 9 })]
         [InlineData(6, -2, new[] { 1, 2, 3 })]
         [InlineData(20, -1, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
-        public async Task Page_When_PageNumber_Is_Negative_Returns_PageNumberTh_Page_From_End(int pageSize, int pageNumber, int[] expectedIds)
+        public async Task Paging_PageNumberIsNegative_PageCorrectIds(int pageSize, int pageNumber, int[] expectedIds)
         {
             var todoItems = DbSetMock.Create(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9)).Object;
             var repository = GetRepository();
