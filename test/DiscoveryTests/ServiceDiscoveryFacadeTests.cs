@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
 using JsonApiDotNetCore.Builders;
@@ -35,11 +36,6 @@ namespace DiscoveryTests
             _services.AddSingleton<IJsonApiOptions>(new JsonApiOptions());
             _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
             _services.AddScoped((_) => new Mock<ICurrentRequest>().Object);
-            _services.AddScoped((_) => new Mock<IPageService>().Object);
-            _services.AddScoped((_) => new Mock<ISparseFieldsService>().Object);
-            _services.AddScoped((_) => new Mock<IFilterService>().Object);
-            _services.AddScoped((_) => new Mock<IIncludeService>().Object);
-            _services.AddScoped((_) => new Mock<ISortService>().Object);
             _services.AddScoped((_) => new Mock<ITargetedFields>().Object);
             _services.AddScoped((_) => new Mock<IResourceGraph>().Object);
             _services.AddScoped((_) => new Mock<IGenericServiceFactory>().Object);
@@ -106,16 +102,13 @@ namespace DiscoveryTests
         {
             private static IResourceRepository<TestModel> _repo = new Mock<IResourceRepository<TestModel>>().Object;
 
-            public TestModelService(ISortService sortService,
-                                    IFilterService filterService,
+            public TestModelService(IEnumerable<IQueryParameterService> queryParameters,
                                     IJsonApiOptions options,
-                                    IIncludeService includeService,
-                                    ISparseFieldsService sparseFieldsService,
-                                    IPageService pageManager,
+                                    IResourceRepository<TestModel, int> repository,
                                     IResourceContextProvider provider,
                                     IResourceHookExecutor hookExecutor = null,
                                     ILoggerFactory loggerFactory = null)
-                : base(sortService, filterService, _repo, options, includeService, sparseFieldsService, pageManager, provider, hookExecutor, loggerFactory) { }
+                : base(queryParameters, options, repository, provider, hookExecutor, loggerFactory) { }
         }
 
         public class TestModelRepository : DefaultResourceRepository<TestModel>
