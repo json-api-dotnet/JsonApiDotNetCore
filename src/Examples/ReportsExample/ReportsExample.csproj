@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>$(NetCoreAppVersion) </TargetFramework>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

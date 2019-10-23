@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <NetCoreAppVersion>netcoreapp3.0</TargetFramework>
-    <NetStandardVersion>netstandard2.0</NetStandardVersion>
+    <NetCoreAppVersion>netcoreapp3.0</NetCoreAppVersion>
+    <NetStandardVersion>netstandard2.1</NetStandardVersion>
     <AspNetCoreVersion>2.2.*</AspNetCoreVersion>
     <MicrosoftLoggingVersion>2.2.*</MicrosoftLoggingVersion>
     <MicrosoftConfigurationVersion>2.2.*</MicrosoftConfigurationVersion>

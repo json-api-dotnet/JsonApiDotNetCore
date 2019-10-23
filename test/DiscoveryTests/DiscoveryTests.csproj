@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$(NetCoreAppVersion) </TargetFramework>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
