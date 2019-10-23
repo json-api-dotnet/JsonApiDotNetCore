@@ -128,7 +128,7 @@ namespace UnitTests.Serialization.Serializer
             Assert.Equal("10", populatedToOneData.Id);
             Assert.Equal("one-to-one-dependents", populatedToOneData.Type);
             var populatedToManiesData = (List<ResourceIdentifierObject>)resourceObject.Relationships["populated-to-manies"].Data;
-            Assert.Equal(1, populatedToManiesData.Count);
+            Assert.Single(populatedToManiesData);
             Assert.Equal("20", populatedToManiesData.First().Id);
             Assert.Equal("one-to-many-dependents", populatedToManiesData.First().Type);
         }
@@ -144,7 +144,7 @@ namespace UnitTests.Serialization.Serializer
             var resourceObject = _builder.Build(entity, relationships: relationships);
 
             // assert
-            Assert.Equal(1, resourceObject.Relationships.Count);
+            Assert.Single(resourceObject.Relationships);
             Assert.NotNull(resourceObject.Relationships["principal"].Data);
             var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
             Assert.Equal("10", ro.Id);
@@ -175,7 +175,7 @@ namespace UnitTests.Serialization.Serializer
             var resourceObject = _builder.Build(entity, relationships: relationships);
 
             // assert
-            Assert.Equal(1, resourceObject.Relationships.Count);
+            Assert.Single(resourceObject.Relationships);
             Assert.NotNull(resourceObject.Relationships["principal"].Data);
             var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
             Assert.Equal("10", ro.Id);

@@ -79,7 +79,7 @@ namespace UnitTests.Serialization.Server
             var nonOverlappingBlogs = result.Where((ro) => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
 
             foreach (var blog in nonOverlappingBlogs)
-                Assert.Equal(1, blog.Relationships.Keys.ToList().Count);
+                Assert.Single(blog.Relationships.Keys.ToList());
 
             var sharedAuthorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == sharedBlogAuthor.StringId);
             var sharedAuthorSongRelation = sharedAuthorResourceObject.Relationships["favorite-song"].SingleData;
@@ -149,7 +149,7 @@ namespace UnitTests.Serialization.Server
             }
 
             var result = builder.Build();
-            Assert.Equal(1, result.Count);
+            Assert.Single(result);
             Assert.Equal(person.Name, result[0].Attributes["name"]);
             Assert.Equal(person.Id.ToString(), result[0].Id);
         }

@@ -137,15 +137,15 @@ namespace UnitTests.Serialization.Deserializer
 
             if (member == "int-field")
             {
-                Assert.Equal(deserializedValue, 1);
+                Assert.Equal(1, deserializedValue);
             }
             else if (member == "nullable-int-field" && value == null)
             {
-                Assert.Equal(deserializedValue, null);
+                Assert.Null(deserializedValue);
             }
             else if (member == "nullable-int-field" && (string)value == "1")
             {
-                Assert.Equal(deserializedValue, 1);
+                Assert.Equal(1, deserializedValue);
             }
             else if (member == "guid-field")
             {
@@ -366,7 +366,7 @@ namespace UnitTests.Serialization.Deserializer
 
             // assert
             Assert.Equal(1, result.Id);
-            Assert.Equal(1, result.Dependents.Count);
+            Assert.Single(result.Dependents);
             Assert.Equal(10, result.Dependents.First().Id);
             Assert.Null(result.AttributeMember);
         }

@@ -21,25 +21,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{02
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{076E1AE4-FD25-4684-B826-CAAE37FEA0AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCoreExampleTests", "test\JsonApiDotNetCoreExampleTests\JsonApiDotNetCoreExampleTests.csproj", "{CAF331F8-9255-4D72-A1A8-A54141E99F1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleTests", "test\JsonApiDotNetCoreExampleTests\JsonApiDotNetCoreExampleTests.csproj", "{CAF331F8-9255-4D72-A1A8-A54141E99F1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoEntityFrameworkTests", "test\NoEntityFrameworkTests\NoEntityFrameworkTests.csproj", "{4F15A8F8-5BC6-45A1-BC51-03F921B726A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFrameworkTests", "test\NoEntityFrameworkTests\NoEntityFrameworkTests.csproj", "{4F15A8F8-5BC6-45A1-BC51-03F921B726A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{8788FF65-C2B6-40B2-A3A0-1E3D91C02664}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{8788FF65-C2B6-40B2-A3A0-1E3D91C02664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscoveryTests", "test\DiscoveryTests\DiscoveryTests.csproj", "{03032A2F-664D-4DD8-A82F-AD8A482EDD85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscoveryTests", "test\DiscoveryTests\DiscoveryTests.csproj", "{03032A2F-664D-4DD8-A82F-AD8A482EDD85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "benchmarks\Benchmarks.csproj", "{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "benchmarks\Benchmarks.csproj", "{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCoreExample", "src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj", "{C916EBDA-3429-4FEA-AFB3-DF7CA32A8C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExample", "src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj", "{C916EBDA-3429-4FEA-AFB3-DF7CA32A8C6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoEntityFrameworkExample", "src\Examples\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj", "{789085E1-048F-4996-B600-791B9CA3A663}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFrameworkExample", "src\Examples\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj", "{789085E1-048F-4996-B600-791B9CA3A663}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportsExample", "src\Examples\ReportsExample\ReportsExample.csproj", "{8BCFF95F-4850-427C-AEDB-B5B4F62B2C7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportsExample", "src\Examples\ReportsExample\ReportsExample.csproj", "{8BCFF95F-4850-427C-AEDB-B5B4F62B2C7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCore", "src\JsonApiDotNetCore\JsonApiDotNetCore.csproj", "{21D27239-138D-4604-8E49-DCBE41BCE4C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore", "src\JsonApiDotNetCore\JsonApiDotNetCore.csproj", "{21D27239-138D-4604-8E49-DCBE41BCE4C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettingStarted", "src\Examples\GettingStarted\GettingStarted.csproj", "{067FFD7A-C66B-473D-8471-37F5C95DF61C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted", "src\Examples\GettingStarted\GettingStarted.csproj", "{067FFD7A-C66B-473D-8471-37F5C95DF61C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,7 +96,6 @@ Global
 		{03032A2F-664D-4DD8-A82F-AD8A482EDD85}.Release|x86.ActiveCfg = Release|Any CPU
 		{03032A2F-664D-4DD8-A82F-AD8A482EDD85}.Release|x86.Build.0 = Release|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|x64.Build.0 = Debug|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -170,10 +169,10 @@ Global
 		{8788FF65-C2B6-40B2-A3A0-1E3D91C02664} = {24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}
 		{03032A2F-664D-4DD8-A82F-AD8A482EDD85} = {24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C} = {076E1AE4-FD25-4684-B826-CAAE37FEA0AA}
-		{21D27239-138D-4604-8E49-DCBE41BCE4C8} = {7A2B7ADD-ECB5-4D00-AA6A-D45BD11C97CF}
 		{C916EBDA-3429-4FEA-AFB3-DF7CA32A8C6A} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
 		{789085E1-048F-4996-B600-791B9CA3A663} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
 		{8BCFF95F-4850-427C-AEDB-B5B4F62B2C7B} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
+		{21D27239-138D-4604-8E49-DCBE41BCE4C8} = {7A2B7ADD-ECB5-4D00-AA6A-D45BD11C97CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2421882-8F0A-4905-928F-B550B192F9A4}
