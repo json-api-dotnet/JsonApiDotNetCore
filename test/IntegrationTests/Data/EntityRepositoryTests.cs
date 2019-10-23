@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,8 @@ namespace JADNC.IntegrationTests.Data
 
         public EntityRepositoryTests()
         {
+            var options = new DbContextOptionsBuilder()
+                .UseInMemoryDatabase()
             // setup database + services
             // seed
         }
