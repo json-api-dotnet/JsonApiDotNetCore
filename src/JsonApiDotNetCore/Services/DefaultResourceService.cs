@@ -34,23 +34,19 @@ namespace JsonApiDotNetCore.Services
         private readonly ResourceContext _currentRequestResource;
 
         public DefaultResourceService(
-                ISortService sortService,
-                IFilterService filterService,
+                IEnumerable<IQueryParameterService> queryParameters,
                 IJsonApiOptions options,
-                IIncludeService includeService,
-                ISparseFieldsService sparseFieldsService,
-                IPageService pageManager,
                 IResourceRepository<TResource, TId> repository,
                 IResourceContextProvider provider,
                 IResourceHookExecutor hookExecutor = null,
                 ILoggerFactory loggerFactory = null)
         {
-            _includeService = includeService;
-            _sparseFieldsService = sparseFieldsService;
-            _pageManager = pageManager;
+            _includeService = queryParameters.FirstOrDefault(qp => qp is IIncludeService) as IIncludeService;
+            _sparseFieldsService = queryParameters.FirstOrDefault(qp => qp is ISparseFieldsService) as ISparseFieldsService;
+            _pageManager = queryParameters.FirstOrDefault(qp => qp is IPageService) as IPageService;
+            _sortService = queryParameters.FirstOrDefault(qp => qp is ISortService) as ISortService;
+            _filterService = queryParameters.FirstOrDefault(qp => qp is IFilterService) as IFilterService;
             _options = options;
-            _sortService = sortService;
-            _filterService = filterService;
             _repository = repository;
             _hookExecutor = hookExecutor;
             _logger = loggerFactory?.CreateLogger<DefaultResourceService<TResource, TId>>();
@@ -323,12 +319,12 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceService(ISortService sortService, IFilterService filterService, IResourceRepository<TResource, int> repository,
-                                     IJsonApiOptions options, IIncludeService includeService, ISparseFieldsService sparseFieldsService,
-                                     IPageService pageManager, IResourceContextProvider provider,
-                                     IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)
-            : base(sortService, filterService, options, includeService, sparseFieldsService, pageManager, repository, provider, hookExecutor, loggerFactory)
-        {
-        }
+        public DefaultResourceService(IEnumerable<IQueryParameterService> queryParameters,
+                                      IJsonApiOptions options,
+                                      IResourceRepository<TResource, int> repository,
+                                      IResourceContextProvider provider,
+                                      IResourceHookExecutor hookExecutor = null,
+                                      ILoggerFactory loggerFactory = null)
+            : base(queryParameters, options, repository, provider, hookExecutor, loggerFactory) { }
     }
 }
