@@ -42,6 +42,11 @@ namespace JsonApiDotNetCore.Builders
             _mvcBuilder = mvcBuilder;
         }
 
+        internal void ConfigureLogging()
+        {
+            _services.AddLogging();
+        }
+
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>
         /// </summary>

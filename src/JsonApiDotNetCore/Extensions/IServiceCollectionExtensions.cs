@@ -35,6 +35,7 @@ namespace JsonApiDotNetCore.Extensions
             var application = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
             if (options != null)
                 application.ConfigureJsonApiOptions(options);
+            application.ConfigureLogging();
             application.ConfigureMvc();
             application.ConfigureResources<TEfCoreDbContext>(resources);
             application.ConfigureServices();
