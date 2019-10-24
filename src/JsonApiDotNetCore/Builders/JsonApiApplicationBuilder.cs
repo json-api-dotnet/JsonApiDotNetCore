@@ -68,17 +68,17 @@ namespace JsonApiDotNetCore.Builders
             var exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
             var typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
 
-            _mvcBuilder.AddMvcOptions(mvcOptions =>
-            {
-                mvcOptions.Filters.Add(exceptionFilterProvider.Get());
-                mvcOptions.Filters.Add(typeMatchFilterProvider.Get());
-                mvcOptions.InputFormatters.Insert(0, new JsonApiInputFormatter());
-                mvcOptions.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
-                mvcOptions.EnableEndpointRouting = false;
-            });
-
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
-            _mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, routingConvention));
+
+            _mvcBuilder.AddMvcOptions(options =>
+            {
+                options.EnableEndpointRouting = true;
+                options.Filters.Add(exceptionFilterProvider.Get());
+                options.Filters.Add(typeMatchFilterProvider.Get());
+                options.InputFormatters.Insert(0, new JsonApiInputFormatter());
+                options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
+                options.Conventions.Insert(0, routingConvention);
+            });
             _services.AddSingleton<IControllerResourceMapping>(routingConvention);
         }
 

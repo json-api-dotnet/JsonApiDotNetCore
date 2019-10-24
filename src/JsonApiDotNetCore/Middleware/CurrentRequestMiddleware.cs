@@ -138,7 +138,9 @@ namespace JsonApiDotNetCore.Middleware
 
             // if the content type is not application/vnd.api+json then continue on
             if (incomingMediaTypeSpan.Length < Constants.ContentType.Length)
+            {
                 return false;
+            }
 
             var incomingContentType = incomingMediaTypeSpan.Slice(0, Constants.ContentType.Length);
             if (incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)

@@ -20,22 +20,27 @@ namespace JsonApiDotNetCore.Extensions
         /// <param name="app"></param>
         /// <param name="useMvc"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseJsonApi(this IApplicationBuilder app, bool useMvc = true)
+        public static void UseJsonApi(this IApplicationBuilder app)
         {
             DisableDetailedErrorsIfProduction(app);
             LogResourceGraphValidations(app);
-            app.UseMiddleware<CurrentRequestMiddleware>();
-            app.UseRouting();
-            if (useMvc)
-            {
-                app.UseMvc();
-            }
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var inverseRelationshipResolver = scope.ServiceProvider.GetService<IInverseRelationships>();
                 inverseRelationshipResolver?.Resolve();
             }
-            return app;
+
+            // An endpoint is selected and set on the HttpContext if a match is found
+            app.UseRouting();
+
+            // middleware to run after routing occurs.
+            app.UseMiddleware<CurrentRequestMiddleware>();
+
+            // Executes the endpoitns that was selected by routing.
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
 
         private static void DisableDetailedErrorsIfProduction(IApplicationBuilder app)

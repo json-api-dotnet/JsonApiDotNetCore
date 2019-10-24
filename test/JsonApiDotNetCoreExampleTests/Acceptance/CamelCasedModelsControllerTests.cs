@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Can_Patch_CamelCasedModels()
+        public async Task RoutingPatch_RouteIsCamelcased_ResponseOKAndCompoundAttrIsAvailable()
         {
             // Arrange
             var model = _faker.Generate();
@@ -146,7 +146,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"api/v1/camelCasedModels/{model.Id}";
             var builder = new WebHostBuilder().UseStartup<Startup>();
-            var server = new TestServer(builder);
+
+            using var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
