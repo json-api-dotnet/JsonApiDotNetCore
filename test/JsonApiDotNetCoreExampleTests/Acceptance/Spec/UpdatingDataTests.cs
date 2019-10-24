@@ -118,7 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Patch_Entity()
         {
-            // arrange
+            // Arrange
             _context.RemoveRange(_context.TodoItemCollections);
             _context.RemoveRange(_context.TodoItems);
             _context.RemoveRange(_context.People);
@@ -166,7 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
         {
-            // arrange
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
@@ -202,7 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Patch_Entity_And_HasOne_Relationships()
         {
-            // arrange
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.CreatedDate = DateTime.Now;
             var person = _personFaker.Generate();

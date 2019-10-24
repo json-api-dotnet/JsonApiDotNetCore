@@ -21,7 +21,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         [Fact]
         public async Task Can_Get_TodoItems()
         {
-            // arrange
+            // Arrange
             _fixture.Context.TodoItems.Add(new TodoItem());
             _fixture.Context.SaveChanges();
 
@@ -32,12 +32,12 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
 
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(responseBody).Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(deserializedBody);
             Assert.NotEmpty(deserializedBody);
@@ -46,7 +46,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         [Fact]
         public async Task Can_Get_TodoItems_By_Id()
         {
-            // arrange
+            // Arrange
             var todoItem = new TodoItem();
             _fixture.Context.TodoItems.Add(todoItem);
             _fixture.Context.SaveChanges();
@@ -58,12 +58,12 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
 
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItem>(responseBody).Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(deserializedBody);
             Assert.Equal(todoItem.Id, deserializedBody.Id);

@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Select_Sparse_Fieldsets()
         {
-            // arrange
+            // Arrange
             var fields = new List<string> { "Id", "Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem
             {
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                                 FROM 'TodoItems' AS 't'
                                 WHERE 't'.'Id' = {todoItem.Id}");
 
-            // act
+            // Act
             var query = _dbContext
                 .TodoItems
                 .Where(t => t.Id == todoItem.Id)
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var result = await query.FirstAsync();
 
-            // assert
+            // Assert
             Assert.Equal(0, result.Ordinal);
             Assert.Equal(todoItem.Description, result.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), result.CreatedDate.ToString("G"));
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Fields_Query_Selects_Sparse_Field_Sets()
         {
-            // arrange
+            // Arrange
             var todoItem = new TodoItem
             {
                 Description = "description",
@@ -104,12 +104,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items/{todoItem.Id}?fields=description,created-date";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
-            // assert
+            // Assert
             Assert.Equal(todoItem.StringId, deserializeBody.SingleData.Id);
             Assert.Equal(2, deserializeBody.SingleData.Attributes.Count);
             Assert.Equal(todoItem.Description, deserializeBody.SingleData.Attributes["description"]);
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Fields_Query_Selects_Sparse_Field_Sets_With_Type_As_Navigation()
         {
-            // arrange
+            // Arrange
             var todoItem = new TodoItem
             {
                 Description = "description",
@@ -137,11 +137,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description,created-date";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("relationships only", body);
 
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Fields_Query_Selects_All_Fieldset_With_HasOne()
         {
-            // arrange
+            // Arrange
             _dbContext.TodoItems.RemoveRange(_dbContext.TodoItems);
             _dbContext.SaveChanges();
             var owner = _personFaker.Generate();
@@ -174,10 +174,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var request = new HttpRequestMessage(httpMethod, route);
             var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todo-items").Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
 
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Fields_Query_Selects_Fieldset_With_HasOne()
         {
-            // arrange
+            // Arrange
             var owner = _personFaker.Generate();
             var todoItem = new TodoItem
             {
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Fields_Query_Selects_Fieldset_With_HasMany()
         {
-            // arrange
+            // Arrange
             var owner = _personFaker.Generate();
             var todoItems = _todoItemFaker.Generate(2);
 
@@ -252,10 +252,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/people/{owner.Id}?include=todo-items&fields[todo-items]=description";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);

@@ -12,11 +12,11 @@ namespace JsonApiDotNetCoreExampleTests.Startups
 {
     public class ClientGeneratedIdsStartup : Startup
     {
-        public ClientGeneratedIdsStartup(IHostingEnvironment env)
+        public ClientGeneratedIdsStartup(IWebHostEnvironment env)
         : base (env)
         {  }
 
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             var mvcBuilder = services.AddMvcCore();
@@ -37,9 +37,6 @@ namespace JsonApiDotNetCoreExampleTests.Startups
                 },
                 discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),
                 mvcBuilder: mvcBuilder);
-
-            return services.BuildServiceProvider();
-
         }
     }
 }

@@ -40,16 +40,16 @@ namespace UnitTests
         [InlineData(Link.None, Link.None, null)]
         public void BuildResourceLinks_GlobalAndResourceConfiguration_ExpectedResult(Link global, Link resource, object expectedResult)
         {
-            // arrange
+            // Arrange
             var config = GetConfiguration(resourceLinks: global);
             var primaryResource = GetResourceContext<Article>(resourceLinks: resource);
             _provider.Setup(m => m.GetResourceContext("articles")).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
 
-            // act
+            // Act
             var links = builder.GetResourceLinks("articles", "123");
 
-            // assert
+            // Assert
             if (expectedResult == null)
                 Assert.Null(links);
             else
@@ -88,17 +88,17 @@ namespace UnitTests
                                                                                                 object expectedSelfLink,
                                                                                                 object expectedRelatedLink)
         {
-            // arrange
+            // Arrange
             var config = GetConfiguration(relationshipLinks: global);
             var primaryResource = GetResourceContext<Article>(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
             var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
 
-            // act
+            // Act
             var links = builder.GetRelationshipLinks(attr, new Article { Id = 123 });
 
-            // assert
+            // Assert
             if (expectedSelfLink == null && expectedRelatedLink == null)
             {
                 Assert.Null(links);
@@ -136,17 +136,17 @@ namespace UnitTests
                                                                                     object expectedSelfLink,
                                                                                     bool pages)
         {
-            // arrange
+            // Arrange
             var config = GetConfiguration(topLevelLinks: global);
             var primaryResource = GetResourceContext<Article>(topLevelLinks: resource);
             _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
             var builder = new LinkBuilder(config, GetRequestManager(), _pageService, _provider.Object);
 
-            // act
+            // Act
             var links = builder.GetTopLevelLinks(primaryResource);
 
-            // assert
+            // Assert
             if (!pages && expectedSelfLink == null)
             {
                 Assert.Null(links);

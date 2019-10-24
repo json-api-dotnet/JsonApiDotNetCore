@@ -13,7 +13,7 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void Entity_Has_Multiple_Relations_To_Same_Type()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
 var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
@@ -25,10 +25,10 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
             todo.StakeHolders = new List<Person> { person3 };
             var todoList = new List<TodoItem>() { todo };
 
-            // act
+            // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -37,7 +37,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         [Fact]
         public void Entity_Has_Cyclic_Relations()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
@@ -45,10 +45,10 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
             todo.ChildrenTodoItems = new List<TodoItem> { todo };
             var todoList = new List<TodoItem>() { todo };
 
-            // act
+            // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock);
         }
@@ -56,7 +56,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         [Fact]
         public void Entity_Has_Nested_Cyclic_Relations()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var rootTodo = new TodoItem() { Id = 1 };
@@ -69,10 +69,10 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
             greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo };
             var todoList = new List<TodoItem>() { rootTodo };
 
-            // act
+            // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Post), Times.Exactly(4));
             VerifyNoOtherCalls(todoResourceMock);
         }

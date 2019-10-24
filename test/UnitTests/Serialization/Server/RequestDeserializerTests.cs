@@ -24,15 +24,15 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void DeserializeAttributes_VariousUpdatedMembers_RegistersTargetedFields()
         {
-            // arrange
+            // Arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
             Document content = CreateTestResourceDocument();
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             _deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(5, attributesToUpdate.Count);
             Assert.Empty(relationshipsToUpdate);
         }
@@ -40,7 +40,7 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void DeserializeAttributes_UpdatedImmutableMember_ThrowsInvalidOperationException()
         {
-            // arrange
+            // Arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
             var content = new Document
             {
@@ -56,14 +56,14 @@ namespace UnitTests.Serialization.Server
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act, assert
+            // Act, assert
             Assert.Throws<InvalidOperationException>(() => _deserializer.Deserialize(body));
         }
 
         [Fact]
         public void DeserializeRelationships_MultipleDependentRelationships_RegistersUpdatedRelationships()
         {
-            // arrange
+            // Arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
             var content = CreateDocumentWithRelationships("multi-principals");
             content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
@@ -72,10 +72,10 @@ namespace UnitTests.Serialization.Server
             content.SingleData.Relationships.Add("empty-to-manies", CreateRelationshipData(isToManyData: true));
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             _deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(4, relationshipsToUpdate.Count);
             Assert.Empty(attributesToUpdate);
         }
@@ -83,7 +83,7 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void DeserializeRelationships_MultiplePrincipalRelationships_RegistersUpdatedRelationships()
         {
-            // arrange
+            // Arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
             var content = CreateDocumentWithRelationships("multi-dependents");
             content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
@@ -92,10 +92,10 @@ namespace UnitTests.Serialization.Server
             content.SingleData.Relationships.Add("empty-to-many", CreateRelationshipData());
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             _deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(4, relationshipsToUpdate.Count);
             Assert.Empty(attributesToUpdate);
         }

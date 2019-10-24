@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +21,10 @@ namespace GettingStarted
                 discover => discover.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SampleDbContext context)
+        public void Configure(IApplicationBuilder app, SampleDbContext context)
         {
             context.Database.EnsureDeleted(); // indicies need to be reset
             context.Database.EnsureCreated();
-
             app.UseJsonApi();
         }
     }

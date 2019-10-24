@@ -27,19 +27,19 @@ namespace UnitTests.Extensions
         [Fact]
         public void AddJsonApiInternals_Adds_All_Required_Services()
         {
-            // arrange
+            // Arrange
             var services = new ServiceCollection();
 
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddJsonApi<AppDbContext>();
 
-            // act
+            // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
             var provider = services.BuildServiceProvider();
 
-            // assert
+            // Assert
             var currentRequest = provider.GetService<ICurrentRequest>();
             Assert.NotNull(currentRequest);
             var resourceGraph = provider.GetService<IResourceGraph>();
@@ -62,13 +62,13 @@ namespace UnitTests.Extensions
         [Fact]
         public void AddResourceService_Registers_All_Shorthand_Service_Interfaces()
         {
-            // arrange
+            // Arrange
             var services = new ServiceCollection();
 
-            // act
+            // Act
             services.AddResourceService<IntResourceService>();
 
-            // assert
+            // Assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceService<IntResource>)));
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceCmdService<IntResource>)));
@@ -85,13 +85,13 @@ namespace UnitTests.Extensions
         [Fact]
         public void AddResourceService_Registers_All_LongForm_Service_Interfaces()
         {
-            // arrange
+            // Arrange
             var services = new ServiceCollection();
 
-            // act
+            // Act
             services.AddResourceService<GuidResourceService>();
 
-            // assert
+            // Assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceService<GuidResource, Guid>)));
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceCmdService<GuidResource, Guid>)));
@@ -108,25 +108,25 @@ namespace UnitTests.Extensions
         [Fact]
         public void AddResourceService_Throws_If_Type_Does_Not_Implement_Any_Interfaces()
         {
-            // arrange
+            // Arrange
             var services = new ServiceCollection();
 
-            // act, assert
+            // Act, assert
             Assert.Throws<JsonApiSetupException>(() => services.AddResourceService<int>());
         }
 
         [Fact]
         public void AddJsonApi_With_Context_Uses_DbSet_PropertyName_If_NoOtherSpecified()
         {
-            // arrange
+            // Arrange
             var services = new ServiceCollection();
 
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
 
-            // act
+            // Act
             services.AddJsonApi<TestContext>();
 
-            // assert
+            // Assert
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
             var resource = resourceGraph.GetResourceContext(typeof(IntResource));

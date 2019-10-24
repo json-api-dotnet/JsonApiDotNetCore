@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [Fact]
         public async Task Injecting_IRequestMeta_Adds_Meta_Data()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
 
@@ -38,12 +38,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var request = new HttpRequestMessage(httpMethod, route);
             var expectedMeta = (_fixture.GetService<ResourceDefinition<Person>>() as IHasMeta).GetMeta();
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var meta = _fixture.GetDeserializer().DeserializeList<Person>(body).Meta;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(meta);
             Assert.NotNull(expectedMeta);

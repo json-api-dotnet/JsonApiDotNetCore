@@ -10,7 +10,7 @@ namespace UnitTests.Models
         [Fact]
         public void Setting_ExposeData_To_List_Sets_ManyData()
         {
-            // arrange
+            // Arrange
             var relationshipData = new RelationshipEntry();
             var relationships = new List<ResourceIdentifierObject> {
                 new ResourceIdentifierObject {
@@ -19,10 +19,10 @@ namespace UnitTests.Models
                 }
             };
 
-            // act 
+            // Act 
             relationshipData.Data = relationships;
 
-            // assert
+            // Assert
             Assert.NotEmpty(relationshipData.ManyData);
             Assert.Equal("authors", relationshipData.ManyData[0].Type);
             Assert.Equal("9", relationshipData.ManyData[0].Id);
@@ -32,7 +32,7 @@ namespace UnitTests.Models
         [Fact]
         public void Setting_ExposeData_To_JArray_Sets_ManyData()
         {
-            // arrange
+            // Arrange
             var relationshipData = new RelationshipEntry();
             var relationshipsJson = @"[
                 {
@@ -43,10 +43,10 @@ namespace UnitTests.Models
 
             var relationships = JArray.Parse(relationshipsJson);
 
-            // act 
+            // Act 
             relationshipData.Data = relationships;
 
-            // assert
+            // Assert
             Assert.NotEmpty(relationshipData.ManyData);
             Assert.Equal("authors", relationshipData.ManyData[0].Type);
             Assert.Equal("9", relationshipData.ManyData[0].Id);
@@ -56,17 +56,17 @@ namespace UnitTests.Models
         [Fact]
         public void Setting_ExposeData_To_RIO_Sets_SingleData()
         {
-            // arrange
+            // Arrange
             var relationshipData = new RelationshipEntry();
             var relationship = new ResourceIdentifierObject {
                 Id = "9",
                 Type = "authors"
             };
 
-            // act 
+            // Act 
             relationshipData.Data = relationship;
 
-            // assert
+            // Assert
             Assert.NotNull(relationshipData.SingleData);
             Assert.Equal("authors", relationshipData.SingleData.Type);
             Assert.Equal("9", relationshipData.SingleData.Id);
@@ -76,7 +76,7 @@ namespace UnitTests.Models
         [Fact]
         public void Setting_ExposeData_To_JObject_Sets_SingleData()
         {
-            // arrange
+            // Arrange
             var relationshipData = new RelationshipEntry();
             var relationshipJson = @"{
                     ""id"": ""9"",
@@ -85,10 +85,10 @@ namespace UnitTests.Models
 
             var relationship = JObject.Parse(relationshipJson);
 
-            // act 
+            // Act 
             relationshipData.Data = relationship;
 
-            // assert
+            // Assert
             Assert.NotNull(relationshipData.SingleData);
             Assert.Equal("authors", relationshipData.SingleData.Type);
             Assert.Equal("9", relationshipData.SingleData.Id);

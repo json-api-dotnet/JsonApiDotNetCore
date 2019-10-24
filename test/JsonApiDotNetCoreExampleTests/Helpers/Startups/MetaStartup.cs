@@ -9,14 +9,14 @@ namespace JsonApiDotNetCoreExampleTests.Startups
 {
     public class MetaStartup : Startup
     {
-        public MetaStartup(IHostingEnvironment env)
+        public MetaStartup(IWebHostEnvironment env)
         : base (env)
         {  }
 
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IRequestMeta, MetaService>();
-            return base.ConfigureServices(services);
+            base.ConfigureServices(services);
         }
     }
 }

@@ -66,11 +66,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"api/v1/camelCasedModels/{model.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // unnecessary, will fix in 4.1
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+              .UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);

@@ -22,7 +22,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var builder = new WebHostBuilder()
                 .UseStartup<TStartup>();
-
             _server = new TestServer(builder);
             _services = _server.Host.Services;
 

@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateResource_GuidResource_IsCreated()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
 
@@ -52,17 +52,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             dbContext.SaveChanges();
             var todoItemCollection = new TodoItemCollection { Owner = owner };
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-collections", serializer.Serialize(todoItemCollection));
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
         }
 
         [Fact]
         public async Task ClientGeneratedId_IntegerIdAndNotEnabled_IsForbidden()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItem>(e => new { e.Description, e.Ordinal, e.CreatedDate });
 
@@ -70,10 +70,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             const int clientDefinedId = 9999;
             todoItem.Id = clientDefinedId;
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
         }
 
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task ClientGeneratedId_IntegerIdAndEnabled_IsCreated()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<ClientGeneratedIdsStartup>();
             var serializer = GetSerializer<TodoItem>(e => new { e.Description, e.Ordinal, e.CreatedDate });
 
@@ -89,11 +89,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             const int clientDefinedId = 9999;
             todoItem.Id = clientDefinedId;
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             Assert.Equal(clientDefinedId, responseItem.Id);
         }
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task ClientGeneratedId_GuidIdAndEnabled_IsCreated()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<ClientGeneratedIdsStartup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
 
@@ -111,11 +111,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var clientDefinedId = Guid.NewGuid();
             var todoItemCollection = new TodoItemCollection { Owner = owner, OwnerId = owner.Id, Id = clientDefinedId };
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-collections", serializer.Serialize(todoItemCollection));
             var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             Assert.Equal(clientDefinedId, responseItem.Id);
         }
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateWithRelationship_HasMany_IsCreated()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.TodoItems });
 
@@ -132,11 +132,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             dbContext.SaveChanges();
             var todoCollection = new TodoItemCollection { TodoItems = new List<TodoItem> { todoItem } };
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-collections", serializer.Serialize(todoCollection));
             var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
 
-            // assert
+            // Assert
             var contextCollection = GetDbContext().TodoItemCollections.AsNoTracking()
                 .Include(c => c.Owner)
                 .Include(c => c.TodoItems)
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateWithRelationship_HasManyAndInclude_IsCreatedAndIncludes()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.TodoItems, e.Owner });
 
@@ -165,11 +165,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             dbContext.SaveChanges();
             var todoCollection = new TodoItemCollection { Owner = owner, TodoItems = new List<TodoItem> { todoItem } };
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-collections?include=todo-items", serializer.Serialize(todoCollection));
             var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
 
             Assert.NotNull(responseItem);
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateWithRelationship_HasOne_IsCreated()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItem>(attributes: ti => new { }, relationships: ti => new { ti.Owner });
 
@@ -190,11 +190,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await dbContext.SaveChangesAsync();
             todoItem.Owner = owner;
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
-            // assert
+            // Assert
             var todoItemResult = GetDbContext().TodoItems.AsNoTracking()
                 .Include(c => c.Owner)
                 .SingleOrDefault(c => c.Id == responseItem.Id);
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateWithRelationship_HasOneAndInclude_IsCreatedAndIncludes()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItem>(attributes: ti => new { }, relationships: ti => new { ti.Owner });
 
@@ -215,11 +215,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             dbContext.SaveChanges();
             todoItem.Owner = owner;
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-items?include=owner", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             Assert.NotNull(responseItem);
             Assert.NotNull(responseItem.Owner);
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateWithRelationship_HasOneFromIndependentSide_IsCreated()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<PersonRole>(pr => new { }, pr => new { pr.Person });
 
@@ -238,11 +238,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             dbContext.SaveChanges();
             var personRole = new PersonRole { Person = person };
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/person-roles", serializer.Serialize(personRole));
             var responseItem = _deserializer.DeserializeSingle<PersonRole>(body).Data;
 
-            // assert
+            // Assert
             var personRoleResult = dbContext.PersonRoles.AsNoTracking()
                 .Include(c => c.Person)
                 .SingleOrDefault(c => c.Id == responseItem.Id);
@@ -254,17 +254,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateResource_SimpleResource_HeaderLocationsAreCorrect()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItem>(ti => new { ti.CreatedDate, ti.Description, ti.Ordinal });
 
             var todoItem = _todoItemFaker.Generate();
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             Assert.Equal($"/api/v1/todo-items/{responseItem.Id}", response.Headers.Location.ToString());
         }
@@ -272,7 +272,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task CreateResource_EntityTypeMismatch_IsConflict()
         {
-            // arrange
+            // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
             var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
@@ -280,10 +280,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todo-items", "people");
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/todo-items", content);
 
-            // assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Conflict, response);
         }
 
@@ -302,7 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var newPerson = _personFaker.Generate();
             newPerson.Passport = passport;
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/people", serializer.Serialize(newPerson));
             var responseItem = _deserializer.DeserializeSingle<Person>(body).Data;
 
@@ -333,7 +333,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var newPerson = _personFaker.Generate();
             newPerson.TodoItems = new List<TodoItem> { firstTd, secondTd };
 
-            // act
+            // Act
             var (body, response) = await Post("/api/v1/people", serializer.Serialize(newPerson));
             var responseItem = _deserializer.DeserializeSingle<Person>(body).Data;
 

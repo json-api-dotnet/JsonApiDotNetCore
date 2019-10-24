@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Server_Sends_Correct_ContentType_Header()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
@@ -30,10 +30,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
         }
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Server_Responds_415_With_MediaType_Parameters()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
@@ -53,17 +53,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
             request.Content.Headers.ContentType.CharSet = "ISO-8859-4";
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
         }
 
         [Fact]
         public async Task ServerResponds_406_If_RequestAcceptHeader_Contains_MediaTypeParameters()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
@@ -77,10 +77,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     .Add(acceptHeader);
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
         }
     }

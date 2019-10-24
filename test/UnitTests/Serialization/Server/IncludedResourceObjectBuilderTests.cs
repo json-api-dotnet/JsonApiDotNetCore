@@ -14,16 +14,16 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
         {
-            // arrange 
+            // Arrange 
             var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
             var builder = GetBuilder();
 
-            // act
+            // Act
             builder.IncludeRelationshipChain(authorChain, article);
             var result = builder.Build();
 
-            // assert
+            // Assert
             Assert.Equal(6, result.Count);
 
             var authorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == author.StringId);
@@ -38,18 +38,18 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void BuildIncluded_DeeplyNestedCircularChainOfManyData_BuildsWithoutDuplicates()
         {
-            // arrange
+            // Arrange
             var (article, author, _, _, _) = GetAuthorChainInstances();
             var secondArticle = _articleFaker.Generate();
             secondArticle.Author = author;
             var builder = GetBuilder();
 
-            // act
+            // Act
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
             builder.IncludeRelationshipChain(authorChain, article);
             builder.IncludeRelationshipChain(authorChain, secondArticle);
 
-            // assert
+            // Assert
             var result = builder.Build();
             Assert.Equal(6, result.Count);
         }
@@ -57,7 +57,7 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void BuildIncluded_OverlappingDeeplyNestedCirculairChains_CanBuild()
         {
-            // arrange
+            // Arrange
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
             var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
             var sharedBlog = author.Blogs.First();
@@ -66,12 +66,12 @@ namespace UnitTests.Serialization.Server
             var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favorite-song");
             var builder = GetBuilder();
 
-            // act
+            // Act
             builder.IncludeRelationshipChain(authorChain, article);
             builder.IncludeRelationshipChain(reviewerChain, article);
             var result = builder.Build();
 
-            // assert
+            // Assert
             Assert.Equal(10, result.Count);
             var overlappingBlogResourcObject = result.Single((ro) => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
 

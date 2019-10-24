@@ -21,7 +21,6 @@ namespace JsonApiDotNetCoreExample
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-
             Config = builder.Build();
         }
 

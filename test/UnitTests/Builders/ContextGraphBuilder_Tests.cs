@@ -26,14 +26,14 @@ namespace UnitTests
         [Fact]
         public void Can_Build_ResourceGraph_Using_Builder()
         {
-            // arrange
+            // Arrange
             var services = new ServiceCollection();
             services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("non-db-resources"));
 
-            // act
+            // Act
             var container = services.BuildServiceProvider();
 
-            // assert
+            // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
             var dbResource = resourceGraph.GetResourceContext("db-resources");
             var nonDbResource = resourceGraph.GetResourceContext("non-db-resources");
@@ -45,14 +45,14 @@ namespace UnitTests
         [Fact]
         public void Resources_Without_Names_Specified_Will_Use_Default_Formatter()
         {
-            // arrange
+            // Arrange
             var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
-            // act
+            // Act
             var resourceGraph = builder.Build();
 
-            // assert
+            // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("test-resources", resource.ResourceName);
         }
@@ -60,14 +60,14 @@ namespace UnitTests
         [Fact]
         public void Resources_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
-            // arrange
+            // Arrange
             var builder = new ResourceGraphBuilder(new CamelCaseNameFormatter());
             builder.AddResource<TestResource>();
 
-            // act
+            // Act
             var resourceGraph = builder.Build();
 
-            // assert
+            // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("testResources", resource.ResourceName);
         }
@@ -75,14 +75,14 @@ namespace UnitTests
         [Fact]
         public void Attrs_Without_Names_Specified_Will_Use_Default_Formatter()
         {
-            // arrange
+            // Arrange
             var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
-            // act
+            // Act
             var resourceGraph = builder.Build();
 
-            // assert
+            // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compound-attribute");
         }
@@ -90,14 +90,14 @@ namespace UnitTests
         [Fact]
         public void Attrs_Without_Names_Specified_Will_Use_Configured_Formatter()
         {
-            // arrange
+            // Arrange
             var builder = new ResourceGraphBuilder(new CamelCaseNameFormatter());
             builder.AddResource<TestResource>();
 
-            // act
+            // Act
             var resourceGraph = builder.Build();
 
-            // assert
+            // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
@@ -105,14 +105,14 @@ namespace UnitTests
         [Fact]
         public void Relationships_Without_Names_Specified_Will_Use_Default_Formatter()
         {
-            // arrange
+            // Arrange
             var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
-            // act
+            // Act
             var resourceGraph = builder.Build();
 
-            // assert
+            // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("related-resource", resource.Relationships.Single(r => r.IsHasOne).PublicRelationshipName);
             Assert.Equal("related-resources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);

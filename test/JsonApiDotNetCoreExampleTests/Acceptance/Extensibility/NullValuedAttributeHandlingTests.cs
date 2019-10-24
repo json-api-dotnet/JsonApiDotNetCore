@@ -86,12 +86,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
-            // assert: does response contain a null valued attribute?
+            // Assert: does response contain a null valued attribute?
             Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
             Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
 

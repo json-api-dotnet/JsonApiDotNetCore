@@ -21,13 +21,13 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Name_OmitNullService_IsCorrect()
         {
-            // arrange
+            // Arrange
             var service = GetService(true, true);
 
-            // act
+            // Act
             var name = service.Name;
 
-            // assert
+            // Assert
             Assert.Equal("omitnull", name);
         }
 
@@ -38,14 +38,14 @@ namespace UnitTests.QueryParameters
         [InlineData("true", false, false, false)]
         public void Parse_QueryConfigWithApiSettings_CanParse(string queryConfig, bool @default, bool @override, bool expected)
         {
-            // arrange
+            // Arrange
             var query = new KeyValuePair<string, StringValues>($"omitNull", new StringValues(queryConfig));
             var service = GetService(@default, @override);
 
-            // act
+            // Act
             service.Parse(query);
 
-            // assert
+            // Assert
             Assert.Equal(expected, service.Config);
         }
     }

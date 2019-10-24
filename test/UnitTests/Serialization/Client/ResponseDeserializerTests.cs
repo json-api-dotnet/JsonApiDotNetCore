@@ -25,17 +25,17 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_EmptyResponseWithMeta_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = new Document
             {
                 Meta = new Dictionary<string, object> { { "foo", "bar" } }
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<TestResource>(body);
 
-            // assert
+            // Assert
             Assert.Null(result.Data);
             Assert.NotNull(result.Meta);
             Assert.Equal("bar", result.Meta["foo"]);
@@ -44,17 +44,17 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_EmptyResponseWithTopLevelLinks_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = new Document
             {
                 Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] }
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<TestResource>(body);
 
-            // assert
+            // Assert
             Assert.Null(result.Data);
             Assert.NotNull(result.Links);
             TopLevelLinks links = (TopLevelLinks)result.Links;
@@ -66,7 +66,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeList_EmptyResponseWithTopLevelLinks_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = new Document
             {
                 Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] },
@@ -74,10 +74,10 @@ namespace UnitTests.Serialization.Client
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeList<TestResource>(body);
 
-            // assert
+            // Assert
             Assert.Empty(result.Data);
             Assert.NotNull(result.Links);
             TopLevelLinks links = (TopLevelLinks)result.Links;
@@ -89,15 +89,15 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_ResourceWithAttributes_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = CreateTestResourceDocument();
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<TestResource>(body);
             var entity = result.Data;
 
-            // assert
+            // Assert
             Assert.Null(result.Links);
             Assert.Null(result.Meta);
             Assert.Equal(1, entity.Id);
@@ -107,7 +107,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_MultipleDependentRelationshipsWithIncluded_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("multi-principals");
             content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
             content.SingleData.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
@@ -132,11 +132,11 @@ namespace UnitTests.Serialization.Client
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
             var entity = result.Data;
 
-            // assert
+            // Assert
             Assert.Equal(1, entity.Id);
             Assert.NotNull(entity.PopulatedToOne);
             Assert.Equal(toOneAttributeValue, entity.PopulatedToOne.AttributeMember);
@@ -150,7 +150,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_MultiplePrincipalRelationshipsWithIncluded_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("multi-dependents");
             content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
             content.SingleData.Relationships.Add("populated-to-many", CreateRelationshipData("one-to-many-principals"));
@@ -175,11 +175,11 @@ namespace UnitTests.Serialization.Client
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsDependentPart>(body);
             var entity = result.Data;
 
-            // assert
+            // Assert
             Assert.Equal(1, entity.Id);
             Assert.NotNull(entity.PopulatedToOne);
             Assert.Equal(toOneAttributeValue, entity.PopulatedToOne.AttributeMember);
@@ -192,7 +192,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_NestedIncluded_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("multi-principals");
             content.SingleData.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
             var toManyAttributeValue = "populated-to-manies member content";
@@ -215,11 +215,11 @@ namespace UnitTests.Serialization.Client
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
             var entity = result.Data;
 
-            // assert
+            // Assert
             Assert.Equal(1, entity.Id);
             Assert.Null(entity.PopulatedToOne);
             Assert.Null(entity.EmptyToManies);
@@ -235,7 +235,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeSingle_DeeplyNestedIncluded_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("multi-principals");
             content.SingleData.Relationships.Add("multi", CreateRelationshipData("multi-principals"));
             var includedAttributeValue = "multi member content";
@@ -266,11 +266,11 @@ namespace UnitTests.Serialization.Client
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
             var entity = result.Data;
 
-            // assert
+            // Assert
             Assert.Equal(1, entity.Id);
             var included = entity.Multi;
             Assert.Equal(10, included.Id);
@@ -287,7 +287,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void DeserializeList_DeeplyNestedIncluded_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = new Document { Data = new List<ResourceObject> { CreateDocumentWithRelationships("multi-principals").SingleData } };
             content.ManyData[0].Relationships.Add("multi", CreateRelationshipData("multi-principals"));
             var includedAttributeValue = "multi member content";
@@ -318,11 +318,11 @@ namespace UnitTests.Serialization.Client
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.DeserializeList<MultipleRelationshipsPrincipalPart>(body);
             var entity = result.Data.First();
 
-            // assert
+            // Assert
             Assert.Equal(1, entity.Id);
             var included = entity.Multi;
             Assert.Equal(10, included.Id);

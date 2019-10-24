@@ -42,7 +42,7 @@ namespace UnitTests.Services
         [Fact]
         public async Task GetRelationshipAsync_Passes_Public_ResourceName_To_Repository()
         {
-            // arrange
+            // Arrange
             const int id = 1;
             const string relationshipName = "collection";
             var relationship = new RelationshipAttribute[] { new HasOneAttribute(relationshipName) };
@@ -56,10 +56,10 @@ namespace UnitTests.Services
 
             var service = GetService();
 
-            // act
+            // Act
             await service.GetRelationshipAsync(id, relationshipName);
 
-            // assert
+            // Assert
             _repositoryMock.Verify(m => m.Get(id), Times.Once);
             _repositoryMock.Verify(m => m.Include(query, relationship), Times.Once);
             _repositoryMock.Verify(m => m.FirstOrDefaultAsync(query), Times.Once);
@@ -68,7 +68,7 @@ namespace UnitTests.Services
         [Fact]
         public async Task GetRelationshipAsync_Returns_Relationship_Value()
         {
-            // arrange
+            // Arrange
             const int id = 1;
             const string relationshipName = "collection";
             var relationship = new RelationshipAttribute[] { new HasOneAttribute(relationshipName) };
@@ -86,10 +86,10 @@ namespace UnitTests.Services
 
             var repository = GetService();
 
-            // act
+            // Act
             var result = await repository.GetRelationshipAsync(id, relationshipName);
 
-            // assert
+            // Assert
             Assert.NotNull(result);
             var collection = Assert.IsType<TodoItemCollection>(result);
             Assert.Equal(todoItem.Collection.Id, collection.Id);

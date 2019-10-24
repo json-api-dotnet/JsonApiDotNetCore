@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Request_ForEmptyCollection_Returns_EmptyDataCollection()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             context.TodoItems.RemoveRange(context.TodoItems);
             await context.SaveChangesAsync();
@@ -49,14 +49,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
             var items = result.Data;
             var meta = result.Meta;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
             Assert.Empty(items);
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Included_Records_Contain_Relationship_Links()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
@@ -83,12 +83,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedBody = JsonConvert.DeserializeObject<Document>(body);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(person.StringId, deserializedBody.Included[0].Id);
             Assert.NotNull(deserializedBody.Included[0].Relationships);

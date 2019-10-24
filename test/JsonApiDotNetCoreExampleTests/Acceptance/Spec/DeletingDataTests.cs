@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Respond_404_If_EntityDoesNotExist()
         {
-            // arrange
+            // Arrange
             var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             var builder = new WebHostBuilder()

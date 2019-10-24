@@ -34,21 +34,21 @@ namespace UnitTests.Internal
         [Fact]
         public void GetDerivedGenericTypes_Gets_Implementation()
         {
-            // arrange
+            // Arrange
             var assembly = GetType().Assembly;
             var openGeneric = typeof(BaseType<>);
             var genericArg = typeof(int);
 
             var expectedImplementation = typeof(DerivedType);
 
-            // act
+            // Act
             var results = TypeLocator.GetDerivedGenericTypes(
                 assembly,
                 openGeneric,
                 genericArg
             );
 
-            // assert
+            // Assert
             Assert.NotNull(results);
             var result = Assert.Single(results);
             Assert.Equal(expectedImplementation, result);
@@ -72,11 +72,11 @@ namespace UnitTests.Internal
         [Fact]
         public void GetIdType_Correctly_Identifies_NonJsonApiResource()
         {
-            // arrange
+            // Arrange
             var type = typeof(DerivedType);
             Type exextedIdType = null;
 
-            // act
+            // Act
             var (isJsonApiResource, idType) = TypeLocator.GetIdType(type);
 
             // Assert
@@ -87,26 +87,26 @@ namespace UnitTests.Internal
         [Fact]
         public void GetIdentifableTypes_Locates_Identifiable_Resource()
         {
-            // arrange
+            // Arrange
             var resourceType = typeof(Model);
 
-            // act
+            // Act
             var results = TypeLocator.GetIdentifableTypes(resourceType.Assembly);
 
-            // assert
+            // Assert
             Assert.Contains(results, r => r.ResourceType == resourceType);
         }
 
         [Fact]
         public void GetIdentifableTypes__Only_Contains_IIdentifiable_Types()
         {
-            // arrange
+            // Arrange
             var resourceType = typeof(Model);
 
-            // act
+            // Act
             var resourceDescriptors = TypeLocator.GetIdentifableTypes(resourceType.Assembly);
 
-            // assert
+            // Assert
             foreach(var resourceDescriptor in resourceDescriptors)
                 Assert.True(typeof(IIdentifiable).IsAssignableFrom(resourceDescriptor.ResourceType));
         }
@@ -114,13 +114,13 @@ namespace UnitTests.Internal
         [Fact]
         public void TryGetResourceDescriptor_Returns_True_If_Type_Is_IIdentfiable()
         {
-            // arrange
+            // Arrange
             var resourceType = typeof(Model);
 
-            // act
+            // Act
             var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var descriptor);
 
-            // assert
+            // Assert
             Assert.True(isJsonApiResource);
             Assert.Equal(resourceType, descriptor.ResourceType);
             Assert.Equal(typeof(int), descriptor.IdType);
@@ -129,13 +129,13 @@ namespace UnitTests.Internal
         [Fact]
         public void TryGetResourceDescriptor_Returns_False_If_Type_Is_IIdentfiable()
         {
-            // arrange
+            // Arrange
             var resourceType = typeof(String);
 
-            // act
+            // Act
             var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var _);
 
-            // assert
+            // Assert
             Assert.False(isJsonApiResource);
         }
     }
