@@ -262,7 +262,6 @@ namespace JsonApiDotNetCore.Data
                 await helper.UpdateAsync((IIdentifiable)parent, hasManyThrough, relationshipIds);
                 return;
             }
-
             var context = _context.Set(relationship.RightType);
             var updatedValue = relationship is HasManyAttribute
                 ? context.Where(e => relationshipIds.Contains(((IIdentifiable)e).StringId)).Cast(relationship.RightType)
@@ -305,13 +304,8 @@ namespace JsonApiDotNetCore.Data
                 // In this case, it does not support .ToListAsync(), so we use the method below.
                 return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
             }
-
             // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
-
-
             var totalCount = await entities.CountAsync();
-
-
             // may be negative
             int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
             int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);

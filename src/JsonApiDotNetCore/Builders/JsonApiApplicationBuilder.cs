@@ -74,6 +74,7 @@ namespace JsonApiDotNetCore.Builders
                 mvcOptions.Filters.Add(typeMatchFilterProvider.Get());
                 mvcOptions.InputFormatters.Insert(0, new JsonApiInputFormatter());
                 mvcOptions.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
+                mvcOptions.EnableEndpointRouting = false;
             });
 
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
