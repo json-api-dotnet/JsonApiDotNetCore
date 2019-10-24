@@ -18,11 +18,8 @@ namespace JsonApiDotNetCore.Extensions
         {
             DisableDetailedErrorsIfProduction(app);
             LogResourceGraphValidations(app);
-
             app.UseEndpointRouting();
-
             app.UseMiddleware<CurrentRequestMiddleware>();
-
             if (useMvc)
                 app.UseMvc();
 

@@ -8,8 +8,8 @@
     <MicrosoftOptionsVersion>3.*</MicrosoftOptionsVersion>
     <EFCoreVersion>3.*</EFCoreVersion>
     <EFCoreToolsVersion>3.*</EFCoreToolsVersion>
-    <NpgsqlVersion>4.0.0</NpgsqlVersion>
-    <NpgsqlPostgreSQLVersion>2.1.0</NpgsqlPostgreSQLVersion>
+    <NpgsqlVersion>4.1.1</NpgsqlVersion>
+    <NpgsqlPostgreSQLVersion>3.0.1</NpgsqlPostgreSQLVersion>
     <TuplesVersion>4.5.0</TuplesVersion>
   </PropertyGroup>
 

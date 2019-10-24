@@ -72,7 +72,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         [Fact]
         public async Task Can_Create_TodoItems()
         {
-            // arrange
+            // Arrange
             var description = Guid.NewGuid().ToString();
             var client = _fixture.Server.CreateClient();
             var httpMethod = new HttpMethod("POST");
@@ -94,12 +94,12 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             var deserializedBody = _fixture.GetDeserializer().DeserializeSingle<TodoItem>(responseBody).Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.NotNull(deserializedBody);
             Assert.Equal(description, deserializedBody.Description);
