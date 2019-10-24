@@ -53,7 +53,6 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-
         private string GetBasePath(string entityName)
         {
             var r = _httpContext.Request;
@@ -63,6 +62,7 @@ namespace JsonApiDotNetCore.Middleware
             }
             return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
         }
+
         internal static string GetNamespaceFromPath(string path, string entityName)
         {
             var entityNameSpan = entityName.AsSpan();

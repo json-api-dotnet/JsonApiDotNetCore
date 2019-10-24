@@ -66,7 +66,6 @@ namespace JsonApiDotNetCore.Extensions
             return services;
         }
 
-
         /// <summary>
         /// Enables client serializers for sending requests and receiving responses
         /// in json:api format. Internally only used for testing.
@@ -74,14 +73,13 @@ namespace JsonApiDotNetCore.Extensions
         /// </summary>
         public static IServiceCollection AddClientSerialization(this IServiceCollection services)
         {
-            services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
-
-            services.AddScoped<IRequestSerializer>(sp =>
+            services.AddSingleton<IResponseDeserializer, ResponseDeserializer>();
+            services.AddSingleton<IRequestSerializer>(sp =>
             {
-                var resourceObjectBuilder = new ResourceObjectBuilder(sp.GetService<IResourceGraph>(), sp.GetService<IResourceObjectBuilderSettingsProvider>().Get());
-                return new RequestSerializer(sp.GetService<IResourceGraph>(), resourceObjectBuilder);
+                var graph = sp.GetService<IResourceGraph>();
+                return new RequestSerializer(graph, new ResourceObjectBuilder(graph, new ResourceObjectBuilderSettings()));
             });
-           return services;
+            return services;
         }
 
         /// <summary>
