@@ -59,11 +59,8 @@ namespace JsonApiDotNetCore.Builders
         public IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null)
         {
             AssertEntityIsNotAlreadyDefined(entityType);
-
-            pluralizedTypeName = pluralizedTypeName ?? _resourceNameFormatter.FormatResourceName(entityType);
-
+            pluralizedTypeName ??= _resourceNameFormatter.FormatResourceName(entityType);
             _entities.Add(GetEntity(pluralizedTypeName, entityType, idType));
-
             return this;
         }
 

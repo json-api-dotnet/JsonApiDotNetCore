@@ -96,8 +96,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
