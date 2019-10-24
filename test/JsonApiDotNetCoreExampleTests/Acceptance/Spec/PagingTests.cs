@@ -95,23 +95,20 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
             var todoItems = _todoItemFaker.Generate(totalCount).ToList();
-
-            foreach (var todoItem in todoItems)
-                todoItem.Owner = person;
+            todoItems.ForEach(ti => ti.Owner = person);
 
             Context.TodoItems.RemoveRange(Context.TodoItems);
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
-
             var route = $"/api/v1/todo-items?page[size]={expectedEntitiesPerPage}&page[number]=-1";
 
             // Act
             var response = await Client.GetAsync(route);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
             var body = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
             var expectedTodoItems = new[] { todoItems[totalCount - 2], todoItems[totalCount - 1] };

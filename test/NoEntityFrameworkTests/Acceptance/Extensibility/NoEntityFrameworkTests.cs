@@ -3,7 +3,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -74,7 +77,6 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
         {
             // Arrange
             var description = Guid.NewGuid().ToString();
-            var client = _fixture.Server.CreateClient();
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/custom-todo-items/";
             var content = new
@@ -93,6 +95,11 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
+
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
 
             // Act
             var response = await client.SendAsync(request);

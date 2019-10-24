@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_404_If_EntityDoesNotExist()
         {
             // Arrange
-            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
+            var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             todoItem.Id = maxPersonId + 100;
             todoItem.CreatedDate = DateTime.Now;
@@ -95,7 +95,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_422_If_IdNotInAttributeList()
         {
             // Arrange
-            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
+            var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()

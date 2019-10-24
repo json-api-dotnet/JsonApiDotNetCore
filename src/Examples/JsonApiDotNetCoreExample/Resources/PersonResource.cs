@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             return new Dictionary<string, object> {
                 { "copyright", "Copyright 2015 Example Corp." },
-                { "authors", new string[] { "Jared Nance", "Maurits Moeys" } }
+                { "authors", new string[] { "Jared Nance", "Maurits Moeys", "Harro van der Kroft" } }
             };
         }
     }

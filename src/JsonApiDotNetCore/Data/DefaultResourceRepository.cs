@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
@@ -298,21 +299,43 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<IEnumerable<TResource>> PageAsync(IQueryable<TResource> entities, int pageSize, int pageNumber)
         {
+            // the IQueryable returned from the hook executor is sometimes consumed here.
+            // In this case, it does not support .ToListAsync(), so we use the method below.
             if (pageNumber >= 0)
             {
-                // the IQueryable returned from the hook executor is sometimes consumed here.
-                // In this case, it does not support .ToListAsync(), so we use the method below.
-                return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
+                entities = entities.PageForward(pageSize, pageNumber);
+                if (entities is IAsyncQueryProvider)
+                {
+                    return await entities.ToListAsync();
+                }
+                else
+                {
+                    return entities.ToList();
+                }
             }
-            // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
-            var totalCount = await entities.CountAsync();
-            // may be negative
-            int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
-            int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
+            else
+            {
+                if (!(entities is IAsyncQueryProvider))
+                {
+                    entities = entities.Reverse();
+                    int firstIndex = pageSize * Math.Abs(pageNumber) - 1;
+                    int numberOfElementsInPage = Math.Min(pageSize, firstIndex + pageSize);
 
-            return await ToListAsync(entities
-                    .Skip(virtualFirstIndex)
-                    .Take(numberOfElementsInPage));
+                    return entities.Skip(firstIndex).Take(numberOfElementsInPage);
+                }
+                else
+                {
+                    // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
+                    var totalCount = await entities.CountAsync();
+
+                    int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
+                    int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
+
+                    return await ToListAsync(entities
+                            .Skip(virtualFirstIndex)
+                            .Take(numberOfElementsInPage));
+                }
+            }
         }
 
         /// <inheritdoc />

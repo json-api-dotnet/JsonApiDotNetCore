@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
@@ -19,7 +20,7 @@ namespace NoEntityFrameworkTests
         private IServiceProvider _services;
         public TestFixture()
         {
-            var builder = new WebHostBuilder().UseStartup<TestStartup>();
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             Server = new TestServer(builder);
             Context = Server.GetService<AppDbContext>();
             Context.Database.EnsureCreated();
