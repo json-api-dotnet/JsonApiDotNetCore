@@ -36,10 +36,9 @@ namespace JsonApiDotNetCore.Extensions
             if (options != null)
                 application.ConfigureJsonApiOptions(options);
             application.ConfigureLogging();
+            application.ConfigureMvc();
             application.ConfigureResources<TEfCoreDbContext>(resources);
             application.ConfigureServices();
-            application.ConfigureMvc();
-
             return services;
         }
 
@@ -59,13 +58,12 @@ namespace JsonApiDotNetCore.Extensions
             var application = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
             if (options != null)
                 application.ConfigureJsonApiOptions(options);
-            if (resources != null)
-                application.ConfigureResources(resources);
-            application.ConfigureServices();
             application.ConfigureMvc();
             if (discovery != null)
                 application.AutoDiscover(discovery);
-
+            if (resources != null)
+                application.ConfigureResources(resources);
+            application.ConfigureServices();
             return services;
         }
 
