@@ -67,7 +67,6 @@ namespace JsonApiDotNetCore.Builders
             _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
             var exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
             var typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
-
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
 
             _mvcBuilder.AddMvcOptions(options =>
@@ -154,7 +153,7 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddSingleton<IResourceGraph>(resourceGraph);
+            _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IResourceContextProvider>(resourceGraph);
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();

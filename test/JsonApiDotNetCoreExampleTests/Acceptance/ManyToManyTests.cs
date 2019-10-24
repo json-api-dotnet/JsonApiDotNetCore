@@ -8,6 +8,7 @@ using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
@@ -204,7 +205,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task Can_Create_Many_To_Many()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var tag = _tagFaker.Generate();
             var author = new Author();
@@ -242,14 +243,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     }
                 }
             };
-
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
 
-            // assert
+            // Assert
             var body = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.Created == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
 

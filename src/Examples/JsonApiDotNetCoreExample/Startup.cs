@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample
     {
         public readonly IConfiguration Config;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExample
             Config = builder.Build();
         }
 
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             services
@@ -45,7 +45,6 @@ namespace JsonApiDotNetCoreExample
                     options.LoaDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
-            return services.BuildServiceProvider();
         }
 
         public virtual void Configure(

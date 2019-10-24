@@ -15,7 +15,7 @@ namespace NoEntityFrameworkExample
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -28,7 +28,7 @@ namespace NoEntityFrameworkExample
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             var mvcBuilder = services.AddMvcCore();
@@ -47,7 +47,6 @@ namespace NoEntityFrameworkExample
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
-            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -15,7 +15,9 @@ namespace JsonApiDotNetCore.Extensions
             foreach (var entry in modelState)
             {
                 if (entry.Value.Errors.Any() == false)
+                {
                     continue;
+                }
 
                 var targetedProperty = resourceType.GetProperty(entry.Key);
                 var attrName = targetedProperty.GetCustomAttribute<AttrAttribute>().PublicAttributeName;
@@ -23,16 +25,21 @@ namespace JsonApiDotNetCore.Extensions
                 foreach (var modelError in entry.Value.Errors)
                 {
                     if (modelError.Exception is JsonApiException jex)
+                    {
                         collection.Errors.AddRange(jex.GetError().Errors);
+                    }
                     else
+                    {
                         collection.Errors.Add(new Error(
                             status: 422,
                             title: entry.Key,
                             detail: modelError.ErrorMessage,
                             meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
-                            source: attrName == null ? null : new {
+                            source: attrName == null ? null : new
+                            {
                                 pointer = $"/data/attributes/{attrName}"
-                        }));
+                            }));
+                    }
                 }
             }
             return collection;

@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     }
                 }
             };
-            var httpMethod = new HttpMethod("PATCH");
+            var httpMethod = HttpMethod.Patch;
             var route = $"api/v1/camelCasedModels/{model.Id}";
             var builder = new WebHostBuilder().UseStartup<Startup>();
 
