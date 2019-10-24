@@ -304,26 +304,11 @@ namespace JsonApiDotNetCore.Data
             if (pageNumber >= 0)
             {
                 entities = entities.PageForward(pageSize, pageNumber);
-                if (entities is IAsyncQueryProvider)
-                {
-                    return await entities.ToListAsync();
-                }
-                else
-                {
-                    return entities.ToList();
-                }
+                return entities is IAsyncQueryProvider ? await entities.ToListAsync() : entities.ToList();
             }
             else
             {
-                if (!(entities is IAsyncQueryProvider))
-                {
-                    entities = entities.Reverse();
-                    int firstIndex = pageSize * Math.Abs(pageNumber) - 1;
-                    int numberOfElementsInPage = Math.Min(pageSize, firstIndex + pageSize);
-
-                    return entities.Skip(firstIndex).Take(numberOfElementsInPage);
-                }
-                else
+                if (entities is IAsyncQueryProvider)
                 {
                     // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
                     var totalCount = await entities.CountAsync();
@@ -331,9 +316,14 @@ namespace JsonApiDotNetCore.Data
                     int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
                     int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
 
-                    return await ToListAsync(entities
-                            .Skip(virtualFirstIndex)
-                            .Take(numberOfElementsInPage));
+                    return await ToListAsync(entities.Skip(virtualFirstIndex).Take(numberOfElementsInPage));
+                }
+                else
+                {
+                    entities = entities.Reverse();
+                    int firstIndex = pageSize * Math.Abs(pageNumber) - 1;
+                    int numberOfElementsInPage = Math.Min(pageSize, firstIndex + pageSize);
+                    return entities.Skip(firstIndex).Take(numberOfElementsInPage);
                 }
             }
         }
