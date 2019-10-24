@@ -20,8 +20,8 @@ A lot of changes were made in v4.0.0, the following chart should help you with c
 
 | .NET Core Version | JADNC Version |
 | ----------------- | ------------- |
-| 2.0 - 2.2         | v3.2          |
-| 3.*               | v4.0          |
+| 2.0 - 2.2         | v3.*          |
+| 3.*               | v4.*          |
 
 
 
