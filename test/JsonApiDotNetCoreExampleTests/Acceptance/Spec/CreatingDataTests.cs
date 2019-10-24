@@ -24,8 +24,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class CreatingDataTests : EndToEndTest
     {
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public CreatingDataTests(TestFixture<TestStartup> fixture) : base(fixture)
         {
@@ -155,9 +155,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.TodoItems, e.Owner });
 
             var owner = new Person();
-            var todoItem = new TodoItem();
-            todoItem.Owner = owner;
-            todoItem.Description = "Description";
+            var todoItem = new TodoItem
+            {
+                Owner = owner,
+                Description = "Description"
+            };
             dbContext.People.Add(owner);
             dbContext.TodoItems.Add(todoItem);
             dbContext.SaveChanges();
@@ -340,7 +342,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var oldPersonDb = dbContext.People.AsNoTracking().Where(p => p.Id == currentPerson.Id).Include(e => e.TodoItems).Single();
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             Assert.Equal(2, newPersonDb.TodoItems.Count);
-            Assert.Equal(1, oldPersonDb.TodoItems.Count);
+            Assert.Single(oldPersonDb.TodoItems);
             Assert.NotNull(newPersonDb.TodoItems.SingleOrDefault(ti => ti.Id == firstTd.Id));
             Assert.NotNull(newPersonDb.TodoItems.SingleOrDefault(ti => ti.Id == secondTd.Id));
             Assert.NotNull(oldPersonDb.TodoItems.SingleOrDefault(ti => ti.Id == thirdTd.Id));

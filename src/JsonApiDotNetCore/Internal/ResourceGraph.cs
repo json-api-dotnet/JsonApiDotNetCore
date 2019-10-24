@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Internal
                     targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberExpression.Member.Name));
                     return targeted;
                 }
-                catch (Exception ex)
+                catch (InvalidOperationException)
                 {
                     ThrowNotExposedError(memberExpression.Member.Name, type);
                 }
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Internal
                     }
                     return targeted;
                 }
-                catch (Exception ex)
+                catch (InvalidOperationException)
                 {
                     ThrowNotExposedError(memberName, type);
                 }

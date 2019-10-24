@@ -11,7 +11,7 @@ namespace UnitTests.Internal
         [Fact]
         public void GetGenericInterfaceImplementation_Gets_Implementation()
         {
-            // arrange
+            // Arrange
             var assembly = GetType().Assembly;
             var openGeneric = typeof(IGenericInterface<>);
             var genericArg = typeof(int);
@@ -19,17 +19,16 @@ namespace UnitTests.Internal
             var expectedImplementation = typeof(Implementation);
             var expectedInterface = typeof(IGenericInterface<int>);
 
-            // act
-            var result = TypeLocator.GetGenericInterfaceImplementation(
+            // Act
+            var (implementation, registrationInterface) = TypeLocator.GetGenericInterfaceImplementation(
                 assembly,
                 openGeneric,
                 genericArg
             );
 
-            // assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedImplementation, result.implementation);
-            Assert.Equal(expectedInterface, result.registrationInterface);
+            // Assert
+            Assert.Equal(expectedImplementation, implementation);
+            Assert.Equal(expectedInterface, registrationInterface);
         }
 
         [Fact]
@@ -58,17 +57,16 @@ namespace UnitTests.Internal
         [Fact]
         public void GetIdType_Correctly_Identifies_JsonApiResource()
         {
-            // arrange
+            // Arrange
             var type = typeof(Model);
             var exextedIdType = typeof(int);
 
-            // act
-            var result = TypeLocator.GetIdType(type);
+            // Act
+            var (isJsonApiResource, idType) = TypeLocator.GetIdType(type);
 
-            // assert
-            Assert.NotNull(result);
-            Assert.True(result.isJsonApiResource);
-            Assert.Equal(exextedIdType, result.idType);
+            // Assert
+            Assert.True(isJsonApiResource);
+            Assert.Equal(exextedIdType, idType);
         }
 
         [Fact]
@@ -79,12 +77,11 @@ namespace UnitTests.Internal
             Type exextedIdType = null;
 
             // act
-            var result = TypeLocator.GetIdType(type);
+            var (isJsonApiResource, idType) = TypeLocator.GetIdType(type);
 
-            // assert
-            Assert.NotNull(result);
-            Assert.False(result.isJsonApiResource);
-            Assert.Equal(exextedIdType, result.idType);
+            // Assert
+            Assert.False(isJsonApiResource);
+            Assert.Equal(exextedIdType, idType);
         }
 
         [Fact]
@@ -136,7 +133,7 @@ namespace UnitTests.Internal
             var resourceType = typeof(String);
 
             // act
-            var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var descriptor);
+            var isJsonApiResource = TypeLocator.TryGetResourceDescriptor(resourceType, out var _);
 
             // assert
             Assert.False(isJsonApiResource);
