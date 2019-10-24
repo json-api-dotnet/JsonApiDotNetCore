@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         private readonly Faker<Person> _personFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public SparseFieldSetTests(TestFixture<TestStartup> fixture)
+        public SparseFieldSetTests(TestFixture<Startup> fixture)
         {
             _dbContext = fixture.GetService<AppDbContext>();
             _resourceGraph = fixture.GetService<IResourceGraph>();

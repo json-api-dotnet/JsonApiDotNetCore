@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExample;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -35,9 +36,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var serializer =  GetService<IRequestSerializer>();
             if (attributes != null)
+            {
                 serializer.SetAttributesToSerialize(attributes);
+            }
             if (relationships != null)
+            {
                 serializer.SetRelationshipsToSerialize(relationships);
+            }
             return serializer;
         }
         public IResponseDeserializer GetDeserializer()

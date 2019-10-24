@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private readonly AppDbContext _context;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public PagingTests(TestFixture<TestStartup> fixture)
+        public PagingTests(TestFixture<Startup> fixture)
         {
             _context = fixture.GetService<AppDbContext>();
             _todoItemFaker = new Faker<TodoItem>()

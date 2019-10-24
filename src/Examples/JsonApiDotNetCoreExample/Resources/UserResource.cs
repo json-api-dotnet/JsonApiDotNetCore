@@ -26,10 +26,13 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             switch (filterQuery.Operation)
             {
+                // need to cast to list first because getting the first
+                // char in a string is apparently not something LINQ can translate
+                // to a query.
                 case "lt":
-                    return users.Where(u => u.Username[0] < filterQuery.Value[0]);
+                    return users.ToList().Where(u => u.Username.First() < filterQuery.Value[0]).AsQueryable();
                 default:
-                    return users.Where(u => u.Username[0] == filterQuery.Value[0]);
+                    return users.ToList().Where(u => u.Username.First() == filterQuery.Value[0]).AsQueryable();
             }
         }
     }

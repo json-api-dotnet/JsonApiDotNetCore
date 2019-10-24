@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -17,9 +18,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     {
         public static MediaTypeHeaderValue JsonApiContentType = new MediaTypeHeaderValue("application/vnd.api+json");
         private HttpClient _client;
-        protected TestFixture<TestStartup> _fixture;
+        protected TestFixture<Startup> _fixture;
         protected readonly IResponseDeserializer _deserializer;
-        public EndToEndTest(TestFixture<TestStartup> fixture)
+        public EndToEndTest(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _deserializer = GetDeserializer();

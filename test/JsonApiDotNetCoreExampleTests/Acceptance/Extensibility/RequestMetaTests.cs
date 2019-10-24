@@ -10,15 +10,16 @@ using JsonApiDotNetCore.Models;
 using System.Collections;
 using JsonApiDotNetCoreExampleTests.Startups;
 using JsonApiDotNetCoreExample.Resources;
+using JsonApiDotNetCoreExample;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
     public class RequestMetaTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public RequestMetaTests(TestFixture<TestStartup> fixture)
+        public RequestMetaTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

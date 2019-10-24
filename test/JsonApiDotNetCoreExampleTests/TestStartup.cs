@@ -19,8 +19,8 @@ namespace JsonApiDotNetCoreExampleTests
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
-            services.AddClientSerialization();
-            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            //services.AddClientSerialization();
+            //services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
         }
     }
 }

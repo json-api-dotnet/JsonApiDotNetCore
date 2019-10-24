@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
@@ -18,9 +19,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeeplyNestedInclusionTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public DeeplyNestedInclusionTests(TestFixture<TestStartup> fixture)
+        public DeeplyNestedInclusionTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

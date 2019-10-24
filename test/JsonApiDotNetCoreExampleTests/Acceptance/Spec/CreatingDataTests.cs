@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public CreatingDataTests(TestFixture<TestStartup> fixture) : base(fixture)
+        public CreatingDataTests(TestFixture<Startup> fixture) : base(fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()

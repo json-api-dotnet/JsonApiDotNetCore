@@ -13,8 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class QueryParameters
     {
-        private TestFixture<TestStartup> _fixture;
-        public QueryParameters(TestFixture<TestStartup> fixture)
+        private TestFixture<Startup> _fixture;
+        public QueryParameters(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

@@ -1,4 +1,5 @@
-﻿using System.Net;
+using JsonApiDotNetCoreExample;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -8,9 +9,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class AttributeSortTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public AttributeSortTests(TestFixture<TestStartup> fixture)
+        public AttributeSortTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

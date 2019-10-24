@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class ResourceDefinitionTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<User> _userFaker;
         private Faker<TodoItem> _todoItemFaker;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             .RuleFor(a => a.Author, f => new Author());
 
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
-        public ResourceDefinitionTests(TestFixture<TestStartup> fixture)
+        public ResourceDefinitionTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -73,6 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var user = _userFaker.Generate();
             var serializer = _fixture.GetSerializer<User>(p => new { p.Password, p.Username });
 
+            
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/users";
 

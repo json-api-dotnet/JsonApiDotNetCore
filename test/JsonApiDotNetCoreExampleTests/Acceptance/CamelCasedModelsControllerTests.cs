@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class CamelCasedModelsControllerTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<CamelCasedModel> _faker;
 
-        public CamelCasedModelsControllerTests(TestFixture<TestStartup> fixture)
+        public CamelCasedModelsControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -11,12 +12,12 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class PagingTests : TestFixture<TestStartup>
+    public class PagingTests : TestFixture<Startup>
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public PagingTests(TestFixture<TestStartup> fixture)
+        public PagingTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()

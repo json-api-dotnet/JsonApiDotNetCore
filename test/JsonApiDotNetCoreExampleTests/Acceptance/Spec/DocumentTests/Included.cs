@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<TodoItemCollection> _todoItemCollectionFaker;
 
-        public Included(TestFixture<TestStartup> fixture)
+        public Included(TestFixture<Startup> fixture)
         {
             _context = fixture.GetService<AppDbContext>();
             _personFaker = new Faker<Person>()
