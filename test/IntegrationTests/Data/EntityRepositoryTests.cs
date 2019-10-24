@@ -30,7 +30,8 @@ namespace JADNC.IntegrationTests.Data
         {
             // Arrange
             var itemId = 213;
-            using (var arrangeContext = GetContext())
+            var seed = Guid.NewGuid();
+            using (var arrangeContext = GetContext(seed))
             {
                 var (repository, targetedFields) = Setup(arrangeContext);
                 var todoItemUpdates = new TodoItem
@@ -38,6 +39,8 @@ namespace JADNC.IntegrationTests.Data
                     Id = itemId,
                     Description = Guid.NewGuid().ToString()
                 };
+                arrangeContext.Add(todoItemUpdates);
+                arrangeContext.SaveChanges();
 
                 var descAttr = new AttrAttribute("description", "Description")
                 {
@@ -51,7 +54,7 @@ namespace JADNC.IntegrationTests.Data
             }
 
             // Assert - in different context
-            using var assertContext = GetContext();
+            using var assertContext = GetContext(seed);
             {
                 var (repository, targetedFields) = Setup(assertContext);
 
@@ -61,8 +64,79 @@ namespace JADNC.IntegrationTests.Data
                 Assert.Equal(fetchedTodo.Description, fetchedTodo.Description);
 
             }
-
         }
+
+        [Theory]
+        [InlineData(3, 2, new[] { 4, 5, 6 })]
+        [InlineData(8, 2, new[] { 9 })]
+        [InlineData(20, 1, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
+        public async Task Paging_PageNumberIsPositive_ReturnCorrectIdsAtTheFront(int pageSize, int pageNumber, int[] expectedResult)
+        {
+            // Arrange
+            using var context = GetContext();
+            var (repository, targetedFields) = Setup(context);
+            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
+            await context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.PageAsync(context.Set<TodoItem>(), pageSize, pageNumber);
+
+            // Assert
+            Assert.Equal(TodoItems(expectedResult), result, new IdComparer<TodoItem>());
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-10)]
+        public async Task Paging_PageSizeNonPositive_DoNothing(int pageSize)
+        {
+            // Arrange
+            using var context = GetContext();
+            var (repository, targetedFields) = Setup(context);
+            var items = TodoItems(2, 3, 1);
+            context.AddRange(items);
+            await context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.PageAsync(context.Set<TodoItem>(), pageSize, 3);
+
+            // Assert
+            Assert.Equal(items.ToList(), result.ToList(), new IdComparer<TodoItem>());
+        }
+
+        [Fact]
+        public async Task Paging_PageNumberDoesNotExist_ReturnEmptyAQueryable()
+        {
+            // Arrange
+            var items = TodoItems(2, 3, 1);
+            using var context = GetContext();
+            var (repository, targetedFields) = Setup(context);
+            context.AddRange(items);
+
+            // Act
+            var result = await repository.PageAsync(context.Set<TodoItem>(), 2, 3);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task Paging_PageNumberIsZero_PretendsItsOne()
+        {
+            // Arrange
+            using var context = GetContext();
+            var (repository, targetedFields) = Setup(context);
+            context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9));
+            await context.SaveChangesAsync();
+
+            // Act
+            var result = await repository.PageAsync(entities: context.Set<TodoItem>(), pageSize: 1, pageNumber: 0);
+
+            // Assert
+            Assert.Equal(TodoItems(2), result, new IdComparer<TodoItem>());
+        }
+
         [Theory]
         [InlineData(6, -1, new[] { 4, 5, 6, 7, 8, 9 })]
         [InlineData(6, -2, new[] { 1, 2, 3 })]
@@ -93,16 +167,18 @@ namespace JADNC.IntegrationTests.Data
             return (repository, targetedFields);
         }
 
-        private AppDbContext GetContext()
+        private AppDbContext GetContext(Guid? seed = null)
         {
+            Guid actualSeed = seed == null ? Guid.NewGuid() : seed.GetValueOrDefault();
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "IntegrationDatabaseRepository")
+                .UseInMemoryDatabase(databaseName: $"IntegrationDatabaseRepository{actualSeed}")
                 .Options;
             var context = new AppDbContext(options);
 
             context.TodoItems.RemoveRange(context.TodoItems.ToList());
             return context;
         }
+
         private static TodoItem[] TodoItems(params int[] ids)
         {
             return ids.Select(id => new TodoItem { Id = id }).ToArray();

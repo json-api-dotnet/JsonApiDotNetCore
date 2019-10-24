@@ -16,7 +16,7 @@ A framework for building [json:api](http://jsonapi.org/) compliant web APIs. The
 
 ## Compatibility
 
-A lot of changes were made in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
+A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
 
 | .NET Core Version | JADNC Version |
 | ----------------- | ------------- |
@@ -66,10 +66,12 @@ public class Article : Identifiable
 ```csharp
 public class ArticlesController : JsonApiController<Article>
 {
-    public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService<Article> resourceService) 
-    : base(jsonApiContext, resourceService) { }
+        public ArticlesController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceService<Article> resourceService,
+            ILoggerFactory loggerFactory) 
+            : base(jsonApiOptions, resourceService, loggerFactory)
+        { }
 }
 ```
 
@@ -92,7 +94,7 @@ public class Startup
 
 ### Development
 
-Restore all nuget packages with:
+Restore all NuGet packages with:
 
 ```bash
 dotnet restore
@@ -100,11 +102,10 @@ dotnet restore
 
 #### Testing
 
-Running tests locally requires access to a postgresql database.  
-If you have docker installed, this can be propped up via: 
+Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via: 
 
 ```bash
-docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432   postgres
+docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres
 ```
 
 And then to run the tests:
