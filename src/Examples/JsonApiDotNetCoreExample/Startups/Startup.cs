@@ -44,6 +44,7 @@ namespace JsonApiDotNetCoreExample
                     options.LoaDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
+            services.AddClientSerialization();
         }
 
         public virtual void Configure(
