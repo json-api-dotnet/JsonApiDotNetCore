@@ -35,10 +35,7 @@ namespace JsonApiDotNetCore.Extensions
             app.UseMiddleware<CurrentRequestMiddleware>();
 
             // Executes the endpoints that was selected by routing.
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
         private static void DisableDetailedErrorsIfProduction(IApplicationBuilder app)
