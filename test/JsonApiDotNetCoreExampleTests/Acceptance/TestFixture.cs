@@ -11,7 +11,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExample;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -14,8 +13,12 @@ namespace NoEntityFrameworkExample.Services
 {
     public class TodoItemService : IResourceService<TodoItem>
     {
-        private readonly string _connectionString = "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=postgres";
+        private readonly string _connectionString;
 
+        public TodoItemService(IConfiguration config)
+        {
+            _connectionString = config["Data:DefaultConnection"];
+        }
 
         private IDbConnection Connection
         {

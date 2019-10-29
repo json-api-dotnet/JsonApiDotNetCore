@@ -39,10 +39,10 @@ namespace NoEntityFrameworkExample
                     options => options.Namespace = "api/v1",
                     resources: resources => resources.AddResource<TodoItem>("todo-items"),
                     mvcBuilder: mvcBuilder
-                ); ;
+                );
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=postgres"); 
+            optionsBuilder.UseNpgsql(GetDbConnectionString()); 
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
@@ -54,5 +54,7 @@ namespace NoEntityFrameworkExample
             context.Database.EnsureCreated();
             app.UseJsonApi();
         }
+
+        public string GetDbConnectionString() => Configuration["Data:DefaultConnection"];
     }
 }
