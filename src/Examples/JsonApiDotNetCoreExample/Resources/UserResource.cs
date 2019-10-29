@@ -26,9 +26,8 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             switch (filterQuery.Operation)
             {
-                // need to cast to list first because getting the first
-                // char in a string is apparently not something LINQ can translate
-                // to a query.
+                /// In EF core >= 3.0 we need to explicitly evaluate the query first. This could probably be translated
+                /// into a query by building expression trees.
                 case "lt":
                     return users.ToList().Where(u => u.Username.First() < filterQuery.Value[0]).AsQueryable();
                 default:

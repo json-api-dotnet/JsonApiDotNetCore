@@ -24,7 +24,6 @@ namespace GettingStarted
         public void Configure(IApplicationBuilder app, SampleDbContext context)
         {
             context.Database.EnsureDeleted(); // indicies need to be reset
-            context.Database.EnsureCreated();
             app.UseJsonApi();
         }
     }

@@ -12,19 +12,6 @@
 
 A framework for building [json:api](http://jsonapi.org/) compliant web APIs. The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection making extensibility incredibly easy.
 
-
-
-## Compatibility
-
-A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
-
-| .NET Core Version | JADNC Version |
-| ----------------- | ------------- |
-| 2.0 - 2.2         | v3.*          |
-| 3.*               | v4.*          |
-
-
-
 ## Getting Started
 
 These are some steps you can take to help you understand what this project is and how you can use it:
@@ -121,3 +108,15 @@ Sometimes the compiled files can be dirty / corrupt from other branches / failed
 ```bash
 dotnet clean
 ```
+
+
+## Compatibility
+
+A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
+
+| .NET Core Version | JADNC Version |
+| ----------------- | ------------- |
+| 2.0 - 2.2         | v3.*          |
+| 3.*               | v4.*          |
+
+
