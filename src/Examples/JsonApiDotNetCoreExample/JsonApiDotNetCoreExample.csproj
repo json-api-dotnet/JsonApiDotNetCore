@@ -28,4 +28,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Startups\" />
+  </ItemGroup>
 </Project>

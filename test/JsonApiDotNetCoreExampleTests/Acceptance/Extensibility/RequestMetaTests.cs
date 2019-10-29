@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 using JsonApiDotNetCoreExample.Models;
-using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using System.Collections;
-using JsonApiDotNetCoreExampleTests.Startups;
-using JsonApiDotNetCoreExample.Resources;
 using JsonApiDotNetCoreExample;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
