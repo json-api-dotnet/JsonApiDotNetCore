@@ -8,6 +8,7 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -33,8 +34,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_404_If_EntityDoesNotExist()
         {
             // Arrange
-            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
-            var todoItem = _todoItemFaker.Generate();
+            var lastTodo = _context.TodoItems.AsEnumerable().LastOrDefault();
+            var lastTodoId = lastTodo?.Id ?? 0;
+
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
@@ -42,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/todo-items/{maxPersonId + 100}";
+            var route = $"/api/v1/todo-items/{lastTodoId + 100}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

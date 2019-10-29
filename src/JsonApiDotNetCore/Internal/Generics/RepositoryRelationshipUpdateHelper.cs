@@ -47,7 +47,6 @@ namespace JsonApiDotNetCore.Internal.Generics
                 await UpdateOneToManyAsync(parent, relationship, relationshipIds);
             else
                 await UpdateOneToOneAsync(parent, relationship, relationshipIds);
-
         }
 
         private async Task UpdateOneToOneAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
