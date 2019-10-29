@@ -339,8 +339,6 @@ namespace UnitTests.Serialization.Server
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
             // Act
             string serialized = serializer.SerializeSingle(entity);
-
-            Console.WriteLine(serialized);
             // Assert
             var expectedFormatted =
             @"{

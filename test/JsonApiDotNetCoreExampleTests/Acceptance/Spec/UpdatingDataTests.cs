@@ -189,7 +189,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(body);
-            Console.WriteLine(body);
             Assert.NotNull(document);
             Assert.NotNull(document.Data);
             Assert.NotNull(document.SingleData.Attributes);

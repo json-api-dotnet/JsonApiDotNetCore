@@ -137,7 +137,6 @@ namespace UnitTests.Serialization.Client
 
             // Act
             string serialized = _serializer.Serialize(entityWithRelationships);
-            Console.WriteLine(serialized);
             // Assert
             var expectedFormatted =
             @"{
