@@ -14,12 +14,8 @@ namespace NoEntityFrameworkExample.Services
 {
     public class TodoItemService : IResourceService<TodoItem>
     {
-        private readonly string _connectionString;
+        private readonly string _connectionString = "Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=postgres";
 
-        public TodoItemService(IConfiguration config)
-        {
-            _connectionString = config.GetValue<string>("Data:DefaultConnection");
-        }
 
         private IDbConnection Connection
         {

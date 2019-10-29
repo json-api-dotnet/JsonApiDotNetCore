@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace NoEntityFrameworkExample.Models
 {
-    public class TodoItem : Identifiable, IIsLockable
+    public class TodoItem : Identifiable
     {
         public TodoItem()
         {
@@ -31,48 +30,7 @@ namespace NoEntityFrameworkExample.Models
         [Attr("updated-date")]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr("calculated-value", isImmutable: true)]
-        public string CalculatedValue
-        {
-            get => "joe";
-        }
-
         [Attr("offset-date")]
         public DateTimeOffset? OffsetDate { get; set; }
- 
-        public int? OwnerId { get; set; }
-        public int? AssigneeId { get; set; }
-        public Guid? CollectionId { get; set; }
-
-        [HasOne("owner")]
-        public virtual Person Owner { get; set; }
-
-        [HasOne("assignee")]
-        public virtual Person Assignee { get; set; }
-
-        [HasOne("one-to-one-person")]
-        public virtual Person ToOnePerson { get; set; }
-        public virtual int? ToOnePersonId { get; set; }
-
-
-        [HasMany("stake-holders")]
-        public virtual List<Person> StakeHolders { get; set; }
-
-        [HasOne("collection")]
-        public virtual TodoItemCollection Collection { get; set; }
-
-
-        // cyclical to-one structure
-        public virtual int? DependentTodoItemId { get; set; }
-        [HasOne("dependent-on-todo")]
-        public virtual TodoItem DependentTodoItem { get; set; }
-
-
-        // cyclical to-many structure
-        public virtual int? ParentTodoItemId {get; set;}
-        [HasOne("parent-todo")]
-        public virtual TodoItem ParentTodoItem { get; set; }
-        [HasMany("children-todos")]
-        public virtual List<TodoItem> ChildrenTodoItems { get; set; }
     }
 }

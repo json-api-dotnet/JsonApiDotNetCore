@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoEntityFrameworkExample.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 
@@ -37,13 +36,13 @@ namespace NoEntityFrameworkExample
                     builder.AddConfiguration(Configuration.GetSection("Logging"));
                     builder.AddConsole();
                 }).AddJsonApi(
-                    options =>  options.Namespace = "api/v1",
-                    resources: resources => resources.AddResource<TodoItem>("custom-todo-items"),
+                    options => options.Namespace = "api/v1",
+                    resources: resources => resources.AddResource<TodoItem>("todo-items"),
                     mvcBuilder: mvcBuilder
-                );
+                ); ;
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
-            optionsBuilder.UseNpgsql(Configuration.GetValue<string>("Data:DefaultConnection")); 
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=JsonApiDotNetCoreExample;User ID=postgres;Password=postgres"); 
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();

@@ -9,12 +9,6 @@ namespace NoEntityFrameworkExample.Data
         : base(options)
         { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<TodoItem>()
-                .Property(t => t.CreatedDate).HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
-        }
-
         public DbSet<TodoItem> TodoItems { get; set; }
     }
 

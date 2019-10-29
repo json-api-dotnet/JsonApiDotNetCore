@@ -3,12 +3,12 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Xunit;
+using Startup = NoEntityFrameworkExample.Startup;
+using TodoItem = NoEntityFrameworkExample.Models.TodoItem;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {
@@ -31,7 +31,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             var client = _fixture.Server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/custom-todo-items";
+            var route = $"/api/v1/todo-items";
 
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -57,7 +57,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             var client = _fixture.Server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/custom-todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todo-items/{todoItem.Id}";
 
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -78,12 +78,12 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // Arrange
             var description = Guid.NewGuid().ToString();
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/custom-todo-items/";
+            var route = $"/api/v1/todo-items/";
             var content = new
             {
                 data = new
                 {
-                    type = "custom-todo-items",
+                    type = "todo-items",
                     attributes = new
                     {
                         description,

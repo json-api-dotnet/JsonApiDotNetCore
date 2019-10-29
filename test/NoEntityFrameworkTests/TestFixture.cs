@@ -1,13 +1,10 @@
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
-using JsonApiDotNetCoreExample;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using NoEntityFrameworkExample.Data;
+using NoEntityFrameworkExample.Models;
 using System;
 using System.Linq.Expressions;
 using Startup = NoEntityFrameworkExample.Startup;
@@ -23,7 +20,7 @@ namespace NoEntityFrameworkTests
         {
             var builder = new WebHostBuilder().UseStartup<Startup>();
             Server = new TestServer(builder);
-            Context = Server.GetService<AppDbContext>();
+            Context = (AppDbContext)Server.Services.GetService(typeof(AppDbContext));
             Context.Database.EnsureCreated();
             _services = Server.Host.Services;
         }
@@ -39,17 +36,7 @@ namespace NoEntityFrameworkTests
         }
         public IResponseDeserializer GetDeserializer()
         {
-            var resourceGraph = new ResourceGraphBuilder()
-                .AddResource<PersonRole>()
-                .AddResource<Article>()
-                .AddResource<Tag>()
-                .AddResource<CamelCasedModel>()
-                .AddResource<User>()
-                .AddResource<Person>()
-                .AddResource<Author>()
-                .AddResource<Passport>()
-                .AddResource<TodoItemClient>("custom-todo-items")
-                .AddResource<TodoItemCollectionClient, Guid>().Build();
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>("todo-items").Build();
             return new ResponseDeserializer(resourceGraph);
         }
 

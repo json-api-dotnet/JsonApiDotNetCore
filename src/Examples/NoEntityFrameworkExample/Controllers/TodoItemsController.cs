@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace NoEntityFrameworkExample.Controllers
 {
-    public class CustomTodoItemsController : JsonApiController<TodoItem>
+    public class TodoItemsController : JsonApiController<TodoItem>
     {
-        public CustomTodoItemsController(
+        public TodoItemsController(
             IJsonApiOptions jsonApiOptions,
             IResourceService<TodoItem> resourceService, 
             ILoggerFactory loggerFactory) 
