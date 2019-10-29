@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -38,14 +37,12 @@ namespace JsonApiDotNetCore.Internal
     {
         private readonly string _namespace;
         private readonly IResourceNameFormatter _formatter;
-        private readonly IResourceGraph _resourceGraph;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
         private readonly Dictionary<string, Type> _registeredResources = new Dictionary<string, Type>();
-        public DefaultRoutingConvention(IJsonApiOptions options, IResourceNameFormatter formatter, IResourceGraph resourceGraph)
+        public DefaultRoutingConvention(IJsonApiOptions options, IResourceNameFormatter formatter)
         {
             _namespace = options.Namespace;
             _formatter = formatter;
-            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc/>
@@ -61,43 +58,18 @@ namespace JsonApiDotNetCore.Internal
             foreach (var controller in application.Controllers)
             {
                 var resourceType = GetResourceTypeFromController(controller.ControllerType);
-
                 if (resourceType != null)
-                {
                     _registeredResources.Add(controller.ControllerName, resourceType);
-                }
 
                 if (RoutingConventionDisabled(controller) == false)
-                {
                     continue;
-                }
-                // if defined in resourcegraph, it should be used
-                var contexts = _resourceGraph.GetResourceContexts();
 
-                var foundResourceGraph = contexts.First(c => c.ResourceType == resourceType);
-                string template = null;
-                if (foundResourceGraph != null)
-                {
-                    template = $"{_namespace}/{foundResourceGraph.ResourceName}";
-                }
-                else
-                {
-                    template = TemplateFromResource(controller) ?? TemplateFromController(controller);
-                }
-
+                var template = TemplateFromResource(controller) ?? TemplateFromController(controller);
                 if (template == null)
-                {
                     throw new JsonApiSetupException($"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
-                }
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel { Template = template };
             }
-
-        }
-
-        public void HandleControllers(IList<ControllerModel> controllers)
-        {
-
         }
 
         /// <summary>
@@ -156,7 +128,7 @@ namespace JsonApiDotNetCore.Internal
             {
                 var nextBaseType = currentBaseType.BaseType;
 
-                if ((nextBaseType == controllerBase || nextBaseType == jsonApiMixin) && currentBaseType.IsGenericType)
+                if ( (nextBaseType == controllerBase || nextBaseType == jsonApiMixin) && currentBaseType.IsGenericType)
                 {
                     var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.Inherits(identifiable));
                     if (potentialResource != null)

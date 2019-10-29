@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExample
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
-        {            services.AddJsonApi();
+        {
             var loggerFactory = new LoggerFactory();
             services
                 .AddSingleton<ILoggerFactory>(loggerFactory)
@@ -44,8 +44,6 @@ namespace JsonApiDotNetCoreExample
                     options.LoaDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
-           
-
             services.AddClientSerialization();
         }
 
@@ -56,7 +54,6 @@ namespace JsonApiDotNetCoreExample
         {
 
             context.Database.EnsureCreated();
-           
             app.UseJsonApi();
         }
 

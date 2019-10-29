@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
@@ -24,7 +23,6 @@ namespace NoEntityFrameworkTests
             var builder = new WebHostBuilder().UseStartup<Startup>();
             Server = new TestServer(builder);
             Context = Server.GetService<AppDbContext>();
-
             Context.Database.EnsureCreated();
             _services = Server.Host.Services;
         }
@@ -40,13 +38,7 @@ namespace NoEntityFrameworkTests
         }
         public IResponseDeserializer GetDeserializer()
         {
-            IResourceGraph resourceGraph = GetResourceGraph();
-            return new ResponseDeserializer(resourceGraph);
-        }
-
-        private static IResourceGraph GetResourceGraph()
-        {
-            return new ResourceGraphBuilder()
+            var resourceGraph = new ResourceGraphBuilder()
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()
@@ -57,16 +49,10 @@ namespace NoEntityFrameworkTests
                 .AddResource<Passport>()
                 .AddResource<TodoItemClient>("custom-todo-items")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
+            return new ResponseDeserializer(resourceGraph);
         }
 
-        public T GetService<T>()
-        {
-            if(typeof(T) == typeof(IResourceGraph))
-            {
-                return (T) GetResourceGraph();
-            }
-            return (T)_services.GetService(typeof(T));
-        }
+        public T GetService<T>() => (T)_services.GetService(typeof(T));
 
         public void Dispose()
         {
