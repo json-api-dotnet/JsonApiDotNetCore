@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using System;
 using System.Linq.Expressions;
+using Startup = NoEntityFrameworkExample.Startup;
 
 namespace NoEntityFrameworkTests
 {

@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Models;
+using NoEntityFrameworkExample.Models;
 using Microsoft.Extensions.Logging;
 
 namespace NoEntityFrameworkExample.Controllers

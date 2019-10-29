@@ -1,7 +1,5 @@
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using NoEntityFrameworkExample.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
+using NoEntityFrameworkExample.Data;
+using NoEntityFrameworkExample.Models;
 
 namespace NoEntityFrameworkExample
 {

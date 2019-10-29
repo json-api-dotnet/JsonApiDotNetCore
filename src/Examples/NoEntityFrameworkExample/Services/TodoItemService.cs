@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Dapper;
 using System.Data;
-using JsonApiDotNetCoreExample.Models;
+using NoEntityFrameworkExample.Models;
 using System.Linq;
 
 namespace NoEntityFrameworkExample.Services

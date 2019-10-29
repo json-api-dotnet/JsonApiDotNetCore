@@ -6,11 +6,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Folder Include="Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
-    <ProjectReference Include="../../Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
 
   <ItemGroup>
