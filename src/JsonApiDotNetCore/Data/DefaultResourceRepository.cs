@@ -159,11 +159,10 @@ namespace JsonApiDotNetCore.Data
                 if (value == null)
                     continue;
 
-                if (value is IEnumerable collection)
+                if (value is IEnumerable<IIdentifiable> collection)
                 {
-                    foreach (IIdentifiable single in ((IEnumerable<IIdentifiable>)collection).ToList())
+                    foreach (IIdentifiable single in collection.ToList())
                         _context.Entry(single).State = EntityState.Detached;
-
                     /// detaching has many relationships is not sufficient to 
                     /// trigger a full reload of relationships: the navigation 
                     /// property actually needs to be nulled out, otherwise
