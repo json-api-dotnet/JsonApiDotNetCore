@@ -1,5 +1,4 @@
 language: csharp
-dist: trusty
 sudo: required
 services:
  - postgresql
@@ -13,3 +12,7 @@ branches:
     - develop
 script:
   - ./build.sh
+
+
+
+
