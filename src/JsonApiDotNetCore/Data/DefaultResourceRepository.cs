@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -268,11 +269,20 @@ namespace JsonApiDotNetCore.Data
                 return;
             }
             var context = _context.Set(relationship.RightType);
-            var updatedValue = relationship is HasManyAttribute
-                ? context.Where(e => relationshipIds.Contains(((IIdentifiable)e).StringId)).Cast(relationship.RightType)
-                : context.FirstOrDefault(e => relationshipIds.First() == ((IIdentifiable)e).StringId);
 
-            relationship.SetValue(parent, updatedValue);
+            if (relationship is HasManyAttribute)
+            {
+                // todo: we should be to do this with an expression that can be translated into a query
+                var value = relationshipIds.Any() ? context.AsEnumerable().Where(e => relationshipIds.Contains(((IIdentifiable)e).StringId)).Cast(relationship.RightType) : TypeHelper.CreateListFor(relationship.RightType);
+                relationship.SetValue(parent, value);
+            }
+            else
+            {
+                // todo: we should be to do this with an expression that can be translated into a query
+                var value = relationshipIds.Any() ? context.AsEnumerable().FirstOrDefault(e => relationshipIds.First() == ((IIdentifiable)e).StringId) : null;
+                relationship.SetValue(parent, value);
+            }
+
             await _context.SaveChangesAsync();
         }
 
