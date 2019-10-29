@@ -16,13 +16,13 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Name_SortService_IsCorrect()
         {
-            // arrange
+            // Arrange
             var filterService = GetService();
 
-            // act
+            // Act
             var name = filterService.Name;
 
-            // assert
+            // Assert
             Assert.Equal("sort", name);
         }
 
@@ -32,11 +32,11 @@ namespace UnitTests.QueryParameters
         [InlineData(",,2")]
         public void Parse_InvalidSortQuery_ThrowsJsonApiException(string stringSortQuery)
         {
-            // arrange
+            // Arrange
             var query = new KeyValuePair<string, StringValues>($"sort", stringSortQuery);
             var sortService = GetService();
 
-            // act, assert
+            // Act, assert
             var exception = Assert.Throws<JsonApiException>(() => sortService.Parse(query));
             Assert.Contains("sort", exception.Message);
         }

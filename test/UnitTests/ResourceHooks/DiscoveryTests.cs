@@ -22,9 +22,9 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void Hook_Discovery()
         {
-            // arrange & act
+            // Arrange & act
             var hookConfig = new HooksDiscovery<Dummy>();
-            // assert
+            // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
 
@@ -46,9 +46,9 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void Hook_Discovery_With_Inheritance()
         {
-            // arrange & act
+            // Arrange & act
             var hookConfig = new HooksDiscovery<AnotherDummy>();
-            // assert
+            // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
@@ -70,7 +70,7 @@ namespace UnitTests.ResourceHooks
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>
             {
-                // arrange & act
+                // Arrange & act
                 var hookConfig = new HooksDiscovery<YetAnotherDummy>();
             });
 
@@ -95,7 +95,7 @@ namespace UnitTests.ResourceHooks
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>
             {
-                // arrange & act
+                // Arrange & act
                 var hookConfig = new HooksDiscovery<DoubleDummy>();
             });
         }

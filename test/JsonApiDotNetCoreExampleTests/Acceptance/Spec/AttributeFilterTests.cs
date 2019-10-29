@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
@@ -17,11 +18,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class AttributeFilterTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public AttributeFilterTests(TestFixture<TestStartup> fixture)
+        public AttributeFilterTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -37,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Filter_On_Guid_Properties()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             context.TodoItems.Add(todoItem);
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items?filter[guid-property]={todoItem.GuidProperty}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var list =  _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
@@ -55,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var todoItemResponse = list.Single();
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(todoItem.Id, todoItemResponse.Id);
             Assert.Equal(todoItem.GuidProperty, todoItemResponse.GuidProperty);
@@ -64,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Filter_On_Related_Attrs()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
@@ -76,13 +77,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items?include=owner&filter[owner.first-name]={person.FirstName}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var list = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data.First();
 
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             list.Owner.FirstName = person.FirstName;
         }
@@ -90,22 +91,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Cannot_Filter_If_Explicitly_Forbidden()
         {
-            // arrange
+            // Arrange
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todo-items?include=owner&filter[achieved-date]={DateTime.UtcNow.Date}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
         public async Task Can_Filter_On_Not_Equal_Values()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             context.TodoItems.Add(todoItem);
@@ -116,12 +117,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[ordinal]=ne:{todoItem.Ordinal}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var list = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.DoesNotContain(list, x => x.Ordinal == todoItem.Ordinal);
         }
@@ -129,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Filter_On_In_Array_Values()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var todoItems = _todoItemFaker.Generate(5);
             var guids = new List<Guid>();
@@ -150,14 +151,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items?filter[guid-property]=in:{string.Join(",", guids)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedTodoItems = _fixture
                 .GetDeserializer()
                 .DeserializeList<TodoItem>(body).Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(guids.Count(), deserializedTodoItems.Count());
             foreach (var item in deserializedTodoItems)
@@ -170,7 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Filter_On_Related_In_Array_Values()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var todoItems = _todoItemFaker.Generate(3);
             var ownerFirstNames = new List<string>();
@@ -187,13 +188,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items?include=owner&filter[owner.first-name]=in:{string.Join(",", ownerFirstNames)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
             var included = documents.Included;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(ownerFirstNames.Count(), documents.ManyData.Count());
             Assert.NotNull(included);
@@ -206,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Filter_On_Not_In_Array_Values()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             context.TodoItems.RemoveRange(context.TodoItems);
             context.SaveChanges();
@@ -229,14 +230,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[guid-property]=nin:{string.Join(",", notInGuids)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializedTodoItems = _fixture
                 .GetDeserializer()
                 .DeserializeList<TodoItem>(body).Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(totalCount - notInGuids.Count(), deserializedTodoItems.Count());
             foreach (var item in deserializedTodoItems)

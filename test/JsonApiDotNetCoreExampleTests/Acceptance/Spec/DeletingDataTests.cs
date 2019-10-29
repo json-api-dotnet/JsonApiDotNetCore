@@ -8,6 +8,7 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -15,11 +16,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeletingDataTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
 
-        public DeletingDataTests(TestFixture<TestStartup> fixture)
+        public DeletingDataTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -32,9 +33,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Respond_404_If_EntityDoesNotExist()
         {
-            // arrange
-            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
-            var todoItem = _todoItemFaker.Generate();
+            // Arrange
+            var lastTodo = _context.TodoItems.AsEnumerable().LastOrDefault();
+            var lastTodoId = lastTodo?.Id ?? 0;
+
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
@@ -42,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/todo-items/{maxPersonId + 100}";
+            var route = $"/api/v1/todo-items/{lastTodoId + 100}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

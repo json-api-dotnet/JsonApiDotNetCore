@@ -47,10 +47,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
-            // arrange, act
+            // Arrange, act
             _facade.AddAssembly(typeof(Person).Assembly);
 
-            // assert
+            // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var personResource = resourceGraph.GetResourceContext(typeof(Person));
             var articleResource = resourceGraph.GetResourceContext(typeof(Article));
@@ -64,10 +64,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
-            // arrange, act
+            // Arrange, act
             _facade.AddCurrentAssembly();
 
-            // assert
+            // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
             var testModelResource = resourceGraph.GetResourceContext(typeof(TestModel));
             Assert.NotNull(testModelResource);
@@ -76,10 +76,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
-            // arrange, act
+            // Arrange, act
             _facade.AddCurrentAssembly();
 
-            // assert
+            // Assert
             var services = _services.BuildServiceProvider();
             var service = services.GetService<IResourceService<TestModel>>();
             Assert.IsType<TestModelService>(service);
@@ -88,10 +88,10 @@ namespace DiscoveryTests
         [Fact]
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
-            // arrange, act
+            // Arrange, act
             _facade.AddCurrentAssembly();
 
-            // assert
+            // Assert
             var services = _services.BuildServiceProvider();
             Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
         }

@@ -11,16 +11,15 @@ namespace JsonApiDotNetCoreExampleTests
 {
     public class CamelCaseTestStartup : Startup
     {
-        public CamelCaseTestStartup(IHostingEnvironment env) : base(env)
+        public CamelCaseTestStartup(IWebHostEnvironment env) : base(env)
         { }
 
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IResourceNameFormatter, CamelCaseFormatter>();
             base.ConfigureServices(services);
             services.AddClientSerialization();
             services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
-            return services.BuildServiceProvider();
         }
     }
 }

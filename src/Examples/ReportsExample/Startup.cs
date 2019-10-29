@@ -11,7 +11,7 @@ namespace ReportsExample
     {
         public readonly IConfiguration Config;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -28,11 +28,6 @@ namespace ReportsExample
             services.AddJsonApi(
                 opt => opt.Namespace = "api", 
                 discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
-        }
-
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            app.UseMvc();
         }
     }
 }

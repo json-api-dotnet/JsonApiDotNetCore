@@ -1,14 +1,14 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Models;
+using NoEntityFrameworkExample.Models;
 using Microsoft.Extensions.Logging;
 
 namespace NoEntityFrameworkExample.Controllers
 {
-    public class CustomTodoItemsController : JsonApiController<TodoItem>
+    public class TodoItemsController : JsonApiController<TodoItem>
     {
-        public CustomTodoItemsController(
+        public TodoItemsController(
             IJsonApiOptions jsonApiOptions,
             IResourceService<TodoItem> resourceService, 
             ILoggerFactory loggerFactory) 

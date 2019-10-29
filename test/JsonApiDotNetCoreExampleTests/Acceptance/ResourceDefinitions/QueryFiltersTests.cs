@@ -3,8 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -12,11 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class QueryFiltersTests
     {
-      private TestFixture<TestStartup> _fixture;
+      private TestFixture<Startup> _fixture;
       private AppDbContext _context;
       private Faker<User> _userFaker;
 
-      public QueryFiltersTests(TestFixture<TestStartup> fixture)
+      public QueryFiltersTests(TestFixture<Startup> fixture)
       {
         _fixture = fixture;
         _context = fixture.GetService<AppDbContext>();
@@ -38,8 +41,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var route = $"/api/v1/users?filter[first-character]=eq:{firstUsernameCharacter}";
             var request = new HttpRequestMessage(httpMethod, route);
 
+            // @TODO - Use fixture
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -66,8 +74,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var route = $"/api/v1/users?filter[first-character]=lt:{median}";
             var request = new HttpRequestMessage(httpMethod, route);
 
+            // @TODO - Use fixture
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

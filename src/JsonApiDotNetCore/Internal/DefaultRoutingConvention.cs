@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// verifies if routing convention should be enabled for this controller
+        /// Verifies if routing convention should be enabled for this controller
         /// </summary>
         private bool RoutingConventionDisabled(ControllerModel controller)
         {
@@ -90,9 +90,10 @@ namespace JsonApiDotNetCore.Internal
             if (_registeredResources.TryGetValue(model.ControllerName, out Type resourceType))
             {
                 var template = $"{_namespace}/{_formatter.FormatResourceName(resourceType)}";
-                if (_registeredTemplates.Add(template))                
+                if (_registeredTemplates.Add(template))
+                {
                     return template;
-
+                }
             }
             return null;
         }
@@ -104,8 +105,13 @@ namespace JsonApiDotNetCore.Internal
         {
             var template = $"{_namespace}/{_formatter.ApplyCasingConvention(model.ControllerName)}";
             if (_registeredTemplates.Add(template))
+            {
                 return template;
-            return null;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -126,12 +132,16 @@ namespace JsonApiDotNetCore.Internal
                 {
                     var potentialResource = currentBaseType.GetGenericArguments().FirstOrDefault(t => t.Inherits(identifiable));
                     if (potentialResource != null)
+                    {
                         return potentialResource;
+                    }
                 }
 
                 currentBaseType = nextBaseType;
                 if (nextBaseType == null)
+                {
                     break;
+                }
             }
             return currentBaseType?.GetGenericArguments().First();
         }

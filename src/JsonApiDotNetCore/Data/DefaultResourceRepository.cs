@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Data
@@ -152,25 +153,29 @@ namespace JsonApiDotNetCore.Data
 
         private void DetachRelationships(TResource entity)
         {
-            foreach (var relationshipAttr in _targetedFields.Relationships)
+            foreach (var relationship in _targetedFields.Relationships)
             {
-                if (relationshipAttr is HasOneAttribute hasOneAttr)
+                var value = relationship.GetValue(entity);
+                if (value == null)
+                    continue;
+
+                if (value is IEnumerable<IIdentifiable> collection)
                 {
-                    var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(entity);
-                    if (relationshipValue == null) continue;
-                    _context.Entry(relationshipValue).State = EntityState.Detached;
-                }
-                else
-                {
-                    IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
-                    if (relationshipValueList == null) continue;
-                    foreach (var pointer in relationshipValueList)
-                        _context.Entry(pointer).State = EntityState.Detached;
+                    foreach (IIdentifiable single in collection.ToList())
+                        _context.Entry(single).State = EntityState.Detached;
                     /// detaching has many relationships is not sufficient to 
                     /// trigger a full reload of relationships: the navigation 
                     /// property actually needs to be nulled out, otherwise
                     /// EF will still add duplicate instances to the collection
-                    relationshipAttr.SetValue(entity, null);
+                    relationship.SetValue(entity, null);
+                }
+                else
+                {
+                    _context.Entry(value).State = EntityState.Detached;
+
+                    /// temporary work around for https://github.com/aspnet/EntityFrameworkCore/issues/18621
+                    /// as soon as ef core 3.1 lands we can get rid of this again.
+                    _context.Entry(entity).State = EntityState.Detached;
                 }
             }
         }
@@ -236,11 +241,13 @@ namespace JsonApiDotNetCore.Data
             if (relationshipValueList == null) return null;
             bool _wasAlreadyAttached = false;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
-            {   // convert each element in the value list to relationshipAttr.DependentType.
-                var tracked = AttachOrGetTracked(pointer);
-                if (tracked != null) _wasAlreadyAttached = true;
-                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
-            }).ToList().Cast(relationshipAttr.RightType);
+                {   // convert each element in the value list to relationshipAttr.DependentType.
+                    var tracked = AttachOrGetTracked(pointer);
+                    if (tracked != null) _wasAlreadyAttached = true;
+                    return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
+                })
+                .ToList()
+                .Cast(relationshipAttr.RightType);
             if (_wasAlreadyAttached) wasAlreadyAttached = true;
             return (IList)trackedPointerCollection;
         }
@@ -256,19 +263,13 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            if (relationship is HasManyThroughAttribute hasManyThrough)
-            {
-                var helper = _genericServiceFactory.Get<IHasManyThroughUpdateHelper>(typeof(HasManyThroughUpdateHelper<>), hasManyThrough.ThroughType);
-                await helper.UpdateAsync((IIdentifiable)parent, hasManyThrough, relationshipIds);
-                return;
-            }
+            var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
+                ? hasManyThrough.ThroughType
+                : relationship.RightType;
 
-            var context = _context.Set(relationship.RightType);
-            var updatedValue = relationship is HasManyAttribute
-                ? context.Where(e => relationshipIds.Contains(((IIdentifiable)e).StringId)).Cast(relationship.RightType)
-                : context.FirstOrDefault(e => relationshipIds.First() == ((IIdentifiable)e).StringId);
+            var helper = _genericServiceFactory.Get<IRepositoryRelationshipUpdateHelper>(typeof(RepositoryRelationshipUpdateHelper<>), typeToUpdate);
+            await helper.UpdateRelationshipAsync((IIdentifiable)parent, relationship, relationshipIds);
 
-            relationship.SetValue(parent, updatedValue);
             await _context.SaveChangesAsync();
         }
 
@@ -285,7 +286,9 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain = null)
         {
             if (inclusionChain == null || !inclusionChain.Any())
+            {
                 return entities;
+            }
 
             string internalRelationshipPath = null;
             foreach (var relationship in inclusionChain)
@@ -299,31 +302,38 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual async Task<IEnumerable<TResource>> PageAsync(IQueryable<TResource> entities, int pageSize, int pageNumber)
         {
+            // the IQueryable returned from the hook executor is sometimes consumed here.
+            // In this case, it does not support .ToListAsync(), so we use the method below.
             if (pageNumber >= 0)
             {
-                // the IQueryable returned from the hook executor is sometimes consumed here.
-                // In this case, it does not support .ToListAsync(), so we use the method below.
-                return await this.ToListAsync(entities.PageForward(pageSize, pageNumber));
+                entities = entities.PageForward(pageSize, pageNumber);
+                return entities is IAsyncQueryProvider ? await entities.ToListAsync() : entities.ToList();
             }
+            if (entities is IAsyncEnumerable<TResource>)
+            {
+                // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
+                var totalCount = await entities.CountAsync();
 
-            // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
-            int numberOfEntities = await this.CountAsync(entities);
+                int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
+                int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
 
-            // may be negative
-            int virtualFirstIndex = numberOfEntities - pageSize * Math.Abs(pageNumber);
-            int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
-
-            return await ToListAsync(entities
-                    .Skip(virtualFirstIndex)
-                    .Take(numberOfElementsInPage));
+                return await ToListAsync(entities.Skip(virtualFirstIndex).Take(numberOfElementsInPage));
+            } else
+            {
+                int firstIndex = pageSize * Math.Abs(pageNumber) - 1;
+                int numberOfElementsInPage = Math.Min(pageSize, firstIndex + pageSize);
+                return entities.Reverse().Skip(firstIndex).Take(numberOfElementsInPage);
+            }
         }
 
         /// <inheritdoc />
         public async Task<int> CountAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TResource>)
-                 ? await entities.CountAsync()
-                 : entities.Count();
+            if (entities is IAsyncEnumerable<TResource>)
+            {
+                return await entities.CountAsync();
+            }
+            return entities.Count();
         }
 
         /// <inheritdoc />
@@ -337,9 +347,11 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task<IReadOnlyList<TResource>> ToListAsync(IQueryable<TResource> entities)
         {
-            return (entities is IAsyncEnumerable<TResource>)
-                ? await entities.ToListAsync()
-                : entities.ToList();
+            if (entities is IAsyncEnumerable<TResource>)
+            {
+                return await entities.ToListAsync();
+            }
+            return entities.ToList();
         }
 
         /// <summary>

@@ -14,56 +14,56 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task Allows_GET_Requests()
         {
-            // arrange
+            // Arrange
             const string route = "nohttppost";
             const string method = "GET";
 
-            // act
+            // Act
             var statusCode = await MakeRequestAsync(route, method);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, statusCode);
         }
 
         [Fact]
         public async Task Rejects_POST_Requests()
         {
-            // arrange
+            // Arrange
             const string route = "nohttppost";
             const string method = "POST";
 
-            // act
+            // Act
             var statusCode = await MakeRequestAsync(route, method);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, statusCode);
         }
 
         [Fact]
         public async Task Allows_PATCH_Requests()
         {
-            // arrange
+            // Arrange
             const string route = "nohttppost";
             const string method = "PATCH";
 
-            // act
+            // Act
             var statusCode = await MakeRequestAsync(route, method);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, statusCode);
         }
 
         [Fact]
         public async Task Allows_DELETE_Requests()
         {
-            // arrange
+            // Arrange
             const string route = "nohttppost";
             const string method = "DELETE";
 
-            // act
+            // Act
             var statusCode = await MakeRequestAsync(route, method);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, statusCode);
         }
 

@@ -17,7 +17,6 @@ namespace JsonApiDotNetCore.Formatters
 
             return string.IsNullOrEmpty(contentTypeString) || contentTypeString == Constants.ContentType;
         }
-
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
             var writer = context.HttpContext.RequestServices.GetService<IJsonApiWriter>();

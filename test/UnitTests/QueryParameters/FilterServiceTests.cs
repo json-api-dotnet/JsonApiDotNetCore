@@ -17,13 +17,13 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Name_FilterService_IsCorrect()
         {
-            // arrange
+            // Arrange
             var filterService = GetService();
 
-            // act
+            // Act
             var name = filterService.Name;
 
-            // assert
+            // Assert
             Assert.Equal("filter", name);
         }
 
@@ -44,16 +44,16 @@ namespace UnitTests.QueryParameters
         [InlineData("title", "le:", "2017-08-15T22:43:47.0156350-05:00")]
         public void Parse_ValidFilters_CanParse(string key, string @operator, string value)
         {
-            // arrange
+            // Arrange
             var queryValue = @operator + value;
             var query = new KeyValuePair<string, StringValues>($"filter[{key}]", new StringValues(queryValue));
             var filterService = GetService();
 
-            // act
+            // Act
             filterService.Parse(query);
             var filter = filterService.Get().Single();
 
-            // assert
+            // Assert
             if (!string.IsNullOrEmpty(@operator))
                 Assert.Equal(@operator.Replace(":", ""), filter.Operation.ToString("G"));
             else

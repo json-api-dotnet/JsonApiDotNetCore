@@ -1,6 +1,5 @@
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
-using JsonApiDotNetCoreExample.Models.Entities;
 
 namespace JsonApiDotNetCoreExample.Data
 {
@@ -24,19 +23,6 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasOne(t => t.Owner)
                 .WithMany(p => p.TodoItems)
                 .HasForeignKey(t => t.OwnerId);
-
-            modelBuilder.Entity<CourseStudentEntity>()
-                .HasKey(r => new { r.CourseId, r.StudentId });
-
-            modelBuilder.Entity<CourseStudentEntity>()
-                .HasOne(r => r.Course)
-                .WithMany(c => c.Students)
-                .HasForeignKey(r => r.CourseId);
-
-            modelBuilder.Entity<CourseStudentEntity>()
-                .HasOne(r => r.Student)
-                .WithMany(s => s.Courses)
-                .HasForeignKey(r => r.StudentId);
 
             modelBuilder.Entity<ArticleTag>()
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
@@ -84,10 +70,6 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<CourseEntity> Courses { get; set; }
-        public DbSet<DepartmentEntity> Departments { get; set; }
-        public DbSet<CourseStudentEntity> Registrations { get; set; }
-        public DbSet<StudentEntity> Students { get; set; }
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }

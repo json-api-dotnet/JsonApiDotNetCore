@@ -22,7 +22,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var builder = new WebHostBuilder()
                 .UseStartup<TStartup>();
-
             _server = new TestServer(builder);
             _services = _server.Host.Services;
 
@@ -36,9 +35,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var serializer =  GetService<IRequestSerializer>();
             if (attributes != null)
+            {
                 serializer.SetAttributesToSerialize(attributes);
+            }
             if (relationships != null)
+            {
                 serializer.SetRelationshipsToSerialize(relationships);
+            }
             return serializer;
         }
         public IResponseDeserializer GetDeserializer()

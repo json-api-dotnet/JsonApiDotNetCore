@@ -47,15 +47,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            // act
+            // Act
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IDiffableEntityHashSet<TodoItem>>((diff) => TodoCheckDiff(diff, description)), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
@@ -77,18 +77,18 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_Deleting_Relationship()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var (_, ufMock, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
             ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.ToOnePerson));
 
-            // act
+            // Act
             var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
             hookExecutor.BeforeUpdate(_todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IDiffableEntityHashSet<TodoItem>>((diff) => TodoCheckDiff(diff, description)), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
                 It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(lastName + lastName, rh)),
@@ -101,15 +101,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_Without_Parent_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            // act
+            // Act
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(lastName, rh)),
@@ -125,15 +125,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_Without_Child_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            // act
+            // Act
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IDiffableEntityHashSet<TodoItem>>((diff) => TodoCheckDiff(diff, description)), ResourcePipeline.Patch), Times.Once());
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(
                 It.Is<IRelationshipsDictionary<TodoItem>>(rh => TodoCheck(rh, description + description)),
@@ -145,15 +145,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_NoImplicit()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, ResourceHook.BeforeUpdate);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            // act
+            // Act
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IDiffableEntityHashSet<TodoItem>>((diff) => TodoCheckDiff(diff, description)), ResourcePipeline.Patch), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
@@ -166,15 +166,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_NoImplicit_Without_Parent_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            // act
+            // Act
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(
                 It.Is<HashSet<string>>(ids => PersonIdCheck(ids, personId)),
                 It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(lastName, rh)),
@@ -186,15 +186,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeUpdate_NoImplicit_Without_Child_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooksNoImplicit, ResourceHook.BeforeUpdate);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            // act
+            // Act
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeUpdate(It.Is<IDiffableEntityHashSet<TodoItem>>((diff) => TodoCheckDiff(diff, description)), ResourcePipeline.Patch), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }

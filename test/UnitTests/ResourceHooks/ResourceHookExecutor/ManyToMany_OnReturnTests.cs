@@ -44,16 +44,16 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void OnReturn()
         {
-            // arrange
+            // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, joins, tags) = CreateDummyData();
 
-            // act
+            // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
-            // assert
+            // Assert
             articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourcePipeline.Get), Times.Once());
             tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
@@ -62,13 +62,13 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void OnReturn_Without_Parent_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, joins, tags) = CreateDummyData();
 
-            // act
+            // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
             // asser
@@ -79,16 +79,16 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void OnReturn_Without_Children_Hooks_Implemented()
         {
-            // arrange
+            // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
             var (articles, joins, tags) = CreateDummyData();
 
-            // act
+            // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
-            // assert
+            // Assert
             articleResourceMock.Verify(rd => rd.OnReturn(It.IsAny<HashSet<Article>>(), ResourcePipeline.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
@@ -96,17 +96,17 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void OnReturn_Without_Any_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
             var (articles, joins, tags) = CreateDummyData();
 
-            // act
+            // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
-            // assert
+            // Assert
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
     }

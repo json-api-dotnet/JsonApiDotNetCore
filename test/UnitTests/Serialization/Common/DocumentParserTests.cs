@@ -33,10 +33,10 @@ namespace UnitTests.Serialization.Deserializer
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (TestResource)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
         }
 
@@ -47,10 +47,10 @@ namespace UnitTests.Serialization.Deserializer
             var content = new Document { };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = _deserializer.Deserialize(body);
 
-            // arrange
+            // Arrange
             Assert.Null(result);
         }
 
@@ -71,10 +71,10 @@ namespace UnitTests.Serialization.Deserializer
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (List<IIdentifiable>)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal("1", result.First().StringId);
         }
 
@@ -84,10 +84,10 @@ namespace UnitTests.Serialization.Deserializer
             var content = new Document { Data = new List<ResourceObject> { } };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (IList)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Empty(result);
         }
 
@@ -106,7 +106,7 @@ namespace UnitTests.Serialization.Deserializer
         [InlineData("nullable-date-time-field", null)]
         public void DeserializeAttributes_VariousDataTypes_CanDeserialize(string member, object value, bool expectError = false)
         {
-            // arrange
+            // Arrange
             var content = new Document
             {
                 Data = new ResourceObject
@@ -121,17 +121,17 @@ namespace UnitTests.Serialization.Deserializer
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act, assert
+            // Act, assert
             if (expectError)
             {
                 Assert.ThrowsAny<FormatException>(() => _deserializer.Deserialize(body));
                 return;
             }
 
-            // act
+            // Act
             var entity = (TestResource)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             var pi = _resourceGraph.GetResourceContext("test-resource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
             var deserializedValue = pi.GetValue(entity);
 
@@ -164,7 +164,7 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeAttributes_ComplexType_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = new Document
             {
                 Data = new ResourceObject
@@ -179,10 +179,10 @@ namespace UnitTests.Serialization.Deserializer
             };
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (TestResource)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.NotNull(result.ComplexField);
             Assert.Equal("testName", result.ComplexField.CompoundName);
         }
@@ -190,7 +190,7 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeAttributes_ComplexListType_CanDeserialize()
         {
-            // arrange
+            // Arrange
             var content = new Document
             {
                 Data = new ResourceObject
@@ -206,10 +206,10 @@ namespace UnitTests.Serialization.Deserializer
             var body = JsonConvert.SerializeObject(content);
 
 
-            // act
+            // Act
             var result = (TestResourceWithList)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.NotNull(result.ComplexFields);
             Assert.NotEmpty(result.ComplexFields);
             Assert.Equal("testName", result.ComplexFields[0].CompoundName);
@@ -218,14 +218,14 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_EmptyOneToOneDependent_NavigationPropertyIsNull()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-one-principals", "dependent");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToOnePrincipal)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Dependent);
             Assert.Null(result.AttributeMember);
@@ -234,14 +234,14 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_PopulatedOneToOneDependent_NavigationPropertyIsPopulated()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-one-principals", "dependent", "one-to-one-dependents");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToOnePrincipal)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Equal(10, result.Dependent.Id);
             Assert.Null(result.AttributeMember);
@@ -250,14 +250,14 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_EmptyOneToOnePrincipal_NavigationPropertyAndForeignKeyAreNull()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-one-dependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToOneDependent)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Principal);
             Assert.Null(result.PrincipalId);
@@ -266,25 +266,25 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_EmptyRequiredOneToOnePrincipal_ThrowsFormatException()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-one-required-dependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
-            // act, assert
+            // Act, assert
             Assert.Throws<FormatException>(() => _deserializer.Deserialize(body));
         }
 
         [Fact]
         public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationPropertyAndForeignKeyArePopulated()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-one-dependents", "principal", "one-to-one-principals");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToOneDependent)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.NotNull(result.Principal);
             Assert.Equal(10, result.Principal.Id);
@@ -295,14 +295,14 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_EmptyOneToManyPrincipal_NavigationAndForeignKeyAreNull()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-many-dependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToManyDependent)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Principal);
             Assert.Null(result.PrincipalId);
@@ -312,25 +312,25 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_EmptyOneToManyRequiredPrincipal_ThrowsFormatException()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-many-required-dependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
-            // act, assert
+            // Act, assert
             Assert.Throws<FormatException>(() => _deserializer.Deserialize(body));
         }
 
         [Fact]
         public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationAndForeignKeyArePopulated()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-many-dependents", "principal", "one-to-many-principals");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToManyDependent)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.NotNull(result.Principal);
             Assert.Equal(10, result.Principal.Id);
@@ -341,14 +341,14 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_EmptyOneToManyDependent_NavigationIsNull()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-many-principals", "dependents");
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToManyPrincipal)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Dependents);
             Assert.Null(result.AttributeMember);
@@ -357,14 +357,14 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeRelationships_PopulatedOneToManyDependent_NavigationIsPopulated()
         {
-            // arrange
+            // Arrange
             var content = CreateDocumentWithRelationships("one-to-many-principals", "dependents", "one-to-many-dependents", isToManyData: true);
             var body = JsonConvert.SerializeObject(content);
 
-            // act
+            // Act
             var result = (OneToManyPrincipal)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Single(result.Dependents);
             Assert.Equal(10, result.Dependents.First().Id);

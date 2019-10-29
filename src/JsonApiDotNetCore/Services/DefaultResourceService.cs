@@ -177,15 +177,19 @@ namespace JsonApiDotNetCore.Services
             if (entity == null)
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
 
-            List<IIdentifiable> relatedEntities;
-
-            if (relationship is HasOneAttribute)
-                relatedEntities = new List<IIdentifiable> { (IIdentifiable)related };
-            else relatedEntities = (List<IIdentifiable>)related;
-            var relationshipIds = relatedEntities.Select(r => r?.StringId);
-
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
-            await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
+
+            string[] relationshipIds = null;
+            if (related != null)
+            {
+                if (relationship is HasOneAttribute)
+                    relationshipIds = new string[] { ((IIdentifiable)related).StringId };
+                else
+                    relationshipIds = ((IEnumerable<IIdentifiable>)related).Select(e => e.StringId).ToArray();
+            }
+
+            await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds ?? new string[0] );
+
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.PatchRelationship);
         }
 

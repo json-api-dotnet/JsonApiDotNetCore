@@ -11,28 +11,28 @@ namespace UnitTests.Internal
         [Fact]
         public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_DoNot_Implement_IIdentifiable()
         {
-            // arrange
+            // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder();
 
-            // act
+            // Act
             resourceGraphBuilder.AddDbContext<TestContext>();
             var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
 
-            // assert
+            // Assert
             Assert.Empty(resourceGraph.GetResourceContexts());
         }
 
         [Fact]
         public void Adding_DbContext_Members_That_DoNot_Implement_IIdentifiable_Creates_Warning()
         {
-            // arrange
+            // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder();
 
-            // act
+            // Act
             resourceGraphBuilder.AddDbContext<TestContext>();
             var resourceGraph = resourceGraphBuilder.Build() as ResourceGraph;
 
-            // assert
+            // Assert
             Assert.Single(resourceGraph.ValidationResults);
             Assert.Contains(resourceGraph.ValidationResults, v => v.LogLevel == LogLevel.Warning);
         }

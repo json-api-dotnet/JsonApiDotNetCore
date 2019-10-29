@@ -1,7 +1,5 @@
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,13 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NoEntityFrameworkExample.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
+using NoEntityFrameworkExample.Data;
+using NoEntityFrameworkExample.Models;
 
 namespace NoEntityFrameworkExample
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -28,7 +27,7 @@ namespace NoEntityFrameworkExample
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             var mvcBuilder = services.AddMvcCore();
@@ -37,17 +36,16 @@ namespace NoEntityFrameworkExample
                     builder.AddConfiguration(Configuration.GetSection("Logging"));
                     builder.AddConsole();
                 }).AddJsonApi(
-                    options =>  options.Namespace = "api/v1",
-                    resources: resources => resources.AddResource<TodoItem>("custom-todo-items"),
+                    options => options.Namespace = "api/v1",
+                    resources: resources => resources.AddResource<TodoItem>("todo-items"),
                     mvcBuilder: mvcBuilder
                 );
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
-            optionsBuilder.UseNpgsql(Configuration.GetValue<string>("Data:DefaultConnection")); 
+            optionsBuilder.UseNpgsql(GetDbConnectionString()); 
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
-            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,5 +54,7 @@ namespace NoEntityFrameworkExample
             context.Database.EnsureCreated();
             app.UseJsonApi();
         }
+
+        public string GetDbConnectionString() => Configuration["Data:DefaultConnection"];
     }
 }

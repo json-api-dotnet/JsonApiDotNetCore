@@ -18,20 +18,20 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Name_SparseFieldsService_IsCorrect()
         {
-            // arrange
+            // Arrange
             var filterService = GetService();
 
-            // act
+            // Act
             var name = filterService.Name;
 
-            // assert
+            // Assert
             Assert.Equal("fields", name);
         }
 
         [Fact]
         public void Parse_ValidSelection_CanParse()
         {
-            // arrange
+            // Arrange
             const string type = "articles";
             const string attrName = "some-field";
             const string internalAttrName = "SomeField";
@@ -48,11 +48,11 @@ namespace UnitTests.QueryParameters
             };
             var service = GetService(resourceContext);
 
-            // act
+            // Act
             service.Parse(query);
             var result = service.Get();
 
-            // assert
+            // Assert
             Assert.NotEmpty(result);
             Assert.Equal(idAttribute, result.First());
             Assert.Equal(attribute, result[1]);
@@ -61,7 +61,7 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Parse_TypeNameAsNavigation_Throws400ErrorWithRelationshipsOnlyMessage()
         {
-            // arrange
+            // Arrange
             const string type = "articles";
             const string attrName = "some-field";
             const string internalAttrName = "SomeField";
@@ -78,7 +78,7 @@ namespace UnitTests.QueryParameters
             };
             var service = GetService(resourceContext);
 
-            // act, assert
+            // Act, assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
             Assert.Contains("relationships only", ex.Message);
         }
@@ -86,7 +86,7 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Parse_DeeplyNestedSelection_Throws400ErrorWithDeeplyNestedMessage()
         {
-            // arrange
+            // Arrange
             const string type = "articles";
             const string relationship = "author.employer";
             const string attrName = "some-field";
@@ -104,7 +104,7 @@ namespace UnitTests.QueryParameters
             };
             var service = GetService(resourceContext);
 
-            // act, assert
+            // Act, assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
             Assert.Contains("deeply nested", ex.Message);
         }
@@ -112,7 +112,7 @@ namespace UnitTests.QueryParameters
         [Fact]
         public void Parse_InvalidField_ThrowsJsonApiException()
         {
-            // arrange
+            // Arrange
             const string type = "articles";
             const string attrName = "dne";
 
@@ -127,7 +127,7 @@ namespace UnitTests.QueryParameters
 
             var service = GetService(resourceContext);
 
-            // act , assert
+            // Act , assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
             Assert.Equal(400, ex.GetStatusCode());
         }

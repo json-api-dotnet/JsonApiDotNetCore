@@ -20,14 +20,14 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void Build_RelationshipNotIncludedAndLinksEnabled_RelationshipEntryWithLinks()
         {
-            // arrange
+            // Arrange
             var entity = new OneToManyPrincipal { Id = 10 };
             var builder = GetResponseResourceObjectBuilder(relationshipLinks: _dummyRelationshipLinks);
 
-            // act
+            // Act
             var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
 
-            // assert
+            // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
@@ -37,28 +37,28 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void Build_RelationshipNotIncludedAndLinksDisabled_NoRelationshipObject()
         {
-            // arrange
+            // Arrange
             var entity = new OneToManyPrincipal { Id = 10 };
             var builder = GetResponseResourceObjectBuilder();
 
-            // act
+            // Act
             var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
 
-            // assert
+            // Assert
             Assert.Null(resourceObject.Relationships);
         }
 
         [Fact]
         public void Build_RelationshipIncludedAndLinksDisabled_RelationshipEntryWithData()
         {
-            // arrange
+            // Arrange
             var entity = new OneToManyPrincipal { Id = 10, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild } );
 
-            // act
+            // Act
             var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
 
-            // assert
+            // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
             Assert.Null(entry.Links);
             Assert.True(entry.IsPopulated);
@@ -68,14 +68,14 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void Build_RelationshipIncludedAndLinksEnabled_RelationshipEntryWithDataAndLinks()
         {
-            // arrange
+            // Arrange
             var entity = new OneToManyPrincipal { Id = 10, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: _dummyRelationshipLinks);
 
-            // act
+            // Act
             var resourceObject = builder.Build(entity, relationships: _relationshipsForBuild);
 
-            // assert
+            // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);

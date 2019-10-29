@@ -22,12 +22,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class UpdatingDataTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
-        public UpdatingDataTests(TestFixture<TestStartup> fixture)
+        public UpdatingDataTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_404_If_EntityDoesNotExist()
         {
             // Arrange
-            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
+            var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             todoItem.Id = maxPersonId + 100;
             todoItem.CreatedDate = DateTime.Now;
@@ -95,7 +95,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Respond_422_If_IdNotInAttributeList()
         {
             // Arrange
-            var maxPersonId = _context.TodoItems.LastOrDefault()?.Id ?? 0;
+            var maxPersonId = _context.TodoItems.ToList().LastOrDefault()?.Id ?? 0;
             var todoItem = _todoItemFaker.Generate();
             todoItem.CreatedDate = DateTime.Now;
             var builder = new WebHostBuilder()
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Patch_Entity()
         {
-            // arrange
+            // Arrange
             _context.RemoveRange(_context.TodoItemCollections);
             _context.RemoveRange(_context.TodoItems);
             _context.RemoveRange(_context.People);
@@ -166,7 +166,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
         {
-            // arrange
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             var person = _personFaker.Generate();
             todoItem.Owner = person;
@@ -202,7 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Patch_Entity_And_HasOne_Relationships()
         {
-            // arrange
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.CreatedDate = DateTime.Now;
             var person = _personFaker.Generate();

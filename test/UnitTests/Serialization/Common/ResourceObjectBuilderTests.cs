@@ -22,13 +22,13 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToResourceObject_EmptyResource_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new TestResource();
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity);
 
-            // assert
+            // Assert
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
             Assert.Null(resourceObject.Id);
@@ -38,13 +38,13 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToResourceObject_ResourceWithId_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new TestResource() { Id = 1 };
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity);
 
-            // assert
+            // Assert
             Assert.Equal("1", resourceObject.Id);
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
@@ -56,14 +56,14 @@ namespace UnitTests.Serialization.Serializer
         [InlineData("string field", 1)]
         public void EntityToResourceObject_ResourceWithIncludedAttrs_CanBuild(string stringFieldValue, int? intFieldValue)
         {
-            // arrange
+            // Arrange
             var entity = new TestResource() { StringField = stringFieldValue, NullableIntField = intFieldValue };
             var attrs = _resourceGraph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity, attrs);
 
-            // assert
+            // Assert
             Assert.NotNull(resourceObject.Attributes);
             Assert.Equal(2, resourceObject.Attributes.Keys.Count);
             Assert.Equal(stringFieldValue, resourceObject.Attributes["string-field"]);
@@ -73,13 +73,13 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityWithRelationshipsToResourceObject_EmptyResource_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new MultipleRelationshipsPrincipalPart();
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity);
 
-            // assert
+            // Assert
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
             Assert.Null(resourceObject.Id);
@@ -89,16 +89,16 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityWithRelationshipsToResourceObject_ResourceWithId_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new MultipleRelationshipsPrincipalPart
             {
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
             };
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity);
 
-            // assert
+            // Assert
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
             Assert.Null(resourceObject.Id);
@@ -108,7 +108,7 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityWithRelationshipsToResourceObject_WithIncludedRelationshipsAttributes_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new MultipleRelationshipsPrincipalPart
             {
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
@@ -116,10 +116,10 @@ namespace UnitTests.Serialization.Serializer
             };
             var relationships = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.PopulatedToManies, tr.PopulatedToOne, tr.EmptyToOne, tr.EmptyToManies });
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity, relationships: relationships);
 
-            // assert
+            // Assert
             Assert.Equal(4, resourceObject.Relationships.Count);
             Assert.Null(resourceObject.Relationships["empty-to-one"].Data);
             Assert.Empty((IList)resourceObject.Relationships["empty-to-manies"].Data);
@@ -136,14 +136,14 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityWithRelationshipsToResourceObject_DeviatingForeignKeyWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
         {
-            // arrange
+            // Arrange
             var entity = new OneToOneDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity, relationships: relationships);
 
-            // assert
+            // Assert
             Assert.Single(resourceObject.Relationships);
             Assert.NotNull(resourceObject.Relationships["principal"].Data);
             var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
@@ -153,28 +153,28 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityWithRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
         {
-            // arrange
+            // Arrange
             var entity = new OneToOneDependent { Principal = null, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneDependent>(tr => tr.Principal);
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity, relationships: relationships);
 
-            // assert
+            // Assert
             Assert.Null(resourceObject.Relationships["principal"].Data);
         }
 
         [Fact]
         public void EntityWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyWhileRelationshipIncluded_IgnoresForeignKeyDuringBuild()
         {
-            // arrange
+            // Arrange
             var entity = new OneToOneRequiredDependent { Principal = new OneToOnePrincipal { Id = 10 }, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
-            // act
+            // Act
             var resourceObject = _builder.Build(entity, relationships: relationships);
 
-            // assert
+            // Assert
             Assert.Single(resourceObject.Relationships);
             Assert.NotNull(resourceObject.Relationships["principal"].Data);
             var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
@@ -184,22 +184,22 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityWithRequiredRelationshipsToResourceObject_DeviatingForeignKeyAndNoNavigationWhileRelationshipIncluded_ThrowsNotSupportedException()
         {
-            // arrange
+            // Arrange
             var entity = new OneToOneRequiredDependent { Principal = null, PrincipalId = 123 };
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
-            // act & assert
+            // Act & assert
             Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(entity, relationships: relationships));
         }
 
         [Fact]
         public void EntityWithRequiredRelationshipsToResourceObject_EmptyResourceWhileRelationshipIncluded_ThrowsNotSupportedException()
         {
-            // arrange
+            // Arrange
             var entity = new OneToOneRequiredDependent();
             var relationships = _resourceGraph.GetRelationships<OneToOneRequiredDependent>(tr => tr.Principal);
 
-            // act & assert
+            // Act & assert
             Assert.ThrowsAny<NotSupportedException>(() => _builder.Build(entity, relationships: relationships));
         }
     }

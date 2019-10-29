@@ -23,13 +23,13 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entity);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                ""data"":{
@@ -54,14 +54,14 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeSingle_ResourceWithTargetedSetAttributes_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entity);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                ""data"":{
@@ -79,14 +79,14 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeSingle_NoIdWithTargetedSetAttributes_CanBuild()
         {
-            // arrange
+            // Arrange
             var entityNoId = new TestResource() { Id = 0, StringField = "value", NullableIntField = 123 };
             _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entityNoId);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                ""data"":{
@@ -104,14 +104,14 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeSingle_ResourceWithoutTargetedAttributes_CanBuild()
         {
-            // arrange
+            // Arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.SetAttributesToSerialize<TestResource>(tr => new { });
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entity);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                ""data"":{
@@ -127,7 +127,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeSingle_ResourceWithTargetedRelationships_CanBuild()
         {
-            // arrange
+            // Arrange
             var entityWithRelationships = new MultipleRelationshipsPrincipalPart
             {
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
@@ -135,10 +135,10 @@ namespace UnitTests.Serialization.Client
             };
             _serializer.SetRelationshipsToSerialize<MultipleRelationshipsPrincipalPart>(tr => new { tr.EmptyToOne, tr.EmptyToManies, tr.PopulatedToOne, tr.PopulatedToManies });
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entityWithRelationships);
             Console.WriteLine(serialized);
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                 ""data"":{
@@ -177,7 +177,7 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeMany_ResourcesWithTargetedAttributes_CanBuild()
         {
-            // arrange
+            // Arrange
             var entities = new List<TestResource>
             {
                 new TestResource() { Id = 1, StringField = "value1", NullableIntField = 123 },
@@ -185,10 +185,10 @@ namespace UnitTests.Serialization.Client
             };
             _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entities);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                 ""data"":[
@@ -215,14 +215,14 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeSingle_Null_CanBuild()
         {
-            // arrange
+            // Arrange
             _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
-            // act
+            // Act
             IIdentifiable obj = null;
             string serialized = _serializer.Serialize(obj);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                 ""data"":null
@@ -234,14 +234,14 @@ namespace UnitTests.Serialization.Client
         [Fact]
         public void SerializeMany_EmptyList_CanBuild()
         {
-            // arrange
+            // Arrange
             var entities = new List<TestResource> { };
             _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
 
-            // act
+            // Act
             string serialized = _serializer.Serialize(entities);
 
-            // assert
+            // Assert
             var expectedFormatted =
             @"{
                 ""data"":[]

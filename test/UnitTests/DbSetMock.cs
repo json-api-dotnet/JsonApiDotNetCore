@@ -25,8 +25,13 @@ public static class ListExtensions
         dbSetMock.As<IQueryable<T>>().Setup(x => x.Expression).Returns(queryableList.Expression);
         dbSetMock.As<IQueryable<T>>().Setup(x => x.ElementType).Returns(queryableList.ElementType);
         dbSetMock.As<IQueryable<T>>().Setup(x => x.GetEnumerator()).Returns(queryableList.GetEnumerator());
-        
-        dbSetMock.As<IAsyncEnumerable<T>>().Setup(m => m.GetEnumerator()).Returns(new TestAsyncEnumerator<T>(queryableList.GetEnumerator()));
+
+        var toReturn = new TestAsyncEnumerator<T>(queryableList.GetEnumerator());
+
+
+        dbSetMock.As<IAsyncEnumerable<T>>()
+            .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+            .Returns(toReturn);
         dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<T>(queryableList.Provider));
         return dbSetMock;
     }
@@ -70,6 +75,12 @@ internal class TestAsyncQueryProvider<TResource> : IAsyncQueryProvider
     {
         return Task.FromResult(Execute<TResult>(expression));
     }
+
+    TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+    {
+
+        return Execute<TResult>(expression);
+    }
 }
 
 internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
@@ -85,6 +96,11 @@ internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>,
     public IAsyncEnumerator<T> GetEnumerator()
     {
         return new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
+    }
+
+    public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+    {
+        throw new System.NotImplementedException();
     }
 
     IQueryProvider IQueryable.Provider
@@ -118,5 +134,15 @@ internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     public Task<bool> MoveNext(CancellationToken cancellationToken)
     {
         return Task.FromResult(_inner.MoveNext());
+    }
+
+    public ValueTask<bool> MoveNextAsync()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        throw new System.NotImplementedException();
     }
 }

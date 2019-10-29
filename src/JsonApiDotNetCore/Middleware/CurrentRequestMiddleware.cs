@@ -138,7 +138,9 @@ namespace JsonApiDotNetCore.Middleware
 
             // if the content type is not application/vnd.api+json then continue on
             if (incomingMediaTypeSpan.Length < Constants.ContentType.Length)
+            {
                 return false;
+            }
 
             var incomingContentType = incomingMediaTypeSpan.Slice(0, Constants.ContentType.Length);
             if (incomingContentType.SequenceEqual(Constants.ContentType.AsSpan()) == false)
@@ -163,7 +165,9 @@ namespace JsonApiDotNetCore.Middleware
         /// <returns></returns>
         private ResourceContext GetCurrentEntity()
         {
-            var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
+            var controllerName = (string)_httpContext.GetRouteValue("controller");
+            if (controllerName == null)
+                return null;
             var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
             var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)

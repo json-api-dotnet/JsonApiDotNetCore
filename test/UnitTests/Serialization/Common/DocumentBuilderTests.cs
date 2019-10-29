@@ -25,13 +25,13 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToDocument_NullEntity_CanBuild()
         {
-            // arrange
+            // Arrange
             TestResource entity = null;
 
-            // act
+            // Act
             var document = _builder.Build(entity, null, null);
 
-            // assert
+            // Assert
             Assert.Null(document.Data);
             Assert.False(document.IsPopulated);
         }
@@ -40,13 +40,13 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToDocument_EmptyList_CanBuild()
         {
-            // arrange
+            // Arrange
             var entities = new List<TestResource>();
 
-            // act
+            // Act
             var document = _builder.Build(entities, null, null);
 
-            // assert
+            // Assert
             Assert.NotNull(document.Data);
             Assert.Empty(document.ManyData);
         }
@@ -55,13 +55,13 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToDocument_SingleEntity_CanBuild()
         {
-            // arrange
+            // Arrange
             IIdentifiable dummy = new Identifiable();
 
-            // act
+            // Act
             var document = _builder.Build(dummy, null, null);
 
-            // assert
+            // Assert
             Assert.NotNull(document.Data);
             Assert.True(document.IsPopulated);
         }
@@ -69,14 +69,14 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToDocument_EntityList_CanBuild()
         {
-            // arrange
+            // Arrange
             var entities = new List<IIdentifiable>() { new Identifiable(), new Identifiable() };
 
-            // act
+            // Act
             var document = _builder.Build(entities, null, null);
             var data = (List<ResourceObject>)document.Data;
 
-            // assert
+            // Assert
             Assert.Equal(2, data.Count);
         }
     }

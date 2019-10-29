@@ -4,19 +4,21 @@ using Microsoft.Extensions.Logging;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
-using System;
-using JsonApiDotNetCoreExample;
 using System.Reflection;
 
-namespace JsonApiDotNetCoreExampleTests.Startups
+namespace JsonApiDotNetCoreExample
 {
+    /// <summary>
+    /// This should be in JsonApiDotNetCoreExampleTests project but changes in .net core 3.0
+    /// do no longer allow that. See https://github.com/aspnet/AspNetCore/issues/15373.
+    /// </summary>
     public class ClientGeneratedIdsStartup : Startup
     {
-        public ClientGeneratedIdsStartup(IHostingEnvironment env)
+        public ClientGeneratedIdsStartup(IWebHostEnvironment env)
         : base (env)
         {  }
 
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             var mvcBuilder = services.AddMvcCore();
@@ -37,9 +39,6 @@ namespace JsonApiDotNetCoreExampleTests.Startups
                 },
                 discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),
                 mvcBuilder: mvcBuilder);
-
-            return services.BuildServiceProvider();
-
         }
     }
 }

@@ -22,26 +22,26 @@ namespace UnitTests.Models
         [Fact]
         public void Request_Filter_Uses_Member_Expression()
         {
-            // arrange
+            // Arrange
             var resource = new RequestFilteredResource(isAdmin: true);
 
-            // act
+            // Act
             var attrs = resource.GetAllowedAttributes();
 
-            // assert
+            // Assert
             Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
         public void Request_Filter_Uses_NewExpression()
         {
-            // arrange
+            // Arrange
             var resource = new RequestFilteredResource(isAdmin: false);
 
-            // act
+            // Act
             var attrs = resource.GetAllowedAttributes();
 
-            // assert
+            // Assert
             Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
             Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.Password));
         }

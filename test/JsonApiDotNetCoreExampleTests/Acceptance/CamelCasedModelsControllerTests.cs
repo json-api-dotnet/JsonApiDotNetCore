@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class CamelCasedModelsControllerTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<CamelCasedModel> _faker;
 
-        public CamelCasedModelsControllerTests(TestFixture<TestStartup> fixture)
+        public CamelCasedModelsControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -66,11 +66,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var httpMethod = new HttpMethod("GET");
             var route = $"api/v1/camelCasedModels/{model.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // unnecessary, will fix in 4.1
             var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+              .UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
@@ -123,7 +125,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Can_Patch_CamelCasedModels()
+        public async Task RoutingPatch_RouteIsCamelcased_ResponseOKAndCompoundAttrIsAvailable()
         {
             // Arrange
             var model = _faker.Generate();
@@ -143,10 +145,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     }
                 }
             };
-            var httpMethod = new HttpMethod("PATCH");
+            var httpMethod = HttpMethod.Patch;
             var route = $"api/v1/camelCasedModels/{model.Id}";
             var builder = new WebHostBuilder().UseStartup<Startup>();
-            var server = new TestServer(builder);
+
+            using var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));

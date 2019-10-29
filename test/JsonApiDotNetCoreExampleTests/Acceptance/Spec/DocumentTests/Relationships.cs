@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Relationships
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
 
-        public Relationships(TestFixture<TestStartup> fixture)
+        public Relationships(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         [Fact]
         public async Task Correct_RelationshipObjects_For_ManyToOne_Relationships()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             
@@ -49,14 +49,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var document = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
             var data = document.SingleData;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{data.Id}/relationships/owner";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{data.Id}/owner";
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(expectedOwnerSelfLink, data.Relationships["owner"].Links.Self);
             Assert.Equal(expectedOwnerRelatedLink, data.Relationships["owner"].Links.Related);
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         [Fact]
         public async Task Correct_RelationshipObjects_For_ManyToOne_Relationships_ById()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             
@@ -80,14 +80,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/relationships/owner";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/owner";
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(expectedOwnerSelfLink, data.Relationships["owner"].Links?.Self);
             Assert.Equal(expectedOwnerRelatedLink, data.Relationships["owner"].Links.Related);
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         [Fact]
         public async Task Correct_RelationshipObjects_For_OneToMany_Relationships()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
@@ -107,14 +107,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
             var data = documents.ManyData.First();
             var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{data.Id}/relationships/todo-items";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{data.Id}/todo-items";
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(expectedOwnerSelfLink, data.Relationships["todo-items"].Links.Self);
             Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todo-items"].Links.Related);
@@ -123,8 +123,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         [Fact]
         public async Task Correct_RelationshipObjects_For_OneToMany_Relationships_ById()
         {
-            // arrange
-            var personId = _context.People.Last().Id;
+            // Arrange
+            var personId = _context.People.AsEnumerable().Last().Id;
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
@@ -136,14 +136,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
             var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{personId}/relationships/todo-items";
             var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{personId}/todo-items";
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(expectedOwnerSelfLink, data.Relationships["todo-items"].Links?.Self);
             Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todo-items"].Links.Related);

@@ -42,6 +42,11 @@ namespace JsonApiDotNetCore.Builders
             _mvcBuilder = mvcBuilder;
         }
 
+        internal void ConfigureLogging()
+        {
+            _services.AddLogging();
+        }
+
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="JsonApiOptions"/>
         /// </summary>
@@ -62,17 +67,17 @@ namespace JsonApiDotNetCore.Builders
             _serviceDiscoveryFacade = intermediateProvider.GetRequiredService<IServiceDiscoveryFacade>();
             var exceptionFilterProvider = intermediateProvider.GetRequiredService<IJsonApiExceptionFilterProvider>();
             var typeMatchFilterProvider = intermediateProvider.GetRequiredService<IJsonApiTypeMatchFilterProvider>();
-
-            _mvcBuilder.AddMvcOptions(mvcOptions =>
-            {
-                mvcOptions.Filters.Add(exceptionFilterProvider.Get());
-                mvcOptions.Filters.Add(typeMatchFilterProvider.Get());
-                mvcOptions.InputFormatters.Insert(0, new JsonApiInputFormatter());
-                mvcOptions.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
-            });
-
             var routingConvention = intermediateProvider.GetRequiredService<IJsonApiRoutingConvention>();
-            _mvcBuilder.AddMvcOptions(opt => opt.Conventions.Insert(0, routingConvention));
+
+            _mvcBuilder.AddMvcOptions(options =>
+            {
+                options.EnableEndpointRouting = true;
+                options.Filters.Add(exceptionFilterProvider.Get());
+                options.Filters.Add(typeMatchFilterProvider.Get());
+                options.InputFormatters.Insert(0, new JsonApiInputFormatter());
+                options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
+                options.Conventions.Insert(0, routingConvention);
+            });
             _services.AddSingleton<IControllerResourceMapping>(routingConvention);
         }
 
@@ -148,14 +153,14 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddSingleton<IResourceGraph>(resourceGraph);
+            _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IResourceContextProvider>(resourceGraph);
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
-            _services.AddScoped(typeof(HasManyThroughUpdateHelper<>));
+            _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
             _services.AddScoped<IQueryParameterDiscovery, QueryParameterDiscovery>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();

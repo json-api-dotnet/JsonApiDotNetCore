@@ -23,26 +23,25 @@ namespace JsonApiDotNetCore.Formatters
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
         }
 
-        public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
+        public async  Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
             var request = context.HttpContext.Request;
             if (request.ContentLength == 0)
-                return InputFormatterResult.SuccessAsync(null);
+            {
+                return await InputFormatterResult.SuccessAsync(null);
+            }
 
             try
             {
-                var body = GetRequestBody(context.HttpContext.Request.Body);
-
+                var body = await GetRequestBody(context.HttpContext.Request.Body);
                 object model = _deserializer.Deserialize(body);
-
                 if (model == null)
                 {
                     _logger?.LogError("An error occurred while de-serializing the payload");
                 }
-
                 if (context.HttpContext.Request.Method == "PATCH")
                 {
                     bool idMissing;
@@ -60,13 +59,13 @@ namespace JsonApiDotNetCore.Formatters
                         throw new JsonApiException(400, "Payload must include id attribute");
                     }
                 }
-                return InputFormatterResult.SuccessAsync(model);
+                return await InputFormatterResult.SuccessAsync(model);
             }
             catch (Exception ex)
             {
                 _logger?.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
                 context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
-                return InputFormatterResult.FailureAsync();
+                return await InputFormatterResult.FailureAsync();
             }
         }
 
@@ -103,11 +102,19 @@ namespace JsonApiDotNetCore.Formatters
             return false;
         }
 
-        private string GetRequestBody(Stream body)
+        /// <summary>
+        /// Fetches the request from body asynchronously.
+        /// </summary>
+        /// <param name="body">Input stream for body</param>
+        /// <returns>String content of body sent to server.</returns>
+        private async Task<string> GetRequestBody(Stream body)
         {
             using (var reader = new StreamReader(body))
             {
-                return reader.ReadToEnd();
+                // This needs to be set to async because
+                // Synchronous IO operations are 
+                // https://github.com/aspnet/AspNetCore/issues/7644
+                return await reader.ReadToEndAsync();
             }
         }
     }

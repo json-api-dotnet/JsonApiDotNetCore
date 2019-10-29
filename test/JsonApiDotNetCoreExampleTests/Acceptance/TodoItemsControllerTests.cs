@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
@@ -21,12 +22,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class TodoItemControllerTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
-        public TodoItemControllerTests(TestFixture<TestStartup> fixture)
+        public TodoItemControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Dapper;
 using System.Data;
-using JsonApiDotNetCoreExample.Models;
+using NoEntityFrameworkExample.Models;
 using System.Linq;
 
 namespace NoEntityFrameworkExample.Services
@@ -20,7 +19,7 @@ namespace NoEntityFrameworkExample.Services
         {
             _connectionString = config.GetValue<string>("Data:DefaultConnection");
         }
-
+        
         private IDbConnection Connection
         {
             get

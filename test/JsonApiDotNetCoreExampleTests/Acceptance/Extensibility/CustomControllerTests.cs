@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class CustomControllerTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
-        public CustomControllerTests(TestFixture<TestStartup> fixture)
+        public CustomControllerTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _todoItemFaker = new Faker<TodoItem>()
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [Fact]
         public async Task NonJsonApiControllers_DoNotUse_Dasherized_Routes()
         {
-            // arrange
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
@@ -45,10 +45,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -65,10 +65,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -92,10 +92,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
