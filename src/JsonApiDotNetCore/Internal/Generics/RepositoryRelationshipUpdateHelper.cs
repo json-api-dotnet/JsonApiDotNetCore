@@ -18,8 +18,8 @@ namespace JsonApiDotNetCore.Internal.Generics
     /// instead of having them evaluated on the client side. In particular, for all three types of relationship
     /// a lookup is performed based on an id. Expressions that use IIdentifiable.StringId can never
     /// be translated into queries because this property only exists at runtime after the query is performed.
-    /// Instead we will need to use IIdentifiable{TId}.Id, and to use that we need to access the DbSet{T} with appropiate
-    /// generic constraints.
+    /// We will have to build expression trees if we want to use IIdentifiable{TId}.TId, for which we minimally a
+    /// generic execution to DbContext.Set{T}().
     /// </remarks>
     public interface IRepositoryRelationshipUpdateHelper
     {
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Internal.Generics
     }
 
     /// <inheritdoc/>
-    public class RepositoryRelationshipUpdateHelper<TRelatedResource, TId> : IRepositoryRelationshipUpdateHelper where TRelatedResource : class, IIdentifiable<TId>
+    public class RepositoryRelationshipUpdateHelper<TRelatedResource> : IRepositoryRelationshipUpdateHelper where TRelatedResource : class
     {
         private readonly DbContext _context;
         public RepositoryRelationshipUpdateHelper(IDbContextResolver contextResolver)
@@ -52,29 +52,38 @@ namespace JsonApiDotNetCore.Internal.Generics
 
         private async Task UpdateOneToOneAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            if (!relationshipIds.Any())
-            {
-                relationship.SetValue(parent, null);
+            TRelatedResource value = null;
+            if (relationshipIds.Any())
+            {   // newOwner.id
+                var target = Expression.Constant(TypeHelper.ConvertType(relationshipIds.First(), TypeHelper.GetIdentifierType(relationship.RightType)));
+                // (Person p) => ...
+                ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
+                // (Person p) => p.Id
+                Expression idMember = Expression.Property(parameter, nameof(Identifiable.Id));
+                // newOwner.Id.Equals(p.Id)
+                Expression callEquals = Expression.Call(idMember, nameof(object.Equals), null, target);
+                var equalsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callEquals, parameter);
+                value = await _context.Set<TRelatedResource>().FirstOrDefaultAsync(equalsLambda);
             }
-            else
-            {
-                var value = await _context.Set<TRelatedResource>().FirstAsync(e => relationshipIds.First().Equals(e.Id.ToString()));
-                relationship.SetValue(parent, value);
-            }
+            relationship.SetValue(parent, value);
         }
 
         private async Task UpdateOneToManyAsync(IIdentifiable parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-
-            if (!relationshipIds.Any())
-            {
-                relationship.SetValue(parent, TypeHelper.CreateListFor(typeof(TRelatedResource)));
+            var value = new List<TRelatedResource>();
+            if (relationshipIds.Any())
+            {   // [1, 2, 3]
+                var target = Expression.Constant(TypeHelper.ConvertListType(relationshipIds, TypeHelper.GetIdentifierType(relationship.RightType)));
+                // (Person p) => ...
+                ParameterExpression parameter = Expression.Parameter(typeof(TRelatedResource));
+                // (Person p) => p.Id
+                Expression idMember = Expression.Property(parameter, nameof(Identifiable.Id));
+                // [1,2,3].Contains(p.Id)
+                var callContains = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] { idMember.Type }, target, idMember);
+                var containsLamdda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
+                value = await _context.Set<TRelatedResource>().Where(containsLamdda).ToListAsync();
             }
-            else
-            {
-                var value = await _context.Set<TRelatedResource>().Where(e => relationshipIds.Contains(e.Id.ToString())).ToListAsync();
-                relationship.SetValue(parent, value);
-            }
+            relationship.SetValue(parent, value);
         }
 
         private async Task UpdateManyToManyAsync(IIdentifiable parent, HasManyThroughAttribute relationship, IEnumerable<string> relationshipIds)
@@ -84,19 +93,14 @@ namespace JsonApiDotNetCore.Internal.Generics
             var transaction = await _context.GetCurrentOrCreateTransactionAsync();
             // ArticleTag
             ParameterExpression parameter = Expression.Parameter(relationship.ThroughType);
-
             // ArticleTag.ArticleId
-            Expression property = Expression.Property(parameter, relationship.LeftIdProperty);
-
+            Expression idMember = Expression.Property(parameter, relationship.LeftIdProperty);
             // article.Id
             var parentId = TypeHelper.ConvertType(parent.StringId, relationship.LeftIdProperty.PropertyType);
             Expression target = Expression.Constant(parentId);
-
             // ArticleTag.ArticleId.Equals(article.Id)
-            Expression equals = Expression.Call(property, "Equals", null, target);
-
-            var lambda = Expression.Lambda<Func<TRelatedResource, bool>>(equals, parameter);
-
+            Expression callEquals = Expression.Call(idMember, "Equals", null, target);
+            var lambda = Expression.Lambda<Func<TRelatedResource, bool>>(callEquals, parameter);
             // TODO: we shouldn't need to do this instead we should try updating the existing?
             // the challenge here is if a composite key is used, then we will fail to 
             // create due to a unique key violation

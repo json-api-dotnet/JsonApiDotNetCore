@@ -266,7 +266,7 @@ namespace JsonApiDotNetCore.Data
                 ? hasManyThrough.ThroughType
                 : relationship.RightType;
 
-            var helper = _genericServiceFactory.Get<IRepositoryRelationshipUpdateHelper>(typeof(RepositoryRelationshipUpdateHelper<,>), typeToUpdate, typeof(int));
+            var helper = _genericServiceFactory.Get<IRepositoryRelationshipUpdateHelper>(typeof(RepositoryRelationshipUpdateHelper<>), typeToUpdate);
             await helper.UpdateRelationshipAsync((IIdentifiable)parent, relationship, relationshipIds);
 
             await _context.SaveChangesAsync();
