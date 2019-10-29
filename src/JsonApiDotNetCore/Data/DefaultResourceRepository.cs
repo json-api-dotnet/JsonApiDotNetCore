@@ -306,26 +306,18 @@ namespace JsonApiDotNetCore.Data
                 entities = entities.PageForward(pageSize, pageNumber);
                 return entities is IAsyncQueryProvider ? await entities.ToListAsync() : entities.ToList();
             }
-            else
+            if (entities is IAsyncQueryProvider)
             {
-                if (entities is IAsyncQueryProvider)
-                {
-                    // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
-                    var totalCount = await entities.CountAsync();
+                // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
+                var totalCount = await entities.CountAsync();
 
-                    int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
-                    int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
+                int virtualFirstIndex = totalCount - pageSize * Math.Abs(pageNumber);
+                int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
 
-                    return await ToListAsync(entities.Skip(virtualFirstIndex).Take(numberOfElementsInPage));
-                }
-                else
-                {
-                    entities = entities.Reverse();
-                    int firstIndex = pageSize * Math.Abs(pageNumber) - 1;
-                    int numberOfElementsInPage = Math.Min(pageSize, firstIndex + pageSize);
-                    return entities.Skip(firstIndex).Take(numberOfElementsInPage);
-                }
+                return await ToListAsync(entities.Skip(virtualFirstIndex).Take(numberOfElementsInPage));
             }
+
+            return entities.Reverse().PageForward(pageSize, 1).ToList();
         }
 
         /// <inheritdoc />

@@ -6,6 +6,7 @@ using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -95,7 +96,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var totalCount = expectedEntitiesPerPage * 2;
             var person = new Person();
             var todoItems = _todoItemFaker.Generate(totalCount).ToList();
-            todoItems.ForEach(ti => ti.Owner = person);
+            foreach (var ti in todoItems)
+                ti.Owner = person;
 
             Context.TodoItems.RemoveRange(Context.TodoItems);
             Context.TodoItems.AddRange(todoItems);
@@ -109,10 +111,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItem>(body).Data;
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<TodoItemClient>(body).Data.Select(ti => ti.Id).ToArray();
 
-            var expectedTodoItems = new[] { todoItems[totalCount - 2], todoItems[totalCount - 1] };
-            Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
+            var expectedTodoItems = new[] { todoItems[totalCount - 2].Id, todoItems[totalCount - 1].Id };
+            for (int i = 0; i < expectedEntitiesPerPage-1 ; i++)
+                Assert.Contains(expectedTodoItems[i], deserializedBody);
         }
 
         private class IdComparer<T> : IEqualityComparer<T>

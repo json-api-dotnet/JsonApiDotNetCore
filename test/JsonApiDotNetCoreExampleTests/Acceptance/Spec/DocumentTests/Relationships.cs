@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_OneToMany_Relationships_ById()
         {
             // Arrange
-            var personId = _context.People.Last().Id;
+            var personId = _context.People.AsEnumerable().Last().Id;
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
