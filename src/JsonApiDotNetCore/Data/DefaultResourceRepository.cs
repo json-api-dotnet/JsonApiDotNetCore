@@ -262,26 +262,12 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public async Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds)
         {
-            if (relationship is HasManyThroughAttribute hasManyThrough)
-            {
-                var helper = _genericServiceFactory.Get<IHasManyThroughUpdateHelper>(typeof(HasManyThroughUpdateHelper<>), hasManyThrough.ThroughType);
-                await helper.UpdateAsync((IIdentifiable)parent, hasManyThrough, relationshipIds);
-                return;
-            }
-            var context = _context.Set(relationship.RightType);
+            var typeToUpdate = (relationship is HasManyThroughAttribute hasManyThrough)
+                ? hasManyThrough.ThroughType
+                : relationship.RightType;
 
-            if (relationship is HasManyAttribute)
-            {
-                // todo: we should be to do this with an expression that can be translated into a query
-                var value = relationshipIds.Any() ? context.AsEnumerable().Where(e => relationshipIds.Contains(((IIdentifiable)e).StringId)).Cast(relationship.RightType) : TypeHelper.CreateListFor(relationship.RightType);
-                relationship.SetValue(parent, value);
-            }
-            else
-            {
-                // todo: we should be to do this with an expression that can be translated into a query
-                var value = relationshipIds.Any() ? context.AsEnumerable().FirstOrDefault(e => relationshipIds.First() == ((IIdentifiable)e).StringId) : null;
-                relationship.SetValue(parent, value);
-            }
+            var helper = _genericServiceFactory.Get<IRepositoryRelationshipUpdateHelper>(typeof(RepositoryRelationshipUpdateHelper<,>), typeToUpdate, typeof(int));
+            await helper.UpdateRelationshipAsync((IIdentifiable)parent, relationship, relationshipIds);
 
             await _context.SaveChangesAsync();
         }
