@@ -153,25 +153,30 @@ namespace JsonApiDotNetCore.Data
 
         private void DetachRelationships(TResource entity)
         {
-            foreach (var relationshipAttr in _targetedFields.Relationships)
+            foreach (var relationship in _targetedFields.Relationships)
             {
-                if (relationshipAttr is HasOneAttribute hasOneAttr)
+                var value = relationship.GetValue(entity);
+                if (value == null)
+                    continue;
+
+                if (value is IEnumerable collection)
                 {
-                    var relationshipValue = (IIdentifiable)hasOneAttr.GetValue(entity);
-                    if (relationshipValue == null) continue;
-                    _context.Entry(relationshipValue).State = EntityState.Detached;
-                }
-                else
-                {
-                    IEnumerable<IIdentifiable> relationshipValueList = (IEnumerable<IIdentifiable>)relationshipAttr.GetValue(entity);
-                    if (relationshipValueList == null) continue;
-                    foreach (var pointer in relationshipValueList)
-                        _context.Entry(pointer).State = EntityState.Detached;
+                    foreach (IIdentifiable single in ((IEnumerable<IIdentifiable>)collection).ToList())
+                        _context.Entry(single).State = EntityState.Detached;
+
                     /// detaching has many relationships is not sufficient to 
                     /// trigger a full reload of relationships: the navigation 
                     /// property actually needs to be nulled out, otherwise
                     /// EF will still add duplicate instances to the collection
-                    relationshipAttr.SetValue(entity, null);
+                    relationship.SetValue(entity, null);
+                }
+                else
+                {
+                    _context.Entry(value).State = EntityState.Detached;
+
+                    /// temporary work around for https://github.com/aspnet/EntityFrameworkCore/issues/18621
+                    /// as soon as ef core 3.1 lands we can get rid of this again.
+                    _context.Entry(entity).State = EntityState.Detached;
                 }
             }
         }

@@ -165,7 +165,9 @@ namespace JsonApiDotNetCore.Middleware
         /// <returns></returns>
         private ResourceContext GetCurrentEntity()
         {
-            var controllerName = (string)_httpContext.GetRouteData().Values["controller"];
+            var controllerName = (string)_httpContext.GetRouteValue("controller");
+            if (controllerName == null)
+                return null;
             var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
             var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
