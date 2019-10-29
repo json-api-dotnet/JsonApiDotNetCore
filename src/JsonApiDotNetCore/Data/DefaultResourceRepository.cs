@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
@@ -242,11 +241,13 @@ namespace JsonApiDotNetCore.Data
             if (relationshipValueList == null) return null;
             bool _wasAlreadyAttached = false;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
-            {   // convert each element in the value list to relationshipAttr.DependentType.
-                var tracked = AttachOrGetTracked(pointer);
-                if (tracked != null) _wasAlreadyAttached = true;
-                return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
-            }).ToList().Cast(relationshipAttr.RightType);
+                {   // convert each element in the value list to relationshipAttr.DependentType.
+                    var tracked = AttachOrGetTracked(pointer);
+                    if (tracked != null) _wasAlreadyAttached = true;
+                    return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
+                })
+                .ToList()
+                .Cast(relationshipAttr.RightType);
             if (_wasAlreadyAttached) wasAlreadyAttached = true;
             return (IList)trackedPointerCollection;
         }
@@ -285,7 +286,9 @@ namespace JsonApiDotNetCore.Data
         public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain = null)
         {
             if (inclusionChain == null || !inclusionChain.Any())
+            {
                 return entities;
+            }
 
             string internalRelationshipPath = null;
             foreach (var relationship in inclusionChain)
@@ -306,7 +309,7 @@ namespace JsonApiDotNetCore.Data
                 entities = entities.PageForward(pageSize, pageNumber);
                 return entities is IAsyncQueryProvider ? await entities.ToListAsync() : entities.ToList();
             }
-            if (entities is IAsyncQueryProvider)
+            if (entities is IAsyncEnumerable<TResource>)
             {
                 // since EntityFramework does not support IQueryable.Reverse(), we need to know the number of queried entities
                 var totalCount = await entities.CountAsync();
@@ -315,9 +318,12 @@ namespace JsonApiDotNetCore.Data
                 int numberOfElementsInPage = Math.Min(pageSize, virtualFirstIndex + pageSize);
 
                 return await ToListAsync(entities.Skip(virtualFirstIndex).Take(numberOfElementsInPage));
+            } else
+            {
+                int firstIndex = pageSize * Math.Abs(pageNumber) - 1;
+                int numberOfElementsInPage = Math.Min(pageSize, firstIndex + pageSize);
+                return entities.Reverse().Skip(firstIndex).Take(numberOfElementsInPage);
             }
-
-            return entities.Reverse().PageForward(pageSize, 1).ToList();
         }
 
         /// <inheritdoc />
@@ -327,10 +333,7 @@ namespace JsonApiDotNetCore.Data
             {
                 return await entities.CountAsync();
             }
-            else
-            {
-                return entities.Count();
-            }
+            return entities.Count();
         }
 
         /// <inheritdoc />
@@ -348,10 +351,7 @@ namespace JsonApiDotNetCore.Data
             {
                 return await entities.ToListAsync();
             }
-            else
-            {
-                return entities.ToList();
-            }
+            return entities.ToList();
         }
 
         /// <summary>
