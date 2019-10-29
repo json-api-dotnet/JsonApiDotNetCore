@@ -3,22 +3,13 @@
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-    <Folder Include="Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(MicrosoftLoggingVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
     <PackageReference Include="Npgsql" Version="$(NpgsqlVersion)" />
     <PackageReference Include="Dapper" Version="1.50.5" />
   </ItemGroup>
-
 </Project>

@@ -11,6 +11,4 @@ namespace NoEntityFrameworkExample.Data
 
         public DbSet<TodoItem> TodoItems { get; set; }
     }
-
-
 }

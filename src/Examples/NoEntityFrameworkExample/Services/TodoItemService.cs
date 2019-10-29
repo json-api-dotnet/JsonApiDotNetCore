@@ -17,9 +17,9 @@ namespace NoEntityFrameworkExample.Services
 
         public TodoItemService(IConfiguration config)
         {
-            _connectionString = config["Data:DefaultConnection"];
+            _connectionString = config.GetValue<string>("Data:DefaultConnection");
         }
-
+        
         private IDbConnection Connection
         {
             get

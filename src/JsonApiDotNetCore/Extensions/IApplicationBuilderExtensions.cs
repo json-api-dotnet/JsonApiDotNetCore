@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +17,6 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds necessary components such as routing to your application
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="useMvc"></param>
         /// <returns></returns>
         public static void UseJsonApi(this IApplicationBuilder app)
         {
@@ -36,7 +34,7 @@ namespace JsonApiDotNetCore.Extensions
             // middleware to run after routing occurs.
             app.UseMiddleware<CurrentRequestMiddleware>();
 
-            // Executes the endpoitns that was selected by routing.
+            // Executes the endpoints that was selected by routing.
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
