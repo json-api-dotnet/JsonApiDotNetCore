@@ -34,7 +34,10 @@ namespace JsonApiDotNetCoreExample
                     builder.AddConsole();
                     builder.AddConfiguration(Config.GetSection("Logging"));
                 })
-                .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
+                .AddDbContext<AppDbContext>(options =>
+                {
+                    options.UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
+                }, ServiceLifetime.Transient)
                 .AddJsonApi(options =>
                 {
                     options.Namespace = "api/v1";
