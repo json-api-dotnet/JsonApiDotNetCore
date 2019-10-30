@@ -80,19 +80,15 @@ This type can only be applied on types that implement IList.</p>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></div>
-    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Models.HasManyAttribute.html">HasManyAttribute</a></div>
-    <div class="level3"><span class="xref">HasManyThroughAttribute</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a></div>
-    <div><a class="xref" href="JsonApiDotNetCore.Models.IRelationshipField.html">IRelationshipField</a></div>
+    <div class="level1"><span class="xref">System.Attribute</span></div>
+    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></div>
+    <div class="level3"><a class="xref" href="JsonApiDotNetCore.Models.HasManyAttribute.html">HasManyAttribute</a></div>
+    <div class="level4"><span class="xref">HasManyThroughAttribute</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ExposedInternalMemberName">RelationshipAttribute.ExposedInternalMemberName</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.HasManyAttribute.html#JsonApiDotNetCore_Models_HasManyAttribute_SetValue_System_Object_System_Object_">HasManyAttribute.SetValue(Object, Object)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_PublicRelationshipName">RelationshipAttribute.PublicRelationshipName</a>
@@ -104,10 +100,13 @@ This type can only be applied on types that implement IList.</p>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_InverseNavigation">RelationshipAttribute.InverseNavigation</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RightType">RelationshipAttribute.RightType</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_Type">RelationshipAttribute.Type</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_LeftType">RelationshipAttribute.LeftType</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_DependentType">RelationshipAttribute.DependentType</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_PrincipalType">RelationshipAttribute.PrincipalType</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_IsHasMany">RelationshipAttribute.IsHasMany</a>
@@ -116,13 +115,22 @@ This type can only be applied on types that implement IList.</p>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_IsHasOne">RelationshipAttribute.IsHasOne</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RelationshipLinks">RelationshipAttribute.RelationshipLinks</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_DocumentLinks">RelationshipAttribute.DocumentLinks</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_CanInclude">RelationshipAttribute.CanInclude</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_EntityPropertyName">RelationshipAttribute.EntityPropertyName</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_TryGetHasOne_JsonApiDotNetCore_Models_HasOneAttribute__">RelationshipAttribute.TryGetHasOne(HasOneAttribute)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_TryGetHasMany_JsonApiDotNetCore_Models_HasManyAttribute__">RelationshipAttribute.TryGetHasMany(HasManyAttribute)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetValue_System_Object_">RelationshipAttribute.GetValue(Object)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ToString">RelationshipAttribute.ToString()</a>
@@ -133,12 +141,132 @@ This type can only be applied on types that implement IList.</p>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_Is_System_String_">RelationshipAttribute.Is(String)</a>
     </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Assembly, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Assembly, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.MemberInfo, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.MemberInfo, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Module, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Module, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.ParameterInfo, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.ParameterInfo, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefaultAttribute()</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.Assembly, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.Assembly, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.MemberInfo, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.MemberInfo, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.Module, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.Module, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.ParameterInfo, System.Type)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.IsDefined(System.Reflection.ParameterInfo, System.Type, System.Boolean)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.Match(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Attribute.TypeId</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Models.html">JsonApiDotNetCore.Models</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class HasManyThroughAttribute : HasManyAttribute, IResourceField, IRelationshipField</code></pre>
+    <pre><code class="lang-csharp hljs">public class HasManyThroughAttribute : HasManyAttribute</code></pre>
   </div>
   <h5 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_examples"><strong>Examples</strong></h5>
   <p>In the following example, we expose a relationship named &quot;tags&quot;
@@ -154,20 +282,20 @@ public List&lt;ArticleTag> ArticleTags { get; set; }</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.%23ctor(System.String%2CJsonApiDotNetCore.Models.Links.Link%2CSystem.Boolean%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.%23ctor(System.String%2CJsonApiDotNetCore.Models.Link%2CSystem.Boolean%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L46">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L41">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)">HasManyThroughAttribute(String, Link, Boolean, String)</h4>
+  <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Link,System.Boolean,System.String)">HasManyThroughAttribute(String, Link, Boolean, String)</h4>
   <div class="markdown level1 summary"><p>Create a HasMany relationship through a many-to-many join relationship.
 The public name exposed through the API will be based on the configured convention.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HasManyThroughAttribute(string internalThroughName, Link relationshipLinks = default(Link), bool canInclude = true, string mappedBy = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public HasManyThroughAttribute(string internalThroughName, Link documentLinks = Link.Self | Link.Paging | Link.Related | Link.All, bool canInclude = true, string mappedBy = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -186,9 +314,9 @@ The public name exposed through the API will be based on the configured conventi
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.Link.html">Link</a></td>
-        <td><span class="parametername">relationshipLinks</span></td>
-        <td><p>Which links are available. Defaults to <a class="xref" href="JsonApiDotNetCore.Models.Links.Link.html#JsonApiDotNetCore_Models_Links_Link_All">All</a></p>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Link.html">Link</a></td>
+        <td><span class="parametername">documentLinks</span></td>
+        <td><p>Which links are available. Defaults to <a class="xref" href="JsonApiDotNetCore.Models.Link.html#JsonApiDotNetCore_Models_Link_All">All</a></p>
 </td>
       </tr>
       <tr>
@@ -205,24 +333,24 @@ The public name exposed through the API will be based on the configured conventi
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String__examples">Examples</h5>
+  <h5 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String__examples">Examples</h5>
   <pre><code>[HasManyThrough(nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]</code></pre>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.%23ctor(System.String%2CSystem.String%2CJsonApiDotNetCore.Models.Links.Link%2CSystem.Boolean%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.%23ctor(System.String%2CSystem.String%2CJsonApiDotNetCore.Models.Link%2CSystem.Boolean%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L67">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L62">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)">HasManyThroughAttribute(String, String, Link, Boolean, String)</h4>
+  <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,System.String,JsonApiDotNetCore.Models.Link,System.Boolean,System.String)">HasManyThroughAttribute(String, String, Link, Boolean, String)</h4>
   <div class="markdown level1 summary"><p>Create a HasMany relationship through a many-to-many join relationship.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HasManyThroughAttribute(string publicName, string internalThroughName, Link documentLinks = default(Link), bool canInclude = true, string mappedBy = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public HasManyThroughAttribute(string publicName, string internalThroughName, Link documentLinks = Link.Self | Link.Paging | Link.Related | Link.All, bool canInclude = true, string mappedBy = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -247,9 +375,9 @@ The public name exposed through the API will be based on the configured conventi
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.Link.html">Link</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Link.html">Link</a></td>
         <td><span class="parametername">documentLinks</span></td>
-        <td><p>Which links are available. Defaults to <a class="xref" href="JsonApiDotNetCore.Models.Links.Link.html#JsonApiDotNetCore_Models_Links_Link_All">All</a></p>
+        <td><p>Which links are available. Defaults to <a class="xref" href="JsonApiDotNetCore.Models.Link.html#JsonApiDotNetCore_Models_Link_All">All</a></p>
 </td>
       </tr>
       <tr>
@@ -266,17 +394,17 @@ The public name exposed through the API will be based on the configured conventi
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String__examples">Examples</h5>
+  <h5 id="JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String__examples">Examples</h5>
   <pre><code>[HasManyThrough(&quot;tags&quot;, nameof(ArticleTags), documentLinks: Link.All, canInclude: true)]</code></pre>
 
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_InternalThroughName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.InternalThroughName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_InternalThroughName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.InternalThroughName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L137">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L75">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_InternalThroughName_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.InternalThroughName*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_InternalThroughName" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.InternalThroughName">InternalThroughName</h4>
@@ -308,10 +436,10 @@ this would be &quot;ArticleTags&quot;.</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftIdProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftIdProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftIdProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftIdProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L176">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L114">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftIdProperty_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftIdProperty*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftIdProperty" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftIdProperty">LeftIdProperty</h4>
@@ -332,7 +460,7 @@ this would be &quot;ArticleTags&quot;.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">PropertyInfo</span></td>
+        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -345,10 +473,10 @@ this would point to the <code>Article.ArticleTags.ArticleId</code> property</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L161">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L99">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftProperty_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftProperty*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_LeftProperty" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.LeftProperty">LeftProperty</h4>
@@ -369,7 +497,7 @@ this would point to the <code>Article.ArticleTags.ArticleId</code> property</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">PropertyInfo</span></td>
+        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -382,10 +510,10 @@ this would point to the <code>Article.ArticleTags.Article</code> property</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_RelationshipPath.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.RelationshipPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_RelationshipPath.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.RelationshipPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L227">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L165">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_RelationshipPath_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.RelationshipPath*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_RelationshipPath" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.RelationshipPath">RelationshipPath</h4>
@@ -421,10 +549,10 @@ this would point to the <code>Article.ArticleTags.Article</code> property</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_RightIdProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.RightIdProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_RightIdProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.RightIdProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L206">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L144">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_RightIdProperty_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.RightIdProperty*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_RightIdProperty" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.RightIdProperty">RightIdProperty</h4>
@@ -445,7 +573,7 @@ this would point to the <code>Article.ArticleTags.Article</code> property</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">PropertyInfo</span></td>
+        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -458,10 +586,10 @@ this would point to the <code>Article.ArticleTags.TagId</code> property</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_RightProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.RightProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_RightProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.RightProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L191">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L129">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_RightProperty_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.RightProperty*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_RightProperty" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.RightProperty">RightProperty</h4>
@@ -482,7 +610,7 @@ this would point to the <code>Article.ArticleTags.TagId</code> property</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">PropertyInfo</span></td>
+        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -495,10 +623,10 @@ this would point to the <code>Article.ArticleTags.Tag</code> property</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L221">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L159">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughProperty_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughProperty*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughProperty" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughProperty">ThroughProperty</h4>
@@ -519,7 +647,7 @@ this would point to the <code>Article.ArticleTags.Tag</code> property</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">PropertyInfo</span></td>
+        <td><span class="xref">System.Reflection.PropertyInfo</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -532,10 +660,10 @@ this would point to the <code>Article.ArticleTags</code> property</p>
 
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughType.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughType.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L146">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L84">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughType_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughType*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_ThroughType" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.ThroughType">ThroughType</h4>
@@ -556,7 +684,7 @@ this would point to the <code>Article.ArticleTags</code> property</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Type</span></td>
+        <td><span class="xref">System.Type</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -565,109 +693,6 @@ this would point to the <code>Article.ArticleTags</code> property</p>
   <p>In the <code>[HasManyThrough(&amp;quot;tags&amp;quot;, nameof(ArticleTags))]</code> example
 this would be <code>ArticleTag</code>.</p>
 
-  <h3 id="methods">Methods
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_GetValue_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.GetValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L78">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_GetValue_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.GetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_GetValue_System_Object_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.GetValue(System.Object)">GetValue(Object)</h4>
-  <div class="markdown level1 summary"><p>Traverses the through the provided entity and returns the 
-value of the relationship on the other side of a join entity
-(e.g. Articles.ArticleTags.Tag).</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override object GetValue(object entity)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">entity</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="JsonApiDotNetCore.Models.HasManyAttribute.html#JsonApiDotNetCore_Models_HasManyAttribute_GetValue_System_Object_">HasManyAttribute.GetValue(Object)</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L104">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Models_HasManyThroughAttribute_SetValue_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.SetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasManyThroughAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Models.HasManyThroughAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
-  <div class="markdown level1 summary"><p>Sets the value of the property identified by this attribute</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void SetValue(object entity, object newValue)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">entity</span></td>
-        <td><p>The target object</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">newValue</span></td>
-        <td><p>The new property value</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="JsonApiDotNetCore.Models.HasManyAttribute.html#JsonApiDotNetCore_Models_HasManyAttribute_SetValue_System_Object_System_Object_">HasManyAttribute.SetValue(Object, Object)</a></div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a>
-  </div>
-  <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.IRelationshipField.html">IRelationshipField</a>
-  </div>
 </article>
           </div>
           
@@ -676,10 +701,10 @@ value of the relationship on the other side of a join entity
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Models_HasManyThroughAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasManyThroughAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasManyThroughAttribute.cs/#L29" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Models/HasManyThroughAttribute.cs/#L24" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

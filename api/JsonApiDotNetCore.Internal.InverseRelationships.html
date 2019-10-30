@@ -90,28 +90,52 @@ the RelationshipAttribute.</p>
     <h5>Implements</h5>
     <div><a class="xref" href="JsonApiDotNetCore.Internal.IInverseRelationships.html">IInverseRelationships</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Internal.html">JsonApiDotNetCore.Internal</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Internal_InverseRelationships_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class InverseRelationships : object, IInverseRelationships</code></pre>
+    <pre><code class="lang-csharp hljs">public class InverseRelationships : IInverseRelationships</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_InverseRelationships__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Data_IDbContextResolver_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.InverseRelationships.%23ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider%2CJsonApiDotNetCore.Data.IDbContextResolver)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_InverseRelationships__ctor_JsonApiDotNetCore_Internal_IResourceGraph_JsonApiDotNetCore_Data_IDbContextResolver_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.InverseRelationships.%23ctor(JsonApiDotNetCore.Internal.IResourceGraph%2CJsonApiDotNetCore.Data.IDbContextResolver)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/InverseRelationships.cs/#L35">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/InverseRelationships.cs/#L34">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_InverseRelationships__ctor_" data-uid="JsonApiDotNetCore.Internal.InverseRelationships.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Internal_InverseRelationships__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Data_IDbContextResolver_" data-uid="JsonApiDotNetCore.Internal.InverseRelationships.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Data.IDbContextResolver)">InverseRelationships(IResourceContextProvider, IDbContextResolver)</h4>
+  <h4 id="JsonApiDotNetCore_Internal_InverseRelationships__ctor_JsonApiDotNetCore_Internal_IResourceGraph_JsonApiDotNetCore_Data_IDbContextResolver_" data-uid="JsonApiDotNetCore.Internal.InverseRelationships.#ctor(JsonApiDotNetCore.Internal.IResourceGraph,JsonApiDotNetCore.Data.IDbContextResolver)">InverseRelationships(IResourceGraph, IDbContextResolver)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InverseRelationships(IResourceContextProvider provider, IDbContextResolver resolver = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public InverseRelationships(IResourceGraph graph, IDbContextResolver resolver = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -124,8 +148,8 @@ the RelationshipAttribute.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider.html">IResourceContextProvider</a></td>
-        <td><span class="parametername">provider</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.IResourceGraph.html">IResourceGraph</a></td>
+        <td><span class="parametername">graph</span></td>
         <td></td>
       </tr>
       <tr>
@@ -139,10 +163,10 @@ the RelationshipAttribute.</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_InverseRelationships_Resolve.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.InverseRelationships.Resolve%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_InverseRelationships_Resolve.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.InverseRelationships.Resolve%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/InverseRelationships.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/InverseRelationships.cs/#L41">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_InverseRelationships_Resolve_" data-uid="JsonApiDotNetCore.Internal.InverseRelationships.Resolve*"></a>
   <h4 id="JsonApiDotNetCore_Internal_InverseRelationships_Resolve" data-uid="JsonApiDotNetCore.Internal.InverseRelationships.Resolve">Resolve()</h4>
@@ -166,10 +190,10 @@ deal with resolving the inverse relationships. </p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_InverseRelationships.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.InverseRelationships%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_InverseRelationships.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.InverseRelationships%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/InverseRelationships.cs/#L30" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/InverseRelationships.cs/#L29" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

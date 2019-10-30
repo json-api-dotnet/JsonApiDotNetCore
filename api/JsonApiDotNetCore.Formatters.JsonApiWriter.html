@@ -73,10 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Formatters_JsonApiWriter" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter" class="text-break">Class JsonApiWriter
   </h1>
-  <div class="markdown level0 summary"><p>Formats the response data used  <a href="https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0">https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0</a>.
-It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
-It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.IJsonApiSerializer.html">IJsonApiSerializer</a>.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -87,23 +84,47 @@ It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.
     <h5>Implements</h5>
     <div><a class="xref" href="JsonApiDotNetCore.Formatters.IJsonApiWriter.html">IJsonApiWriter</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Formatters.html">JsonApiDotNetCore.Formatters</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Formatters_JsonApiWriter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiWriter : object, IJsonApiWriter</code></pre>
+    <pre><code class="lang-csharp hljs">public class JsonApiWriter : IJsonApiWriter</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Formatters_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_Server_IJsonApiSerializer_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Formatters.JsonApiWriter.%23ctor(JsonApiDotNetCore.Serialization.Server.IJsonApiSerializer%2CILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Formatters_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_IJsonApiSerializer_Microsoft_Extensions_Logging_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Formatters.JsonApiWriter.%23ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer%2CMicrosoft.Extensions.Logging.ILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Formatters/JsonApiWriter.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Formatters/JsonApiWriter.cs/#L16">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Formatters_JsonApiWriter__ctor_" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Formatters_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_Server_IJsonApiSerializer_ILoggerFactory_" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.Server.IJsonApiSerializer,ILoggerFactory)">JsonApiWriter(IJsonApiSerializer, ILoggerFactory)</h4>
+  <h4 id="JsonApiDotNetCore_Formatters_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_IJsonApiSerializer_Microsoft_Extensions_Logging_ILoggerFactory_" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer,Microsoft.Extensions.Logging.ILoggerFactory)">JsonApiWriter(IJsonApiSerializer, ILoggerFactory)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -121,12 +142,12 @@ It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Server.IJsonApiSerializer.html">IJsonApiSerializer</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiSerializer.html">IJsonApiSerializer</a></td>
         <td><span class="parametername">serializer</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
         <td><span class="parametername">loggerFactory</span></td>
         <td></td>
       </tr>
@@ -136,13 +157,13 @@ It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Formatters_JsonApiWriter_WriteAsync_OutputFormatterWriteContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Formatters.JsonApiWriter.WriteAsync(OutputFormatterWriteContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Formatters_JsonApiWriter_WriteAsync_Microsoft_AspNetCore_Mvc_Formatters_OutputFormatterWriteContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Formatters.JsonApiWriter.WriteAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Formatters/JsonApiWriter.cs/#L29">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Formatters/JsonApiWriter.cs/#L24">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Formatters_JsonApiWriter_WriteAsync_" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter.WriteAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Formatters_JsonApiWriter_WriteAsync_OutputFormatterWriteContext_" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter.WriteAsync(OutputFormatterWriteContext)">WriteAsync(OutputFormatterWriteContext)</h4>
+  <h4 id="JsonApiDotNetCore_Formatters_JsonApiWriter_WriteAsync_Microsoft_AspNetCore_Mvc_Formatters_OutputFormatterWriteContext_" data-uid="JsonApiDotNetCore.Formatters.JsonApiWriter.WriteAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext)">WriteAsync(OutputFormatterWriteContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -160,7 +181,7 @@ It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">OutputFormatterWriteContext</span></td>
+        <td><span class="xref">Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext</span></td>
         <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
@@ -176,7 +197,7 @@ It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -193,10 +214,10 @@ It onls depends on <a class="xref" href="JsonApiDotNetCore.Serialization.Server.
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Formatters_JsonApiWriter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Formatters.JsonApiWriter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Formatters_JsonApiWriter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Formatters.JsonApiWriter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Formatters/JsonApiWriter.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Formatters/JsonApiWriter.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -73,7 +73,8 @@
   
   <h1 id="JsonApiDotNetCore_Internal_Query_FilterQuery" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery" class="text-break">Class FilterQuery
   </h1>
-  <div class="markdown level0 summary"><p>Internal representation of the raw articles?filter[X]=Y query from the URL.</p>
+  <div class="markdown level0 summary"><p>Allows you to filter the query, via the methods shown at
+<a href="https://json-api-dotnet.github.io/#/filtering">HERE</a></p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -85,13 +86,34 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_Target">BaseQuery.Target</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_Attribute">BaseQuery.Attribute</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship">BaseQuery.Relationship</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_IsAttributeOfRelationship">BaseQuery.IsAttributeOfRelationship</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Internal.Query.html">JsonApiDotNetCore.Internal.Query</a></h6>
@@ -104,18 +126,20 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery__ctor_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery.%23ctor(System.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery__ctor_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery.%23ctor(System.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L8">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_FilterQuery__ctor_" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Query_FilterQuery__ctor_System_String_System_String_System_String_" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery.#ctor(System.String,System.String,System.String)">FilterQuery(String, String, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Allows you to filter the query, via the methods shown at
+<a href="https://json-api-dotnet.github.io/#/filtering">HERE</a></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FilterQuery(string target, string value, string operation)</code></pre>
+    <pre><code class="lang-csharp hljs">public FilterQuery(string attribute, string value, string operation)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -129,18 +153,21 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">target</span></td>
-        <td></td>
+        <td><span class="parametername">attribute</span></td>
+        <td><p>the json attribute you want to filter on</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">value</span></td>
-        <td></td>
+        <td><p>the value this attribute should be</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">operation</span></td>
-        <td></td>
+        <td><p>possible values: eq, ne, lt, gt, le, ge, like, in (default)</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -148,15 +175,14 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery_Operation.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery.Operation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery_Operation.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery.Operation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L19">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L28">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_FilterQuery_Operation_" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery.Operation*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Query_FilterQuery_Operation" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery.Operation">Operation</h4>
-  <div class="markdown level1 summary"><p>See <a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterOperation.html">FilterOperation</a>. Can also be a custom operation.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -179,10 +205,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery_Value.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery.Value%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery_Value.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery.Value%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L15">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_FilterQuery_Value_" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery.Value*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Query_FilterQuery_Value" data-uid="JsonApiDotNetCore.Internal.Query.FilterQuery.Value">Value</h4>
@@ -215,10 +241,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_FilterQuery.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.FilterQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/FilterQuery.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

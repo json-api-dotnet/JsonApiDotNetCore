@@ -77,33 +77,39 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.AttrFilterQuery.html">AttrFilterQuery</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.AttrSortQuery.html">AttrSortQuery</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseAttrQuery.html">BaseAttrQuery</a></h4>
+      <section><p>Abstract class to make available shared properties of all query implementations
+It elimines boilerplate of providing specified type(AttrQuery or RelatedAttrQuery) 
+while filter and sort operations and eliminates plenty of methods to keep DRY principles </p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseFilterQuery.html">BaseFilterQuery</a></h4>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html">BaseQuery</a></h4>
-      <section><p>represents what FilterQuery and SortQuery have in common: a target.
-(sort=TARGET, or filter[TARGET]=123).</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQueryContext-1.html">BaseQueryContext&lt;TQuery&gt;</a></h4>
-      <section><p>A context class that provides extra meta data for a <see cref="!:TQuery"></see>
-that is used when applying url queries internally.</p>
-</section>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterQuery.html">FilterQuery</a></h4>
-      <section><p>Internal representation of the raw articles?filter[X]=Y query from the URL.</p>
+      <section><p>Allows you to filter the query, via the methods shown at
+<a href="https://json-api-dotnet.github.io/#/filtering">HERE</a></p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterQueryContext.html">FilterQueryContext</a></h4>
-      <section><p>Wrapper class for filter queries. Provides the internals
-with metadata it needs to perform the url filter queries on the targeted dataset.</p>
-</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.PageQuery.html">PageQuery</a></h4>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.QueryConstants.html">QueryConstants</a></h4>
       <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.QuerySet.html">QuerySet</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.RelatedAttrFilterQuery.html">RelatedAttrFilterQuery</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.RelatedAttrSortQuery.html">RelatedAttrSortQuery</a></h4>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQuery.html">SortQuery</a></h4>
-      <section><p>Internal representation of the raw articles?sort[field] query from the URL.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQueryContext.html">SortQueryContext</a></h4>
-      <section><p>Wrapper class for sort queries. Provides the internals
-with metadata it needs to perform the url sort queries on the targeted dataset.</p>
+      <section><p>An internal representation of the raw sort query.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterOperation.html">FilterOperation</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterOperations.html">FilterOperations</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortDirection.html">SortDirection</a></h4>
       <section></section>

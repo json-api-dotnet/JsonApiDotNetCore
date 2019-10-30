@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Internal_Query_SortQuery" data-uid="JsonApiDotNetCore.Internal.Query.SortQuery" class="text-break">Class SortQuery
   </h1>
-  <div class="markdown level0 summary"><p>Internal representation of the raw articles?sort[field] query from the URL.</p>
+  <div class="markdown level0 summary"><p>An internal representation of the raw sort query.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -85,13 +85,34 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_Target">BaseQuery.Target</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_Attribute">BaseQuery.Attribute</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship">BaseQuery.Relationship</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseQuery.html#JsonApiDotNetCore_Internal_Query_BaseQuery_IsAttributeOfRelationship">BaseQuery.IsAttributeOfRelationship</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Internal.Query.html">JsonApiDotNetCore.Internal.Query</a></h6>
@@ -104,18 +125,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_SortQuery__ctor_System_String_JsonApiDotNetCore_Internal_Query_SortDirection_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.SortQuery.%23ctor(System.String%2CJsonApiDotNetCore.Internal.Query.SortDirection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_SortQuery__ctor_JsonApiDotNetCore_Internal_Query_SortDirection_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.SortQuery.%23ctor(JsonApiDotNetCore.Internal.Query.SortDirection%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/SortQuery.cs/#L8">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/SortQuery.cs/#L11">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_SortQuery__ctor_" data-uid="JsonApiDotNetCore.Internal.Query.SortQuery.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Internal_Query_SortQuery__ctor_System_String_JsonApiDotNetCore_Internal_Query_SortDirection_" data-uid="JsonApiDotNetCore.Internal.Query.SortQuery.#ctor(System.String,JsonApiDotNetCore.Internal.Query.SortDirection)">SortQuery(String, SortDirection)</h4>
+  <h4 id="JsonApiDotNetCore_Internal_Query_SortQuery__ctor_JsonApiDotNetCore_Internal_Query_SortDirection_System_String_" data-uid="JsonApiDotNetCore.Internal.Query.SortQuery.#ctor(JsonApiDotNetCore.Internal.Query.SortDirection,System.String)">SortQuery(SortDirection, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SortQuery(string target, SortDirection direction)</code></pre>
+    <pre><code class="lang-csharp hljs">public SortQuery(SortDirection direction, string attribute)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -128,13 +149,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">target</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortDirection.html">SortDirection</a></td>
+        <td><span class="parametername">direction</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortDirection.html">SortDirection</a></td>
-        <td><span class="parametername">direction</span></td>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">attribute</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -143,10 +164,10 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_SortQuery_Direction.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.SortQuery.Direction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_SortQuery_Direction.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.SortQuery.Direction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/SortQuery.cs/#L17">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/SortQuery.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_SortQuery_Direction_" data-uid="JsonApiDotNetCore.Internal.Query.SortQuery.Direction*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Query_SortQuery_Direction" data-uid="JsonApiDotNetCore.Internal.Query.SortQuery.Direction">Direction</h4>
@@ -180,10 +201,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_SortQuery.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.SortQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_SortQuery.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.SortQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Internal/Query/SortQuery.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/SortQuery.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

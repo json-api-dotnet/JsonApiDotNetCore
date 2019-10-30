@@ -80,28 +80,52 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">IQueryableExtensions</span></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Extensions.html">JsonApiDotNetCore.Extensions</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class IQueryableExtensions : object</code></pre>
+    <pre><code class="lang-csharp hljs">public static class IQueryableExtensions</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter__1_IQueryable___0__JsonApiDotNetCore_Internal_Query_FilterQueryContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter%60%601(IQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Internal.Query.FilterQueryContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Internal_Query_BaseFilterQuery_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter%60%601(System.Linq.IQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Internal.Query.BaseFilterQuery)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L56">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L128">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter__1_IQueryable___0__JsonApiDotNetCore_Internal_Query_FilterQueryContext_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter``1(IQueryable{``0},JsonApiDotNetCore.Internal.Query.FilterQueryContext)">Filter&lt;TSource&gt;(IQueryable&lt;TSource&gt;, FilterQueryContext)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Internal_Query_BaseFilterQuery_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter``1(System.Linq.IQueryable{``0},JsonApiDotNetCore.Internal.Query.BaseFilterQuery)">Filter&lt;TSource&gt;(IQueryable&lt;TSource&gt;, BaseFilterQuery)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IQueryable&lt;TSource&gt; Filter&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, FilterQueryContext filterQuery)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IQueryable&lt;TSource&gt; Filter&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, BaseFilterQuery filterQuery)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -114,12 +138,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterQueryContext.html">FilterQueryContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.BaseFilterQuery.html">BaseFilterQuery</a></td>
         <td><span class="parametername">filterQuery</span></td>
         <td></td>
       </tr>
@@ -135,7 +159,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -157,13 +181,85 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach__1_IEnumerable___0__Action___0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.ForEach%60%601(IEnumerable%7B%60%600%7D%2CAction%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Internal_Query_FilterQuery_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter%60%601(System.Linq.IQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Services.IJsonApiContext%2CJsonApiDotNetCore.Internal.Query.FilterQuery)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L48">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L116">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter*"></a>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Filter__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Internal_Query_FilterQuery_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Filter``1(System.Linq.IQueryable{``0},JsonApiDotNetCore.Services.IJsonApiContext,JsonApiDotNetCore.Internal.Query.FilterQuery)">Filter&lt;TSource&gt;(IQueryable&lt;TSource&gt;, IJsonApiContext, FilterQuery)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IQueryable&lt;TSource&gt; Filter&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, IJsonApiContext jsonApiContext, FilterQuery filterQuery)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></td>
+        <td><span class="parametername">jsonApiContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterQuery.html">FilterQuery</a></td>
+        <td><span class="parametername">filterQuery</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach__1_System_Collections_Generic_IEnumerable___0__System_Action___0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.ForEach%60%601(System.Collections.Generic.IEnumerable%7B%60%600%7D%2CSystem.Action%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L442">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ForEach*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach__1_IEnumerable___0__Action___0__" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ForEach``1(IEnumerable{``0},Action{``0})">ForEach&lt;T&gt;(IEnumerable&lt;T&gt;, Action&lt;T&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach__1_System_Collections_Generic_IEnumerable___0__System_Action___0__" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">ForEach&lt;T&gt;(IEnumerable&lt;T&gt;, Action&lt;T&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -181,12 +277,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
         <td><span class="parametername">enumeration</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">Action</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Action</span>&lt;T&gt;</td>
         <td><span class="parametername">action</span></td>
         <td></td>
       </tr>
@@ -209,13 +305,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderBy__1_IQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderBy%60%601(IQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderBy__1_System_Linq_IQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderBy%60%601(System.Linq.IQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L85">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L75">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderBy_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderBy*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderBy__1_IQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderBy``1(IQueryable{``0},System.String)">OrderBy&lt;TSource&gt;(IQueryable&lt;TSource&gt;, String)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderBy__1_System_Linq_IQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.String)">OrderBy&lt;TSource&gt;(IQueryable&lt;TSource&gt;, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -233,7 +329,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
@@ -254,7 +350,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -276,13 +372,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderByDescending__1_IQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderByDescending%60%601(IQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderByDescending__1_System_Linq_IQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderByDescending%60%601(System.Linq.IQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L88">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L78">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderByDescending_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderByDescending*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderByDescending__1_IQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderByDescending``1(IQueryable{``0},System.String)">OrderByDescending&lt;TSource&gt;(IQueryable&lt;TSource&gt;, String)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_OrderByDescending__1_System_Linq_IQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.OrderByDescending``1(System.Linq.IQueryable{``0},System.String)">OrderByDescending&lt;TSource&gt;(IQueryable&lt;TSource&gt;, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -300,7 +396,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
@@ -321,7 +417,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -343,13 +439,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_PageForward__1_IQueryable___0__System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.PageForward%60%601(IQueryable%7B%60%600%7D%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_PageForward__1_System_Linq_IQueryable___0__System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.PageForward%60%601(System.Linq.IQueryable%7B%60%600%7D%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L32">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L426">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_PageForward_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.PageForward*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_PageForward__1_IQueryable___0__System_Int32_System_Int32_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.PageForward``1(IQueryable{``0},System.Int32,System.Int32)">PageForward&lt;T&gt;(IQueryable&lt;T&gt;, Int32, Int32)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_PageForward__1_System_Linq_IQueryable___0__System_Int32_System_Int32_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.PageForward``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)">PageForward&lt;T&gt;(IQueryable&lt;T&gt;, Int32, Int32)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -367,7 +463,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;T&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
@@ -393,7 +489,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;T&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -415,18 +511,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Select__1_IQueryable___0__IEnumerable_JsonApiDotNetCore_Models_AttrAttribute__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Select%60%601(IQueryable%7B%60%600%7D%2CIEnumerable%7BJsonApiDotNetCore.Models.AttrAttribute%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Select__1_System_Linq_IQueryable___0__System_Collections_Generic_List_System_String__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Select%60%601(System.Linq.IQueryable%7B%60%600%7D%2CSystem.Collections.Generic.List%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L67">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L318">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Select_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Select*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Select__1_IQueryable___0__IEnumerable_JsonApiDotNetCore_Models_AttrAttribute__" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Select``1(IQueryable{``0},IEnumerable{JsonApiDotNetCore.Models.AttrAttribute})">Select&lt;TSource&gt;(IQueryable&lt;TSource&gt;, IEnumerable&lt;AttrAttribute&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Select__1_System_Linq_IQueryable___0__System_Collections_Generic_List_System_String__" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Select``1(System.Linq.IQueryable{``0},System.Collections.Generic.List{System.String})">Select&lt;TSource&gt;(IQueryable&lt;TSource&gt;, List&lt;String&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IQueryable&lt;TSource&gt; Select&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, IEnumerable&lt;AttrAttribute&gt; columns)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IQueryable&lt;TSource&gt; Select&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, List&lt;string&gt; columns)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -439,12 +535,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td><span class="parametername">columns</span></td>
         <td></td>
       </tr>
@@ -460,7 +556,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -482,18 +578,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_IOrderedQueryable___0__JsonApiDotNetCore_Internal_Query_SortQueryContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort%60%601(IOrderedQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Internal.Query.SortQueryContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_System_Linq_IOrderedQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Internal_Query_SortQuery_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort%60%601(System.Linq.IOrderedQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Services.IJsonApiContext%2CJsonApiDotNetCore.Internal.Query.SortQuery)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L77">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L62">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_IOrderedQueryable___0__JsonApiDotNetCore_Internal_Query_SortQueryContext_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort``1(IOrderedQueryable{``0},JsonApiDotNetCore.Internal.Query.SortQueryContext)">Sort&lt;TSource&gt;(IOrderedQueryable&lt;TSource&gt;, SortQueryContext)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_System_Linq_IOrderedQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Internal_Query_SortQuery_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort``1(System.Linq.IOrderedQueryable{``0},JsonApiDotNetCore.Services.IJsonApiContext,JsonApiDotNetCore.Internal.Query.SortQuery)">Sort&lt;TSource&gt;(IOrderedQueryable&lt;TSource&gt;, IJsonApiContext, SortQuery)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IOrderedQueryable&lt;TSource&gt; Sort&lt;TSource&gt;(this IOrderedQueryable&lt;TSource&gt; source, SortQueryContext sortQuery)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IOrderedQueryable&lt;TSource&gt; Sort&lt;TSource&gt;(this IOrderedQueryable&lt;TSource&gt; source, IJsonApiContext jsonApiContext, SortQuery sortQuery)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -506,12 +602,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQueryContext.html">SortQueryContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></td>
+        <td><span class="parametername">jsonApiContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQuery.html">SortQuery</a></td>
         <td><span class="parametername">sortQuery</span></td>
         <td></td>
       </tr>
@@ -527,7 +628,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -549,18 +650,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_IQueryable___0__JsonApiDotNetCore_Internal_Query_SortQueryContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort%60%601(IQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Internal.Query.SortQueryContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Internal_Query_SortQuery_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort%60%601(System.Linq.IQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Services.IJsonApiContext%2CJsonApiDotNetCore.Internal.Query.SortQuery)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L70">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L49">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_IQueryable___0__JsonApiDotNetCore_Internal_Query_SortQueryContext_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort``1(IQueryable{``0},JsonApiDotNetCore.Internal.Query.SortQueryContext)">Sort&lt;TSource&gt;(IQueryable&lt;TSource&gt;, SortQueryContext)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_JsonApiDotNetCore_Internal_Query_SortQuery_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort``1(System.Linq.IQueryable{``0},JsonApiDotNetCore.Services.IJsonApiContext,JsonApiDotNetCore.Internal.Query.SortQuery)">Sort&lt;TSource&gt;(IQueryable&lt;TSource&gt;, IJsonApiContext, SortQuery)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IOrderedQueryable&lt;TSource&gt; Sort&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, SortQueryContext sortQuery)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IOrderedQueryable&lt;TSource&gt; Sort&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, IJsonApiContext jsonApiContext, SortQuery sortQuery)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -573,12 +674,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQueryContext.html">SortQueryContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></td>
+        <td><span class="parametername">jsonApiContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQuery.html">SortQuery</a></td>
         <td><span class="parametername">sortQuery</span></td>
         <td></td>
       </tr>
@@ -594,7 +700,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -616,13 +722,85 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenBy__1_IOrderedQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenBy%60%601(IOrderedQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_System_Collections_Generic_List_JsonApiDotNetCore_Internal_Query_SortQuery__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort%60%601(System.Linq.IQueryable%7B%60%600%7D%2CJsonApiDotNetCore.Services.IJsonApiContext%2CSystem.Collections.Generic.List%7BJsonApiDotNetCore.Internal.Query.SortQuery%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L91">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L33">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort*"></a>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_Sort__1_System_Linq_IQueryable___0__JsonApiDotNetCore_Services_IJsonApiContext_System_Collections_Generic_List_JsonApiDotNetCore_Internal_Query_SortQuery__" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.Sort``1(System.Linq.IQueryable{``0},JsonApiDotNetCore.Services.IJsonApiContext,System.Collections.Generic.List{JsonApiDotNetCore.Internal.Query.SortQuery})">Sort&lt;TSource&gt;(IQueryable&lt;TSource&gt;, IJsonApiContext, List&lt;SortQuery&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IQueryable&lt;TSource&gt; Sort&lt;TSource&gt;(this IQueryable&lt;TSource&gt; source, IJsonApiContext jsonApiContext, List&lt;SortQuery&gt; sortQueries)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></td>
+        <td><span class="parametername">jsonApiContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQuery.html">SortQuery</a>&gt;</td>
+        <td><span class="parametername">sortQueries</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.IQueryable</span>&lt;TSource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenBy__1_System_Linq_IOrderedQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenBy%60%601(System.Linq.IOrderedQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L81">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenBy_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenBy*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenBy__1_IOrderedQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenBy``1(IOrderedQueryable{``0},System.String)">ThenBy&lt;TSource&gt;(IOrderedQueryable&lt;TSource&gt;, String)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenBy__1_System_Linq_IOrderedQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.String)">ThenBy&lt;TSource&gt;(IOrderedQueryable&lt;TSource&gt;, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -640,7 +818,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
@@ -661,7 +839,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -683,13 +861,13 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenByDescending__1_IOrderedQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenByDescending%60%601(IOrderedQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenByDescending__1_System_Linq_IOrderedQueryable___0__System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenByDescending%60%601(System.Linq.IOrderedQueryable%7B%60%600%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L94">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L84">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenByDescending_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenByDescending*"></a>
-  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenByDescending__1_IOrderedQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenByDescending``1(IOrderedQueryable{``0},System.String)">ThenByDescending&lt;TSource&gt;(IOrderedQueryable&lt;TSource&gt;, String)</h4>
+  <h4 id="JsonApiDotNetCore_Extensions_IQueryableExtensions_ThenByDescending__1_System_Linq_IOrderedQueryable___0__System_String_" data-uid="JsonApiDotNetCore.Extensions.IQueryableExtensions.ThenByDescending``1(System.Linq.IOrderedQueryable{``0},System.String)">ThenByDescending&lt;TSource&gt;(IOrderedQueryable&lt;TSource&gt;, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -707,7 +885,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td><span class="parametername">source</span></td>
         <td></td>
       </tr>
@@ -728,7 +906,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IOrderedQueryable</span>&lt;TSource&gt;</td>
+        <td><span class="xref">System.Linq.IOrderedQueryable</span>&lt;TSource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -756,10 +934,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Extensions_IQueryableExtensions.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Extensions.IQueryableExtensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Extensions/IQueryableExtensions.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
