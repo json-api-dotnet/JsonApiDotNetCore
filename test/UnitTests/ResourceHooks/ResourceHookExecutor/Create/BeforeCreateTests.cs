@@ -13,17 +13,16 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeCreate()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // act
+            // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -32,17 +31,16 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeCreate_Without_Parent_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // act
+            // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Never());
             ownerResourceMock.Verify(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<Person>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -50,34 +48,32 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeCreate_Without_Child_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // act
+            // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TodoItem>>(), ResourcePipeline.Post), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
         [Fact]
         public void BeforeCreate_Without_Any_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // act
+            // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
-            // assert
+            // Assert
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
     }

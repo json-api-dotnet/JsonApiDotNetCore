@@ -1,193 +1,144 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public interface IResourceGraph
-    {
-        /// <summary>
-        /// Gets the value of the navigation property, defined by the relationshipName,
-        /// on the provided instance.
-        /// </summary>
-        /// <param name="resource">The resource instance</param>
-        /// <param name="propertyName">The navigation property name.</param>
-        /// <example>
-        /// <code>
-        /// _graph.GetRelationship(todoItem, nameof(TodoItem.Owner));
-        /// </code>
-        /// </example>
-        /// <remarks>
-        /// In the case of a `HasManyThrough` relationship, it will not traverse the relationship 
-        /// and will instead return the value of the shadow property (e.g. Articles.Tags).
-        /// If you want to traverse the relationship, you should use <see cref="GetRelationshipValue" />.
-        /// </remarks>
-        object GetRelationship<TParent>(TParent resource, string propertyName);
-
-        /// <summary>
-        /// Gets the value of the navigation property (defined by the <see cref="RelationshipAttribute" />)
-        /// on the provided instance.
-        /// In the case of `HasManyThrough` relationships, it will traverse the through entity and return the 
-        /// value of the relationship on the other side of a join entity (e.g. Articles.ArticleTags.Tag).
-        /// </summary>
-        /// <param name="resource">The resource instance</param>
-        /// <param name="relationship">The attribute used to define the relationship.</param>
-        /// <example>
-        /// <code>
-        /// _graph.GetRelationshipValue(todoItem, nameof(TodoItem.Owner));
-        /// </code>
-        /// </example>
-        object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable;
-
-        /// <summary>
-        /// Get the internal navigation property name for the specified public
-        /// relationship name.
-        /// </summary>
-        /// <param name="relationshipName">The public relationship name specified by a <see cref="HasOneAttribute" /> or <see cref="HasManyAttribute" /></param>
-        /// <example>
-        /// <code>
-        /// _graph.GetRelationshipName&lt;TodoItem&gt;("achieved-date");
-        /// // returns "AchievedDate"
-        /// </code>
-        /// </example>
-        string GetRelationshipName<TParent>(string relationshipName);
-
-        /// <summary>
-        /// Get the resource metadata by the DbSet property name
-        /// </summary>
-        ContextEntity GetContextEntity(string dbSetName);
-
-        /// <summary>
-        /// Get the resource metadata by the resource type
-        /// </summary>
-        ContextEntity GetContextEntity(Type entityType);
-
-        /// <summary>
-        /// Get the public attribute name for a type based on the internal attribute name.
-        /// </summary>
-        /// <param name="internalAttributeName">The internal attribute name for a <see cref="AttrAttribute" />.</param>
-        string GetPublicAttributeName<TParent>(string internalAttributeName);
-
-        /// <summary>
-        /// Helper method to get the inverse relationship attribute corresponding 
-        /// to a relationship.
-        /// </summary>
-        RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
-
-        /// <summary>
-        /// Was built against an EntityFrameworkCore DbContext ?
-        /// </summary>
-        bool UsesDbContext { get; }
-    }
-
+    /// <summary>
+    ///  keeps track of all the models/resources defined in JADNC
+    /// </summary>
     public class ResourceGraph : IResourceGraph
     {
-        internal List<ContextEntity> Entities { get; }
         internal List<ValidationResult> ValidationResults { get; }
-        internal static IResourceGraph Instance { get; set; }
+        private List<ResourceContext> _resources { get; }
 
-        public ResourceGraph() { }
-        public ResourceGraph(List<ContextEntity> entities, bool usesDbContext)
+        public ResourceGraph(List<ResourceContext> entities, List<ValidationResult> validationResults = null)
         {
-            Entities = entities;
-            UsesDbContext = usesDbContext;
-            ValidationResults = new List<ValidationResult>();
-            Instance = this;
-        }
-
-        // eventually, this is the planned public constructor
-        // to avoid breaking changes, we will be leaving the original constructor in place
-        // until the context graph validation process is completed
-        // you can track progress on this issue here: https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170
-        internal ResourceGraph(List<ContextEntity> entities, bool usesDbContext, List<ValidationResult> validationResults)
-        {
-            Entities = entities;
-            UsesDbContext = usesDbContext;
+            _resources = entities;
             ValidationResults = validationResults;
-            Instance = this;
         }
 
         /// <inheritdoc />
-        public bool UsesDbContext { get; }
-
+        public ResourceContext[] GetResourceContexts() => _resources.ToArray();
         /// <inheritdoc />
-        public ContextEntity GetContextEntity(string entityName)
-            => Entities.SingleOrDefault(e => string.Equals(e.EntityName, entityName, StringComparison.OrdinalIgnoreCase));
-
+        public ResourceContext GetResourceContext(string entityName)
+            => _resources.SingleOrDefault(e => string.Equals(e.ResourceName, entityName, StringComparison.OrdinalIgnoreCase));
         /// <inheritdoc />
-        public ContextEntity GetContextEntity(Type entityType)
-            => Entities.SingleOrDefault(e => e.EntityType == entityType);
-
+        public ResourceContext GetResourceContext(Type entityType)
+            => _resources.SingleOrDefault(e => e.ResourceType == entityType);
         /// <inheritdoc />
-        public object GetRelationship<TParent>(TParent entity, string relationshipName)
+        public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
+            => GetResourceContext(typeof(TResource));
+        /// <inheritdoc/>
+        public List<IResourceField> GetFields<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
         {
-            var parentEntityType = entity.GetType();
-
-            var navigationProperty = parentEntityType
-                .GetProperties()
-                .SingleOrDefault(p => string.Equals(p.Name, relationshipName, StringComparison.OrdinalIgnoreCase));
-
-            if (navigationProperty == null)
-                throw new JsonApiException(400, $"{parentEntityType} does not contain a relationship named {relationshipName}");
-
-            return navigationProperty.GetValue(entity);
+            return Getter(selector).ToList();
         }
-
-        public object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable
+        /// <inheritdoc/>
+        public List<AttrAttribute> GetAttributes<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
         {
-            if(relationship is HasManyThroughAttribute hasManyThroughRelationship) 
-            {
-                return GetHasManyThrough(resource, hasManyThroughRelationship);
-            }
-
-            return GetRelationship(resource, relationship.InternalRelationshipName);
+            return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToList();
         }
-
-        private IEnumerable<IIdentifiable> GetHasManyThrough(IIdentifiable parent, HasManyThroughAttribute hasManyThrough)
+        /// <inheritdoc/>
+        public List<RelationshipAttribute> GetRelationships<T>(Expression<Func<T, dynamic>> selector = null) where T : IIdentifiable
         {
-            var throughProperty = GetRelationship(parent, hasManyThrough.InternalThroughName);
-            if (throughProperty is IEnumerable hasManyNavigationEntity)
-            {
-                // wrap "yield return" in a sub-function so we can correctly return null if the property is null.
-                return GetHasManyThroughIter(hasManyThrough, hasManyNavigationEntity);
-            }
-            return null;
+            return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToList();
         }
-
-        private IEnumerable<IIdentifiable> GetHasManyThroughIter(HasManyThroughAttribute hasManyThrough, IEnumerable hasManyNavigationEntity)
+        /// <inheritdoc/>
+        public List<IResourceField> GetFields(Type type)
         {
-            foreach (var includedEntity in hasManyNavigationEntity)
-            {
-                var targetValue = hasManyThrough.RightProperty.GetValue(includedEntity) as IIdentifiable;
-                yield return targetValue;
-            }
+            return GetResourceContext(type).Fields.ToList();
         }
-
+        /// <inheritdoc/>
+        public List<AttrAttribute> GetAttributes(Type type)
+        {
+            return GetResourceContext(type).Attributes.ToList();
+        }
+        /// <inheritdoc/>
+        public List<RelationshipAttribute> GetRelationships(Type type)
+        {
+            return GetResourceContext(type).Relationships.ToList();
+        }
         /// <inheritdoc />
-        public string GetRelationshipName<TParent>(string relationshipName)
-        {
-            var entityType = typeof(TParent);
-            return Entities
-                .SingleOrDefault(e => e.EntityType == entityType)
-                ?.Relationships
-                .SingleOrDefault(r => r.Is(relationshipName))
-                ?.InternalRelationshipName;
-        }
-
-        public string GetPublicAttributeName<TParent>(string internalAttributeName)
-        {
-            return GetContextEntity(typeof(TParent))
-                .Attributes
-                .SingleOrDefault(a => a.InternalAttributeName == internalAttributeName)?
-                .PublicAttributeName;
-        }
-
-        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
+        public RelationshipAttribute GetInverse(RelationshipAttribute relationship)
         {
             if (relationship.InverseNavigation == null) return null;
-            return GetContextEntity(relationship.DependentType).Relationships.SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
+            return GetResourceContext(relationship.RightType)
+                            .Relationships
+                            .SingleOrDefault(r => r.InternalRelationshipName == relationship.InverseNavigation);
+        }
+
+        private IEnumerable<IResourceField> Getter<T>(Expression<Func<T, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where T : IIdentifiable
+        {
+            IEnumerable<IResourceField> available;
+            if (type == FieldFilterType.Attribute)
+                available = GetResourceContext(typeof(T)).Attributes.Cast<IResourceField>();
+            else if (type == FieldFilterType.Relationship)
+                available = GetResourceContext(typeof(T)).Relationships.Cast<IResourceField>();
+            else
+                available = GetResourceContext(typeof(T)).Fields;
+
+            if (selector == null)
+                return available;
+
+            var targeted = new List<IResourceField>();
+
+            if (selector.Body is MemberExpression memberExpression)
+            {   // model => model.Field1
+                try
+                {
+                    targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberExpression.Member.Name));
+                    return targeted;
+                }
+                catch (InvalidOperationException)
+                {
+                    ThrowNotExposedError(memberExpression.Member.Name, type);
+                }
+            }
+
+
+            if (selector.Body is NewExpression newExpression)
+            {   // model => new { model.Field1, model.Field2 }
+                string memberName = null;
+                try
+                {
+                    if (newExpression.Members == null)
+                        return targeted;
+
+                    foreach (var member in newExpression.Members)
+                    {
+                        memberName = member.Name;
+                        targeted.Add(available.Single(f => f.ExposedInternalMemberName == memberName));
+                    }
+                    return targeted;
+                }
+                catch (InvalidOperationException)
+                {
+                    ThrowNotExposedError(memberName, type);
+                }
+            }
+
+            throw new ArgumentException($"The expression returned by '{selector}' for '{GetType()}' is of type {selector.Body.GetType()}"
+                        + " and cannot be used to select resource attributes. The type must be a NewExpression.Example: article => new { article.Author };");
+
+        }
+
+        private void ThrowNotExposedError(string memberName, FieldFilterType type)
+        {
+            throw new ArgumentException($"{memberName} is not an json:api exposed {type.ToString("g")}.");
+        }
+
+        /// <summary>
+        /// internally used only by <see cref="ResourceGraph"/>.
+        /// </summary>
+        private enum FieldFilterType
+        {
+            None,
+            Attribute,
+            Relationship
         }
     }
 }

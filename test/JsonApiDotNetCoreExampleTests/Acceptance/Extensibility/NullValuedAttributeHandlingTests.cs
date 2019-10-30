@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Newtonsoft.Json;
@@ -13,11 +14,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class NullValuedAttributeHandlingTests : IAsyncLifetime
     {
-        private readonly TestFixture<TestStartup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _dbContext;
         private readonly TodoItem _todoItem;
 
-        public NullValuedAttributeHandlingTests(TestFixture<TestStartup> fixture)
+        public NullValuedAttributeHandlingTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
@@ -67,39 +68,32 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // Override some null handling options
             NullAttributeResponseBehavior nullAttributeResponseBehavior;
             if (omitNullValuedAttributes.HasValue && allowClientOverride.HasValue)
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitNullValuedAttributes.Value, allowClientOverride.Value);
-            }
             else if (omitNullValuedAttributes.HasValue)
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitNullValuedAttributes.Value);
-            }
             else if (allowClientOverride.HasValue)
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior(allowClientOverride: allowClientOverride.Value);
-            }
             else
-            {
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior();
-            }
-            var jsonApiOptions = _fixture.GetService<JsonApiOptions>();
+
+            var jsonApiOptions = _fixture.GetService<IJsonApiOptions>();
             jsonApiOptions.NullAttributeResponseBehavior = nullAttributeResponseBehavior;
             jsonApiOptions.AllowCustomQueryParameters = true;
 
             var httpMethod = new HttpMethod("GET");
             var queryString = allowClientOverride.HasValue
-                ? $"&omitNullValuedAttributes={clientOverride}"
+                ? $"&omitNull={clientOverride}"
                 : "";
-            var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}"; 
+            var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}";
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
-            // assert. does response contain a null valued attribute
-            Assert.Equal(omitsNulls, !deserializeBody.Data.Attributes.ContainsKey("description"));
+            // Assert: does response contain a null valued attribute?
+            Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
             Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
 
         }

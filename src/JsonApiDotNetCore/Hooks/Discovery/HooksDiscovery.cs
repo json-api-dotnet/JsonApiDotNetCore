@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 
@@ -11,7 +10,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <summary>
     /// The default implementation for IHooksDiscovery
     /// </summary>
-    public class HooksDiscovery<TEntity> : IHooksDiscovery<TEntity> where TEntity : class, IIdentifiable
+    public class HooksDiscovery<TResource> : IHooksDiscovery<TResource> where TResource : class, IIdentifiable
     {
         private readonly ResourceHook[] _allHooks;
         private readonly ResourceHook[] _databaseValuesAttributeAllowed =
@@ -41,8 +40,8 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The implemented hooks for model.</returns>
         void DiscoverImplementedHooksForModel()
         {
-            Type parameterizedResourceDefinition = typeof(ResourceDefinition<TEntity>);
-            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TEntity).Assembly, parameterizedResourceDefinition).ToList();
+            Type parameterizedResourceDefinition = typeof(ResourceDefinition<TResource>);
+            var derivedTypes = TypeLocator.GetDerivedTypes(typeof(TResource).Assembly, parameterizedResourceDefinition).ToList();
 
 
             var implementedHooks = new List<ResourceHook>();
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCore.Hooks
                     if (method.DeclaringType != parameterizedResourceDefinition)
                     {
                         implementedHooks.Add(hook);
-                        var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValues>().SingleOrDefault();
+                        var attr = method.GetCustomAttributes(true).OfType<LoaDatabaseValues>().SingleOrDefault();
                         if (attr != null)
                         {
                             if (!_databaseValuesAttributeAllowed.Contains(hook))

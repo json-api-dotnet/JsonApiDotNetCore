@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -12,10 +11,6 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class DbContextExtensions
     {
-        [Obsolete("This is no longer required since the introduction of context.Set<T>", error: false)]
-        public static DbSet<T> GetDbSet<T>(this DbContext context) where T : class 
-            => context.Set<T>();
-
         /// <summary>
         /// Get the DbSet when the model type is unknown until runtime
         /// </summary>
@@ -113,6 +108,21 @@ namespace JsonApiDotNetCore.Extensions
         {
             if(_shouldExecute) 
                 func(_transaction);
+        }
+
+        public Task CommitAsync(CancellationToken cancellationToken = default)
+        {
+            return _transaction.CommitAsync(cancellationToken);
+        }
+
+        public Task RollbackAsync(CancellationToken cancellationToken = default)
+        {
+            return _transaction.RollbackAsync(cancellationToken);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _transaction.DisposeAsync();
         }
     }
 }

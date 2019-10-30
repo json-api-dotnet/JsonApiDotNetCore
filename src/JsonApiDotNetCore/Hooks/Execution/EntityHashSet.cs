@@ -3,8 +3,6 @@ using JsonApiDotNetCore.Models;
 using System.Collections;
 using JsonApiDotNetCore.Internal;
 using System;
-using System.Collections.ObjectModel;
-using System.Collections.Immutable;
 using System.Linq.Expressions;
 
 namespace JsonApiDotNetCore.Hooks
@@ -27,8 +25,6 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     public class EntityHashSet<TResource> : HashSet<TResource>, IEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
-
-
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> AffectedRelationships { get => _relationships; }
         private readonly RelationshipsDictionary<TResource> _relationships;
@@ -48,15 +44,15 @@ namespace JsonApiDotNetCore.Hooks
 
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type principalType)
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type leftType)
         {
-            return _relationships.GetByRelationship(principalType);
+            return _relationships.GetByRelationship(leftType);
         }
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRelatedResource>() where TRelatedResource : class, IIdentifiable
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship<TRightResource>() where TRightResource : class, IIdentifiable
         {
-            return GetByRelationship(typeof(TRelatedResource));
+            return GetByRelationship(typeof(TRightResource));
         }
 
         /// <inheritdoc />

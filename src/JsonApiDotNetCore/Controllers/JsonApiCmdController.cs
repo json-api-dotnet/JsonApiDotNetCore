@@ -1,18 +1,18 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiCmdController<T>
-    : JsonApiCmdController<T, int> where T : class, IIdentifiable<int>
+    public class JsonApiCmdController<T> : JsonApiCmdController<T, int>
+        where T : class, IIdentifiable<int>
     {
         public JsonApiCmdController(
-            IJsonApiContext jsonApiContext,
+            IJsonApiOptions jsonApiOptions,
             IResourceService<T, int> resourceService)
-            : base(jsonApiContext, resourceService)
+            : base(jsonApiOptions, resourceService)
         { }
     }
 
@@ -20,9 +20,9 @@ namespace JsonApiDotNetCore.Controllers
     : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiCmdController(
-            IJsonApiContext jsonApiContext,
+            IJsonApiOptions jsonApiOptions,
             IResourceService<T, TId> resourceService)
-        : base(jsonApiContext, resourceService)
+        : base(jsonApiOptions, resourceService)
         { }
 
         [HttpPost]
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Controllers
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> PatchRelationshipsAsync(
-            TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
+            TId id, string relationshipName, [FromBody] object relationships)
             => await base.PatchRelationshipsAsync(id, relationshipName, relationships);
 
         [HttpDelete("{id}")]

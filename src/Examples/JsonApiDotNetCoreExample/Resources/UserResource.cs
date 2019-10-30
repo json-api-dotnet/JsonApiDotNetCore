@@ -1,18 +1,18 @@
-using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class UserResource : ResourceDefinition<User>
     {
-        public UserResource(IResourceGraph graph) : base(graph) { }
-
-        protected override List<AttrAttribute> OutputAttrs()
-            => Remove(user => user.Password);
+        public UserResource(IResourceGraph resourceGraph) : base(resourceGraph)
+        {
+            HideFields(u => u.Password);
+        }
 
         public override QueryFilters GetQueryFilters()
         {
@@ -24,13 +24,15 @@ namespace JsonApiDotNetCoreExample.Resources
 
         private IQueryable<User> FirstCharacterFilter(IQueryable<User> users, FilterQuery filterQuery)
         {
-          switch(filterQuery.Operation)
-          {
-            case "lt":
-              return users.Where(u => u.Username[0] < filterQuery.Value[0]);
-            default:
-              return users.Where(u => u.Username[0] == filterQuery.Value[0]);
-          }
+            switch (filterQuery.Operation)
+            {
+                /// In EF core >= 3.0 we need to explicitly evaluate the query first. This could probably be translated
+                /// into a query by building expression trees.
+                case "lt":
+                    return users.ToList().Where(u => u.Username.First() < filterQuery.Value[0]).AsQueryable();
+                default:
+                    return users.ToList().Where(u => u.Username.First() == filterQuery.Value[0]).AsQueryable();
+            }
         }
     }
 }

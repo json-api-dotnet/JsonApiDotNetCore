@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -15,14 +14,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class FetchingRelationshipsTests
     {
-        private TestFixture<TestStartup> _fixture;
-        private IJsonApiContext _jsonApiContext;
+        private TestFixture<Startup> _fixture;
         private Faker<TodoItem> _todoItemFaker;
 
-        public FetchingRelationshipsTests(TestFixture<TestStartup> fixture)
+        public FetchingRelationshipsTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
-            _jsonApiContext = fixture.GetService<IJsonApiContext>();
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -32,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Request_UnsetRelationship_Returns_Null_DataObject()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var todoItem = _todoItemFaker.Generate();
             context.TodoItems.Add(todoItem);
@@ -46,13 +43,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedBody = "{\"data\":null}";
+            var expectedBody = "{\"meta\":{\"copyright\":\"Copyright 2015 Example Corp.\",\"authors\":[\"Jared Nance\",\"Maurits Moeys\",\"Harro van der Kroft\"]},\"links\":{\"self\":\"http://localhost/api/v1/people\"},\"data\":null}";
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("application/vnd.api+json", response.Content.Headers.ContentType.ToString());
             Assert.Equal(expectedBody, body);
@@ -63,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Request_ForRelationshipLink_ThatDoesNotExist_Returns_404()
         {
-            // arrange
+            // Arrange
             var context = _fixture.GetService<AppDbContext>();
 
             var todoItem = _todoItemFaker.Generate();
@@ -83,10 +80,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             context.Dispose();

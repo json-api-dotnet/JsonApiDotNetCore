@@ -16,8 +16,6 @@ namespace JsonApiDotNetCore.Hooks
     /// (eg ArticleTags) is identifiable (in which case we will traverse through 
     /// it and fire hooks for it, if defined) or not (in which case we skip 
     /// ArticleTags and go directly to Tags.
-    /// 
-    /// TODO: We can consider moving fields like DependentType and PrincipalType 
     /// </summary>
     public class RelationshipProxy
     {
@@ -30,20 +28,20 @@ namespace JsonApiDotNetCore.Hooks
         /// For HasManyThrough it is either the ThroughProperty (when the jointable is 
         /// Identifiable) or it is the righthand side (when the jointable is not identifiable)
         /// </summary>
-        public Type DependentType { get; private set; }
-        public Type PrincipalType { get { return Attribute.PrincipalType; } }
+        public Type RightType { get; private set; }
+        public Type LeftType { get { return Attribute.LeftType; } }
         public bool IsContextRelation { get; private set; }
 
         public RelationshipAttribute Attribute { get; set; }
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)
         {
-            DependentType = relatedType;
+            RightType = relatedType;
             Attribute = attr;
             IsContextRelation = isContextRelation;
             if (attr is HasManyThroughAttribute throughAttr)
             {
                 _isHasManyThrough = true;
-                _skipJoinTable |= DependentType != throughAttr.ThroughType;
+                _skipJoinTable |= RightType != throughAttr.ThroughType;
             }
         }
 
@@ -63,22 +61,17 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     return throughAttr.ThroughProperty.GetValue(entity);
                 }
-                else
+                var collection = new List<IIdentifiable>();
+                var joinEntities = (IList)throughAttr.ThroughProperty.GetValue(entity);
+                if (joinEntities == null) return null;
+
+                foreach (var joinEntity in joinEntities)
                 {
-                    var collection = new List<IIdentifiable>();
-                    var joinEntities = (IList)throughAttr.ThroughProperty.GetValue(entity);
-                    if (joinEntities == null) return null;
-
-                    foreach (var joinEntity in joinEntities)
-                    {
-                        var rightEntity = (IIdentifiable)throughAttr.RightProperty.GetValue(joinEntity);
-                        if (rightEntity == null) continue;
-                        collection.Add(rightEntity);
-                    }
-                    return collection;
-
+                    var rightEntity = (IIdentifiable)throughAttr.RightProperty.GetValue(joinEntity);
+                    if (rightEntity == null) continue;
+                    collection.Add(rightEntity);
                 }
-
+                return collection;
             }
             return Attribute.GetValue(entity);
         }
@@ -97,27 +90,24 @@ namespace JsonApiDotNetCore.Hooks
                 if (!_skipJoinTable)
                 {
                     var list = (IEnumerable<object>)value;
-                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, list.Cast(DependentType));
+                    ((HasManyThroughAttribute)Attribute).ThroughProperty.SetValue(entity, list.Cast(RightType));
                     return;
                 }
-                else
+                var throughAttr = (HasManyThroughAttribute)Attribute;
+                var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
+
+                var filteredList = new List<object>();
+                var rightEntities = ((IEnumerable<object>)value).Cast(RightType);
+                foreach (var je in joinEntities)
                 {
-                    var throughAttr = (HasManyThroughAttribute)Attribute;
-                    var joinEntities = (IEnumerable<object>)throughAttr.ThroughProperty.GetValue(entity);
 
-                    var filteredList = new List<object>();
-                    var rightEntities = ((IEnumerable<object>)value).Cast(DependentType);
-                    foreach (var je in joinEntities)
+                    if (((IList)rightEntities).Contains(throughAttr.RightProperty.GetValue(je)))
                     {
-
-                        if (((IList)rightEntities).Contains(throughAttr.RightProperty.GetValue(je)))
-                        {
-                            filteredList.Add(je);
-                        }
+                        filteredList.Add(je);
                     }
-                    throughAttr.ThroughProperty.SetValue(entity, filteredList.Cast(throughAttr.ThroughType));
-                    return;
                 }
+                throughAttr.ThroughProperty.SetValue(entity, filteredList.Cast(throughAttr.ThroughType));
+                return;
             }
             Attribute.SetValue(entity, value);
         }

@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         private readonly AppDbContext _context;
         private readonly Faker<TodoItem> _todoItemFaker;
 
-        public PagingTests(TestFixture<TestStartup> fixture)
+        public PagingTests(TestFixture<Startup> fixture)
         {
             _context = fixture.GetService<AppDbContext>();
             _todoItemFaker = new Faker<TodoItem>()
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         [Fact]
         public async Task Server_IncludesPagination_Links()
         {
-            // arrange
+            // Arrange
             var pageSize = 5;
             const int minimumNumberOfRecords = 11;
             _context.TodoItems.RemoveRange(_context.TodoItems);
@@ -55,12 +55,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
             var links = documents.Links;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(links.First);
             Assert.NotEmpty(links.Next);

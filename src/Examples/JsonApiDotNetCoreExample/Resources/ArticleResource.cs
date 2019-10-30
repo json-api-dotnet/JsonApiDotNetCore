@@ -5,14 +5,13 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.Extensions.Logging;
-using System.Security.Principal;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class ArticleResource : ResourceDefinition<Article>
     {
-        public ArticleResource(IResourceGraph graph) : base(graph) { }
+        public ArticleResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> entities, ResourcePipeline pipeline)
         {

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Internal
 {
-    internal class ValidationResult
+    public class ValidationResult
     {
         public ValidationResult(LogLevel logLevel, string message)
         {

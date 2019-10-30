@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
+
 namespace UnitTests.ResourceHooks
 {
     public class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
@@ -35,39 +36,37 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeDelete()
         {
-            // arrange
+            // Arrange
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, EnableDbValues);
-            (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
-                var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
 
             var todoList = CreateTodoWithOwner();
-            // act
+            // Act
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
-            // assert
+            // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
-            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>( rh => CheckImplicitTodos(rh) ), ResourcePipeline.Delete), Times.Once());
-            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>( rh => CheckImplicitPassports(rh) ), ResourcePipeline.Delete), Times.Once());
+            todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
+            passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }
 
         [Fact]
         public void BeforeDelete_No_Parent_Hooks()
         {
-            // arrange
+            // Arrange
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, EnableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, EnableDbValues);
-            (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
-                var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
 
             var todoList = CreateTodoWithOwner();
-            // act
+            // Act
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodos(rh)), ResourcePipeline.Delete), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Passport>>(rh => CheckImplicitPassports(rh)), ResourcePipeline.Delete), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
@@ -76,18 +75,17 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeDelete_No_Children_Hooks()
         {
-            // arrange
+            // Arrange
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var personResourceMock, var todoResourceMock,
-                var passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
+            var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: options);
 
             var todoList = CreateTodoWithOwner();
-            // act
+            // Act
             hookExecutor.BeforeDelete(new List<Person> { person }, ResourcePipeline.Delete);
 
-            // assert
+            // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IEntityHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
             VerifyNoOtherCalls(personResourceMock, todoResourceMock, passportResourceMock);
         }

@@ -14,18 +14,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
-    <ProjectReference Include="../../test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj" />
     <ProjectReference Include="../../src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
     <ProjectReference Include="../UnitTests/UnitTests.csproj" />
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="Bogus" Version="$(BogusVersion)" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
@@ -8,10 +9,10 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class PeopleController : JsonApiController<Person>
     {
         public PeopleController(
-            IJsonApiContext jsonApiContext,
+            IJsonApiOptions jsonApiOptions,
             IResourceService<Person> resourceService,
             ILoggerFactory loggerFactory) 
-            : base(jsonApiContext, resourceService, loggerFactory)
+            : base(jsonApiOptions, resourceService, loggerFactory)
         { }
     }
 }

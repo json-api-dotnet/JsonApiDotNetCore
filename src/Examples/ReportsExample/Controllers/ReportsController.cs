@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace ReportsExample.Controllers
 {
@@ -9,9 +11,9 @@ namespace ReportsExample.Controllers
     public class ReportsController : BaseJsonApiController<Report, int> 
     {
         public ReportsController(
-            IJsonApiContext jsonApiContext, 
+            IJsonApiOptions jsonApiOptions,
             IGetAllService<Report> getAll)
-        : base(jsonApiContext, getAll: getAll)
+        : base(jsonApiOptions, getAll: getAll)
         { }
 
         [HttpGet]

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xunit;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace UnitTests.ResourceHooks
 {
@@ -21,9 +22,9 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void Hook_Discovery()
         {
-            // arrange & act
+            // Arrange & act
             var hookConfig = new HooksDiscovery<Dummy>();
-            // assert
+            // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
 
@@ -32,7 +33,7 @@ namespace UnitTests.ResourceHooks
         public class AnotherDummy : Identifiable { }
         public abstract class ResourceDefintionBase<T> : ResourceDefinition<T> where T : class, IIdentifiable
         {
-            protected ResourceDefintionBase(IResourceGraph graph) : base(graph) { }
+            protected ResourceDefintionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
             public override IEnumerable<T> BeforeDelete(IEntityHashSet<T> affected, ResourcePipeline pipeline) { return affected; }
             public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
@@ -45,9 +46,9 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void Hook_Discovery_With_Inheritance()
         {
-            // arrange & act
+            // Arrange & act
             var hookConfig = new HooksDiscovery<AnotherDummy>();
-            // assert
+            // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
@@ -60,16 +61,16 @@ namespace UnitTests.ResourceHooks
 
             public override IEnumerable<YetAnotherDummy> BeforeDelete(IEntityHashSet<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
 
-            [LoadDatabaseValues(false)]
+            [LoaDatabaseValues(false)]
             public override void AfterDelete(HashSet<YetAnotherDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
         [Fact]
-        public void LoadDatabaseValues_Attribute_Not_Allowed()
+        public void LoaDatabaseValues_Attribute_Not_Allowed()
         {
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>
             {
-                // arrange & act
+                // Arrange & act
                 var hookConfig = new HooksDiscovery<YetAnotherDummy>();
             });
 
@@ -94,7 +95,7 @@ namespace UnitTests.ResourceHooks
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>
             {
-                // arrange & act
+                // Arrange & act
                 var hookConfig = new HooksDiscovery<DoubleDummy>();
             });
         }

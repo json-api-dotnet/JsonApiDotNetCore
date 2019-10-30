@@ -2,7 +2,7 @@ namespace JsonApiDotNetCore.Controllers
 {
     public enum QueryParams
     { 
-        Filter = 1 << 0,
+        Filters = 1 << 0,
         Sort = 1 << 1,
         Include = 1 << 2,
         Page = 1 << 3,

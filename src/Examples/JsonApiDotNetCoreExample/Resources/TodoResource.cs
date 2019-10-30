@@ -4,12 +4,13 @@ using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class TodoResource : LockableResource<TodoItem>
     {
-        public TodoResource(IResourceGraph graph) : base(graph) { }
+        public TodoResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {

@@ -42,7 +42,7 @@ See [the documentation](https://json-api-dotnet.github.io/#/) for detailed usage
 
 ```csharp
 public class Article : Identifiable
-{ 
+{
     [Attr("name")]
     public string Name { get; set; }
 }
@@ -53,10 +53,12 @@ public class Article : Identifiable
 ```csharp
 public class ArticlesController : JsonApiController<Article>
 {
-    public ArticlesController(
-        IJsonApiContext jsonApiContext,
-        IResourceService<Article> resourceService) 
-    : base(jsonApiContext, resourceService) { }
+        public ArticlesController(
+            IJsonApiOptions jsonApiOptions,
+            IResourceService<Article> resourceService,
+            ILoggerFactory loggerFactory) 
+            : base(jsonApiOptions, resourceService, loggerFactory)
+        { }
 }
 ```
 
@@ -79,7 +81,7 @@ public class Startup
 
 ### Development
 
-Restore all nuget packages with:
+Restore all NuGet packages with:
 
 ```bash
 dotnet restore
@@ -87,11 +89,10 @@ dotnet restore
 
 #### Testing
 
-Running tests locally requires access to a postgresql database.  
-If you have docker installed, this can be propped up via: 
+Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via: 
 
 ```bash
-docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres  -e POSTGRES_PASSWORD=postgres   -p 5432:5432   postgres
+docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:12.0
 ```
 
 And then to run the tests:
@@ -107,3 +108,14 @@ Sometimes the compiled files can be dirty / corrupt from other branches / failed
 ```bash
 dotnet clean
 ```
+
+## Compatibility
+
+A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
+
+| .NET Core Version | JADNC Version |
+| ----------------- | ------------- |
+| 2.*               | v3.*          |
+| 3.*               | v4.*          |
+
+

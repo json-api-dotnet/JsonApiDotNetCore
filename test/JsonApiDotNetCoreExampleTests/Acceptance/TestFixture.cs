@@ -1,12 +1,16 @@
 using System;
 using System.Net.Http;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Data;
 using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Serialization.Client;
+using System.Linq.Expressions;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -14,25 +18,48 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     {
         private readonly TestServer _server;
         private IServiceProvider _services;
-
         public TestFixture()
         {
             var builder = new WebHostBuilder()
                 .UseStartup<TStartup>();
-
             _server = new TestServer(builder);
             _services = _server.Host.Services;
 
             Client = _server.CreateClient();
             Context = GetService<IDbContextResolver>().GetContext() as AppDbContext;
-            DeSerializer = GetService<IJsonApiDeSerializer>();
-            JsonApiContext = GetService<IJsonApiContext>();
         }
 
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
-        public IJsonApiDeSerializer DeSerializer { get; private set; }
-        public IJsonApiContext JsonApiContext { get; private set; }
+        public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
+        {
+            var serializer =  GetService<IRequestSerializer>();
+            if (attributes != null)
+            {
+                serializer.SetAttributesToSerialize(attributes);
+            }
+            if (relationships != null)
+            {
+                serializer.SetRelationshipsToSerialize(relationships);
+            }
+            return serializer;
+        }
+        public IResponseDeserializer GetDeserializer()
+        {
+            var resourceGraph = new ResourceGraphBuilder()
+                .AddResource<PersonRole>()
+                .AddResource<Article>()
+                .AddResource<Tag>()
+                .AddResource<CamelCasedModel>()
+                .AddResource<User>()
+                .AddResource<Person>()
+                .AddResource<Author>()
+                .AddResource<Passport>()
+                .AddResource<TodoItemClient>("todo-items")
+                .AddResource<TodoItemCollectionClient, Guid>().Build();
+            return new ResponseDeserializer(resourceGraph);
+        }
+
         public T GetService<T>() => (T)_services.GetService(typeof(T));
         
         public void ReloadDbContext()

@@ -1,14 +1,17 @@
-﻿using System.Collections;
-using DependentType = System.Type;
+using System.Collections;
+using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
-    internal interface IEntityNode
+    /// <summary>
+    /// This is the interface that nodes need to inherit from
+    /// </summary>
+    internal interface INode
     {
         /// <summary>
         /// Each node representes the entities of a given type throughout a particular layer.
         /// </summary>
-        DependentType EntityType { get; }
+        RightType ResourceType { get; }
         /// <summary>
         /// The unique set of entities in this node. Note that these are all of the same type.
         /// </summary>
@@ -35,5 +38,4 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="updated">Updated.</param>
         void UpdateUnique(IEnumerable updated);
     }
-
 }

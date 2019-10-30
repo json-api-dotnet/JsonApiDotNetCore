@@ -1,26 +1,28 @@
-using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using Microsoft.EntityFrameworkCore;
+using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
     /// Global options
     /// </summary>
-    public class JsonApiOptions
+    public class JsonApiOptions : IJsonApiOptions
     {
 
-        /// <summary>
-        /// Provides an interface for formatting resource names by convention
-        /// </summary>
-        public static IResourceNameFormatter ResourceNameFormatter { get; set; } = new DefaultResourceNameFormatter();
+        /// <inheritdoc/>
+        public bool RelativeLinks { get; set; } = false;
+
+        /// <inheritdoc/>
+        public Link TopLevelLinks { get; set; } = Link.All;
+
+        /// <inheritdoc/>
+        public Link ResourceLinks { get; set; } = Link.All;
+
+        /// <inheritdoc/>
+        public Link RelationshipLinks { get; set; } = Link.All;
 
         /// <summary>
         /// Provides an interface for formatting relationship id properties given the navigation property name
@@ -31,7 +33,7 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not stack traces should be serialized in Error objects
         /// </summary>
         public static bool DisableErrorStackTraces { get; set; }
-        
+
         /// <summary>
         /// Whether or not source URLs should be serialized in Error objects
         /// </summary>
@@ -50,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
         /// 
         /// Defaults to <see langword="false"/>.
         /// </summary>
-        public bool LoadDatabaseValues { get; set; } = false;
+        public bool LoaDatabaseValues { get; set; } = false;
 
         /// <summary>
         /// The base URL Namespace
@@ -90,55 +92,6 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowClientGeneratedIds { get; set; }
 
         /// <summary>
-        /// The graph of all resources exposed by this application.
-        /// </summary>
-        public IResourceGraph ResourceGraph { get; set; }
-
-        /// <summary>
-        /// Use relative links for all resources.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.RelativeLinks = true;
-        /// </code>
-        /// <code>
-        /// {
-        ///   "type": "articles",
-        ///   "id": "4309",
-        ///   "relationships": {
-        ///      "author": {
-        ///        "links": {
-        ///          "self": "/api/v1/articles/4309/relationships/author",
-        ///          "related": "/api/v1/articles/4309/author"
-        ///        }
-        ///      }
-        ///   }
-        /// }
-        /// </code>
-        /// </example>
-        public bool RelativeLinks { get; set; }
-
-        /// <summary>
-        /// Which links to include in relationships. Defaults to <see cref="Link.All"/>.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// options.DefaultRelationshipLinks = Link.None;
-        /// </code>
-        /// <code>
-        /// {
-        ///   "type": "articles",
-        ///   "id": "4309",
-        ///   "relationships": {
-        ///      "author": {}
-        ///      }
-        ///   }
-        /// }
-        /// </code>
-        /// </example>
-        public Link DefaultRelationshipLinks { get; set; } = Link.All;
-
-        /// <summary>
         /// Whether or not to allow all custom query parameters.
         /// </summary>
         /// <example>
@@ -159,17 +112,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </code>
         /// </example>
         public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
-
-        /// <summary>
-        /// Whether or not to allow json:api v1.1 operation requests.
-        /// This is a beta feature and there may be breaking changes
-        /// in subsequent releases. For now, it should be considered
-        /// experimental.
-        /// </summary>
-        /// <remarks>
-        /// This will be enabled by default in a subsequent patch JsonApiDotNetCore v2.2.x
-        /// </remarks>
-        public bool EnableOperations { get; set; }
+        public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>
         /// Whether or not to validate model state.
@@ -183,32 +126,12 @@ namespace JsonApiDotNetCore.Configuration
 
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
         {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new DasherizedResolver()
+            NullValueHandling = NullValueHandling.Ignore
         };
-
-        public void BuildResourceGraph<TContext>(Action<IResourceGraphBuilder> builder) where TContext : DbContext
-        {
-            BuildResourceGraph(builder);
-
-            ResourceGraphBuilder.AddDbContext<TContext>();
-
-            ResourceGraph = ResourceGraphBuilder.Build();
-        }
-
-        public void BuildResourceGraph(Action<IResourceGraphBuilder> builder)
-        {
-            if (builder == null) return;
-
-            builder(ResourceGraphBuilder);
-
-            ResourceGraph = ResourceGraphBuilder.Build();
-        }
 
         public void EnableExtension(JsonApiExtension extension)
             => EnabledExtensions.Add(extension);
 
-        internal IResourceGraphBuilder ResourceGraphBuilder { get; } = new ResourceGraphBuilder();
         internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
     }
 }

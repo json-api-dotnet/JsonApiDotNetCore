@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
@@ -13,16 +14,16 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeRead()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
+            var (iqMock, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>());
-            // act
+            iqMock.Setup(c => c.Get()).Returns(new List<List<RelationshipAttribute>>());
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock);
 
@@ -31,20 +32,19 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeReadWithInclusion()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            var (iqMock, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner", "assignee", "stake-holders" });
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner", "assignee", "stake-holders"));
 
-            // act
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
@@ -53,21 +53,20 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeReadWithNestedInclusion()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
+            var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
 
-            // act
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
@@ -78,21 +77,20 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeReadWithNestedInclusion_No_Parent_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
+            var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
 
-            // act
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
@@ -101,21 +99,20 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeReadWithNestedInclusion_No_Child_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(targetHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
+            var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
 
-            // act
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
@@ -124,21 +121,20 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeReadWithNestedInclusion_No_Grandchild_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
+            var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
 
-            // act
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
@@ -148,21 +144,20 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void BeforeReadWithNestedInclusion_Without_Any_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
             var passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
-            (var contextMock, var hookExecutor, var todoResourceMock,
-                var ownerResourceMock, var passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
+            var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
             // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            contextMock.Setup(c => c.IncludedRelationships).Returns(new List<string>() { "owner.passport", "assignee", "stake-holders" });
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
 
-            // act
+            // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
-            // assert
+            // Assert
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }
     }
