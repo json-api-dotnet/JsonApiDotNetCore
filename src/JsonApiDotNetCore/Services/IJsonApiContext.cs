@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Services
     public interface IJsonApiApplication
     {
         JsonApiOptions Options { get; set; }
-        IContextGraph ContextGraph { get; set; }
+        IResourceGraph ResourceGraph { get; set; }
     }
 
     public interface IQueryRequest
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Services
         /// Any relationships that were included in a PATCH request. 
         /// Only the relationships in this dictionary should be updated.
         /// </summary>
-        Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; set; }
+        Dictionary<RelationshipAttribute, object> RelationshipsToUpdate { get; }
     }
 
     public interface IJsonApiRequest : IJsonApiApplication, IUpdateRequest, IQueryRequest
@@ -139,9 +139,6 @@ namespace JsonApiDotNetCore.Services
         /// If the request is on the `{id}/relationships/{relationshipName}` route
         /// </summary>
         bool IsRelationshipPath { get; }
-
-        [Obsolete("Use `IsRelationshipPath` instead.")]
-        bool IsRelationshipData { get; set; }
     }
 
     public interface IJsonApiContext : IJsonApiRequest
@@ -149,9 +146,6 @@ namespace JsonApiDotNetCore.Services
         IJsonApiContext ApplyContext<T>(object controller);
         IMetaBuilder MetaBuilder { get; set; }
         IGenericProcessorFactory GenericProcessorFactory { get; set; }
-
-        [Obsolete("Use the proxied method IControllerContext.GetControllerAttribute instead.")]
-        TAttribute GetControllerAttribute<TAttribute>() where TAttribute : Attribute;
 
         /// <summary>
         /// **_Experimental_**: do not use. It is likely to change in the future.

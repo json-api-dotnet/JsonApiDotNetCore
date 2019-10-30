@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         private AppDbContext _context;
         private IJsonApiContext _jsonApiContext;
         private Faker<TodoItem> _todoItemFaker;
+        private Faker<Person> _personFaker;
 
         public TodoItemControllerTests(TestFixture<TestStartup> fixture)
         {
@@ -35,6 +36,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+
+            _personFaker = new Faker<Person>()
+                .RuleFor(t => t.FirstName, f => f.Name.FirstName())
+                .RuleFor(t => t.LastName, f => f.Name.LastName())
+                .RuleFor(t => t.Age, f => f.Random.Int(1, 99));
         }
 
         [Fact]
@@ -61,6 +67,54 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(deserializedBody);
             Assert.True(deserializedBody.Count <= expectedEntitiesPerPage);
+        }
+
+        [Fact]
+        public async Task Can_Filter_By_Resource_Id()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[id]={todoItem.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+            Assert.Contains(deserializedBody, (i) => i.Id == todoItem.Id);
+        }
+
+        [Fact]
+        public async Task Can_Filter_By_Relationship_Id()
+        {
+            // Arrange
+            var person = new Person();           
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Owner = person;
+            _context.TodoItems.Add(todoItem);
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[owner.id]={person.Id}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(deserializedBody);
+            Assert.Contains(deserializedBody, (i) => i.Owner.Id == person.Id);
         }
 
         [Fact]
@@ -122,6 +176,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Can_Filter_TodoItems_ByParent_Using_IsNotNull_Operator()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Assignee = new Person();
+
+            var otherTodoItem = _todoItemFaker.Generate();
+            otherTodoItem.Assignee = null;
+
+            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[assignee.id]=isnotnull:";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.NotEmpty(todoItems);
+            Assert.All(todoItems, t => Assert.NotNull(t.Assignee));
+        }
+
+        [Fact]
         public async Task Can_Filter_TodoItems_Using_IsNull_Operator()
         {
             // Arrange
@@ -149,6 +233,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.NotEmpty(todoItems);
             Assert.All(todoItems, t => Assert.Null(t.UpdatedDate));
+        }
+
+        [Fact]
+        public async Task Can_Filter_TodoItems_ByParent_Using_IsNull_Operator()
+        {
+            // Arrange
+            var todoItem = _todoItemFaker.Generate();
+            todoItem.Assignee = null;
+
+            var otherTodoItem = _todoItemFaker.Generate();
+            otherTodoItem.Assignee = new Person();
+
+            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?filter[assignee.id]=isnull:";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var todoItems = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.NotEmpty(todoItems);
+            Assert.All(todoItems, t => Assert.Null(t.Assignee));
         }
 
         [Fact]
@@ -214,6 +328,82 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 Assert.True(todoItemResult.Ordinal > priorOrdinal);
                 priorOrdinal = todoItemResult.Ordinal;
+            }
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Nested_Attribute_Ascending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 10;
+
+            for (var i = 1; i <= numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = _personFaker.Generate();
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=owner.age";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            Assert.NotEmpty(deserializedBody);
+
+            long lastAge = 0;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Owner.Age >= lastAge);
+                lastAge = todoItemResult.Owner.Age;
+            }
+        }
+
+        [Fact]
+        public async Task Can_Sort_TodoItems_By_Nested_Attribute_Descending()
+        {
+            // Arrange
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+
+            const int numberOfItems = 10;
+
+            for (var i = 1; i <= numberOfItems; i++)
+            {
+                var todoItem = _todoItemFaker.Generate();
+                todoItem.Ordinal = i;
+                todoItem.Owner = _personFaker.Generate();
+                _context.TodoItems.Add(todoItem);
+            }
+            _context.SaveChanges();
+
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=-owner.age";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<TodoItem>(body);
+            Assert.NotEmpty(deserializedBody);
+
+            int maxAge = deserializedBody.Max(i => i.Owner.Age) + 1;
+            foreach (var todoItemResult in deserializedBody)
+            {
+                Assert.True(todoItemResult.Owner.Age <= maxAge);
+                maxAge = todoItemResult.Owner.Age;
             }
         }
 
@@ -305,7 +495,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var deserializedBody = (TodoItem)_fixture.GetService<IJsonApiDeSerializer>().Deserialize(body);
-            Assert.Equal(person.Id, deserializedBody.OwnerId);
+
+            Assert.Equal(person.Id, deserializedBody.Owner.Id);
             Assert.Equal(todoItem.Id, deserializedBody.Id);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.Ordinal, deserializedBody.Ordinal);
@@ -322,6 +513,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
+            var nowOffset = new DateTimeOffset();
             var content = new
             {
                 data = new
@@ -331,7 +523,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                     {
                         { "description", todoItem.Description },
                         { "ordinal", todoItem.Ordinal },
-                        { "created-date", todoItem.CreatedDate }
+                        { "created-date", todoItem.CreatedDate },
+                        { "offset-date", nowOffset }
                     },
                     relationships = new
                     {
@@ -364,6 +557,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(todoItem.Description, deserializedBody.Description);
             Assert.Equal(todoItem.CreatedDate.ToString("G"), deserializedBody.CreatedDate.ToString("G"));
+            Assert.Equal(nowOffset.ToString("yyyy-MM-ddTHH:mm:ssK"), deserializedBody.OffsetDate?.ToString("yyyy-MM-ddTHH:mm:ssK"));
             Assert.Null(deserializedBody.AchievedDate);
         }
 
@@ -454,6 +648,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
@@ -505,6 +700,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {
@@ -556,6 +752,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
+                    id = todoItem.Id,
                     type = "todo-items",
                     attributes = new Dictionary<string, object>()
                     {

@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
+        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
         /// 
         /// <example>
         /// Using an alternative foreign key:
@@ -20,21 +21,23 @@ namespace JsonApiDotNetCore.Models
         /// <code>
         /// public class Article : Identifiable 
         /// {
-        ///     [HasOne("author", withForiegnKey: nameof(AuthorKey)]
+        ///     [HasOne("author", withForeignKey: nameof(AuthorKey)]
         ///     public Author Author { get; set; }
         ///     public int AuthorKey { get; set; }
         /// }
         /// </code>
         /// 
         /// </example>
-        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null)
-        : base(publicName, documentLinks, canInclude)
+        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)
+
+        : base(publicName, documentLinks, canInclude, mappedBy)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
+            InverseNavigation = inverseNavigationProperty;
         }
 
         private readonly string _explicitIdentifiablePropertyName;
-
+        
         /// <summary>
         /// The independent resource identifier.
         /// </summary>
@@ -49,19 +52,18 @@ namespace JsonApiDotNetCore.Models
         /// <param name="newValue">The new property value</param>
         public override void SetValue(object resource, object newValue)
         {
-            var propertyName = (newValue?.GetType() == Type)
-                ? InternalRelationshipName
-                : IdentifiablePropertyName;
+            string propertyName = InternalRelationshipName;
+            // if we're deleting the relationship (setting it to null),
+            // we set the foreignKey to null. We could also set the actual property to null,
+            // but then we would first need to load the current relationship, which requires an extra query.
+            if (newValue == null) propertyName = IdentifiablePropertyName;
 
-            var propertyInfo = resource
-                .GetType()
-                .GetProperty(propertyName);
-
+            var propertyInfo = resource.GetType().GetProperty(propertyName);
             propertyInfo.SetValue(resource, newValue);
         }
 
         // HACK: this will likely require boxing
-        // we should be able to move some of the reflection into the ContextGraphBuilder
+        // we should be able to move some of the reflection into the ResourceGraphBuilder
         /// <summary>
         /// Gets the value of the independent identifier (e.g. Article.AuthorId)
         /// </summary>

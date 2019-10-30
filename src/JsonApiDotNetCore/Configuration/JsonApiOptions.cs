@@ -12,11 +12,11 @@ using Newtonsoft.Json.Serialization;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Global options.
-    /// https://json-api-dotnet.github.io/#/global-options
+    /// Global options
     /// </summary>
     public class JsonApiOptions
     {
+
         /// <summary>
         /// Provides an interface for formatting resource names by convention
         /// </summary>
@@ -36,6 +36,21 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not source URLs should be serialized in Error objects
         /// </summary>
         public static bool DisableErrorSource { get; set; }
+
+        /// <summary>
+        /// Whether or not ResourceHooks are enabled. 
+        /// 
+        /// Default is set to <see langword="false"/> for backward compatibility.
+        /// </summary>
+        public bool EnableResourceHooks { get; set; } = false;
+
+        /// <summary>
+        /// Whether or not database values should be included by default
+        /// for resource hooks. Ignored if EnableResourceHooks is set false.
+        /// 
+        /// Defaults to <see langword="false"/>.
+        /// </summary>
+        public bool LoadDatabaseValues { get; set; } = false;
 
         /// <summary>
         /// The base URL Namespace
@@ -77,7 +92,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The graph of all resources exposed by this application.
         /// </summary>
-        public IContextGraph ContextGraph { get; set; }
+        public IResourceGraph ResourceGraph { get; set; }
 
         /// <summary>
         /// Use relative links for all resources.
@@ -102,6 +117,26 @@ namespace JsonApiDotNetCore.Configuration
         /// </code>
         /// </example>
         public bool RelativeLinks { get; set; }
+
+        /// <summary>
+        /// Which links to include in relationships. Defaults to <see cref="Link.All"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// options.DefaultRelationshipLinks = Link.None;
+        /// </code>
+        /// <code>
+        /// {
+        ///   "type": "articles",
+        ///   "id": "4309",
+        ///   "relationships": {
+        ///      "author": {}
+        ///      }
+        ///   }
+        /// }
+        /// </code>
+        /// </example>
+        public Link DefaultRelationshipLinks { get; set; } = Link.All;
 
         /// <summary>
         /// Whether or not to allow all custom query parameters.
@@ -146,40 +181,34 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public bool ValidateModelState { get; set; }
 
-        [Obsolete("JsonContract resolver can now be set on SerializerSettings.")]
-        public IContractResolver JsonContractResolver
-        {
-            get => SerializerSettings.ContractResolver;
-            set => SerializerSettings.ContractResolver = value;
-        }
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
         {
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new DasherizedResolver()
         };
 
-        public void BuildContextGraph<TContext>(Action<IContextGraphBuilder> builder) where TContext : DbContext
+        public void BuildResourceGraph<TContext>(Action<IResourceGraphBuilder> builder) where TContext : DbContext
         {
-            BuildContextGraph(builder);
+            BuildResourceGraph(builder);
 
-            ContextGraphBuilder.AddDbContext<TContext>();
+            ResourceGraphBuilder.AddDbContext<TContext>();
 
-            ContextGraph = ContextGraphBuilder.Build();
+            ResourceGraph = ResourceGraphBuilder.Build();
         }
 
-        public void BuildContextGraph(Action<IContextGraphBuilder> builder)
+        public void BuildResourceGraph(Action<IResourceGraphBuilder> builder)
         {
             if (builder == null) return;
 
-            builder(ContextGraphBuilder);
+            builder(ResourceGraphBuilder);
 
-            ContextGraph = ContextGraphBuilder.Build();
+            ResourceGraph = ResourceGraphBuilder.Build();
         }
 
         public void EnableExtension(JsonApiExtension extension)
             => EnabledExtensions.Add(extension);
 
-        internal IContextGraphBuilder ContextGraphBuilder { get; } = new ContextGraphBuilder();
+        internal IResourceGraphBuilder ResourceGraphBuilder { get; } = new ResourceGraphBuilder();
         internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
     }
 }

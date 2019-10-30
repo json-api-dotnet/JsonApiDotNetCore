@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -8,15 +8,23 @@
     <ProjectReference Include="../../src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
   <ItemGroup>
-  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3" />
+  <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.2" />
+    <PackageReference Include="Bogus" Version="22.1.2" />
   </ItemGroup>
   <ItemGroup>
     <None Update="xunit.runner.json"> 
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Read\" />
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Create\" />
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Update\" />
+    <Folder Include="ResourceHooks\ResourceHookExecutor\Delete\" />
   </ItemGroup>
 </Project>

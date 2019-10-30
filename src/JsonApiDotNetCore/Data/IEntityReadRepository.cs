@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace JsonApiDotNetCore.Data
         /// such as authorization of resources.
         /// </summary>
         IQueryable<TEntity> Get();
+
+        /// <summary>
+        /// Apply fields to the provided queryable
+        /// </summary>
+        IQueryable<TEntity> Select(IQueryable<TEntity> entities, List<string> fields);
 
         /// <summary>
         /// Include a relationship in the query

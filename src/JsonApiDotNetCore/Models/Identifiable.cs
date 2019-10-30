@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Models
         /// from `typeof(T)` to a string and the setter vice versa.
         /// 
         /// To override this behavior, you can either implement the
-        /// <see cref="IIdentifiable{T}"> interface directly or override
+        /// <see cref="IIdentifiable{T}" /> interface directly or override
         /// `GetStringId` and `GetTypedId` methods.
         /// </summary>
         [NotMapped]
@@ -61,12 +61,6 @@ namespace JsonApiDotNetCore.Models
         {
             var convertedValue = TypeHelper.ConvertType(value, typeof(T));
             return convertedValue == null ? default : (T)convertedValue;
-        }
-
-        [Obsolete("Use GetTypedId instead")]
-        protected virtual object GetConcreteId(string value)
-        {
-            return TypeHelper.ConvertType(value, typeof(T));
         }
     }
 }

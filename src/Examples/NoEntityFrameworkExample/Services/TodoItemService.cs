@@ -68,8 +68,8 @@ namespace NoEntityFrameworkExample.Services
         {
             return (await QueryAsync<TodoItem>(async connection =>
             {
-                var query = "insert into \"TodoItems\" (\"Description\", \"Ordinal\", \"GuidProperty\") values (@description, @ordinal, @guidProperty) returning \"Id\",\"Description\",\"Ordinal\", \"GuidProperty\"";
-                var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, guidProperty =  entity.GuidProperty});
+                var query = "insert into \"TodoItems\" (\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\") values (@description, @isLocked, @ordinal, @guidProperty) returning \"Id\",\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\"";
+                var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, guidProperty =  entity.GuidProperty, isLocked = entity.IsLocked});
                 return result;
             })).SingleOrDefault();
         }

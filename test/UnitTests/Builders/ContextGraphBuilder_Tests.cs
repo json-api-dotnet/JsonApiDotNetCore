@@ -15,7 +15,7 @@ using Xunit;
 
 namespace UnitTests
 {
-    public class ContextGraphBuilder_Tests
+    public class ResourceGraphBuilder_Tests
     {
         class NonDbResource : Identifiable {}
         class DbResource : Identifiable {}
@@ -23,18 +23,18 @@ namespace UnitTests
             public DbSet<DbResource> DbResources { get; set; }
         }
 
-        public ContextGraphBuilder_Tests()
+        public ResourceGraphBuilder_Tests()
         {
             JsonApiOptions.ResourceNameFormatter = new DefaultResourceNameFormatter();
         }
 
         [Fact]
-        public void Can_Build_ContextGraph_Using_Builder()
+        public void Can_Build_ResourceGraph_Using_Builder()
         {
             // arrange
             var services = new ServiceCollection();
             services.AddJsonApi<TestContext>(opt => {
-                opt.BuildContextGraph(b => {
+                opt.BuildResourceGraph(b => {
                     b.AddResource<NonDbResource>("non-db-resources");
                 });
             });
@@ -43,9 +43,9 @@ namespace UnitTests
             var container = services.BuildServiceProvider();
 
             // assert
-            var contextGraph = container.GetRequiredService<IContextGraph>();
-            var dbResource = contextGraph.GetContextEntity("db-resources");
-            var nonDbResource = contextGraph.GetContextEntity("non-db-resources");
+            var resourceGraph = container.GetRequiredService<IResourceGraph>();
+            var dbResource = resourceGraph.GetContextEntity("db-resources");
+            var nonDbResource = resourceGraph.GetContextEntity("non-db-resources");
             Assert.Equal(typeof(DbResource), dbResource.EntityType);
             Assert.Equal(typeof(NonDbResource), nonDbResource.EntityType);
             Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceType);
@@ -55,7 +55,7 @@ namespace UnitTests
         public void Resources_Without_Names_Specified_Will_Use_Default_Formatter()
         {
             // arrange
-            var builder = new ContextGraphBuilder();
+            var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
             // act
@@ -71,7 +71,7 @@ namespace UnitTests
         {
             // arrange
             JsonApiOptions.ResourceNameFormatter = new CamelCaseNameFormatter();
-            var builder = new ContextGraphBuilder();
+            var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
             // act
@@ -86,7 +86,7 @@ namespace UnitTests
         public void Attrs_Without_Names_Specified_Will_Use_Default_Formatter()
         {
             // arrange
-            var builder = new ContextGraphBuilder();
+            var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
             // act
@@ -94,7 +94,7 @@ namespace UnitTests
 
             // assert
             var resource = graph.GetContextEntity(typeof(TestResource));
-            Assert.Equal("compound-attribute", resource.Attributes.Single().PublicAttributeName);
+            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compound-attribute");
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace UnitTests
         {
             // arrange
             JsonApiOptions.ResourceNameFormatter = new CamelCaseNameFormatter();
-            var builder = new ContextGraphBuilder();
+            var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
             // act
@@ -110,14 +110,14 @@ namespace UnitTests
 
             // assert
             var resource = graph.GetContextEntity(typeof(TestResource));
-            Assert.Equal("compoundAttribute", resource.Attributes.Single().PublicAttributeName);
+            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
 
         [Fact]
         public void Relationships_Without_Names_Specified_Will_Use_Default_Formatter()
         {
             // arrange
-            var builder = new ContextGraphBuilder();
+            var builder = new ResourceGraphBuilder();
             builder.AddResource<TestResource>();
 
             // act
@@ -139,6 +139,8 @@ namespace UnitTests
 
         public class CamelCaseNameFormatter : IResourceNameFormatter
         {
+            public string ApplyCasingConvention(string properName) => ToCamelCase(properName);
+
             public string FormatPropertyName(PropertyInfo property) => ToCamelCase(property.Name);
 
             public string FormatResourceName(Type resourceType) => ToCamelCase(resourceType.Name.Pluralize());

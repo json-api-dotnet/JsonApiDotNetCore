@@ -23,8 +23,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             ICreateService<T, int> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph
-        ) : base(service, deSerializer, documentBuilder, contextGraph)
+            IResourceGraph resourceGraph
+        ) : base(service, deSerializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -34,18 +34,18 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly ICreateService<T, TId> _service;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
-        private readonly IContextGraph _contextGraph;
+        private readonly IResourceGraph _resourceGraph;
 
         public CreateOpProcessor(
             ICreateService<T, TId> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph)
+            IResourceGraph resourceGraph)
         {
             _service = service;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
-            _contextGraph = contextGraph;
+            _resourceGraph = resourceGraph;
         }
 
         public async Task<Operation> ProcessAsync(Operation operation)
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             };
 
             operationResult.Data = _documentBuilder.GetData(
-                _contextGraph.GetContextEntity(operation.GetResourceTypeName()),
+                _resourceGraph.GetContextEntity(operation.GetResourceTypeName()),
                 result);
 
             // we need to persist the original request localId so that subsequent operations

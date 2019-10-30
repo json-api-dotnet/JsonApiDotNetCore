@@ -19,9 +19,9 @@ namespace UnitTests.Services
         public EntityResourceService_Tests()
         {
             _jsonApiContextMock
-                .Setup(m => m.ContextGraph)
+                .Setup(m => m.ResourceGraph)
                 .Returns(
-                    new ContextGraphBuilder()
+                    new ResourceGraphBuilder()
                         .AddResource<TodoItem>("todo-items")
                         .Build()
                 );
@@ -73,6 +73,6 @@ namespace UnitTests.Services
         }
 
         private EntityResourceService<TodoItem> GetService() =>
-            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, _loggerFactory);
+            new EntityResourceService<TodoItem>(_jsonApiContextMock.Object, _repositoryMock.Object, _loggerFactory, null);
     }
 }

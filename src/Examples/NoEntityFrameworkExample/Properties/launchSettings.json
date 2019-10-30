@@ -16,7 +16,8 @@
       }
     },
     "NoEntityFrameworkExample": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {}
     }
   }
 }

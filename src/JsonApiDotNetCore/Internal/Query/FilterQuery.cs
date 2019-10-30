@@ -1,23 +1,31 @@
 using System;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class FilterQuery
+    /// <summary>
+    /// Allows you to filter the query, via the methods shown at
+    /// <see href="https://json-api-dotnet.github.io/#/filtering">HERE</see>
+    /// </summary>
+    public class FilterQuery : BaseQuery
     {
+        /// <summary>
+        /// Allows you to filter the query, via the methods shown at
+        /// <see href="https://json-api-dotnet.github.io/#/filtering">HERE</see>
+        /// </summary>
+        /// <param name="attribute">the json attribute you want to filter on</param>
+        /// <param name="value">the value this attribute should be</param>
+        /// <param name="operation">possible values: eq, ne, lt, gt, le, ge, like, in (default)</param>
         public FilterQuery(string attribute, string value, string operation)
+            : base(attribute)
         {
-            Attribute = attribute;
-            Key = attribute.ToProperCase();
             Value = value;
             Operation = operation;
         }
-        
-        [Obsolete("Key has been replaced by '" + nameof(Attribute) + "'. Members should be located by their public name, not by coercing the provided value to the internal name.")]
-        public string Key { get; set; }
-        public string Attribute { get; }
+
         public string Value { get; set; }
         public string Operation { get; set; }
-        public bool IsAttributeOfRelationship => Attribute.Contains(".");
+
     }
 }

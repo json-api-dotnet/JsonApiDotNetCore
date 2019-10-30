@@ -1,4 +1,3 @@
-using System;
 using GettingStarted.Models;
 using GettingStarted.ResourceDefinitionExample;
 using JsonApiDotNetCore.Builders;
@@ -6,8 +5,8 @@ using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -16,7 +15,16 @@ namespace DiscoveryTests
     public class ServiceDiscoveryFacadeTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
-        private readonly ContextGraphBuilder _graphBuilder = new ContextGraphBuilder();
+        private readonly ResourceGraphBuilder _graphBuilder = new ResourceGraphBuilder();
+
+        public ServiceDiscoveryFacadeTests()
+        {
+            var contextMock = new Mock<DbContext>();
+            var dbResolverMock = new Mock<IDbContextResolver>();
+            dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
+            TestModelRepository._dbContextResolver = dbResolverMock.Object;
+        }
+
         private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _graphBuilder);
 
         [Fact]
@@ -81,7 +89,7 @@ namespace DiscoveryTests
 
         public class TestModelRepository : DefaultEntityRepository<TestModel>
         {
-            private static IDbContextResolver _dbContextResolver = new  Mock<IDbContextResolver>().Object;
+            internal static IDbContextResolver _dbContextResolver;
             private static IJsonApiContext _jsonApiContext = new  Mock<IJsonApiContext>().Object;
             public TestModelRepository() : base(_jsonApiContext, _dbContextResolver) { }
         }

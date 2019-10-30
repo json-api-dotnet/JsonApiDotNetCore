@@ -21,12 +21,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
+            var person = new Person { FirstName = "Bob", LastName = null };
             _todoItem = new TodoItem
             {
                 Description = null,
                 Ordinal = 1,
                 CreatedDate = DateTime.Now,
-                AchievedDate = DateTime.Now.AddDays(2)
+                AchievedDate = DateTime.Now.AddDays(2),
+                Owner = person
             };
             _todoItem = _dbContext.TodoItems.Add(_todoItem).Entity;
         }
@@ -86,9 +88,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             var httpMethod = new HttpMethod("GET");
             var queryString = allowClientOverride.HasValue
-                ? $"?omitNullValuedAttributes={clientOverride}"
+                ? $"&omitNullValuedAttributes={clientOverride}"
                 : "";
-            var route = $"/api/v1/todo-items/{_todoItem.Id}{queryString}"; 
+            var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}"; 
             var request = new HttpRequestMessage(httpMethod, route);
 
             // act
@@ -98,6 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             // assert. does response contain a null valued attribute
             Assert.Equal(omitsNulls, !deserializeBody.Data.Attributes.ContainsKey("description"));
+            Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
 
         }
     }

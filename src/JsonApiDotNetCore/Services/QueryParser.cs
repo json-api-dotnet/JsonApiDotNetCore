@@ -153,10 +153,12 @@ namespace JsonApiDotNetCore.Services
 
             const char DESCENDING_SORT_OPERATOR = '-';
             var sortSegments = value.Split(QueryConstants.COMMA);
-
+            if(sortSegments.Where(s => s == string.Empty).Count() >0)
+            {
+                throw new JsonApiException(400, "The sort URI segment contained a null value.");
+            }
             foreach (var sortSegment in sortSegments)
             {
-
                 var propertyName = sortSegment;
                 var direction = SortDirection.Ascending;
 
@@ -166,12 +168,7 @@ namespace JsonApiDotNetCore.Services
                     propertyName = propertyName.Substring(1);
                 }
 
-                var attribute = GetAttribute(propertyName);
-
-                if (attribute.IsSortable == false)
-                    throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
-
-                sortParameters.Add(new SortQuery(direction, attribute));
+                sortParameters.Add(new SortQuery(direction, propertyName));
             };
 
             return sortParameters;
@@ -188,25 +185,34 @@ namespace JsonApiDotNetCore.Services
         {
             // expected: fields[TYPE]=prop1,prop2
             var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var includedFields = new List<string> { nameof(Identifiable.Id) };
 
-            const string ID = "Id";
-            var includedFields = new List<string> { ID };
-
-            // this will not support nested inclusions, it requires that the typeName is the current request type
-            if (string.Equals(typeName, _controllerContext.RequestEntity.EntityName, StringComparison.OrdinalIgnoreCase) == false)
+            var relationship = _controllerContext.RequestEntity.Relationships.SingleOrDefault(a => a.Is(typeName));
+            if (relationship == default && string.Equals(typeName, _controllerContext.RequestEntity.EntityName, StringComparison.OrdinalIgnoreCase) == false)
                 return includedFields;
 
             var fields = value.Split(QueryConstants.COMMA);
             foreach (var field in fields)
             {
-                var attr = _controllerContext.RequestEntity
-                    .Attributes
-                    .SingleOrDefault(a => a.Is(field));
+                if (relationship != default)
+                {
+                    var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.DependentType);
+                    var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
+                    if(attr == null)
+                        throw new JsonApiException(400, $"'{relationship.DependentType.Name}' does not contain '{field}'.");
 
-                if (attr == null) throw new JsonApiException(400, $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'.");
+                    // e.g. "Owner.Name"
+                    includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
+                }
+                else
+                {
+                    var attr = _controllerContext.RequestEntity.Attributes.SingleOrDefault(a => a.Is(field));
+                    if (attr == null)
+                        throw new JsonApiException(400, $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'.");
 
-                var internalAttrName = attr.InternalAttributeName;
-                includedFields.Add(internalAttrName);
+                    // e.g. "Name"
+                    includedFields.Add(attr.InternalAttributeName);
+                }
             }
 
             return includedFields;
@@ -240,12 +246,6 @@ namespace JsonApiDotNetCore.Services
                 return string.Empty;
 
             return operation;
-        }
-
-        private FilterQuery BuildFilterQuery(ReadOnlySpan<char> query, string propertyName)
-        {
-            var (operation, filterValue) = ParseFilterOperation(query.ToString());
-            return new FilterQuery(propertyName, filterValue, operation);
         }
     }
 }

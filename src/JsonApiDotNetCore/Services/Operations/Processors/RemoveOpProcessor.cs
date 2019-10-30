@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             IDeleteService<T, int> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph
-        ) : base(service, deSerializer, documentBuilder, contextGraph)
+            IResourceGraph resourceGraph
+        ) : base(service, deSerializer, documentBuilder, resourceGraph)
         { }
     }
 
@@ -33,18 +33,18 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         private readonly IDeleteService<T, TId> _service;
         private readonly IJsonApiDeSerializer _deSerializer;
         private readonly IDocumentBuilder _documentBuilder;
-        private readonly IContextGraph _contextGraph;
+        private readonly IResourceGraph _resourceGraph;
 
         public RemoveOpProcessor(
             IDeleteService<T, TId> service,
             IJsonApiDeSerializer deSerializer,
             IDocumentBuilder documentBuilder,
-            IContextGraph contextGraph)
+            IResourceGraph resourceGraph)
         {
             _service = service;
             _deSerializer = deSerializer;
             _documentBuilder = documentBuilder;
-            _contextGraph = contextGraph;
+            _resourceGraph = resourceGraph;
         }
 
         public async Task<Operation> ProcessAsync(Operation operation)

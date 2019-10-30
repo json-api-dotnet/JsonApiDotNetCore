@@ -13,12 +13,12 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Builders
 {
-    public interface IContextGraphBuilder
+    public interface IResourceGraphBuilder
     {
         /// <summary>
-        /// Construct the <see cref="ContextGraph"/>
+        /// Construct the <see cref="ResourceGraph"/>
         /// </summary>
-        IContextGraph Build();
+        IResourceGraph Build();
 
         /// <summary>
         /// Add a json:api resource
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Builders
         /// If nothing is specified, the configured name formatter will be used.
         /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
         /// </param>
-        IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
+        IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
 
         /// <summary>
         /// Add a json:api resource
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Builders
         /// If nothing is specified, the configured name formatter will be used.
         /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
         /// </param>
-        IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>;
+        IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
         /// Add a json:api resource
@@ -53,20 +53,20 @@ namespace JsonApiDotNetCore.Builders
         /// If nothing is specified, the configured name formatter will be used.
         /// See <see cref="JsonApiOptions.ResourceNameFormatter" />.
         /// </param>
-        IContextGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
+        IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
 
         /// <summary>
         /// Add all the models that are part of the provided <see cref="DbContext" /> 
         /// that also implement <see cref="IIdentifiable"/>
         /// </summary>
         /// <typeparam name="T">The <see cref="DbContext"/> implementation type.</typeparam>
-        IContextGraphBuilder AddDbContext<T>() where T : DbContext;
+        IResourceGraphBuilder AddDbContext<T>() where T : DbContext;
 
         /// <summary>
         /// Specify the <see cref="IResourceNameFormatter"/> used to format resource names.
         /// </summary>
         /// <param name="resourceNameFormatter">Formatter used to define exposed resource names by convention.</param>
-        IContextGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter);
+        IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter);
 
         /// <summary>
         /// Which links to include. Defaults to <see cref="Link.All"/>.
@@ -74,34 +74,36 @@ namespace JsonApiDotNetCore.Builders
         Link DocumentLinks { get; set; }
     }
 
-    public class ContextGraphBuilder : IContextGraphBuilder
+    public class ResourceGraphBuilder : IResourceGraphBuilder
     {
         private List<ContextEntity> _entities = new List<ContextEntity>();
         private List<ValidationResult> _validationResults = new List<ValidationResult>();
         private bool _usesDbContext;
         private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
+        /// <inheritdoc />
         public Link DocumentLinks { get; set; } = Link.All;
 
-        public IContextGraph Build()
+        /// <inheritdoc />
+        public IResourceGraph Build()
         {
             // this must be done at build so that call order doesn't matter
             _entities.ForEach(e => e.Links = GetLinkFlags(e.EntityType));
 
-            var graph = new ContextGraph(_entities, _usesDbContext, _validationResults);
+            var graph = new ResourceGraph(_entities, _usesDbContext, _validationResults);
             return graph;
         }
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
+        public IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>
             => AddResource<TResource, int>(pluralizedTypeName);
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
+        public IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>
             => AddResource(typeof(TResource), typeof(TId), pluralizedTypeName);
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null)
+        public IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null)
         {
             AssertEntityIsNotAlreadyDefined(entityType);
 
@@ -139,6 +141,18 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var prop in properties)
             {
+                if (prop.Name == nameof(Identifiable.Id))
+                {
+                    var idAttr = new AttrAttribute()
+                    {
+                        PublicAttributeName = JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop),
+                        PropertyInfo = prop,
+                        InternalAttributeName = prop.Name
+                    };
+                    attributes.Add(idAttr);
+                    continue;
+                }
+
                 var attribute = (AttrAttribute)prop.GetCustomAttribute(typeof(AttrAttribute));
                 if (attribute == null)
                     continue;
@@ -165,10 +179,11 @@ namespace JsonApiDotNetCore.Builders
 
                 attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? JsonApiOptions.ResourceNameFormatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
-                attribute.Type = GetRelationshipType(attribute, prop);
+                attribute.DependentType = GetRelationshipType(attribute, prop);
+                attribute.PrincipalType = entityType;
                 attributes.Add(attribute);
 
-                if(attribute is HasManyThroughAttribute hasManyThroughAttribute) {
+                if (attribute is HasManyThroughAttribute hasManyThroughAttribute) {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.InternalThroughName);
                     if(throughProperty == null)
                         throw new JsonApiSetupException($"Invalid '{nameof(HasManyThroughAttribute)}' on type '{entityType}'. Type does not contain a property named '{hasManyThroughAttribute.InternalThroughName}'.");
@@ -198,31 +213,26 @@ namespace JsonApiDotNetCore.Builders
                         ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {entityType} with name {leftIdPropertyName}");
 
                     // Article → ArticleTag.Tag
-                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.Type)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.Type}");
+                    hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.DependentType)
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a navigation property to type {hasManyThroughAttribute.DependentType}");
                     
                     // ArticleTag.TagId
                     var rightIdPropertyName = JsonApiOptions.RelatedIdMapper.GetRelatedIdPropertyName(hasManyThroughAttribute.RightProperty.Name);
                     hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.Type} with name {rightIdPropertyName}");
+                        ?? throw new JsonApiSetupException($"{hasManyThroughAttribute.ThroughType} does not contain a relationship id property to type {hasManyThroughAttribute.DependentType} with name {rightIdPropertyName}");
                 }
             }
 
             return attributes;
         }
 
-        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop)
-        {
-            if (relation.IsHasMany)
-                return prop.PropertyType.GetGenericArguments()[0];
-            else
-                return prop.PropertyType;
-        }
+        protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
+            relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 
         /// <inheritdoc />
-        public IContextGraphBuilder AddDbContext<T>() where T : DbContext
+        public IResourceGraphBuilder AddDbContext<T>() where T : DbContext
         {
             _usesDbContext = true;
 
@@ -267,8 +277,9 @@ namespace JsonApiDotNetCore.Builders
             if (property.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute resourceAttribute)
                 return resourceAttribute.ResourceName;
 
-            // fallback to dsherized...this should actually check for a custom IResourceNameFormatter
-            return _resourceNameFormatter.FormatResourceName(resourceType);
+            // fallback to the established convention using the DbSet Property.Name
+            // e.g DbSet<FooBar> FooBars { get; set; } => "foo-bars"
+            return _resourceNameFormatter.ApplyCasingConvention(property.Name);
         }
 
         private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
@@ -289,7 +300,7 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <inheritdoc />
-        public IContextGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter)
+        public IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter)
         {
             _resourceNameFormatter = resourceNameFormatter;
             return this;

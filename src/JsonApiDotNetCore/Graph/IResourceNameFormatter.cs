@@ -22,6 +22,12 @@ namespace JsonApiDotNetCore.Graph
         /// Get the publicly visible name for the given property
         /// </summary>
         string FormatPropertyName(PropertyInfo property);
+
+        /// <summary>
+        /// Aoplies the desired casing convention to the internal string.
+        /// This is generally applied to the type name after pluralization.
+        /// </summary>
+        string ApplyCasingConvention(string properName);
     }
 
     public class DefaultResourceNameFormatter : IResourceNameFormatter
@@ -45,13 +51,29 @@ namespace JsonApiDotNetCore.Graph
                 if (type.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
                     return attribute.ResourceName;
 
-                return str.Dasherize(type.Name.Pluralize());
+                return ApplyCasingConvention(type.Name.Pluralize());
             }
             catch (InvalidOperationException e)
             {
                 throw new InvalidOperationException($"Cannot define multiple {nameof(ResourceAttribute)}s on type '{type}'.", e);
             }
         }
+
+        /// <summary>
+        /// Aoplies the desired casing convention to the internal string.
+        /// This is generally applied to the type name after pluralization.
+        /// </summary>
+        ///
+        /// <example>
+        /// <code>
+        /// _default.ApplyCasingConvention("TodoItems"); 
+        /// // > "todo-items"
+        ///
+        /// _default.ApplyCasingConvention("TodoItem"); 
+        /// // > "todo-item"
+        /// </code>
+        /// </example>
+        public string ApplyCasingConvention(string properName) => str.Dasherize(properName);
 
         /// <summary>
         /// Uses the internal PropertyInfo to determine the external resource name.

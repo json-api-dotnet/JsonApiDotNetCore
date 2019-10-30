@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,12 +12,12 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Services.Operations;
 using JsonApiDotNetCore.Services.Operations.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -48,7 +47,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             var config = new JsonApiOptions();
             options(config);
-            config.BuildContextGraph(builder => builder.AddDbContext<TContext>());
+            config.BuildResourceGraph(builder => builder.AddDbContext<TContext>());
 
             mvcBuilder.AddMvcOptions(opt => AddMvcOptions(opt, config));
 
@@ -65,9 +64,9 @@ namespace JsonApiDotNetCore.Extensions
             var config = new JsonApiOptions();
             configureOptions(config);
 
-            if(autoDiscover != null)
+            if (autoDiscover != null)
             {
-                var facade = new ServiceDiscoveryFacade(services, config.ContextGraphBuilder);
+                var facade = new ServiceDiscoveryFacade(services, config.ResourceGraphBuilder);
                 autoDiscover(facade);
             }
 
@@ -88,8 +87,8 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions) where TContext : DbContext
         {
-            if (jsonApiOptions.ContextGraph == null)
-                jsonApiOptions.BuildContextGraph<TContext>(null);
+            if (jsonApiOptions.ResourceGraph == null)
+                jsonApiOptions.BuildResourceGraph<TContext>(null);
 
             services.AddScoped<IDbContextResolver, DbContextResolver<TContext>>();
 
@@ -100,10 +99,10 @@ namespace JsonApiDotNetCore.Extensions
             this IServiceCollection services,
             JsonApiOptions jsonApiOptions)
         {
-            if (jsonApiOptions.ContextGraph == null)
-                jsonApiOptions.ContextGraph = jsonApiOptions.ContextGraphBuilder.Build();
+            if (jsonApiOptions.ResourceGraph == null)
+                jsonApiOptions.ResourceGraph = jsonApiOptions.ResourceGraphBuilder.Build();
 
-            if (jsonApiOptions.ContextGraph.UsesDbContext == false)
+            if (jsonApiOptions.ResourceGraph.UsesDbContext == false)
             {
                 services.AddScoped<DbContext>();
                 services.AddSingleton(new DbContextOptionsBuilder().Options);
@@ -114,6 +113,11 @@ namespace JsonApiDotNetCore.Extensions
 
             services.AddScoped(typeof(IEntityRepository<>), typeof(DefaultEntityRepository<>));
             services.AddScoped(typeof(IEntityRepository<,>), typeof(DefaultEntityRepository<,>));
+
+            services.AddScoped(typeof(IEntityReadRepository<,>), typeof(DefaultEntityRepository<,>));
+            services.AddScoped(typeof(IEntityWriteRepository<,>), typeof(DefaultEntityRepository<,>));
+
+
 
             services.AddScoped(typeof(ICreateService<>), typeof(EntityResourceService<>));
             services.AddScoped(typeof(ICreateService<,>), typeof(EntityResourceService<,>));
@@ -137,7 +141,7 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped(typeof(IResourceService<,>), typeof(EntityResourceService<,>));
 
             services.AddSingleton(jsonApiOptions);
-            services.AddSingleton(jsonApiOptions.ContextGraph);
+            services.AddSingleton(jsonApiOptions.ResourceGraph);
             services.AddScoped<IJsonApiContext, JsonApiContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
@@ -155,7 +159,17 @@ namespace JsonApiDotNetCore.Extensions
             services.AddScoped<IControllerContext, Services.ControllerContext>();
             services.AddScoped<IDocumentBuilderOptionsProvider, DocumentBuilderOptionsProvider>();
 
-            // services.AddScoped<IActionFilter, TypeMatchFilter>();
+
+            if (jsonApiOptions.EnableResourceHooks)
+            {
+                services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
+                services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceDefinition<>));
+                services.AddTransient(typeof(IResourceHookExecutor), typeof(ResourceHookExecutor));
+                services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
+            }
+
+            services.AddScoped<IInverseRelationships, InverseRelationships>();
+
         }
 
         private static void AddOperationServices(IServiceCollection services)
@@ -190,7 +204,7 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds all required registrations for the service to the container
         /// </summary>
         /// <exception cref="JsonApiSetupException"/>
-        public static IServiceCollection AddResourceService<T>(this IServiceCollection services) 
+        public static IServiceCollection AddResourceService<T>(this IServiceCollection services)
         {
             var typeImplementsAnExpectedInterface = false;
 
@@ -199,28 +213,29 @@ namespace JsonApiDotNetCore.Extensions
             // it is _possible_ that a single concrete type could be used for multiple resources...
             var resourceDescriptors = GetResourceTypesFromServiceImplementation(serviceImplementationType);
 
-            foreach(var resourceDescriptor in resourceDescriptors)
+            foreach (var resourceDescriptor in resourceDescriptors)
             {
-                foreach(var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
+                foreach (var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
                 {
                     // A shorthand interface is one where the id type is ommitted
                     // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
                     var isShorthandInterface = (openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1);
-                    if(isShorthandInterface && resourceDescriptor.IdType != typeof(int))
+                    if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
                         continue; // we can't create a shorthand for id types other than int
 
                     var concreteGenericType = isShorthandInterface
                         ? openGenericType.MakeGenericType(resourceDescriptor.ResourceType)
                         : openGenericType.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
 
-                    if(concreteGenericType.IsAssignableFrom(serviceImplementationType)) {
+                    if (concreteGenericType.IsAssignableFrom(serviceImplementationType))
+                    {
                         services.AddScoped(concreteGenericType, serviceImplementationType);
                         typeImplementsAnExpectedInterface = true;
                     }
                 }
             }
 
-            if(typeImplementsAnExpectedInterface == false)
+            if (typeImplementsAnExpectedInterface == false)
                 throw new JsonApiSetupException($"{serviceImplementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
 
             return services;
@@ -230,12 +245,12 @@ namespace JsonApiDotNetCore.Extensions
         {
             var resourceDecriptors = new HashSet<ResourceDescriptor>();
             var interfaces = type.GetInterfaces();
-            foreach(var i in interfaces)
+            foreach (var i in interfaces)
             {
-                if(i.IsGenericType)
+                if (i.IsGenericType)
                 {
                     var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
-                    if(TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
+                    if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
                     {
                         resourceDecriptors.Add(resourceDescriptor);
                     }

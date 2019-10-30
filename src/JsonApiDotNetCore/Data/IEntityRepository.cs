@@ -1,7 +1,9 @@
+using System;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Data
 {
+     
     public interface IEntityRepository<TEntity>
         : IEntityRepository<TEntity, int>
         where TEntity : class, IIdentifiable<int>
@@ -33,4 +35,7 @@ namespace JsonApiDotNetCore.Data
         /// </remarks>
         void DetachRelationshipPointers(TEntity entity);
     }
+
 }
+
+

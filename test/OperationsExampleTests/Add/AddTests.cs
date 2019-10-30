@@ -95,7 +95,137 @@ namespace OperationsExampleTests
         }
 
         [Fact]
-        public async Task Can_Create_Author_With_Article()
+        public async Task Can_Create_Article_With_Existing_Author()
+        {
+            // arrange
+            var context = GetService<AppDbContext>();
+            var author = AuthorFactory.Get();
+            var article = ArticleFactory.Get();
+
+            context.Authors.Add(author);
+            await context.SaveChangesAsync();
+
+
+            //const string authorLocalId = "author-1";
+
+            var content = new
+            {
+                operations = new object[] {
+                    new {
+                        op = "add",
+                        data = new {
+                            type = "articles",
+                            attributes = new {
+                                name = article.Name
+                            },
+                            relationships = new {
+                                author = new {
+                                    data = new {
+                                        type = "authors",
+                                        id = author.Id
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // act
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
+
+            // assert
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Single(data.Operations);
+
+
+            var lastAuthor = await context.Authors
+                .Include(a => a.Articles)
+                .SingleAsync(a => a.Id == author.Id);
+            var articleOperationResult = data.Operations[0];
+
+            // author validation: sanity checks
+            Assert.NotNull(lastAuthor);
+            Assert.Equal(author.Name, lastAuthor.Name);
+
+            //// article validation
+            Assert.Single(lastAuthor.Articles);
+            Assert.Equal(article.Name, lastAuthor.Articles[0].Name);
+            Assert.Equal(articleOperationResult.DataObject.Id, lastAuthor.Articles[0].StringId);
+        }
+
+        [Fact]
+        public async Task Can_Create_Articles_With_Existing_Author()
+        {
+
+
+            // arrange
+            var context = GetService<AppDbContext>();
+            var author = AuthorFactory.Get();
+            context.Authors.Add(author);
+            await context.SaveChangesAsync();
+            var expectedCount = _faker.Random.Int(1, 10);
+            var articles = ArticleFactory.Get(expectedCount);
+
+            var content = new
+            {
+                operations = new List<object>()
+            };
+
+            for (int i = 0; i < expectedCount; i++)
+            {
+                content.operations.Add(
+                     new
+                     {
+                         op = "add",
+                         data = new
+                         {
+                             type = "articles",
+                             attributes = new
+                             {
+                                 name = articles[i].Name
+                             },
+                             relationships = new
+                             {
+                                 author = new
+                                 {
+                                     data = new
+                                     {
+                                         type = "authors",
+                                         id = author.Id
+                                     }
+                                 }
+                             }
+                         }
+                     }
+                );
+            }
+
+            // act
+            var (response, data) = await PatchAsync<OperationsDocument>("api/bulk", content);
+
+            // assert
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedCount, data.Operations.Count);
+
+            // author validation: sanity checks
+            var lastAuthor = context.Authors.Include(a => a.Articles).Single(a => a.Id == author.Id);
+            Assert.NotNull(lastAuthor);
+            Assert.Equal(author.Name, lastAuthor.Name);
+
+            // articles validation
+            Assert.True(lastAuthor.Articles.Count == expectedCount);
+            for (int i = 0; i < expectedCount; i++)
+            {
+                var article = articles[i];
+                Assert.NotNull(lastAuthor.Articles.FirstOrDefault(a => a.Name == article.Name));
+            }
+        }
+
+        [Fact]
+        public async Task Can_Create_Author_With_Article_Using_LocalId()
         {
             // arrange
             var context = GetService<AppDbContext>();

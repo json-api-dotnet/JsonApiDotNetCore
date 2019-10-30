@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,12 @@ using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
 {
+
     public interface IResourceDefinition
     {
         List<AttrAttribute> GetOutputAttrs(object instance);
     }
+
 
     /// <summary>
     /// exposes developer friendly hooks into how their resources are exposed. 
@@ -20,19 +23,17 @@ namespace JsonApiDotNetCore.Models
     /// service and repository layers.
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
-    public class ResourceDefinition<T> : IResourceDefinition where T : class, IIdentifiable
+    public class ResourceDefinition<T> : IResourceDefinition, IResourceHookContainer<T> where T : class, IIdentifiable
     {
-        private readonly IContextGraph _graph;
         private readonly ContextEntity _contextEntity;
         internal readonly bool _instanceAttrsAreSpecified;
 
         private bool _requestCachedAttrsHaveBeenLoaded = false;
         private List<AttrAttribute> _requestCachedAttrs;
 
-        public ResourceDefinition()
+        public ResourceDefinition(IResourceGraph graph)
         {
-            _graph = ContextGraph.Instance;
-            _contextEntity = ContextGraph.Instance.GetContextEntity(typeof(T));
+            _contextEntity = graph.GetContextEntity(typeof(T));
             _instanceAttrsAreSpecified = InstanceOutputAttrsAreSpecified();
         }
 
@@ -49,11 +50,17 @@ namespace JsonApiDotNetCore.Models
                 .FirstOrDefault();
             var declaringType = instanceMethod?.DeclaringType;
             return declaringType == derivedType;
-        }   
+        }
 
-        // TODO: need to investigate options for caching these
+        /// <summary>
+        /// Remove an attribute
+        /// </summary>
+        /// <param name="filter">the filter to execute</param>
+        /// <param name="from">@TODO</param>
+        /// <returns></returns>
         protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
         {
+            //@TODO: need to investigate options for caching these
             from = from ?? _contextEntity.Attributes;
 
             // model => model.Attribute
@@ -125,11 +132,13 @@ namespace JsonApiDotNetCore.Models
         /// instead of the default query behavior. A common use-case for this
         /// is including related resources and filtering on them.
         /// </summary>
+        ///
         /// <returns>
         /// A set of custom queries that will be applied instead of the default
         /// queries for the given key. Null will be returned if default behavior
         /// is desired.
         /// </returns>
+        ///
         /// <example>
         /// <code>
         /// protected override QueryFilters GetQueryFilters() =>  { 
@@ -155,12 +164,38 @@ namespace JsonApiDotNetCore.Models
         /// </example>
         public virtual QueryFilters GetQueryFilters() => null;
 
+        /// <inheritdoc/>
+        public virtual void AfterCreate(HashSet<T> entities, ResourcePipeline pipeline) { }
+        /// <inheritdoc/>
+        public virtual void AfterRead(HashSet<T> entities, ResourcePipeline pipeline, bool isIncluded = false) { }
+        /// <inheritdoc/>
+        public virtual void AfterUpdate(HashSet<T> entities, ResourcePipeline pipeline) { }
+        /// <inheritdoc/>
+        public virtual void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
+        /// <inheritdoc/>
+        public virtual void AfterUpdateRelationship(IRelationshipsDictionary<T> entitiesByRelationship, ResourcePipeline pipeline) { }
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> BeforeCreate(IEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        /// <inheritdoc/>
+        public virtual void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null) { }
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> BeforeUpdate(IDiffableEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> BeforeDelete(IEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+        /// <inheritdoc/>
+        public virtual IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<T> entitiesByRelationship, ResourcePipeline pipeline) { return ids; }
+        /// <inheritdoc/>
+        public virtual void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<T> entitiesByRelationship, ResourcePipeline pipeline) { }
+        /// <inheritdoc/>
+        public virtual IEnumerable<T> OnReturn(HashSet<T> entities, ResourcePipeline pipeline) { return entities; }
+
+
         /// <summary>
         /// This is an alias type intended to simplify the implementation's
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
-        /// <summary>
-        public class QueryFilters : Dictionary<string, Func<IQueryable<T>, string, IQueryable<T>>> { }
+        /// </summary>
+        public class QueryFilters : Dictionary<string, Func<IQueryable<T>, FilterQuery, IQueryable<T>>> { }
 
         /// <summary>
         /// Define a the default sort order if no sort key is provided.
@@ -177,20 +212,20 @@ namespace JsonApiDotNetCore.Models
         ///     };
         /// </code>
         /// </example>
-        protected virtual PropertySortOrder GetDefaultSortOrder() => null;
+        public virtual PropertySortOrder GetDefaultSortOrder() => null;
 
-        internal List<(AttrAttribute, SortDirection)> DefaultSort()
+        public List<(AttrAttribute, SortDirection)> DefaultSort()
         {
             var defaultSortOrder = GetDefaultSortOrder();
-            if(defaultSortOrder != null && defaultSortOrder.Count > 0)
+            if (defaultSortOrder != null && defaultSortOrder.Count > 0)
             {
                 var order = new List<(AttrAttribute, SortDirection)>();
-                foreach(var sortProp in defaultSortOrder)
+                foreach (var sortProp in defaultSortOrder)
                 {
                     // TODO: error handling, log or throw?
                     if (sortProp.Item1.Body is MemberExpression memberExpression)
                         order.Add(
-                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name), 
+                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name),
                             sortProp.Item2)
                         );
                 }
@@ -205,7 +240,7 @@ namespace JsonApiDotNetCore.Models
         /// This is an alias type intended to simplify the implementation's
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
-        /// <summary>
+        /// </summary>
         public class PropertySortOrder : List<(Expression<Func<T, dynamic>>, SortDirection)> { }
     }
 }

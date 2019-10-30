@@ -1,10 +1,23 @@
+using JsonApiDotNetCore.Services;
 using System;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
-    public class BaseFilterQuery
+    public class BaseFilterQuery : BaseAttrQuery
     {
-        protected FilterOperations GetFilterOperation(string prefix)
+        public BaseFilterQuery(
+            IJsonApiContext jsonApiContext,
+            FilterQuery filterQuery)
+        : base(jsonApiContext, filterQuery)
+        {
+            PropertyValue = filterQuery.Value;
+            FilterOperation = GetFilterOperation(filterQuery.Operation);
+        }
+
+        public string PropertyValue { get; }
+        public FilterOperations FilterOperation { get; }
+
+        private FilterOperations GetFilterOperation(string prefix)
         {
             if (prefix.Length == 0) return FilterOperations.eq;
 
@@ -13,5 +26,6 @@ namespace JsonApiDotNetCore.Internal.Query
 
             return opertion;
         }
+
     }
 }

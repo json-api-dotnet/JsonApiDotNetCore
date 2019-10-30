@@ -11,13 +11,18 @@ namespace JsonApiDotNetCoreExample.Models
         public Person Person { get; set; }
     }
 
-    public class Person : Identifiable, IHasMeta
+    public class Person : Identifiable, IHasMeta, IIsLockable
     {
+        public bool IsLocked { get; set; }
+
         [Attr("first-name")]
         public string FirstName { get; set; }
 
         [Attr("last-name")]
         public string LastName { get; set; }
+
+        [Attr("age")]
+        public int Age { get; set; }
 
         [HasMany("todo-items")]
         public virtual List<TodoItem> TodoItems { get; set; }
@@ -29,11 +34,24 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
 
         [HasOne("role")]
-        public virtual PersonRole Role { get; set; }
+        public virtual PersonRole Role { get; set; } 
         public int? PersonRoleId { get; set; }
+
+        [HasOne("one-to-one-todo-item")]
+        public virtual TodoItem ToOneTodoItem { get; set; }
+
+
+        [HasOne("stake-holder-todo-item")]
+        public virtual TodoItem StakeHolderTodo { get; set; }
+        public virtual int? StakeHolderTodoId { get; set; }
 
         [HasOne("unincludeable-item", documentLinks: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
+
+        public int? PassportId { get; set; }
+
+        [HasOne("passport")]
+        public virtual Passport Passport { get; set; }
 
         public Dictionary<string, object> GetMeta(IJsonApiContext context)
         {
@@ -42,5 +60,6 @@ namespace JsonApiDotNetCoreExample.Models
                 { "authors", new string[] { "Jared Nance" } }
             };
         }
+
     }
 }

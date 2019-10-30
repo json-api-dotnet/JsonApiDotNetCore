@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Hooks;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,9 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource> entityRepository,
-            ILoggerFactory loggerFactory = null) :
-            base(jsonApiContext, entityRepository, loggerFactory)
+            ILoggerFactory loggerFactory = null,
+            IResourceHookExecutor hookExecutor = null) :
+            base(jsonApiContext, entityRepository, loggerFactory, hookExecutor)
         { }
     }
 
@@ -28,8 +30,9 @@ namespace JsonApiDotNetCore.Services
         public EntityResourceService(
             IJsonApiContext jsonApiContext,
             IEntityRepository<TResource, TId> entityRepository,
-            ILoggerFactory loggerFactory = null) :
-            base(jsonApiContext, entityRepository, loggerFactory)
+            ILoggerFactory loggerFactory = null, 
+            IResourceHookExecutor hookExecutor = null) :
+            base(jsonApiContext, entityRepository, hookExecutor, loggerFactory)
         { }
     }
 
@@ -42,39 +45,55 @@ namespace JsonApiDotNetCore.Services
         private readonly IEntityRepository<TEntity, TId> _entities;
         private readonly ILogger _logger;
         private readonly IResourceMapper _mapper;
+        private readonly IResourceHookExecutor _hookExecutor;
+
+
+        public EntityResourceService(
+            IJsonApiContext jsonApiContext,
+            IEntityRepository<TEntity, TId> entityRepository,
+            IResourceHookExecutor hookExecutor = null,
+            IResourceMapper mapper = null,
+            ILoggerFactory loggerFactory = null)
+        {
+            _jsonApiContext = jsonApiContext;
+            _entities = entityRepository;
+
+            if (mapper == null && typeof(TResource) != typeof(TEntity))
+            {
+                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
+            }
+            _hookExecutor = hookExecutor;
+            _mapper = mapper;
+            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
+        }
+
+
+        public EntityResourceService(
+        IJsonApiContext jsonApiContext,
+        IEntityRepository<TEntity, TId> entityRepository,
+        IResourceHookExecutor hookExecutor,
+        ILoggerFactory loggerFactory = null) : this(jsonApiContext, entityRepository, hookExecutor: hookExecutor, mapper: null, loggerFactory: null)
+        { }
 
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
-                ILoggerFactory loggerFactory = null)
-        {
-            // no mapper provided, TResource & TEntity must be the same type
-            if (typeof(TResource) != typeof(TEntity))
-            {
-                throw new InvalidOperationException("Resource and Entity types are NOT the same. Please provide a mapper.");
-            }
+                ILoggerFactory loggerFactory = null)  : this(jsonApiContext, entityRepository, hookExecutor: null, mapper: null, loggerFactory: loggerFactory)
+        { }
 
-            _jsonApiContext = jsonApiContext;
-            _entities = entityRepository;
-            _logger = loggerFactory?.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
-        }
-
+        [Obsolete("Use ctor with signature (jsonApiContext, entityRepository, hookExecutor = null, mapper = null, loggerFactory = null")]
         public EntityResourceService(
                 IJsonApiContext jsonApiContext,
                 IEntityRepository<TEntity, TId> entityRepository,
                 ILoggerFactory loggerFactory,
-                IResourceMapper mapper)
-        {
-            _jsonApiContext = jsonApiContext;
-            _entities = entityRepository;
-            _logger = loggerFactory.CreateLogger<EntityResourceService<TResource, TEntity, TId>>();
-            _mapper = mapper;
-        }
+                IResourceMapper mapper ) : this(jsonApiContext, entityRepository, hookExecutor: null, mapper: mapper, loggerFactory: loggerFactory)
+        { }
 
         public virtual async Task<TResource> CreateAsync(TResource resource)
         {
             var entity = MapIn(resource);
 
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
             entity = await _entities.CreateAsync(entity);
 
             // this ensures relationships get reloaded from the database if they have
@@ -82,28 +101,50 @@ namespace JsonApiDotNetCore.Services
             // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/343
             if (ShouldIncludeRelationships())
             {
-                if(_entities is IEntityFrameworkRepository<TEntity> efRepository)
+                if (_entities is IEntityFrameworkRepository<TEntity> efRepository)
                     efRepository.DetachRelationshipPointers(entity);
 
-                return await GetWithRelationshipsAsync(entity.Id);
-            }
+                entity = await GetWithRelationshipsAsync(entity.Id);
 
+            }
+            if (!IsNull(_hookExecutor, entity))
+            {
+                _hookExecutor.AfterCreate(AsList(entity), ResourcePipeline.Post);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Get).SingleOrDefault();
+            }
             return MapOut(entity);
         }
-
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            return await _entities.DeleteAsync(id);
+            var entity = (TEntity)Activator.CreateInstance(typeof(TEntity));
+            entity.Id = id;
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
+            var succeeded = await _entities.DeleteAsync(entity.Id);
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
+            return succeeded;
         }
 
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
+            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.Get);
             var entities = _entities.Get();
 
             entities = ApplySortAndFilterQuery(entities);
 
             if (ShouldIncludeRelationships())
                 entities = IncludeRelationships(entities, _jsonApiContext.QuerySet.IncludedRelationships);
+                
+            if (_jsonApiContext.Options.IncludeTotalRecordCount)
+                _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
+
+            entities = _entities.Select(entities, _jsonApiContext.QuerySet?.Fields);
+
+            if (!IsNull(_hookExecutor, entities))
+            {
+                var result = entities.ToList();
+                _hookExecutor.AfterRead(result, ResourcePipeline.Get);
+                entities = _hookExecutor.OnReturn(result, ResourcePipeline.Get).AsQueryable();
+            }
 
             if (_jsonApiContext.Options.IncludeTotalRecordCount)
                 _jsonApiContext.PageManager.TotalRecords = await _entities.CountAsync(entities);
@@ -115,20 +156,40 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> GetAsync(TId id)
         {
+            var pipeline = ResourcePipeline.GetSingle;
+            _hookExecutor?.BeforeRead<TEntity>(pipeline, id.ToString());
+            TEntity entity;
             if (ShouldIncludeRelationships())
-                return await GetWithRelationshipsAsync(id);
-
-            TEntity entity = await _entities.GetAsync(id);
-
+            {
+                entity = await GetWithRelationshipsAsync(id);
+            }
+            else
+            {
+                entity = await _entities.GetAsync(id);
+            }
+            if(!IsNull(_hookExecutor, entity))
+            {
+                _hookExecutor.AfterRead(AsList(entity), pipeline);
+                entity = _hookExecutor.OnReturn(AsList(entity), pipeline).SingleOrDefault();
+            }
             return MapOut(entity);
+
         }
 
-        public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName)
-            => await GetRelationshipAsync(id, relationshipName);
+        // triggered by GET /articles/1/relationships/{relationshipName}
+        public virtual async Task<object> GetRelationshipsAsync(TId id, string relationshipName) => await GetRelationshipAsync(id, relationshipName);
 
+        // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
+
+            _hookExecutor?.BeforeRead<TEntity>(ResourcePipeline.GetRelationship, id.ToString());
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
+            if (!IsNull(_hookExecutor, entity))
+            {
+                _hookExecutor.AfterRead(AsList(entity), ResourcePipeline.GetRelationship);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.GetRelationship).SingleOrDefault();
+            }
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
@@ -140,11 +201,11 @@ namespace JsonApiDotNetCore.Services
             var resource = MapOut(entity);
 
             // compound-property -> CompoundProperty
-            var navigationPropertyName = _jsonApiContext.ContextGraph.GetRelationshipName<TResource>(relationshipName);
+            var navigationPropertyName = _jsonApiContext.ResourceGraph.GetRelationshipName<TResource>(relationshipName);
             if (navigationPropertyName == null)
                 throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
 
-            var relationshipValue = _jsonApiContext.ContextGraph.GetRelationship(resource, navigationPropertyName);
+            var relationshipValue = _jsonApiContext.ResourceGraph.GetRelationship(resource, navigationPropertyName);
             return relationshipValue;
         }
 
@@ -152,11 +213,17 @@ namespace JsonApiDotNetCore.Services
         {
             var entity = MapIn(resource);
 
-            entity = await _entities.UpdateAsync(id, entity);
-
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
+            entity = await _entities.UpdateAsync(entity);
+            if (!IsNull(_hookExecutor, entity))
+            {
+                _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.Patch);
+                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
+            }
             return MapOut(entity);
         }
 
+        // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, List<ResourceObject> relationships)
         {
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
@@ -165,12 +232,12 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
             }
 
-            var relationship = _jsonApiContext.ContextGraph
+            var relationship = _jsonApiContext.ResourceGraph
                 .GetContextEntity(typeof(TResource))
                 .Relationships
                 .FirstOrDefault(r => r.Is(relationshipName));
 
-            var relationshipType = relationship.Type;
+            var relationshipType = relationship.DependentType;
 
             // update relationship type with internalname
             var entityProperty = typeof(TEntity).GetProperty(relationship.InternalRelationshipName);
@@ -180,13 +247,16 @@ namespace JsonApiDotNetCore.Services
                     $"could not be found on entity.");
             }
 
+            /// Why are we changing this value on the attribute and setting it back below? This feels very hacky
             relationship.Type = relationship.IsHasMany
                 ? entityProperty.PropertyType.GetGenericArguments()[0]
                 : entityProperty.PropertyType;
 
             var relationshipIds = relationships.Select(r => r?.Id?.ToString());
 
+            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
             await _entities.UpdateRelationshipsAsync(entity, relationship, relationshipIds);
+            if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.PatchRelationship);
 
             relationship.Type = relationshipType;
         }
@@ -238,18 +308,33 @@ namespace JsonApiDotNetCore.Services
             return entities;
         }
 
-        private async Task<TResource> GetWithRelationshipsAsync(TId id)
+        private async Task<TEntity> GetWithRelationshipsAsync(TId id)
         {
-            var query = _entities.Get().Where(e => e.Id.Equals(id));
+            var query = _entities.Select(_entities.Get(), _jsonApiContext.QuerySet?.Fields).Where(e => e.Id.Equals(id));
 
             _jsonApiContext.QuerySet.IncludedRelationships.ForEach(r =>
             {
                 query = _entities.Include(query, r);
             });
 
-            var value = await _entities.FirstOrDefaultAsync(query);
+            TEntity value;
+            // https://github.com/aspnet/EntityFrameworkCore/issues/6573
+            if (_jsonApiContext.QuerySet?.Fields?.Count > 0)
+                value = query.FirstOrDefault();
+            else
+                value = await _entities.FirstOrDefaultAsync(query);
 
-            return MapOut(value);
+            return value;
+        }
+
+
+        private bool IsNull(params object[] values)
+        {
+            foreach (var val in values)
+            {
+                if (val == null) return true;
+            }
+            return false;
         }
 
         private bool ShouldIncludeRelationships()
@@ -270,5 +355,10 @@ namespace JsonApiDotNetCore.Services
             => (typeof(TResource) == typeof(TEntity))
                 ? resource as TEntity
                 : _mapper.Map<TEntity>(resource);
+
+        private List<TEntity> AsList(TEntity entity)
+        {
+            return new List<TEntity> { entity };
+        }
     }
 }
