@@ -15,7 +15,6 @@ namespace JsonApiDotNetCore.Query
         public PageService(IJsonApiOptions options)
         {
             _options = options;
-            DefaultPageSize = _options.DefaultPageSize;
             PageSize = _options.DefaultPageSize;
         }
         /// <inheritdoc/>
@@ -23,11 +22,9 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public int PageSize { get; set; }
         /// <inheritdoc/>
-        public int DefaultPageSize { get; set; } // I think we shouldnt expose this
-        /// <inheritdoc/>
         public int CurrentPage { get; set; }
         /// <inheritdoc/>
-        public int TotalPages => (TotalRecords == null || DefaultPageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
+        public int TotalPages => (TotalRecords == null || PageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)

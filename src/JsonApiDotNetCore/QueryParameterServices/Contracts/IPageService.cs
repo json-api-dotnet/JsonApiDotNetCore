@@ -14,19 +14,13 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         int PageSize { get; set; }
         /// <summary>
-        /// What is the default page size
-        /// </summary>
-        int DefaultPageSize { get; set; }
-        /// <summary>
         /// What page are we currently on
         /// </summary>
         int CurrentPage { get; set; }
-
         /// <summary>
         /// Total amount of pages for request
         /// </summary>
         int TotalPages { get; }
-
         /// <summary>
         /// Checks if pagination is enabled
         /// </summary>
