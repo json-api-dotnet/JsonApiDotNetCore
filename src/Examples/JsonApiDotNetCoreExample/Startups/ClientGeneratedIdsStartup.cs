@@ -15,8 +15,8 @@ namespace JsonApiDotNetCoreExample
     public class ClientGeneratedIdsStartup : Startup
     {
         public ClientGeneratedIdsStartup(IWebHostEnvironment env)
-        : base (env)
-        {  }
+        : base(env)
+        { }
 
         public override void ConfigureServices(IServiceCollection services)
         {
