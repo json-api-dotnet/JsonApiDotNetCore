@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Do (not) include null attributes in the response payload.
+        /// Do not include null attributes in the response payload.
         /// </summary>
         public bool OmitNullValuedAttributes { get; }
 

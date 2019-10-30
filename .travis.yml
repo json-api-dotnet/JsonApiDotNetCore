@@ -12,7 +12,3 @@ branches:
     - develop
 script:
   - ./build.sh
-
-
-
-

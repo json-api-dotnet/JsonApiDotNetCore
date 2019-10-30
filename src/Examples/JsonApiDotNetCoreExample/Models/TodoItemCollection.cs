@@ -15,6 +15,7 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasOne("owner")]
         public virtual Person Owner { get; set; }
+
         public int? OwnerId { get; set; }
     }
 }
