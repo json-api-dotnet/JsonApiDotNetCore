@@ -109,14 +109,13 @@ Sometimes the compiled files can be dirty / corrupt from other branches / failed
 dotnet clean
 ```
 
-
 ## Compatibility
 
 A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
 
 | .NET Core Version | JADNC Version |
 | ----------------- | ------------- |
-| 2.0 - 2.2         | v3.*          |
+| 2.*               | v3.*          |
 | 3.*               | v4.*          |
 
 
