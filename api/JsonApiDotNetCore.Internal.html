@@ -79,10 +79,12 @@
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Constants.html">Constants</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.ContextEntity.html">ContextEntity</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.DasherizedRoutingConvention.html">DasherizedRoutingConvention</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.DefaultRoutingConvention.html">DefaultRoutingConvention</a></h4>
+      <section><p>The default routing convention registers the name of the resource as the route
+using the <a class="xref" href="JsonApiDotNetCore.Graph.IResourceNameFormatter.html">IResourceNameFormatter</a> that is registered. The default for this is
+a kebab-case formatter. If the controller directly inherits from JsonApiMixin and there is no
+resource directly associated, it used the name of the controller instead of the name of the type.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.Error.html">Error</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.ErrorCollection.html">ErrorCollection</a></h4>
@@ -104,16 +106,20 @@ the RelationshipAttribute.</p>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.JsonApiExceptionFactory.html">JsonApiExceptionFactory</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.JsonApiRouteHandler.html">JsonApiRouteHandler</a></h4>
-      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.JsonApiSetupException.html">JsonApiSetupException</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.PageManager.html">PageManager</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.ResourceContext.html">ResourceContext</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.ResourceGraph.html">ResourceGraph</a></h4>
+      <section><p>keeps track of all the models/resources defined in JADNC</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.ValidationResult.html">ValidationResult</a></h4>
       <section></section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.IControllerResourceMapping.html">IControllerResourceMapping</a></h4>
+      <section><p>Registery of which resource is associated with which controller.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Internal.IInverseRelationships.html">IInverseRelationships</a></h4>
       <section><p>Responsible for populating the RelationshipAttribute InverseNavigation property.</p>
 <p>This service is instantiated in the configure phase of the application.</p>
@@ -122,8 +128,10 @@ that depend on the inverse navigation property (BeforeImplicitUpdateRelationship
 you will need to override this service, or pass along the inverseNavigationProperty in
 the RelationshipAttribute.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.IResourceGraph.html">IResourceGraph</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a></h4>
+      <section><p>Service for specifying which routing convention to use. This can be overriden to customize
+the relation between controllers and mapped routes.</p>
+</section>
 </article>
           </div>
           

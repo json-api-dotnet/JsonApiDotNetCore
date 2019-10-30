@@ -1,0 +1,883 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class DefaultResourceService&lt;TResource, TId&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class DefaultResourceService&lt;TResource, TId&gt;
+   ">
+    <meta name="generator" content="docfx 2.47.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2">
+  
+  
+  <h1 id="JsonApiDotNetCore_Services_DefaultResourceService_2" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2" class="text-break">Class DefaultResourceService&lt;TResource, TId&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>Entity mapping class</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">DefaultResourceService&lt;TResource, TId&gt;</span></div>
+      <div class="level2"><a class="xref" href="JsonApiDotNetCore.Services.DefaultResourceService-1.html">DefaultResourceService&lt;TResource&gt;</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-2.html">IResourceCmdService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceQueryService-2.html">IResourceQueryService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipsService-2.html">IGetRelationshipsService</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService</a>&lt;TResource, TId&gt;</div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Services.html">JsonApiDotNetCore.Services</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Services_DefaultResourceService_2_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DefaultResourceService&lt;TResource, TId&gt; : object, IResourceService&lt;TResource, TId&gt;, IResourceCmdService&lt;TResource, TId&gt;, ICreateService&lt;TResource, TId&gt;, IUpdateService&lt;TResource, TId&gt;, IUpdateRelationshipService&lt;TResource, TId&gt;, IDeleteService&lt;TResource, TId&gt;, IResourceQueryService&lt;TResource, TId&gt;, IGetAllService&lt;TResource, TId&gt;, IGetByIdService&lt;TResource, TId&gt;, IGetRelationshipsService&lt;TResource, TId&gt;, IGetRelationshipService&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2__ctor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Data_IResourceRepository__0__1__JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Hooks_IResourceHookExecutor_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.%23ctor(IEnumerable%7BJsonApiDotNetCore.Query.IQueryParameterService%7D%2CJsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Data.IResourceRepository%7B%600%2C%601%7D%2CJsonApiDotNetCore.Internal.Contracts.IResourceContextProvider%2CJsonApiDotNetCore.Hooks.IResourceHookExecutor%2CILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L37">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2__ctor_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2__ctor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Data_IResourceRepository__0__1__JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_Hooks_IResourceHookExecutor_ILoggerFactory_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.#ctor(IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService},JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Data.IResourceRepository{`0,`1},JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.Hooks.IResourceHookExecutor,ILoggerFactory)">DefaultResourceService(IEnumerable&lt;IQueryParameterService&gt;, IJsonApiOptions, IResourceRepository&lt;TResource, TId&gt;, IResourceContextProvider, IResourceHookExecutor, ILoggerFactory)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DefaultResourceService(IEnumerable&lt;IQueryParameterService&gt; queryParameters, IJsonApiOptions options, IResourceRepository&lt;TResource, TId&gt; repository, IResourceContextProvider provider, IResourceHookExecutor hookExecutor = null, ILoggerFactory loggerFactory = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Query.IQueryParameterService.html">IQueryParameterService</a>&gt;</td>
+        <td><span class="parametername">queryParameters</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
+        <td><span class="parametername">options</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Data.IResourceRepository-2.html">IResourceRepository</a>&lt;TResource, TId&gt;</td>
+        <td><span class="parametername">repository</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider.html">IResourceContextProvider</a></td>
+        <td><span class="parametername">provider</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookExecutor.html">IResourceHookExecutor</a></td>
+        <td><span class="parametername">hookExecutor</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">ILoggerFactory</span></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyFilter_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.ApplyFilter(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L233">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyFilter_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyFilter*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyFilter_IQueryable__0__" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyFilter(IQueryable{`0})">ApplyFilter(IQueryable&lt;TResource&gt;)</h4>
+  <div class="markdown level1 summary"><p>Applies filter queries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; ApplyFilter(IQueryable&lt;TResource&gt; entities)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyInclude_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.ApplyInclude(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L249">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyInclude_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyInclude_IQueryable__0__" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude(IQueryable{`0})">ApplyInclude(IQueryable&lt;TResource&gt;)</h4>
+  <div class="markdown level1 summary"><p>Applies include queries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; ApplyInclude(IQueryable&lt;TResource&gt; entities)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyPageQueryAsync_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.ApplyPageQueryAsync(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L196">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyPageQueryAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyPageQueryAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyPageQueryAsync_IQueryable__0__" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyPageQueryAsync(IQueryable{`0})">ApplyPageQueryAsync(IQueryable&lt;TResource&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Task&lt;IEnumerable&lt;TResource&gt;&gt; ApplyPageQueryAsync(IQueryable&lt;TResource&gt; entities)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IEnumerable</span>&lt;TResource&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_ApplySelect_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.ApplySelect(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L264">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplySelect_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplySelect*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplySelect_IQueryable__0__" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplySelect(IQueryable{`0})">ApplySelect(IQueryable&lt;TResource&gt;)</h4>
+  <div class="markdown level1 summary"><p>Applies sparse field selection queries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; ApplySelect(IQueryable&lt;TResource&gt; entities)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_ApplySort_IQueryable__0__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.ApplySort(IQueryable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L218">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplySort_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplySort*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_ApplySort_IQueryable__0__" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.ApplySort(IQueryable{`0})">ApplySort(IQueryable&lt;TResource&gt;)</h4>
+  <div class="markdown level1 summary"><p>Applies sort queries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; ApplySort(IQueryable&lt;TResource&gt; entities)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td><span class="parametername">entities</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_CreateAsync__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.CreateAsync(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L58">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_CreateAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.CreateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_CreateAsync__0_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.CreateAsync(`0)">CreateAsync(TResource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;TResource&gt; CreateAsync(TResource entity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">entity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_DeleteAsync__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.DeleteAsync(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L74">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.DeleteAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_DeleteAsync__1_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.DeleteAsync(`1)">DeleteAsync(TId)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;bool&gt; DeleteAsync(TId id)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Boolean</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_GetAsync.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.GetAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L84">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetAsync" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetAsync">GetAsync()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;IEnumerable&lt;TResource&gt;&gt; GetAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IEnumerable</span>&lt;TResource&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_GetAsync__1_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.GetAsync(%601)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L109">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetAsync__1_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetAsync(`1)">GetAsync(TId)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;TResource&gt; GetAsync(TId id)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_GetRelationshipAsync__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.GetRelationshipAsync(%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L152">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetRelationshipAsync__1_System_String_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetRelationshipAsync(`1,System.String)">GetRelationshipAsync(TId, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;object&gt; GetRelationshipAsync(TId id, string relationshipName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">relationshipName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Object</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_GetRelationshipsAsync__1_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.GetRelationshipsAsync(%601%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L128">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetRelationshipsAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetRelationshipsAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_GetRelationshipsAsync__1_System_String_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.GetRelationshipsAsync(`1,System.String)">GetRelationshipsAsync(TId, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;TResource&gt; GetRelationshipsAsync(TId id, string relationshipName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">relationshipName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_UpdateAsync__1__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.UpdateAsync(%601%2C%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L159">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_UpdateAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.UpdateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_UpdateAsync__1__0_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.UpdateAsync(`1,`0)">UpdateAsync(TId, TResource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;TResource&gt; UpdateAsync(TId id, TResource entity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">entity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2_UpdateRelationshipsAsync__1_System_String_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602.UpdateRelationshipsAsync(%601%2CSystem.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L172">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_DefaultResourceService_2_UpdateRelationshipsAsync_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.UpdateRelationshipsAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_DefaultResourceService_2_UpdateRelationshipsAsync__1_System_String_System_Object_" data-uid="JsonApiDotNetCore.Services.DefaultResourceService`2.UpdateRelationshipsAsync(`1,System.String,System.Object)">UpdateRelationshipsAsync(TId, String, Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">relationshipName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">related</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-2.html">IResourceCmdService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IResourceQueryService-2.html">IResourceQueryService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipsService-2.html">IGetRelationshipsService&lt;T, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService&lt;T, TId&gt;</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Services_DefaultResourceService_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.DefaultResourceService%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Services/DefaultResourceService.cs/#L22" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

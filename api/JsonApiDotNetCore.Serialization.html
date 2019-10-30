@@ -77,18 +77,34 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.DasherizedResolver.html">DasherizedResolver</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.JsonApiDeSerializer.html">JsonApiDeSerializer</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.JsonApiSerializer.html">JsonApiSerializer</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html">BaseDocumentBuilder</a></h4>
+      <section><p>Abstract base class for serialization.
+Uses <a class="xref" href="JsonApiDotNetCore.Serialization.IResourceObjectBuilder.html">IResourceObjectBuilder</a> to convert entities in to <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>s and wraps them in a <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Document</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.BaseDocumentParser.html">BaseDocumentParser</a></h4>
+      <section><p>Abstract base class for deserialization. Deserializes JSON content into <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Document</a>s
+And constructs instances of the resource(s) in the document body.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.ResourceObjectBuilder.html">ResourceObjectBuilder</a></h4>
+      <section><p>Responsible for converting entities in to <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>s
+given a list of attributes and relationships.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.ResourceObjectBuilderSettings.html">ResourceObjectBuilderSettings</a></h4>
+      <section><p>Options used to configure how fields of a model get serialized into
+a json:api <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Document</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.TargetedFields.html">TargetedFields</a></h4>
+      <section><p>Container to register which attributes and relationships are targeted by the current operation.</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiDeSerializer.html">IJsonApiDeSerializer</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiSerializer.html">IJsonApiSerializer</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IResourceObjectBuilder.html">IResourceObjectBuilder</a></h4>
+      <section><p>Responsible for converting entities in to <a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>s
+given a list of attributes and relationships.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.ITargetedFields.html">ITargetedFields</a></h4>
+      <section><p>Container to register which attributes and relationships are targeted by the current operation.</p>
+</section>
 </article>
           </div>
           

@@ -77,29 +77,21 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.ControllerContext.html">ControllerContext</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-1.html">EntityResourceService&lt;TResource&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-2.html">EntityResourceService&lt;TResource, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.EntityResourceService-3.html">EntityResourceService&lt;TResource, TEntity, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.JsonApiContext.html">JsonApiContext</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.QueryAccessor.html">QueryAccessor</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.QueryComposer.html">QueryComposer</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.QueryParser.html">QueryParser</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.DefaultResourceService-1.html">DefaultResourceService&lt;TResource&gt;</a></h4>
+      <section><p>No mapping with integer as default</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.DefaultResourceService-2.html">DefaultResourceService&lt;TResource, TId&gt;</a></h4>
+      <section><p>Entity mapping class</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.QueryParameterDiscovery.html">QueryParameterDiscovery</a></h4>
+      <section><p>Responsible for populating the various service implementations of
+<see cref="!:IQueryParameterService"></see>.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.RequestScopedServiceProvider.html">RequestScopedServiceProvider</a></h4>
       <section><p>A service provider that uses the current HttpContext request scope</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IControllerContext.html">IControllerContext</a></h4>
-      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-1.html">ICreateService&lt;T&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService&lt;T, TId&gt;</a></h4>
@@ -124,22 +116,15 @@
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipsService-2.html">IGetRelationshipsService&lt;T, TId&gt;</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiApplication.html">IJsonApiApplication</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiContext.html">IJsonApiContext</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IJsonApiRequest.html">IJsonApiRequest</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IQueryAccessor.html">IQueryAccessor</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IQueryComposer.html">IQueryComposer</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IQueryParser.html">IQueryParser</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IQueryRequest.html">IQueryRequest</a></h4>
-      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Services.IQueryParameterDiscovery.html">IQueryParameterDiscovery</a></h4>
+      <section><p>Responsible for populating the various service implementations of
+<see cref="!:IQueryParameterService"></see>.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IRequestMeta.html">IRequestMeta</a></h4>
-      <section></section>
+      <section><p>Service to add global top-level metadata to a <a class="xref" href="JsonApiDotNetCore.Models.Document.html">Document</a>.
+Use <a class="xref" href="JsonApiDotNetCore.Models.IHasMeta.html">IHasMeta</a> on <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a>
+to specify top-level metadata per resource type.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-1.html">IResourceCmdService&lt;T&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-2.html">IResourceCmdService&lt;T, TId&gt;</a></h4>
@@ -160,8 +145,6 @@ manually resolve services from the request scope (e.g. operation processors)</p>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-1.html">IUpdateRelationshipService&lt;T&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService&lt;T, TId&gt;</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRequest.html">IUpdateRequest</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-1.html">IUpdateService&lt;T&gt;</a></h4>
       <section></section>

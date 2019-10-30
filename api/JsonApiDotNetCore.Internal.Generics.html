@@ -77,21 +77,20 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.GenericProcessor-1.html">GenericProcessor&lt;T&gt;</a></h4>
-      <section><p>A special processor that gets instantiated for a generic type (&lt;T&gt;)
-when the actual type is not known until runtime. Specifically, this is used for updating
-relationships.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.GenericProcessorFactory.html">GenericProcessorFactory</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.GenericServiceFactory.html">GenericServiceFactory</a></h4>
       <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.RepositoryRelationshipUpdateHelper-1.html">RepositoryRelationshipUpdateHelper&lt;TRelatedResource&gt;</a></h4>
+      <section><p>A special helper that processes updates of relationships</p>
+</section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.IGenericProcessor.html">IGenericProcessor</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.IGenericProcessorFactory.html">IGenericProcessorFactory</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.IGenericServiceFactory.html">IGenericServiceFactory</a></h4>
       <section><p>Used to generate a generic operations processor when the types
 are not known until runtime. The typical use case would be for
 accessing relationship data or resolving operations processors.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Internal.Generics.IRepositoryRelationshipUpdateHelper.html">IRepositoryRelationshipUpdateHelper</a></h4>
+      <section><p>A special helper that processes updates of relationships</p>
 </section>
 </article>
           </div>

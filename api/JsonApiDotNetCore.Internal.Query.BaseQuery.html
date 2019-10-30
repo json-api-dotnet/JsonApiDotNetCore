@@ -73,7 +73,9 @@
   
   <h1 id="JsonApiDotNetCore_Internal_Query_BaseQuery" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery" class="text-break">Class BaseQuery
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>represents what FilterQuery and SortQuery have in common: a target.
+(sort=TARGET, or filter[TARGET]=123).</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -82,35 +84,11 @@
       <div class="level2"><a class="xref" href="JsonApiDotNetCore.Internal.Query.FilterQuery.html">FilterQuery</a></div>
       <div class="level2"><a class="xref" href="JsonApiDotNetCore.Internal.Query.SortQuery.html">SortQuery</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Internal.Query.html">JsonApiDotNetCore.Internal.Query</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Internal_Query_BaseQuery_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class BaseQuery</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class BaseQuery : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -119,7 +97,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery__ctor_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L10">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L9">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_BaseQuery__ctor_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Query_BaseQuery__ctor_System_String_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.#ctor(System.String)">BaseQuery(String)</h4>
@@ -127,7 +105,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BaseQuery(string attribute)</code></pre>
+    <pre><code class="lang-csharp hljs">protected BaseQuery(string target)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -141,7 +119,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">attribute</span></td>
+        <td><span class="parametername">target</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -153,7 +131,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery_Attribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery.Attribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L23">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Internal_Query_BaseQuery_Attribute_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Attribute*"></a>
   <h4 id="JsonApiDotNetCore_Internal_Query_BaseQuery_Attribute" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Attribute">Attribute</h4>
@@ -180,18 +158,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery_IsAttributeOfRelationship.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery.IsAttributeOfRelationship%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery.Relationship%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L24">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Internal_Query_BaseQuery_IsAttributeOfRelationship_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.IsAttributeOfRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Internal_Query_BaseQuery_IsAttributeOfRelationship" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.IsAttributeOfRelationship">IsAttributeOfRelationship</h4>
+  <a id="JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Relationship*"></a>
+  <h4 id="JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Relationship">Relationship</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsAttributeOfRelationship { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Relationship { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -203,25 +181,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery.Relationship%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery_Target.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery.Target%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L23">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L22">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Relationship*"></a>
-  <h4 id="JsonApiDotNetCore_Internal_Query_BaseQuery_Relationship" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Relationship">Relationship</h4>
+  <a id="JsonApiDotNetCore_Internal_Query_BaseQuery_Target_" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Target*"></a>
+  <h4 id="JsonApiDotNetCore_Internal_Query_BaseQuery_Target" data-uid="JsonApiDotNetCore.Internal.Query.BaseQuery.Target">Target</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Relationship { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Target { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -249,7 +227,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Internal_Query_BaseQuery.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Internal.Query.BaseQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Internal/Query/BaseQuery.cs/#L7" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
