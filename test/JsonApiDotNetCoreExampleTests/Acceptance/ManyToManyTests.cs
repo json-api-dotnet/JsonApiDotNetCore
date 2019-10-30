@@ -240,7 +240,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var tag = _tagFaker.Generate();
             var author = new Author();
             context.Tags.Add(tag);
-            context.Authors.Add(author);
+            context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
             var article = _articleFaker.Generate();

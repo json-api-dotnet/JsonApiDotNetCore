@@ -60,6 +60,27 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
+        public void RegisterResource_DeviatingDbContextPropertyName_RegistersCorrectly()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
+            services.AddJsonApi<AppDbContext>();
+
+            // Act
+            // this is required because the DbContextResolver requires access to the current HttpContext
+            // to get the request scoped DbContext instance
+            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            var provider = services.BuildServiceProvider();
+            var graph = provider.GetService<IResourceGraph>();
+            var resourceContext = graph.GetResourceContext<Author>();
+
+            // Assert 
+            Assert.Equal("authors", resourceContext.ResourceName);
+        }
+
+        [Fact]
         public void AddResourceService_Registers_All_Shorthand_Service_Interfaces()
         {
             // Arrange
