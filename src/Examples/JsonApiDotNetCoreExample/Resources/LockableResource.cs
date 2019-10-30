@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public abstract class LockableResource<T> : ResourceDefinition<T> where T : class, IIsLockable, IIdentifiable
     {
-        protected LockableResource(IResourceGraph graph) : base(graph) { }
+        protected LockableResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
         protected void DisallowLocked(IEnumerable<T> entities)
         {

@@ -1,4 +1,5 @@
 ﻿using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.Links;
 using Xunit;
 
 namespace UnitTests.Models
@@ -8,10 +9,10 @@ namespace UnitTests.Models
         [Fact]
         public void All_Contains_All_Flags_Except_None()
         {
-            // arrange
+            // Arrange
             var e = Link.All;
 
-            // assert
+            // Assert
             Assert.True(e.HasFlag(Link.Self));
             Assert.True(e.HasFlag(Link.Paging));
             Assert.True(e.HasFlag(Link.Related));
@@ -22,10 +23,10 @@ namespace UnitTests.Models
         [Fact]
         public void None_Contains_Only_None()
         {
-            // arrange
+            // Arrange
             var e = Link.None;
 
-            // assert
+            // Assert
             Assert.False(e.HasFlag(Link.Self));
             Assert.False(e.HasFlag(Link.Paging));
             Assert.False(e.HasFlag(Link.Related));
@@ -36,10 +37,10 @@ namespace UnitTests.Models
         [Fact]
         public void Self()
         {
-            // arrange
+            // Arrange
             var e = Link.Self;
 
-            // assert
+            // Assert
             Assert.True(e.HasFlag(Link.Self));
             Assert.False(e.HasFlag(Link.Paging));
             Assert.False(e.HasFlag(Link.Related));
@@ -50,10 +51,10 @@ namespace UnitTests.Models
         [Fact]
         public void Paging()
         {
-            // arrange
+            // Arrange
             var e = Link.Paging;
 
-            // assert
+            // Assert
             Assert.False(e.HasFlag(Link.Self));
             Assert.True(e.HasFlag(Link.Paging));
             Assert.False(e.HasFlag(Link.Related));
@@ -64,10 +65,10 @@ namespace UnitTests.Models
         [Fact]
         public void Related()
         {
-            // arrange
+            // Arrange
             var e = Link.Related;
 
-            // assert
+            // Assert
             Assert.False(e.HasFlag(Link.Self));
             Assert.False(e.HasFlag(Link.Paging));
             Assert.True(e.HasFlag(Link.Related));

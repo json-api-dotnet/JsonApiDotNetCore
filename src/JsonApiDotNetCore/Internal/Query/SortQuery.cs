@@ -1,15 +1,12 @@
-using JsonApiDotNetCore.Models;
-using System;
-
-namespace JsonApiDotNetCore.Internal.Query
+﻿namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
-    /// An internal representation of the raw sort query.
+    /// Internal representation of the raw articles?sort[field] query from the URL.
     /// </summary>
     public class SortQuery : BaseQuery
     {
-        public SortQuery(SortDirection direction, string attribute)
-            : base(attribute)
+        public SortQuery(string target, SortDirection direction)
+            : base(target)
         {
             Direction = direction;
         }

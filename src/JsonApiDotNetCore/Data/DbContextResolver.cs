@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data
@@ -15,7 +14,7 @@ namespace JsonApiDotNetCore.Data
 
         public DbContext GetContext() => _context;
 
-        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class =>  null;
+        public DbSet<TResource> GetDbSet<TResource>() where TResource : class =>  null;
 
     }
 }

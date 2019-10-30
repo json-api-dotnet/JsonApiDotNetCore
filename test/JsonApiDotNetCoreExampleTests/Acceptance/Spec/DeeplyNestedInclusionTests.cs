@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Bogus;
+using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
-using Microsoft.AspNetCore.Hosting;
+using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -18,9 +19,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeeplyNestedInclusionTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public DeeplyNestedInclusionTests(TestFixture<TestStartup> fixture)
+        public DeeplyNestedInclusionTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }
@@ -36,28 +37,32 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Include_Nested_Relationships()
         {
-            // arrange
+            // Arrange
             const string route = "/api/v1/todo-items?include=collection.owner";
-
-            var todoItem = new TodoItem {
-                Collection = new TodoItemCollection {
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
+            var deserializer = new ResponseDeserializer(resourceGraph);
+            var todoItem = new TodoItem
+            {
+                Collection = new TodoItemCollection
+                {
                     Owner = new Person()
                 }
             };
-        
+
             var context = _fixture.GetService<AppDbContext>();
             context.TodoItems.RemoveRange(context.TodoItems);
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            // act
+            // Act
             var response = await _fixture.Client.GetAsync(route);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var todoItems = _fixture.DeSerializer.DeserializeList<TodoItem>(body);
+
+            var todoItems = deserializer.DeserializeList<TodoItem>(body).Data;
 
             var responseTodoItem = Assert.Single(todoItems);
             Assert.NotNull(responseTodoItem);
@@ -68,11 +73,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Include_Nested_HasMany_Relationships()
         {
-            // arrange
+            // Arrange
             const string route = "/api/v1/todo-items?include=collection.todo-items";
 
-            var todoItem = new TodoItem {
-                Collection = new TodoItemCollection {
+            var todoItem = new TodoItem
+            {
+                Collection = new TodoItemCollection
+                {
                     Owner = new Person(),
                     TodoItems = new List<TodoItem> {
                         new TodoItem(),
@@ -80,24 +87,24 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-        
-            
+
+
             var context = _fixture.GetService<AppDbContext>();
             ResetContext(context);
 
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            // act
+            // Act
             var response = await _fixture.Client.GetAsync(route);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(body);
+            var documents = JsonConvert.DeserializeObject<Document>(body);
             var included = documents.Included;
-            
+
             Assert.Equal(4, included.Count);
 
             Assert.Equal(3, included.CountOfType("todo-items"));
@@ -107,11 +114,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Include_Nested_HasMany_Relationships_BelongsTo()
         {
-            // arrange
+            // Arrange
             const string route = "/api/v1/todo-items?include=collection.todo-items.owner";
 
-            var todoItem = new TodoItem {
-                Collection = new TodoItemCollection {
+            var todoItem = new TodoItem
+            {
+                Collection = new TodoItemCollection
+                {
                     Owner = new Person(),
                     TodoItems = new List<TodoItem> {
                         new TodoItem {
@@ -121,23 +130,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-        
+
             var context = _fixture.GetService<AppDbContext>();
             ResetContext(context);
 
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            // act
+            // Act
             var response = await _fixture.Client.GetAsync(route);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(body);
+            var documents = JsonConvert.DeserializeObject<Document>(body);
             var included = documents.Included;
-            
+
             Assert.Equal(5, included.Count);
 
             Assert.Equal(3, included.CountOfType("todo-items"));
@@ -148,12 +157,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Include_Nested_Relationships_With_Multiple_Paths()
         {
-            // arrange
+            // Arrange
             const string route = "/api/v1/todo-items?include=collection.owner.role,collection.todo-items.owner";
 
-            var todoItem = new TodoItem {
-                Collection = new TodoItemCollection {
-                    Owner = new Person {
+            var todoItem = new TodoItem
+            {
+                Collection = new TodoItemCollection
+                {
+                    Owner = new Person
+                    {
                         Role = new PersonRole()
                     },
                     TodoItems = new List<TodoItem> {
@@ -164,25 +176,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     }
                 }
             };
-        
+
             var context = _fixture.GetService<AppDbContext>();
             ResetContext(context);
 
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
 
-            // act
+            // Act
             var response = await _fixture.Client.GetAsync(route);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(body);
+            var documents = JsonConvert.DeserializeObject<Document>(body);
             var included = documents.Included;
-            
+
             Assert.Equal(7, included.Count);
-            
+
             Assert.Equal(3, included.CountOfType("todo-items"));
             Assert.Equal(2, included.CountOfType("people"));
             Assert.Equal(1, included.CountOfType("person-roles"));
@@ -192,7 +204,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Included_Resources_Are_Correct()
         {
-            // arrange
+            // Arrange
             var role = new PersonRole();
             var assignee = new Person { Role = role };
             var collectionOwner = new Person();
@@ -225,10 +237,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     "assignee.role," + 
                     "assignee.assigned-todo-items";
 
-            // act
+            // Act
             var response = await _fixture.Client.GetAsync(route);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();
@@ -269,7 +281,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [Fact]
         public async Task Can_Include_Doubly_HasMany_Relationships()
         {
-            // arrange
+            // Arrange
             var person = new Person {
                 TodoItemCollections = new List<TodoItemCollection> {
                     new TodoItemCollection {
@@ -297,10 +309,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             string route = "/api/v1/people/" + person.Id + "?include=todo-collections.todo-items";
 
-            // act
+            // Act
             var response = await _fixture.Client.GetAsync(route);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var body = await response.Content.ReadAsStringAsync();

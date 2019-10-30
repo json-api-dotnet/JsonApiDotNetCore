@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
-using DependentType = System.Type;
-using PrincipalType = System.Type;
+using JsonApiDotNetCore.Serialization;
+using RightType = System.Type;
+using LeftType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -19,29 +20,28 @@ namespace JsonApiDotNetCore.Hooks
     /// It creates nodes for each layer. 
     /// Typically, the first layer is homogeneous (all entities have the same type),
     /// and further nodes can be mixed.
-    /// 
     /// </summary>
-    internal class TraversalHelper
+    internal class TraversalHelper : ITraversalHelper
     {
-        private readonly IResourceGraph _graph;
-        private readonly IJsonApiContext _context;
+        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IResourceGraph _resourceGraph;
+        private readonly ITargetedFields _targetedFields;
         /// <summary>
         /// Keeps track of which entities has already been traversed through, to prevent
         /// infinite loops in eg cyclic data structures.
         /// </summary>
-        private Dictionary<DependentType, HashSet<IIdentifiable>> _processedEntities;
+        private Dictionary<RightType, HashSet<IIdentifiable>> _processedEntities;
         /// <summary>
         /// A mapper from <see cref="RelationshipAttribute"/> to <see cref="RelationshipProxy"/>. 
         /// See the latter for more details.
         /// </summary>
-        private readonly Dictionary<RelationshipAttribute, RelationshipProxy> RelationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
-
+        private readonly Dictionary<RelationshipAttribute, RelationshipProxy> _relationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
         public TraversalHelper(
-            IResourceGraph graph,
-            IJsonApiContext context)
+            IResourceGraph resourceGraph,
+            ITargetedFields targetedFields)
         {
-            _context = context;
-            _graph = graph;
+            _targetedFields = targetedFields;
+            _resourceGraph = resourceGraph;
         }
 
         /// <summary>
@@ -51,15 +51,15 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The root node.</returns>
         /// <param name="rootEntities">Root entities.</param>
-        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
-        public RootNode<TEntity> CreateRootNode<TEntity>(IEnumerable<TEntity> rootEntities) where TEntity : class, IIdentifiable
+        /// <typeparam name="TResource">The 1st type parameter.</typeparam>
+        public RootNode<TResource> CreateRootNode<TResource>(IEnumerable<TResource> rootEntities) where TResource : class, IIdentifiable
         {
-            _processedEntities = new Dictionary<DependentType, HashSet<IIdentifiable>>();
-            RegisterRelationshipProxies(typeof(TEntity));
+            _processedEntities = new Dictionary<RightType, HashSet<IIdentifiable>>();
+            RegisterRelationshipProxies(typeof(TResource));
             var uniqueEntities = ProcessEntities(rootEntities);
-            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TEntity), uniqueEntities.Cast<IIdentifiable>());
-            var allRelationshipsFromType = RelationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == typeof(TEntity)).ToArray();
-            return new RootNode<TEntity>(uniqueEntities, populatedRelationshipsToNextLayer, allRelationshipsFromType);
+            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TResource), uniqueEntities.Cast<IIdentifiable>());
+            var allRelationshipsFromType = _relationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.LeftType == typeof(TResource)).ToArray();
+            return new RootNode<TResource>(uniqueEntities, populatedRelationshipsToNextLayer, allRelationshipsFromType);
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The next layer.</returns>
         /// <param name="rootNode">Root node.</param>
-        public EntityChildLayer CreateNextLayer(IEntityNode rootNode)
+        public NodeLayer CreateNextLayer(INode rootNode)
         {
-            return CreateNextLayer(new IEntityNode[] { rootNode });
+            return CreateNextLayer(new INode[] { rootNode });
         }
 
         /// <summary>
@@ -77,19 +77,19 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The next layer.</returns>
         /// <param name="nodes">Nodes.</param>
-        public EntityChildLayer CreateNextLayer(IEnumerable<IEntityNode> nodes)
+        public NodeLayer CreateNextLayer(IEnumerable<INode> nodes)
         {
             /// first extract entities by parsing populated relationships in the entities
             /// of previous layer
-            (var principals, var dependents) = ExtractEntities(nodes);
+            (var lefts, var rights) = ExtractEntities(nodes);
 
             /// group them conveniently so we can make ChildNodes of them:
-            /// there might be several relationship attributes in dependents dictionary
-            /// that point to the same dependent type. 
-            var principalsGrouped = GroupByDependentTypeOfRelationship(principals);
+            /// there might be several relationship attributes in rights dictionary
+            /// that point to the same right type. 
+            var leftsGrouped = GroupByRightTypeOfRelationship(lefts);
 
             /// convert the groups into child nodes
-            var nextNodes = principalsGrouped.Select(entry =>
+            var nextNodes = leftsGrouped.Select(entry =>
             {
                 var nextNodeType = entry.Key;
                 RegisterRelationshipProxies(nextNodeType);
@@ -98,85 +98,85 @@ namespace JsonApiDotNetCore.Hooks
                 var relationshipsToPreviousLayer = entry.Value.Select(grouped =>
                 {
                     var proxy = grouped.Key;
-                    populatedRelationships.AddRange(GetPopulatedRelationships(nextNodeType, dependents[proxy]));
-                    return CreateRelationshipGroupInstance(nextNodeType, proxy, grouped.Value, dependents[proxy]);
+                    populatedRelationships.AddRange(GetPopulatedRelationships(nextNodeType, rights[proxy]));
+                    return CreateRelationshipGroupInstance(nextNodeType, proxy, grouped.Value, rights[proxy]);
                 }).ToList();
 
                 return CreateNodeInstance(nextNodeType, populatedRelationships.ToArray(), relationshipsToPreviousLayer);
             }).ToList();
 
             /// wrap the child nodes in a EntityChildLayer
-            return new EntityChildLayer(nextNodes);
+            return new NodeLayer(nextNodes);
         }
 
         /// <summary>
         /// iterates throug the <paramref name="relationships"/> dictinary and groups the values 
-        /// by matching dependent type of the keys (which are relationshipattributes)
+        /// by matching right type of the keys (which are relationshipattributes)
         /// </summary>
-        Dictionary<DependentType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByDependentTypeOfRelationship(Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
+        Dictionary<RightType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByRightTypeOfRelationship(Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
         {
-            return relationships.GroupBy(kvp => kvp.Key.DependentType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
+            return relationships.GroupBy(kvp => kvp.Key.RightType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
         }
 
         /// <summary>
         /// Extracts the entities for the current layer by going through all populated relationships
-        /// of the (principal entities of the previous layer.
+        /// of the (left entities of the previous layer.
         /// </summary>
-        (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<IEntityNode> principalNodes)
+        (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<INode> leftNodes)
         {
-            var principalsEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevlayer->currentlayer  => prevLayerEntities
-            var dependentsEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevlayer->currentlayer   => currentLayerEntities
+            var leftEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevlayer->currentlayer  => prevLayerEntities
+            var rightEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevlayer->currentlayer   => currentLayerEntities
 
-            foreach (var node in principalNodes)
+            foreach (var node in leftNodes)
             {
-                var principalEntities = node.UniqueEntities;
+                var leftEntities = node.UniqueEntities;
                 var relationships = node.RelationshipsToNextLayer;
-                foreach (IIdentifiable principalEntity in principalEntities)
+                foreach (IIdentifiable leftEntity in leftEntities)
                 {
                     foreach (var proxy in relationships)
                     {
-                        var relationshipValue = proxy.GetValue(principalEntity);
+                        var relationshipValue = proxy.GetValue(leftEntity);
                         // skip this relationship if it's not populated
                         if (!proxy.IsContextRelation && relationshipValue == null) continue;
-                        if (!(relationshipValue is IEnumerable dependentEntities))
+                        if (!(relationshipValue is IEnumerable rightEntities))
                         {
                             // in the case of a to-one relationship, the assigned value
                             // will not be a list. We therefore first wrap it in a list.
-                            var list = TypeHelper.CreateListFor(proxy.DependentType);
+                            var list = TypeHelper.CreateListFor(proxy.RightType);
                             if (relationshipValue != null) list.Add(relationshipValue);
-                            dependentEntities = list;
+                            rightEntities = list;
                         }
 
-                        var uniqueDependentEntities = UniqueInTree(dependentEntities.Cast<IIdentifiable>(), proxy.DependentType);
-                        if (proxy.IsContextRelation || uniqueDependentEntities.Any())
+                        var uniqueRightEntities = UniqueInTree(rightEntities.Cast<IIdentifiable>(), proxy.RightType);
+                        if (proxy.IsContextRelation || uniqueRightEntities.Any())
                         {
-                            AddToRelationshipGroup(dependentsEntitiesGrouped, proxy, uniqueDependentEntities);
-                            AddToRelationshipGroup(principalsEntitiesGrouped, proxy, new IIdentifiable[] { principalEntity });
+                            AddToRelationshipGroup(rightEntitiesGrouped, proxy, uniqueRightEntities);
+                            AddToRelationshipGroup(leftEntitiesGrouped, proxy, new IIdentifiable[] { leftEntity });
                         }
                     }
                 }
             }
 
             var processEntitiesMethod = GetType().GetMethod(nameof(ProcessEntities), BindingFlags.NonPublic | BindingFlags.Instance);
-            foreach (var kvp in dependentsEntitiesGrouped)
+            foreach (var kvp in rightEntitiesGrouped)
             {
-                var type = kvp.Key.DependentType;
+                var type = kvp.Key.RightType;
                 var list = kvp.Value.Cast(type);
                 processEntitiesMethod.MakeGenericMethod(type).Invoke(this, new object[] { list });
             }
 
-            return (principalsEntitiesGrouped, dependentsEntitiesGrouped);
+            return (leftEntitiesGrouped, rightEntitiesGrouped);
         }
 
         /// <summary>
         /// Get all populated relationships known in the current tree traversal from a 
-        /// principal type to any dependent type
+        /// left type to any right type
         /// </summary>
         /// <returns>The relationships.</returns>
-        RelationshipProxy[] GetPopulatedRelationships(PrincipalType principalType, IEnumerable<IIdentifiable> principals)
+        RelationshipProxy[] GetPopulatedRelationships(LeftType leftType, IEnumerable<IIdentifiable> lefts)
         {
-            var relationshipsFromPrincipalToDependent = RelationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.PrincipalType == principalType);
-            return relationshipsFromPrincipalToDependent.Where(proxy => proxy.IsContextRelation || principals.Any(p => proxy.GetValue(p) != null)).ToArray();
+            var relationshipsFromLeftToRight = _relationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.LeftType == leftType);
+            return relationshipsFromLeftToRight.Where(proxy => proxy.IsContextRelation || lefts.Any(p => proxy.GetValue(p) != null)).ToArray();
         }
 
         /// <summary>
@@ -184,10 +184,10 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The entities.</returns>
         /// <param name="incomingEntities">Incoming entities.</param>
-        /// <typeparam name="TEntity">The 1st type parameter.</typeparam>
-        HashSet<TEntity> ProcessEntities<TEntity>(IEnumerable<TEntity> incomingEntities) where TEntity : class, IIdentifiable
+        /// <typeparam name="TResource">The 1st type parameter.</typeparam>
+        HashSet<TResource> ProcessEntities<TResource>(IEnumerable<TResource> incomingEntities) where TResource : class, IIdentifiable
         {
-            Type type = typeof(TEntity);
+            Type type = typeof(TResource);
             var newEntities = UniqueInTree(incomingEntities, type);
             RegisterProcessedEntities(newEntities, type);
             return newEntities;
@@ -195,26 +195,25 @@ namespace JsonApiDotNetCore.Hooks
 
         /// <summary>
         /// Parses all relationships from <paramref name="type"/> to
-        /// other models in the resource graphs by constructing RelationshipProxies .
+        /// other models in the resource resourceGraphs by constructing RelationshipProxies .
         /// </summary>
         /// <param name="type">The type to parse</param>
-        void RegisterRelationshipProxies(DependentType type)
+        void RegisterRelationshipProxies(RightType type)
         {
-            var contextEntity = _graph.GetContextEntity(type);
-            foreach (RelationshipAttribute attr in contextEntity.Relationships)
+            foreach (RelationshipAttribute attr in _resourceGraph.GetRelationships(type))
             {
                 if (!attr.CanInclude) continue;
-                if (!RelationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
+                if (!_relationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
                 {
-                    DependentType dependentType = GetDependentTypeFromRelationship(attr);
+                    RightType rightType = GetRightTypeFromRelationship(attr);
                     bool isContextRelation = false;
-                    if (_context.RelationshipsToUpdate != null) isContextRelation = _context.RelationshipsToUpdate.ContainsKey(attr);
-                    var proxy = new RelationshipProxy(attr, dependentType, isContextRelation);
-                    RelationshipProxies[attr] = proxy;
+                    var relationshipsToUpdate = _targetedFields.Relationships;
+                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.Contains(attr);
+                    var proxy = new RelationshipProxy(attr, rightType, isContextRelation);
+                    _relationshipProxies[attr] = proxy;
                 }
             }
         }
-
 
         /// <summary>
         /// Registers the processed entities in the dictionary grouped by type
@@ -249,10 +248,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The in tree.</returns>
         /// <param name="entities">Entities.</param>
         /// <param name="entityType">Entity type.</param>
-        HashSet<TEntity> UniqueInTree<TEntity>(IEnumerable<TEntity> entities, Type entityType) where TEntity : class, IIdentifiable
+        HashSet<TResource> UniqueInTree<TResource>(IEnumerable<TResource> entities, Type entityType) where TResource : class, IIdentifiable
         {
-            var newEntities = entities.Except(GetProcessedEntities(entityType), ResourceHookExecutor.Comparer).Cast<TEntity>();
-            return new HashSet<TEntity>(newEntities);
+            var newEntities = entities.Except(GetProcessedEntities(entityType), _comparer).Cast<TResource>();
+            return new HashSet<TResource>(newEntities);
         }
 
         /// <summary>
@@ -263,13 +262,13 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The target type for traversal</returns>
         /// <param name="attr">Relationship attribute</param>
-        DependentType GetDependentTypeFromRelationship(RelationshipAttribute attr)
+        RightType GetRightTypeFromRelationship(RelationshipAttribute attr)
         {
             if (attr is HasManyThroughAttribute throughAttr && throughAttr.ThroughType.Inherits(typeof(IIdentifiable)))
             {
                 return throughAttr.ThroughType;
             }
-            return attr.DependentType;
+            return attr.RightType;
         }
 
         void AddToRelationshipGroup(Dictionary<RelationshipProxy, List<IIdentifiable>> target, RelationshipProxy proxy, IEnumerable<IIdentifiable> newEntities)
@@ -283,32 +282,32 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Reflective helper method to create an instance of <see cref="ChildNode{TEntity}"/>;
+        /// Reflective helper method to create an instance of <see cref="ChildNode{TResource}"/>;
         /// </summary>
-        IEntityNode CreateNodeInstance(DependentType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        INode CreateNodeInstance(RightType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
-            return (IEntityNode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
+            return (INode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
         }
 
         /// <summary>
-        /// Reflective helper method to create an instance of <see cref="RelationshipsFromPreviousLayer{TDependent}"/>;
+        /// Reflective helper method to create an instance of <see cref="RelationshipsFromPreviousLayer{TRight}"/>;
         /// </summary>
-        IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(DependentType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             var casted = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
             return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { casted });
         }
 
         /// <summary>
-        /// Reflective helper method to create an instance of <see cref="RelationshipGroup{TDependent}"/>;
+        /// Reflective helper method to create an instance of <see cref="RelationshipGroup{TRight}"/>;
         /// </summary>
-        IRelationshipGroup CreateRelationshipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> principalEntities, List<IIdentifiable> dependentEntities)
+        IRelationshipGroup CreateRelationshipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> leftEntities, List<IIdentifiable> rightEntities)
         {
-            var dependentEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, dependentEntities.Cast(thisLayerType));
+            var rightEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, rightEntities.Cast(thisLayerType));
             return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
                 thisLayerType,
-                new object[] { proxy, new HashSet<IIdentifiable>(principalEntities), dependentEntitiesHashed });
+                new object[] { proxy, new HashSet<IIdentifiable>(leftEntities), rightEntitiesHashed });
         }
     }
 
@@ -316,21 +315,21 @@ namespace JsonApiDotNetCore.Hooks
     /// A helper class that represents all entities in the current layer that
     /// are being traversed for which hooks will be executed (see IResourceHookExecutor)
     /// </summary>
-    internal class EntityChildLayer : IEnumerable<IEntityNode>
+    internal class NodeLayer : IEnumerable<INode>
     {
-        readonly List<IEntityNode> _collection;
+        readonly List<INode> _collection;
 
         public bool AnyEntities()
         {
             return _collection.Any(n => n.UniqueEntities.Cast<IIdentifiable>().Any());
         }
 
-        public EntityChildLayer(List<IEntityNode> nodes)
+        public NodeLayer(List<INode> nodes)
         {
             _collection = nodes;
         }
 
-        public IEnumerator<IEntityNode> GetEnumerator()
+        public IEnumerator<INode> GetEnumerator()
         {
             return _collection.GetEnumerator();
         }

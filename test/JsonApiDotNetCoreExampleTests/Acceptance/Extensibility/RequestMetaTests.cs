@@ -5,19 +5,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 using JsonApiDotNetCoreExample.Models;
-using Newtonsoft.Json;
 using JsonApiDotNetCore.Models;
 using System.Collections;
-using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreExample;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
     public class RequestMetaTests
     {
-        private TestFixture<TestStartup> _fixture;
+        private TestFixture<Startup> _fixture;
 
-        public RequestMetaTests(TestFixture<TestStartup> fixture)
+        public RequestMetaTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
         }
@@ -25,9 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [Fact]
         public async Task Injecting_IRequestMeta_Adds_Meta_Data()
         {
-            // arrange
-            var person = new Person();
-            var expectedMeta = person.GetMeta(null);
+            // Arrange
             var builder = new WebHostBuilder()
                 .UseStartup<MetaStartup>();
 
@@ -37,31 +34,33 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
+            var expectedMeta = (_fixture.GetService<ResourceDefinition<Person>>() as IHasMeta).GetMeta();
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            
-            // assert
+            var body = await response.Content.ReadAsStringAsync();
+            var meta = _fixture.GetDeserializer().DeserializeList<Person>(body).Meta;
+
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.NotNull(documents.Meta);
+            Assert.NotNull(meta);
             Assert.NotNull(expectedMeta);
             Assert.NotEmpty(expectedMeta);
-            
-            foreach(var hash in expectedMeta)
+
+            foreach (var hash in expectedMeta)
             {
-                if(hash.Value is IList)
+                if (hash.Value is IList)
                 {
                     var listValue = (IList)hash.Value;
-                    for(var i=0; i < listValue.Count; i++)
-                        Assert.Equal(listValue[i].ToString(), ((IList)documents.Meta[hash.Key])[i].ToString());
+                    for (var i = 0; i < listValue.Count; i++)
+                        Assert.Equal(listValue[i].ToString(), ((IList)meta[hash.Key])[i].ToString());
                 }
                 else
                 {
-                    Assert.Equal(hash.Value, documents.Meta[hash.Key]);
+                    Assert.Equal(hash.Value, meta[hash.Key]);
                 }
             }
-            Assert.Equal("request-meta-value", documents.Meta["request-meta"]);
+            Assert.Equal("request-meta-value", meta["request-meta"]);
         }
     }
 }

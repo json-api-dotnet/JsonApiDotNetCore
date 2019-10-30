@@ -1,16 +1,13 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -18,11 +15,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class QueryFiltersTests
     {
-      private TestFixture<TestStartup> _fixture;
+      private TestFixture<Startup> _fixture;
       private AppDbContext _context;
       private Faker<User> _userFaker;
 
-      public QueryFiltersTests(TestFixture<TestStartup> fixture)
+      public QueryFiltersTests(TestFixture<Startup> fixture)
       {
         _fixture = fixture;
         _context = fixture.GetService<AppDbContext>();
@@ -31,55 +28,65 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
           .RuleFor(u => u.Password, f => f.Internet.Password());
       }
 
-      [Fact]
-      public async Task FiltersWithCustomQueryFiltersEquals()
-      {
-        // Arrange
-        var user = _userFaker.Generate();
-        var firstUsernameCharacter = user.Username[0];
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        [Fact]
+        public async Task FiltersWithCustomQueryFiltersEquals()
+        {
+            // Arrange
+            var user = _userFaker.Generate();
+            var firstUsernameCharacter = user.Username[0];
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
-        var httpMethod = new HttpMethod("GET");
-        var route = $"/api/v1/users?filter[first-character]=eq:{firstUsernameCharacter}";
-        var request = new HttpRequestMessage(httpMethod, route);
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/users?filter[first-character]=eq:{firstUsernameCharacter}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        // Act
-        var response = await _fixture.Client.SendAsync(request);
+            // @TODO - Use fixture
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var body = await response.Content.ReadAsStringAsync();
-        var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
-        var usersWithFirstCharacter = _context.Users.Where(u => u.Username[0] == firstUsernameCharacter);
-        Assert.True(deserializedBody.All(u => u.Username[0] == firstUsernameCharacter));
-      }
+            // Act
+            var response = await client.SendAsync(request);
 
-      [Fact]
-      public async Task FiltersWithCustomQueryFiltersLessThan()
-      {
-        // Arrange
-        var aUser = _userFaker.Generate();
-        aUser.Username = "alfred";
-        var zUser = _userFaker.Generate();
-        zUser.Username = "zac";
-        _context.Users.AddRange(aUser, zUser);
-        _context.SaveChanges();
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<User>(body).Data;
+            var usersWithFirstCharacter = _context.Users.Where(u => u.Username[0] == firstUsernameCharacter);
+            Assert.True(deserializedBody.All(u => u.Username[0] == firstUsernameCharacter));
+        }
 
-        var median = 'h';
+        [Fact]
+        public async Task FiltersWithCustomQueryFiltersLessThan()
+        {
+            // Arrange
+            var aUser = _userFaker.Generate();
+            aUser.Username = "alfred";
+            var zUser = _userFaker.Generate();
+            zUser.Username = "zac";
+            _context.Users.AddRange(aUser, zUser);
+            _context.SaveChanges();
 
-        var httpMethod = new HttpMethod("GET");
-        var route = $"/api/v1/users?filter[first-character]=lt:{median}";
-        var request = new HttpRequestMessage(httpMethod, route);
+            var median = 'h';
 
-        // Act
-        var response = await _fixture.Client.SendAsync(request);
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/users?filter[first-character]=lt:{median}";
+            var request = new HttpRequestMessage(httpMethod, route);
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var body = await response.Content.ReadAsStringAsync();
-        var deserializedBody = _fixture.GetService<IJsonApiDeSerializer>().DeserializeList<User>(body);
-        Assert.True(deserializedBody.All(u => u.Username[0] < median));
-      }
+            // @TODO - Use fixture
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            var deserializedBody = _fixture.GetDeserializer().DeserializeList<User>(body).Data;
+            Assert.True(deserializedBody.All(u => u.Username[0] < median));
+        }
     }
 }

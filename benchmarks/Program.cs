@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Running;
 using Benchmarks.JsonApiContext;
 using Benchmarks.LinkBuilder;
 using Benchmarks.Query;
@@ -9,8 +9,8 @@ namespace Benchmarks {
     class Program {
         static void Main(string[] args) {
             var switcher = new BenchmarkSwitcher(new[] {
-                typeof(JsonApiDeserializer_Benchmarks),
-                typeof(JsonApiSerializer_Benchmarks),
+                typeof(JsonApideserializer_Benchmarks),
+                //typeof(JsonApiSerializer_Benchmarks),
                 typeof(QueryParser_Benchmarks),
                 typeof(LinkBuilder_GetNamespaceFromPath_Benchmarks),
                 typeof(ContainsMediaTypeParameters_Benchmarks),

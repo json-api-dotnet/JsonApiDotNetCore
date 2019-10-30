@@ -10,45 +10,45 @@ namespace UnitTests.Internal
         [Fact]
         public void Can_Convert_DateTimeOffsets()
         {
-            // arrange
+            // Arrange
             var dto = DateTimeOffset.Now;
             var formattedString = dto.ToString("O");
 
-            // act
+            // Act
             var result = TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
 
-            // assert
+            // Assert
             Assert.Equal(dto, result);
         }
 
         [Fact]
         public void Bad_DateTimeOffset_String_Throws()
         {
-            // arrange
+            // Arrange
             var formattedString = "this_is_not_a_valid_dto";
 
-            // act
-            // assert
+            // Act
+            // Assert
             Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset)));
         }
 
         [Fact]
         public void Can_Convert_Enums()
         {
-            // arrange
+            // Arrange
             var formattedString = "1";
 
-            // act
+            // Act
             var result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
 
-            // assert
+            // Assert
             Assert.Equal(TestEnum.Test, result);
         }
 
         [Fact]
         public void ConvertType_Returns_Value_If_Type_Is_Same()
         {
-            // arrange
+            // Arrange
             var val = new ComplexType
             {
                 Property = 1
@@ -56,17 +56,17 @@ namespace UnitTests.Internal
 
             var type = val.GetType();
 
-            // act
+            // Act
             var result = TypeHelper.ConvertType(val, type);
 
-            // assert
+            // Assert
             Assert.Equal(val, result);
         }
 
         [Fact]
         public void ConvertType_Returns_Value_If_Type_Is_Assignable()
         {
-            // arrange
+            // Arrange
             var val = new ComplexType
             {
                 Property = 1
@@ -75,11 +75,11 @@ namespace UnitTests.Internal
             var baseType = typeof(BaseType);
             var iType = typeof(IType);
 
-            // act
+            // Act
             var baseResult = TypeHelper.ConvertType(val, baseType);
             var iResult = TypeHelper.ConvertType(val, iType);
 
-            // assert
+            // Assert
             Assert.Equal(val, baseResult);
             Assert.Equal(val, iResult);
         }
@@ -87,7 +87,7 @@ namespace UnitTests.Internal
         [Fact]
         public void ConvertType_Returns_Default_Value_For_Empty_Strings()
         {
-            // arrange -- can't use non-constants in [Theory]
+            // Arrange -- can't use non-constants in [Theory]
             var data = new Dictionary<Type, object>
             {
                 { typeof(int), 0 },
@@ -99,10 +99,10 @@ namespace UnitTests.Internal
 
             foreach (var t in data)
             {
-                // act
+                // Act
                 var result = TypeHelper.ConvertType(string.Empty, t.Key);
 
-                // assert
+                // Assert
                 Assert.Equal(t.Value, result);
             }
         }
@@ -124,10 +124,10 @@ namespace UnitTests.Internal
         [Fact]
         public void Bad_TimeSpanString_Throws() 
         {
-            // arrange
+            // Arrange
             var formattedString = "this_is_not_a_valid_timespan";
 
-            // act/assert
+            // Act/assert
             Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(TimeSpan)));
         }
 

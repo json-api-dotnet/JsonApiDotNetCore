@@ -14,9 +14,6 @@
         Post,
         Patch,
         PatchRelationship,
-        Delete,
-        BulkPost,
-        BulkPatch,
-        BulkDelete
+        Delete
     }
 }

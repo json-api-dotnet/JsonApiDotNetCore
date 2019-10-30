@@ -5,12 +5,13 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
     public class PassportResource : ResourceDefinition<Passport>
     {
-        public PassportResource(IResourceGraph graph) : base(graph)
+        public PassportResource(IResourceGraph resourceGraph) : base(resourceGraph)
         {
         }
 

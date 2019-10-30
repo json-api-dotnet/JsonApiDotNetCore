@@ -5,6 +5,7 @@
     <AssemblyName>JsonApiDotNetCoreExample</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>JsonApiDotNetCoreExample</PackageId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,9 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="2.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="$(EFCoreVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(MicrosoftConfigurationVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="$(MicrosoftConfigurationVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftConfigurationVersion)" />
@@ -28,4 +28,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Startups\" />
+  </ItemGroup>
 </Project>

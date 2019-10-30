@@ -1,49 +1,51 @@
-using System.Collections.Generic;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Exporters;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Generics;
-using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Services;
-using Moq;
-using Newtonsoft.Json.Serialization;
+//using System.Collections.Generic;
+//using BenchmarkDotNet.Attributes;
+//using BenchmarkDotNet.Attributes.Exporters;
+//using JsonApiDotNetCore.Builders;
+//using JsonApiDotNetCore.Configuration;
+//using JsonApiDotNetCore.Internal.Generics;
+//using JsonApiDotNetCore.Models;
+//using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Contracts;
 
-namespace Benchmarks.Serialization {
-    [MarkdownExporter]
-    public class JsonApiSerializer_Benchmarks {
-        private const string TYPE_NAME = "simple-types";
-        private static readonly SimpleType Content = new SimpleType();
+//using JsonApiDotNetCore.Services;
+//using Moq;
+//using Newtonsoft.Json.Serialization;
 
-        private readonly JsonApiSerializer _jsonApiSerializer;
+//namespace Benchmarks.Serialization {
+//    [MarkdownExporter]
+//    public class JsonApiSerializer_Benchmarks {
+//        private const string TYPE_NAME = "simple-types";
+//        private static readonly SimpleType Content = new SimpleType();
 
-        public JsonApiSerializer_Benchmarks() {
-            var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
-            var resourceGraph = resourceGraphBuilder.Build();
+//        private readonly JsonApiSerializer _jsonApiSerializer;
 
-            var jsonApiContextMock = new Mock<IJsonApiContext>();
-            jsonApiContextMock.SetupAllProperties();
-            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
-            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
+//        public JsonApiSerializer_Benchmarks() {
+//            var resourceGraphBuilder = new ResourceGraphBuilder();
+//            resourceGraphBuilder.AddResource<SimpleType>(TYPE_NAME);
+//            var resourceGraph = resourceGraphBuilder.Build();
 
-            var jsonApiOptions = new JsonApiOptions();
-            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
+//            var jsonApiContextMock = new Mock<IJsonApiContext>();
+//            jsonApiContextMock.SetupAllProperties();
+//            jsonApiContextMock.Setup(m => m.ResourceGraph).Returns(resourceGraph);
+//            jsonApiContextMock.Setup(m => m.AttributesToUpdate).Returns(new Dictionary<AttrAttribute, object>());
 
-            var genericProcessorFactoryMock = new Mock<IGenericProcessorFactory>();
+//            var jsonApiOptions = new JsonApiOptions();
+//            jsonApiOptions.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+//            jsonApiContextMock.Setup(m => m.Options).Returns(jsonApiOptions);
 
-            var documentBuilder = new DocumentBuilder(jsonApiContextMock.Object);
-            _jsonApiSerializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);
-        }
+//            var genericServiceFactoryMock = new Mock<IGenericServiceFactory>();
 
-        [Benchmark]
-        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
+//            var documentBuilder = new BaseDocumentBuilder(jsonApiContextMock.Object);
+//            _jsonApiSerializer = new JsonApiSerializer(jsonApiContextMock.Object, documentBuilder);
+//        }
 
-        private class SimpleType : Identifiable {
-            [Attr("name")]
-            public string Name { get; set; }
-        }
-    }
-}
+//        [Benchmark]
+//        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
+
+//        private class SimpleType : Identifiable {
+//            [Attr("name")]
+//            public string Name { get; set; }
+//        }
+//    }
+//}

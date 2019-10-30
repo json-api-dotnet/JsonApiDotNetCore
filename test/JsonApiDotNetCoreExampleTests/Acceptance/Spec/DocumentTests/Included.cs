@@ -19,15 +19,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Included
     {
-        private TestFixture<TestStartup> _fixture;
-        private AppDbContext _context;
-        private Bogus.Faker<Person> _personFaker;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<TodoItemCollection> _todoItemCollectionFaker;
+        private readonly AppDbContext _context;
+        private readonly Bogus.Faker<Person> _personFaker;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<TodoItemCollection> _todoItemCollectionFaker;
 
-        public Included(TestFixture<TestStartup> fixture)
+        public Included(TestFixture<Startup> fixture)
         {
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
             _personFaker = new Faker<Person>()
                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
@@ -43,9 +41,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_Included_Contains_SideloadedData_ForManyToOne()
+        public async Task GET_Included_Contains_SideloadeData_ForManyToOne()
         {
-            // arrange
+            // Arrange
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = person;
@@ -62,24 +60,28 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             var json = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(json);
+            var documents = JsonConvert.DeserializeObject<Document>(json);
             // we only care about counting the todo-items that have owners
-            var expectedCount = documents.Data.Count(d => d.Relationships["owner"].SingleData != null);
+            var expectedCount = documents.ManyData.Count(d => d.Relationships["owner"].SingleData != null);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
             Assert.Equal(expectedCount, documents.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
-        public async Task GET_ById_Included_Contains_SideloadedData_ForManyToOne()
+        public async Task GET_ById_Included_Contains_SideloadeData_ForManyToOne()
         {
-            // arrange
+            // Arrange
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = person;
@@ -97,23 +99,27 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(responseString);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(person.Id.ToString(), document.Included[0].Id);
             Assert.Equal(person.FirstName, document.Included[0].Attributes["first-name"]);
             Assert.Equal(person.LastName, document.Included[0].Attributes["last-name"]);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
-        public async Task GET_Included_Contains_SideloadedData_OneToMany()
+        public async Task GET_Included_Contains_SideloadeData_OneToMany()
         {
-            // arrange
+            // Arrange
             _context.People.RemoveRange(_context.People); // ensure all people have todo-items
             _context.TodoItems.RemoveRange(_context.TodoItems);
             var person = _personFaker.Generate();
@@ -132,23 +138,28 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data[0];
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
-            Assert.Equal(documents.Data.Count, documents.Included.Count);
+            Assert.Equal(documents.ManyData.Count, documents.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task GET_Included_DoesNot_Duplicate_Records_ForMultipleRelationshipsOfSameType()
         {
-            // arrange
-            _context.People.RemoveRange(_context.People); // ensure all people have todo-items
-            _context.TodoItems.RemoveRange(_context.TodoItems);
+            // Arrange
+            _context.RemoveRange(_context.TodoItems);
+            _context.RemoveRange(_context.TodoItemCollections);
+            _context.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.SaveChanges();
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = person;
@@ -166,21 +177,24 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data;
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
             Assert.Single(documents.Included);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task GET_Included_DoesNot_Duplicate_Records_If_HasOne_Exists_Twice()
         {
-            // arrange
+            // Arrange
             _context.TodoItemCollections.RemoveRange(_context.TodoItemCollections);
             _context.People.RemoveRange(_context.People); // ensure all people have todo-items
             _context.TodoItems.RemoveRange(_context.TodoItems);
@@ -202,21 +216,24 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Documents>(await response.Content.ReadAsStringAsync());
-            var data = documents.Data;
+            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(documents.Included);
             Assert.Single(documents.Included);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
-        public async Task GET_ById_Included_Contains_SideloadedData_ForOneToMany()
+        public async Task GET_ById_Included_Contains_SideloadeData_ForOneToMany()
         {
-            // arrange
+            // Arrange
             const int numberOfTodoItems = 5;
             var person = _personFaker.Generate();
             for (var i = 0; i < numberOfTodoItems; i++)
@@ -238,21 +255,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(responseString);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(numberOfTodoItems, document.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task Can_Include_MultipleRelationships()
         {
-            // arrange
+            // Arrange
             var person = _personFaker.Generate();
             var todoItemCollection = _todoItemCollectionFaker.Generate();
             todoItemCollection.Owner = person;
@@ -278,21 +299,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var document = JsonConvert.DeserializeObject<Document>(responseString);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(numberOfTodoItems + 1, document.Included.Count);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task Request_ToIncludeUnknownRelationship_Returns_400()
         {
-            // arrange
+            // Arrange
             var person = _context.People.First();
 
             var builder = new WebHostBuilder()
@@ -306,17 +331,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task Request_ToIncludeDeeplyNestedRelationships_Returns_400()
         {
-            // arrange
+            // Arrange
             var person = _context.People.First();
 
             var builder = new WebHostBuilder()
@@ -330,17 +359,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task Request_ToIncludeRelationshipMarkedCanIncludeFalse_Returns_400()
         {
-            // arrange
+            // Arrange
             var person = _context.People.First();
 
             var builder = new WebHostBuilder()
@@ -354,17 +387,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
 
         [Fact]
         public async Task Can_Ignore_Null_Parent_In_Nested_Include()
         {
-            // arrange
+            // Arrange
             var todoItem = _todoItemFaker.Generate();
             todoItem.Owner = _personFaker.Generate();
             todoItem.CreatedDate = DateTime.Now;
@@ -388,28 +425,32 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
-            // act
+            // Act
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Documents>(responseString);
+            var documents = JsonConvert.DeserializeObject<Document>(responseString);
 
-            // assert
+            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Single(documents.Included);
 
-            var ownerValueNull = documents.Data
+            var ownerValueNull = documents.ManyData
                 .First(i => i.Id == todoItemWithNullOwner.StringId)
                 .Relationships.First(i => i.Key == "owner")
                 .Value.SingleData;
 
             Assert.Null(ownerValueNull);
 
-            var ownerValue = documents.Data
+            var ownerValue = documents.ManyData
                 .First(i => i.Id == todoItem.StringId)
                 .Relationships.First(i => i.Key == "owner")
                 .Value.SingleData;
 
             Assert.NotNull(ownerValue);
+
+            server.Dispose();
+            request.Dispose();
+            response.Dispose();
         }
     }
 }

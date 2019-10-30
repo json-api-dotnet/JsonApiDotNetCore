@@ -40,20 +40,20 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         {
             FirstToOneAttr = new HasOneAttribute("first-to-one")
             {
-                PrincipalType = typeof(Dummy),
-                DependentType = typeof(ToOne),
+                LeftType = typeof(Dummy),
+                RightType = typeof(ToOne),
                 InternalRelationshipName = "FirstToOne"
             };
             SecondToOneAttr = new HasOneAttribute("second-to-one")
             {
-                PrincipalType = typeof(Dummy),
-                DependentType = typeof(ToOne),
+                LeftType = typeof(Dummy),
+                RightType = typeof(ToOne),
                 InternalRelationshipName = "SecondToOne"
             };
             ToManyAttr = new HasManyAttribute("to-manies")
             {
-                PrincipalType = typeof(Dummy),
-                DependentType = typeof(ToMany),
+                LeftType = typeof(Dummy),
+                RightType = typeof(ToMany),
                 InternalRelationshipName = "ToManies"
             };
             Relationships.Add(FirstToOneAttr, FirstToOnesEntities);
@@ -65,30 +65,30 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [Fact]
         public void RelationshipsDictionary_GetByRelationships()
         {
-            // arrange 
+            // Arrange 
             RelationshipsDictionary<Dummy> relationshipsDictionary = new RelationshipsDictionary<Dummy>(Relationships);
 
-            // act
+            // Act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = relationshipsDictionary.GetByRelationship<ToOne>();
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = relationshipsDictionary.GetByRelationship<ToMany>();
             Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = relationshipsDictionary.GetByRelationship<NotTargeted>();
 
-            // assert
+            // Assert
             AssertRelationshipDictionaryGetters(relationshipsDictionary, toOnes, toManies, notTargeted);
         }
 
         [Fact]
         public void RelationshipsDictionary_GetAffected()
         {
-            // arrange 
+            // Arrange 
             RelationshipsDictionary<Dummy> relationshipsDictionary = new RelationshipsDictionary<Dummy>(Relationships);
 
-            // act
+            // Act
             var affectedThroughFirstToOne = relationshipsDictionary.GetAffected(d => d.FirstToOne).ToList();
             var affectedThroughSecondToOne = relationshipsDictionary.GetAffected(d => d.SecondToOne).ToList();
             var affectedThroughToMany = relationshipsDictionary.GetAffected(d => d.ToManies).ToList();
 
-            // assert
+            // Assert
             affectedThroughFirstToOne.ForEach((entitiy) => Assert.Contains(entitiy, FirstToOnesEntities));
             affectedThroughSecondToOne.ForEach((entitiy) => Assert.Contains(entitiy, SecondToOnesEntities));
             affectedThroughToMany.ForEach((entitiy) => Assert.Contains(entitiy, ToManiesEntities));
@@ -97,10 +97,10 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [Fact]
         public void EntityHashSet_GetByRelationships()
         {
-            // arrange 
+            // Arrange 
             EntityHashSet<Dummy> entities = new EntityHashSet<Dummy>(AllEntities, Relationships);
 
-            // act
+            // Act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = entities.GetByRelationship<ToOne>();
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = entities.GetByRelationship<ToMany>();
             Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = entities.GetByRelationship<NotTargeted>();
@@ -118,11 +118,11 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [Fact]
         public void EntityDiff_GetByRelationships()
         {
-            // arrange 
+            // Arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }).ToList());
             DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships, null);
 
-            // act
+            // Act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.GetByRelationship<ToOne>();
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = diffs.GetByRelationship<ToMany>();
             Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = diffs.GetByRelationship<NotTargeted>();
@@ -151,7 +151,7 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [Fact]
         public void EntityDiff_Loops_Over_Diffs()
         {
-            // arrange 
+            // Arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }));
             DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships, null);
 
@@ -168,16 +168,16 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [Fact]
         public void EntityDiff_GetAffected_Relationships()
         {
-            // arrange 
+            // Arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }));
             DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships, null);
 
-            // act
+            // Act
             var affectedThroughFirstToOne = diffs.GetAffected(d => d.FirstToOne).ToList();
             var affectedThroughSecondToOne = diffs.GetAffected(d => d.SecondToOne).ToList();
             var affectedThroughToMany = diffs.GetAffected(d => d.ToManies).ToList();
 
-            // assert
+            // Assert
             affectedThroughFirstToOne.ForEach((entitiy) => Assert.Contains(entitiy, FirstToOnesEntities));
             affectedThroughSecondToOne.ForEach((entitiy) => Assert.Contains(entitiy, SecondToOnesEntities));
             affectedThroughToMany.ForEach((entitiy) => Assert.Contains(entitiy, ToManiesEntities));
@@ -186,7 +186,7 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         [Fact]
         public void EntityDiff_GetAffected_Attributes()
         {
-            // arrange 
+            // Arrange 
             var dbEntities = new HashSet<Dummy>(AllEntities.Select(e => new Dummy { Id = e.Id }));
             var updatedAttributes = new Dictionary<PropertyInfo, HashSet<Dummy>>
             {
@@ -194,11 +194,11 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             };
             DiffableEntityHashSet<Dummy> diffs = new DiffableEntityHashSet<Dummy>(AllEntities, dbEntities, Relationships, updatedAttributes);
 
-            // act
+            // Act
             var affectedThroughSomeUpdatedProperty = diffs.GetAffected(d => d.SomeUpdatedProperty).ToList();
             var affectedThroughSomeNotUpdatedProperty = diffs.GetAffected(d => d.SomeNotUpdatedProperty).ToList();
 
-            // assert
+            // Assert
             Assert.NotEmpty(affectedThroughSomeUpdatedProperty);
             Assert.Empty(affectedThroughSomeNotUpdatedProperty);
         }

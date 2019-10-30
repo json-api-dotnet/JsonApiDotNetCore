@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
@@ -20,18 +14,15 @@ namespace GettingStarted
                 options.UseSqlite("Data Source=sample.db");
             });
 
-            var mvcCoreBuilder = services.AddMvcCore();
+            var mvcBuilder = services.AddMvcCore();
             services.AddJsonApi(
                 options => options.Namespace = "api", 
-                mvcCoreBuilder, 
-                discover => discover.AddCurrentAssembly());
+                discover => discover.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SampleDbContext context)
+        public void Configure(IApplicationBuilder app, SampleDbContext context)
         {
             context.Database.EnsureDeleted(); // indicies need to be reset
-            context.Database.EnsureCreated();
-
             app.UseJsonApi();
         }
     }

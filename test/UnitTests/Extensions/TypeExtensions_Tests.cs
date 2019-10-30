@@ -11,13 +11,13 @@ namespace UnitTests.Extensions
         [Fact]
         public void GetCollection_Creates_List_If_T_Implements_Interface()
         {
-            // arrange
+            // Arrange
             var type = typeof(Model);
 
-            // act
+            // Act
             var collection = type.GetEmptyCollection();
 
-            // assert
+            // Assert
             Assert.NotNull(collection);
             Assert.Empty(collection);
             Assert.IsType<List<Model>>(collection);
@@ -26,13 +26,13 @@ namespace UnitTests.Extensions
         [Fact]
         public void New_Creates_An_Instance_If_T_Implements_Interface()
         {
-            // arrange
+            // Arrange
             var type = typeof(Model);
 
-            // act
+            // Act
             var instance = type.New<IIdentifiable>();
 
-            // assert
+            // Assert
             Assert.NotNull(instance);
             Assert.IsType<Model>(instance);
         }
@@ -40,26 +40,26 @@ namespace UnitTests.Extensions
         [Fact]
         public void Implements_Returns_True_If_Type_Implements_Interface()
         {
-            // arrange
+            // Arrange
             var type = typeof(Model);
 
-            // act
+            // Act
             var result = type.Implements<IIdentifiable>();
 
-            // assert
+            // Assert
             Assert.True(result);
         }
 
         [Fact]
         public void Implements_Returns_False_If_Type_DoesNot_Implement_Interface()
         {
-            // arrange
+            // Arrange
             var type = typeof(String);
 
-            // act
+            // Act
             var result = type.Implements<IIdentifiable>();
 
-            // assert
+            // Assert
             Assert.False(result);
         }
 

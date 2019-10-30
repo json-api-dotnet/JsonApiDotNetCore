@@ -12,7 +12,7 @@ namespace UnitTests
         [Fact]
         public void Errors_Correctly_Infers_Status_Code()
         {
-            // arrange
+            // Arrange
             var errors422 = new ErrorCollection {
                 Errors = new List<Error> {
                     new Error(422, "bad specific"),
@@ -38,12 +38,12 @@ namespace UnitTests
                 }
             };
             
-            // act
+            // Act
             var result422 = this.Errors(errors422);
             var result400 = this.Errors(errors400);
             var result500 = this.Errors(errors500);
             
-            // assert
+            // Assert
             var response422 = Assert.IsType<ObjectResult>(result422);
             var response400 = Assert.IsType<ObjectResult>(result400);
             var response500 = Assert.IsType<ObjectResult>(result500);

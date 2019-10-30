@@ -13,15 +13,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void AfterDelete()
         {
-            // arrange
+            // Arrange
             var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
+            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
             var todoList = CreateTodoWithOwner();
 
-            // act
+            // Act
             hookExecutor.AfterDelete(todoList, ResourcePipeline.Delete, It.IsAny<bool>());
 
-            // assert
+            // Assert
             resourceDefinitionMock.Verify(rd => rd.AfterDelete(It.IsAny<HashSet<TodoItem>>(), ResourcePipeline.Delete, It.IsAny<bool>()), Times.Once());
             VerifyNoOtherCalls(resourceDefinitionMock);
         }
@@ -29,15 +29,15 @@ namespace UnitTests.ResourceHooks
         [Fact]
         public void AfterDelete_Without_Any_Hook_Implemented()
         {
-            // arrange
+            // Arrange
             var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
+            (var _, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
             var todoList = CreateTodoWithOwner();
 
-            // act
+            // Act
             hookExecutor.AfterDelete(todoList, ResourcePipeline.Delete, It.IsAny<bool>());
 
-            // assert
+            // Assert
             VerifyNoOtherCalls(resourceDefinitionMock);
         }
     }

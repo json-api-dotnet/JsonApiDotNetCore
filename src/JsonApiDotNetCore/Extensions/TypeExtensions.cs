@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Extensions
         /// <summary>
         /// Extension to use the LINQ cast method in a non-generic way:
         /// <code>
-        /// Type targetType = typeof(TEntity)
+        /// Type targetType = typeof(TResource)
         /// ((IList)myList).Cast(targetType).
         /// </code>
         /// </summary>
