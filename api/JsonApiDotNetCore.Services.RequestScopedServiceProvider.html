@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class RequestScopedServiceProvider
    ">
-    <meta name="generator" content="docfx 2.45.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -84,49 +84,25 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IScopedServiceProvider.html">IScopedServiceProvider</a></div>
-    <div><span class="xref">System.IServiceProvider</span></div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
+    <div><span class="xref">IServiceProvider</span></div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Services.html">JsonApiDotNetCore.Services</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Services_RequestScopedServiceProvider_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RequestScopedServiceProvider : IScopedServiceProvider, IServiceProvider</code></pre>
+    <pre><code class="lang-csharp hljs">public class RequestScopedServiceProvider : object, IScopedServiceProvider, IServiceProvider</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_RequestScopedServiceProvider__ctor_Microsoft_AspNetCore_Http_IHttpContextAccessor_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.RequestScopedServiceProvider.%23ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_RequestScopedServiceProvider__ctor_IHttpContextAccessor_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.RequestScopedServiceProvider.%23ctor(IHttpContextAccessor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/ScopedServiceProvider.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_RequestScopedServiceProvider__ctor_" data-uid="JsonApiDotNetCore.Services.RequestScopedServiceProvider.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Services_RequestScopedServiceProvider__ctor_Microsoft_AspNetCore_Http_IHttpContextAccessor_" data-uid="JsonApiDotNetCore.Services.RequestScopedServiceProvider.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">RequestScopedServiceProvider(IHttpContextAccessor)</h4>
+  <h4 id="JsonApiDotNetCore_Services_RequestScopedServiceProvider__ctor_IHttpContextAccessor_" data-uid="JsonApiDotNetCore.Services.RequestScopedServiceProvider.#ctor(IHttpContextAccessor)">RequestScopedServiceProvider(IHttpContextAccessor)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -144,7 +120,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Microsoft.AspNetCore.Http.IHttpContextAccessor</span></td>
+        <td><span class="xref">IHttpContextAccessor</span></td>
         <td><span class="parametername">httpContextAccessor</span></td>
         <td></td>
       </tr>
@@ -154,13 +130,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_RequestScopedServiceProvider_GetService_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.RequestScopedServiceProvider.GetService(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_RequestScopedServiceProvider_GetService_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.RequestScopedServiceProvider.GetService(Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/ScopedServiceProvider.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_RequestScopedServiceProvider_GetService_" data-uid="JsonApiDotNetCore.Services.RequestScopedServiceProvider.GetService*"></a>
-  <h4 id="JsonApiDotNetCore_Services_RequestScopedServiceProvider_GetService_System_Type_" data-uid="JsonApiDotNetCore.Services.RequestScopedServiceProvider.GetService(System.Type)">GetService(Type)</h4>
+  <h4 id="JsonApiDotNetCore_Services_RequestScopedServiceProvider_GetService_Type_" data-uid="JsonApiDotNetCore.Services.RequestScopedServiceProvider.GetService(Type)">GetService(Type)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -178,7 +154,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Type</span></td>
+        <td><span class="xref">Type</span></td>
         <td><span class="parametername">serviceType</span></td>
         <td></td>
       </tr>
@@ -204,7 +180,7 @@
       <a class="xref" href="JsonApiDotNetCore.Services.IScopedServiceProvider.html">IScopedServiceProvider</a>
   </div>
   <div>
-      <span class="xref">System.IServiceProvider</span>
+      <span class="xref">IServiceProvider</span>
   </div>
 </article>
           </div>

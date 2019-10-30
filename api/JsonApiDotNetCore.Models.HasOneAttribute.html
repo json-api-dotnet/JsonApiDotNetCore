@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class HasOneAttribute
    ">
-    <meta name="generator" content="docfx 2.45.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -78,12 +78,19 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">System.Attribute</span></div>
-    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></div>
-    <div class="level3"><span class="xref">HasOneAttribute</span></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a></div>
+    <div class="level2"><span class="xref">HasOneAttribute</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a></div>
+    <div><a class="xref" href="JsonApiDotNetCore.Models.IRelationshipField.html">IRelationshipField</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ExposedInternalMemberName">RelationshipAttribute.ExposedInternalMemberName</a>
+    </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_PublicRelationshipName">RelationshipAttribute.PublicRelationshipName</a>
     </div>
@@ -94,13 +101,10 @@
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_InverseNavigation">RelationshipAttribute.InverseNavigation</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_Type">RelationshipAttribute.Type</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RightType">RelationshipAttribute.RightType</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_DependentType">RelationshipAttribute.DependentType</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_PrincipalType">RelationshipAttribute.PrincipalType</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_LeftType">RelationshipAttribute.LeftType</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_IsHasMany">RelationshipAttribute.IsHasMany</a>
@@ -109,22 +113,13 @@
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_IsHasOne">RelationshipAttribute.IsHasOne</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_DocumentLinks">RelationshipAttribute.DocumentLinks</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RelationshipLinks">RelationshipAttribute.RelationshipLinks</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_CanInclude">RelationshipAttribute.CanInclude</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_EntityPropertyName">RelationshipAttribute.EntityPropertyName</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_TryGetHasOne_JsonApiDotNetCore_Models_HasOneAttribute__">RelationshipAttribute.TryGetHasOne(HasOneAttribute)</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_TryGetHasMany_JsonApiDotNetCore_Models_HasManyAttribute__">RelationshipAttribute.TryGetHasMany(HasManyAttribute)</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetValue_System_Object_">RelationshipAttribute.GetValue(Object)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ToString">RelationshipAttribute.ToString()</a>
@@ -138,150 +133,30 @@
     <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_RelationshipPath">RelationshipAttribute.RelationshipPath</a>
     </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Assembly, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Assembly, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.MemberInfo, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.MemberInfo, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Module, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.Module, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.ParameterInfo, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttribute(System.Reflection.ParameterInfo, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Assembly, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.MemberInfo, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.Module, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetCustomAttributes(System.Reflection.ParameterInfo, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefaultAttribute()</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.Assembly, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.Assembly, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.MemberInfo, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.MemberInfo, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.Module, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.Module, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.ParameterInfo, System.Type)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.IsDefined(System.Reflection.ParameterInfo, System.Type, System.Boolean)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.Match(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Attribute.TypeId</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Models.html">JsonApiDotNetCore.Models</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Models_HasOneAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class HasOneAttribute : RelationshipAttribute</code></pre>
+    <pre><code class="lang-csharp hljs">public class HasOneAttribute : RelationshipAttribute, IResourceField, IRelationshipField</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.%23ctor(System.String%2CJsonApiDotNetCore.Models.Link%2CSystem.Boolean%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.%23ctor(System.String%2CJsonApiDotNetCore.Models.Links.Link%2CSystem.Boolean%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/HasOneAttribute.cs/#L31">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L31">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_System_String_System_String_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Link,System.Boolean,System.String,System.String,System.String)">HasOneAttribute(String, Link, Boolean, String, String, String)</h4>
+  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String,System.String)">HasOneAttribute(String, Link, Boolean, String, String, String)</h4>
   <div class="markdown level1 summary"><p>Create a HasOne relational link to another entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HasOneAttribute(string publicName = null, Link documentLinks = Link.Self | Link.Paging | Link.Related | Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public HasOneAttribute(string publicName = null, Link links = default(Link), bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -300,9 +175,10 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.Link.html">Link</a></td>
-        <td><span class="parametername">documentLinks</span></td>
-        <td><p>Which links are available. Defaults to <a class="xref" href="JsonApiDotNetCore.Models.Link.html#JsonApiDotNetCore_Models_Link_All">All</a></p>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.Link.html">Link</a></td>
+        <td><span class="parametername">links</span></td>
+        <td><p>Enum to set which links should be outputted for this relationship. Defaults to <a class="xref" href="JsonApiDotNetCore.Models.Links.Link.html#JsonApiDotNetCore_Models_Links_Link_NotConfigured">NotConfigured</a> which means that the configuration in
+<a class="xref" href="JsonApiDotNetCore.Configuration.ILinksConfiguration.html">ILinksConfiguration</a> or <see cref="!:ResourceContext"></see> is used.</p>
 </td>
       </tr>
       <tr>
@@ -330,7 +206,7 @@
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Link_System_Boolean_System_String_System_String_System_String__examples">Examples</h5>
+  <h5 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String__examples">Examples</h5>
   <p>Using an alternative foreign key:</p>
 <pre><code>public class Article : Identifiable 
 {
@@ -339,7 +215,6 @@
     public int AuthorKey { get; set; }
 }</code></pre>
 
-
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -347,7 +222,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_IdentifiablePropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.IdentifiablePropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/HasOneAttribute.cs/#L44">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L52">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasOneAttribute_IdentifiablePropertyName_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.IdentifiablePropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_IdentifiablePropertyName" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.IdentifiablePropertyName">IdentifiablePropertyName</h4>
@@ -377,19 +252,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_GetValue_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.GetValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/HasOneAttribute.cs/#L53">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L40">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Models_HasOneAttribute_SetValue_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.SetValue*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
-  <div class="markdown level1 summary"><p>Sets the value of the property identified by this attribute</p>
-</div>
+  <a id="JsonApiDotNetCore_Models_HasOneAttribute_GetValue_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.GetValue*"></a>
+  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_GetValue_System_Object_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.GetValue(System.Object)">GetValue(Object)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void SetValue(object resource, object newValue)</code></pre>
+    <pre><code class="lang-csharp hljs">public override object GetValue(object entity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -403,7 +277,57 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">resource</span></td>
+        <td><span class="parametername">entity</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetValue_System_Object_">RelationshipAttribute.GetValue(Object)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L61">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_HasOneAttribute_SetValue_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.SetValue*"></a>
+  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of the property identified by this attribute</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void SetValue(object entity, object newValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">entity</span></td>
         <td><p>The target object</p>
 </td>
       </tr>
@@ -417,6 +341,13 @@
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_SetValue_System_Object_System_Object_">RelationshipAttribute.SetValue(Object, Object)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.IResourceField.html">IResourceField</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Models.IRelationshipField.html">IRelationshipField</a>
+  </div>
 </article>
           </div>
           
@@ -428,7 +359,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/HasOneAttribute.cs/#L6" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L6" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

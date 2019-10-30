@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IResourceHookExecutor
    ">
-    <meta name="generator" content="docfx 2.45.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -74,9 +74,9 @@
   <h1 id="JsonApiDotNetCore_Hooks_IResourceHookExecutor" data-uid="JsonApiDotNetCore.Hooks.IResourceHookExecutor" class="text-break">Interface IResourceHookExecutor
   </h1>
   <div class="markdown level0 summary"><p>Transient service responsible for executing Resource Hooks as defined 
-in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>. see methods in 
-<a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a> and 
-<a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a> for more information.</p>
+in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a>. see methods in 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information.</p>
 <p>Uses <span class="xref">JsonApiDotNetCore.Hooks.TraversalHelper</span> for traversal of nested entity data structures.
 Uses <span class="xref">JsonApiDotNetCore.Hooks.HookExecutorHelper</span> for retrieving meta data about hooks, 
 fetching database values and performing other recurring internal operations.</p>
@@ -85,38 +85,38 @@ fetching database values and performing other recurring internal operations.</p>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IBeforeExecutor.BeforeCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookExecutor.html#JsonApiDotNetCore_Hooks_IReadHookExecutor_BeforeRead__1_JsonApiDotNetCore_Hooks_ResourcePipeline_System_String_">IReadHookExecutor.BeforeRead&lt;TResource&gt;(ResourcePipeline, String)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeRead__1_JsonApiDotNetCore_Hooks_ResourcePipeline_System_String_">IBeforeExecutor.BeforeRead&lt;TResource&gt;(ResourcePipeline, String)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookExecutor.html#JsonApiDotNetCore_Hooks_IReadHookExecutor_AfterRead__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IReadHookExecutor.AfterRead&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IBeforeExecutor.BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.html#JsonApiDotNetCore_Hooks_IUpdateHookExecutor_BeforeUpdate__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IUpdateHookExecutor.BeforeUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html#JsonApiDotNetCore_Hooks_IBeforeExecutor_BeforeDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IBeforeExecutor.BeforeDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.html#JsonApiDotNetCore_Hooks_IUpdateHookExecutor_AfterUpdate__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IUpdateHookExecutor.AfterUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterCreate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IAfterExecutor.AfterCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.ICreateHookExecutor.html#JsonApiDotNetCore_Hooks_ICreateHookExecutor_BeforeCreate__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">ICreateHookExecutor.BeforeCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterRead__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IAfterExecutor.AfterRead&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.ICreateHookExecutor.html#JsonApiDotNetCore_Hooks_ICreateHookExecutor_AfterCreate__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">ICreateHookExecutor.AfterCreate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterUpdate__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IAfterExecutor.AfterUpdate&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IDeleteHookExecutor.html#JsonApiDotNetCore_Hooks_IDeleteHookExecutor_BeforeDelete__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IDeleteHookExecutor.BeforeDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html#JsonApiDotNetCore_Hooks_IAfterExecutor_AfterDelete__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_">IAfterExecutor.AfterDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline, Boolean)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IDeleteHookExecutor.html#JsonApiDotNetCore_Hooks_IDeleteHookExecutor_AfterDelete__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_System_Boolean_">IDeleteHookExecutor.AfterDelete&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline, Boolean)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html#JsonApiDotNetCore_Hooks_IOnExecutor_OnReturn__1_System_Collections_Generic_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IOnExecutor.OnReturn&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookExecutor.html#JsonApiDotNetCore_Hooks_IOnReturnHookExecutor_OnReturn__1_IEnumerable___0__JsonApiDotNetCore_Hooks_ResourcePipeline_">IOnReturnHookExecutor.OnReturn&lt;TResource&gt;(IEnumerable&lt;TResource&gt;, ResourcePipeline)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Hooks_IResourceHookExecutor_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceHookExecutor : IBeforeExecutor, IAfterExecutor, IOnExecutor</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IResourceHookExecutor : IReadHookExecutor, IUpdateHookExecutor, ICreateHookExecutor, IDeleteHookExecutor, IOnReturnHookExecutor</code></pre>
   </div>
 </article>
           </div>

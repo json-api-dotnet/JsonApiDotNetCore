@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IDiffableEntityHashSet&lt;TResource&gt;
    ">
-    <meta name="generator" content="docfx 2.45.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -85,26 +85,20 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
       <a class="xref" href="JsonApiDotNetCore.Hooks.IByAffectedRelationships-1.html#JsonApiDotNetCore_Hooks_IByAffectedRelationships_1_AffectedRelationships">IByAffectedRelationships&lt;TResource&gt;.AffectedRelationships</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship__1">IRelationshipGetters&lt;TResource&gt;.GetByRelationship&lt;TRelatedResource&gt;()</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship__1">IRelationshipGetters&lt;TResource&gt;.GetByRelationship&lt;TRightResource&gt;()</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_System_Type_">IRelationshipGetters&lt;TResource&gt;.GetByRelationship(Type)</a>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetByRelationship_Type_">IRelationshipGetters&lt;TResource&gt;.GetByRelationship(Type)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___">IRelationshipGetters&lt;TResource&gt;.GetAffected(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</a>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.IReadOnlyCollection&lt;TResource&gt;.Count</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;TResource&gt;.GetEnumerator()</span>
+      <a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html#JsonApiDotNetCore_Hooks_IRelationshipGetters_1_GetAffected_Expression_Func__0_System_Object___">IRelationshipGetters&lt;TResource&gt;.GetAffected(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Hooks.html">JsonApiDotNetCore.Hooks</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Hooks_IDiffableEntityHashSet_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IDiffableEntityHashSet&lt;TResource&gt; : IEntityHashSet&lt;TResource&gt;, IByAffectedRelationships&lt;TResource&gt;, IRelationshipGetters&lt;TResource&gt;, IReadOnlyCollection&lt;TResource&gt;, IEnumerable&lt;TResource&gt;, IEnumerable where TResource : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IDiffableEntityHashSet&lt;TResource&gt; : IEntityHashSet&lt;TResource&gt;, IByAffectedRelationships&lt;TResource&gt;, IRelationshipGetters&lt;TResource&gt;, IReadOnlyCollection&lt;TResource&gt; where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -150,15 +144,11 @@ with their associated current value from the database.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Hooks.EntityDiffPair-1.html">EntityDiffPair</a>&lt;TResource&gt;&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Hooks.EntityDiffPair-1.html">EntityDiffPair</a>&lt;TResource&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="JsonApiDotNetCore.Extensions.IQueryableExtensions.html#JsonApiDotNetCore_Extensions_IQueryableExtensions_ForEach__1_System_Collections_Generic_IEnumerable___0__System_Action___0__">IQueryableExtensions.ForEach&lt;T&gt;(IEnumerable&lt;T&gt;, Action&lt;T&gt;)</a>
-  </div>
 </article>
           </div>
           

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Document
    ">
-    <meta name="generator" content="docfx 2.45.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,70 +73,53 @@
   
   <h1 id="JsonApiDotNetCore_Models_Document" data-uid="JsonApiDotNetCore.Models.Document" class="text-break">Class Document
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p><a href="https://jsonapi.org/format/#document-structure">https://jsonapi.org/format/#document-structure</a></p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Models.DocumentBase.html">DocumentBase</a></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Models.ExposableData-1.html">ExposableData</a>&lt;<a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>&gt;</div>
     <div class="level2"><span class="xref">Document</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.DocumentBase.html#JsonApiDotNetCore_Models_DocumentBase_Links">DocumentBase.Links</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_Data">ExposableData&lt;ResourceObject&gt;.Data</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.DocumentBase.html#JsonApiDotNetCore_Models_DocumentBase_Included">DocumentBase.Included</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_ShouldSerializeData">ExposableData&lt;ResourceObject&gt;.ShouldSerializeData()</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.DocumentBase.html#JsonApiDotNetCore_Models_DocumentBase_Meta">DocumentBase.Meta</a>
+      <a class="xref" href="JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_GetPrimaryData">ExposableData&lt;ResourceObject&gt;.GetPrimaryData()</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <a class="xref" href="JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_SetPrimaryData_System_Object_">ExposableData&lt;ResourceObject&gt;.SetPrimaryData(Object)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Models.html">JsonApiDotNetCore.Models</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Models_Document_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Document : DocumentBase</code></pre>
+    <pre><code class="lang-csharp hljs">public class Document : ExposableData&lt;ResourceObject&gt;</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_Document_Data.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.Document.Data%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_Document_Included.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.Document.Included%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Document.cs/#L7">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/JsonApiDocuments/Document.cs/#L27">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Models_Document_Data_" data-uid="JsonApiDotNetCore.Models.Document.Data*"></a>
-  <h4 id="JsonApiDotNetCore_Models_Document_Data" data-uid="JsonApiDotNetCore.Models.Document.Data">Data</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="JsonApiDotNetCore_Models_Document_Included_" data-uid="JsonApiDotNetCore.Models.Document.Included*"></a>
+  <h4 id="JsonApiDotNetCore_Models_Document_Included" data-uid="JsonApiDotNetCore.Models.Document.Included">Included</h4>
+  <div class="markdown level1 summary"><p>see &quot;included&quot; in <a href="https://jsonapi.org/format/#document-top-level">https://jsonapi.org/format/#document-top-level</a></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;data&quot;)]
-public ResourceObject Data { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;ResourceObject&gt; Included { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -148,7 +131,69 @@ public ResourceObject Data { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a></td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.ResourceObject.html">ResourceObject</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_Document_Links.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.Document.Links%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/JsonApiDocuments/Document.cs/#L21">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_Document_Links_" data-uid="JsonApiDotNetCore.Models.Document.Links*"></a>
+  <h4 id="JsonApiDotNetCore_Models_Document_Links" data-uid="JsonApiDotNetCore.Models.Document.Links">Links</h4>
+  <div class="markdown level1 summary"><p>see &quot;links&quot; in <a href="https://jsonapi.org/format/#document-top-level">https://jsonapi.org/format/#document-top-level</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TopLevelLinks Links { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Models.Links.TopLevelLinks.html">TopLevelLinks</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_Document_Meta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.Document.Meta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/JsonApiDocuments/Document.cs/#L15">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Models_Document_Meta_" data-uid="JsonApiDotNetCore.Models.Document.Meta*"></a>
+  <h4 id="JsonApiDotNetCore_Models_Document_Meta" data-uid="JsonApiDotNetCore.Models.Document.Meta">Meta</h4>
+  <div class="markdown level1 summary"><p>see &quot;meta&quot; in <a href="https://jsonapi.org/format/#document-top-level">https://jsonapi.org/format/#document-top-level</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -164,7 +209,7 @@ public ResourceObject Data { get; set; }</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_Document.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.Document%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Document.cs/#L5" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/JsonApiDocuments/Document.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

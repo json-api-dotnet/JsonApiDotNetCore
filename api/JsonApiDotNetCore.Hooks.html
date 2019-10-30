@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace JsonApiDotNetCore.Hooks
    ">
-    <meta name="generator" content="docfx 2.45.0.0">
+    <meta name="generator" content="docfx 2.47.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -89,10 +89,10 @@ matched to its current database value</p>
 <p>Also contains information about updated relationships through 
 implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.HooksDiscovery-1.html">HooksDiscovery&lt;TEntity&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.HooksDiscovery-1.html">HooksDiscovery&lt;TResource&gt;</a></h4>
       <section><p>The default implementation for IHooksDiscovery</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.LoadDatabaseValues.html">LoadDatabaseValues</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.LoaDatabaseValues.html">LoaDatabaseValues</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.RelationshipProxy.html">RelationshipProxy</a></h4>
       <section><p>A class used internally for resource hook execution. Not intended for developer use.</p>
@@ -103,30 +103,27 @@ It also depends on if the jointable entity
 (eg ArticleTags) is identifiable (in which case we will traverse through 
 it and fire hooks for it, if defined) or not (in which case we skip 
 ArticleTags and go directly to Tags.</p>
-<p>TODO: We can consider moving fields like DependentType and PrincipalType </p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html">RelationshipsDictionary&lt;TResource&gt;</a></h4>
-      <section><p>Implementation of IAffectedRelationships{TDependentResource}</p>
-<p>It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TDependentResource}} dictionary
-with the two helper methods defined on IAffectedRelationships{TDependentResource}.</p>
+      <section><p>Implementation of IAffectedRelationships{TRightResource}</p>
+<p>It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary
+with the two helper methods defined on IAffectedRelationships{TRightResource}.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a></h4>
-      <section><p>Wrapper interface for all After execution methods.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IAfterHooks-1.html">IAfterHooks&lt;TResource&gt;</a></h4>
-      <section><p>Wrapper interface for all After hooks.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a></h4>
-      <section><p>Wrapper interface for all Before execution methods.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeHooks-1.html">IBeforeHooks&lt;TResource&gt;</a></h4>
-      <section><p>Wrapper interface for all Before hooks.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IByAffectedRelationships-1.html">IByAffectedRelationships&lt;TDependentResource&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IByAffectedRelationships-1.html">IByAffectedRelationships&lt;TRightResource&gt;</a></h4>
       <section><p>An interface that is implemented to expose a relationship dictionary on another class.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ICreateHookContainer-1.html">ICreateHookContainer&lt;TResource&gt;</a></h4>
+      <section><p>Create hooks container</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.ICreateHookExecutor.html">ICreateHookExecutor</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IDeleteHookContainer-1.html">IDeleteHookContainer&lt;TResource&gt;</a></h4>
+      <section><p>Delete hooks container</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IDeleteHookExecutor.html">IDeleteHookExecutor</a></h4>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IDiffableEntityHashSet-1.html">IDiffableEntityHashSet&lt;TResource&gt;</a></h4>
       <section><p>A wrapper class that contains information about the resources that are updated by the request.
 Contains the resources from the request and the corresponding database values.</p>
@@ -140,40 +137,52 @@ implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="t
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery.html">IHooksDiscovery</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery-1.html">IHooksDiscovery&lt;TEntity&gt;</a></h4>
-      <section><p>A singleton service for a particular TEntity that stores a field of 
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IHooksDiscovery-1.html">IHooksDiscovery&lt;TResource&gt;</a></h4>
+      <section><p>A singleton service for a particular TResource that stores a field of 
 enums that represents which resource hooks have been implemented for that
 particular entity.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookContainer-1.html">IOnReturnHookContainer&lt;TResource&gt;</a></h4>
+      <section><p>On return hook container</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a></h4>
       <section><p>Wrapper interface for all On execution methods.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IOnHooks-1.html">IOnHooks&lt;TResource&gt;</a></h4>
-      <section><p>Wrapper interface for all on hooks.</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookContainer-1.html">IReadHookContainer&lt;TResource&gt;</a></h4>
+      <section><p>Read hooks container</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html">IRelationshipGetters&lt;TResource&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookExecutor.html">IReadHookExecutor</a></h4>
+      <section><p>Wrapper interface for all Before execution methods.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipGetters-1.html">IRelationshipGetters&lt;TLeftResource&gt;</a></h4>
       <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary.html">IRelationshipsDictionary</a></h4>
       <section><p>A dummy interface used internally by the hook executor.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html">IRelationshipsDictionary&lt;TDependentResource&gt;</a></h4>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IRelationshipsDictionary-1.html">IRelationshipsDictionary&lt;TRightResource&gt;</a></h4>
       <section><p>A helper class that provides insights in which relationships have been updated for which entities.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer.html">IResourceHookContainer</a></h4>
       <section><p>Not meant for public usage. Used internally in the <span class="xref">JsonApiDotNetCore.Hooks.ResourceHookExecutor</span></p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookContainer-1.html">IResourceHookContainer&lt;TResource&gt;</a></h4>
-      <section><p>Implement this interface to implement business logic hooks on <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>.</p>
+      <section><p>Implement this interface to implement business logic hooks on <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IResourceHookExecutor.html">IResourceHookExecutor</a></h4>
       <section><p>Transient service responsible for executing Resource Hooks as defined 
-in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;T&gt;</a>. see methods in 
-<a class="xref" href="JsonApiDotNetCore.Hooks.IBeforeExecutor.html">IBeforeExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IAfterExecutor.html">IAfterExecutor</a> and 
-<a class="xref" href="JsonApiDotNetCore.Hooks.IOnExecutor.html">IOnExecutor</a> for more information.</p>
+in <a class="xref" href="JsonApiDotNetCore.Models.ResourceDefinition-1.html">ResourceDefinition&lt;TResource&gt;</a>. see methods in 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and 
+<a class="xref" href="JsonApiDotNetCore.Hooks.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information.</p>
 <p>Uses <span class="xref">JsonApiDotNetCore.Hooks.TraversalHelper</span> for traversal of nested entity data structures.
 Uses <span class="xref">JsonApiDotNetCore.Hooks.HookExecutorHelper</span> for retrieving meta data about hooks, 
 fetching database values and performing other recurring internal operations.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookContainer-1.html">IUpdateHookContainer&lt;TResource&gt;</a></h4>
+      <section><p>update hooks container</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.IUpdateHookExecutor.html">IUpdateHookExecutor</a></h4>
+      <section><p>Wrapper interface for all After execution methods.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
