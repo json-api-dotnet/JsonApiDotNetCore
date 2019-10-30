@@ -60,6 +60,27 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
+        public void RegisterResource_DeviatingDbContextPropertyName_RegistersCorrectly()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
+            services.AddJsonApi<AppDbContext>();
+
+            // Act
+            // this is required because the DbContextResolver requires access to the current HttpContext
+            // to get the request scoped DbContext instance
+            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            var provider = services.BuildServiceProvider();
+            var graph = provider.GetService<IResourceGraph>();
+            var resourceContext = graph.GetResourceContext<Author>();
+
+            // Assert 
+            Assert.Equal("authors", resourceContext.ResourceName);
+        }
+
+        [Fact]
         public void AddResourceService_Registers_All_Shorthand_Service_Interfaces()
         {
             // Arrange
@@ -116,7 +137,7 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
-        public void AddJsonApi_With_Context_Uses_DbSet_PropertyName_If_NoOtherSpecified()
+        public void AddJsonApi_With_Context_Uses_Resource_Type_Name_If_NoOtherSpecified()
         {
             // Arrange
             var services = new ServiceCollection();
@@ -130,7 +151,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
             var resource = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("resource", resource.ResourceName);
+            Assert.Equal("int-resources", resource.ResourceName);
         }
 
         public class IntResource : Identifiable { }

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<TodoItemCollection> TodoItemCollections { get; set; }
         public DbSet<CamelCasedModel> CamelCasedModels { get; set; }
         public DbSet<Article> Articles { get; set; }
-        public DbSet<Author> Authors { get; set; }
+        public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PersonRole> PersonRoles { get; set; }

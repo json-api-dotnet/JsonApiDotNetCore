@@ -218,7 +218,7 @@ namespace JsonApiDotNetCore.Builders
 
             // fallback to the established convention using the DbSet Property.Name
             // e.g DbSet<FooBar> FooBars { get; set; } => "foo-bars"
-            return _resourceNameFormatter.ApplyCasingConvention(property.Name);
+            return _resourceNameFormatter.FormatResourceName(resourceType);
         }
 
         private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
