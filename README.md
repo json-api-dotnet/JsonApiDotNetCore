@@ -92,7 +92,7 @@ dotnet restore
 Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via: 
 
 ```bash
-docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres
+docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:12.0
 ```
 
 And then to run the tests:

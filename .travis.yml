@@ -1,5 +1,7 @@
 language: csharp
 sudo: required
+addons:
+    postgresql: "12.0"
 services:
  - postgresql
 before_script:
