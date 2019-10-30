@@ -137,7 +137,7 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
-        public void AddJsonApi_With_Context_Uses_DbSet_PropertyName_If_NoOtherSpecified()
+        public void AddJsonApi_With_Context_Uses_Resource_Type_Name_If_NoOtherSpecified()
         {
             // Arrange
             var services = new ServiceCollection();
@@ -151,7 +151,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
             var resource = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("resource", resource.ResourceName);
+            Assert.Equal("int-resources", resource.ResourceName);
         }
 
         public class IntResource : Identifiable { }
