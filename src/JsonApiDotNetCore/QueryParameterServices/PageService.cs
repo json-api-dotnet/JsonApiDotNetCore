@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public int CurrentPage { get; set; }
         /// <inheritdoc/>
-        public int TotalPages => (TotalRecords == null) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
+        public int TotalPages => (TotalRecords == null || DefaultPageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
