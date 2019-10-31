@@ -8622,19 +8622,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.IPageService.CurrentPage
   nameWithType: IPageService.CurrentPage
-- uid: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  name: DefaultPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_DefaultPageSize
-  commentId: P:JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  fullName: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  nameWithType: IPageService.DefaultPageSize
-- uid: JsonApiDotNetCore.Query.IPageService.DefaultPageSize*
-  name: DefaultPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_DefaultPageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  nameWithType: IPageService.DefaultPageSize
 - uid: JsonApiDotNetCore.Query.IPageService.PageSize
   name: PageSize
   href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_PageSize
@@ -8907,19 +8894,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.CurrentPage
   nameWithType: PageService.CurrentPage
-- uid: JsonApiDotNetCore.Query.PageService.DefaultPageSize
-  name: DefaultPageSize
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_DefaultPageSize
-  commentId: P:JsonApiDotNetCore.Query.PageService.DefaultPageSize
-  fullName: JsonApiDotNetCore.Query.PageService.DefaultPageSize
-  nameWithType: PageService.DefaultPageSize
-- uid: JsonApiDotNetCore.Query.PageService.DefaultPageSize*
-  name: DefaultPageSize
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_DefaultPageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.PageService.DefaultPageSize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.PageService.DefaultPageSize
-  nameWithType: PageService.DefaultPageSize
 - uid: JsonApiDotNetCore.Query.PageService.PageSize
   name: PageSize
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_PageSize
