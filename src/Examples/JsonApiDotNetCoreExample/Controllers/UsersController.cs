@@ -15,4 +15,14 @@ namespace JsonApiDotNetCoreExample.Controllers
             : base(jsonApiOptions, resourceService, loggerFactory)
         { }
     }
+
+    public class SuperUsersContrroller : JsonApiController<SuperUser>
+    {
+        public SuperUsersContrroller(
+            IJsonApiOptions jsonApiOptions,
+            IResourceService<SuperUser> resourceService,
+            ILoggerFactory loggerFactory)
+            : base(jsonApiOptions, resourceService, loggerFactory)
+        { }
+    }
 }

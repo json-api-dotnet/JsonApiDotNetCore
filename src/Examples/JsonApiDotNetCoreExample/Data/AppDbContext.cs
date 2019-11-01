@@ -23,6 +23,8 @@ namespace JsonApiDotNetCoreExample.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SuperUser>().HasBaseType<User>();
+
             modelBuilder.Entity<TodoItem>()
                 .Property(t => t.CreatedDate).HasDefaultValueSql("CURRENT_TIMESTAMP").IsRequired();
 
