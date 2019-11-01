@@ -414,19 +414,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeTotalRecordCount
   nameWithType: IJsonApiOptions.IncludeTotalRecordCount
-- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoaDatabaseValues
-  name: LoaDatabaseValues
-  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_LoaDatabaseValues
-  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.LoaDatabaseValues
-  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoaDatabaseValues
-  nameWithType: IJsonApiOptions.LoaDatabaseValues
-- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoaDatabaseValues*
-  name: LoaDatabaseValues
-  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_LoaDatabaseValues_
-  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.LoaDatabaseValues
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues
+  name: LoadDatabaseValues
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_LoadDatabaseValues
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues
+  nameWithType: IJsonApiOptions.LoadDatabaseValues
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues*
+  name: LoadDatabaseValues
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_LoadDatabaseValues_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoaDatabaseValues
-  nameWithType: IJsonApiOptions.LoaDatabaseValues
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues
+  nameWithType: IJsonApiOptions.LoadDatabaseValues
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.Namespace
   name: Namespace
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_Namespace
@@ -666,19 +666,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeTotalRecordCount
   nameWithType: JsonApiOptions.IncludeTotalRecordCount
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.LoaDatabaseValues
-  name: LoaDatabaseValues
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_LoaDatabaseValues
-  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.LoaDatabaseValues
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.LoaDatabaseValues
-  nameWithType: JsonApiOptions.LoaDatabaseValues
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.LoaDatabaseValues*
-  name: LoaDatabaseValues
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_LoaDatabaseValues_
-  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.LoaDatabaseValues
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues
+  name: LoadDatabaseValues
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_LoadDatabaseValues
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues
+  nameWithType: JsonApiOptions.LoadDatabaseValues
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues*
+  name: LoadDatabaseValues
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_LoadDatabaseValues_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.LoaDatabaseValues
-  nameWithType: JsonApiOptions.LoaDatabaseValues
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues
+  nameWithType: JsonApiOptions.LoadDatabaseValues
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.Namespace
   name: Namespace
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_Namespace
