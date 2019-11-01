@@ -7,6 +7,8 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -24,6 +26,7 @@ namespace JsonApiDotNetCoreExample
             Config = builder.Build();
         }
 
+
         public virtual void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
@@ -36,7 +39,9 @@ namespace JsonApiDotNetCoreExample
                 })
                 .AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
+                    options.UseLoggerFactory(new LoggerFactory(new[] { new DebugLoggerProvider() }))
+                           .EnableSensitiveDataLogging()
+                           .UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
                 .AddJsonApi(options =>
                 {
@@ -44,7 +49,7 @@ namespace JsonApiDotNetCoreExample
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
                     options.EnableResourceHooks = true;
-                    options.LoaDatabaseValues = true;
+                    options.LoadDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
             services.AddClientSerialization();
