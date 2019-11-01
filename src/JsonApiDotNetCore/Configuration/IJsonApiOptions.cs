@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Configuration
         /// 
         /// Defaults to <see langword="false"/>.
         /// </summary>
-        bool LoaDatabaseValues { get; set; }
+        bool LoadDatabase { get; set; }
         /// <summary>
         /// Whether or not the total-record count should be included in all document
         /// level meta objects.

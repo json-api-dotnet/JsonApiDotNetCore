@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
         /// 
         /// Defaults to <see langword="false"/>.
         /// </summary>
-        public bool LoaDatabaseValues { get; set; } = false;
+        public bool LoadDatabase { get; set; } = false;
 
         /// <summary>
         /// The base URL Namespace

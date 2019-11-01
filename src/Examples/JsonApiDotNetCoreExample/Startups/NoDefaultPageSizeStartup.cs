@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExample
                     options.Namespace = "api/v1";
                     options.IncludeTotalRecordCount = true;
                     options.EnableResourceHooks = true;
-                    options.LoaDatabaseValues = true;
+                    options.LoadDatabase = true;
                     options.AllowClientGeneratedIds = true;
                 },
                 discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),

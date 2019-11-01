@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExample
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
                     options.EnableResourceHooks = true;
-                    options.LoaDatabaseValues = true;
+                    options.LoadDatabase = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
             services.AddClientSerialization();
