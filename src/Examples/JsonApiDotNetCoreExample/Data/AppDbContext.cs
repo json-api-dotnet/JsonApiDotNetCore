@@ -14,6 +14,7 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<NonJsonApiResource> NonJsonApiResources { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<SuperUser> SuperUsers { get; set; }
         public DbSet<PersonRole> PersonRoles { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
