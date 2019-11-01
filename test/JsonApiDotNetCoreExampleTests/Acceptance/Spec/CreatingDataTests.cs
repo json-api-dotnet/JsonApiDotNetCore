@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var dbContext = PrepareTest<Startup>();
-            var serializer = GetSerializer<SuperUser>(e => new { }, e => new { e.SecurityLevel, e.Username, e.Password });
+            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });
             var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
 
             // Act
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             var createdSuperUser = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            dbContext.SuperUsers.Where(e => e.Id.Equals(createdSuperUser.Id)).First();
+            var created = dbContext.SuperUsers.Where(e => e.Id.Equals(createdSuperUser.Id)).First();
         }
 
         [Fact]

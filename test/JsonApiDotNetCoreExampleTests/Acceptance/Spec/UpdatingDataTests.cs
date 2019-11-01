@@ -48,16 +48,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel });
             var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
-            var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674 };
             dbContext.SuperUsers.Add(superUser);
             dbContext.SaveChanges();
+            var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674 };
 
             // Act
-            var (body, response) = await Patch($"/api/v1/super-users/{su.Id}", serializer.Serialize(superUser));
+            var (body, response) = await Patch($"/api/v1/super-users/{su.Id}", serializer.Serialize(su));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
-            var updated = dbContext.SuperUsers.AsNoTracking().Where(e => e.Id.Equals(su.Id)).First();
+            var updated = _deserializer.DeserializeSingle<SuperUser>(body).Data;
             Assert.Equal(2674, updated.SecurityLevel);
         }
 
