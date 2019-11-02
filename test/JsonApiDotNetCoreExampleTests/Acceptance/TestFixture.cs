@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -31,17 +32,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
+
+
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
             var serializer =  GetService<IRequestSerializer>();
-            if (attributes != null)
-            {
-                serializer.SetAttributesToSerialize(attributes);
-            }
-            if (relationships != null)
-            {
-                serializer.SetRelationshipsToSerialize(relationships);
-            }
+            var graph =  GetService<IResourceGraph>();
+            serializer.AttributesToSerialize = graph.GetAttributes(attributes);
+            serializer.RelationshipsToSerialize = graph.GetRelationships(attributes);
             return serializer;
         }
         public IResponseDeserializer GetDeserializer()
