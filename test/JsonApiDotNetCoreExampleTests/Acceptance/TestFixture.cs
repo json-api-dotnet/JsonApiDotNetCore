@@ -38,8 +38,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             var serializer =  GetService<IRequestSerializer>();
             var graph =  GetService<IResourceGraph>();
-            serializer.AttributesToSerialize = graph.GetAttributes(attributes);
-            serializer.RelationshipsToSerialize = graph.GetRelationships(attributes);
+            if (attributes != null)
+                serializer.AttributesToSerialize = graph.GetAttributes(attributes);
+            if (relationships != null)
+                serializer.RelationshipsToSerialize = graph.GetRelationships(relationships);
             return serializer;
         }
         public IResponseDeserializer GetDeserializer()
