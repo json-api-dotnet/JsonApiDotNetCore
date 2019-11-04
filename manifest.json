@@ -2361,7 +2361,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html",
-          "hash": "7EAiTentm0cXYz44PlIlHA=="
+          "hash": "UyyY75CwGPc5MuSuzVxKEg=="
         }
       },
       "is_incremental": false,
@@ -2385,7 +2385,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html",
-          "hash": "5zanQLePVjs7piik7NVwIQ=="
+          "hash": "fUQKPYA4e3QTOD7MwshEYA=="
         }
       },
       "is_incremental": false,
@@ -3507,6 +3507,13 @@
         "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
@@ -3517,13 +3524,6 @@
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 255,
-          "skipped_file_count": 0
-        },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build",
-          "total_file_count": 0,
           "skipped_file_count": 0
         }
       }

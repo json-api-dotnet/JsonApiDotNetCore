@@ -114,7 +114,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.%23ctor(JsonApiDotNetCore.Internal.Contracts.IResourceGraph%2CJsonApiDotNetCore.Serialization.IResourceObjectBuilder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L21">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L18">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer__ctor_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer__ctor_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.#ctor(JsonApiDotNetCore.Internal.Contracts.IResourceGraph,JsonApiDotNetCore.Serialization.IResourceObjectBuilder)">RequestSerializer(IResourceGraph, IResourceObjectBuilder)</h4>
@@ -146,6 +146,74 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer_AttributesToSerialize.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L58">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_AttributesToSerialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_AttributesToSerialize" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize">AttributesToSerialize</h4>
+  <div class="markdown level1 summary"><p>Sets the attributes that will be included in the serialized payload.
+You can use <see cref="!:IResourceGraph.GetAttributes&lt;TResource>(Expression&lt;System.Func&lt;TResource, dynamic>>)"></see>
+to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a> instances</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;AttrAttribute&gt; AttributesToSerialize { set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer_RelationshipsToSerialize.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L61">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_RelationshipsToSerialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_RelationshipsToSerialize" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize">RelationshipsToSerialize</h4>
+  <div class="markdown level1 summary"><p>Sets the relationships that will be included in the serialized payload.
+You can use <see cref="!:IResourceGraph.GetRelationships&lt;TResource>(Expression&lt;System.Func&lt;TResource, dynamic>>)"></see>
+to conveniently access the desired <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a> instances</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;RelationshipAttribute&gt; RelationshipsToSerialize { set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -153,7 +221,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_IEnumerable_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L43">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L38">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_IEnumerable_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable)">Serialize(IEnumerable)</h4>
@@ -203,7 +271,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_JsonApiDotNetCore_Models_IIdentifiable_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(JsonApiDotNetCore.Models.IIdentifiable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L31">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L26">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_JsonApiDotNetCore_Models_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(JsonApiDotNetCore.Models.IIdentifiable)">Serialize(IIdentifiable)</h4>
@@ -248,102 +316,6 @@
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetAttributesToSerialize__1_Expression_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize%60%601(Expression%7BFunc%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L63">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetAttributesToSerialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetAttributesToSerialize__1_Expression_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize``1(Expression{Func{``0,System.Object}})">SetAttributesToSerialize&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SetAttributesToSerialize&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; filter)
-    where TResource : class, IIdentifiable</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Expression</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
-        <td><span class="parametername">filter</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TResource</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetRelationshipsToSerialize__1_Expression_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize%60%601(Expression%7BFunc%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L71">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetRelationshipsToSerialize_" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetRelationshipsToSerialize__1_Expression_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize``1(Expression{Func{``0,System.Object}})">SetRelationshipsToSerialize&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SetRelationshipsToSerialize&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; filter)
-    where TResource : class, IIdentifiable</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Expression</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
-        <td><span class="parametername">filter</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TResource</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html">IRequestSerializer</a>
@@ -359,7 +331,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/develop/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Client_RequestSerializer.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Client.RequestSerializer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L15" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/develop/src/JsonApiDotNetCore/Serialization/Client/RequestSerializer.cs/#L14" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

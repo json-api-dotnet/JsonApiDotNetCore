@@ -9420,6 +9420,32 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Client.IRequestSerializer
   fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer
   nameWithType: IRequestSerializer
+- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.AttributesToSerialize
+  name: AttributesToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_AttributesToSerialize
+  commentId: P:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.AttributesToSerialize
+  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.AttributesToSerialize
+  nameWithType: IRequestSerializer.AttributesToSerialize
+- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.AttributesToSerialize*
+  name: AttributesToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_AttributesToSerialize_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.AttributesToSerialize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.AttributesToSerialize
+  nameWithType: IRequestSerializer.AttributesToSerialize
+- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize
+  name: RelationshipsToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_RelationshipsToSerialize
+  commentId: P:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize
+  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize
+  nameWithType: IRequestSerializer.RelationshipsToSerialize
+- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize*
+  name: RelationshipsToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_RelationshipsToSerialize_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.RelationshipsToSerialize
+  nameWithType: IRequestSerializer.RelationshipsToSerialize
 - uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize(IEnumerable)
   name: Serialize(IEnumerable)
   href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_Serialize_IEnumerable_
@@ -9439,38 +9465,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.Serialize
   nameWithType: IRequestSerializer.Serialize
-- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize*
-  name: SetAttributesToSerialize
-  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_SetAttributesToSerialize_
-  commentId: Overload:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize
-  nameWithType: IRequestSerializer.SetAttributesToSerialize
-- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize``1(Expression{System.Func{``0,System.Object}})
-  name: SetAttributesToSerialize<TResource>(Expression<System.Func<TResource, Object>>)
-  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_SetAttributesToSerialize__1_Expression_System_Func___0_System_Object___
-  commentId: M:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize``1(Expression{System.Func{``0,System.Object}})
-  name.vb: SetAttributesToSerialize(Of TResource)(Expression(Of System.Func(Of TResource, Object)))
-  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize<TResource>(Expression<System.Func<TResource, System.Object>>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetAttributesToSerialize(Of TResource)(Expression(Of System.Func(Of TResource, System.Object)))
-  nameWithType: IRequestSerializer.SetAttributesToSerialize<TResource>(Expression<System.Func<TResource, Object>>)
-  nameWithType.vb: IRequestSerializer.SetAttributesToSerialize(Of TResource)(Expression(Of System.Func(Of TResource, Object)))
-- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize*
-  name: SetRelationshipsToSerialize
-  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_SetRelationshipsToSerialize_
-  commentId: Overload:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize
-  nameWithType: IRequestSerializer.SetRelationshipsToSerialize
-- uid: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize``1(Expression{System.Func{``0,System.Object}})
-  name: SetRelationshipsToSerialize<TResource>(Expression<System.Func<TResource, Object>>)
-  href: api/JsonApiDotNetCore.Serialization.Client.IRequestSerializer.html#JsonApiDotNetCore_Serialization_Client_IRequestSerializer_SetRelationshipsToSerialize__1_Expression_System_Func___0_System_Object___
-  commentId: M:JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize``1(Expression{System.Func{``0,System.Object}})
-  name.vb: SetRelationshipsToSerialize(Of TResource)(Expression(Of System.Func(Of TResource, Object)))
-  fullName: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize<TResource>(Expression<System.Func<TResource, System.Object>>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Client.IRequestSerializer.SetRelationshipsToSerialize(Of TResource)(Expression(Of System.Func(Of TResource, System.Object)))
-  nameWithType: IRequestSerializer.SetRelationshipsToSerialize<TResource>(Expression<System.Func<TResource, Object>>)
-  nameWithType.vb: IRequestSerializer.SetRelationshipsToSerialize(Of TResource)(Expression(Of System.Func(Of TResource, Object)))
 - uid: JsonApiDotNetCore.Serialization.Client.IResponseDeserializer
   name: IResponseDeserializer
   href: api/JsonApiDotNetCore.Serialization.Client.IResponseDeserializer.html
@@ -9528,6 +9522,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.RequestSerializer
   nameWithType: RequestSerializer.RequestSerializer
+- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize
+  name: AttributesToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_AttributesToSerialize
+  commentId: P:JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize
+  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize
+  nameWithType: RequestSerializer.AttributesToSerialize
+- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize*
+  name: AttributesToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_AttributesToSerialize_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.AttributesToSerialize
+  nameWithType: RequestSerializer.AttributesToSerialize
+- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize
+  name: RelationshipsToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_RelationshipsToSerialize
+  commentId: P:JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize
+  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize
+  nameWithType: RequestSerializer.RelationshipsToSerialize
+- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize*
+  name: RelationshipsToSerialize
+  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_RelationshipsToSerialize_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.RelationshipsToSerialize
+  nameWithType: RequestSerializer.RelationshipsToSerialize
 - uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize(IEnumerable)
   name: Serialize(IEnumerable)
   href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_Serialize_IEnumerable_
@@ -9547,38 +9567,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.Serialize
   nameWithType: RequestSerializer.Serialize
-- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize*
-  name: SetAttributesToSerialize
-  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetAttributesToSerialize_
-  commentId: Overload:JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize
-  nameWithType: RequestSerializer.SetAttributesToSerialize
-- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize``1(Expression{Func{``0,System.Object}})
-  name: SetAttributesToSerialize<TResource>(Expression<Func<TResource, Object>>)
-  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetAttributesToSerialize__1_Expression_Func___0_System_Object___
-  commentId: M:JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize``1(Expression{Func{``0,System.Object}})
-  name.vb: SetAttributesToSerialize(Of TResource)(Expression(Of Func(Of TResource, Object)))
-  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize<TResource>(Expression<Func<TResource, System.Object>>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetAttributesToSerialize(Of TResource)(Expression(Of Func(Of TResource, System.Object)))
-  nameWithType: RequestSerializer.SetAttributesToSerialize<TResource>(Expression<Func<TResource, Object>>)
-  nameWithType.vb: RequestSerializer.SetAttributesToSerialize(Of TResource)(Expression(Of Func(Of TResource, Object)))
-- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize*
-  name: SetRelationshipsToSerialize
-  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetRelationshipsToSerialize_
-  commentId: Overload:JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize
-  nameWithType: RequestSerializer.SetRelationshipsToSerialize
-- uid: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize``1(Expression{Func{``0,System.Object}})
-  name: SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, Object>>)
-  href: api/JsonApiDotNetCore.Serialization.Client.RequestSerializer.html#JsonApiDotNetCore_Serialization_Client_RequestSerializer_SetRelationshipsToSerialize__1_Expression_Func___0_System_Object___
-  commentId: M:JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize``1(Expression{Func{``0,System.Object}})
-  name.vb: SetRelationshipsToSerialize(Of TResource)(Expression(Of Func(Of TResource, Object)))
-  fullName: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, System.Object>>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Client.RequestSerializer.SetRelationshipsToSerialize(Of TResource)(Expression(Of Func(Of TResource, System.Object)))
-  nameWithType: RequestSerializer.SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, Object>>)
-  nameWithType.vb: RequestSerializer.SetRelationshipsToSerialize(Of TResource)(Expression(Of Func(Of TResource, Object)))
 - uid: JsonApiDotNetCore.Serialization.Client.ResponseDeserializer
   name: ResponseDeserializer
   href: api/JsonApiDotNetCore.Serialization.Client.ResponseDeserializer.html
