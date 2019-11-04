@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Client
@@ -14,8 +13,6 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// </summary>
     public class RequestSerializer : BaseDocumentBuilder, IRequestSerializer
     {
-        private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache;
-        private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache;
         private Type _currentTargetedResource;
         private readonly IResourceGraph _resourceGraph;
         public RequestSerializer(IResourceGraph resourceGraph,
@@ -23,8 +20,6 @@ namespace JsonApiDotNetCore.Serialization.Client
             : base(resourceObjectBuilder, resourceGraph)
         {
             _resourceGraph = resourceGraph;
-            _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
-            _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         }
 
         /// <inheritdoc/>
@@ -60,44 +55,34 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <inheritdoc/>
-        public void SetAttributesToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
-            where TResource : class, IIdentifiable
-        {
-            var allowedAttributes = _resourceGraph.GetAttributes(filter);
-            _attributesToSerializeCache[typeof(TResource)] = allowedAttributes;
-        }
+        public IEnumerable<AttrAttribute> AttributesToSerialize { private get; set; }
 
         /// <inheritdoc/>
-        public void SetRelationshipsToSerialize<TResource>(Expression<Func<TResource, dynamic>> filter)
-            where TResource : class, IIdentifiable
-        {
-            var allowedRelationships = _resourceGraph.GetRelationships(filter);
-            _relationshipsToSerializeCache[typeof(TResource)] = allowedRelationships;
-        }
+        public IEnumerable<RelationshipAttribute> RelationshipsToSerialize { private get; set; }
 
         /// <summary>
         /// By default, the client serializer includes all attributes in the result,
-        /// unless a list of allowed attributes was supplied using the <see cref="SetAttributesToSerialize"/>
+        /// unless a list of allowed attributes was supplied using the <see cref="AttributesToSerialize"/>
         /// method. For any related resources, attributes are never exposed.
         /// </summary>
         private List<AttrAttribute> GetAttributesToSerialize(IIdentifiable entity)
         {
-            var resourceType = entity.GetType();
-            if (_currentTargetedResource != resourceType)
+            var currentResourceType = entity.GetType();
+            if (_currentTargetedResource != currentResourceType)
                 // We're dealing with a relationship that is being serialized, for which
                 // we never want to include any attributes in the payload.
                 return new List<AttrAttribute>();
 
-            if (!_attributesToSerializeCache.TryGetValue(resourceType, out var attributes))
-                return _resourceGraph.GetAttributes(resourceType);
+            if (AttributesToSerialize == null)
+                return _resourceGraph.GetAttributes(currentResourceType);
 
-            return attributes;
+            return AttributesToSerialize.ToList();
         }
 
         /// <summary>
         /// By default, the client serializer does not include any relationships
         /// for entities in the primary data unless explicitly included using
-        /// <see cref="SetRelationshipsToSerialize{T}(Expression{Func{T, dynamic}})"/>.
+        /// <see cref="RelationshipsToSerialize"/>.
         /// </summary>
         private List<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable entity)
         {
@@ -105,10 +90,10 @@ namespace JsonApiDotNetCore.Serialization.Client
             /// only allow relationship attributes to be serialized if they were set using
             /// <see cref="RelationshipsToInclude{T}(Expression{Func{T, dynamic}})"/>
             /// and the current <paramref name="entity"/> is a main entry in the primary data.
-            if (!_relationshipsToSerializeCache.TryGetValue(currentResourceType, out var relationships))
-                return new List<RelationshipAttribute>();
+            if (RelationshipsToSerialize == null)
+                return _resourceGraph.GetRelationships(currentResourceType);
 
-            return relationships;
+            return RelationshipsToSerialize.ToList();
         }
     }
 }

@@ -72,6 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var user = _userFaker.Generate();
+
             var serializer = _fixture.GetSerializer<User>(p => new { p.Password, p.Username });
 
             
