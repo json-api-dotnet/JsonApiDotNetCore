@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
@@ -23,11 +24,17 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <param name="entities">Entities to serialize</param>
         /// <returns>The serialized content</returns>
         string Serialize(IEnumerable entities);
-
-        /// <inheritdoc/>
+        /// <summary>
+        /// Sets the attributes that will be included in the serialized payload.
+        /// You can use <see cref="IResourceGraph.GetAttributes{TResource}(Expression{System.Func{TResource, dynamic}})"/>
+        /// to conveniently access the desired <see cref="AttrAttribute"/> instances
+        /// </summary>
         public IEnumerable<AttrAttribute> AttributesToSerialize { set; }
-
-        /// <inheritdoc/>
+        /// <summary>
+        /// Sets the relationships that will be included in the serialized payload.
+        /// You can use <see cref="IResourceGraph.GetRelationships{TResource}(Expression{System.Func{TResource, dynamic}})"/>
+        /// to conveniently access the desired <see cref="RelationshipAttribute"/> instances
+        /// </summary>
         public IEnumerable<RelationshipAttribute> RelationshipsToSerialize { set; }
     }
 }
