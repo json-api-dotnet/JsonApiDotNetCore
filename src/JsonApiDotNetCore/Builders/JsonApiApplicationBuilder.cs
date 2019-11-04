@@ -150,6 +150,9 @@ namespace JsonApiDotNetCore.Builders
             _services.AddScoped(typeof(IResourceService<>), typeof(DefaultResourceService<>));
             _services.AddScoped(typeof(IResourceService<,>), typeof(DefaultResourceService<,>));
 
+            _services.AddScoped(typeof(IResourceQueryService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IResourceCmdService<,>), typeof(DefaultResourceService<,>));
+
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
