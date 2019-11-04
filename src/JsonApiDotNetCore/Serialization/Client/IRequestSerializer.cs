@@ -23,21 +23,6 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <param name="entities">Entities to serialize</param>
         /// <returns>The serialized content</returns>
         string Serialize(IEnumerable entities);
-        ///// <summary>
-        ///// Sets the <see cref="AttrAttribute"/>s to serialize for resources of type <typeparamref name="TResource"/>.
-        ///// If no <see cref="AttrAttribute"/>s are specified, by default all attributes are included in the serialized result.
-        ///// </summary>
-        ///// <typeparam name="TResource">Type of the resource to serialize</typeparam>
-        ///// <param name="filter">Should be of the form: (TResource e) => new { e.Attr1, e.Attr2 }</param>
-        //void  AAttributesToSerialize(IEnumerable<AttrAttribute> attributes);
-        ///// <summary>
-        ///// Sets the <see cref="RelationshipAttribute"/>s to serialize for resources of type <typeparamref name="TResource"/>.
-        ///// If no <see cref="RelationshipAttribute"/>s are specified, by default no relationships are included in the serialization result.
-        ///// The <paramref name="filter"/>should be of the form: (TResource e) => new { e.Attr1, e.Attr2 }
-        ///// </summary>
-        ///// <typeparam name="TResource">Type of the resource to serialize</typeparam>
-        ///// <param name="filter">Should be of the form: (TResource e) => new { e.Attr1, e.Attr2 }</param>
-        //void SetRelationshipsToSerialize(IEnumerable<RelationshipAttribute> attributes);
 
         /// <inheritdoc/>
         public IEnumerable<AttrAttribute> AttributesToSerialize { set; }

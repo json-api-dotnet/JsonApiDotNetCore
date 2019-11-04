@@ -17,5 +17,4 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         List<RelationshipAttribute> Relationships { get; set; }
     }
-
 }
