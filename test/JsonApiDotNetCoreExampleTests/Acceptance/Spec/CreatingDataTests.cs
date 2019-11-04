@@ -37,6 +37,23 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task CreateResource_ModelWithEntityFrameworkInHeritance_IsCreated()
+        {
+            // Arrange
+            var dbContext = PrepareTest<Startup>();
+            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });
+            var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
+
+            // Act
+            var (body, response) = await Post("/api/v1/super-users", serializer.Serialize(superUser));
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.Created, response);
+            var createdSuperUser = _deserializer.DeserializeSingle<SuperUser>(body).Data;
+            var created = dbContext.SuperUsers.Where(e => e.Id.Equals(createdSuperUser.Id)).First();
+        }
+
+        [Fact]
         public async Task CreateResource_GuidResource_IsCreated()
         {
             // Arrange

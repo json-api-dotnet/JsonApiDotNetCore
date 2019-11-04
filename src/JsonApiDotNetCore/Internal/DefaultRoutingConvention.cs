@@ -58,6 +58,7 @@ namespace JsonApiDotNetCore.Internal
             foreach (var controller in application.Controllers)
             {
                 var resourceType = GetResourceTypeFromController(controller.ControllerType);
+
                 if (resourceType != null)
                     _registeredResources.Add(controller.ControllerName, resourceType);
 

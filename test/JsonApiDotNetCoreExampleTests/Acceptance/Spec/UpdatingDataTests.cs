@@ -20,15 +20,15 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class UpdatingDataTests
+    public class UpdatingDataTests : EndToEndTest
     {
         private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
-        public UpdatingDataTests(TestFixture<Startup> fixture)
-        {
+        public UpdatingDataTests(TestFixture<Startup> fixture) : base(fixture)
+        { 
             _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
 
@@ -41,6 +41,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .RuleFor(p => p.LastName, f => f.Name.LastName());
         }
 
+        [Fact]
+        public async Task PatchResource_ModelWithEntityFrameworkInHeritance_IsPatched()
+        {
+            // Arrange
+            var dbContext = PrepareTest<Startup>();
+            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel });
+            var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
+            dbContext.SuperUsers.Add(superUser);
+            dbContext.SaveChanges();
+            var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674 };
+
+            // Act
+            var (body, response) = await Patch($"/api/v1/super-users/{su.Id}", serializer.Serialize(su));
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
+            var updated = _deserializer.DeserializeSingle<SuperUser>(body).Data;
+            Assert.Equal(2674, updated.SecurityLevel);
+        }
 
         [Fact]
         public async Task Response400IfUpdatingNotSettableAttribute()
