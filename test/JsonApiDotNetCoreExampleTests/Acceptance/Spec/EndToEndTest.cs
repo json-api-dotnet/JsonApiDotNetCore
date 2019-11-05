@@ -61,6 +61,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             return SendRequest("POST", route, content);
         }
 
+        public Task<(string, HttpResponseMessage)> Patch(string route, string content)
+        {
+            return SendRequest("PATCH", route, content);
+        }
+
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
             return _fixture.GetSerializer(attributes, relationships);
