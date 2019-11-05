@@ -47,7 +47,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         public async Task<(string, HttpResponseMessage)> SendRequest(string method, string route, string content)
-        {            var request = new HttpRequestMessage(new HttpMethod(method), route);
+        {
+            var request = new HttpRequestMessage(new HttpMethod(method), route);
             request.Content = new StringContent(content);
             request.Content.Headers.ContentType = JsonApiContentType;
             var response = await _client.SendAsync(request);

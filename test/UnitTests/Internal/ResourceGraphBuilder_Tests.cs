@@ -12,7 +12,7 @@ namespace UnitTests.Internal
         [Fact]
         public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_DoNot_Implement_IIdentifiable()
         {
-            // Arrange 
+            // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder();
 
             // Act
