@@ -10,16 +10,15 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Builders
 {
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
-        private readonly List<ResourceContext> _entities = new List<ResourceContext>();
-        private readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
-        private readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
+        internal readonly List<ResourceContext> _entities = new List<ResourceContext>();
+        internal readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
+        internal readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
 
         public ResourceGraphBuilder() { }
 
@@ -67,7 +66,7 @@ namespace JsonApiDotNetCore.Builders
             return this;
         }
 
-        private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
+        internal ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
             ResourceName = pluralizedTypeName,
             ResourceType = entityType,
@@ -178,29 +177,7 @@ namespace JsonApiDotNetCore.Builders
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 
-        /// <inheritdoc />
-        public IResourceGraphBuilder AddDbContext<T>() where T : DbContext
-        {
-            var contextType = typeof(T);
-            var contextProperties = contextType.GetProperties();
-            foreach (var property in contextProperties)
-            {
-                var dbSetType = property.PropertyType;
-                if (dbSetType.GetTypeInfo().IsGenericType
-                    && dbSetType.GetGenericTypeDefinition() == typeof(DbSet<>))
-                {
-                    var entityType = dbSetType.GetGenericArguments()[0];
-                    AssertEntityIsNotAlreadyDefined(entityType);
-                    var (isJsonApiResource, idType) = GetIdType(entityType);
-                    if (isJsonApiResource)
-                        _entities.Add(GetEntity(GetResourceNameFromDbSetProperty(property, entityType), entityType, idType));
-                }
-            }
-
-            return this;
-        }
-
-        private string GetResourceNameFromDbSetProperty(PropertyInfo property, Type resourceType)
+        internal string GetResourceNameFromDbSetProperty(PropertyInfo property, Type resourceType)
         {
             // this check is actually duplicated in the DefaultResourceNameFormatter
             // however, we perform it here so that we allow class attributes to be prioritized over
@@ -221,7 +198,7 @@ namespace JsonApiDotNetCore.Builders
             return _resourceNameFormatter.FormatResourceName(resourceType);
         }
 
-        private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
+        internal (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
         {
             var possible = TypeLocator.GetIdType(resourceType);
             if (possible.isJsonApiResource)
@@ -232,7 +209,7 @@ namespace JsonApiDotNetCore.Builders
             return (false, null);
         }
 
-        private void AssertEntityIsNotAlreadyDefined(Type entityType)
+        internal void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
             if (_entities.Any(e => e.ResourceType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");

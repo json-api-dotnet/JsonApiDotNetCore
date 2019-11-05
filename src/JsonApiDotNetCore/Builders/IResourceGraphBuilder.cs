@@ -13,7 +13,6 @@ namespace JsonApiDotNetCore.Builders
         /// Construct the <see cref="ResourceGraph"/>
         /// </summary>
         IResourceGraph Build();
-
         /// <summary>
         /// Add a json:api resource
         /// </summary>
@@ -24,8 +23,6 @@ namespace JsonApiDotNetCore.Builders
         /// See <see cref="IResourceNameFormatter" />.
         /// </param>
         IResourceGraphBuilder AddResource<TResource>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<int>;
-
-
         /// <summary>
         /// Add a json:api resource
         /// </summary>
@@ -37,7 +34,6 @@ namespace JsonApiDotNetCore.Builders
         /// See <see cref="IResourceNameFormatter" />.
         /// </param>
         IResourceGraphBuilder AddResource<TResource, TId>(string pluralizedTypeName = null) where TResource : class, IIdentifiable<TId>;
-
         /// <summary>
         /// Add a Json:Api resource
         /// </summary>
@@ -49,12 +45,5 @@ namespace JsonApiDotNetCore.Builders
         /// See <see cref="IResourceNameFormatter" />.
         /// </param>
         IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null);
-
-        /// <summary>
-        /// Add all the models that are part of the provided <see cref="DbContext" /> 
-        /// that also implement <see cref="IIdentifiable"/>
-        /// </summary>
-        /// <typeparam name="T">The <see cref="DbContext"/> implementation type.</typeparam>
-        IResourceGraphBuilder AddDbContext<T>() where T : DbContext;   
     }
 }
