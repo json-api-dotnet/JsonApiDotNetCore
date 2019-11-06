@@ -19,32 +19,8 @@ namespace JsonApiDotNetCore.Extensions
     public static class IServiceCollectionExtensions
     {
         /// <summary>
-        /// Enabling JsonApiDotNetCore using the EF Core DbContext to build the ResourceGraph.
-        /// </summary>
-        /// <typeparam name="TContext"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="options"></param>
-        /// <param name="resources"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddJsonApi<TEfCoreDbContext>(this IServiceCollection services,
-                                                              Action<JsonApiOptions> options = null,
-                                                              Action<IResourceGraphBuilder> resources = null,
-                                                              IMvcCoreBuilder mvcBuilder = null)
-            where TEfCoreDbContext : DbContext
-        {
-            var application = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
-            if (options != null)
-                application.ConfigureJsonApiOptions(options);
-            application.ConfigureLogging();
-            application.ConfigureMvc();
-            application.ConfigureResources<TEfCoreDbContext>(resources);
-            application.ConfigureServices();
-            return services;
-        }
-
-        /// <summary>
         /// Enabling JsonApiDotNetCore using manual declaration to build the ResourceGraph.
-        /// </summary>z
+        /// </summary>
         /// <param name="services"></param>
         /// <param name="options"></param>
         /// <param name="resources"></param>

@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
