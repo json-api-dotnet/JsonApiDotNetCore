@@ -3,7 +3,7 @@
 namespace JsonApiDotNetCore.Graph
 {
     /// <summary>
-    /// Uses kebab-case as formatting options in the route and request/response body.
+    /// Uses camelCase as formatting options in the route and request/response body.
     /// </summary>
     /// <example>
     /// <code>

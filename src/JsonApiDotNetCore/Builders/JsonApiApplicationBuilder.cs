@@ -206,7 +206,7 @@ namespace JsonApiDotNetCore.Builders
         private void RegisterJsonApiStartupServices()
         {
             _services.AddSingleton<IJsonApiOptions>(JsonApiOptions);
-            _services.TryAddSingleton<IResourceNameFormatter>(new KebabCaseFormatter());
+            _services.TryAddSingleton<IResourceNameFormatter>(new CamelCaseFormatter());
             _services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
             _services.TryAddSingleton<IResourceGraphBuilder, ResourceGraphBuilder>();
             _services.TryAddSingleton<IServiceDiscoveryFacade>(sp => new ServiceDiscoveryFacade(_services, sp.GetRequiredService<IResourceGraphBuilder>()));

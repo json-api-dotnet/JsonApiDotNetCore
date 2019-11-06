@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Internal
     /// <summary>
     /// The default routing convention registers the name of the resource as the route
     /// using the <see cref="IResourceNameFormatter"/> that is registered. The default for this is
-    /// a kebab-case formatter. If the controller directly inherits from JsonApiMixin and there is no
+    /// a camelCase formatter. If the controller directly inherits from JsonApiMixin and there is no
     /// resource directly associated, it used the name of the controller instead of the name of the type.
     /// </summary>
     /// <example>

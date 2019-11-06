@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Builders
     {
         private List<ResourceContext> _resources { get; set; } = new List<ResourceContext>();
         private List<ValidationResult> _validationResults { get; set; } = new List<ValidationResult>();
-        private IResourceNameFormatter _formatter { get; set; } = new KebabCaseFormatter();
+        private IResourceNameFormatter _formatter { get; set; } = new CamelCaseFormatter();
 
         public ResourceGraphBuilder() { }
 
