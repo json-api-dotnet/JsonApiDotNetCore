@@ -32,7 +32,7 @@ namespace UnitTests.Serialization.Serializer
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
             Assert.Null(resourceObject.Id);
-            Assert.Equal("test-resource", resourceObject.Type);
+            Assert.Equal("testResource", resourceObject.Type);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace UnitTests.Serialization.Serializer
             Assert.Equal("1", resourceObject.Id);
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
-            Assert.Equal("test-resource", resourceObject.Type);
+            Assert.Equal("testResource", resourceObject.Type);
         }
 
         [Theory]
@@ -66,8 +66,8 @@ namespace UnitTests.Serialization.Serializer
             // Assert
             Assert.NotNull(resourceObject.Attributes);
             Assert.Equal(2, resourceObject.Attributes.Keys.Count);
-            Assert.Equal(stringFieldValue, resourceObject.Attributes["string-field"]);
-            Assert.Equal(intFieldValue, resourceObject.Attributes["nullable-int-field"]);
+            Assert.Equal(stringFieldValue, resourceObject.Attributes["stringField"]);
+            Assert.Equal(intFieldValue, resourceObject.Attributes["nullableIntField"]);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace UnitTests.Serialization.Serializer
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
             Assert.Null(resourceObject.Id);
-            Assert.Equal("multi-principals", resourceObject.Type);
+            Assert.Equal("multiPrincipals", resourceObject.Type);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace UnitTests.Serialization.Serializer
             Assert.Null(resourceObject.Attributes);
             Assert.Null(resourceObject.Relationships);
             Assert.Null(resourceObject.Id);
-            Assert.Equal("multi-principals", resourceObject.Type);
+            Assert.Equal("multiPrincipals", resourceObject.Type);
         }
 
         [Fact]
@@ -121,16 +121,16 @@ namespace UnitTests.Serialization.Serializer
 
             // Assert
             Assert.Equal(4, resourceObject.Relationships.Count);
-            Assert.Null(resourceObject.Relationships["empty-to-one"].Data);
-            Assert.Empty((IList)resourceObject.Relationships["empty-to-manies"].Data);
-            var populatedToOneData = (ResourceIdentifierObject)resourceObject.Relationships["populated-to-one"].Data;
+            Assert.Null(resourceObject.Relationships["emptyToOne"].Data);
+            Assert.Empty((IList)resourceObject.Relationships["emptyToManies"].Data);
+            var populatedToOneData = (ResourceIdentifierObject)resourceObject.Relationships["populatedToOne"].Data;
             Assert.NotNull(populatedToOneData);
             Assert.Equal("10", populatedToOneData.Id);
-            Assert.Equal("one-to-one-dependents", populatedToOneData.Type);
-            var populatedToManiesData = (List<ResourceIdentifierObject>)resourceObject.Relationships["populated-to-manies"].Data;
+            Assert.Equal("oneToOneDependents", populatedToOneData.Type);
+            var populatedToManiesData = (List<ResourceIdentifierObject>)resourceObject.Relationships["populatedToManies"].Data;
             Assert.Single(populatedToManiesData);
             Assert.Equal("20", populatedToManiesData.First().Id);
-            Assert.Equal("one-to-many-dependents", populatedToManiesData.First().Type);
+            Assert.Equal("oneToManyDependents", populatedToManiesData.First().Type);
         }
 
         [Fact]

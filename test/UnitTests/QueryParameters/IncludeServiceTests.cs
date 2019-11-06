@@ -34,7 +34,7 @@ namespace UnitTests.QueryParameters
         public void Parse_MultipleNestedChains_CanParse()
         {
             // Arrange
-            const string chain = "author.blogs.reviewer.favorite-food,reviewer.blogs.author.favorite-song";
+            const string chain = "author.blogs.reviewer.favoriteFood,reviewer.blogs.author.favoriteSong";
             var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
             var service = GetService();
 
@@ -46,17 +46,17 @@ namespace UnitTests.QueryParameters
             Assert.Equal(2, chains.Count);
             var firstChain = chains[0];
             Assert.Equal("author", firstChain.First().PublicRelationshipName);
-            Assert.Equal("favorite-food", firstChain.Last().PublicRelationshipName);
+            Assert.Equal("favoriteFood", firstChain.Last().PublicRelationshipName);
             var secondChain = chains[1];
             Assert.Equal("reviewer", secondChain.First().PublicRelationshipName);
-            Assert.Equal("favorite-song", secondChain.Last().PublicRelationshipName);
+            Assert.Equal("favoriteSong", secondChain.Last().PublicRelationshipName);
         }
 
         [Fact]
         public void Parse_ChainsOnWrongMainResource_ThrowsJsonApiException()
         {
             // Arrange
-            const string chain = "author.blogs.reviewer.favorite-food,reviewer.blogs.author.favorite-song";
+            const string chain = "author.blogs.reviewer.favoriteFood,reviewer.blogs.author.favoriteSong";
             var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
             var service = GetService(_resourceGraph.GetResourceContext<Food>());
 
@@ -69,7 +69,7 @@ namespace UnitTests.QueryParameters
         public void Parse_NotIncludable_ThrowsJsonApiException()
         {
             // Arrange
-            const string chain = "cannot-include";
+            const string chain = "cannotInclude";
             var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
             var service = GetService();
 

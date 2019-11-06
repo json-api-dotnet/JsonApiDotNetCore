@@ -31,13 +31,13 @@ namespace JsonApiDotNetCore.Internal
 
         /// <summary>
         /// Exposed resource attributes.
-        /// See https://jsonapi.org/format/#document-resource-object-attributes.
+        /// See https://jsonapi.org/format/#documentResource-object-attributes.
         /// </summary>
         public List<AttrAttribute> Attributes { get; set; }
 
         /// <summary>
         /// Exposed resource relationships.
-        /// See https://jsonapi.org/format/#document-resource-object-relationships
+        /// See https://jsonapi.org/format/#documentResource-object-relationships
         /// </summary>
         public List<RelationshipAttribute> Relationships { get; set; }
 

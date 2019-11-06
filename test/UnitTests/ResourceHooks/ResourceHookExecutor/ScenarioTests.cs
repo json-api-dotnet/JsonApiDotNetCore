@@ -21,7 +21,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
             var todo = new TodoItem { Owner = person1 };
             var person2 = new Person { AssignedTodoItems = new List<TodoItem>() { todo } };
             todo.Assignee = person2;
-            var person3 = new Person { StakeHolderTodo = todo };
+            var person3 = new Person { StakeHolderTodoItem = todo };
             todo.StakeHolders = new List<Person> { person3 };
             var todoList = new List<TodoItem>() { todo };
 
@@ -41,8 +41,8 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
-            todo.ParentTodoItem = todo;
-            todo.ChildrenTodoItems = new List<TodoItem> { todo };
+            todo.ParentTodo  = todo;
+            todo.ChildrenTodos = new List<TodoItem> { todo };
             var todoList = new List<TodoItem>() { todo };
 
             // Act
@@ -60,13 +60,13 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
             (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
             var rootTodo = new TodoItem() { Id = 1 };
-            var child = new TodoItem { ParentTodoItem = rootTodo, Id = 2 };
-            rootTodo.ChildrenTodoItems = new List<TodoItem> { child };
-            var grandChild = new TodoItem() { ParentTodoItem = child, Id = 3 };
-            child.ChildrenTodoItems = new List<TodoItem> { grandChild };
-            var greatGrandChild = new TodoItem() { ParentTodoItem = grandChild, Id = 4 };
-            grandChild.ChildrenTodoItems = new List<TodoItem> { greatGrandChild };
-            greatGrandChild.ChildrenTodoItems = new List<TodoItem> { rootTodo };
+            var child = new TodoItem { ParentTodo  = rootTodo, Id = 2 };
+            rootTodo.ChildrenTodos = new List<TodoItem> { child };
+            var grandChild = new TodoItem() { ParentTodo  = child, Id = 3 };
+            child.ChildrenTodos = new List<TodoItem> { grandChild };
+            var greatGrandChild = new TodoItem() { ParentTodo  = grandChild, Id = 4 };
+            grandChild.ChildrenTodos = new List<TodoItem> { greatGrandChild };
+            greatGrandChild.ChildrenTodos = new List<TodoItem> { rootTodo };
             var todoList = new List<TodoItem>() { rootTodo };
 
             // Act

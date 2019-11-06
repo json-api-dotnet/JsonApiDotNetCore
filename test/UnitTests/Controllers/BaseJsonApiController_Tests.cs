@@ -16,7 +16,7 @@ namespace UnitTests
     {
         public class Resource : Identifiable
         {
-            [Attr("test-attribute")] public string TestAttribute { get; set; }
+            [Attr] public string TestAttribute { get; set; }
         }
 
         [Fact]

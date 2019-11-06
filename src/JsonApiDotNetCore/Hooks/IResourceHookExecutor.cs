@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// Fires the <see cref="ResourceDefinition{U}.BeforeImplicitUpdateRelationship"/>
         /// hook for any entities that are indirectly (implicitly) affected by this operation.
-        /// Eg: when updating a one-to-one relationship of an entity which already 
+        /// Eg: when updating a oneToOne relationship of an entity which already 
         /// had this relationship populated, then this update will indirectly affect 
         /// the existing relationship value.
         /// </summary>

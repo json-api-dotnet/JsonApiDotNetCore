@@ -33,16 +33,16 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1"",
                   ""attributes"":{
-                     ""string-field"":""value"",
-                     ""date-time-field"":""0001-01-01T00:00:00"",
-                     ""nullable-date-time-field"":null,
-                     ""int-field"":0,
-                     ""nullable-int-field"":123,
-                     ""guid-field"":""00000000-0000-0000-0000-000000000000"",
-                     ""complex-field"":null,
+                     ""stringField"":""value"",
+                     ""dateTimeField"":""0001-01-01T00:00:00"",
+                     ""nullableDateTimeField"":null,
+                     ""intField"":0,
+                     ""nullableIntField"":123,
+                     ""guidField"":""00000000-0000-0000-0000-000000000000"",
+                     ""complexField"":null,
                      ""immutable"":null
                   }
                }
@@ -65,10 +65,10 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1"",
                   ""attributes"":{
-                     ""string-field"":""value""
+                     ""stringField"":""value""
                   }
                }
             }";
@@ -90,9 +90,9 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""attributes"":{
-                     ""string-field"":""value""
+                     ""stringField"":""value""
                   }
                }
             }";
@@ -115,7 +115,7 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1""
                }
             }";
@@ -141,27 +141,27 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                 ""data"":{
-                    ""type"":""multi-principals"",
+                    ""type"":""multiPrincipals"",
                     ""attributes"":{
-                        ""attribute-member"":null
+                        ""attributeMember"":null
                     },
                     ""relationships"":{
-                        ""empty-to-one"":{
+                        ""emptyToOne"":{
                         ""data"":null
                         },
-                        ""empty-to-manies"":{
+                        ""emptyToManies"":{
                         ""data"":[ ]
                         },
-                        ""populated-to-one"":{
+                        ""populatedToOne"":{
                         ""data"":{
-                            ""type"":""one-to-one-dependents"",
+                            ""type"":""oneToOneDependents"",
                             ""id"":""10""
                            }
                         },
-                        ""populated-to-manies"":{
+                        ""populatedToManies"":{
                         ""data"":[
                             {
-                                ""type"":""one-to-many-dependents"",
+                                ""type"":""oneToManyDependents"",
                                 ""id"":""20""
                             }
                           ]
@@ -192,17 +192,17 @@ namespace UnitTests.Serialization.Client
             @"{
                 ""data"":[
                     {
-                        ""type"":""test-resource"",
+                        ""type"":""testResource"",
                         ""id"":""1"",
                         ""attributes"":{
-                        ""string-field"":""value1""
+                        ""stringField"":""value1""
                         }
                     },
                     {
-                        ""type"":""test-resource"",
+                        ""type"":""testResource"",
                         ""id"":""2"",
                         ""attributes"":{
-                        ""string-field"":""value2""
+                        ""stringField"":""value2""
                         }
                     }
                 ]

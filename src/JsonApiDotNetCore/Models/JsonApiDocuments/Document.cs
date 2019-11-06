@@ -10,19 +10,19 @@ namespace JsonApiDotNetCore.Models
     public class Document : ExposableData<ResourceObject>
     {
         /// <summary>
-        /// see "meta" in https://jsonapi.org/format/#document-top-level
+        /// see "meta" in https://jsonapi.org/format/#documentTop-level
         /// </summary>
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }
 
         /// <summary>
-        /// see "links" in https://jsonapi.org/format/#document-top-level
+        /// see "links" in https://jsonapi.org/format/#documentTop-level
         /// </summary>
         [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public TopLevelLinks Links { get; set; }
 
         /// <summary>
-        /// see "included" in https://jsonapi.org/format/#document-top-level
+        /// see "included" in https://jsonapi.org/format/#documentTop-level
         /// </summary>
         [JsonProperty("included", NullValueHandling = NullValueHandling.Ignore, Order = 1)]
         public List<ResourceObject> Included { get; set; }

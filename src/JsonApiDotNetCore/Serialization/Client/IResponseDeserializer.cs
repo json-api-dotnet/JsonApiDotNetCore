@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// <summary>
     /// Client deserializer. Currently not used internally in JsonApiDotNetCore,
     /// except for in the tests. Exposed pubically to make testing easier or to implement
-    /// server-to-server communication.
+    /// serverTo-server communication.
     /// </summary>
     public interface IResponseDeserializer
     {

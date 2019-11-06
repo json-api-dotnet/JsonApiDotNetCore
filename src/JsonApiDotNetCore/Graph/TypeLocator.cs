@@ -8,7 +8,7 @@ using System.Reflection;
 namespace JsonApiDotNetCore.Graph
 {
     /// <summary>
-    /// Used to locate types and facilitate auto-resource discovery
+    /// Used to locate types and facilitate autoResource discovery
     /// </summary>
     static class TypeLocator
     {

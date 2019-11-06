@@ -64,8 +64,8 @@ namespace UnitTests.ResourceHooks
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
             var todoList = new List<TodoItem>() { todoItem };
-            person.ToOneTodoItem = todoItem;
-            todoItem.ToOnePerson = person;
+            person.OneToOneTodoItem = todoItem;
+            todoItem.OneToOnePerson = person;
             return todoList;
         }
 

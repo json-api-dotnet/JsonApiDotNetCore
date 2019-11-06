@@ -6,10 +6,10 @@ namespace JsonApiDotNetCoreExample.Models
 {
     public class Article : Identifiable
     {
-        [Attr("name")]
+        [Attr]
         public string Name { get; set; }
 
-        [HasOne("author")]
+        [HasOne]
         public Author Author { get; set; }
         public int AuthorId { get; set; }
 

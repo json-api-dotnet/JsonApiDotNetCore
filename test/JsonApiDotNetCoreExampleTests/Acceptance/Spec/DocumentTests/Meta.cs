@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     attributes = new
                     {
                         description = "New Description",
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     id = todoItem.Id,
                     attributes = new
                     {

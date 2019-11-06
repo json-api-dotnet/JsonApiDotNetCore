@@ -5,7 +5,7 @@ namespace JsonApiDotNetCoreExample.Models
     [Resource("camelCasedModels")]
     public class CamelCasedModel : Identifiable
     {
-        [Attr("compoundAttr")]
+        [Attr]
         public string CompoundAttr { get; set; }
     }
 }

@@ -38,8 +38,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Include_Nested_Relationships()
         {
             // Arrange
-            const string route = "/api/v1/todo-items?include=collection.owner";
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
+            const string route = "/api/v1/todoItems?include=collection.owner";
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todoItems").AddResource<TodoItemCollection, Guid>().AddResource<Person>().Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
             var todoItem = new TodoItem
             {
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Include_Nested_HasMany_Relationships()
         {
             // Arrange
-            const string route = "/api/v1/todo-items?include=collection.todo-items";
+            const string route = "/api/v1/todoItems?include=collection.todoItems";
 
             var todoItem = new TodoItem
             {
@@ -107,15 +107,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(4, included.Count);
 
-            Assert.Equal(3, included.CountOfType("todo-items"));
-            Assert.Equal(1, included.CountOfType("todo-collections"));
+            Assert.Equal(3, included.CountOfType("todoItems"));
+            Assert.Equal(1, included.CountOfType("todoCollections"));
         }
 
         [Fact]
         public async Task Can_Include_Nested_HasMany_Relationships_BelongsTo()
         {
             // Arrange
-            const string route = "/api/v1/todo-items?include=collection.todo-items.owner";
+            const string route = "/api/v1/todoItems?include=collection.todoItems.owner";
 
             var todoItem = new TodoItem
             {
@@ -149,16 +149,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(5, included.Count);
 
-            Assert.Equal(3, included.CountOfType("todo-items"));
+            Assert.Equal(3, included.CountOfType("todoItems"));
             Assert.Equal(1, included.CountOfType("people"));
-            Assert.Equal(1, included.CountOfType("todo-collections"));
+            Assert.Equal(1, included.CountOfType("todoCollections"));
         }
 
         [Fact]
         public async Task Can_Include_Nested_Relationships_With_Multiple_Paths()
         {
             // Arrange
-            const string route = "/api/v1/todo-items?include=collection.owner.role,collection.todo-items.owner";
+            const string route = "/api/v1/todoItems?include=collection.owner.role,collection.todoItems.owner";
 
             var todoItem = new TodoItem
             {
@@ -195,10 +195,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(7, included.Count);
 
-            Assert.Equal(3, included.CountOfType("todo-items"));
+            Assert.Equal(3, included.CountOfType("todoItems"));
             Assert.Equal(2, included.CountOfType("people"));
             Assert.Equal(1, included.CountOfType("person-roles"));
-            Assert.Equal(1, included.CountOfType("todo-collections"));
+            Assert.Equal(1, included.CountOfType("todoCollections"));
         }
 
         [Fact]
@@ -232,10 +232,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await context.SaveChangesAsync();
 
             string route = 
-                "/api/v1/todo-items/" + todoItem1.Id + "?include=" +
+                "/api/v1/todoItems/" + todoItem1.Id + "?include=" +
                     "collection.owner," + 
                     "assignee.role," + 
-                    "assignee.assigned-todo-items";
+                    "assignee.assignedTodoItems";
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -252,12 +252,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // 2 assigned todo items (including the primary resource)
             Assert.Equal(6, included.Count); 
 
-            var collectionDocument = included.FindResource("todo-collections", collection.Id);
+            var collectionDocument = included.FindResource("todoCollections", collection.Id);
             var ownerDocument = included.FindResource("people", collectionOwner.Id);
             var assigneeDocument = included.FindResource("people", assignee.Id);
             var roleDocument = included.FindResource("person-roles", role.Id);
-            var assignedTodo1 = included.FindResource("todo-items", todoItem1.Id);
-            var assignedTodo2 = included.FindResource("todo-items", todoItem2.Id);
+            var assignedTodo1 = included.FindResource("todoItems", todoItem1.Id);
+            var assignedTodo2 = included.FindResource("todoItems", todoItem2.Id);
 
             Assert.NotNull(assignedTodo1);
             Assert.Equal(todoItem1.Id.ToString(), assignedTodo1.Id);
@@ -307,7 +307,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             await context.SaveChangesAsync();
 
-            string route = "/api/v1/people/" + person.Id + "?include=todo-collections.todo-items";
+            string route = "/api/v1/people/" + person.Id + "?include=todoCollections.todoItems";
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -321,8 +321,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             
             Assert.Equal(7, included.Count); 
 
-            Assert.Equal(5, included.CountOfType("todo-items"));
-            Assert.Equal(2, included.CountOfType("todo-collections"));
+            Assert.Equal(5, included.CountOfType("todoItems"));
+            Assert.Equal(2, included.CountOfType("todoCollections"));
         }        
     }
 }

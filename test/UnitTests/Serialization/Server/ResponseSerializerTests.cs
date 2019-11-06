@@ -26,16 +26,16 @@ namespace UnitTests.Serialization.Server
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1"",
                   ""attributes"":{
-                     ""string-field"":""value"",
-                     ""date-time-field"":""0001-01-01T00:00:00"",
-                     ""nullable-date-time-field"":null,
-                     ""int-field"":0,
-                     ""nullable-int-field"":123,
-                     ""guid-field"":""00000000-0000-0000-0000-000000000000"",
-                     ""complex-field"":null,
+                     ""stringField"":""value"",
+                     ""dateTimeField"":""0001-01-01T00:00:00"",
+                     ""nullableDateTimeField"":null,
+                     ""intField"":0,
+                     ""nullableIntField"":123,
+                     ""guidField"":""00000000-0000-0000-0000-000000000000"",
+                     ""complexField"":null,
                      ""immutable"":null
                   }
                }
@@ -60,16 +60,16 @@ namespace UnitTests.Serialization.Server
             var expectedFormatted =
             @"{
                ""data"":[{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1"",
                   ""attributes"":{
-                     ""string-field"":""value"",
-                     ""date-time-field"":""0001-01-01T00:00:00"",
-                     ""nullable-date-time-field"":null,
-                     ""int-field"":0,
-                     ""nullable-int-field"":123,
-                     ""guid-field"":""00000000-0000-0000-0000-000000000000"",
-                     ""complex-field"":null,
+                     ""stringField"":""value"",
+                     ""dateTimeField"":""0001-01-01T00:00:00"",
+                     ""nullableDateTimeField"":null,
+                     ""intField"":0,
+                     ""nullableIntField"":123,
+                     ""guidField"":""00000000-0000-0000-0000-000000000000"",
+                     ""complexField"":null,
                      ""immutable"":null
                   }
                }]
@@ -99,39 +99,39 @@ namespace UnitTests.Serialization.Server
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""multi-principals"",
+                  ""type"":""multiPrincipals"",
                   ""id"":""1"",
-                  ""attributes"":{ ""attribute-member"":null },
+                  ""attributes"":{ ""attributeMember"":null },
                   ""relationships"":{
-                     ""populated-to-one"":{
+                     ""populatedToOne"":{
                         ""data"":{
-                           ""type"":""one-to-one-dependents"",
+                           ""type"":""oneToOneDependents"",
                            ""id"":""10""
                         }
                      },
-                     ""empty-to-one"": { ""data"":null },
-                     ""populated-to-manies"":{
+                     ""emptyToOne"": { ""data"":null },
+                     ""populatedToManies"":{
                         ""data"":[
                            {
-                              ""type"":""one-to-many-dependents"",
+                              ""type"":""oneToManyDependents"",
                               ""id"":""20""
                            }
                         ]
                      },
-                     ""empty-to-manies"": { ""data"":[ ] },
+                     ""emptyToManies"": { ""data"":[ ] },
                      ""multi"":{ ""data"":null }
                   }
                },
                ""included"":[
                   {
-                     ""type"":""one-to-one-dependents"",
+                     ""type"":""oneToOneDependents"",
                      ""id"":""10"",
-                     ""attributes"":{ ""attribute-member"":null }
+                     ""attributes"":{ ""attributeMember"":null }
                   },
                   {
-                   ""type"":""one-to-many-dependents"",
+                   ""type"":""oneToManyDependents"",
                      ""id"":""20"",
-                     ""attributes"":{ ""attribute-member"":null }
+                     ""attributes"":{ ""attributeMember"":null }
                   }
                ]
             }";
@@ -156,7 +156,7 @@ namespace UnitTests.Serialization.Server
                                 .Select(r =>
                                 {
                                     var chain = new List<RelationshipAttribute> { r };
-                                    if (r.PublicRelationshipName != "populated-to-manies")
+                                    if (r.PublicRelationshipName != "populatedToManies")
                                         return new List<RelationshipAttribute> { r };
                                     chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
                                     return chain;
@@ -171,27 +171,27 @@ namespace UnitTests.Serialization.Server
             var expectedFormatted =
             @"{
                ""data"":{ 
-                  ""type"":""multi-principals"",
+                  ""type"":""multiPrincipals"",
                   ""id"":""10"",
                   ""attributes"":{ 
-                     ""attribute-member"":null
+                     ""attributeMember"":null
                   },
                   ""relationships"":{ 
-                     ""populated-to-one"":{ 
+                     ""populatedToOne"":{ 
                         ""data"":null
                      },
-                     ""empty-to-one"":{ 
+                     ""emptyToOne"":{ 
                         ""data"":null
                      },
-                     ""populated-to-manies"":{ 
+                     ""populatedToManies"":{ 
                         ""data"":[ 
                            { 
-                              ""type"":""one-to-many-dependents"",
+                              ""type"":""oneToManyDependents"",
                               ""id"":""20""
                            }
                         ]
                      },
-                     ""empty-to-manies"":{ 
+                     ""emptyToManies"":{ 
                         ""data"":[]
                      },
                      ""multi"":{ 
@@ -201,25 +201,25 @@ namespace UnitTests.Serialization.Server
                },
                ""included"":[
                   { 
-                     ""type"":""one-to-many-dependents"",
+                     ""type"":""oneToManyDependents"",
                      ""id"":""20"",
                      ""attributes"":{ 
-                        ""attribute-member"":null
+                        ""attributeMember"":null
                      },
                      ""relationships"":{ 
                         ""principal"":{ 
                            ""data"":{ 
-                              ""type"":""one-to-many-principals"",
+                              ""type"":""oneToManyPrincipals"",
                               ""id"":""30""
                            }
                         }
                      }
                   },
                   { 
-                     ""type"":""one-to-many-principals"",
+                     ""type"":""oneToManyPrincipals"",
                      ""id"":""30"",
                      ""attributes"":{ 
-                        ""attribute-member"":""deep""
+                        ""attributeMember"":""deep""
                      }
                   }
                ]
@@ -279,10 +279,10 @@ namespace UnitTests.Serialization.Server
                   ""last"":""http://www.dummy.com/dummy-last-link""
                },
                ""data"":{
-                  ""type"":""one-to-many-principals"",
+                  ""type"":""oneToManyPrincipals"",
                   ""id"":""10"",
                   ""attributes"":{
-                     ""attribute-member"":null
+                     ""attributeMember"":null
                   },
                   ""relationships"":{
                      ""dependents"":{
@@ -318,10 +318,10 @@ namespace UnitTests.Serialization.Server
             @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""data"":{
-                    ""type"":""one-to-many-principals"",
+                    ""type"":""oneToManyPrincipals"",
                     ""id"":""10"",
                     ""attributes"":{
-                        ""attribute-member"":null
+                        ""attributeMember"":null
                     }
                 }
             }";
@@ -392,7 +392,7 @@ namespace UnitTests.Serialization.Server
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""one-to-one-dependents"",
+                  ""type"":""oneToOneDependents"",
                   ""id"":""1""
                }
             }";
@@ -438,7 +438,7 @@ namespace UnitTests.Serialization.Server
             var expectedFormatted =
             @"{
                ""data"":[{
-                  ""type"":""one-to-many-dependents"",
+                  ""type"":""oneToManyDependents"",
                   ""id"":""1""
                }]
             }";

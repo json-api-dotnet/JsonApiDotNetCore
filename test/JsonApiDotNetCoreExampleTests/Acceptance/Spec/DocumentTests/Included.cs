@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var builder = new WebHostBuilder().UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner";
+            var route = $"/api/v1/todoItems?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // Assert
             var json = await response.Content.ReadAsStringAsync();
             var documents = JsonConvert.DeserializeObject<Document>(json);
-            // we only care about counting the todo-items that have owners
+            // we only care about counting the todoItems that have owners
             var expectedCount = documents.ManyData.Count(d => d.Relationships["owner"].SingleData != null);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task GET_Included_Contains_SideloadeData_OneToMany()
         {
             // Arrange
-            _context.People.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.People.RemoveRange(_context.People); // ensure all people have todoItems
             _context.TodoItems.RemoveRange(_context.TodoItems);
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people?include=todo-items";
+            var route = $"/api/v1/people?include=todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // Arrange
             _context.RemoveRange(_context.TodoItems);
             _context.RemoveRange(_context.TodoItemCollections);
-            _context.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.RemoveRange(_context.People); // ensure all people have todoItems
             _context.SaveChanges();
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner&include=assignee";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&include=assignee";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         {
             // Arrange
             _context.TodoItemCollections.RemoveRange(_context.TodoItemCollections);
-            _context.People.RemoveRange(_context.People); // ensure all people have todo-items
+            _context.People.RemoveRange(_context.People); // ensure all people have todoItems
             _context.TodoItems.RemoveRange(_context.TodoItems);
             var person = _personFaker.Generate();
             var todoItem1 = _todoItemFaker.Generate();
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner";
+            var route = $"/api/v1/todoItems?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -249,7 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/people/{person.Id}?include=todo-items";
+            var route = $"/api/v1/people/{person.Id}?include=todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -293,7 +293,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/people/{person.Id}?include=todo-items,todo-collections";
+            var route = $"/api/v1/people/{person.Id}?include=todoItems,todoCollections";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -325,7 +325,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/people/{person.Id}?include=non-existent-relationship";
+            var route = $"/api/v1/people/{person.Id}?include=nonExistentRelationship";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -381,7 +381,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
 
-            var route = $"/api/v1/people/{person.Id}?include=unincludeable-item";
+            var route = $"/api/v1/people/{person.Id}?include=unincludeableItem";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
           
-            var route = $"/api/v1/todo-items?sort=-created-date&page[size]=2&include=owner.role"; // last two todo-items
+            var route = $"/api/v1/todoItems?sort=-createdDate&page[size]=2&include=owner.role"; // last two todoItems
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

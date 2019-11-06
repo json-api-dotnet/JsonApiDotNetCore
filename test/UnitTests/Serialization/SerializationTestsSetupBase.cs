@@ -38,19 +38,19 @@ namespace UnitTests.Serialization
         protected IResourceGraph BuildGraph()
         {
             var resourceGraphBuilder = new ResourceGraphBuilder();
-            resourceGraphBuilder.AddResource<TestResource>("test-resource");
-            resourceGraphBuilder.AddResource<TestResourceWithList>("test-resource-with-list");
+            resourceGraphBuilder.AddResource<TestResource>("testResource");
+            resourceGraphBuilder.AddResource<TestResourceWithList>("testResource-with-list");
             // one to one relationships
-            resourceGraphBuilder.AddResource<OneToOnePrincipal>("one-to-one-principals");
-            resourceGraphBuilder.AddResource<OneToOneDependent>("one-to-one-dependents");
-            resourceGraphBuilder.AddResource<OneToOneRequiredDependent>("one-to-one-required-dependents");
+            resourceGraphBuilder.AddResource<OneToOnePrincipal>("oneToOnePrincipals");
+            resourceGraphBuilder.AddResource<OneToOneDependent>("oneToOneDependents");
+            resourceGraphBuilder.AddResource<OneToOneRequiredDependent>("oneToOne-requiredDependents");
             // one to many relationships
-            resourceGraphBuilder.AddResource<OneToManyPrincipal>("one-to-many-principals");
-            resourceGraphBuilder.AddResource<OneToManyDependent>("one-to-many-dependents");
-            resourceGraphBuilder.AddResource<OneToManyRequiredDependent>("one-to-many-required-dependents");
+            resourceGraphBuilder.AddResource<OneToManyPrincipal>("oneToManyPrincipals");
+            resourceGraphBuilder.AddResource<OneToManyDependent>("oneToManyDependents");
+            resourceGraphBuilder.AddResource<OneToManyRequiredDependent>("oneToMany-requiredDependents");
             // collective relationships
-            resourceGraphBuilder.AddResource<MultipleRelationshipsPrincipalPart>("multi-principals");
-            resourceGraphBuilder.AddResource<MultipleRelationshipsDependentPart>("multi-dependents");
+            resourceGraphBuilder.AddResource<MultipleRelationshipsPrincipalPart>("multiPrincipals");
+            resourceGraphBuilder.AddResource<MultipleRelationshipsDependentPart>("multiDependents");
 
             resourceGraphBuilder.AddResource<Article>();
             resourceGraphBuilder.AddResource<Person>();

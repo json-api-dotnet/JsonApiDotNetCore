@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<Person>()
                 .AddResource<Author>()
                 .AddResource<Passport>()
-                .AddResource<TodoItemClient>("todo-items")
+                .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
             return new ResponseDeserializer(resourceGraph);
         }

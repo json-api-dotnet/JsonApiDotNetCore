@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var queryString = allowClientOverride.HasValue
                 ? $"&omitNull={clientOverride}"
                 : "";
-            var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}";
+            var route = $"/api/v1/todoItems/{_todoItem.Id}?include=owner{queryString}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

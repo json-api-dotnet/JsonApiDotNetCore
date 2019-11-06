@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItemCollection = new TodoItemCollection { Owner = owner };
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-collections", serializer.Serialize(todoItemCollection));
+            var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Id = clientDefinedId;
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
+            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Id = clientDefinedId;
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
+            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
             // Assert
@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItemCollection = new TodoItemCollection { Owner = owner, OwnerId = owner.Id, Id = clientDefinedId };
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-collections", serializer.Serialize(todoItemCollection));
+            var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
             var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
 
             // Assert
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoCollection = new TodoItemCollection { TodoItems = new List<TodoItem> { todoItem } };
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-collections", serializer.Serialize(todoCollection));
+            var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoCollection));
             var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
 
             // Assert
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoCollection = new TodoItemCollection { Owner = owner, TodoItems = new List<TodoItem> { todoItem } };
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-collections?include=todo-items", serializer.Serialize(todoCollection));
+            var (body, response) = await Post("/api/v1/todoCollections?include=todoItems", serializer.Serialize(todoCollection));
             var responseItem = _deserializer.DeserializeSingle<TodoItemCollectionClient>(body).Data;
 
             // Assert
@@ -204,7 +204,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Owner = owner;
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
+            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
             // Assert
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Owner = owner;
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-items?include=owner", serializer.Serialize(todoItem));
+            var (body, response) = await Post("/api/v1/todoItems?include=owner", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
             // Assert
@@ -274,12 +274,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItem = _todoItemFaker.Generate();
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-items", serializer.Serialize(todoItem));
+            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
             var responseItem = _deserializer.DeserializeSingle<TodoItemClient>(body).Data;
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
-            Assert.Equal($"/api/v1/todo-items/{responseItem.Id}", response.Headers.Location.ToString());
+            Assert.Equal($"/api/v1/todoItems/{responseItem.Id}", response.Headers.Location.ToString());
         }
 
         [Fact]
@@ -288,13 +288,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var dbContext = PrepareTest<Startup>();
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todo-items").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todoItems").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
             var _deserializer = new ResponseDeserializer(resourceGraph);
 
-            var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todo-items", "people");
+            var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todoItems", "people");
 
             // Act
-            var (body, response) = await Post("/api/v1/todo-items", content);
+            var (body, response) = await Post("/api/v1/todoItems", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Conflict, response);

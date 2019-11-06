@@ -39,7 +39,7 @@ namespace NoEntityFrameworkTests
 
         public IResponseDeserializer GetDeserializer()
         {
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>("todo-items").Build();
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>("todoItems").Build();
             return new ResponseDeserializer(resourceGraph);
         }
 

@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.CalculatedValue });
             var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
             var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId + 100}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId + 100}", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate });
             var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{maxPersonId}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{maxPersonId}", content);
 
             // Act
             var response = await client.SendAsync(request);
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var serializer = _fixture.GetSerializer<TodoItem>(p => new { p.Description, p.Ordinal });
 
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", serializer.Serialize(newTodoItem));
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", serializer.Serialize(newTodoItem));
 
             // Act
             var response = await client.SendAsync(request);
@@ -213,8 +213,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.NotNull(document.SingleData.Attributes);
             Assert.Equal(newPerson.LastName, document.SingleData.Attributes["last-name"]);
             Assert.Equal(newPerson.FirstName, document.SingleData.Attributes["first-name"]);
-            Assert.True(document.SingleData.Relationships.ContainsKey("todo-items"));
-            Assert.Null(document.SingleData.Relationships["todo-items"].Data);
+            Assert.True(document.SingleData.Relationships.ContainsKey("todoItems"));
+            Assert.Null(document.SingleData.Relationships["todoItems"].Data);
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
             var serializer = _fixture.GetSerializer<TodoItem>(ti => new { ti.Description, ti.Ordinal, ti.CreatedDate }, ti => new { ti.Owner });
             var content = serializer.Serialize(todoItem);
-            var request = PrepareRequest("PATCH", $"/api/v1/todo-items/{todoItem.Id}", content);
+            var request = PrepareRequest("PATCH", $"/api/v1/todoItems/{todoItem.Id}", content);
 
             // Act
             var response = await client.SendAsync(request);

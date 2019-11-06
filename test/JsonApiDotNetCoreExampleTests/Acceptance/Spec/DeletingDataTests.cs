@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var client = server.CreateClient();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/todo-items/{lastTodoId + 100}";
+            var route = $"/api/v1/todoItems/{lastTodoId + 100}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

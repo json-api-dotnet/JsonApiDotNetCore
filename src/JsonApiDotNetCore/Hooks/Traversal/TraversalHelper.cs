@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Hooks
                         if (!proxy.IsContextRelation && relationshipValue == null) continue;
                         if (!(relationshipValue is IEnumerable rightEntities))
                         {
-                            // in the case of a to-one relationship, the assigned value
+                            // in the case of a toOne relationship, the assigned value
                             // will not be a list. We therefore first wrap it in a list.
                             var list = TypeHelper.CreateListFor(proxy.RightType);
                             if (relationshipValue != null) list.Add(relationshipValue);

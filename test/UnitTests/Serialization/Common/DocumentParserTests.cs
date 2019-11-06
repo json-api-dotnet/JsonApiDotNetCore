@@ -27,7 +27,7 @@ namespace UnitTests.Serialization.Deserializer
             {
                 Data = new ResourceObject
                 {
-                    Type = "test-resource",
+                    Type = "testResource",
                     Id = "1",
                 }
             };
@@ -64,7 +64,7 @@ namespace UnitTests.Serialization.Deserializer
                 {
                     new ResourceObject
                     {
-                        Type = "test-resource",
+                        Type = "testResource",
                         Id = "1",
                     }
                 }
@@ -92,18 +92,18 @@ namespace UnitTests.Serialization.Deserializer
         }
 
         [Theory]
-        [InlineData("string-field", "some string")]
-        [InlineData("string-field", null)]
-        [InlineData("int-field", null, true)]
-        [InlineData("int-field", 1)]
-        [InlineData("int-field", "1")]
-        [InlineData("nullable-int-field", null)]
-        [InlineData("nullable-int-field", "1")]
-        [InlineData("guid-field", "bad format", true)]
-        [InlineData("guid-field", "1a68be43-cc84-4924-a421-7f4d614b7781")]
-        [InlineData("date-time-field", "9/11/2019 11:41:40 AM")]
-        [InlineData("date-time-field", null, true)]
-        [InlineData("nullable-date-time-field", null)]
+        [InlineData("stringField", "some string")]
+        [InlineData("stringField", null)]
+        [InlineData("intField", null, true)]
+        [InlineData("intField", 1)]
+        [InlineData("intField", "1")]
+        [InlineData("nullableIntField", null)]
+        [InlineData("nullableIntField", "1")]
+        [InlineData("guidField", "bad format", true)]
+        [InlineData("guidField", "1a68be43-cc84-4924-a421-7f4d614b7781")]
+        [InlineData("dateTimeField", "9/11/2019 11:41:40 AM")]
+        [InlineData("dateTimeField", null, true)]
+        [InlineData("nullableDateTimeField", null)]
         public void DeserializeAttributes_VariousDataTypes_CanDeserialize(string member, object value, bool expectError = false)
         {
             // Arrange
@@ -111,7 +111,7 @@ namespace UnitTests.Serialization.Deserializer
             {
                 Data = new ResourceObject
                 {
-                    Type = "test-resource",
+                    Type = "testResource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
@@ -132,26 +132,26 @@ namespace UnitTests.Serialization.Deserializer
             var entity = (TestResource)_deserializer.Deserialize(body);
 
             // Assert
-            var pi = _resourceGraph.GetResourceContext("test-resource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
+            var pi = _resourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicAttributeName == member).PropertyInfo;
             var deserializedValue = pi.GetValue(entity);
 
-            if (member == "int-field")
+            if (member == "intField")
             {
                 Assert.Equal(1, deserializedValue);
             }
-            else if (member == "nullable-int-field" && value == null)
+            else if (member == "nullableIntField" && value == null)
             {
                 Assert.Null(deserializedValue);
             }
-            else if (member == "nullable-int-field" && (string)value == "1")
+            else if (member == "nullableIntField" && (string)value == "1")
             {
                 Assert.Equal(1, deserializedValue);
             }
-            else if (member == "guid-field")
+            else if (member == "guidField")
             {
                 Assert.Equal(deserializedValue, Guid.Parse("1a68be43-cc84-4924-a421-7f4d614b7781"));
             }
-            else if (member == "date-time-field")
+            else if (member == "dateTimeField")
             {
                 Assert.Equal(deserializedValue, DateTime.Parse("9/11/2019 11:41:40 AM"));
             }
@@ -169,11 +169,11 @@ namespace UnitTests.Serialization.Deserializer
             {
                 Data = new ResourceObject
                 {
-                    Type = "test-resource",
+                    Type = "testResource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        { "complex-field", new Dictionary<string, object> { {"compoundName", "testName" } } } // this is not right
+                        { "complexField", new Dictionary<string, object> { {"compoundName", "testName" } } } // this is not right
                     }
                 }
             };
@@ -195,11 +195,11 @@ namespace UnitTests.Serialization.Deserializer
             {
                 Data = new ResourceObject
                 {
-                    Type = "test-resource-with-list",
+                    Type = "testResource-with-list",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        { "complex-fields", new [] { new Dictionary<string, object> { {"compoundName", "testName" } } } }
+                        { "complexFields", new [] { new Dictionary<string, object> { {"compoundName", "testName" } } } }
                     }
                 }
             };
@@ -219,7 +219,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyOneToOneDependent_NavigationPropertyIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-one-principals", "dependent");
+            var content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -235,7 +235,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_PopulatedOneToOneDependent_NavigationPropertyIsPopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-one-principals", "dependent", "one-to-one-dependents");
+            var content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent", "oneToOneDependents");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -251,7 +251,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyOneToOnePrincipal_NavigationPropertyAndForeignKeyAreNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-one-dependents", "principal");
+            var content = CreateDocumentWithRelationships("oneToOneDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -267,7 +267,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyRequiredOneToOnePrincipal_ThrowsFormatException()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-one-required-dependents", "principal");
+            var content = CreateDocumentWithRelationships("oneToOne-requiredDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
             // Act, assert
@@ -278,7 +278,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationPropertyAndForeignKeyArePopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-one-dependents", "principal", "one-to-one-principals");
+            var content = CreateDocumentWithRelationships("oneToOneDependents", "principal", "oneToOnePrincipals");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -296,7 +296,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyOneToManyPrincipal_NavigationAndForeignKeyAreNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-many-dependents", "principal");
+            var content = CreateDocumentWithRelationships("oneToManyDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -313,7 +313,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyOneToManyRequiredPrincipal_ThrowsFormatException()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-many-required-dependents", "principal");
+            var content = CreateDocumentWithRelationships("oneToMany-requiredDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
             // Act, assert
@@ -324,7 +324,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationAndForeignKeyArePopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-many-dependents", "principal", "one-to-many-principals");
+            var content = CreateDocumentWithRelationships("oneToManyDependents", "principal", "oneToManyPrincipals");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -342,7 +342,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyOneToManyDependent_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-many-principals", "dependents");
+            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -358,7 +358,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_PopulatedOneToManyDependent_NavigationIsPopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("one-to-many-principals", "dependents", "one-to-many-dependents", isToManyData: true);
+            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", "oneToManyDependents", isToManyData: true);
             var body = JsonConvert.SerializeObject(content);
 
             // Act

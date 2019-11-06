@@ -20,10 +20,10 @@ namespace JsonApiDotNetCore.Internal
     /// </summary>
     /// <example>
     /// public class SomeResourceController: JsonApiController{SomeResource} { }
-    /// // => /some-resources/relationship/related-resource
+    /// // => /someResources/relationship/relatedResource
     ///
     /// public class RandomNameController{SomeResource} : JsonApiController{SomeResource} { }
-    /// // => /some-resources/relationship/related-resource
+    /// // => /someResources/relationship/relatedResource
     ///
     /// // when using the camelCase formatter:
     /// public class SomeResourceController{SomeResource} : JsonApiController{SomeResource} { }
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Internal
     ///
     /// // when inheriting from JsonApiMixin formatter:
     /// public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
-    /// // => /some-very-customs/relationship/related-resource
+    /// // => /some-very-customs/relationship/relatedResource
     /// </example>
     public class DefaultRoutingConvention : IJsonApiRoutingConvention, IControllerResourceMapping
     {

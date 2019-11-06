@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[guid-property]={todoItem.GuidProperty}";
+            var route = $"/api/v1/todoItems?filter[guidProperty]={todoItem.GuidProperty}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner&filter[owner.first-name]={person.FirstName}";
+            var route = $"/api/v1/todoItems?include=owner&filter[owner.first-name]={person.FirstName}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner&filter[achieved-date]={DateTime.UtcNow.Date}";
+            var route = $"/api/v1/todoItems?include=owner&filter[achievedDate]={DateTime.UtcNow.Date}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var totalCount = context.TodoItems.Count();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[ordinal]=ne:{todoItem.Ordinal}";
+            var route = $"/api/v1/todoItems?page[size]={totalCount}&filter[ordinal]=ne:{todoItem.Ordinal}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -148,7 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var totalCount = context.TodoItems.Count();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[guid-property]=in:{string.Join(",", guids)}";
+            var route = $"/api/v1/todoItems?filter[guidProperty]=in:{string.Join(",", guids)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -185,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner&filter[owner.first-name]=in:{string.Join(",", ownerFirstNames)}";
+            var route = $"/api/v1/todoItems?include=owner&filter[owner.first-name]=in:{string.Join(",", ownerFirstNames)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var totalCount = context.TodoItems.Count();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?page[size]={totalCount}&filter[guid-property]=nin:{string.Join(",", notInGuids)}";
+            var route = $"/api/v1/todoItems?page[size]={totalCount}&filter[guidProperty]=nin:{string.Join(",", notInGuids)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

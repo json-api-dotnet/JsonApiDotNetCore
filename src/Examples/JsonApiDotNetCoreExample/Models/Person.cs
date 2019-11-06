@@ -6,7 +6,6 @@ namespace JsonApiDotNetCoreExample.Models
 {
     public class PersonRole : Identifiable
     {
-        [HasOne("person")]
         public Person Person { get; set; }
     }
 
@@ -14,43 +13,40 @@ namespace JsonApiDotNetCoreExample.Models
     {
         public bool IsLocked { get; set; }
 
-        [Attr("first-name")]
+        [Attr]
         public string FirstName { get; set; }
 
-        [Attr("last-name")]
+        [Attr]
         public string LastName { get; set; }
 
-        [Attr("age")]
+        [Attr]
         public int Age { get; set; }
 
-        [HasMany("todo-items")]
+        [HasMany]
         public virtual List<TodoItem> TodoItems { get; set; }
 
-        [HasMany("assigned-todo-items")]
+        [HasMany]
         public virtual List<TodoItem> AssignedTodoItems { get; set; }
 
-        [HasMany("todo-collections")]
+        [HasMany]
         public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
 
-        [HasOne("role")]
+        [HasOne]
         public virtual PersonRole Role { get; set; } 
         public int? PersonRoleId { get; set; }
 
-        [HasOne("one-to-one-todo-item")]
-        public virtual TodoItem ToOneTodoItem { get; set; }
+        [HasOne]
+        public virtual TodoItem OneToOneTodoItem { get; set; }
 
+        [HasOne]
+        public virtual TodoItem StakeHolderTodoItem { get; set; }
+        public virtual int? StakeHolderTodoItemId { get; set; }
 
-        [HasOne("stake-holder-todo-item")]
-        public virtual TodoItem StakeHolderTodo { get; set; }
-        public virtual int? StakeHolderTodoId { get; set; }
-
-        [HasOne("unincludeable-item", links: Link.All, canInclude: false)]
+        [HasOne(links: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
 
         public int? PassportId { get; set; }
 
-        [HasOne("passport")]
         public virtual Passport Passport { get; set; }
-
     }
 }

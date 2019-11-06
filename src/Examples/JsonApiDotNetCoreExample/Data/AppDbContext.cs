@@ -46,18 +46,18 @@ namespace JsonApiDotNetCoreExample.Data
                 .HasKey(bc => new { bc.ArticleId, bc.TagId });
 
             modelBuilder.Entity<Person>()
-                .HasOne(t => t.StakeHolderTodo)
+                .HasOne(t => t.StakeHolderTodoItem)
                 .WithMany(t => t.StakeHolders)
-                .HasForeignKey(t => t.StakeHolderTodoId)
+                .HasForeignKey(t => t.StakeHolderTodoItemId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TodoItem>()
-                .HasOne(t => t.DependentTodoItem);
+                .HasOne(t => t.DependentOnTodo);
 
             modelBuilder.Entity<TodoItem>()
-                .HasMany(t => t.ChildrenTodoItems)
-                .WithOne(t => t.ParentTodoItem)
-                .HasForeignKey(t => t.ParentTodoItemId);
+                .HasMany(t => t.ChildrenTodos)
+                .WithOne(t => t.ParentTodo)
+                .HasForeignKey(t => t.ParentTodoId);
 
             modelBuilder.Entity<Passport>()
                 .HasOne(p => p.Person)
@@ -66,14 +66,14 @@ namespace JsonApiDotNetCoreExample.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<TodoItem>()
-                .HasOne(p => p.ToOnePerson)
-                .WithOne(p => p.ToOneTodoItem)
-                .HasForeignKey<TodoItem>(p => p.ToOnePersonId);
+                .HasOne(p => p.OneToOnePerson)
+                .WithOne(p => p.OneToOneTodoItem)
+                .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
 
             modelBuilder.Entity<Person>()
-                .HasOne(p => p.ToOneTodoItem)
-                .WithOne(p => p.ToOnePerson)
-                .HasForeignKey<TodoItem>(p => p.ToOnePersonId);
+                .HasOne(p => p.OneToOneTodoItem)
+                .WithOne(p => p.OneToOnePerson)
+                .HasForeignKey<TodoItem>(p => p.OneToOnePersonId);
         }
     }
 }

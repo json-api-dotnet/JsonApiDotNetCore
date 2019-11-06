@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Models
         /// <code>
         /// public class Author : Identifiable
         /// {
-        ///     [Attr("name")]
+        ///     [Attr]
         ///     public string Name { get; set; }
         /// }
         /// </code>

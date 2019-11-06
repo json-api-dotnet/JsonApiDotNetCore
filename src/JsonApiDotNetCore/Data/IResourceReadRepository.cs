@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Data
         /// </summary>
         /// <example>
         /// <code>
-        /// _todoItemsRepository.GetAndIncludeAsync(1, "achieved-date");
+        /// _todoItemsRepository.GetAndIncludeAsync(1, "achievedDate");
         /// </code>
         /// </example>
         IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain);

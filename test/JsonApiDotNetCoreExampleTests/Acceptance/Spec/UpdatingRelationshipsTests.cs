@@ -66,16 +66,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "children-todos", new
+                        { "childrenTodos", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todo-items", id = $"{todoItem.Id}" },
-                                    new { type = "todo-items", id = $"{strayTodoItem.Id}" }
+                                    new { type = "todoItems", id = $"{todoItem.Id}" },
+                                    new { type = "todoItems", id = $"{strayTodoItem.Id}" }
                                 }
 
                             }
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -100,10 +100,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
-                 .Include(ti => ti.ChildrenTodoItems).First();
+                 .Include(ti => ti.ChildrenTodos).First();
 
-            updatedTodoItem.ChildrenTodoItems.Any((ti) => ti.Id == todoItem.Id);
-            Assert.Contains(updatedTodoItem.ChildrenTodoItems, (ti) => ti.Id == todoItem.Id);
+            updatedTodoItem.ChildrenTodos.Any((ti) => ti.Id == todoItem.Id);
+            Assert.Contains(updatedTodoItem.ChildrenTodos, (ti) => ti.Id == todoItem.Id);
         }
 
         [Fact]
@@ -127,13 +127,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "dependent-on-todo", new
+                        { "dependentOnTodo", new
                             {
-                                data = new { type = "todo-items", id = $"{todoItem.Id}" }
+                                data = new { type = "todoItems", id = $"{todoItem.Id}" }
                             }
                         }
                     }
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -157,9 +157,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
-                 .Include(ti => ti.DependentTodoItem).First();
+                 .Include(ti => ti.DependentOnTodo).First();
 
-            Assert.Equal(todoItem.Id, updatedTodoItem.DependentTodoItemId);
+            Assert.Equal(todoItem.Id, updatedTodoItem.DependentOnTodoId);
         }
 
         [Fact]
@@ -184,21 +184,21 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     id = todoItem.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "dependent-on-todo", new
+                        { "dependentOnTodo", new
                             {
-                                data = new { type = "todo-items", id = $"{todoItem.Id}" }
+                                data = new { type = "todoItems", id = $"{todoItem.Id}" }
                             }
                         },
-                        { "children-todos", new
+                        { "childrenTodos", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todo-items", id = $"{todoItem.Id}" },
-                                    new { type = "todo-items", id = $"{strayTodoItem.Id}" }
+                                    new { type = "todoItems", id = $"{todoItem.Id}" },
+                                    new { type = "todoItems", id = $"{strayTodoItem.Id}" }
                                 }
                             }
                         }
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -223,9 +223,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
-                 .Include(ti => ti.ParentTodoItem).First();
+                 .Include(ti => ti.ParentTodo).First();
 
-            Assert.Equal(todoItem.Id, updatedTodoItem.ParentTodoItemId);
+            Assert.Equal(todoItem.Id, updatedTodoItem.ParentTodoId);
         }
 
         [Fact]
@@ -256,16 +256,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todo-collections",
+                    type = "todoCollections",
                     id = todoCollection.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "todo-items", new
+                        { "todoItems", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todo-items", id = $"{newTodoItem1.Id}" },
-                                    new { type = "todo-items", id = $"{newTodoItem2.Id}" }
+                                    new { type = "todoItems", id = $"{newTodoItem1.Id}" },
+                                    new { type = "todoItems", id = $"{newTodoItem2.Id}" }
                                 }
 
                             }
@@ -275,7 +275,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-collections/{todoCollection.Id}";
+            var route = $"/api/v1/todoCollections/{todoCollection.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todo-collections",
+                    type = "todoCollections",
                     id = todoCollection.Id,
                     attributes = new
                     {
@@ -339,12 +339,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     },
                     relationships = new Dictionary<string, object>
                     {
-                        { "todo-items", new
+                        { "todoItems", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todo-items", id = $"{newTodoItem1.Id}" },
-                                    new { type = "todo-items", id = $"{newTodoItem2.Id}" }
+                                    new { type = "todoItems", id = $"{newTodoItem1.Id}" },
+                                    new { type = "todoItems", id = $"{newTodoItem2.Id}" }
                                 }
 
                             }
@@ -354,7 +354,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-collections/{todoCollection.Id}";
+            var route = $"/api/v1/todoCollections/{todoCollection.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -401,16 +401,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 data = new
                 {
-                    type = "todo-collections",
+                    type = "todoCollections",
                     id = todoCollection.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "todo-items", new
+                        { "todoItems", new
                             {
                                 data = new object[]
                                 {
-                                    new { type = "todo-items", id = $"{todoItem1.Id}" },
-                                    new { type = "todo-items", id = $"{todoItem2.Id}" }
+                                    new { type = "todoItems", id = $"{todoItem1.Id}" },
+                                    new { type = "todoItems", id = $"{todoItem2.Id}" }
                                 }
 
                             }
@@ -420,7 +420,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-collections/{todoCollection.Id}";
+            var route = $"/api/v1/todoCollections/{todoCollection.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -464,14 +464,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new List<object>
                 {
                     new {
-                        type = "todo-items",
+                        type = "todoItems",
                         id = $"{todoItem.Id}"
                     }
                 }
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/people/{person.Id}/relationships/todo-items";
+            var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
             var request = new HttpRequestMessage(httpMethod, route);
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
@@ -509,7 +509,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var content = serializer.Serialize(person);
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}/relationships/owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
             var request = new HttpRequestMessage(httpMethod, route);
 
             request.Content = new StringContent(content);
@@ -547,7 +547,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 data = new
                 {
                     id = todoItem.Id,
-                    type = "todo-items",
+                    type = "todoItems",
                     relationships = new
                     {
                         owner = new
@@ -559,7 +559,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
@@ -602,7 +602,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     type = "people",
                     relationships = new Dictionary<string, object>
                     {
-                         { "todo-items", new
+                         { "todoItems", new
                             {
                                 data = new List<object>
                                 {
@@ -659,7 +659,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}/relationships/owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
             var request = new HttpRequestMessage(httpMethod, route);
 
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
@@ -748,16 +748,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     id = person2.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "todo-items", new
+                        { "todoItems", new
                             {
                                 data = new List<object>
                                 {
                                     new {
-                                        type = "todo-items",
+                                        type = "todoItems",
                                         id = $"{todoItem1Id}"
                                     },
                                     new {
-                                        type = "todo-items",
+                                        type = "todoItems",
                                         id = $"{todoItem2Id}"
                                     }
                                 }

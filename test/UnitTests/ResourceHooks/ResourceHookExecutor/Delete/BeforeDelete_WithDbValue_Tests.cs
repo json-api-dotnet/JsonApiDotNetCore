@@ -25,7 +25,7 @@ namespace UnitTests.ResourceHooks
 
             person.Passport = passport;
             person.TodoItems = new List<TodoItem> { todo1 };
-            person.StakeHolderTodo = todo2;
+            person.StakeHolderTodoItem = todo2;
             options = InitInMemoryDb(context =>
             {
                 context.Set<Person>().Add(person);

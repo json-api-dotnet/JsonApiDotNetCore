@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Hooks
         /// hook is fired after the execution of this hook.
         /// <para />
         /// If by the creation of these relationships, any other relationships (eg
-        /// in the case of an already populated one-to-one relationship) are implicitly 
+        /// in the case of an already populated oneToOne relationship) are implicitly 
         /// affected, the <see cref="ResourceDefinition{T}.BeforeImplicitUpdateRelationship"/>
         /// hook is fired for these.
         /// </summary>
@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Hooks
         /// This hook is fired when a relationship to entities of type 
         /// <typeparamref name="TResource"/> is implicitly affected from a dependent pipeline (<see cref="ResourcePipeline.Patch"/>
         /// or <see cref="ResourcePipeline.Delete"/>). For example, if an Article was updated
-        /// by setting its author relationship (one-to-one) to an existing Person, 
+        /// by setting its author relationship (oneToOne) to an existing Person, 
         /// and by this the relationship to a different Person was implicitly removed, 
         /// this hook will be fired for the latter Person.
         /// <para />
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// If by the deletion of these entities any other entities are affected 
         /// implicitly by the removal of their relationships (eg
-        /// in the case of an one-to-one relationship), the <see cref="ResourceDefinition{T}.BeforeImplicitUpdateRelationship"/>
+        /// in the case of an oneToOne relationship), the <see cref="ResourceDefinition{T}.BeforeImplicitUpdateRelationship"/>
         /// hook is fired for these entities.
         /// </summary>
         /// <returns>The transformed entity set</returns>

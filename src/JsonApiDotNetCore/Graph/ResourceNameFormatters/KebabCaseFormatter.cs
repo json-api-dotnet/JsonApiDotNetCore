@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Graph
     /// <example>
     /// <code>
     /// _default.FormatResourceName(typeof(TodoItem)).Dump(); 
-    /// // > "todo-items"
+    /// // > "todoItems"
     /// </code>
     /// </example>
     /// <example>
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Graph
     /// <example>
     /// <code>
     /// _default.ApplyCasingConvention("TodoItems"); 
-    /// // > "todo-items"
+    /// // > "todoItems"
     ///
     /// _default.ApplyCasingConvention("TodoItem"); 
     /// // > "todo-item"
