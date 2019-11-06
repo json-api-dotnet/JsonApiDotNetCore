@@ -45,8 +45,8 @@ namespace JsonApiDotNetCore.Hooks
         void DiscoverImplementedHooksForModel(Type containerType)
         {
             var implementedHooks = new List<ResourceHook>();
-            var enabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship };
-            var disabledHooks = new List<ResourceHook>();
+            var databaseValuesEnabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship }; // this hook can only be used with enabled database values
+            var databaseValuesDisabledHooks = new List<ResourceHook>();
             foreach (var hook in _allHooks)
             {
                 var method = containerType.GetMethod(hook.ToString("G"));
@@ -62,14 +62,14 @@ namespace JsonApiDotNetCore.Hooks
                         throw new JsonApiSetupException($"DatabaseValuesAttribute cannot be used on hook" +
                             $"{hook.ToString("G")} in resource definition  {containerType.Name}");
                     }
-                    var targetList = attr.value ? enabledHooks : disabledHooks;
+                    var targetList = attr.value ? databaseValuesEnabledHooks : databaseValuesDisabledHooks;
                     targetList.Add(hook);
                 }
             }
 
             ImplementedHooks = implementedHooks.ToArray();
-            DatabaseValuesDisabledHooks = disabledHooks.ToArray();
-            DatabaseValuesEnabledHooks = enabledHooks.ToArray();
+            DatabaseValuesDisabledHooks = databaseValuesDisabledHooks.ToArray();
+            DatabaseValuesEnabledHooks = databaseValuesEnabledHooks.ToArray();
         }
     }
 }
