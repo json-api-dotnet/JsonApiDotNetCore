@@ -13,22 +13,6 @@ references:
   commentId: T:JsonApiDotNetCore.Builders.IResourceGraphBuilder
   fullName: JsonApiDotNetCore.Builders.IResourceGraphBuilder
   nameWithType: IResourceGraphBuilder
-- uid: JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext*
-  name: AddDbContext
-  href: api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.html#JsonApiDotNetCore_Builders_IResourceGraphBuilder_AddDbContext_
-  commentId: Overload:JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext
-  nameWithType: IResourceGraphBuilder.AddDbContext
-- uid: JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext``1
-  name: AddDbContext<T>()
-  href: api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.html#JsonApiDotNetCore_Builders_IResourceGraphBuilder_AddDbContext__1
-  commentId: M:JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext``1
-  name.vb: AddDbContext(Of T)()
-  fullName: JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext<T>()
-  fullName.vb: JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddDbContext(Of T)()
-  nameWithType: IResourceGraphBuilder.AddDbContext<T>()
-  nameWithType.vb: IResourceGraphBuilder.AddDbContext(Of T)()
 - uid: JsonApiDotNetCore.Builders.IResourceGraphBuilder.AddResource(Type,Type,System.String)
   name: AddResource(Type, Type, String)
   href: api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.html#JsonApiDotNetCore_Builders_IResourceGraphBuilder_AddResource_Type_Type_System_String_
@@ -153,15 +137,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureResources
   nameWithType: JsonApiApplicationBuilder.ConfigureResources
-- uid: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureResources``1(Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder})
-  name: ConfigureResources<TContext>(Action<IResourceGraphBuilder>)
-  href: api/JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html#JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_ConfigureResources__1_Action_JsonApiDotNetCore_Builders_IResourceGraphBuilder__
-  commentId: M:JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureResources``1(Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder})
-  name.vb: ConfigureResources(Of TContext)(Action(Of IResourceGraphBuilder))
-  fullName: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureResources<TContext>(Action<JsonApiDotNetCore.Builders.IResourceGraphBuilder>)
-  fullName.vb: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureResources(Of TContext)(Action(Of JsonApiDotNetCore.Builders.IResourceGraphBuilder))
-  nameWithType: JsonApiApplicationBuilder.ConfigureResources<TContext>(Action<IResourceGraphBuilder>)
-  nameWithType.vb: JsonApiApplicationBuilder.ConfigureResources(Of TContext)(Action(Of IResourceGraphBuilder))
 - uid: JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.ConfigureServices
   name: ConfigureServices()
   href: api/JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html#JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_ConfigureServices
@@ -206,22 +181,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder.ResourceGraphBuilder
   nameWithType: ResourceGraphBuilder.ResourceGraphBuilder
-- uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext*
-  name: AddDbContext
-  href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddDbContext_
-  commentId: Overload:JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext
-  nameWithType: ResourceGraphBuilder.AddDbContext
-- uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext``1
-  name: AddDbContext<T>()
-  href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddDbContext__1
-  commentId: M:JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext``1
-  name.vb: AddDbContext(Of T)()
-  fullName: JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext<T>()
-  fullName.vb: JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddDbContext(Of T)()
-  nameWithType: ResourceGraphBuilder.AddDbContext<T>()
-  nameWithType.vb: ResourceGraphBuilder.AddDbContext(Of T)()
 - uid: JsonApiDotNetCore.Builders.ResourceGraphBuilder.AddResource(Type,Type,System.String)
   name: AddResource(Type, Type, String)
   href: api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html#JsonApiDotNetCore_Builders_ResourceGraphBuilder_AddResource_Type_Type_System_String_
@@ -2517,6 +2476,78 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Extensions.DbContextExtensions.Set
   nameWithType: DbContextExtensions.Set
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore
+  name: JsonApiDotNetCore.Extensions.EntityFrameworkCore
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.html
+  commentId: N:JsonApiDotNetCore.Extensions.EntityFrameworkCore
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore
+  nameWithType: JsonApiDotNetCore.Extensions.EntityFrameworkCore
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions
+  name: IResourceGraphBuilderExtensions
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.html
+  commentId: T:JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions
+  nameWithType: IResourceGraphBuilderExtensions
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext*
+  name: AddDbContext
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_IResourceGraphBuilderExtensions_AddDbContext_
+  commentId: Overload:JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext
+  nameWithType: IResourceGraphBuilderExtensions.AddDbContext
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext``1(JsonApiDotNetCore.Builders.IResourceGraphBuilder)
+  name: AddDbContext<TDbContext>(IResourceGraphBuilder)
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_IResourceGraphBuilderExtensions_AddDbContext__1_JsonApiDotNetCore_Builders_IResourceGraphBuilder_
+  commentId: M:JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext``1(JsonApiDotNetCore.Builders.IResourceGraphBuilder)
+  name.vb: AddDbContext(Of TDbContext)(IResourceGraphBuilder)
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext<TDbContext>(JsonApiDotNetCore.Builders.IResourceGraphBuilder)
+  fullName.vb: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.AddDbContext(Of TDbContext)(JsonApiDotNetCore.Builders.IResourceGraphBuilder)
+  nameWithType: IResourceGraphBuilderExtensions.AddDbContext<TDbContext>(IResourceGraphBuilder)
+  nameWithType.vb: IResourceGraphBuilderExtensions.AddDbContext(Of TDbContext)(IResourceGraphBuilder)
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions
+  name: IServiceCollectionExtensions
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.html
+  commentId: T:JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions
+  nameWithType: IServiceCollectionExtensions
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi*
+  name: AddJsonApi
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_IServiceCollectionExtensions_AddJsonApi_
+  commentId: Overload:JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi
+  nameWithType: IServiceCollectionExtensions.AddJsonApi
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi``1(IServiceCollection,Action{JsonApiDotNetCore.Configuration.JsonApiOptions},Action{JsonApiDotNetCore.Graph.IServiceDiscoveryFacade},Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder},IMvcCoreBuilder)
+  name: AddJsonApi<TDbContext>(IServiceCollection, Action<JsonApiOptions>, Action<IServiceDiscoveryFacade>, Action<IResourceGraphBuilder>, IMvcCoreBuilder)
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_IServiceCollectionExtensions_AddJsonApi__1_IServiceCollection_Action_JsonApiDotNetCore_Configuration_JsonApiOptions__Action_JsonApiDotNetCore_Graph_IServiceDiscoveryFacade__Action_JsonApiDotNetCore_Builders_IResourceGraphBuilder__IMvcCoreBuilder_
+  commentId: M:JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi``1(IServiceCollection,Action{JsonApiDotNetCore.Configuration.JsonApiOptions},Action{JsonApiDotNetCore.Graph.IServiceDiscoveryFacade},Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder},IMvcCoreBuilder)
+  name.vb: AddJsonApi(Of TDbContext)(IServiceCollection, Action(Of JsonApiOptions), Action(Of IServiceDiscoveryFacade), Action(Of IResourceGraphBuilder), IMvcCoreBuilder)
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi<TDbContext>(IServiceCollection, Action<JsonApiDotNetCore.Configuration.JsonApiOptions>, Action<JsonApiDotNetCore.Graph.IServiceDiscoveryFacade>, Action<JsonApiDotNetCore.Builders.IResourceGraphBuilder>, IMvcCoreBuilder)
+  fullName.vb: JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.AddJsonApi(Of TDbContext)(IServiceCollection, Action(Of JsonApiDotNetCore.Configuration.JsonApiOptions), Action(Of JsonApiDotNetCore.Graph.IServiceDiscoveryFacade), Action(Of JsonApiDotNetCore.Builders.IResourceGraphBuilder), IMvcCoreBuilder)
+  nameWithType: IServiceCollectionExtensions.AddJsonApi<TDbContext>(IServiceCollection, Action<JsonApiOptions>, Action<IServiceDiscoveryFacade>, Action<IResourceGraphBuilder>, IMvcCoreBuilder)
+  nameWithType.vb: IServiceCollectionExtensions.AddJsonApi(Of TDbContext)(IServiceCollection, Action(Of JsonApiOptions), Action(Of IServiceDiscoveryFacade), Action(Of IResourceGraphBuilder), IMvcCoreBuilder)
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions
+  name: JsonApiApplicationBuildExtensions
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.html
+  commentId: T:JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions
+  nameWithType: JsonApiApplicationBuildExtensions
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources*
+  name: ConfigureResources
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_JsonApiApplicationBuildExtensions_ConfigureResources_
+  commentId: Overload:JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources
+  nameWithType: JsonApiApplicationBuildExtensions.ConfigureResources
+- uid: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources``1(JsonApiDotNetCore.Builders.JsonApiApplicationBuilder,Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder})
+  name: ConfigureResources<TContext>(JsonApiApplicationBuilder, Action<IResourceGraphBuilder>)
+  href: api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.html#JsonApiDotNetCore_Extensions_EntityFrameworkCore_JsonApiApplicationBuildExtensions_ConfigureResources__1_JsonApiDotNetCore_Builders_JsonApiApplicationBuilder_Action_JsonApiDotNetCore_Builders_IResourceGraphBuilder__
+  commentId: M:JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources``1(JsonApiDotNetCore.Builders.JsonApiApplicationBuilder,Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder})
+  name.vb: ConfigureResources(Of TContext)(JsonApiApplicationBuilder, Action(Of IResourceGraphBuilder))
+  fullName: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources<TContext>(JsonApiDotNetCore.Builders.JsonApiApplicationBuilder, Action<JsonApiDotNetCore.Builders.IResourceGraphBuilder>)
+  fullName.vb: JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.ConfigureResources(Of TContext)(JsonApiDotNetCore.Builders.JsonApiApplicationBuilder, Action(Of JsonApiDotNetCore.Builders.IResourceGraphBuilder))
+  nameWithType: JsonApiApplicationBuildExtensions.ConfigureResources<TContext>(JsonApiApplicationBuilder, Action<IResourceGraphBuilder>)
+  nameWithType.vb: JsonApiApplicationBuildExtensions.ConfigureResources(Of TContext)(JsonApiApplicationBuilder, Action(Of IResourceGraphBuilder))
 - uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions
   name: IApplicationBuilderExtensions
   href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html
@@ -2752,15 +2783,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApi
   nameWithType: IServiceCollectionExtensions.AddJsonApi
-- uid: JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApi``1(IServiceCollection,Action{JsonApiDotNetCore.Configuration.JsonApiOptions},Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder},IMvcCoreBuilder)
-  name: AddJsonApi<TEfCoreDbContext>(IServiceCollection, Action<JsonApiOptions>, Action<IResourceGraphBuilder>, IMvcCoreBuilder)
-  href: api/JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.html#JsonApiDotNetCore_Extensions_IServiceCollectionExtensions_AddJsonApi__1_IServiceCollection_Action_JsonApiDotNetCore_Configuration_JsonApiOptions__Action_JsonApiDotNetCore_Builders_IResourceGraphBuilder__IMvcCoreBuilder_
-  commentId: M:JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApi``1(IServiceCollection,Action{JsonApiDotNetCore.Configuration.JsonApiOptions},Action{JsonApiDotNetCore.Builders.IResourceGraphBuilder},IMvcCoreBuilder)
-  name.vb: AddJsonApi(Of TEfCoreDbContext)(IServiceCollection, Action(Of JsonApiOptions), Action(Of IResourceGraphBuilder), IMvcCoreBuilder)
-  fullName: JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApi<TEfCoreDbContext>(IServiceCollection, Action<JsonApiDotNetCore.Configuration.JsonApiOptions>, Action<JsonApiDotNetCore.Builders.IResourceGraphBuilder>, IMvcCoreBuilder)
-  fullName.vb: JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddJsonApi(Of TEfCoreDbContext)(IServiceCollection, Action(Of JsonApiDotNetCore.Configuration.JsonApiOptions), Action(Of JsonApiDotNetCore.Builders.IResourceGraphBuilder), IMvcCoreBuilder)
-  nameWithType: IServiceCollectionExtensions.AddJsonApi<TEfCoreDbContext>(IServiceCollection, Action<JsonApiOptions>, Action<IResourceGraphBuilder>, IMvcCoreBuilder)
-  nameWithType.vb: IServiceCollectionExtensions.AddJsonApi(Of TEfCoreDbContext)(IServiceCollection, Action(Of JsonApiOptions), Action(Of IResourceGraphBuilder), IMvcCoreBuilder)
 - uid: JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.AddResourceService*
   name: AddResourceService
   href: api/JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.html#JsonApiDotNetCore_Extensions_IServiceCollectionExtensions_AddResourceService_

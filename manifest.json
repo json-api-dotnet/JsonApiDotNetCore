@@ -21,7 +21,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.IResourceGraphBuilder.html",
-          "hash": "v8/HtpDfhePvdM14NIwbug=="
+          "hash": "1Gtuzc5Vdfr3JIoR7q8x7A=="
         }
       },
       "is_incremental": false,
@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html",
-          "hash": "SuI7PV16d8u3nDHxm2nRPQ=="
+          "hash": "YRVzHtx1X4dk2etgElTg3w=="
         }
       },
       "is_incremental": false,
@@ -45,7 +45,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.ResourceGraphBuilder.html",
-          "hash": "zvnTVRAGo9ZFaKzieQI24g=="
+          "hash": "BrVUKQ9k6BIAoO7ZnlYyFw=="
         }
       },
       "is_incremental": false,
@@ -509,6 +509,54 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IResourceGraphBuilderExtensions.html",
+          "hash": "Mj+v2ch49OZFl+6yJ2TISA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.IServiceCollectionExtensions.html",
+          "hash": "2evNsl3QpyT9HtgRtC3/+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.JsonApiApplicationBuildExtensions.html",
+          "hash": "HSwdRIH+C8OdzrHEI4Bt5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Extensions.EntityFrameworkCore.html",
+          "hash": "QLkFL3uoMEJfMOb/pggNSQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.yml",
       "output": {
         ".html": {
@@ -549,7 +597,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Extensions.IServiceCollectionExtensions.html",
-          "hash": "vtnhuRf13EMegGHfZEwOsA=="
+          "hash": "UeiYpCrIP2C5dhcVSDoc+w=="
         }
       },
       "is_incremental": false,
@@ -3096,7 +3144,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "kBna0M+DJjOHOkvLlOBBkA=="
+          "hash": "rh9rLNe2ZUlxnSw4gkg1kw=="
         }
       },
       "is_incremental": false,
@@ -3523,7 +3571,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 255,
+          "total_file_count": 259,
           "skipped_file_count": 0
         }
       }
