@@ -32,19 +32,27 @@ namespace JsonApiDotNetCore.Hooks
                             .Cast<ResourceHook>()
                             .Where(h => h != ResourceHook.None)
                             .ToArray();
-            using var scope = provider.CreateScope();
-            var containerType = scope.ServiceProvider.GetService(_boundResourceDefinitionType)?.GetType();
-            if (containerType == null || containerType == _boundResourceDefinitionType)
-                return;
-            DiscoverImplementedHooksForModel(containerType);
+
+            Type containerType;
+            using (var scope = provider.CreateScope())
+            {
+                containerType = scope.ServiceProvider.GetService(_boundResourceDefinitionType)?.GetType();
+            }
+
+            DiscoverImplementedHooks(containerType);
         }
 
         /// <summary>
         /// Discovers the implemented hooks for a model.
         /// </summary>
         /// <returns>The implemented hooks for model.</returns>
-        void DiscoverImplementedHooksForModel(Type containerType)
+        void DiscoverImplementedHooks(Type containerType)
         {
+            if (containerType == null || containerType == _boundResourceDefinitionType)
+            {
+                return;
+            }
+
             var implementedHooks = new List<ResourceHook>();
             var databaseValuesEnabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship }; // this hook can only be used with enabled database values
             var databaseValuesDisabledHooks = new List<ResourceHook>();

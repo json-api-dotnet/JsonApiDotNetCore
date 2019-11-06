@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Whether or not ResourceHooks are enabled. 
         /// 
-        /// Default is set to <see langword="false"/> for backward compatibility.
+        /// Default is set to <see langword="true"/>
         /// </summary>
         public bool EnableResourceHooks { get; set; } = true;
 
