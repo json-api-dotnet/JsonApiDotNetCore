@@ -54,7 +54,8 @@ namespace JsonApiDotNetCore.Hooks
             }
 
             var implementedHooks = new List<ResourceHook>();
-            var databaseValuesEnabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship }; // this hook can only be used with enabled database values
+            // this hook can only be used with enabled database values
+            var databaseValuesEnabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship };
             var databaseValuesDisabledHooks = new List<ResourceHook>();
             foreach (var hook in _allHooks)
             {
