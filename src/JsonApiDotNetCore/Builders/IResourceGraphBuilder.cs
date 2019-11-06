@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;

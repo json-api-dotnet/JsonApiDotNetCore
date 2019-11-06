@@ -16,22 +16,22 @@ namespace JsonApiDotNetCore.Builders
 {
     public class ResourceGraphBuilder : IResourceGraphBuilder
     {
-        internal readonly List<ResourceContext> _entities = new List<ResourceContext>();
-        internal readonly List<ValidationResult> _validationResults = new List<ValidationResult>();
-        internal readonly IResourceNameFormatter _resourceNameFormatter = new KebabCaseFormatter();
+        private List<ResourceContext> _resources { get; set; } = new List<ResourceContext>();
+        private List<ValidationResult> _validationResults { get; set; } = new List<ValidationResult>();
+        private IResourceNameFormatter _formatter { get; set; } = new KebabCaseFormatter();
 
         public ResourceGraphBuilder() { }
 
         public ResourceGraphBuilder(IResourceNameFormatter formatter)
         {
-            _resourceNameFormatter = formatter;
+            _formatter = formatter;
         }
 
         /// <inheritdoc />
         public IResourceGraph Build()
         {
-            _entities.ForEach(SetResourceLinksOptions);
-            var resourceGraph = new ResourceGraph(_entities, _validationResults);
+            _resources.ForEach(SetResourceLinksOptions);
+            var resourceGraph = new ResourceGraph(_resources, _validationResults);
             return resourceGraph;
         }
 
@@ -55,18 +55,17 @@ namespace JsonApiDotNetCore.Builders
             => AddResource(typeof(TResource), typeof(TId), pluralizedTypeName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource(Type entityType, Type idType, string pluralizedTypeName = null)
+        public IResourceGraphBuilder AddResource(Type entityType, Type idType = null, string pluralizedTypeName = null)
         {
             AssertEntityIsNotAlreadyDefined(entityType);
-
-            pluralizedTypeName = pluralizedTypeName ?? _resourceNameFormatter.FormatResourceName(entityType);
-
-            _entities.Add(GetEntity(pluralizedTypeName, entityType, idType));
+            idType ??= GetIdType(entityType).idType;
+            pluralizedTypeName ??= _formatter.FormatResourceName(entityType);
+            _resources.Add(GetEntity(pluralizedTypeName, entityType, idType));
 
             return this;
         }
 
-        internal ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
+        private ResourceContext GetEntity(string pluralizedTypeName, Type entityType, Type idType) => new ResourceContext
         {
             ResourceName = pluralizedTypeName,
             ResourceType = entityType,
@@ -92,7 +91,7 @@ namespace JsonApiDotNetCore.Builders
                 {
                     var idAttr = new AttrAttribute()
                     {
-                        PublicAttributeName = _resourceNameFormatter.FormatPropertyName(prop),
+                        PublicAttributeName = _formatter.FormatPropertyName(prop),
                         PropertyInfo = prop,
                         InternalAttributeName = prop.Name
                     };
@@ -104,7 +103,7 @@ namespace JsonApiDotNetCore.Builders
                 if (attribute == null)
                     continue;
 
-                attribute.PublicAttributeName = attribute.PublicAttributeName ?? _resourceNameFormatter.FormatPropertyName(prop);
+                attribute.PublicAttributeName = attribute.PublicAttributeName ?? _formatter.FormatPropertyName(prop);
                 attribute.InternalAttributeName = prop.Name;
                 attribute.PropertyInfo = prop;
 
@@ -122,7 +121,7 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
                 if (attribute == null) continue;
 
-                attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? _resourceNameFormatter.FormatPropertyName(prop);
+                attribute.PublicRelationshipName = attribute.PublicRelationshipName ?? _formatter.FormatPropertyName(prop);
                 attribute.InternalRelationshipName = prop.Name;
                 attribute.RightType = GetRelationshipType(attribute, prop);
                 attribute.LeftType = entityType;
@@ -177,28 +176,7 @@ namespace JsonApiDotNetCore.Builders
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 
-        internal string GetResourceNameFromDbSetProperty(PropertyInfo property, Type resourceType)
-        {
-            // this check is actually duplicated in the DefaultResourceNameFormatter
-            // however, we perform it here so that we allow class attributes to be prioritized over
-            // the DbSet attribute. Eventually, the DbSet attribute should be deprecated.
-            //
-            // check the class definition first
-            // [Resource("models"] public class Model : Identifiable { /* ... */ }
-            if (resourceType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute classResourceAttribute)
-                return classResourceAttribute.ResourceName;
-
-            // check the DbContext member next
-            // [Resource("models")] public DbSet<Model> Models { get; set; }
-            if (property.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute resourceAttribute)
-                return resourceAttribute.ResourceName;
-
-            // fallback to the established convention using the DbSet Property.Name
-            // e.g DbSet<FooBar> FooBars { get; set; } => "foo-bars"
-            return _resourceNameFormatter.FormatResourceName(resourceType);
-        }
-
-        internal (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
+        private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
         {
             var possible = TypeLocator.GetIdType(resourceType);
             if (possible.isJsonApiResource)
@@ -209,9 +187,9 @@ namespace JsonApiDotNetCore.Builders
             return (false, null);
         }
 
-        internal void AssertEntityIsNotAlreadyDefined(Type entityType)
+        private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
-            if (_entities.Any(e => e.ResourceType == entityType))
+            if (_resources.Any(e => e.ResourceType == entityType))
                 throw new InvalidOperationException($"Cannot add entity type {entityType} to context resourceGraph, there is already an entity of that type configured.");
         }
     }
