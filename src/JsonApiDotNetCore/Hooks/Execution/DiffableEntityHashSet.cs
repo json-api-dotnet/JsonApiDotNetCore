@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Hooks
 
         private HashSet<TResource> ThrowNoDbValuesError()
         {
-            throw new MemberAccessException("Cannot iterate over the diffs if the LoaDatabaseValues option is set to false");
+            throw new MemberAccessException($"Cannot iterate over the diffs if the ${nameof(LoadDatabaseValues)} option is set to false");
         }
     }
 

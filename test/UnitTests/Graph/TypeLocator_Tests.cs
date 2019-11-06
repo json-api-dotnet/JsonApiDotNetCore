@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Xunit;
