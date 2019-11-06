@@ -170,7 +170,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todoItems?include=owner&fields[owner]=first-name,age";
+            var route = $"/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
             var request = new HttpRequestMessage(httpMethod, route);
             var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todoItems").Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&fields[owner]=first-name,age";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&fields[owner]=firstName,age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -226,9 +226,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert - check owner attributes
             var included = deserializeBody.Included.First();
             Assert.Equal(owner.StringId, included.Id);
-            Assert.Equal(owner.FirstName, included.Attributes["first-name"]);
+            Assert.Equal(owner.FirstName, included.Attributes["firstName"]);
             Assert.Equal((long)owner.Age, included.Attributes["age"]);
-            Assert.DoesNotContain("last-name", included.Attributes.Keys);
+            Assert.DoesNotContain("lastName", included.Attributes.Keys);
         }
 
         [Fact]

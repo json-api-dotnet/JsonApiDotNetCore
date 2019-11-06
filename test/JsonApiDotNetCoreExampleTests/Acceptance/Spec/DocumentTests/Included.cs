@@ -108,8 +108,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotEmpty(document.Included);
             Assert.Equal(person.Id.ToString(), document.Included[0].Id);
-            Assert.Equal(person.FirstName, document.Included[0].Attributes["first-name"]);
-            Assert.Equal(person.LastName, document.Included[0].Attributes["last-name"]);
+            Assert.Equal(person.FirstName, document.Included[0].Attributes["firstName"]);
+            Assert.Equal(person.LastName, document.Included[0].Attributes["lastName"]);
 
             server.Dispose();
             request.Dispose();

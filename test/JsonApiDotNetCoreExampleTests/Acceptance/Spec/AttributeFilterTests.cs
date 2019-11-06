@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             await context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner&filter[owner.first-name]={person.FirstName}";
+            var route = $"/api/v1/todoItems?include=owner&filter[owner.firstName]={person.FirstName}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -185,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner&filter[owner.first-name]=in:{string.Join(",", ownerFirstNames)}";
+            var route = $"/api/v1/todoItems?include=owner&filter[owner.firstName]=in:{string.Join(",", ownerFirstNames)}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -200,7 +200,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.NotNull(included);
             Assert.NotEmpty(included);
             foreach (var item in included)
-                Assert.Contains(item.Attributes["first-name"], ownerFirstNames);
+                Assert.Contains(item.Attributes["firstName"], ownerFirstNames);
 
         }
 

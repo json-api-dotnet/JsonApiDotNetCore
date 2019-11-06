@@ -197,7 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Equal(3, included.CountOfType("todoItems"));
             Assert.Equal(2, included.CountOfType("people"));
-            Assert.Equal(1, included.CountOfType("person-roles"));
+            Assert.Equal(1, included.CountOfType("personRoles"));
             Assert.Equal(1, included.CountOfType("todoCollections"));
         }
 
@@ -255,7 +255,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var collectionDocument = included.FindResource("todoCollections", collection.Id);
             var ownerDocument = included.FindResource("people", collectionOwner.Id);
             var assigneeDocument = included.FindResource("people", assignee.Id);
-            var roleDocument = included.FindResource("person-roles", role.Id);
+            var roleDocument = included.FindResource("personRoles", role.Id);
             var assignedTodo1 = included.FindResource("todoItems", todoItem1.Id);
             var assignedTodo2 = included.FindResource("todoItems", todoItem2.Id);
 
@@ -283,7 +283,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var person = new Person {
-                TodoItemCollections = new List<TodoItemCollection> {
+                todoCollections = new List<TodoItemCollection> {
                     new TodoItemCollection {
                         TodoItems = new List<TodoItem> {
                             new TodoItem(),

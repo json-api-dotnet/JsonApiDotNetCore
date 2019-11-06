@@ -6,6 +6,7 @@ namespace JsonApiDotNetCoreExample.Models
 {
     public class PersonRole : Identifiable
     {
+        [HasOne]
         public Person Person { get; set; }
     }
 
@@ -29,7 +30,7 @@ namespace JsonApiDotNetCoreExample.Models
         public virtual List<TodoItem> AssignedTodoItems { get; set; }
 
         [HasMany]
-        public virtual List<TodoItemCollection> TodoItemCollections { get; set; }
+        public virtual List<TodoItemCollection> todoCollections { get; set; }
 
         [HasOne]
         public virtual PersonRole Role { get; set; } 

@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674 };
 
             // Act
-            var (body, response) = await Patch($"/api/v1/super-users/{su.Id}", serializer.Serialize(su));
+            var (body, response) = await Patch($"/api/v1/superUsers/{su.Id}", serializer.Serialize(su));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
@@ -211,8 +211,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.NotNull(document);
             Assert.NotNull(document.Data);
             Assert.NotNull(document.SingleData.Attributes);
-            Assert.Equal(newPerson.LastName, document.SingleData.Attributes["last-name"]);
-            Assert.Equal(newPerson.FirstName, document.SingleData.Attributes["first-name"]);
+            Assert.Equal(newPerson.LastName, document.SingleData.Attributes["lastName"]);
+            Assert.Equal(newPerson.FirstName, document.SingleData.Attributes["firstName"]);
             Assert.True(document.SingleData.Relationships.ContainsKey("todoItems"));
             Assert.Null(document.SingleData.Relationships["todoItems"].Data);
         }

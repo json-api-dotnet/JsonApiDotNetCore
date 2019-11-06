@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
 
             // Act
-            var (body, response) = await Post("/api/v1/super-users", serializer.Serialize(superUser));
+            var (body, response) = await Post("/api/v1/superUsers", serializer.Serialize(superUser));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
@@ -252,7 +252,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var personRole = new PersonRole { Person = person };
 
             // Act
-            var (body, response) = await Post("/api/v1/person-roles", serializer.Serialize(personRole));
+            var (body, response) = await Post("/api/v1/personRoles", serializer.Serialize(personRole));
             var responseItem = _deserializer.DeserializeSingle<PersonRole>(body).Data;
 
             // Assert

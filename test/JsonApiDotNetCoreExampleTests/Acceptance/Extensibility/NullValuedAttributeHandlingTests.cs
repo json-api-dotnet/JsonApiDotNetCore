@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             // Assert: does response contain a null valued attribute?
             Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
-            Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
+            Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("lastName"));
 
         }
     }
