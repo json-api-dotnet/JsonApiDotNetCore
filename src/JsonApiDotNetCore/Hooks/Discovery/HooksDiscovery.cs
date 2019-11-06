@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -26,13 +26,14 @@ namespace JsonApiDotNetCore.Hooks
         public ResourceHook[] DatabaseValuesEnabledHooks { get; private set; }
         public ResourceHook[] DatabaseValuesDisabledHooks { get; private set; }
 
-        public HooksDiscovery(IScopedServiceProvider provider)
+        public HooksDiscovery(IServiceProvider provider)
         {
             _allHooks = Enum.GetValues(typeof(ResourceHook))
                             .Cast<ResourceHook>()
                             .Where(h => h != ResourceHook.None)
                             .ToArray();
-            var containerType = provider.GetService(_boundResourceDefinitionType)?.GetType();
+            using var scope = provider.CreateScope();
+            var containerType = scope.ServiceProvider.GetService(_boundResourceDefinitionType)?.GetType();
             if (containerType == null || containerType == _boundResourceDefinitionType)
                 return;
             DiscoverImplementedHooksForModel(containerType);

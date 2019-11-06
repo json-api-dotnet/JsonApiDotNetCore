@@ -22,9 +22,9 @@ namespace UnitTests.ResourceHooks
             public override void AfterDelete(HashSet<Dummy> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
 
-        private IScopedServiceProvider MockProvider(object service)
+        private IServiceProvider MockProvider(object service)
         {
-            var mock = new Mock<IScopedServiceProvider>();
+            var mock = new Mock<IServiceProvider>();
             mock.Setup(m => m.GetService(It.IsAny<Type>())).Returns(service);
             return mock.Object;
         }
@@ -88,30 +88,5 @@ namespace UnitTests.ResourceHooks
             });
 
         }
-
-        //public class DoubleDummy : Identifiable { }
-        //public class DoubleDummyResourceDefinition1 : ResourceDefinition<DoubleDummy>
-        //{
-        //    public DoubleDummyResourceDefinition1() : base(new ResourceGraphBuilder().AddResource<DoubleDummy>().Build()) { }
-
-        //    public override IEnumerable<DoubleDummy> BeforeDelete(IEntityHashSet<DoubleDummy> affected, ResourcePipeline pipeline) { return affected; }
-        //}
-        //public class DoubleDummyResourceDefinition2 : ResourceDefinition<DoubleDummy>
-        //{
-        //    public DoubleDummyResourceDefinition2() : base(new ResourceGraphBuilder().AddResource<DoubleDummy>().Build()) { }
-
-        //    public override void AfterDelete(HashSet<DoubleDummy> entities, ResourcePipeline pipeline, bool succeeded) { }
-        //}
-        //[Fact]
-        //public void Multiple_Implementations_Of_ResourceDefinitions()
-        //{
-        //    //  assert
-        //    Assert.Throws<JsonApiSetupException>(() =>
-        //    {
-        //        // Arrange & act
-        //        new List<> { new DoubleDummyResourceDefinition1(), new DoubleDummyResourceDefinition2() };
-        //        var hookConfig = new HooksDiscovery<DoubleDummy>(MockProvider( ));
-        //    });
-        //}
     }
 }
