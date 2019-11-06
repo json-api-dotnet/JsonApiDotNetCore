@@ -52,6 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             request.Content = new StringContent(content);
             request.Content.Headers.ContentType = JsonApiContentType;
             var response = await _client.SendAsync(request);
+
             var body = await response.Content?.ReadAsStringAsync();
             return (body, response);
         }

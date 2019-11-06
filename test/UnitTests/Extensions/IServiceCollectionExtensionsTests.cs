@@ -19,6 +19,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 
 namespace UnitTests.Extensions
 {
@@ -29,7 +30,7 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
-
+            services.AddLogging();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddJsonApi<AppDbContext>();
 

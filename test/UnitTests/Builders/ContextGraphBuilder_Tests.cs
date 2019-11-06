@@ -5,6 +5,7 @@ using System.Reflection;
 using Humanizer;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;

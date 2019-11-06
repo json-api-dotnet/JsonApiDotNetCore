@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using System;
 using System.Collections.Generic;
@@ -19,30 +20,10 @@ namespace JsonApiDotNetCore.Graph
         /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
         /// Returns the status and the resultant id type, either `(true, Type)` OR `(false, null)`
         /// </summary>        
-        public static (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
+        public static Type GetIdType(Type resourceType)
         {
-            var identitifableType = GetIdentifiableIdType(resourceType);
-            return (identitifableType != null)
-                ? (true, identitifableType)
-                : (false, null);
-        }
-
-        private static Type GetIdentifiableIdType(Type identifiableType)
-            => GetIdentifiableInterface(identifiableType)?.GetGenericArguments()[0];
-
-        private static Type GetIdentifiableInterface(Type type)
-            => type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
-
-        // TODO: determine if this optimization is even helpful...
-        private static Type[] GetAssemblyTypes(Assembly assembly)
-        {
-            if (_typeCache.TryGetValue(assembly, out var types) == false)
-            {
-                types = assembly.GetTypes();
-                _typeCache[assembly] = types;
-            }
-
-            return types;
+            var identifiableInterface = resourceType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
+            return identifiableInterface?.GetGenericArguments()[0];
         }
 
         /// <summary>
@@ -76,13 +57,11 @@ namespace JsonApiDotNetCore.Graph
         /// </returns>
         internal static bool TryGetResourceDescriptor(Type type, out ResourceDescriptor descriptor)
         {
-            var possible = GetIdType(type);
-            if (possible.isJsonApiResource)
+            if (type.Implements<IIdentifiable>())
             {
-                descriptor = new ResourceDescriptor(type, possible.idType);
+                descriptor = new ResourceDescriptor(type, GetIdType(type));
                 return true;
             }
-
             descriptor = ResourceDescriptor.Empty;
             return false;
         }
