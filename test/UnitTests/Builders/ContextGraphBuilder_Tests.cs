@@ -85,7 +85,7 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compound-attribute");
+            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
 
         [Fact]

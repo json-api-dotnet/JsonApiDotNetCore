@@ -45,8 +45,8 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne(links: Link.All, canInclude: false)]
         public virtual TodoItem UnIncludeableItem { get; set; }
 
-        public int? PassportId { get; set; }
-
+        [HasOne]
         public virtual Passport Passport { get; set; }
+        public int? PassportId { get; set; }
     }
 }
