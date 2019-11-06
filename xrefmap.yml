@@ -3583,14 +3583,14 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.HooksDiscovery(Of TResource)
   nameWithType: HooksDiscovery<TResource>
   nameWithType.vb: HooksDiscovery(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.HooksDiscovery`1.#ctor
-  name: HooksDiscovery()
-  href: api/JsonApiDotNetCore.Hooks.HooksDiscovery-1.html#JsonApiDotNetCore_Hooks_HooksDiscovery_1__ctor
-  commentId: M:JsonApiDotNetCore.Hooks.HooksDiscovery`1.#ctor
-  fullName: JsonApiDotNetCore.Hooks.HooksDiscovery<TResource>.HooksDiscovery()
-  fullName.vb: JsonApiDotNetCore.Hooks.HooksDiscovery(Of TResource).HooksDiscovery()
-  nameWithType: HooksDiscovery<TResource>.HooksDiscovery()
-  nameWithType.vb: HooksDiscovery(Of TResource).HooksDiscovery()
+- uid: JsonApiDotNetCore.Hooks.HooksDiscovery`1.#ctor(IServiceProvider)
+  name: HooksDiscovery(IServiceProvider)
+  href: api/JsonApiDotNetCore.Hooks.HooksDiscovery-1.html#JsonApiDotNetCore_Hooks_HooksDiscovery_1__ctor_IServiceProvider_
+  commentId: M:JsonApiDotNetCore.Hooks.HooksDiscovery`1.#ctor(IServiceProvider)
+  fullName: JsonApiDotNetCore.Hooks.HooksDiscovery<TResource>.HooksDiscovery(IServiceProvider)
+  fullName.vb: JsonApiDotNetCore.Hooks.HooksDiscovery(Of TResource).HooksDiscovery(IServiceProvider)
+  nameWithType: HooksDiscovery<TResource>.HooksDiscovery(IServiceProvider)
+  nameWithType.vb: HooksDiscovery(Of TResource).HooksDiscovery(IServiceProvider)
 - uid: JsonApiDotNetCore.Hooks.HooksDiscovery`1.#ctor*
   name: HooksDiscovery
   href: api/JsonApiDotNetCore.Hooks.HooksDiscovery-1.html#JsonApiDotNetCore_Hooks_HooksDiscovery_1__ctor_
@@ -4289,31 +4289,31 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.IUpdateHookExecutor.BeforeUpdate(Of TResource)(IEnumerable(Of TResource), JsonApiDotNetCore.Hooks.ResourcePipeline)
   nameWithType: IUpdateHookExecutor.BeforeUpdate<TResource>(IEnumerable<TResource>, ResourcePipeline)
   nameWithType.vb: IUpdateHookExecutor.BeforeUpdate(Of TResource)(IEnumerable(Of TResource), ResourcePipeline)
-- uid: JsonApiDotNetCore.Hooks.LoaDatabaseValues
-  name: LoaDatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.LoaDatabaseValues.html
-  commentId: T:JsonApiDotNetCore.Hooks.LoaDatabaseValues
-  fullName: JsonApiDotNetCore.Hooks.LoaDatabaseValues
-  nameWithType: LoaDatabaseValues
-- uid: JsonApiDotNetCore.Hooks.LoaDatabaseValues.#ctor(System.Boolean)
-  name: LoaDatabaseValues(Boolean)
-  href: api/JsonApiDotNetCore.Hooks.LoaDatabaseValues.html#JsonApiDotNetCore_Hooks_LoaDatabaseValues__ctor_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Hooks.LoaDatabaseValues.#ctor(System.Boolean)
-  fullName: JsonApiDotNetCore.Hooks.LoaDatabaseValues.LoaDatabaseValues(System.Boolean)
-  nameWithType: LoaDatabaseValues.LoaDatabaseValues(Boolean)
-- uid: JsonApiDotNetCore.Hooks.LoaDatabaseValues.#ctor*
-  name: LoaDatabaseValues
-  href: api/JsonApiDotNetCore.Hooks.LoaDatabaseValues.html#JsonApiDotNetCore_Hooks_LoaDatabaseValues__ctor_
-  commentId: Overload:JsonApiDotNetCore.Hooks.LoaDatabaseValues.#ctor
+- uid: JsonApiDotNetCore.Hooks.LoadDatabaseValues
+  name: LoadDatabaseValues
+  href: api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html
+  commentId: T:JsonApiDotNetCore.Hooks.LoadDatabaseValues
+  fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues
+  nameWithType: LoadDatabaseValues
+- uid: JsonApiDotNetCore.Hooks.LoadDatabaseValues.#ctor(System.Boolean)
+  name: LoadDatabaseValues(Boolean)
+  href: api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html#JsonApiDotNetCore_Hooks_LoadDatabaseValues__ctor_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Hooks.LoadDatabaseValues.#ctor(System.Boolean)
+  fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues.LoadDatabaseValues(System.Boolean)
+  nameWithType: LoadDatabaseValues.LoadDatabaseValues(Boolean)
+- uid: JsonApiDotNetCore.Hooks.LoadDatabaseValues.#ctor*
+  name: LoadDatabaseValues
+  href: api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html#JsonApiDotNetCore_Hooks_LoadDatabaseValues__ctor_
+  commentId: Overload:JsonApiDotNetCore.Hooks.LoadDatabaseValues.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.LoaDatabaseValues.LoaDatabaseValues
-  nameWithType: LoaDatabaseValues.LoaDatabaseValues
-- uid: JsonApiDotNetCore.Hooks.LoaDatabaseValues.value
+  fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues.LoadDatabaseValues
+  nameWithType: LoadDatabaseValues.LoadDatabaseValues
+- uid: JsonApiDotNetCore.Hooks.LoadDatabaseValues.value
   name: value
-  href: api/JsonApiDotNetCore.Hooks.LoaDatabaseValues.html#JsonApiDotNetCore_Hooks_LoaDatabaseValues_value
-  commentId: F:JsonApiDotNetCore.Hooks.LoaDatabaseValues.value
-  fullName: JsonApiDotNetCore.Hooks.LoaDatabaseValues.value
-  nameWithType: LoaDatabaseValues.value
+  href: api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html#JsonApiDotNetCore_Hooks_LoadDatabaseValues_value
+  commentId: F:JsonApiDotNetCore.Hooks.LoadDatabaseValues.value
+  fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues.value
+  nameWithType: LoadDatabaseValues.value
 - uid: JsonApiDotNetCore.Hooks.RelationshipProxy
   name: RelationshipProxy
   href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html
