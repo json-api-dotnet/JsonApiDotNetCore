@@ -55,12 +55,19 @@ namespace JsonApiDotNetCore.Builders
             => AddResource(typeof(TResource), typeof(TId), pluralizedTypeName);
 
         /// <inheritdoc />
-        public IResourceGraphBuilder AddResource(Type entityType, Type idType = null, string pluralizedTypeName = null)
+        public IResourceGraphBuilder AddResource(Type resourceType, Type idType = null, string pluralizedTypeName = null)
         {
-            AssertEntityIsNotAlreadyDefined(entityType);
-            idType ??= GetIdType(entityType).idType;
-            pluralizedTypeName ??= _formatter.FormatResourceName(entityType);
-            _resources.Add(GetEntity(pluralizedTypeName, entityType, idType));
+            AssertEntityIsNotAlreadyDefined(resourceType);
+            if (resourceType.Implements<IIdentifiable>())
+            {
+                pluralizedTypeName ??= _formatter.FormatResourceName(resourceType);
+                idType ??= TypeLocator.GetIdType(resourceType);
+                _resources.Add(GetEntity(pluralizedTypeName, resourceType, idType));
+            }
+            else
+            {
+                _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
+            }
 
             return this;
         }
@@ -175,17 +182,6 @@ namespace JsonApiDotNetCore.Builders
             relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
-
-        private (bool isJsonApiResource, Type idType) GetIdType(Type resourceType)
-        {
-            var possible = TypeLocator.GetIdType(resourceType);
-            if (possible.isJsonApiResource)
-                return possible;
-
-            _validationResults.Add(new ValidationResult(LogLevel.Warning, $"{resourceType} does not implement 'IIdentifiable<>'. "));
-
-            return (false, null);
-        }
 
         private void AssertEntityIsNotAlreadyDefined(Type entityType)
         {
