@@ -4,7 +4,6 @@ using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Hooks
 {
@@ -13,6 +12,7 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     public class HooksDiscovery<TEntity> : IHooksDiscovery<TEntity> where TEntity : class, IIdentifiable
     {
+        private readonly Type _boundResourceDefinitionType = typeof(ResourceDefinition<TEntity>);
         private readonly ResourceHook[] _allHooks;
         private readonly ResourceHook[] _databaseValuesAttributeAllowed =
         {
@@ -32,10 +32,10 @@ namespace JsonApiDotNetCore.Hooks
                             .Cast<ResourceHook>()
                             .Where(h => h != ResourceHook.None)
                             .ToArray();
-            var container = provider.GetService(typeof(ResourceDefinition<TEntity>));
-            if (container == null)
+            var containerType = provider.GetService(_boundResourceDefinitionType)?.GetType();
+            if (containerType == null || containerType == _boundResourceDefinitionType)
                 return;
-            DiscoverImplementedHooksForModel(container.GetType());
+            DiscoverImplementedHooksForModel(containerType);
         }
 
         /// <summary>
@@ -45,28 +45,28 @@ namespace JsonApiDotNetCore.Hooks
         void DiscoverImplementedHooksForModel(Type containerType)
         {
             var implementedHooks = new List<ResourceHook>();
-            var enabledHooks = new List<ResourceHook>() { ResourceHook.BeforeImplicitUpdateRelationship };
+            var enabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship };
             var disabledHooks = new List<ResourceHook>();
-            if (containerType != null)
+            foreach (var hook in _allHooks)
             {
-                foreach (var hook in _allHooks)
-                {
-                    var method = containerType.GetMethod(hook.ToString("G"));
-                    implementedHooks.Add(hook);
-                    var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValues>().SingleOrDefault();
-                    if (attr != null)
-                    {
-                        if (!_databaseValuesAttributeAllowed.Contains(hook))
-                        {
-                            throw new JsonApiSetupException($"DatabaseValuesAttribute cannot be used on hook" +
-                                $"{hook.ToString("G")} in resource definition  {containerType.Name}");
-                        }
-                        var targetList = attr.value ? enabledHooks : disabledHooks;
-                        targetList.Add(hook);
-                    }
-                }
+                var method = containerType.GetMethod(hook.ToString("G"));
+                if (method.DeclaringType == _boundResourceDefinitionType)
+                    continue;
 
+                implementedHooks.Add(hook);
+                var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValues>().SingleOrDefault();
+                if (attr != null)
+                {
+                    if (!_databaseValuesAttributeAllowed.Contains(hook))
+                    {
+                        throw new JsonApiSetupException($"DatabaseValuesAttribute cannot be used on hook" +
+                            $"{hook.ToString("G")} in resource definition  {containerType.Name}");
+                    }
+                    var targetList = attr.value ? enabledHooks : disabledHooks;
+                    targetList.Add(hook);
+                }
             }
+
             ImplementedHooks = implementedHooks.ToArray();
             DatabaseValuesDisabledHooks = disabledHooks.ToArray();
             DatabaseValuesEnabledHooks = enabledHooks.ToArray();
