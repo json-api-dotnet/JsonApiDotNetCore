@@ -10,9 +10,9 @@ namespace JsonApiDotNetCore.Hooks
     /// <summary>
     /// The default implementation for IHooksDiscovery
     /// </summary>
-    public class HooksDiscovery<TEntity> : IHooksDiscovery<TEntity> where TEntity : class, IIdentifiable
+    public class HooksDiscovery<TResource> : IHooksDiscovery<TResource> where TResource : class, IIdentifiable
     {
-        private readonly Type _boundResourceDefinitionType = typeof(ResourceDefinition<TEntity>);
+        private readonly Type _boundResourceDefinitionType = typeof(ResourceDefinition<TResource>);
         private readonly ResourceHook[] _allHooks;
         private readonly ResourceHook[] _databaseValuesAttributeAllowed =
         {
