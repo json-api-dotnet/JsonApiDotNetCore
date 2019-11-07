@@ -12,11 +12,9 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public class MetaStartup : Startup
     {
-        public MetaStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+        public MetaStartup(IWebHostEnvironment env) : base(env) { }
 
-        public new void ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IRequestMeta, MetaService>();
             base.ConfigureServices(services);

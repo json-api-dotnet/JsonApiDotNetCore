@@ -5,7 +5,6 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -15,12 +14,9 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public class NoDefaultPageSizeStartup : Startup
     {
-        public NoDefaultPageSizeStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+        public NoDefaultPageSizeStartup(IWebHostEnvironment env) : base(env) { }
 
-
-        public new void ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             var mvcBuilder = services.AddMvcCore();

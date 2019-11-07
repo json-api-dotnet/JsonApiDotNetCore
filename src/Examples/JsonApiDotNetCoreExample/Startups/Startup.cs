@@ -15,12 +15,17 @@ namespace JsonApiDotNetCoreExample
     {
         public readonly IConfiguration Config;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Config = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Config = builder.Build();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             services
@@ -44,6 +49,8 @@ namespace JsonApiDotNetCoreExample
                     options.LoadDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
+            // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
+            services.AddClientSerialization(); 
         }
 
         public virtual void Configure(

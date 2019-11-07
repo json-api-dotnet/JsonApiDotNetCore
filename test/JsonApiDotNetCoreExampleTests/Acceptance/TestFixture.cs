@@ -36,8 +36,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
-            var serializer =  GetService<IRequestSerializer>();
-            var graph =  GetService<IResourceGraph>();
+            var serializer = GetService<IRequestSerializer>();
+            var graph = GetService<IResourceGraph>();
             if (attributes != null)
                 serializer.AttributesToSerialize = graph.GetAttributes(attributes);
             if (relationships != null)
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));
-        
+
         public void ReloadDbContext()
         {
             Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>());
