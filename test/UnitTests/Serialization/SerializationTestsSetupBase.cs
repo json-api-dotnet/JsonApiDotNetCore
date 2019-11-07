@@ -43,7 +43,7 @@ namespace UnitTests.Serialization
             // one to one relationships
             resourceGraphBuilder.AddResource<OneToOnePrincipal>("oneToOnePrincipals");
             resourceGraphBuilder.AddResource<OneToOneDependent>("oneToOneDependents");
-            resourceGraphBuilder.AddResource<OneToOneRequiredDependent>("oneToOne-requiredDependents");
+            resourceGraphBuilder.AddResource<OneToOneRequiredDependent>("oneToOneRequiredDependents");
             // one to many relationships
             resourceGraphBuilder.AddResource<OneToManyPrincipal>("oneToManyPrincipals");
             resourceGraphBuilder.AddResource<OneToManyDependent>("oneToManyDependents");

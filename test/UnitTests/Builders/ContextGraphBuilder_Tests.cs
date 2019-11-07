@@ -29,7 +29,7 @@ namespace UnitTests
         {
             // Arrange
             var services = new ServiceCollection();
-            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("non-dbResources"));
+            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("nonDbResources"));
 
             // Act
             var container = services.BuildServiceProvider();
@@ -37,7 +37,7 @@ namespace UnitTests
             // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
             var dbResource = resourceGraph.GetResourceContext("dbResources");
-            var nonDbResource = resourceGraph.GetResourceContext("non-dbResources");
+            var nonDbResource = resourceGraph.GetResourceContext("nonDbResources");
             Assert.Equal(typeof(DbResource), dbResource.ResourceType);
             Assert.Equal(typeof(NonDbResource), nonDbResource.ResourceType);
             Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceDefinitionType);

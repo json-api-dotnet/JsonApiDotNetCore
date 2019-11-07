@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Models
     public class ExposableData<T> where T : class
     {
         /// <summary>
-        /// see "primary data" in https://jsonapi.org/format/#documentTop-level.
+        /// see "primary data" in https://jsonapi.org/format/#document-top-level.
         /// </summary>
         [JsonProperty("data")]
         public object Data { get { return GetPrimaryData(); } set { SetPrimaryData(value); } }

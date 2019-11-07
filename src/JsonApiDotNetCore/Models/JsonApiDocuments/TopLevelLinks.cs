@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Models.Links
 {
     /// <summary>
-    /// see links section in https://jsonapi.org/format/#documentTop-level
+    /// see links section in https://jsonapi.org/format/#document-top-level
     /// </summary>
     public class TopLevelLinks
     {

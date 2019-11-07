@@ -267,7 +267,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeRelationships_EmptyRequiredOneToOnePrincipal_ThrowsFormatException()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOne-requiredDependents", "principal");
+            var content = CreateDocumentWithRelationships("oneToOneRequiredDependents", "principal");
             var body = JsonConvert.SerializeObject(content);
 
             // Act, assert
