@@ -2,8 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    [Resource("camelCasedModels")]
-    public class CamelCasedModel : Identifiable
+    public class KebabCasedModel : Identifiable
     {
         [Attr]
         public string CompoundAttr { get; set; }

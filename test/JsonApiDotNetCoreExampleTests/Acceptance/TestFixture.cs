@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()
-                .AddResource<CamelCasedModel>()
+                .AddResource<KebabCasedModel>()
                 .AddResource<User>()
                 .AddResource<SuperUser>()
                 .AddResource<Person>()

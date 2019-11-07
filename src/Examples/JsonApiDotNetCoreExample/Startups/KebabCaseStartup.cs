@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,22 +7,24 @@ using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
 using Microsoft.Extensions.Logging.Debug;
+using JsonApiDotNetCore.Graph;
 
 namespace JsonApiDotNetCoreExample
 {
-    public class Startup
+    public class KebabCaseStartup
     {
         public readonly IConfiguration Config;
 
-        public Startup(IConfiguration configuration)
+        public KebabCaseStartup(IConfiguration configuration)
         {
             Config = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             var loggerFactory = new LoggerFactory();
             services
+                .AddSingleton<IResourceNameFormatter, KebabCaseFormatter>()
                 .AddSingleton<ILoggerFactory>(loggerFactory)
                 .AddLogging(builder =>
                 {
@@ -34,7 +35,7 @@ namespace JsonApiDotNetCoreExample
                 {
                     options.UseLoggerFactory(new LoggerFactory(new[] { new DebugLoggerProvider() }))
                            .EnableSensitiveDataLogging()
-                           .UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
+                           .UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9, 6)));
                 }, ServiceLifetime.Transient)
                 .AddJsonApi(options =>
                 {
@@ -44,12 +45,15 @@ namespace JsonApiDotNetCoreExample
                     options.LoadDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
+            services.AddClientSerialization();
         }
 
         public virtual void Configure(
             IApplicationBuilder app,
+            ILoggerFactory loggerFactory,
             AppDbContext context)
         {
+
             context.Database.EnsureCreated();
             app.UseJsonApi();
         }

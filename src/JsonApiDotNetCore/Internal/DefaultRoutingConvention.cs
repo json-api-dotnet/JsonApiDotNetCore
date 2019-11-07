@@ -25,13 +25,13 @@ namespace JsonApiDotNetCore.Internal
     /// public class RandomNameController{SomeResource} : JsonApiController{SomeResource} { }
     /// // => /someResources/relationship/relatedResource
     ///
-    /// // when using the camelCase formatter:
+    /// // when using the kebab-case formatter:
     /// public class SomeResourceController{SomeResource} : JsonApiController{SomeResource} { }
-    /// // => /someResources/relationship/relatedResource
+    /// // => /some-resources/relationship/related-resource
     ///
-    /// // when inheriting from JsonApiMixin formatter:
+    /// // when inheriting from JsonApiMixin controller:
     /// public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
-    /// // => /some-very-customs/relationship/relatedResource
+    /// // => /someVeryCustoms/relationship/relatedResource
     /// </example>
     public class DefaultRoutingConvention : IJsonApiRoutingConvention, IControllerResourceMapping
     {
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Internal
             foreach (var controller in application.Controllers)
             {
                 var resourceType = GetResourceTypeFromController(controller.ControllerType);
-
+                
                 if (resourceType != null)
                     _registeredResources.Add(controller.ControllerName, resourceType);
 
