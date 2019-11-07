@@ -57,12 +57,12 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne]
         public virtual TodoItemCollection Collection { get; set; }
 
-        // cyclical toOne structure
+        // cyclical to-one structure
         public virtual int? DependentOnTodoId { get; set; }
         [HasOne]
         public virtual TodoItem DependentOnTodo { get; set; }
 
-        // cyclical toMany structure
+        // cyclical to-many structure
         public virtual int? ParentTodoId {get; set;}
         [HasOne]
         public virtual TodoItem ParentTodo { get; set; }

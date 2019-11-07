@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Checks if the toOne relationship is required by checking if the foreign key is nullable.
+        /// Checks if the to-one relationship is required by checking if the foreign key is nullable.
         /// </summary>
         private bool IsRequiredToOneRelationship(HasOneAttribute attr, IIdentifiable entity)
         {
