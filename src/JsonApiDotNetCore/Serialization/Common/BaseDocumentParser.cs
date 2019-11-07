@@ -166,7 +166,7 @@ namespace JsonApiDotNetCore.Serialization
             var rio = (ResourceIdentifierObject)relationshipData.Data;
             var relatedId = rio?.Id ?? null;
 
-            // this does not make sense in the following case: if we're setting the dependent of a one-to-onerelationship, IdentifiablePropertyName should be null.
+            // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
             if (foreignKeyProperty != null)
