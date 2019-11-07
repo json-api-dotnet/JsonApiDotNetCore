@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Data
                     /// entity when we're using a different instance of the relationship (because this different one
                     /// was already tracked) than the one assigned to the to-be-created entity.
                     /// Alternatively, even if we don't have to reassign anything because of already tracked 
-                    /// entities, we still need to assign the "through" entities in the case of manyToMany.
+                    /// entities, we still need to assign the "through" entities in the case of many-to-many.
                     relationshipAttr.SetValue(entity, trackedRelationshipValue);
             }
             _dbSet.Add(entity);
@@ -358,7 +358,7 @@ namespace JsonApiDotNetCore.Data
         /// Before assigning new relationship values (UpdateAsync), we need to
         /// attach the current database values of the relationship to the dbcontext, else 
         /// it will not perform a complete-replace which is required for 
-        /// oneToMany and manyToMany.
+        /// one-to-many and many-to-many.
         /// <para />
         /// For example: a person `p1` has 2 todoitems: `t1` and `t2`.
         /// If we want to update this todoitem set to `t3` and `t4`, simply assigning

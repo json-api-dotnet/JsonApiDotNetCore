@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Models.Links;
 namespace JsonApiDotNetCore.Models
 {
     /// <summary>
-    /// Create a HasMany relationship through a manyToMany join relationship.
+    /// Create a HasMany relationship through a many-to-many join relationship.
     /// This type can only be applied on types that implement IList.
     /// </summary>
     /// 
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Models
     public class HasManyThroughAttribute : HasManyAttribute
     {
         /// <summary>
-        /// Create a HasMany relationship through a manyToMany join relationship.
+        /// Create a HasMany relationship through a many-to-many join relationship.
         /// The public name exposed through the API will be based on the configured convention.
         /// </summary>
         /// 
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Models
         }
 
         /// <summary>
-        /// Create a HasMany relationship through a manyToMany join relationship.
+        /// Create a HasMany relationship through a many-to-many join relationship.
         /// </summary>
         /// 
         /// <param name="publicName">The relationship name as exposed by the API</param>

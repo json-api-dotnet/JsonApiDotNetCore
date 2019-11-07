@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <summary>
-        /// Executes autodiscovery of JADNC services.
+        /// Executes auto-discovery of JADNC services.
         /// </summary>
         public void AutoDiscover(Action<IServiceDiscoveryFacade> autoDiscover)
         {
