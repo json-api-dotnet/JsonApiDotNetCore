@@ -103,7 +103,7 @@
   </div>
   <h5 id="JsonApiDotNetCore_Graph_KebabCaseFormatter_examples"><strong>Examples</strong></h5>
   <pre><code>_default.FormatResourceName(typeof(TodoItem)).Dump(); 
-// > &quot;todo-items&quot;</code></pre>
+// > &quot;todoItems&quot;</code></pre>
 
   <p>Given the following property:</p>
 <pre><code>public string CompoundProperty { get; set; }</code></pre>
@@ -112,7 +112,7 @@
 // > &quot;compound-property&quot;</code></pre>
 
   <pre><code>_default.ApplyCasingConvention(&quot;TodoItems&quot;); 
-// > &quot;todo-items&quot;
+// > &quot;todoItems&quot;
 
 _default.ApplyCasingConvention(&quot;TodoItem&quot;); 
 // > &quot;todo-item&quot;</code></pre>
