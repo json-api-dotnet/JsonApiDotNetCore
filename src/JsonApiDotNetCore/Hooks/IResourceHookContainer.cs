@@ -165,7 +165,7 @@ namespace JsonApiDotNetCore.Hooks
         /// This hook is fired when a relationship to entities of type 
         /// <typeparamref name="TResource"/> is implicitly affected from a dependent pipeline (<see cref="ResourcePipeline.Patch"/>
         /// or <see cref="ResourcePipeline.Delete"/>). For example, if an Article was updated
-        /// by setting its author relationship (oneToOne) to an existing Person, 
+        /// by setting its author relationship (one-to-one) to an existing Person, 
         /// and by this the relationship to a different Person was implicitly removed, 
         /// this hook will be fired for the latter Person.
         /// <para />

@@ -231,7 +231,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Fires the nested before hooks for entities in the current <paramref name="layer"/>
         /// </summary>
         /// <remarks>
-        /// For example: consider the case when the owner of article1 (oneToOne) 
+        /// For example: consider the case when the owner of article1 (one-to-one) 
         /// is being updated from owner_old to owner_new, where owner_new is currently already 
         /// related to article2. Then, the following nested hooks need to be fired in the following order. 
         /// First the BeforeUpdateRelationship should be for owner1, then the 

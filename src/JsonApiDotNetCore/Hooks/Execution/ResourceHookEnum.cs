@@ -6,7 +6,7 @@
     /// </summary>
     public enum ResourceHook
     {
-        None, // https://stackoverflow.com/questions/24151354/is-it-a-good-practiceTo-add-a-null-or-noneMemberTo-the-enum
+        None, // https://stackoverflow.com/questions/24151354/is-it-a-good-practice-to-add-a-null-or-none-member-to-the-enum
         BeforeCreate,
         BeforeRead,
         BeforeUpdate,
