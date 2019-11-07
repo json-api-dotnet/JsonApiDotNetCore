@@ -16,7 +16,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange 
             var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
-            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
+            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             var builder = GetBuilder();
 
             // Act
@@ -27,11 +27,11 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(6, result.Count);
 
             var authorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == author.StringId);
-            var authorFoodRelation = authorResourceObject.Relationships["favorite-food"].SingleData;
+            var authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
 
             var reviewerResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == reviewer.StringId);
-            var reviewerFoodRelation = reviewerResourceObject.Relationships["favorite-food"].SingleData;
+            var reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
 
@@ -45,7 +45,7 @@ namespace UnitTests.Serialization.Server
             var builder = GetBuilder();
 
             // Act
-            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
+            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             builder.IncludeRelationshipChain(authorChain, article);
             builder.IncludeRelationshipChain(authorChain, secondArticle);
 
@@ -58,12 +58,12 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_OverlappingDeeplyNestedCirculairChains_CanBuild()
         {
             // Arrange
-            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favorite-food");
+            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
             var sharedBlog = author.Blogs.First();
             var sharedBlogAuthor = reviewer;
             var (_reviewer, _reviewerSong, _author, _authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
-            var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favorite-song");
+            var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
             var builder = GetBuilder();
 
             // Act
@@ -82,9 +82,9 @@ namespace UnitTests.Serialization.Server
                 Assert.Single(blog.Relationships.Keys.ToList());
 
             var sharedAuthorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == sharedBlogAuthor.StringId);
-            var sharedAuthorSongRelation = sharedAuthorResourceObject.Relationships["favorite-song"].SingleData;
+            var sharedAuthorSongRelation = sharedAuthorResourceObject.Relationships["favoriteSong"].SingleData;
             Assert.Equal(_authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
-            var sharedAuthorFoodRelation = sharedAuthorResourceObject.Relationships["favorite-food"].SingleData;
+            var sharedAuthorFoodRelation = sharedAuthorResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);
         }
 

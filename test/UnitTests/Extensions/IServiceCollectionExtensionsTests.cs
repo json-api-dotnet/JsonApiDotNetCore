@@ -152,7 +152,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
             var resource = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("int-resources", resource.ResourceName);
+            Assert.Equal("intResources", resource.ResourceName);
         }
 
         public class IntResource : Identifiable { }

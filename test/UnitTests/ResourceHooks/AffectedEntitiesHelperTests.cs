@@ -12,11 +12,11 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         public string SomeUpdatedProperty { get; set; }
         public string SomeNotUpdatedProperty { get; set; }
 
-        [HasOne("first-to-one")]
+        [HasOne]
         public ToOne FirstToOne { get; set; }
-        [HasOne("second-to-one")]
+        [HasOne]
         public ToOne SecondToOne { get; set; }
-        [HasMany("to-manies")]
+        [HasMany]
         public List<ToMany> ToManies { get; set; }
     }
 
@@ -38,19 +38,19 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         public readonly HashSet<Dummy> AllEntities;
         public RelationshipDictionaryTests()
         {
-            FirstToOneAttr = new HasOneAttribute("first-to-one")
+            FirstToOneAttr = new HasOneAttribute("firstToOne")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
                 InternalRelationshipName = "FirstToOne"
             };
-            SecondToOneAttr = new HasOneAttribute("second-to-one")
+            SecondToOneAttr = new HasOneAttribute("secondToOne")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToOne),
                 InternalRelationshipName = "SecondToOne"
             };
-            ToManyAttr = new HasManyAttribute("to-manies")
+            ToManyAttr = new HasManyAttribute("toManies")
             {
                 LeftType = typeof(Dummy),
                 RightType = typeof(ToMany),

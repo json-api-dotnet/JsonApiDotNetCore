@@ -140,12 +140,8 @@ namespace JsonApiDotNetCore.Graph
 
         private void AddResourceToGraph(ResourceDescriptor identifiable)
         {
-            var resourceName = FormatResourceName(identifiable.ResourceType);
-            _resourceGraphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType, resourceName);
+            _resourceGraphBuilder.AddResource(identifiable.ResourceType, identifiable.IdType);
         }
-
-        private string FormatResourceName(Type resourceType)
-            => new KebabCaseFormatter().FormatResourceName(resourceType);
 
         /// <summary>
         /// Add <see cref="IResourceService{T, TId}"/> implementations to container.

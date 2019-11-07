@@ -58,7 +58,7 @@ namespace Benchmarks.Serialization
         public object DeserializeSimpleObject() => _jsonApideserializer.Deserialize<SimpleType>(Content);
 
         private class SimpleType : Identifiable {
-            [Attr("name")]
+            [Attr]
             public string Name { get; set; }
         }
     }

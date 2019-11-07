@@ -14,9 +14,7 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public class NoDefaultPageSizeStartup : Startup
     {
-        public NoDefaultPageSizeStartup(IWebHostEnvironment env)
-        : base(env)
-        { }
+        public NoDefaultPageSizeStartup(IWebHostEnvironment env) : base(env) { }
 
         public override void ConfigureServices(IServiceCollection services)
         {
@@ -32,7 +30,6 @@ namespace JsonApiDotNetCoreExample
                 .AddJsonApi(options => {
                     options.Namespace = "api/v1";
                     options.IncludeTotalRecordCount = true;
-                    options.EnableResourceHooks = true;
                     options.LoadDatabaseValues = true;
                     options.AllowClientGeneratedIds = true;
                 },

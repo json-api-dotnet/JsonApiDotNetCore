@@ -13,66 +13,60 @@ namespace JsonApiDotNetCoreExample.Models
 
         public bool IsLocked { get; set; }
 
-        [Attr("description")]
+        [Attr]
         public string Description { get; set; }
 
-        [Attr("ordinal")]
+        [Attr]
         public long Ordinal { get; set; }
 
-        [Attr("guid-property")]
+        [Attr]
         public Guid GuidProperty { get; set; }
 
-        [Attr("created-date")]
+        [Attr]
         public DateTime CreatedDate { get; set; }
 
-        [Attr("achieved-date", isFilterable: false, isSortable: false)]
+        [Attr(isFilterable: false, isSortable: false)]
         public DateTime? AchievedDate { get; set; }
 
-        [Attr("updated-date")]
+        [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr("calculated-value", isImmutable: true)]
-        public string CalculatedValue
-        {
-            get => "joe";
-        }
+        [Attr(isImmutable: true)]
+        public string CalculatedValue { get => "calculated"; }
 
-        [Attr("offset-date")]
+        [Attr]
         public DateTimeOffset? OffsetDate { get; set; }
  
         public int? OwnerId { get; set; }
         public int? AssigneeId { get; set; }
         public Guid? CollectionId { get; set; }
 
-        [HasOne("owner")]
+        [HasOne]
         public virtual Person Owner { get; set; }
 
-        [HasOne("assignee")]
+        [HasOne]
         public virtual Person Assignee { get; set; }
 
-        [HasOne("one-to-one-person")]
-        public virtual Person ToOnePerson { get; set; }
-        public virtual int? ToOnePersonId { get; set; }
+        [HasOne]
+        public virtual Person OneToOnePerson { get; set; }
+        public virtual int? OneToOnePersonId { get; set; }
 
-
-        [HasMany("stake-holders")]
+        [HasMany]
         public virtual List<Person> StakeHolders { get; set; }
 
-        [HasOne("collection")]
+        [HasOne]
         public virtual TodoItemCollection Collection { get; set; }
 
-
         // cyclical to-one structure
-        public virtual int? DependentTodoItemId { get; set; }
-        [HasOne("dependent-on-todo")]
-        public virtual TodoItem DependentTodoItem { get; set; }
-
+        public virtual int? DependentOnTodoId { get; set; }
+        [HasOne]
+        public virtual TodoItem DependentOnTodo { get; set; }
 
         // cyclical to-many structure
-        public virtual int? ParentTodoItemId {get; set;}
-        [HasOne("parent-todo")]
-        public virtual TodoItem ParentTodoItem { get; set; }
-        [HasMany("children-todos")]
-        public virtual List<TodoItem> ChildrenTodoItems { get; set; }
+        public virtual int? ParentTodoId {get; set;}
+        [HasOne]
+        public virtual TodoItem ParentTodo { get; set; }
+        [HasMany]
+        public virtual List<TodoItem> ChildrenTodos { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
 
-            var route = $"/api/v1/todo-items?page[size]={expectedEntitiesPerPage}";
+            var route = $"/api/v1/todoItems?page[size]={expectedEntitiesPerPage}";
 
             // Act
             var response = await Client.GetAsync(route);
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
 
-            var route = $"/api/v1/todo-items?page[size]={expectedEntitiesPerPage}&page[number]=1";
+            var route = $"/api/v1/todoItems?page[size]={expectedEntitiesPerPage}&page[number]=1";
 
             // Act
             var response = await Client.GetAsync(route);
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.RemoveRange(Context.TodoItems);
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
-            var route = $"/api/v1/todo-items?page[size]={expectedEntitiesPerPage}&page[number]=-1";
+            var route = $"/api/v1/todoItems?page[size]={expectedEntitiesPerPage}&page[number]=-1";
 
             // Act
             var response = await Client.GetAsync(route);

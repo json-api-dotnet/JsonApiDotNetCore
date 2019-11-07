@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?page[number]=2";
+            var route = $"/api/v1/todoItems?page[number]=2";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -66,10 +66,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             Assert.NotEmpty(links.Next);
             Assert.NotEmpty(links.Last);
 
-            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={startPageNumber+1}", links.Next);
-            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={startPageNumber-1}", links.Prev);
-            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]={numberOfPages}", links.Last);
-            Assert.Equal($"http://localhost/api/v1/todo-items?page[size]={pageSize}&page[number]=1", links.First);
+            Assert.Equal($"http://localhost/api/v1/todoItems?page[size]={pageSize}&page[number]={startPageNumber+1}", links.Next);
+            Assert.Equal($"http://localhost/api/v1/todoItems?page[size]={pageSize}&page[number]={startPageNumber-1}", links.Prev);
+            Assert.Equal($"http://localhost/api/v1/todoItems?page[size]={pageSize}&page[number]={numberOfPages}", links.Last);
+            Assert.Equal($"http://localhost/api/v1/todoItems?page[size]={pageSize}&page[number]=1", links.First);
         }
     }
 }

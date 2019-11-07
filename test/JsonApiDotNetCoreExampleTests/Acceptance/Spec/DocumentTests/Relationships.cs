@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -53,8 +53,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var document = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
             var data = document.SingleData;
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{data.Id}/relationships/owner";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{data.Id}/owner";
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/todoItems/{data.Id}/relationships/owner";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todoItems/{data.Id}/owner";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -84,8 +84,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/relationships/owner";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todo-items/{todoItem.Id}/owner";
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/todoItems/{todoItem.Id}/relationships/owner";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todoItems/{todoItem.Id}/owner";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -111,13 +111,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
             var data = documents.ManyData.First();
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{data.Id}/relationships/todo-items";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{data.Id}/todo-items";
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{data.Id}/relationships/todoItems";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{data.Id}/todoItems";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(expectedOwnerSelfLink, data.Relationships["todo-items"].Links.Self);
-            Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todo-items"].Links.Related);
+            Assert.Equal(expectedOwnerSelfLink, data.Relationships["todoItems"].Links.Self);
+            Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todoItems"].Links.Related);
         }
 
         [Fact]
@@ -140,13 +140,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{personId}/relationships/todo-items";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{personId}/todo-items";
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{personId}/relationships/todoItems";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{personId}/todoItems";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(expectedOwnerSelfLink, data.Relationships["todo-items"].Links?.Self);
-            Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todo-items"].Links.Related);
+            Assert.Equal(expectedOwnerSelfLink, data.Relationships["todoItems"].Links?.Self);
+            Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todoItems"].Links.Related);
         }
     }
 }

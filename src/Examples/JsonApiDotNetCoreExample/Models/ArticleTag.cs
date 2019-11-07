@@ -15,11 +15,11 @@ namespace JsonApiDotNetCoreExample.Models
     public class IdentifiableArticleTag : Identifiable
     {
         public int ArticleId { get; set; }
-        [HasOne("article")]
+        [HasOne]
         public Article Article { get; set; }
 
         public int TagId { get; set; }
-        [HasOne("Tag")]
+        [HasOne]
         public Tag Tag { get; set; }
 
         public string SomeMetaData { get; set; }

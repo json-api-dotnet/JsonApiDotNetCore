@@ -7,7 +7,6 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
-using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
 
 namespace JsonApiDotNetCoreExample
@@ -25,7 +24,6 @@ namespace JsonApiDotNetCoreExample
                 .AddEnvironmentVariables();
             Config = builder.Build();
         }
-
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
@@ -48,19 +46,17 @@ namespace JsonApiDotNetCoreExample
                     options.Namespace = "api/v1";
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
-                    options.EnableResourceHooks = true;
                     options.LoadDatabaseValues = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
-            services.AddClientSerialization();
+            // once all tests have been moved to WebApplicationFactory format we can get rid of this line below
+            services.AddClientSerialization(); 
         }
 
         public virtual void Configure(
             IApplicationBuilder app,
-            ILoggerFactory loggerFactory,
             AppDbContext context)
         {
-
             context.Database.EnsureCreated();
             app.UseJsonApi();
         }

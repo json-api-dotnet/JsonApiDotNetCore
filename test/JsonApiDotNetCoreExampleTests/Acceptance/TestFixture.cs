@@ -36,8 +36,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
-            var serializer =  GetService<IRequestSerializer>();
-            var graph =  GetService<IResourceGraph>();
+            var serializer = GetService<IRequestSerializer>();
+            var graph = GetService<IResourceGraph>();
             if (attributes != null)
                 serializer.AttributesToSerialize = graph.GetAttributes(attributes);
             if (relationships != null)
@@ -50,19 +50,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()
-                .AddResource<CamelCasedModel>()
+                .AddResource<KebabCasedModel>()
                 .AddResource<User>()
                 .AddResource<SuperUser>()
                 .AddResource<Person>()
                 .AddResource<Author>()
                 .AddResource<Passport>()
-                .AddResource<TodoItemClient>("todo-items")
+                .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
             return new ResponseDeserializer(resourceGraph);
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));
-        
+
         public void ReloadDbContext()
         {
             Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>());

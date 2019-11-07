@@ -13,28 +13,21 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Models
     /// </summary>
     public class TodoItemClient : TodoItem
     {
-        [Attr("calculated-value")]
+        [Attr]
         public new string CalculatedValue { get; set; }
     }
 
-    //[Resource("todo-collections")]
-    //public class TodoItemCollectionClient : TodoItemCollection
-    //{
-    //    [HasMany("todo-items")]
-    //    public new List<TodoItemClient> TodoItems { get; set; }
-    //}
-
-    [Resource("todo-collections")]
+    [Resource("todoCollections")]
     public class TodoItemCollectionClient : Identifiable<Guid>
     {
-        [Attr("name")]
+        [Attr]
         public string Name { get; set; }
         public int OwnerId { get; set; }
 
-        [HasMany("todo-items")]
+        [HasMany]
         public virtual List<TodoItemClient> TodoItems { get; set; }
 
-        [HasOne("owner")]
+        [HasOne]
         public virtual Person Owner { get; set; }
     }
 }

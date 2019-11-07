@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?include=owner&sort=achieved-date";
+            var route = $"/api/v1/todoItems?include=owner&sort=achievedDate";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

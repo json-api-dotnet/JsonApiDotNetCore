@@ -29,15 +29,15 @@ namespace UnitTests
         {
             // Arrange
             var services = new ServiceCollection();
-            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("non-db-resources"));
+            services.AddJsonApi<TestContext>(resources: builder => builder.AddResource<NonDbResource>("nonDbResources"));
 
             // Act
             var container = services.BuildServiceProvider();
 
             // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
-            var dbResource = resourceGraph.GetResourceContext("db-resources");
-            var nonDbResource = resourceGraph.GetResourceContext("non-db-resources");
+            var dbResource = resourceGraph.GetResourceContext("dbResources");
+            var nonDbResource = resourceGraph.GetResourceContext("nonDbResources");
             Assert.Equal(typeof(DbResource), dbResource.ResourceType);
             Assert.Equal(typeof(NonDbResource), nonDbResource.ResourceType);
             Assert.Equal(typeof(ResourceDefinition<NonDbResource>), nonDbResource.ResourceDefinitionType);
@@ -55,7 +55,7 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("test-resources", resource.ResourceName);
+            Assert.Equal("testResources", resource.ResourceName);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compound-attribute");
+            Assert.Contains(resource.Attributes, (i) => i.PublicAttributeName == "compoundAttribute");
         }
 
         [Fact]
@@ -115,8 +115,8 @@ namespace UnitTests
 
             // Assert
             var resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("related-resource", resource.Relationships.Single(r => r.IsHasOne).PublicRelationshipName);
-            Assert.Equal("related-resources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);
+            Assert.Equal("relatedResource", resource.Relationships.Single(r => r.IsHasOne).PublicRelationshipName);
+            Assert.Equal("relatedResources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);
         }
 
         public class TestResource : Identifiable

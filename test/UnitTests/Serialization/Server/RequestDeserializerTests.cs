@@ -46,7 +46,7 @@ namespace UnitTests.Serialization.Server
             {
                 Data = new ResourceObject
                 {
-                    Type = "test-resource",
+                    Type = "testResource",
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
@@ -65,11 +65,11 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
-            var content = CreateDocumentWithRelationships("multi-principals");
-            content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-dependents"));
-            content.SingleData.Relationships.Add("empty-to-one", CreateRelationshipData());
-            content.SingleData.Relationships.Add("populated-to-manies", CreateRelationshipData("one-to-many-dependents", isToManyData: true));
-            content.SingleData.Relationships.Add("empty-to-manies", CreateRelationshipData(isToManyData: true));
+            var content = CreateDocumentWithRelationships("multiPrincipals");
+            content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
+            content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
+            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", isToManyData: true));
+            content.SingleData.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -85,11 +85,11 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
-            var content = CreateDocumentWithRelationships("multi-dependents");
-            content.SingleData.Relationships.Add("populated-to-one", CreateRelationshipData("one-to-one-principals"));
-            content.SingleData.Relationships.Add("empty-to-one", CreateRelationshipData());
-            content.SingleData.Relationships.Add("populated-to-many", CreateRelationshipData("one-to-many-principals"));
-            content.SingleData.Relationships.Add("empty-to-many", CreateRelationshipData());
+            var content = CreateDocumentWithRelationships("multiDependents");
+            content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
+            content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
+            content.SingleData.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
+            content.SingleData.Relationships.Add("emptyToMany", CreateRelationshipData());
             var body = JsonConvert.SerializeObject(content);
 
             // Act

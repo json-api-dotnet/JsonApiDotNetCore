@@ -4,16 +4,16 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    [Resource("todo-collections")]
+    [Resource("todoCollections")]
     public class TodoItemCollection : Identifiable<Guid>
     {
-        [Attr("name")]
+        [Attr]
         public string Name { get; set; }
 
-        [HasMany("todo-items")]
+        [HasMany]
         public virtual List<TodoItem> TodoItems { get; set; }
 
-        [HasOne("owner")]
+        [HasOne]
         public virtual Person Owner { get; set; }
 
         public int? OwnerId { get; set; }

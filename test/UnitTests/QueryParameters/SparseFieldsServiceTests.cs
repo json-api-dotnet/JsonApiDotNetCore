@@ -33,7 +33,7 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string type = "articles";
-            const string attrName = "some-field";
+            const string attrName = "someField";
             const string internalAttrName = "SomeField";
             var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
             var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
@@ -63,7 +63,7 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string type = "articles";
-            const string attrName = "some-field";
+            const string attrName = "someField";
             const string internalAttrName = "SomeField";
             var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
             var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
@@ -89,7 +89,7 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string relationship = "author.employer";
-            const string attrName = "some-field";
+            const string attrName = "someField";
             const string internalAttrName = "SomeField";
             var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
             var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };

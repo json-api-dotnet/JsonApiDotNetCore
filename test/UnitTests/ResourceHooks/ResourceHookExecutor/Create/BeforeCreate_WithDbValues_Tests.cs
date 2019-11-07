@@ -26,11 +26,11 @@ namespace UnitTests.ResourceHooks
 
             todoList[0].Id = 0;
             todoList[0].Description = description;
-            var _personId = todoList[0].ToOnePerson.Id;
+            var _personId = todoList[0].OneToOnePerson.Id;
             personId = _personId.ToString();
             var implicitTodo = _todoFaker.Generate();
             implicitTodo.Id += 1000;
-            implicitTodo.ToOnePersonId = _personId;
+            implicitTodo.OneToOnePersonId = _personId;
             implicitTodo.Description = description + description;
 
             options = InitInMemoryDb(context =>
