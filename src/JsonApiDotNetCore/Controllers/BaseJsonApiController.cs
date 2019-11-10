@@ -141,7 +141,7 @@ namespace JsonApiDotNetCore.Controllers
                 return Forbidden();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(GetAssociatedResource()));
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>());
 
             entity = await _create.CreateAsync(entity);
 
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>(GetAssociatedResource()));
+                return UnprocessableEntity(ModelState.ConvertToErrorCollection<T>());
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 
@@ -181,12 +181,12 @@ namespace JsonApiDotNetCore.Controllers
             return NoContent();
         }
 
-        internal Type GetAssociatedResource()
-        {
-            return GetType().GetMethod(nameof(GetAssociatedResource), BindingFlags.Instance | BindingFlags.NonPublic)
-                            .DeclaringType
-                            .GetGenericArguments()[0];
-        }
+        //internal Type GetAssociatedResource()
+        //{
+        //    return GetType().GetMethod(nameof(GetAssociatedResource), BindingFlags.Instance | BindingFlags.NonPublic)
+        //                    .DeclaringType
+        //                    .GetGenericArguments()[0];
+        //}
     }
     public class BaseJsonApiController<T>
     : BaseJsonApiController<T, int>
