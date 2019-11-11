@@ -38,6 +38,10 @@ namespace JsonApiDotNetCore.Extensions
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
+        /// <summary>
+        /// Configures your application to return stack traces in error results.
+        /// </summary>
+        /// <param name="app"></param>
         public static void EnableDetailedErrors(this IApplicationBuilder app)
         {
             JsonApiOptions.DisableErrorStackTraces = false;
