@@ -2554,6 +2554,19 @@ references:
   commentId: T:JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions
   fullName: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions
   nameWithType: IApplicationBuilderExtensions
+- uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors(IApplicationBuilder)
+  name: EnableDetailedErrors(IApplicationBuilder)
+  href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html#JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_EnableDetailedErrors_IApplicationBuilder_
+  commentId: M:JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors(IApplicationBuilder)
+  fullName: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors(IApplicationBuilder)
+  nameWithType: IApplicationBuilderExtensions.EnableDetailedErrors(IApplicationBuilder)
+- uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors*
+  name: EnableDetailedErrors
+  href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html#JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_EnableDetailedErrors_
+  commentId: Overload:JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors
+  nameWithType: IApplicationBuilderExtensions.EnableDetailedErrors
 - uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
   name: UseJsonApi(IApplicationBuilder)
   href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html#JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_
@@ -2812,15 +2825,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection
   nameWithType: ModelStateExtensions.ConvertToErrorCollection
-- uid: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection``1(ModelStateDictionary,Type)
-  name: ConvertToErrorCollection<T>(ModelStateDictionary, Type)
-  href: api/JsonApiDotNetCore.Extensions.ModelStateExtensions.html#JsonApiDotNetCore_Extensions_ModelStateExtensions_ConvertToErrorCollection__1_ModelStateDictionary_Type_
-  commentId: M:JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection``1(ModelStateDictionary,Type)
-  name.vb: ConvertToErrorCollection(Of T)(ModelStateDictionary, Type)
-  fullName: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection<T>(ModelStateDictionary, Type)
-  fullName.vb: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection(Of T)(ModelStateDictionary, Type)
-  nameWithType: ModelStateExtensions.ConvertToErrorCollection<T>(ModelStateDictionary, Type)
-  nameWithType.vb: ModelStateExtensions.ConvertToErrorCollection(Of T)(ModelStateDictionary, Type)
+- uid: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection``1(ModelStateDictionary)
+  name: ConvertToErrorCollection<T>(ModelStateDictionary)
+  href: api/JsonApiDotNetCore.Extensions.ModelStateExtensions.html#JsonApiDotNetCore_Extensions_ModelStateExtensions_ConvertToErrorCollection__1_ModelStateDictionary_
+  commentId: M:JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection``1(ModelStateDictionary)
+  name.vb: ConvertToErrorCollection(Of T)(ModelStateDictionary)
+  fullName: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection<T>(ModelStateDictionary)
+  fullName.vb: JsonApiDotNetCore.Extensions.ModelStateExtensions.ConvertToErrorCollection(Of T)(ModelStateDictionary)
+  nameWithType: ModelStateExtensions.ConvertToErrorCollection<T>(ModelStateDictionary)
+  nameWithType.vb: ModelStateExtensions.ConvertToErrorCollection(Of T)(ModelStateDictionary)
 - uid: JsonApiDotNetCore.Extensions.StringExtensions
   name: StringExtensions
   href: api/JsonApiDotNetCore.Extensions.StringExtensions.html
@@ -6841,6 +6854,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).GetPrimaryData
   nameWithType: ExposableData<T>.GetPrimaryData
   nameWithType.vb: ExposableData(Of T).GetPrimaryData
+- uid: JsonApiDotNetCore.Models.ExposableData`1.ManyData
+  name: ManyData
+  href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_ManyData
+  commentId: P:JsonApiDotNetCore.Models.ExposableData`1.ManyData
+  fullName: JsonApiDotNetCore.Models.ExposableData<T>.ManyData
+  fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).ManyData
+  nameWithType: ExposableData<T>.ManyData
+  nameWithType.vb: ExposableData(Of T).ManyData
+- uid: JsonApiDotNetCore.Models.ExposableData`1.ManyData*
+  name: ManyData
+  href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_ManyData_
+  commentId: Overload:JsonApiDotNetCore.Models.ExposableData`1.ManyData
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.ExposableData<T>.ManyData
+  fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).ManyData
+  nameWithType: ExposableData<T>.ManyData
+  nameWithType.vb: ExposableData(Of T).ManyData
 - uid: JsonApiDotNetCore.Models.ExposableData`1.SetPrimaryData(System.Object)
   name: SetPrimaryData(Object)
   href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_SetPrimaryData_System_Object_
@@ -6875,6 +6905,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).ShouldSerializeData
   nameWithType: ExposableData<T>.ShouldSerializeData
   nameWithType.vb: ExposableData(Of T).ShouldSerializeData
+- uid: JsonApiDotNetCore.Models.ExposableData`1.SingleData
+  name: SingleData
+  href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_SingleData
+  commentId: P:JsonApiDotNetCore.Models.ExposableData`1.SingleData
+  fullName: JsonApiDotNetCore.Models.ExposableData<T>.SingleData
+  fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).SingleData
+  nameWithType: ExposableData<T>.SingleData
+  nameWithType.vb: ExposableData(Of T).SingleData
+- uid: JsonApiDotNetCore.Models.ExposableData`1.SingleData*
+  name: SingleData
+  href: api/JsonApiDotNetCore.Models.ExposableData-1.html#JsonApiDotNetCore_Models_ExposableData_1_SingleData_
+  commentId: Overload:JsonApiDotNetCore.Models.ExposableData`1.SingleData
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.ExposableData<T>.SingleData
+  fullName.vb: JsonApiDotNetCore.Models.ExposableData(Of T).SingleData
+  nameWithType: ExposableData<T>.SingleData
+  nameWithType.vb: ExposableData(Of T).SingleData
 - uid: JsonApiDotNetCore.Models.HasManyAttribute
   name: HasManyAttribute
   href: api/JsonApiDotNetCore.Models.HasManyAttribute.html
