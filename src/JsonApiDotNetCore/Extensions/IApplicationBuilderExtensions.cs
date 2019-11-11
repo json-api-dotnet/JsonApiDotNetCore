@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Extensions
@@ -20,7 +21,6 @@ namespace JsonApiDotNetCore.Extensions
         /// <returns></returns>
         public static void UseJsonApi(this IApplicationBuilder app)
         {
-            DisableDetailedErrorsIfProduction(app);
             LogResourceGraphValidations(app);
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -38,14 +38,14 @@ namespace JsonApiDotNetCore.Extensions
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
-        private static void DisableDetailedErrorsIfProduction(IApplicationBuilder app)
+        /// <summary>
+        /// Configures your application to return stack traces in error results.
+        /// </summary>
+        /// <param name="app"></param>
+        public static void EnableDetailedErrors(this IApplicationBuilder app)
         {
-            var webHostEnvironment = (IWebHostEnvironment) app.ApplicationServices.GetService(typeof(IWebHostEnvironment));
-            if (webHostEnvironment.EnvironmentName == "Production")
-            {
-                JsonApiOptions.DisableErrorStackTraces = true;
-                JsonApiOptions.DisableErrorSource = true;
-            }
+            JsonApiOptions.DisableErrorStackTraces = false;
+            JsonApiOptions.DisableErrorSource = false;
         }
 
         private static void LogResourceGraphValidations(IApplicationBuilder app)

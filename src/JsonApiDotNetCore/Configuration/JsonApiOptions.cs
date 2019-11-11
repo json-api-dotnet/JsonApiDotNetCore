@@ -32,12 +32,12 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Whether or not stack traces should be serialized in Error objects
         /// </summary>
-        public static bool DisableErrorStackTraces { get; set; }
+        public static bool DisableErrorStackTraces { get; set; } = true;
 
         /// <summary>
         /// Whether or not source URLs should be serialized in Error objects
         /// </summary>
-        public static bool DisableErrorSource { get; set; }
+        public static bool DisableErrorSource { get; set; } = true;
 
         /// <summary>
         /// Whether or not ResourceHooks are enabled. 

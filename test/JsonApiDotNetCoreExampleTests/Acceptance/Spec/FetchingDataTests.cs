@@ -123,5 +123,31 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             Assert.True(result.Data.Count >= 20);
         }
+
+        [Fact]
+        public async Task GetSingleResource_ResourceDoesNotExist_ReturnsNotFoundWithNullData()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.SaveChangesAsync();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<NoDefaultPageSizeStartup>();
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todoItems/123";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<Document>(body);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Null(document.Data);
+        }
     }
 }

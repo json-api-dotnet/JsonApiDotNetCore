@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization.Server;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -32,33 +33,39 @@ namespace JsonApiDotNetCore.Formatters
                 throw new ArgumentNullException(nameof(context));
 
             var response = context.HttpContext.Response;
-            using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
+            using var writer = context.WriterFactory(response.Body, Encoding.UTF8);
+            string responseContent;
+
+            if (_serializer == null)
+            {
+                responseContent = JsonConvert.SerializeObject(context.Object);
+            }
+            else
             {
                 response.ContentType = Constants.ContentType;
-                string responseContent;
-                if (_serializer == null)
+                try
                 {
-                    responseContent = JsonConvert.SerializeObject(context.Object);
-                }
-                else
-                {
-                    try
+                    if (context.Object is ProblemDetails pd)
+                    {
+                        var errors = new ErrorCollection();
+                        errors.Add(new Error(pd.Status.Value, pd.Title, pd.Detail));
+                        responseContent = _serializer.Serialize(errors);
+                    } else
                     {
                         responseContent = _serializer.Serialize(context.Object);
                     }
-                    catch (Exception e)
-                    {
-                        _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
-                        var errors = new ErrorCollection();
-                        errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
-                        responseContent = _serializer.Serialize(errors);
-                        response.StatusCode = 400;
-                    }
                 }
-
-                await writer.WriteAsync(responseContent);
-                await writer.FlushAsync();
+                catch (Exception e)
+                {
+                    _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
+                    var errors = new ErrorCollection();
+                    errors.Add(new Error(500, e.Message, ErrorMeta.FromException(e)));
+                    responseContent = _serializer.Serialize(errors);
+                    response.StatusCode = 500;
+                }
             }
+            await writer.WriteAsync(responseContent);
+            await writer.FlushAsync();
         }
     }
 }
