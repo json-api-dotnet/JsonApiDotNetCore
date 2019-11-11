@@ -25,20 +25,20 @@ namespace UnitTests.ResourceHooks
             todoList = CreateTodoWithToOnePerson();
 
             var todoId = todoList[0].Id;
-            var _personId = todoList[0].ToOnePerson.Id;
+            var _personId = todoList[0].OneToOnePerson.Id;
             personId = _personId.ToString();
             var _implicitPersonId = (_personId + 10000);
 
             var implicitTodo = _todoFaker.Generate();
             implicitTodo.Id += 1000;
-            implicitTodo.ToOnePersonId = _personId;
+            implicitTodo.OneToOnePersonId = _personId;
             implicitTodo.Description = description + description;
 
             options = InitInMemoryDb(context =>
             {
                 context.Set<Person>().Add(new Person { Id = _personId, LastName = lastName });
                 context.Set<Person>().Add(new Person { Id = _implicitPersonId, LastName = lastName + lastName });
-                context.Set<TodoItem>().Add(new TodoItem { Id = todoId, ToOnePersonId = _implicitPersonId, Description = description });
+                context.Set<TodoItem>().Add(new TodoItem { Id = todoId, OneToOnePersonId = _implicitPersonId, Description = description });
                 context.Set<TodoItem>().Add(implicitTodo);
                 context.SaveChanges();
             });
@@ -82,7 +82,7 @@ namespace UnitTests.ResourceHooks
             var personDiscovery = SetDiscoverableHooks<Person>(targetHooks, EnableDbValues);
             var (_, ufMock, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, repoDbContextOptions: options);
 
-            ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.ToOnePerson));
+            ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson));
 
             // Act
             var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
@@ -207,9 +207,9 @@ namespace UnitTests.ResourceHooks
             var diffPairCheck = (dbCheck && reqCheck);
 
             var updatedRelationship = entities.GetByRelationship<Person>().Single();
-            var diffcheck = updatedRelationship.Key.PublicRelationshipName == "one-to-one-person";
+            var diffcheck = updatedRelationship.Key.PublicRelationshipName == "oneToOnePerson";
 
-            var getAffectedCheck = entities.GetAffected(e => e.ToOnePerson).Any();
+            var getAffectedCheck = entities.GetAffected(e => e.OneToOnePerson).Any();
 
             return (dbCheck && reqCheck && diffcheck && getAffectedCheck);
         }

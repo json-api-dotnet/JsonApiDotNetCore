@@ -12,11 +12,9 @@ namespace JsonApiDotNetCoreExample
     /// This should be in JsonApiDotNetCoreExampleTests project but changes in .net core 3.0
     /// do no longer allow that. See https://github.com/aspnet/AspNetCore/issues/15373.
     /// </summary>
-    public class ClientGeneratedIdsStartup : Startup
+    public class NoDefaultPageSizeStartup : Startup
     {
-        public ClientGeneratedIdsStartup(IWebHostEnvironment env)
-        : base (env)
-        {  }
+        public NoDefaultPageSizeStartup(IWebHostEnvironment env) : base(env) { }
 
         public override void ConfigureServices(IServiceCollection services)
         {
@@ -31,10 +29,8 @@ namespace JsonApiDotNetCoreExample
                 .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
                 .AddJsonApi(options => {
                     options.Namespace = "api/v1";
-                    options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
-                    options.EnableResourceHooks = true;
-                    options.LoaDatabaseValues = true;
+                    options.LoadDatabaseValues = true;
                     options.AllowClientGeneratedIds = true;
                 },
                 discovery => discovery.AddAssembly(Assembly.Load(nameof(JsonApiDotNetCoreExample))),

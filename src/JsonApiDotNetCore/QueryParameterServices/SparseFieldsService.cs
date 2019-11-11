@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <summary>
-        /// Registers field selection queries of the form articles?fields[author]=first-name
+        /// Registers field selection queries of the form articles?fields[author]=firstName
         /// </summary>
         private void RegisterRelatedResourceField(string field, RelationshipAttribute relationship)
         {

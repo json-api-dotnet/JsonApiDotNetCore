@@ -101,7 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todo-items/{todoItem.Id}?fields=description,created-date";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?fields=description,createdDate";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todoItem.StringId, deserializeBody.SingleData.Id);
             Assert.Equal(2, deserializeBody.SingleData.Attributes.Count);
             Assert.Equal(todoItem.Description, deserializeBody.SingleData.Attributes["description"]);
-            Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.SingleData.Attributes["created-date"]).ToString("G"));
+            Assert.Equal(todoItem.CreatedDate.ToString("G"), ((DateTime)deserializeBody.SingleData.Attributes["createdDate"]).ToString("G"));
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var httpMethod = new HttpMethod("GET");
             using var server = new TestServer(builder);
             var client = server.CreateClient();
-            var route = $"/api/v1/todo-items/{todoItem.Id}?fields[todo-items]=description,created-date";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?fields[todoItems]=description,createdDate";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -170,9 +170,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todo-items?include=owner&fields[owner]=first-name,age";
+            var route = $"/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
             var request = new HttpRequestMessage(httpMethod, route);
-            var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todo-items").Build();
+            var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todoItems").Build();
             var deserializer = new ResponseDeserializer(resourceGraph);
             // Act
             var response = await client.SendAsync(request);
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner&fields[owner]=first-name,age";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner&fields[owner]=firstName,age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -226,9 +226,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert - check owner attributes
             var included = deserializeBody.Included.First();
             Assert.Equal(owner.StringId, included.Id);
-            Assert.Equal(owner.FirstName, included.Attributes["first-name"]);
+            Assert.Equal(owner.FirstName, included.Attributes["firstName"]);
             Assert.Equal((long)owner.Age, included.Attributes["age"]);
-            Assert.DoesNotContain("last-name", included.Attributes.Keys);
+            Assert.DoesNotContain("lastName", included.Attributes.Keys);
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/people/{owner.Id}?include=todo-items&fields[todo-items]=description";
+            var route = $"/api/v1/people/{owner.Id}?include=todoItems&fields[todoItems]=description";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -267,7 +267,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 Assert.NotNull(todoItem);
                 Assert.Equal(todoItem.Description, includedItem.Attributes["description"]);
                 Assert.DoesNotContain("ordinal", includedItem.Attributes.Keys);
-                Assert.DoesNotContain("created-date", includedItem.Attributes.Keys);
+                Assert.DoesNotContain("createdDate", includedItem.Attributes.Keys);
             }
         }
     }

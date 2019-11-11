@@ -12,25 +12,25 @@ namespace NoEntityFrameworkExample.Models
 
         public bool IsLocked { get; set; }
 
-        [Attr("description")]
+        [Attr]
         public string Description { get; set; }
 
-        [Attr("ordinal")]
+        [Attr]
         public long Ordinal { get; set; }
 
-        [Attr("guid-property")]
+        [Attr]
         public Guid GuidProperty { get; set; }
 
-        [Attr("created-date")]
+        [Attr]
         public DateTime CreatedDate { get; set; }
 
-        [Attr("achieved-date", isFilterable: false, isSortable: false)]
+        [Attr(isFilterable: false, isSortable: false)]
         public DateTime? AchievedDate { get; set; }
 
-        [Attr("updated-date")]
+        [Attr]
         public DateTime? UpdatedDate { get; set; }
 
-        [Attr("offset-date")]
+        [Attr]
         public DateTimeOffset? OffsetDate { get; set; }
     }
 }

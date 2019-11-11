@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Client;
 using Microsoft.AspNetCore.Hosting;
@@ -28,15 +29,17 @@ namespace NoEntityFrameworkTests
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
             var serializer = GetService<IRequestSerializer>();
+            var graph = GetService<IResourceGraph>();
             if (attributes != null)
-                serializer.SetAttributesToSerialize(attributes);
+                serializer.AttributesToSerialize = graph.GetAttributes(attributes);
             if (relationships != null)
-                serializer.SetRelationshipsToSerialize(relationships);
+                serializer.RelationshipsToSerialize = graph.GetRelationships(relationships);
             return serializer;
         }
+
         public IResponseDeserializer GetDeserializer()
         {
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>("todo-items").Build();
+            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>("todoItems").Build();
             return new ResponseDeserializer(resourceGraph);
         }
 

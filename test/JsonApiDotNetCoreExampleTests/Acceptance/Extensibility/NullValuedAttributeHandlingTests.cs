@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var queryString = allowClientOverride.HasValue
                 ? $"&omitNull={clientOverride}"
                 : "";
-            var route = $"/api/v1/todo-items/{_todoItem.Id}?include=owner{queryString}";
+            var route = $"/api/v1/todoItems/{_todoItem.Id}?include=owner{queryString}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             // Assert: does response contain a null valued attribute?
             Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
-            Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("last-name"));
+            Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("lastName"));
 
         }
     }

@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/users?filter[first-character]=eq:{firstUsernameCharacter}";
+            var route = $"/api/v1/users?filter[firstCharacter]=eq:{firstUsernameCharacter}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // @TODO - Use fixture
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var median = 'h';
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/users?filter[first-character]=lt:{median}";
+            var route = $"/api/v1/users?filter[firstCharacter]=lt:{median}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // @TODO - Use fixture

@@ -20,6 +20,7 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -30,21 +31,16 @@ namespace JsonApiDotNetCore.Builders
     public class JsonApiApplicationBuilder
     {
         public readonly JsonApiOptions JsonApiOptions = new JsonApiOptions();
-        private IResourceGraphBuilder _resourceGraphBuilder;
+        internal IResourceGraphBuilder _resourceGraphBuilder;
+        internal bool _usesDbContext;
+        internal readonly IServiceCollection _services;
         private IServiceDiscoveryFacade _serviceDiscoveryFacade;
-        private bool _usesDbContext;
-        private readonly IServiceCollection _services;
         private readonly IMvcCoreBuilder _mvcBuilder;
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
             _services = services;
             _mvcBuilder = mvcBuilder;
-        }
-
-        internal void ConfigureLogging()
-        {
-            _services.AddLogging();
         }
 
         /// <summary>
@@ -82,7 +78,7 @@ namespace JsonApiDotNetCore.Builders
         }
 
         /// <summary>
-        /// Executes autodiscovery of JADNC services.
+        /// Executes auto-discovery of JADNC services.
         /// </summary>
         public void AutoDiscover(Action<IServiceDiscoveryFacade> autoDiscover)
         {
@@ -96,18 +92,6 @@ namespace JsonApiDotNetCore.Builders
         public void ConfigureResources(Action<IResourceGraphBuilder> resourceGraphBuilder)
         {
             resourceGraphBuilder(_resourceGraphBuilder);
-        }
-
-        /// <summary>
-        /// Executes the action provided by the user to configure the resources using <see cref="IResourceGraphBuilder"/>.
-        /// Additionally, inspects the EF core database context for models that implement IIdentifiable.
-        /// </summary>
-        public void ConfigureResources<TContext>(Action<IResourceGraphBuilder> resourceGraphBuilder) where TContext : DbContext
-        {
-            _resourceGraphBuilder.AddDbContext<TContext>();
-            _usesDbContext = true;
-            _services.AddScoped<IDbContextResolver, DbContextResolver<TContext>>();
-            resourceGraphBuilder?.Invoke(_resourceGraphBuilder);
         }
 
         /// <summary>
@@ -149,6 +133,9 @@ namespace JsonApiDotNetCore.Builders
 
             _services.AddScoped(typeof(IResourceService<>), typeof(DefaultResourceService<>));
             _services.AddScoped(typeof(IResourceService<,>), typeof(DefaultResourceService<,>));
+
+            _services.AddScoped(typeof(IResourceQueryService<,>), typeof(DefaultResourceService<,>));
+            _services.AddScoped(typeof(IResourceCmdService<,>), typeof(DefaultResourceService<,>));
 
             _services.AddSingleton<ILinksConfiguration>(JsonApiOptions);
             _services.AddSingleton(resourceGraph);
@@ -219,7 +206,7 @@ namespace JsonApiDotNetCore.Builders
         private void RegisterJsonApiStartupServices()
         {
             _services.AddSingleton<IJsonApiOptions>(JsonApiOptions);
-            _services.TryAddSingleton<IResourceNameFormatter>(new KebabCaseFormatter());
+            _services.TryAddSingleton<IResourceNameFormatter>(new CamelCaseFormatter());
             _services.TryAddSingleton<IJsonApiRoutingConvention, DefaultRoutingConvention>();
             _services.TryAddSingleton<IResourceGraphBuilder, ResourceGraphBuilder>();
             _services.TryAddSingleton<IServiceDiscoveryFacade>(sp => new ServiceDiscoveryFacade(_services, sp.GetRequiredService<IResourceGraphBuilder>()));

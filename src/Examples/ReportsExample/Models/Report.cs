@@ -2,10 +2,10 @@ using JsonApiDotNetCore.Models;
 
 public class Report : Identifiable
 {
-    [Attr("title")]
+    [Attr]
     public string Title { get; set; }
     
-    [Attr("complex-type")]
+    [Attr]
     public ComplexType ComplexType { get; set; }
 }
 

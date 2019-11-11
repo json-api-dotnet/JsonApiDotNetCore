@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Graph
 
         /// <summary>
         /// Uses the internal PropertyInfo to determine the external resource name.
-        /// By default the name will be formatted to kebab-case.
+        /// By default the name will be formatted to camelCase.
         /// </summary>
         public string FormatPropertyName(PropertyInfo property) => ApplyCasingConvention(property.Name);
     }

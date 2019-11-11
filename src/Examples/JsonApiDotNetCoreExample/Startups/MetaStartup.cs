@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Services;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -11,9 +12,7 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public class MetaStartup : Startup
     {
-        public MetaStartup(IWebHostEnvironment env)
-        : base (env)
-        {  }
+        public MetaStartup(IWebHostEnvironment env) : base(env) { }
 
         public override void ConfigureServices(IServiceCollection services)
         {

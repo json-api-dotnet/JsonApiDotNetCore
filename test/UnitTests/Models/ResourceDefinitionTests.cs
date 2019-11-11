@@ -49,9 +49,9 @@ namespace UnitTests.Models
 
     public class Model : Identifiable
     {
-        [Attr("name")] public string AlwaysExcluded { get; set; }
-        [Attr("password")] public string Password { get; set; }
-        [Attr("prop")] public string Prop { get; set; }
+        [Attr] public string AlwaysExcluded { get; set; }
+        [Attr] public string Password { get; set; }
+        [Attr] public string Prop { get; set; }
     }
 
     public class RequestFilteredResource : ResourceDefinition<Model>

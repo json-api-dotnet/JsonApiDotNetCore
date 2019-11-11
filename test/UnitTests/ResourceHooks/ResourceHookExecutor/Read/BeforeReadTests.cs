@@ -39,8 +39,8 @@ namespace UnitTests.ResourceHooks
             var (iqMock, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // eg a call on api/todo-items?include=owner,assignee,stake-holders
-            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner", "assignee", "stake-holders"));
+            // eg a call on api/todoItems?include=owner,assignee,stakeHolders
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner", "assignee", "stakeHolders"));
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -61,8 +61,8 @@ namespace UnitTests.ResourceHooks
             var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
+            // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders"));
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -85,8 +85,8 @@ namespace UnitTests.ResourceHooks
             var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
+            // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders"));
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -107,8 +107,8 @@ namespace UnitTests.ResourceHooks
             var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
+            // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders"));
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -129,8 +129,8 @@ namespace UnitTests.ResourceHooks
             var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
+            // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders"));
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -152,8 +152,8 @@ namespace UnitTests.ResourceHooks
             var (iqMock, hookExecutor, todoResourceMock, ownerResourceMock, passportResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, passportDiscovery);
             var todoList = CreateTodoWithOwner();
 
-            // eg a call on api/todo-items?include=owner.passport,assignee,stake-holders
-            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stake-holders"));
+            // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
+            iqMock.Setup(c => c.Get()).Returns(GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders"));
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);

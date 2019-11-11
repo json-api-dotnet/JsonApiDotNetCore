@@ -26,11 +26,13 @@
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Repositories\" />
     <Folder Include="Helpers\Models\" />
     <Folder Include="Helpers\Startups\" />
+    <Folder Include="Factories\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Helpers\Repositories\AuthorizedTodoItemsRepository.cs" />

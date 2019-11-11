@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?{queryKey}={queryValue}";
+            var route = $"/api/v1/todoItems?{queryKey}={queryValue}";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);

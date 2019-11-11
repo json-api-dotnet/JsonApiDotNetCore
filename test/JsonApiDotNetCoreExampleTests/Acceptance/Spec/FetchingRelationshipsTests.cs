@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}/owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}/owner";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItemId}/owner";
+            var route = $"/api/v1/todoItems/{todoItemId}/owner";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCore.Serialization.Client
 {
@@ -23,19 +25,16 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <returns>The serialized content</returns>
         string Serialize(IEnumerable entities);
         /// <summary>
-        /// Sets the <see cref="AttrAttribute"/>s to serialize for resources of type <typeparamref name="TResource"/>.
-        /// If no <see cref="AttrAttribute"/>s are specified, by default all attributes are included in the serialized result.
+        /// Sets the attributes that will be included in the serialized payload.
+        /// You can use <see cref="IResourceGraph.GetAttributes{TResource}(Expression{System.Func{TResource, dynamic}})"/>
+        /// to conveniently access the desired <see cref="AttrAttribute"/> instances
         /// </summary>
-        /// <typeparam name="TResource">Type of the resource to serialize</typeparam>
-        /// <param name="filter">Should be of the form: (TResource e) => new { e.Attr1, e.Attr2 }</param>
-        void SetAttributesToSerialize<TResource>(Expression<System.Func<TResource, dynamic>> filter) where TResource : class, IIdentifiable;
+        public IEnumerable<AttrAttribute> AttributesToSerialize { set; }
         /// <summary>
-        /// Sets the <see cref="RelationshipAttribute"/>s to serialize for resources of type <typeparamref name="TResource"/>.
-        /// If no <see cref="RelationshipAttribute"/>s are specified, by default no relationships are included in the serialization result.
-        /// The <paramref name="filter"/>should be of the form: (TResource e) => new { e.Attr1, e.Attr2 }
+        /// Sets the relationships that will be included in the serialized payload.
+        /// You can use <see cref="IResourceGraph.GetRelationships{TResource}(Expression{System.Func{TResource, dynamic}})"/>
+        /// to conveniently access the desired <see cref="RelationshipAttribute"/> instances
         /// </summary>
-        /// <typeparam name="TResource">Type of the resource to serialize</typeparam>
-        /// <param name="filter">Should be of the form: (TResource e) => new { e.Attr1, e.Attr2 }</param>
-        void SetRelationshipsToSerialize<TResource>(Expression<System.Func<TResource, dynamic>> filter) where TResource : class, IIdentifiable;
+        public IEnumerable<RelationshipAttribute> RelationshipsToSerialize { set; }
     }
 }

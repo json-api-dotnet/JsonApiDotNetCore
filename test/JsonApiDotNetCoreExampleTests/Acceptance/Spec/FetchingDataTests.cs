@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = "/api/v1/todo-items";
+            var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -78,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -92,9 +93,35 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(person.StringId, deserializedBody.Included[0].Id);
             Assert.NotNull(deserializedBody.Included[0].Relationships);
-            Assert.Equal($"http://localhost/api/v1/people/{person.Id}/todo-items", deserializedBody.Included[0].Relationships["todo-items"].Links.Related);
-            Assert.Equal($"http://localhost/api/v1/people/{person.Id}/relationships/todo-items", deserializedBody.Included[0].Relationships["todo-items"].Links.Self);
+            Assert.Equal($"http://localhost/api/v1/people/{person.Id}/todoItems", deserializedBody.Included[0].Relationships["todoItems"].Links.Related);
+            Assert.Equal($"http://localhost/api/v1/people/{person.Id}/relationships/todoItems", deserializedBody.Included[0].Relationships["todoItems"].Links.Self);
             context.Dispose();
+        }
+
+        [Fact]
+        public async Task GetResources_NoDefaultPageSize_ReturnsResources()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var todoItems = _todoItemFaker.Generate(20).ToList();
+            context.TodoItems.AddRange(todoItems);
+            await context.SaveChangesAsync();
+
+            var builder = new WebHostBuilder()
+                .UseStartup<NoDefaultPageSizeStartup>();
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todoItems";
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+            var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
+
+            // Assert
+            Assert.True(result.Data.Count >= 20);
         }
     }
 }

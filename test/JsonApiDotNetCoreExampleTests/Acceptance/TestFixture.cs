@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
@@ -31,17 +32,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         public HttpClient Client { get; set; }
         public AppDbContext Context { get; private set; }
+
+
         public IRequestSerializer GetSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null, Expression<Func<TResource, dynamic>> relationships = null) where TResource : class, IIdentifiable
         {
-            var serializer =  GetService<IRequestSerializer>();
+            var serializer = GetService<IRequestSerializer>();
+            var graph = GetService<IResourceGraph>();
             if (attributes != null)
-            {
-                serializer.SetAttributesToSerialize(attributes);
-            }
+                serializer.AttributesToSerialize = graph.GetAttributes(attributes);
             if (relationships != null)
-            {
-                serializer.SetRelationshipsToSerialize(relationships);
-            }
+                serializer.RelationshipsToSerialize = graph.GetRelationships(relationships);
             return serializer;
         }
         public IResponseDeserializer GetDeserializer()
@@ -50,18 +50,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 .AddResource<PersonRole>()
                 .AddResource<Article>()
                 .AddResource<Tag>()
-                .AddResource<CamelCasedModel>()
+                .AddResource<KebabCasedModel>()
                 .AddResource<User>()
+                .AddResource<SuperUser>()
                 .AddResource<Person>()
                 .AddResource<Author>()
                 .AddResource<Passport>()
-                .AddResource<TodoItemClient>("todo-items")
+                .AddResource<TodoItemClient>("todoItems")
                 .AddResource<TodoItemCollectionClient, Guid>().Build();
             return new ResponseDeserializer(resourceGraph);
         }
 
         public T GetService<T>() => (T)_services.GetService(typeof(T));
-        
+
         public void ReloadDbContext()
         {
             Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>());

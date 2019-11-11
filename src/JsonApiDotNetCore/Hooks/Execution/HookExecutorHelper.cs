@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Hooks
                 return false;
             if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
                 return true;
-            return _options.LoaDatabaseValues;
+            return _options.LoadDatabaseValues;
         }
 
         bool ShouldExecuteHook(RightType entityType, ResourceHook hook)

@@ -72,6 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var user = _userFaker.Generate();
+
             var serializer = _fixture.GetSerializer<User>(p => new { p.Password, p.Username });
 
             
@@ -138,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Unauthorized_TodoItem()
         {
             // Arrange
-            var route = $"/api/v1/todo-items/1337";
+            var route = $"/api/v1/todoItems/1337";
             var httpMethod = new HttpMethod("GET");
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -451,10 +452,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     relationships = new Dictionary<string, object>
                     {
-                        { "stake-holders", new
+                        { "stakeHolders", new
                             {
                                 data = new object[]
                                 {
@@ -469,7 +470,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todoItems";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -502,11 +503,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     id = unlockedTodo.Id,
                     relationships = new Dictionary<string, object>
                     {
-                        { "stake-holders", new
+                        { "stakeHolders", new
                             {
                                 data = new object[]
                                 {
@@ -521,7 +522,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{unlockedTodo.Id}";
+            var route = $"/api/v1/todoItems/{unlockedTodo.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);

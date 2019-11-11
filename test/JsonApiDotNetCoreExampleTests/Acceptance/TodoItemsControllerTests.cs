@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             }
 
             var httpMethod = new HttpMethod("GET");
-            var route = "/api/v1/todo-items";
+            var route = "/api/v1/todoItems";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[id]={todoItem.Id}";
+            var route = $"/api/v1/todoItems?filter[id]={todoItem.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[owner.id]={person.Id}";
+            var route = $"/api/v1/todoItems?filter[owner.id]={person.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[ordinal]={todoItem.Ordinal}";
+            var route = $"/api/v1/todoItems?filter[ordinal]={todoItem.Ordinal}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -165,7 +165,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[updated-date]=isnotnull:";
+            var route = $"/api/v1/todoItems?filter[updatedDate]=isnotnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[assignee.id]=isnotnull:";
+            var route = $"/api/v1/todoItems?filter[assignee.id]=isnotnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -224,7 +224,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[updated-date]=isnull:";
+            var route = $"/api/v1/todoItems?filter[updatedDate]=isnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -254,7 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[assignee.id]=isnull:";
+            var route = $"/api/v1/todoItems?filter[assignee.id]=isnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -281,7 +281,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var substring = todoItem.Description.Substring(1, todoItem.Description.Length - 2);
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?filter[description]=like:{substring}";
+            var route = $"/api/v1/todoItems?filter[description]=like:{substring}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?sort=ordinal";
+            var route = $"/api/v1/todoItems?sort=ordinal";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -354,7 +354,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=owner.age";
+            var route = $"/api/v1/todoItems?page[size]={numberOfItems}&include=owner&sort=owner.age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -392,7 +392,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?page[size]={numberOfItems}&include=owner&sort=-owner.age";
+            var route = $"/api/v1/todoItems?page[size]={numberOfItems}&include=owner&sort=-owner.age";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -431,7 +431,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items?sort=-ordinal";
+            var route = $"/api/v1/todoItems?sort=-ordinal";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -462,7 +462,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -490,7 +490,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todo-items/{todoItem.Id}?include=owner";
+            var route = $"/api/v1/todoItems/{todoItem.Id}?include=owner";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -524,7 +524,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             todoItem.OffsetDate = nowOffset;
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todoItems";
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(serializer.Serialize(todoItem));
@@ -560,12 +560,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             {
                 data = new
                 {
-                    type = "todo-items",
+                    type = "todoItems",
                     attributes = new Dictionary<string, object>()
                     {
                         { "description", todoItem.Description },
                         { "ordinal", todoItem.Ordinal },
-                        { "created-date", todoItem.CreatedDate }
+                        { "createdDate", todoItem.CreatedDate }
                     },
                     relationships = new
                     {
@@ -590,7 +590,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todo-items";
+            var route = $"/api/v1/todoItems";
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
@@ -632,18 +632,18 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     id = todoItem.Id,
-                    type = "todo-items",
+                    type = "todoItems",
                     attributes = new Dictionary<string, object>()
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
-                        { "created-date", newTodoItem.CreatedDate }
+                        { "createdDate", newTodoItem.CreatedDate }
                     }
                 }
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
@@ -684,19 +684,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     id = todoItem.Id,
-                    type = "todo-items",
+                    type = "todoItems",
                     attributes = new Dictionary<string, object>()
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
-                        { "created-date", newTodoItem.CreatedDate },
-                        { "achieved-date", newTodoItem.AchievedDate }
+                        { "createdDate", newTodoItem.CreatedDate },
+                        { "achievedDate", newTodoItem.AchievedDate }
                     }
                 }
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
@@ -736,19 +736,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     id = todoItem.Id,
-                    type = "todo-items",
+                    type = "todoItems",
                     attributes = new Dictionary<string, object>()
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
-                        { "created-date", newTodoItem.CreatedDate },
-                        { "achieved-date", null }
+                        { "createdDate", newTodoItem.CreatedDate },
+                        { "achievedDate", null }
                     }
                 }
             };
 
             var httpMethod = new HttpMethod("PATCH");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(JsonConvert.SerializeObject(content));
@@ -781,7 +781,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("DELETE");
-            var route = $"/api/v1/todo-items/{todoItem.Id}";
+            var route = $"/api/v1/todoItems/{todoItem.Id}";
 
             var request = new HttpRequestMessage(httpMethod, route);
             request.Content = new StringContent(string.Empty);

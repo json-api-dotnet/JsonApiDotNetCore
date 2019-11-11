@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Models;
 using Xunit;
@@ -59,14 +58,13 @@ namespace UnitTests.Internal
         {
             // Arrange
             var type = typeof(Model);
-            var exextedIdType = typeof(int);
+            var expectedIdType = typeof(int);
 
             // Act
-            var (isJsonApiResource, idType) = TypeLocator.GetIdType(type);
+            var idType = TypeLocator.GetIdType(type);
 
             // Assert
-            Assert.True(isJsonApiResource);
-            Assert.Equal(exextedIdType, idType);
+            Assert.Equal(expectedIdType, idType);
         }
 
         [Fact]
@@ -74,14 +72,13 @@ namespace UnitTests.Internal
         {
             // Arrange
             var type = typeof(DerivedType);
-            Type exextedIdType = null;
+            Type expectedIdType = null;
 
             // Act
-            var (isJsonApiResource, idType) = TypeLocator.GetIdType(type);
+            var idType = TypeLocator.GetIdType(type);
 
             // Assert
-            Assert.False(isJsonApiResource);
-            Assert.Equal(exextedIdType, idType);
+            Assert.Equal(expectedIdType, idType);
         }
 
         [Fact]

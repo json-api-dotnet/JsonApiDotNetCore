@@ -64,8 +64,8 @@ namespace UnitTests.ResourceHooks
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
             var todoList = new List<TodoItem>() { todoItem };
-            person.ToOneTodoItem = todoItem;
-            todoItem.ToOnePerson = person;
+            person.OneToOneTodoItem = todoItem;
+            todoItem.OneToOnePerson = person;
             return todoList;
         }
 
@@ -145,7 +145,7 @@ namespace UnitTests.ResourceHooks
             var pfMock = new Mock<IGenericServiceFactory>();
             var ufMock = new Mock<ITargetedFields>();
             var iqsMock = new Mock<IIncludeService>();
-            var optionsMock = new JsonApiOptions { LoaDatabaseValues = false };
+            var optionsMock = new JsonApiOptions { LoadDatabaseValues = false };
             return (ufMock, iqsMock, pfMock, optionsMock);
         }
 

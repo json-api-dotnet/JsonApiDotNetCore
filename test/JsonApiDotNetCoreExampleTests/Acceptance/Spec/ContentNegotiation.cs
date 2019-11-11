@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = "/api/v1/todo-items";
+            var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = "/api/v1/todo-items";
+            var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = "/api/v1/todo-items";
+            var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var acceptHeader = new MediaTypeWithQualityHeaderValue("application/vnd.api+json");

@@ -19,6 +19,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
+using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 
 namespace UnitTests.Extensions
 {
@@ -29,7 +30,7 @@ namespace UnitTests.Extensions
         {
             // Arrange
             var services = new ServiceCollection();
-
+            services.AddLogging();
             services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
             services.AddJsonApi<AppDbContext>();
 
@@ -57,6 +58,27 @@ namespace UnitTests.Extensions
             Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
             Assert.NotNull(provider.GetService<IGenericServiceFactory>());
             Assert.NotNull(provider.GetService(typeof(RepositoryRelationshipUpdateHelper<TodoItem>)));
+        }
+
+        [Fact]
+        public void RegisterResource_DeviatingDbContextPropertyName_RegistersCorrectly()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"), ServiceLifetime.Transient);
+            services.AddJsonApi<AppDbContext>();
+
+            // Act
+            // this is required because the DbContextResolver requires access to the current HttpContext
+            // to get the request scoped DbContext instance
+            services.AddScoped<IScopedServiceProvider, TestScopedServiceProvider>();
+            var provider = services.BuildServiceProvider();
+            var graph = provider.GetService<IResourceGraph>();
+            var resourceContext = graph.GetResourceContext<Author>();
+
+            // Assert 
+            Assert.Equal("authors", resourceContext.ResourceName);
         }
 
         [Fact]
@@ -116,7 +138,7 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
-        public void AddJsonApi_With_Context_Uses_DbSet_PropertyName_If_NoOtherSpecified()
+        public void AddJsonApi_With_Context_Uses_Resource_Type_Name_If_NoOtherSpecified()
         {
             // Arrange
             var services = new ServiceCollection();
@@ -130,7 +152,7 @@ namespace UnitTests.Extensions
             var provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetService<IResourceGraph>();
             var resource = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("resource", resource.ResourceName);
+            Assert.Equal("intResources", resource.ResourceName);
         }
 
         public class IntResource : Identifiable { }

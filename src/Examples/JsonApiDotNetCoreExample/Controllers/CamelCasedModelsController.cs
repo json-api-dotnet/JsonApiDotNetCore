@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class CamelCasedModelsController : JsonApiController<CamelCasedModel>
+    public class KebabCasedModelsController : JsonApiController<KebabCasedModel>
     {
-        public CamelCasedModelsController(
+        public KebabCasedModelsController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<CamelCasedModel> resourceService,
+            IResourceService<KebabCasedModel> resourceService,
             ILoggerFactory loggerFactory) 
             : base(jsonApiOptions, resourceService, loggerFactory)
         { }

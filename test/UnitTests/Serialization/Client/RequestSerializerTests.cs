@@ -33,16 +33,16 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1"",
                   ""attributes"":{
-                     ""string-field"":""value"",
-                     ""date-time-field"":""0001-01-01T00:00:00"",
-                     ""nullable-date-time-field"":null,
-                     ""int-field"":0,
-                     ""nullable-int-field"":123,
-                     ""guid-field"":""00000000-0000-0000-0000-000000000000"",
-                     ""complex-field"":null,
+                     ""stringField"":""value"",
+                     ""dateTimeField"":""0001-01-01T00:00:00"",
+                     ""nullableDateTimeField"":null,
+                     ""intField"":0,
+                     ""nullableIntField"":123,
+                     ""guidField"":""00000000-0000-0000-0000-000000000000"",
+                     ""complexField"":null,
                      ""immutable"":null
                   }
                }
@@ -56,7 +56,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
-            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+            _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
             string serialized = _serializer.Serialize(entity);
@@ -65,10 +65,10 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1"",
                   ""attributes"":{
-                     ""string-field"":""value""
+                     ""stringField"":""value""
                   }
                }
             }";
@@ -81,7 +81,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             var entityNoId = new TestResource() { Id = 0, StringField = "value", NullableIntField = 123 };
-            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+            _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
             string serialized = _serializer.Serialize(entityNoId);
@@ -90,9 +90,9 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""attributes"":{
-                     ""string-field"":""value""
+                     ""stringField"":""value""
                   }
                }
             }";
@@ -106,7 +106,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
-            _serializer.SetAttributesToSerialize<TestResource>(tr => new { });
+            _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => new { });
 
             // Act
             string serialized = _serializer.Serialize(entity);
@@ -115,7 +115,7 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                ""data"":{
-                  ""type"":""test-resource"",
+                  ""type"":""testResource"",
                   ""id"":""1""
                }
             }";
@@ -133,7 +133,7 @@ namespace UnitTests.Serialization.Client
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new List<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            _serializer.SetRelationshipsToSerialize<MultipleRelationshipsPrincipalPart>(tr => new { tr.EmptyToOne, tr.EmptyToManies, tr.PopulatedToOne, tr.PopulatedToManies });
+            _serializer.RelationshipsToSerialize = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new { tr.EmptyToOne, tr.EmptyToManies, tr.PopulatedToOne, tr.PopulatedToManies });
 
             // Act
             string serialized = _serializer.Serialize(entityWithRelationships);
@@ -141,27 +141,27 @@ namespace UnitTests.Serialization.Client
             var expectedFormatted =
             @"{
                 ""data"":{
-                    ""type"":""multi-principals"",
+                    ""type"":""multiPrincipals"",
                     ""attributes"":{
-                        ""attribute-member"":null
+                        ""attributeMember"":null
                     },
                     ""relationships"":{
-                        ""empty-to-one"":{
+                        ""emptyToOne"":{
                         ""data"":null
                         },
-                        ""empty-to-manies"":{
+                        ""emptyToManies"":{
                         ""data"":[ ]
                         },
-                        ""populated-to-one"":{
+                        ""populatedToOne"":{
                         ""data"":{
-                            ""type"":""one-to-one-dependents"",
+                            ""type"":""oneToOneDependents"",
                             ""id"":""10""
                            }
                         },
-                        ""populated-to-manies"":{
+                        ""populatedToManies"":{
                         ""data"":[
                             {
-                                ""type"":""one-to-many-dependents"",
+                                ""type"":""oneToManyDependents"",
                                 ""id"":""20""
                             }
                           ]
@@ -182,7 +182,7 @@ namespace UnitTests.Serialization.Client
                 new TestResource() { Id = 1, StringField = "value1", NullableIntField = 123 },
                 new TestResource() { Id = 2, StringField = "value2", NullableIntField = 123 }
             };
-            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+            _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
             string serialized = _serializer.Serialize(entities);
@@ -192,17 +192,17 @@ namespace UnitTests.Serialization.Client
             @"{
                 ""data"":[
                     {
-                        ""type"":""test-resource"",
+                        ""type"":""testResource"",
                         ""id"":""1"",
                         ""attributes"":{
-                        ""string-field"":""value1""
+                        ""stringField"":""value1""
                         }
                     },
                     {
-                        ""type"":""test-resource"",
+                        ""type"":""testResource"",
                         ""id"":""2"",
                         ""attributes"":{
-                        ""string-field"":""value2""
+                        ""stringField"":""value2""
                         }
                     }
                 ]
@@ -215,7 +215,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_Null_CanBuild()
         {
             // Arrange
-            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+            _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
             IIdentifiable obj = null;
@@ -235,7 +235,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             var entities = new List<TestResource> { };
-            _serializer.SetAttributesToSerialize<TestResource>(tr => tr.StringField);
+            _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
             string serialized = _serializer.Serialize(entities);
