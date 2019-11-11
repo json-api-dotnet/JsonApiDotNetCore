@@ -58,6 +58,7 @@ namespace JsonApiDotNetCoreExample
             AppDbContext context)
         {
             context.Database.EnsureCreated();
+            app.EnableDetailedErrors();
             app.UseJsonApi();
         }
 
