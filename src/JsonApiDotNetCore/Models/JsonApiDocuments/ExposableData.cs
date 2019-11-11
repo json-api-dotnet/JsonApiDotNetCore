@@ -31,11 +31,13 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Internally used for "single" primary data.
         /// </summary>
+        [JsonIgnore]
         public T SingleData { get; private set; }
 
         /// <summary>
         /// Internally used for "many" primary data.
         /// </summary>
+        [JsonIgnore]
         public List<T> ManyData { get; private set; }
 
         /// <summary>

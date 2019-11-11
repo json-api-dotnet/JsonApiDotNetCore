@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -106,7 +104,11 @@ namespace JsonApiDotNetCore.Controllers
             if (_getById == null) throw Exceptions.UnSupportedRequestMethod;
             var entity = await _getById.GetAsync(id);
             if (entity == null)
-                return NotFound();
+            {
+                // remove the null argument as soon as this has been resolved:
+                // https://github.com/aspnet/AspNetCore/issues/16969
+                return NotFound(null);
+            }
 
             return Ok(entity);
         }
@@ -117,7 +119,11 @@ namespace JsonApiDotNetCore.Controllers
                 throw Exceptions.UnSupportedRequestMethod;
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
-                return NotFound();
+            {
+                // remove the null argument as soon as this has been resolved:
+                // https://github.com/aspnet/AspNetCore/issues/16969
+                return NotFound(null);
+            }
 
             return Ok(relationship);
         }
@@ -160,7 +166,12 @@ namespace JsonApiDotNetCore.Controllers
             var updatedEntity = await _update.UpdateAsync(id, entity);
 
             if (updatedEntity == null)
-                return NotFound();
+            {
+                // remove the null argument as soon as this has been resolved:
+                // https://github.com/aspnet/AspNetCore/issues/16969
+                return NotFound(null);
+            }
+
 
             return Ok(updatedEntity);
         }
@@ -180,14 +191,8 @@ namespace JsonApiDotNetCore.Controllers
                 return NotFound();
             return NoContent();
         }
-
-        //internal Type GetAssociatedResource()
-        //{
-        //    return GetType().GetMethod(nameof(GetAssociatedResource), BindingFlags.Instance | BindingFlags.NonPublic)
-        //                    .DeclaringType
-        //                    .GetGenericArguments()[0];
-        //}
     }
+
     public class BaseJsonApiController<T>
     : BaseJsonApiController<T, int>
     where T : class, IIdentifiable<int>
