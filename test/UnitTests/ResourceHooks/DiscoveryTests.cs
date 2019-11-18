@@ -29,7 +29,7 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
-        public void Hook_Discovery()
+        public void HookDiscovery_StandardResourceDefinition_CanDiscover()
         {
             // Arrange & act
             var hookConfig = new HooksDiscovery<Dummy>(MockProvider<Dummy>(new DummyResourceDefinition()));
@@ -73,7 +73,7 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
-        public void LoadDatabaseValues_Attribute_Not_Allowed()
+        public void HookDiscovery_WronglyUsedLoadDatabaseValueAttribute_ThrowsJsonApiSetupException()
         {
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>
