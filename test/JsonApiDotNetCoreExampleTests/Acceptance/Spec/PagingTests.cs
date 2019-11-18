@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -86,6 +87,37 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var expectedTodoItems = new[] { todoItems[0], todoItems[1] };
             Assert.Equal(expectedTodoItems, deserializedBody, new IdComparer<TodoItem>());
+        }
+
+        [Fact]
+        public async Task Pagination_SecondPage_DisplaysFirstAndPrevLinks()
+        {
+            // Arrange
+            var totalCount = 20;
+            var person = new Person();
+            var todoItems = _todoItemFaker.Generate(totalCount).ToList();
+
+            foreach (var todoItem in todoItems)
+                todoItem.Owner = person;
+
+            Context.TodoItems.RemoveRange(Context.TodoItems);
+            Context.TodoItems.AddRange(todoItems);
+            Context.SaveChanges();
+
+            var route = $"/api/v1/todoItems";
+
+            // Act
+            var response = await Client.GetAsync(route);
+            var body = await response.Content.ReadAsStringAsync();
+            var links = JsonConvert.DeserializeObject<Document>(body).Links;
+            var secondPageResponse = await Client.GetAsync(links.Next);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var secondPageBody = await secondPageResponse.Content.ReadAsStringAsync();
+            var secondPageLinks = JsonConvert.DeserializeObject<Document>(secondPageBody).Links;
+            Assert.Contains("/api/v1/todoItems?page[size]=5&page[number]=1", secondPageLinks.Prev);
+            Assert.Contains("/api/v1/todoItems?page[size]=5&page[number]=1", secondPageLinks.First);
         }
 
         [Fact]
