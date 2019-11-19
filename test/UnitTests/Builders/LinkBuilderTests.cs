@@ -153,7 +153,6 @@ namespace UnitTests
             }
             else
             {
-                Assert.Equal(expectedSelfLink, links.Self);
                 Assert.True(CheckPages(links, pages));
             }
         }
@@ -162,7 +161,8 @@ namespace UnitTests
         {
             if (pages)
             {
-                return links.First == $"{_host}/articles?page[size]=10&page[number]=1"
+                return links.Self == $"{_host}/articles?page[size]=10&page[number]=2"
+                    && links.First == $"{_host}/articles?page[size]=10&page[number]=1"
                     && links.Prev == $"{_host}/articles?page[size]=10&page[number]=1"
                     && links.Next == $"{_host}/articles?page[size]=10&page[number]=3"
                     && links.Last == $"{_host}/articles?page[size]=10&page[number]=3";
@@ -192,15 +192,13 @@ namespace UnitTests
         private IPageService GetPageManager()
         {
             var mock = new Mock<IPageService>();
-            mock.Setup(m => m.ShouldPaginate()).Returns(true);
+            mock.Setup(m => m.CanPaginate).Returns(true);
             mock.Setup(m => m.CurrentPage).Returns(2);
             mock.Setup(m => m.TotalPages).Returns(3);
             mock.Setup(m => m.PageSize).Returns(10);
             return mock.Object;
 
         }
-
-
 
         private ResourceContext GetResourceContext<TResource>(Link resourceLinks = Link.NotConfigured,
                                                           Link topLevelLinks = Link.NotConfigured,
