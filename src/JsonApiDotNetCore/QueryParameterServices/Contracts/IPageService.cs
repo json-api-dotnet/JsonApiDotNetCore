@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         int PageSize { get; set; }
         /// <summary>
-        /// What page are we currently on
+        /// The page requested. Note that the page number is one-based.
         /// </summary>
         int CurrentPage { get; set; }
         /// <summary>
@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         int TotalPages { get; }
         /// <summary>
-        /// Checks if pagination is enabled
+        /// Denotes if pagination is possible for the current request
         /// </summary>
-        bool ShouldPaginate();
+        bool CanPaginate { get; }
     }
 }

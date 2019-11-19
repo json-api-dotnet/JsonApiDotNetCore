@@ -136,23 +136,20 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
 
-            var route = $"/api/v1/todoItems";
+            var route = $"/api/v1/todoItems?page[size]=5&page[number]=2";
 
             // Act
             var response = await Client.GetAsync(route);
-            var body = await response.Content.ReadAsStringAsync();
-            var secondPageResponse = await Client.GetAsync(JsonConvert.DeserializeObject<Document>(body).Links.Next);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var secondPageBody = await secondPageResponse.Content.ReadAsStringAsync();
-            var secondPageLinks = JsonConvert.DeserializeObject<Document>(secondPageBody).Links;
-            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=1", secondPageLinks.Self);
-            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=1", secondPageLinks.First);
-            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=1", secondPageLinks.Prev);
-            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=2", secondPageLinks.Next);
-            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=4", secondPageLinks.Last);
-
+            var body = await response.Content.ReadAsStringAsync();
+            var links = JsonConvert.DeserializeObject<Document>(body).Links;
+            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=2", links.Self);
+            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=1", links.First);
+            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=1", links.Prev);
+            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=3", links.Next);
+            Assert.EndsWith("/api/v1/todoItems?page[size]=5&page[number]=4", links.Last);
         }
 
         [Fact]
