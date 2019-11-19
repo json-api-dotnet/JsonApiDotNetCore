@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Hooks
             return (IResourceHookContainer<TResource>)GetResourceHookContainer(typeof(TResource), hook);
         }
 
-        public IEnumerable LoadDbValues(LeftType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] inclusionChain)
+        public IEnumerable LoadDbValues(LeftType entityTypeForRepository, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationshipsToNextLayer)
         {
             var idType = TypeHelper.GetIdentifierType(entityTypeForRepository);
             var parameterizedGetWhere = GetType()
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Hooks
                     .MakeGenericMethod(entityTypeForRepository, idType);
             var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
             var ids = casted.Select(e => e.StringId).Cast(idType);
-            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, inclusionChain });
+            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
             if (values == null) return null;
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
         }
@@ -129,11 +129,15 @@ namespace JsonApiDotNetCore.Hooks
             return discovery;
         }
 
-        IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] inclusionChain) where TResource : class, IIdentifiable<TId>
+        IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TResource, TId>();
             var query = repo.Get().Where(e => ids.Contains(e.Id));
-            return repo.Include(query, inclusionChain).ToList();
+            foreach (var inclusionChainElement in relationshipsToNextLayer)
+            {
+                query = repo.Include(query, new RelationshipAttribute[] { inclusionChainElement });
+            }
+            return query.ToList();
         }
 
         IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
@@ -183,12 +187,6 @@ namespace JsonApiDotNetCore.Hooks
             }
 
             return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.RightType, kvp.Value));
-
-        }
-
-        private IEnumerable CreateHashSet(Type type, IList elements)
-        {
-            return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(type), new object[] { elements });
         }
 
         bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,
@@ -201,3 +199,4 @@ namespace JsonApiDotNetCore.Hooks
         }
     }
 }
+

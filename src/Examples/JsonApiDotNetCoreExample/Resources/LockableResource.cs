@@ -4,7 +4,6 @@ using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Resources
