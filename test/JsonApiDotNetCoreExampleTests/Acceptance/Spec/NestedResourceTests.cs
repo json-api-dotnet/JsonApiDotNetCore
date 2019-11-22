@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task NestedResourceRoute_IncludeDeeplyNestedRelationship_ReturnsRequestedRelationships()
+        public async Task NestedResourceRoute_RequestWithIncludeQueryParam_ReturnsRequestedRelationships()
         {
             // Arrange
             var assignee = _dbContext.Add(_personFaker.Generate()).Entity;
@@ -51,6 +51,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todo.Id, resultTodoItem.Id);
             Assert.Equal(todo.Owner.Id, resultTodoItem.Owner.Id);
             Assert.Equal(todo.Owner.Passport.Id, resultTodoItem.Owner.Passport.Id);
+        }
+
+        [Theory]
+        [InlineData("filter[ordinal]=1")]
+        [InlineData("fields=ordinal")]
+        [InlineData("sort=ordinal")]
+        [InlineData("page[number]=1")]
+        [InlineData("page[size]=10")]
+        public async Task NestedResourceRoute_RequestWithUnsupportedQueryParam_ReturnsBadRequest(string queryParam)
+        {
+            // Act
+            var (body, response) = await Get($"/api/v1/people/1/assignedTodoItems?{queryParam}");
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.BadRequest, response);
+            Assert.Contains("currently not supported", body);
         }
     }
 }

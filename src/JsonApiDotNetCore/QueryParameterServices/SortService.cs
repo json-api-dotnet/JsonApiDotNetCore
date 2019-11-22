@@ -28,6 +28,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
+            EnsureNoNestedResourceRoute();
             CheckIfProcessed(); // disallow multiple sort parameters.
             var queries = BuildQueries(queryParameter.Value);
 

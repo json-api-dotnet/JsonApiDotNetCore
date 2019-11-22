@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
-using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
@@ -16,9 +14,11 @@ namespace JsonApiDotNetCore.Query
     {
         protected readonly IResourceGraph _resourceGraph;
         protected readonly ResourceContext _requestResource;
+        private readonly ResourceContext _mainRequestResource;
 
         protected QueryParameterService(IResourceGraph resourceGraph, ICurrentRequest currentRequest)
         {
+            _mainRequestResource = currentRequest.GetRequestResource();
             _resourceGraph = resourceGraph;
             if (currentRequest.RequestRelationship != null)
             {
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Query
             }
             else
             {
-                _requestResource = currentRequest.GetRequestResource();
+                _requestResource = _mainRequestResource;
             }
         }
 
@@ -76,6 +76,17 @@ namespace JsonApiDotNetCore.Query
                 throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.ResourceName}.");
 
             return relationship;
+        }
+
+        /// <summary>
+        /// Throw an exception if query parameters are requested that are unsupported on nested resource routes.
+        /// </summary>
+        protected void EnsureNoNestedResourceRoute()
+        {
+            if (_requestResource != _mainRequestResource)
+            {
+                throw new JsonApiException(400, $"Query parameter {Name} is currently not supported on nested resource endpoints (i.e. of the form '/article/1/author?{Name}=...'");
+            }
         }
     }
 }

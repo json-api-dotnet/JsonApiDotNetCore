@@ -31,6 +31,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
+            EnsureNoNestedResourceRoute();
             var queries = GetFilterQueries(queryParameter);
             _filters.AddRange(queries.Select(GetQueryContexts));
         }
