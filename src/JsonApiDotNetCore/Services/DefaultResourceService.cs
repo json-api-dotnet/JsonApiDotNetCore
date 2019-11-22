@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
             return succeeded;
         }
-        g
+        
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);

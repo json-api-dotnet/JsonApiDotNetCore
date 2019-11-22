@@ -52,26 +52,5 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todo.Owner.Id, resultTodoItem.Owner.Id);
             Assert.Equal(todo.Owner.Passport.Id, resultTodoItem.Owner.Passport.Id);
         }
-
-        [Fact]
-        public async Task NestedResourceRoute_Filter_ReturnsFilteredResources()
-        {
-            // Arrange
-            var assignee = _personFaker.Generate();
-            //var assignee = _dbContext.Add(_personFaker.Generate()).Entity;
-            //var todos = _todoItemFaker.Generate(10).ToList();
-            assignee.AssignedTodoItems = _todoItemFaker.Generate(10).ToList();
-            //assignee.AssignedTodoItems = todos;
-            _dbContext.Add(assignee);
-            var ordinal = assignee.AssignedTodoItems.First().Ordinal;
-
-            // Act
-            var (body, response) = await Get($"/api/v1/people/{assignee.Id}/assignedTodoItems?filter[ordinal]={ordinal}");
-
-            // Assert
-            AssertEqualStatusCode(HttpStatusCode.OK, response);
-            var resultTodoItem = _deserializer.DeserializeList<TodoItemClient>(body).Data.SingleOrDefault();
-            Assert.Equal(assignee.AssignedTodoItems.First().Id, resultTodoItem.Id);
-        }
     }
 }
