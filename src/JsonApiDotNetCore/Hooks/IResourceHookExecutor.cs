@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface ICreateHookExecutor
     {
         /// <summary>
-        /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeCreate"/>
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
         /// <summary>
-        /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterCreate"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface IDeleteHookExecutor
     {
         /// <summary>
-        /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeDelete"/>
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
         /// <summary>
-        /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterDelete"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface IReadHookExecutor
     {
         /// <summary>
-        /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeRead"/>
         /// hook where T = <typeparamref name="TResource"/> for the requested 
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <typeparam name="TResource">The type of the request entity</typeparam>
         void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable;
         /// <summary>
-        /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterRead"/> for every unique
         /// entity type occuring in parameter <paramref name="entities"/>.
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface IUpdateHookExecutor
     {
         /// <summary>
-        /// Executes the Before Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the Before Cycle by firing the appropriate hooks if they are implemented. 
         /// The returned set will be used in the actual operation in <see cref="DefaultResourceService{T}"/>.
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.BeforeUpdate(IDiffableEntityHashSet{T}, ResourcePipeline)"/>
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
         /// <summary>
-        /// Executes the After Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.AfterUpdate"/>
         /// hook where T = <typeparamref name="TResource"/> for values in parameter <paramref name="entities"/>.
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Hooks
     public interface IOnReturnHookExecutor
     {
         /// <summary>
-        /// Executes the On Cycle by firing the appropiate hooks if they are implemented. 
+        /// Executes the On Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
         /// Fires the <see cref="ResourceDefinition{T}.OnReturn"/> for every unique
         /// entity type occuring in parameter <paramref name="entities"/>.

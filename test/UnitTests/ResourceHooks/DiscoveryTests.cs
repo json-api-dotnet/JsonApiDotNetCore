@@ -29,7 +29,7 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
-        public void Hook_Discovery()
+        public void HookDiscovery_StandardResourceDefinition_CanDiscover()
         {
             // Arrange & act
             var hookConfig = new HooksDiscovery<Dummy>(MockProvider<Dummy>(new DummyResourceDefinition()));
@@ -42,7 +42,7 @@ namespace UnitTests.ResourceHooks
         public abstract class ResourceDefintionBase<T> : ResourceDefinition<T> where T : class, IIdentifiable
         {
             public ResourceDefintionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
-            public override IEnumerable<T> BeforeDelete(IEntityHashSet<T> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<T> BeforeDelete(IEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
             public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
 
@@ -52,7 +52,7 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
-        public void Hook_Discovery_With_Inheritance()
+        public void HookDiscovery_InheritanceSubclass_CanDiscover()
         {
             // Arrange & act
             var hookConfig = new HooksDiscovery<AnotherDummy>(MockProvider<AnotherDummy>(new AnotherDummyResourceDefinition()));
@@ -73,7 +73,7 @@ namespace UnitTests.ResourceHooks
         }
 
         [Fact]
-        public void LoadDatabaseValues_Attribute_Not_Allowed()
+        public void HookDiscovery_WronglyUsedLoadDatabaseValueAttribute_ThrowsJsonApiSetupException()
         {
             //  assert
             Assert.Throws<JsonApiSetupException>(() =>
@@ -81,7 +81,25 @@ namespace UnitTests.ResourceHooks
                 // Arrange & act
                 var hookConfig = new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));
             });
+        }
 
+        [Fact]
+        public void HookDiscovery_InheritanceWithGenericSubclass_CanDiscover()
+        {
+            // Arrange & act
+            var hookConfig = new HooksDiscovery<AnotherDummy>(MockProvider<AnotherDummy>(new GenericDummyResourceDefinition<AnotherDummy>()));
+
+            // Assert
+            Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
+            Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
+        }
+
+        public class GenericDummyResourceDefinition<TResource> : ResourceDefinition<TResource> where TResource : class, IIdentifiable<int>
+        {
+            public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<TResource>().Build()) { }
+
+            public override IEnumerable<TResource> BeforeDelete(IEntityHashSet<TResource> entities, ResourcePipeline pipeline) { return entities; }
+            public override void AfterDelete(HashSet<TResource> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
     }
 }
