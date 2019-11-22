@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Services
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
             return succeeded;
         }
-
+        g
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
@@ -135,13 +135,7 @@ namespace JsonApiDotNetCore.Services
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
 
-            var entityQuery = _repository.Get(id);
-
-            entityQuery = ApplyFilter(entityQuery);
-            entityQuery = ApplySort(entityQuery);
-            entityQuery = ApplyInclude(entityQuery, chainPrefix: new List<RelationshipAttribute> { relationship });
-            entityQuery = ApplySelect(entityQuery);
-
+            var entityQuery = ApplyInclude(_repository.Get(id), chainPrefix: new List<RelationshipAttribute> { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
             {
