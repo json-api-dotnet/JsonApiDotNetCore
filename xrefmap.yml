@@ -8678,6 +8678,32 @@ references:
   commentId: T:JsonApiDotNetCore.Query.IPageService
   fullName: JsonApiDotNetCore.Query.IPageService
   nameWithType: IPageService
+- uid: JsonApiDotNetCore.Query.IPageService.Backwards
+  name: Backwards
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_Backwards
+  commentId: P:JsonApiDotNetCore.Query.IPageService.Backwards
+  fullName: JsonApiDotNetCore.Query.IPageService.Backwards
+  nameWithType: IPageService.Backwards
+- uid: JsonApiDotNetCore.Query.IPageService.Backwards*
+  name: Backwards
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_Backwards_
+  commentId: Overload:JsonApiDotNetCore.Query.IPageService.Backwards
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.IPageService.Backwards
+  nameWithType: IPageService.Backwards
+- uid: JsonApiDotNetCore.Query.IPageService.CanPaginate
+  name: CanPaginate
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CanPaginate
+  commentId: P:JsonApiDotNetCore.Query.IPageService.CanPaginate
+  fullName: JsonApiDotNetCore.Query.IPageService.CanPaginate
+  nameWithType: IPageService.CanPaginate
+- uid: JsonApiDotNetCore.Query.IPageService.CanPaginate*
+  name: CanPaginate
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CanPaginate_
+  commentId: Overload:JsonApiDotNetCore.Query.IPageService.CanPaginate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.IPageService.CanPaginate
+  nameWithType: IPageService.CanPaginate
 - uid: JsonApiDotNetCore.Query.IPageService.CurrentPage
   name: CurrentPage
   href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CurrentPage
@@ -8704,19 +8730,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.IPageService.PageSize
   nameWithType: IPageService.PageSize
-- uid: JsonApiDotNetCore.Query.IPageService.ShouldPaginate
-  name: ShouldPaginate()
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_ShouldPaginate
-  commentId: M:JsonApiDotNetCore.Query.IPageService.ShouldPaginate
-  fullName: JsonApiDotNetCore.Query.IPageService.ShouldPaginate()
-  nameWithType: IPageService.ShouldPaginate()
-- uid: JsonApiDotNetCore.Query.IPageService.ShouldPaginate*
-  name: ShouldPaginate
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_ShouldPaginate_
-  commentId: Overload:JsonApiDotNetCore.Query.IPageService.ShouldPaginate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IPageService.ShouldPaginate
-  nameWithType: IPageService.ShouldPaginate
 - uid: JsonApiDotNetCore.Query.IPageService.TotalPages
   name: TotalPages
   href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_TotalPages
@@ -8950,6 +8963,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.PageService
   nameWithType: PageService.PageService
+- uid: JsonApiDotNetCore.Query.PageService.Backwards
+  name: Backwards
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_Backwards
+  commentId: P:JsonApiDotNetCore.Query.PageService.Backwards
+  fullName: JsonApiDotNetCore.Query.PageService.Backwards
+  nameWithType: PageService.Backwards
+- uid: JsonApiDotNetCore.Query.PageService.Backwards*
+  name: Backwards
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_Backwards_
+  commentId: Overload:JsonApiDotNetCore.Query.PageService.Backwards
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.PageService.Backwards
+  nameWithType: PageService.Backwards
+- uid: JsonApiDotNetCore.Query.PageService.CanPaginate
+  name: CanPaginate
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CanPaginate
+  commentId: P:JsonApiDotNetCore.Query.PageService.CanPaginate
+  fullName: JsonApiDotNetCore.Query.PageService.CanPaginate
+  nameWithType: PageService.CanPaginate
+- uid: JsonApiDotNetCore.Query.PageService.CanPaginate*
+  name: CanPaginate
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CanPaginate_
+  commentId: Overload:JsonApiDotNetCore.Query.PageService.CanPaginate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.PageService.CanPaginate
+  nameWithType: PageService.CanPaginate
 - uid: JsonApiDotNetCore.Query.PageService.CurrentPage
   name: CurrentPage
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CurrentPage
@@ -8992,19 +9031,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.Parse
   nameWithType: PageService.Parse
-- uid: JsonApiDotNetCore.Query.PageService.ShouldPaginate
-  name: ShouldPaginate()
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_ShouldPaginate
-  commentId: M:JsonApiDotNetCore.Query.PageService.ShouldPaginate
-  fullName: JsonApiDotNetCore.Query.PageService.ShouldPaginate()
-  nameWithType: PageService.ShouldPaginate()
-- uid: JsonApiDotNetCore.Query.PageService.ShouldPaginate*
-  name: ShouldPaginate
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_ShouldPaginate_
-  commentId: Overload:JsonApiDotNetCore.Query.PageService.ShouldPaginate
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.PageService.ShouldPaginate
-  nameWithType: PageService.ShouldPaginate
 - uid: JsonApiDotNetCore.Query.PageService.TotalPages
   name: TotalPages
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_TotalPages

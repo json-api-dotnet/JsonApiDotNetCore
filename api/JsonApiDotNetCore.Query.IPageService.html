@@ -94,6 +94,68 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IPageService_Backwards.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IPageService.Backwards%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Contracts/IPageService.cs/#L31">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_IPageService_Backwards_" data-uid="JsonApiDotNetCore.Query.IPageService.Backwards*"></a>
+  <h4 id="JsonApiDotNetCore_Query_IPageService_Backwards" data-uid="JsonApiDotNetCore.Query.IPageService.Backwards">Backwards</h4>
+  <div class="markdown level1 summary"><p>Denotes if pagination is backwards</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool Backwards { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IPageService_CanPaginate.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IPageService.CanPaginate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Contracts/IPageService.cs/#L27">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_IPageService_CanPaginate_" data-uid="JsonApiDotNetCore.Query.IPageService.CanPaginate*"></a>
+  <h4 id="JsonApiDotNetCore_Query_IPageService_CanPaginate" data-uid="JsonApiDotNetCore.Query.IPageService.CanPaginate">CanPaginate</h4>
+  <div class="markdown level1 summary"><p>Denotes if pagination is possible for the current request</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool CanPaginate { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IPageService_CurrentPage.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IPageService.CurrentPage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -101,7 +163,7 @@
   </span>
   <a id="JsonApiDotNetCore_Query_IPageService_CurrentPage_" data-uid="JsonApiDotNetCore.Query.IPageService.CurrentPage*"></a>
   <h4 id="JsonApiDotNetCore_Query_IPageService_CurrentPage" data-uid="JsonApiDotNetCore.Query.IPageService.CurrentPage">CurrentPage</h4>
-  <div class="markdown level1 summary"><p>What page are we currently on</p>
+  <div class="markdown level1 summary"><p>The page requested. Note that the page number is one-based.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -212,39 +274,6 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_IPageService_ShouldPaginate.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.IPageService.ShouldPaginate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/Contracts/IPageService.cs/#L27">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Query_IPageService_ShouldPaginate_" data-uid="JsonApiDotNetCore.Query.IPageService.ShouldPaginate*"></a>
-  <h4 id="JsonApiDotNetCore_Query_IPageService_ShouldPaginate" data-uid="JsonApiDotNetCore.Query.IPageService.ShouldPaginate">ShouldPaginate()</h4>
-  <div class="markdown level1 summary"><p>Checks if pagination is enabled</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">bool ShouldPaginate()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

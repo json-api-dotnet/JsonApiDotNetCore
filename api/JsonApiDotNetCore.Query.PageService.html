@@ -149,14 +149,76 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_Backwards.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.Backwards%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L31">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_PageService_Backwards_" data-uid="JsonApiDotNetCore.Query.PageService.Backwards*"></a>
+  <h4 id="JsonApiDotNetCore_Query_PageService_Backwards" data-uid="JsonApiDotNetCore.Query.PageService.Backwards">Backwards</h4>
+  <div class="markdown level1 summary"><p>Denotes if pagination is backwards</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Backwards { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_CanPaginate.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.CanPaginate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L37">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Query_PageService_CanPaginate_" data-uid="JsonApiDotNetCore.Query.PageService.CanPaginate*"></a>
+  <h4 id="JsonApiDotNetCore_Query_PageService_CanPaginate" data-uid="JsonApiDotNetCore.Query.PageService.CanPaginate">CanPaginate</h4>
+  <div class="markdown level1 summary"><p>Denotes if pagination is possible for the current request</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CanPaginate { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_CurrentPage.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.CurrentPage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L25">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L28">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_PageService_CurrentPage_" data-uid="JsonApiDotNetCore.Query.PageService.CurrentPage*"></a>
   <h4 id="JsonApiDotNetCore_Query_PageService_CurrentPage" data-uid="JsonApiDotNetCore.Query.PageService.CurrentPage">CurrentPage</h4>
-  <div class="markdown level1 summary"><p>What page are we currently on</p>
+  <div class="markdown level1 summary"><p>The page requested. Note that the page number is one-based.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -183,7 +245,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_PageSize.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.PageSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L23">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L25">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_PageService_PageSize_" data-uid="JsonApiDotNetCore.Query.PageService.PageSize*"></a>
   <h4 id="JsonApiDotNetCore_Query_PageService_PageSize" data-uid="JsonApiDotNetCore.Query.PageService.PageSize">PageSize</h4>
@@ -214,7 +276,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_TotalPages.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.TotalPages%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L34">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_PageService_TotalPages_" data-uid="JsonApiDotNetCore.Query.PageService.TotalPages*"></a>
   <h4 id="JsonApiDotNetCore_Query_PageService_TotalPages" data-uid="JsonApiDotNetCore.Query.PageService.TotalPages">TotalPages</h4>
@@ -245,7 +307,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_TotalRecords.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.TotalRecords%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L21">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_PageService_TotalRecords_" data-uid="JsonApiDotNetCore.Query.PageService.TotalRecords*"></a>
   <h4 id="JsonApiDotNetCore_Query_PageService_TotalRecords" data-uid="JsonApiDotNetCore.Query.PageService.TotalRecords">TotalRecords</h4>
@@ -278,7 +340,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_Parse_KeyValuePair_System_String_StringValues__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.Parse(KeyValuePair%7BSystem.String%2CStringValues%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L40">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Query_PageService_Parse_" data-uid="JsonApiDotNetCore.Query.PageService.Parse*"></a>
   <h4 id="JsonApiDotNetCore_Query_PageService_Parse_KeyValuePair_System_String_StringValues__" data-uid="JsonApiDotNetCore.Query.PageService.Parse(KeyValuePair{System.String,StringValues})">Parse(KeyValuePair&lt;String, StringValues&gt;)</h4>
@@ -304,37 +366,6 @@
         <td><span class="parametername">queryParameter</span></td>
         <td><p>the value of the query parameter as retrieved from the url</p>
 </td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Query_PageService_ShouldPaginate.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Query.PageService.ShouldPaginate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryParameterServices/PageService.cs/#L56">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Query_PageService_ShouldPaginate_" data-uid="JsonApiDotNetCore.Query.PageService.ShouldPaginate*"></a>
-  <h4 id="JsonApiDotNetCore_Query_PageService_ShouldPaginate" data-uid="JsonApiDotNetCore.Query.PageService.ShouldPaginate">ShouldPaginate()</h4>
-  <div class="markdown level1 summary"><p>Checks if pagination is enabled</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ShouldPaginate()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
       </tr>
     </tbody>
   </table>
