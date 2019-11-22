@@ -135,11 +135,20 @@ namespace JsonApiDotNetCore.Services
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
 
-            var query = _repository.Get(id);
-            query = ApplyInclude(query, chainPrefix: new List<RelationshipAttribute> { relationship });
-            var entity = await _repository.FirstOrDefaultAsync(query);
-            if (entity == null) // this does not make sense. If the parent entity is not found, this error is thrown?
+            var entityQuery = _repository.Get(id);
+
+            entityQuery = ApplyFilter(entityQuery);
+            entityQuery = ApplySort(entityQuery);
+            entityQuery = ApplyInclude(entityQuery, chainPrefix: new List<RelationshipAttribute> { relationship });
+            entityQuery = ApplySelect(entityQuery);
+
+            var entity = await _repository.FirstOrDefaultAsync(entityQuery);
+            if (entity == null)
+            {
+                /// TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
+                /// this error should be thrown when the relationship is not found.
                 throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
+            }
 
             if (!IsNull(_hookExecutor, entity))
             {   // AfterRead and OnReturn resource hook execution.

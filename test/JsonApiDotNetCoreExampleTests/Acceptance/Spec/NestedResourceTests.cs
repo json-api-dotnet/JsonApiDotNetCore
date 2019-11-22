@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -31,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Include_NestedResource_CanInclude()
+        public async Task NestedResourceRoute_IncludeDeeplyNestedRelationship_ReturnsRequestedRelationships()
         {
             // Arrange
             var assignee = _dbContext.Add(_personFaker.Generate()).Entity;
@@ -53,6 +51,27 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(todo.Id, resultTodoItem.Id);
             Assert.Equal(todo.Owner.Id, resultTodoItem.Owner.Id);
             Assert.Equal(todo.Owner.Passport.Id, resultTodoItem.Owner.Passport.Id);
+        }
+
+        [Fact]
+        public async Task NestedResourceRoute_Filter_ReturnsFilteredResources()
+        {
+            // Arrange
+            var assignee = _personFaker.Generate();
+            //var assignee = _dbContext.Add(_personFaker.Generate()).Entity;
+            //var todos = _todoItemFaker.Generate(10).ToList();
+            assignee.AssignedTodoItems = _todoItemFaker.Generate(10).ToList();
+            //assignee.AssignedTodoItems = todos;
+            _dbContext.Add(assignee);
+            var ordinal = assignee.AssignedTodoItems.First().Ordinal;
+
+            // Act
+            var (body, response) = await Get($"/api/v1/people/{assignee.Id}/assignedTodoItems?filter[ordinal]={ordinal}");
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.OK, response);
+            var resultTodoItem = _deserializer.DeserializeList<TodoItemClient>(body).Data.SingleOrDefault();
+            Assert.Equal(assignee.AssignedTodoItems.First().Id, resultTodoItem.Id);
         }
     }
 }
