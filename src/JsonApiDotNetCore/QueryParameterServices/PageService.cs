@@ -28,6 +28,9 @@ namespace JsonApiDotNetCore.Query
         public int CurrentPage { get; set; } = 1;
 
         /// <inheritdoc/>
+        public bool Backwards { get; set; }
+
+        /// <inheritdoc/>
         public int TotalPages => (TotalRecords == null || PageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
 
         /// <inheritdoc/>
@@ -70,7 +73,8 @@ namespace JsonApiDotNetCore.Query
                 }
                 else
                 {
-                    CurrentPage = number;
+                    Backwards = (number < 0);
+                    CurrentPage = Math.Abs(number);
                 }
             }
         }

@@ -25,5 +25,9 @@ namespace JsonApiDotNetCore.Query
         /// Denotes if pagination is possible for the current request
         /// </summary>
         bool CanPaginate { get; }
+        /// <summary>
+        /// Denotes if pagination is backwards
+        /// </summary>
+        bool Backwards { get; }
     }
 }

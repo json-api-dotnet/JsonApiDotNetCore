@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
-        private readonly IPageService _pageManager;
+        private readonly IPageService _pageService;
         private readonly IJsonApiOptions _options;
         private readonly IFilterService _filterService;
         private readonly ISortService _sortService;
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Services
         {
             _includeService = queryParameters.FirstOrDefault<IIncludeService>();
             _sparseFieldsService = queryParameters.FirstOrDefault<ISparseFieldsService>();
-            _pageManager = queryParameters.FirstOrDefault<IPageService>();
+            _pageService = queryParameters.FirstOrDefault<IPageService>();
             _sortService = queryParameters.FirstOrDefault<ISortService>();
             _filterService = queryParameters.FirstOrDefault<IFilterService>();
             _options = options;
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             if (_options.IncludeTotalRecordCount)
-                _pageManager.TotalRecords = await _repository.CountAsync(entityQuery);
+                _pageService.TotalRecords = await _repository.CountAsync(entityQuery);
 
             // pagination should be done last since it will execute the query
             var pagedEntities = await ApplyPageQueryAsync(entityQuery);
@@ -195,19 +195,24 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
         {
-            if (!(_pageManager.PageSize > 0))
+            if (!(_pageService.PageSize > 0))
             {
                 var allEntities = await _repository.ToListAsync(entities);
                 return allEntities as IEnumerable<TResource>;
             }
 
+            int pageOffset = _pageService.CurrentPage;
+            if (_pageService.Backwards)
+            {
+                pageOffset = -pageOffset;
+            }
             if (_logger?.IsEnabled(LogLevel.Information) == true)
             {
-                _logger?.LogInformation($"Applying paging query. Fetching page {_pageManager.CurrentPage} " +
-                    $"with {_pageManager.PageSize} entities");
+                _logger?.LogInformation($"Applying paging query. Fetching page {pageOffset} " +
+                    $"with {_pageService.PageSize} entities");
             }
 
-            return await _repository.PageAsync(entities, _pageManager.PageSize, _pageManager.CurrentPage);
+            return await _repository.PageAsync(entities, _pageService.PageSize, pageOffset);
         }
 
         /// <summary>

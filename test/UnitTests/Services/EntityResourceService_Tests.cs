@@ -6,13 +6,10 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -21,17 +18,10 @@ namespace UnitTests.Services
     public class EntityResourceService_Tests
     {
         private readonly Mock<IResourceRepository<TodoItem>> _repositoryMock = new Mock<IResourceRepository<TodoItem>>();
-        private readonly ILoggerFactory _loggerFactory = new Mock<ILoggerFactory>().Object;
-        private readonly Mock<ICurrentRequest> _crMock;
-        private readonly Mock<IPageService> _pgsMock;
-        private readonly Mock<ITargetedFields> _ufMock;
         private readonly IResourceGraph _resourceGraph;
 
         public EntityResourceService_Tests()
         {
-            _crMock = new Mock<ICurrentRequest>();
-            _pgsMock = new Mock<IPageService>();
-            _ufMock = new Mock<ITargetedFields>();
             _resourceGraph = new ResourceGraphBuilder()
                                 .AddResource<TodoItem>()
                                 .AddResource<TodoItemCollection, Guid>()

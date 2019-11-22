@@ -36,8 +36,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
             }
 
             if (ShouldAddTopLevelLink(primaryResource, Link.Paging) && _pageService.CanPaginate)
-            {
-                
+            {   
                 SetPageLinks(primaryResource, topLevelLinks ??= new TopLevelLinks());
             }
 
@@ -62,11 +61,8 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private void SetPageLinks(ResourceContext primaryResource, TopLevelLinks links)
         {
-            links.Self = GetPageLink(primaryResource, _pageService.CurrentPage, _pageService.PageSize);
-
             if (_pageService.CurrentPage > 1)
             {
-                links.First = GetPageLink(primaryResource, 1, _pageService.PageSize);
                 links.Prev = GetPageLink(primaryResource, _pageService.CurrentPage - 1, _pageService.PageSize);
             }
 
@@ -77,6 +73,8 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
             if (_pageService.TotalPages > 0)
             {
+                links.Self = GetPageLink(primaryResource, _pageService.CurrentPage, _pageService.PageSize);
+                links.First = GetPageLink(primaryResource, 1, _pageService.PageSize);
                 links.Last = GetPageLink(primaryResource, _pageService.TotalPages, _pageService.PageSize);
             }
         }
@@ -88,6 +86,11 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
         private string GetPageLink(ResourceContext primaryResource, int pageOffset, int pageSize)
         {
+            if (_pageService.Backwards)
+            {
+                pageOffset = -pageOffset;
+            }
+
             return $"{GetBasePath()}/{primaryResource.ResourceName}?page[size]={pageSize}&page[number]={pageOffset}";
         }
 
