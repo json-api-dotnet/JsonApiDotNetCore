@@ -87,7 +87,9 @@ namespace UnitTests.Services
 
         private DefaultResourceService<TodoItem> GetService()
         {
-            return new DefaultResourceService<TodoItem>(new List<IQueryParameterService>(), new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
+            var includeService = new Mock<IIncludeService>();
+            includeService.Setup(m => m.Get()).Returns(new List<List<RelationshipAttribute>>());
+            return new DefaultResourceService<TodoItem>(new List<IQueryParameterService>() { includeService.Object }, new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
         }
     }
 }

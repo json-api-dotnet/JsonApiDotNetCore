@@ -274,7 +274,10 @@ namespace JsonApiDotNetCore.Services
             {
                 foreach (var inclusionChain in chains)
                 {
-                    inclusionChain.InsertRange(0, chainPrefix);
+                    if (chainPrefix != null)
+                    {
+                        inclusionChain.InsertRange(0, chainPrefix);
+                    }
                     entities = _repository.Include(entities, inclusionChain.ToArray());
                 }
             }
