@@ -20,7 +20,14 @@ namespace JsonApiDotNetCore.Query
         protected QueryParameterService(IResourceGraph resourceGraph, ICurrentRequest currentRequest)
         {
             _resourceGraph = resourceGraph;
-            _requestResource = currentRequest.GetRequestResource();
+            if (currentRequest.RequestRelationship != null)
+            {
+                _requestResource= resourceGraph.GetResourceContext(currentRequest.RequestRelationship.RightType);
+            }
+            else
+            {
+                _requestResource = currentRequest.GetRequestResource();
+            }
         }
 
         protected QueryParameterService() { }

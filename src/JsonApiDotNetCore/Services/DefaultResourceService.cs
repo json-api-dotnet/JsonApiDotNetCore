@@ -134,8 +134,10 @@ namespace JsonApiDotNetCore.Services
 
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
-            var entityQuery = _repository.Include(_repository.Get(id), new RelationshipAttribute[] { relationship });
-            var entity = await _repository.FirstOrDefaultAsync(entityQuery);
+
+            var query = _repository.Get(id);
+            query = ApplyInclude(query, chainPrefix: new List<RelationshipAttribute> { relationship });
+            var entity = await _repository.FirstOrDefaultAsync(query);
             if (entity == null) // this does not make sense. If the parent entity is not found, this error is thrown?
                 throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
 
@@ -251,12 +253,31 @@ namespace JsonApiDotNetCore.Services
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities)
+        protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> chainPrefix = null)
         {
             var chains = _includeService.Get();
-            if (chains != null && chains.Any())
-                foreach (var r in chains)
-                    entities = _repository.Include(entities, r.ToArray());
+            bool hasInclusionChain = chains.Any();
+
+            if (chains == null)
+            {
+                throw new Exception();
+            }
+
+            if (chainPrefix != null && !hasInclusionChain)
+            {
+               hasInclusionChain = true;
+               chains.Add(new List<RelationshipAttribute>());
+            }
+
+
+            if (hasInclusionChain)
+            {
+                foreach (var inclusionChain in chains)
+                {
+                    inclusionChain.InsertRange(0, chainPrefix);
+                    entities = _repository.Include(entities, inclusionChain.ToArray());
+                }
+            }
 
             return entities;
         }

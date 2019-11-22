@@ -14,6 +14,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
+
     public class CreatingDataTests : FunctionalTestCollection<StandardApplicationFactory>
     {
         private readonly Faker<TodoItem> _todoItemFaker;
