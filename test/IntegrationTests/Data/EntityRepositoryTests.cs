@@ -9,22 +9,13 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-
 
 namespace JADNC.IntegrationTests.Data
 {
     public class EntityRepositoryTests
     {
-
-
-        public EntityRepositoryTests()
-        {
-        }
-
         [Fact]
         public async Task UpdateAsync_AttributesUpdated_ShouldHaveSpecificallyThoseAttributesUpdated()
         {
@@ -138,9 +129,9 @@ namespace JADNC.IntegrationTests.Data
         }
 
         [Theory]
-        [InlineData(6, -1, new[] { 4, 5, 6, 7, 8, 9 })]
-        [InlineData(6, -2, new[] { 1, 2, 3 })]
-        [InlineData(20, -1, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
+        [InlineData(6, -1, new[] { 9, 8, 7, 6, 5, 4 })]
+        [InlineData(6, -2, new[] { 3, 2, 1 })]
+        [InlineData(20, -1, new[] { 9, 8, 7, 6, 5, 4, 3, 2, 1 })]
         public async Task Paging_PageNumberIsNegative_GiveBackReverseAmountOfIds(int pageSize, int pageNumber, int[] expectedIds)
         {
             // Arrange
