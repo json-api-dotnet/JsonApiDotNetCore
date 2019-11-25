@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
+using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -12,7 +14,16 @@ namespace JsonApiDotNetCore.Query
     {
         private readonly IJsonApiOptions _options;
 
-        public PageService(IJsonApiOptions options)
+        public PageService(IJsonApiOptions options, IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
+        {
+            _options = options;
+            PageSize = _options.DefaultPageSize;
+        }
+
+        /// <summary>
+        /// constructor used for unit testing
+        /// </summary>
+        internal PageService(IJsonApiOptions options)
         {
             _options = options;
             PageSize = _options.DefaultPageSize;
@@ -39,6 +50,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
+            EnsureNoNestedResourceRoute();
             // expected input = page[size]=<integer>
             //                  page[number]=<integer > 0>
             var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];

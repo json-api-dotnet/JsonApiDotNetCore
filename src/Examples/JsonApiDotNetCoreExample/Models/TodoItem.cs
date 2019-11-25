@@ -38,7 +38,9 @@ namespace JsonApiDotNetCoreExample.Models
         public DateTimeOffset? OffsetDate { get; set; }
  
         public int? OwnerId { get; set; }
+
         public int? AssigneeId { get; set; }
+
         public Guid? CollectionId { get; set; }
 
         [HasOne]
@@ -49,6 +51,7 @@ namespace JsonApiDotNetCoreExample.Models
 
         [HasOne]
         public virtual Person OneToOnePerson { get; set; }
+
         public virtual int? OneToOnePersonId { get; set; }
 
         [HasMany]
@@ -59,13 +62,16 @@ namespace JsonApiDotNetCoreExample.Models
 
         // cyclical to-one structure
         public virtual int? DependentOnTodoId { get; set; }
+
         [HasOne]
         public virtual TodoItem DependentOnTodo { get; set; }
 
         // cyclical to-many structure
         public virtual int? ParentTodoId {get; set;}
+
         [HasOne]
         public virtual TodoItem ParentTodo { get; set; }
+
         [HasMany]
         public virtual List<TodoItem> ChildrenTodos { get; set; }
     }

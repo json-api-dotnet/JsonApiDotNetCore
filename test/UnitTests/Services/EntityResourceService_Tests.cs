@@ -19,9 +19,21 @@ namespace UnitTests.Services
     {
         private readonly Mock<IResourceRepository<TodoItem>> _repositoryMock = new Mock<IResourceRepository<TodoItem>>();
         private readonly IResourceGraph _resourceGraph;
+        private readonly Mock<IIncludeService> _includeService;
+        private readonly Mock<ISparseFieldsService> _sparseFieldsService;
+        private readonly Mock<IPageService> _pageService;
+
+        public Mock<ISortService> _sortService { get; }
+        public Mock<IFilterService> _filterService { get; }
 
         public EntityResourceService_Tests()
         {
+            _includeService = new Mock<IIncludeService>();
+            _includeService.Setup(m => m.Get()).Returns(new List<List<RelationshipAttribute>>());
+            _sparseFieldsService = new Mock<ISparseFieldsService>();
+            _pageService = new Mock<IPageService>();
+            _sortService = new Mock<ISortService>();
+            _filterService = new Mock<IFilterService>();
             _resourceGraph = new ResourceGraphBuilder()
                                 .AddResource<TodoItem>()
                                 .AddResource<TodoItemCollection, Guid>()
@@ -87,7 +99,13 @@ namespace UnitTests.Services
 
         private DefaultResourceService<TodoItem> GetService()
         {
-            return new DefaultResourceService<TodoItem>(new List<IQueryParameterService>(), new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
+            var queryParamServices = new List<IQueryParameterService>
+            {
+                _includeService.Object, _pageService.Object, _filterService.Object,
+                _sortService.Object, _sparseFieldsService.Object
+            };
+
+            return new DefaultResourceService<TodoItem>(queryParamServices, new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
         }
     }
 }

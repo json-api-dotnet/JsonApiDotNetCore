@@ -9,7 +9,6 @@ namespace JsonApiDotNetCore.Controllers
 {
     public class JsonApiController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-
         /// <param name="jsonApiOptions"></param>
         /// <param name="resourceService"></param>
         /// <param name="loggerFactory"></param>

@@ -45,6 +45,7 @@ namespace JsonApiDotNetCore.Query
         {   // expected: articles?fields=prop1,prop2
             //           articles?fields[articles]=prop1,prop2  <-- this form in invalid UNLESS "articles" is actually a relationship on Article
             //           articles?fields[relationship]=prop1,prop2
+            EnsureNoNestedResourceRoute();
             var fields = new List<string> { nameof(Identifiable.Id) };
             fields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
 
