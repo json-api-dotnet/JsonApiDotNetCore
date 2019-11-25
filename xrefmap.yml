@@ -8950,12 +8950,12 @@ references:
   commentId: T:JsonApiDotNetCore.Query.PageService
   fullName: JsonApiDotNetCore.Query.PageService
   nameWithType: PageService
-- uid: JsonApiDotNetCore.Query.PageService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  name: PageService(IJsonApiOptions)
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_
-  commentId: M:JsonApiDotNetCore.Query.PageService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  fullName: JsonApiDotNetCore.Query.PageService.PageService(JsonApiDotNetCore.Configuration.IJsonApiOptions)
-  nameWithType: PageService.PageService(IJsonApiOptions)
+- uid: JsonApiDotNetCore.Query.PageService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Internal.Contracts.IResourceGraph,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest)
+  name: PageService(IJsonApiOptions, IResourceGraph, ICurrentRequest)
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Internal_Contracts_IResourceGraph_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_
+  commentId: M:JsonApiDotNetCore.Query.PageService.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Internal.Contracts.IResourceGraph,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest)
+  fullName: JsonApiDotNetCore.Query.PageService.PageService(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Internal.Contracts.IResourceGraph, JsonApiDotNetCore.Managers.Contracts.ICurrentRequest)
+  nameWithType: PageService.PageService(IJsonApiOptions, IResourceGraph, ICurrentRequest)
 - uid: JsonApiDotNetCore.Query.PageService.#ctor*
   name: PageService
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService__ctor_
@@ -9094,6 +9094,19 @@ references:
   commentId: F:JsonApiDotNetCore.Query.QueryParameterService._resourceGraph
   fullName: JsonApiDotNetCore.Query.QueryParameterService._resourceGraph
   nameWithType: QueryParameterService._resourceGraph
+- uid: JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute
+  name: EnsureNoNestedResourceRoute()
+  href: api/JsonApiDotNetCore.Query.QueryParameterService.html#JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute
+  commentId: M:JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute
+  fullName: JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute()
+  nameWithType: QueryParameterService.EnsureNoNestedResourceRoute()
+- uid: JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute*
+  name: EnsureNoNestedResourceRoute
+  href: api/JsonApiDotNetCore.Query.QueryParameterService.html#JsonApiDotNetCore_Query_QueryParameterService_EnsureNoNestedResourceRoute_
+  commentId: Overload:JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.QueryParameterService.EnsureNoNestedResourceRoute
+  nameWithType: QueryParameterService.EnsureNoNestedResourceRoute
 - uid: JsonApiDotNetCore.Query.QueryParameterService.GetAttribute(System.String,JsonApiDotNetCore.Models.RelationshipAttribute)
   name: GetAttribute(String, RelationshipAttribute)
   href: api/JsonApiDotNetCore.Query.QueryParameterService.html#JsonApiDotNetCore_Query_QueryParameterService_GetAttribute_System_String_JsonApiDotNetCore_Models_RelationshipAttribute_
@@ -10716,15 +10729,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource, TId).ApplyFilter
   nameWithType: DefaultResourceService<TResource, TId>.ApplyFilter
   nameWithType.vb: DefaultResourceService(Of TResource, TId).ApplyFilter
-- uid: JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude(IQueryable{`0})
-  name: ApplyInclude(IQueryable<TResource>)
-  href: api/JsonApiDotNetCore.Services.DefaultResourceService-2.html#JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyInclude_IQueryable__0__
-  commentId: M:JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude(IQueryable{`0})
-  name.vb: ApplyInclude(IQueryable(Of TResource))
-  fullName: JsonApiDotNetCore.Services.DefaultResourceService<TResource, TId>.ApplyInclude(IQueryable<TResource>)
-  fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource, TId).ApplyInclude(IQueryable(Of TResource))
-  nameWithType: DefaultResourceService<TResource, TId>.ApplyInclude(IQueryable<TResource>)
-  nameWithType.vb: DefaultResourceService(Of TResource, TId).ApplyInclude(IQueryable(Of TResource))
+- uid: JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude(IQueryable{`0},IEnumerable{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name: ApplyInclude(IQueryable<TResource>, IEnumerable<RelationshipAttribute>)
+  href: api/JsonApiDotNetCore.Services.DefaultResourceService-2.html#JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyInclude_IQueryable__0__IEnumerable_JsonApiDotNetCore_Models_RelationshipAttribute__
+  commentId: M:JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude(IQueryable{`0},IEnumerable{JsonApiDotNetCore.Models.RelationshipAttribute})
+  name.vb: ApplyInclude(IQueryable(Of TResource), IEnumerable(Of RelationshipAttribute))
+  fullName: JsonApiDotNetCore.Services.DefaultResourceService<TResource, TId>.ApplyInclude(IQueryable<TResource>, IEnumerable<JsonApiDotNetCore.Models.RelationshipAttribute>)
+  fullName.vb: JsonApiDotNetCore.Services.DefaultResourceService(Of TResource, TId).ApplyInclude(IQueryable(Of TResource), IEnumerable(Of JsonApiDotNetCore.Models.RelationshipAttribute))
+  nameWithType: DefaultResourceService<TResource, TId>.ApplyInclude(IQueryable<TResource>, IEnumerable<RelationshipAttribute>)
+  nameWithType.vb: DefaultResourceService(Of TResource, TId).ApplyInclude(IQueryable(Of TResource), IEnumerable(Of RelationshipAttribute))
 - uid: JsonApiDotNetCore.Services.DefaultResourceService`2.ApplyInclude*
   name: ApplyInclude
   href: api/JsonApiDotNetCore.Services.DefaultResourceService-2.html#JsonApiDotNetCore_Services_DefaultResourceService_2_ApplyInclude_
