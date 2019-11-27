@@ -41,6 +41,7 @@ namespace UnitTests.Middleware
             var resourceContext = new ResourceContext();
 
             mockGraph.Setup(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+
             // Act
             await middleware.Invoke(context, mockMapping.Object, mockOptions.Object, currentRequest, mockGraph.Object);
 

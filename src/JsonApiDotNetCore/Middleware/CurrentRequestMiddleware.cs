@@ -60,7 +60,8 @@ namespace JsonApiDotNetCore.Middleware
 
         private string GetBaseId(PathString pathString)
         {
-            return "hello";
+
+            return "";
         }
         private string GetRelationshipId(PathString pathString)
         {
