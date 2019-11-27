@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
@@ -21,6 +22,7 @@ namespace JsonApiDotNetCore.Middleware
         private ICurrentRequest _currentRequest;
         private IResourceGraph _resourceGraph;
         private IJsonApiOptions _options;
+        private RouteValueDictionary _routeValues;
         private IControllerResourceMapping _controllerResourceMapping;
 
         public CurrentRequestMiddleware(RequestDelegate next)
@@ -39,6 +41,7 @@ namespace JsonApiDotNetCore.Middleware
             _controllerResourceMapping = controllerResourceMapping;
             _resourceGraph = resourceGraph;
             _options = options;
+            _routeValues = httpContext.GetRouteData().Values;
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
             {
@@ -57,11 +60,11 @@ namespace JsonApiDotNetCore.Middleware
 
         private string GetBaseId(PathString pathString)
         {
-
+            return "hello";
         }
         private string GetRelationshipId(PathString pathString)
         {
-
+            return "hello";
         }
 
         private string GetBasePath(string entityName)
@@ -107,7 +110,7 @@ namespace JsonApiDotNetCore.Middleware
 
         protected bool PathIsRelationship()
         {
-            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            var actionName = (string)_routeValues["action"];
             return actionName.ToLower().Contains("relationships");
         }
 
@@ -176,16 +179,21 @@ namespace JsonApiDotNetCore.Middleware
         /// <returns></returns>
         private ResourceContext GetCurrentEntity()
         {
-            var controllerName = (string)_httpContext.GetRouteValue("controller");
+            var controllerName = (string)_routeValues["controller"];
             if (controllerName == null)
+            {
                 return null;
+            }
             var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
             var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
+            {
                 return requestResource;
-            var rd = _httpContext.GetRouteData().Values;
-            if (rd.TryGetValue("relationshipName", out object relationshipName))
+            }
+            if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
+            {
                 _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+            }
             return requestResource;
         }
     }
