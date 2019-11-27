@@ -2,6 +2,8 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -18,11 +20,14 @@ namespace JsonApiDotNetCore.Formatters
     public class JsonApiWriter : IJsonApiWriter
     {
         private readonly ILogger<JsonApiWriter> _logger;
+        private readonly ICurrentRequest _currentRequest;
         private readonly IJsonApiSerializer _serializer;
 
         public JsonApiWriter(IJsonApiSerializer serializer,
-                             ILoggerFactory loggerFactory)
+                             ILoggerFactory loggerFactory,
+                             ICurrentRequest currentRequest)
         {
+            _currentRequest = currentRequest;
             _serializer = serializer;
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
         }
@@ -30,40 +35,57 @@ namespace JsonApiDotNetCore.Formatters
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException(nameof(context));
+            }
 
             var response = context.HttpContext.Response;
             using var writer = context.WriterFactory(response.Body, Encoding.UTF8);
             string responseContent;
 
-            if (_serializer == null)
+            if (response.StatusCode == 404)
             {
-                responseContent = JsonConvert.SerializeObject(context.Object);
+                var requestedModel = _currentRequest.GetRequestResource();
+                var errors = new ErrorCollection();
+                errors.Add(new Error(404, $"The resource with type '{requestedModel.ResourceName}' and id 'unknown' could not be found"));
+                responseContent = _serializer.Serialize(errors);
+                response.StatusCode = 404;
             }
             else
             {
-                response.ContentType = Constants.ContentType;
-                try
+
+                if (_serializer == null)
                 {
-                    if (context.Object is ProblemDetails pd)
+                    responseContent = JsonConvert.SerializeObject(context.Object);
+                }
+                else
+                {
+                    response.ContentType = Constants.ContentType;
+                    try
                     {
+                        if (context.Object is ProblemDetails pd)
+                        {
+                            var errors = new ErrorCollection();
+                            errors.Add(new Error(pd.Status.Value, pd.Title, pd.Detail));
+                            responseContent = _serializer.Serialize(errors);
+
+                        }
+                        else
+                        {
+                            responseContent = _serializer.Serialize(context.Object);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
                         var errors = new ErrorCollection();
-                        errors.Add(new Error(pd.Status.Value, pd.Title, pd.Detail));
+                        errors.Add(new Error(500, e.Message, ErrorMeta.FromException(e)));
                         responseContent = _serializer.Serialize(errors);
-                    } else
-                    {
-                        responseContent = _serializer.Serialize(context.Object);
+                        response.StatusCode = 500;
                     }
                 }
-                catch (Exception e)
-                {
-                    _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
-                    var errors = new ErrorCollection();
-                    errors.Add(new Error(500, e.Message, ErrorMeta.FromException(e)));
-                    responseContent = _serializer.Serialize(errors);
-                    response.StatusCode = 500;
-                }
             }
+
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
         }

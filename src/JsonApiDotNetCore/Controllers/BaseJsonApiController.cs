@@ -101,16 +101,23 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            if (_getById == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_getById == null) {
+                throw Exceptions.UnSupportedRequestMethod;
+            }
             var entity = await _getById.GetAsync(id);
             if (entity == null)
             {
-                // remove the null argument as soon as this has been resolved:
-                // https://github.com/aspnet/AspNetCore/issues/16969
-                return NotFound(null);
+                return NoResultFound();
             }
 
             return Ok(entity);
+        }
+
+        private NotFoundObjectResult NoResultFound()
+        {
+            // remove the null argument as soon as this has been resolved:
+            // https://github.com/aspnet/AspNetCore/issues/16969
+            return NotFound(null);
         }
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
@@ -120,9 +127,7 @@ namespace JsonApiDotNetCore.Controllers
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
             {
-                // remove the null argument as soon as this has been resolved:
-                // https://github.com/aspnet/AspNetCore/issues/16969
-                return NotFound(null);
+                return NoResultFound();
             }
 
             return Ok(relationship);

@@ -48,20 +48,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             public List<ErrorInnerMessage> Errors;
         }
         [Fact]
-        public async Task Resource_UserNonExistent_ShouldReturn404WithCorrectError()
+        public async Task Resource_PersonNonExistent_ShouldReturn404WithCorrectError()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
-            context.People.RemoveRange(context.People.ToList());
             var person = _personFaker.Generate();
             context.People.Add(person);
             await context.SaveChangesAsync();
-            var nonExistentId = person.Id;
+            var nonExistingId = person.Id;
             context.People.Remove(person);
             context.SaveChanges();
 
             var httpMethod = HttpMethod.Get;
-            var route = $"/api/v1/people/{nonExistentId}";
+            var route = $"/api/v1/people/{nonExistingId}";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -73,8 +72,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var errorParsed = errorResult.Errors.First();
             var title = errorParsed.Title;
             var code = errorParsed.Status;
-            Assert.Contains(title, "person");
-            Assert.Contains(title, "found");
+            Assert.Contains("found", title);
+            Assert.Contains("people", title);
+            Assert.Contains(nonExistingId.ToString(), title);
             Assert.Equal("404", code);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -100,7 +100,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             var errorResult = JsonConvert.DeserializeObject<ErrorMessage>(body);
             var title = errorResult.Errors.First().Title;
-            Assert.Contains(title, "todoitem");
             Assert.Contains(title, "found");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
