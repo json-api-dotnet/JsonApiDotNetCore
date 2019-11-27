@@ -52,16 +52,72 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
+            context.People.RemoveRange(context.People.ToList());
+            var person = _personFaker.Generate();
+            context.People.Add(person);
+            await context.SaveChangesAsync();
+            var nonExistentId = person.Id;
+            context.People.Remove(person);
+            context.SaveChanges();
+
+            var httpMethod = HttpMethod.Get;
+            var route = $"/api/v1/people/{nonExistentId}";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            var errorResult = JsonConvert.DeserializeObject<ErrorMessage>(body);
+            var errorParsed = errorResult.Errors.First();
+            var title = errorParsed.Title;
+            var code = errorParsed.Status;
+            Assert.Contains(title, "person");
+            Assert.Contains(title, "found");
+            Assert.Equal("404", code);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+        [Fact]
+        public async Task ResourceRelatedHasOne_TodoItemExistentOwnerIsNonExistent_ShouldReturn200WithNullData()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
             context.TodoItems.RemoveRange(context.TodoItems.ToList());
             var todoItem = _todoItemFaker.Generate();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
-            var nonExistentId = todoItem.Id;
-            context.TodoItems.Remove(todoItem);
-            context.SaveChanges();
+            var existingId = todoItem.Id;
 
-            var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems/{nonExistentId}";
+            var httpMethod = HttpMethod.Get;
+            var route = $"/api/v1/todoItems/{existingId}/people";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            var errorResult = JsonConvert.DeserializeObject<ErrorMessage>(body);
+            var title = errorResult.Errors.First().Title;
+            Assert.Contains(title, "todoitem");
+            Assert.Contains(title, "found");
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ResourceRelatedHasMany_PersonExistsToDoItemDoesNot_ShouldReturn200WithNullData()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems.ToList());
+            var todoItem = _todoItemFaker.Generate();
+            context.TodoItems.Add(todoItem);
+            await context.SaveChangesAsync();
+            var existingId = todoItem.Id;
+
+            var httpMethod = HttpMethod.Get;
+            var route = $"/api/v1/todoItems/{existingId}/people";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
