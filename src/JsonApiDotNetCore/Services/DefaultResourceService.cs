@@ -200,7 +200,7 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
         {
-            if (!(_pageService.PageSize > 0))
+            if (!(_pageService.CurrentPageSize > 0))
             {
                 var allEntities = await _repository.ToListAsync(entities);
                 return allEntities as IEnumerable<TResource>;
@@ -214,10 +214,10 @@ namespace JsonApiDotNetCore.Services
             if (_logger?.IsEnabled(LogLevel.Information) == true)
             {
                 _logger?.LogInformation($"Applying paging query. Fetching page {pageOffset} " +
-                    $"with {_pageService.PageSize} entities");
+                    $"with {_pageService.CurrentPageSize} entities");
             }
 
-            return await _repository.PageAsync(entities, _pageService.PageSize, pageOffset);
+            return await _repository.PageAsync(entities, _pageService.CurrentPageSize, pageOffset);
         }
 
         /// <summary>

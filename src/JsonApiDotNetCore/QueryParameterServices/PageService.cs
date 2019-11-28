@@ -13,11 +13,10 @@ namespace JsonApiDotNetCore.Query
     public class PageService : QueryParameterService, IPageService
     {
         private readonly IJsonApiOptions _options;
-
         public PageService(IJsonApiOptions options, IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
             _options = options;
-            PageSize = _options.DefaultPageSize;
+            DefaultPageSize = _options.DefaultPageSize;
         }
 
         /// <summary>
@@ -26,14 +25,27 @@ namespace JsonApiDotNetCore.Query
         internal PageService(IJsonApiOptions options)
         {
             _options = options;
-            PageSize = _options.DefaultPageSize;
+            DefaultPageSize = _options.DefaultPageSize;
         }
 
         /// <inheritdoc/>
-        public int? TotalRecords { get; set; }
+        public int CurrentPageSize
+        {
+            get
+            {
+                if (RequestedPageSize.HasValue)
+                {
+                    return RequestedPageSize.Value;
+                }
+                return DefaultPageSize;
+            }
+        }
 
         /// <inheritdoc/>
-        public int PageSize { get; set; }
+        public int DefaultPageSize { get; set; }
+
+        /// <inheritdoc/>
+        public int? RequestedPageSize { get; set; }
 
         /// <inheritdoc/>
         public int CurrentPage { get; set; } = 1;
@@ -42,17 +54,20 @@ namespace JsonApiDotNetCore.Query
         public bool Backwards { get; set; }
 
         /// <inheritdoc/>
-        public int TotalPages => (TotalRecords == null || PageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, PageSize));
+        public int TotalPages => (TotalRecords == null || CurrentPageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, CurrentPageSize));
 
         /// <inheritdoc/>
         public bool CanPaginate { get { return TotalPages > 1; } }
+
+        /// <inheritdoc/>
+        public int? TotalRecords { get; set; }
 
         /// <inheritdoc/>
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             EnsureNoNestedResourceRoute();
             // expected input = page[size]=<integer>
-            //                  page[number]=<integer > 0>
+            //                  page[number]=<integer greater than zero> 
             var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             const string SIZE = "size";
@@ -70,7 +85,7 @@ namespace JsonApiDotNetCore.Query
                 }
                 else
                 {
-                    PageSize = size;
+                    RequestedPageSize = size;
                 }
             }
             else if (propertyName == NUMBER)

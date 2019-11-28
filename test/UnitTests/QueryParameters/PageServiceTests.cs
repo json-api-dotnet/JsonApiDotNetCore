@@ -46,7 +46,7 @@ namespace UnitTests.QueryParameters
             else
             {
                 service.Parse(query);
-                Assert.Equal(expectedValue, service.PageSize);
+                Assert.Equal(expectedValue, service.CurrentPageSize);
             }
         }
 
