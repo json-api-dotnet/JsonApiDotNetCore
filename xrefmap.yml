@@ -6298,6 +6298,19 @@ references:
   commentId: T:JsonApiDotNetCore.Managers.Contracts.ICurrentRequest
   fullName: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest
   nameWithType: ICurrentRequest
+- uid: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BaseId
+  name: BaseId
+  href: api/JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html#JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_BaseId
+  commentId: P:JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BaseId
+  fullName: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BaseId
+  nameWithType: ICurrentRequest.BaseId
+- uid: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BaseId*
+  name: BaseId
+  href: api/JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html#JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_BaseId_
+  commentId: Overload:JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BaseId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BaseId
+  nameWithType: ICurrentRequest.BaseId
 - uid: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.BasePath
   name: BasePath
   href: api/JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html#JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_BasePath
@@ -6337,6 +6350,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.IsRelationshipPath
   nameWithType: ICurrentRequest.IsRelationshipPath
+- uid: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RelationshipId
+  name: RelationshipId
+  href: api/JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html#JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_RelationshipId
+  commentId: P:JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RelationshipId
+  fullName: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RelationshipId
+  nameWithType: ICurrentRequest.RelationshipId
+- uid: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RelationshipId*
+  name: RelationshipId
+  href: api/JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html#JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_RelationshipId_
+  commentId: Overload:JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RelationshipId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RelationshipId
+  nameWithType: ICurrentRequest.RelationshipId
 - uid: JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.RequestRelationship
   name: RequestRelationship
   href: api/JsonApiDotNetCore.Managers.Contracts.ICurrentRequest.html#JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_RequestRelationship
