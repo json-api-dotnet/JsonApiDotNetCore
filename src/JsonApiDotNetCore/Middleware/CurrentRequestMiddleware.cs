@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -61,20 +62,55 @@ namespace JsonApiDotNetCore.Middleware
         private string GetBaseId()
         {
             var path = _httpContext.Request.Path.Value;
-            var resourceName = _currentRequest.GetRequestResource().ResourceName;
-            var ns = GetNamespaceFromPath(path, resourceName);
+            var resource = _currentRequest.GetRequestResource();
+            var resourceName = resource.ResourceName;
+            var ns = $"/{GetNameSpace()}";
             var nonNameSpaced = path.Replace(ns, "");
-            var individualComponents = nonNameSpaced.Split('/');
+            nonNameSpaced = nonNameSpaced.Trim('/');
 
-            if(individualComponents[1] != resourceName) {
-                throw new JsonApiException(500, $"Something went wrong in the middleware, we can't find the resourcename:{resourceName} ");
-            }
-            if(individualComponents.Length < 3)
+            var individualComponents = nonNameSpaced.Split('/');
+            if (individualComponents.Length < 2)
             {
                 return null;
             }
+            var toReturn = individualComponents[1];
+
+            CheckIdType(toReturn, resource.IdentityType);
+
+
+
 
             return individualComponents[2];
+        }
+        private void CheckIdType(string value, Type idType)
+        {
+
+            try
+            {
+                var converter = TypeDescriptor.GetConverter(idType);
+                if (converter != null)
+                {
+                    if (!converter.IsValid(value))
+                    {
+                        throw new JsonApiException(500, $"We could not convert the id '{value}'");
+                    }
+                    else
+                    {
+                        if (idType == typeof(int))
+                        {
+                            if ((int)converter.ConvertFromString(value) < 0)
+                            {
+                                throw new JsonApiException(500, "The base ID is an integer, and it is negative.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (NotSupportedException)
+            {
+
+            }
+
         }
         private string GetRelationshipId()
         {
@@ -86,39 +122,15 @@ namespace JsonApiDotNetCore.Middleware
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNamespaceFromPath(r.Path, entityName);
+                return GetNameSpace();
             }
-            return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
+            var ns = GetNameSpace();
+            return $"{r.Scheme}://{r.Host}/{ns}";
         }
 
-        internal static string GetNamespaceFromPath(string path, string entityName)
+        private string GetNameSpace()
         {
-            var entityNameSpan = entityName.AsSpan();
-            var pathSpan = path.AsSpan();
-            const char delimiter = '/';
-            for (var i = 0; i < pathSpan.Length; i++)
-            {
-                if (pathSpan[i].Equals(delimiter))
-                {
-                    var nextPosition = i + 1;
-                    if (pathSpan.Length > i + entityNameSpan.Length)
-                    {
-                        var possiblePathSegment = pathSpan.Slice(nextPosition, entityNameSpan.Length);
-                        if (entityNameSpan.SequenceEqual(possiblePathSegment))
-                        {
-                            // check to see if it's the last position in the string
-                            //   or if the next character is a /
-                            var lastCharacterPosition = nextPosition + entityNameSpan.Length;
-                            if (lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition].Equals(delimiter))
-                            {
-                                return pathSpan.Slice(0, i).ToString();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return string.Empty;
+            return _options.Namespace;
         }
 
         protected bool PathIsRelationship()
