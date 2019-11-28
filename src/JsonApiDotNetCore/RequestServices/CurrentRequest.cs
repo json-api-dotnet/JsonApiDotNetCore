@@ -10,6 +10,8 @@ namespace JsonApiDotNetCore.Managers
         public string BasePath { get; set; }
         public bool IsRelationshipPath { get; set; }
         public RelationshipAttribute RequestRelationship { get; set; }
+        public string BaseId { get; set; }
+        public string RelationshipId { get; set; }
 
         /// <summary>
         /// The main resource of the request.

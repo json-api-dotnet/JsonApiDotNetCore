@@ -29,6 +29,8 @@ namespace JsonApiDotNetCore.Managers.Contracts
         /// is the relationship attribute associated with the targeted relationship
         /// </summary>
         RelationshipAttribute RequestRelationship { get; set; }
+        string BaseId { get; set; }
+        string RelationshipId { get; set; }
 
         /// <summary>
         /// Sets the current context entity for this entire request
