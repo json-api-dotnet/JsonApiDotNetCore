@@ -6,13 +6,17 @@ namespace JsonApiDotNetCore.Query
     public interface IPageService : IQueryParameterService
     {
         /// <summary>
-        /// What the total records are for this output
+        /// Gets the requested or default page size
         /// </summary>
-        int? TotalRecords { get; set; }
+        int CurrentPageSize { get; }
         /// <summary>
-        /// How many records per page should be shown
+        /// Default size to be used in pagination
         /// </summary>
-        int PageSize { get; set; }
+        int DefaultPageSize { get; set; }
+        /// <summary>
+        /// Currently requested page size to be used in pagination
+        /// </summary>
+        int? RequestedPageSize { get; set; }
         /// <summary>
         /// The page requested. Note that the page number is one-based.
         /// </summary>
@@ -29,5 +33,9 @@ namespace JsonApiDotNetCore.Query
         /// Denotes if pagination is backwards
         /// </summary>
         bool Backwards { get; }
+        /// <summary>
+        /// What the total records are for this output
+        /// </summary>
+        int? TotalRecords { get; set; }
     }
 }
