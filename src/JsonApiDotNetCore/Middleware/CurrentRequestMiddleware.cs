@@ -61,30 +61,54 @@ namespace JsonApiDotNetCore.Middleware
 
         private string GetBaseId()
         {
-            var path = _httpContext.Request.Path.Value;
             var resource = _currentRequest.GetRequestResource();
-            var resourceName = resource.ResourceName;
-            var ns = $"/{GetNameSpace()}";
-            var nonNameSpaced = path.Replace(ns, "");
-            nonNameSpaced = nonNameSpaced.Trim('/');
-
-            var individualComponents = nonNameSpaced.Split('/');
+            var individualComponents = SplitCurrentPath();
             if (individualComponents.Length < 2)
             {
                 return null;
             }
-            var toReturn = individualComponents[1];
-
-            CheckIdType(toReturn, resource.IdentityType);
-
-
-
-
-            return individualComponents[2];
+            var indexOfResource = individualComponents.ToList().FindIndex(c => c == resource.ResourceName);
+            var baseId = individualComponents.ElementAtOrDefault(indexOfResource + 1);
+            if (baseId == null)
+            {
+                return null;
+            }
+            CheckIdType(baseId, resource.IdentityType);
+            return baseId;
         }
+        private string GetRelationshipId()
+        {
+            var resource = _currentRequest.GetRequestResource();
+            if (!_currentRequest.IsRelationshipPath)
+            {
+                return null;
+            }
+            var components = SplitCurrentPath();
+            var toReturn = components.ElementAtOrDefault(4);
+
+            if (toReturn == null)
+            {
+                return null;
+            }
+            var relType = _currentRequest.RequestRelationship.RightType;
+            var relResource = _resourceGraph.GetResourceContext(relType);
+            var relIdentityType = relResource.IdentityType;
+            CheckIdType(toReturn, relIdentityType);
+            return toReturn;
+        }
+        private string[] SplitCurrentPath()
+        {
+            var path = _httpContext.Request.Path.Value;
+            var ns = $"/{GetNameSpace()}";
+            var nonNameSpaced = path.Replace(ns, "");
+            nonNameSpaced = nonNameSpaced.Trim('/');
+            var individualComponents = nonNameSpaced.Split('/');
+            return individualComponents;
+        }
+
+
         private void CheckIdType(string value, Type idType)
         {
-
             try
             {
                 var converter = TypeDescriptor.GetConverter(idType);
@@ -112,24 +136,44 @@ namespace JsonApiDotNetCore.Middleware
             }
 
         }
-        private string GetRelationshipId()
-        {
-            return "hello";
-        }
 
-        private string GetBasePath(string entityName)
+        private string GetBasePath(string resourceName = null)
         {
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNameSpace();
+                return GetNameSpace(resourceName);
             }
-            var ns = GetNameSpace();
-            return $"{r.Scheme}://{r.Host}/{ns}";
+            var ns = GetNameSpace(resourceName);
+            var customRoute = GetCustomRoute(r.Path.Value, resourceName);
+            var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
+            if(customRoute != null)
+            {
+                toReturn += $"/{customRoute}";
+            }
+            return toReturn;
         }
 
-        private string GetNameSpace()
+        private object GetCustomRoute(string path, string resourceName)
         {
+            var ns = GetNameSpace();
+            var trimmedComponents = path.Trim('/').Split('/').ToList();
+            var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+            var newComponents = trimmedComponents.Take(resourceNameIndex ).ToArray();
+            var customRoute = string.Join('/', newComponents);
+            if(customRoute == ns)
+            {
+                return null;
+            }
+            else
+            {
+                return customRoute;
+            }
+        }
+
+        private string GetNameSpace(string resourceName = null)
+        {
+
             return _options.Namespace;
         }
 

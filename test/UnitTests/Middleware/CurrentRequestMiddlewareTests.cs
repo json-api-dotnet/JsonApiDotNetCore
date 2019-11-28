@@ -1,8 +1,11 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
@@ -10,6 +13,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,118 +23,81 @@ namespace UnitTests.Middleware
     public class CurrentRequestMiddlewareTests
     {
         [Fact]
-        public async Task ParseUrl_UrlHasBaseIdSet_ShouldSetCurrentRequestWithSaidId()
+        public async Task ParseUrlBase_UrlHasBaseIdSet_ShouldSetCurrentRequestWithSaidId()
         {
             // Arrange
-            var middleware = new CurrentRequestMiddleware((context) =>
-            {
-                return Task.Run(() => Console.WriteLine("finished"));
-            });
-            var mockMapping = new Mock<IControllerResourceMapping>();
-            var mockOptions = new Mock<IJsonApiOptions>();
-            var mockGraph = new Mock<IResourceGraph>();
-            var currentRequest = new CurrentRequest();
-            var context = new DefaultHttpContext();
-            var id = 1231;
-            context.Request.Path = new PathString($"/api/v1/users/{id}");
-            context.Response.Body = new MemoryStream();
-            var feature = new RouteValuesFeature();
-            feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = "noRel";
-            context.Features.Set<IRouteValuesFeature>(feature);
-            var resourceContext = new ResourceContext();
-            resourceContext.ResourceName = "users";
-            mockGraph.Setup(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+            var id = "123";
+            var configuration = GetConfiguration($"/users/{id}");
+            var currentRequest = configuration.CurrentRequest;
 
             // Act
-            await middleware.Invoke(context, mockMapping.Object, mockOptions.Object, currentRequest, mockGraph.Object);
+            await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id.ToString(), currentRequest.BaseId);
+            Assert.Equal(id, currentRequest.BaseId);
         }
 
         [Fact]
-        public async Task ParseUrl_UrlHasNoBaseIdSet_ShouldHaveBaseIdSetToNull()
+        public async Task ParseUrlBase_UrlHasNoBaseIdSet_ShouldHaveBaseIdSetToNull()
         {
             // Arrange
-            var middleware = new CurrentRequestMiddleware((context) =>
-            {
-                return Task.Run(() => Console.WriteLine("finished"));
-            });
-            var mockMapping = new Mock<IControllerResourceMapping>();
-            var mockOptions = new Mock<IJsonApiOptions>();
-            var mockGraph = new Mock<IResourceGraph>();
-            var currentRequest = new CurrentRequest();
-            var context = new DefaultHttpContext();
-            var id = 1231;
-            context.Request.Path = new PathString($"/api/v1/users");
-            context.Response.Body = new MemoryStream();
-            var feature = new RouteValuesFeature();
-            feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = "noRel";
-            context.Features.Set<IRouteValuesFeature>(feature);
-            var resourceContext = new ResourceContext
-            {
-                ResourceName = "users"
-            };
-            mockGraph.Setup(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+            var configuration = GetConfiguration("/users");
+            var currentRequest = configuration.CurrentRequest;
 
             // Act
-            await middleware.Invoke(context, mockMapping.Object, mockOptions.Object, currentRequest, mockGraph.Object);
+            await RunMiddlewareTask(configuration);
 
             // Assert
             Assert.Null(currentRequest.BaseId);
         }
         [Fact]
-        public async Task ParseUrl_UrlHasRelationshipIdSet_ShouldHaveBaseIdAndRelationshipIdSet()
+        public async Task ParseUrlRel_UrlHasRelationshipIdSet_ShouldHaveBaseIdAndRelationshipIdSet()
         {
             // Arrange
-            var middleware = new CurrentRequestMiddleware((context) =>
-            {
-                return Task.Run(() => Console.WriteLine("finished"));
-            });
-            var mockMapping = new Mock<IControllerResourceMapping>();
-            var mockOptions = new Mock<IJsonApiOptions>();
-            var mockGraph = new Mock<IResourceGraph>();
-            var currentRequest = new CurrentRequest();
-            var context = new DefaultHttpContext();
-            var id = 1231;
-            var relId = 7654;
-            context.Request.Path = new PathString($"/api/v1/users/");
-            context.Response.Body = new MemoryStream();
-            var feature = new RouteValuesFeature();
-            feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = "noRel";
-            context.Features.Set<IRouteValuesFeature>(feature);
-            var resourceContext = new ResourceContext
-            {
-                ResourceName = "users"
-            };
-            mockGraph.Setup(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+            var baseId = "5";
+            var relId = "23";
+            var configuration = GetConfiguration($"/users/{baseId}/relationships/books/{relId}", relType: typeof(TodoItem), relIdType: typeof(int));
+            var currentRequest = configuration.CurrentRequest;
 
             // Act
-            await middleware.Invoke(context, mockMapping.Object, mockOptions.Object, currentRequest, mockGraph.Object);
+            await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id.ToString(), currentRequest.BaseId);
-            Assert.Equal(relId.ToString(), currentRequest.RelationshipId);
+            Assert.Equal(baseId, currentRequest.BaseId);
+            Assert.Equal(relId, currentRequest.RelationshipId);
+        }
+
+        [Fact]
+        public async Task ParseUrlBase_UrlHasNegativeBaseIdAndTypeIsInt_ShouldThrowJAException()
+        {
+            // Arrange
+            var configuration = GetConfiguration("/users/-5/");
+
+            // Act
+            var task = RunMiddlewareTask(configuration);
+
+            // Assert
+            var exception = await Assert.ThrowsAsync<JsonApiException>(async () =>
+            {
+                await task;
+            });
+            Assert.Equal(500, exception.GetStatusCode());
+            Assert.Contains("negative", exception.Message);
         }
 
         [Theory]
         [InlineData("12315K", typeof(int), true)]
         [InlineData("12315K", typeof(int), false)]
-        [InlineData("-5", typeof(int), true)]
-        [InlineData("-5", typeof(int), false)]
         [InlineData("5", typeof(Guid), true)]
         [InlineData("5", typeof(Guid), false)]
-        public async Task ParseUrl_UrlHasIncorrectBaseIdSet_ShouldThrowException(string baseId, Type idType, bool addSlash)
+        public async Task ParseUrlBase_UrlHasIncorrectBaseIdSet_ShouldThrowException(string baseId, Type idType, bool addSlash)
         {
             // Arrange
             var url = addSlash ? $"/users/{baseId}/" : $"/users/{baseId}";
-            var configuration = Setup(url, idType: idType);
+            var configuration = GetConfiguration(url, idType: idType);
 
             // Act
-            var task = PrepareTask(configuration);
+            var task = RunMiddlewareTask(configuration);
 
             // Assert
             var exception = await Assert.ThrowsAsync<JsonApiException>(async () =>
@@ -150,7 +117,7 @@ namespace UnitTests.Middleware
             public CurrentRequest CurrentRequest;
             public Mock<IResourceGraph> ResourceGraph;
         }
-        private Task PrepareTask(InvokeConfiguration holder)
+        private Task RunMiddlewareTask(InvokeConfiguration holder)
         {
             var controllerResourceMapping = holder.ControllerResourcemapping.Object;
             var context = holder.HttpContext;
@@ -159,8 +126,16 @@ namespace UnitTests.Middleware
             var resourceGraph = holder.ResourceGraph.Object;
             return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, currentRequest, resourceGraph);
         }
-        private InvokeConfiguration Setup(string path, Type idType = null)
+        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", Type idType = null, Type relType = null, Type relIdType = null)
         {
+            if((relType != null) != (relIdType != null))
+            {
+                throw new ArgumentException("Define both reltype and relidType or dont.");
+            }
+            if (path.First() != '/')
+            {
+                throw new ArgumentException("Path should start with a '/'");
+            }
             idType ??= typeof(int);
             var middleware = new CurrentRequestMiddleware((context) =>
             {
@@ -169,9 +144,16 @@ namespace UnitTests.Middleware
             var forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
-            var mockGraph = CreateMockResourceGraph();
+            var mockGraph = CreateMockResourceGraph(idType, resourceName, relIdType : relIdType);
             var currentRequest = new CurrentRequest();
-            var context = CreateHttpContext(path);
+            if (relType != null && relIdType != null)
+            {
+                currentRequest.RequestRelationship = new HasManyAttribute
+                {
+                    RightType = relType
+                };
+            }
+            var context = CreateHttpContext(path, isRelationship: relType != null);
             return new InvokeConfiguration
             {
                 MiddleWare = middleware,
@@ -190,26 +172,36 @@ namespace UnitTests.Middleware
             return mockOptions;
         }
 
-        private static DefaultHttpContext CreateHttpContext(string path)
+        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false)
         {
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString(path);
             context.Response.Body = new MemoryStream();
             var feature = new RouteValuesFeature();
             feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = "noRel";
+            feature.RouteValues["action"] = isRelationship ? "relationships" : "noRel";
             context.Features.Set<IRouteValuesFeature>(feature);
             return context;
         }
 
-        private Mock<IResourceGraph> CreateMockResourceGraph()
+        private Mock<IResourceGraph> CreateMockResourceGraph(Type idType, string resourceName, Type relIdType = null)
         {
             var mockGraph = new Mock<IResourceGraph>();
             var resourceContext = new ResourceContext
             {
-                ResourceName = "users"
+                ResourceName = resourceName,
+                IdentityType = idType
             };
-            mockGraph.Setup(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+             var seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+            if (relIdType != null)
+            {
+                var relResourceContext = new ResourceContext
+                {
+                    ResourceName = "todoItems",
+                    IdentityType = relIdType
+                };
+                seq.Returns(relResourceContext);
+            }
             return mockGraph;
         }
 
