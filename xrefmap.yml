@@ -8743,19 +8743,45 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.IPageService.CurrentPage
   nameWithType: IPageService.CurrentPage
-- uid: JsonApiDotNetCore.Query.IPageService.PageSize
-  name: PageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_PageSize
-  commentId: P:JsonApiDotNetCore.Query.IPageService.PageSize
-  fullName: JsonApiDotNetCore.Query.IPageService.PageSize
-  nameWithType: IPageService.PageSize
-- uid: JsonApiDotNetCore.Query.IPageService.PageSize*
-  name: PageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_PageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.IPageService.PageSize
+- uid: JsonApiDotNetCore.Query.IPageService.CurrentPageSize
+  name: CurrentPageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CurrentPageSize
+  commentId: P:JsonApiDotNetCore.Query.IPageService.CurrentPageSize
+  fullName: JsonApiDotNetCore.Query.IPageService.CurrentPageSize
+  nameWithType: IPageService.CurrentPageSize
+- uid: JsonApiDotNetCore.Query.IPageService.CurrentPageSize*
+  name: CurrentPageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CurrentPageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.IPageService.CurrentPageSize
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IPageService.PageSize
-  nameWithType: IPageService.PageSize
+  fullName: JsonApiDotNetCore.Query.IPageService.CurrentPageSize
+  nameWithType: IPageService.CurrentPageSize
+- uid: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
+  name: DefaultPageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_DefaultPageSize
+  commentId: P:JsonApiDotNetCore.Query.IPageService.DefaultPageSize
+  fullName: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
+  nameWithType: IPageService.DefaultPageSize
+- uid: JsonApiDotNetCore.Query.IPageService.DefaultPageSize*
+  name: DefaultPageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_DefaultPageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.IPageService.DefaultPageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
+  nameWithType: IPageService.DefaultPageSize
+- uid: JsonApiDotNetCore.Query.IPageService.RequestedPageSize
+  name: RequestedPageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_RequestedPageSize
+  commentId: P:JsonApiDotNetCore.Query.IPageService.RequestedPageSize
+  fullName: JsonApiDotNetCore.Query.IPageService.RequestedPageSize
+  nameWithType: IPageService.RequestedPageSize
+- uid: JsonApiDotNetCore.Query.IPageService.RequestedPageSize*
+  name: RequestedPageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_RequestedPageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.IPageService.RequestedPageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.IPageService.RequestedPageSize
+  nameWithType: IPageService.RequestedPageSize
 - uid: JsonApiDotNetCore.Query.IPageService.TotalPages
   name: TotalPages
   href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_TotalPages
@@ -9028,19 +9054,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.CurrentPage
   nameWithType: PageService.CurrentPage
-- uid: JsonApiDotNetCore.Query.PageService.PageSize
-  name: PageSize
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_PageSize
-  commentId: P:JsonApiDotNetCore.Query.PageService.PageSize
-  fullName: JsonApiDotNetCore.Query.PageService.PageSize
-  nameWithType: PageService.PageSize
-- uid: JsonApiDotNetCore.Query.PageService.PageSize*
-  name: PageSize
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_PageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.PageService.PageSize
+- uid: JsonApiDotNetCore.Query.PageService.CurrentPageSize
+  name: CurrentPageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CurrentPageSize
+  commentId: P:JsonApiDotNetCore.Query.PageService.CurrentPageSize
+  fullName: JsonApiDotNetCore.Query.PageService.CurrentPageSize
+  nameWithType: PageService.CurrentPageSize
+- uid: JsonApiDotNetCore.Query.PageService.CurrentPageSize*
+  name: CurrentPageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CurrentPageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.PageService.CurrentPageSize
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.PageService.PageSize
-  nameWithType: PageService.PageSize
+  fullName: JsonApiDotNetCore.Query.PageService.CurrentPageSize
+  nameWithType: PageService.CurrentPageSize
+- uid: JsonApiDotNetCore.Query.PageService.DefaultPageSize
+  name: DefaultPageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_DefaultPageSize
+  commentId: P:JsonApiDotNetCore.Query.PageService.DefaultPageSize
+  fullName: JsonApiDotNetCore.Query.PageService.DefaultPageSize
+  nameWithType: PageService.DefaultPageSize
+- uid: JsonApiDotNetCore.Query.PageService.DefaultPageSize*
+  name: DefaultPageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_DefaultPageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.PageService.DefaultPageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.PageService.DefaultPageSize
+  nameWithType: PageService.DefaultPageSize
 - uid: JsonApiDotNetCore.Query.PageService.Parse(KeyValuePair{System.String,StringValues})
   name: Parse(KeyValuePair<String, StringValues>)
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_Parse_KeyValuePair_System_String_StringValues__
@@ -9057,6 +9096,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.Parse
   nameWithType: PageService.Parse
+- uid: JsonApiDotNetCore.Query.PageService.RequestedPageSize
+  name: RequestedPageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_RequestedPageSize
+  commentId: P:JsonApiDotNetCore.Query.PageService.RequestedPageSize
+  fullName: JsonApiDotNetCore.Query.PageService.RequestedPageSize
+  nameWithType: PageService.RequestedPageSize
+- uid: JsonApiDotNetCore.Query.PageService.RequestedPageSize*
+  name: RequestedPageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_RequestedPageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.PageService.RequestedPageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.PageService.RequestedPageSize
+  nameWithType: PageService.RequestedPageSize
 - uid: JsonApiDotNetCore.Query.PageService.TotalPages
   name: TotalPages
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_TotalPages
