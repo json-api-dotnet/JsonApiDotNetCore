@@ -45,11 +45,11 @@ namespace JsonApiDotNetCore.Middleware
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
             {
-                _currentRequest.SetRequestResource(GetCurrentEntity());
+                _currentRequest.SetRequestResource(requestResource);
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
-                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().ResourceName);
-                _currentRequest.BaseId = GetBaseId(httpContext.Request.Path);
-                _currentRequest.RelationshipId = GetRelationshipId(httpContext.Request.Path);
+                _currentRequest.BasePath = GetBasePath(requestResource.ResourceName);
+                _currentRequest.BaseId = GetBaseId();
+                _currentRequest.RelationshipId = GetRelationshipId();
             }
 
             if (IsValid())
@@ -58,12 +58,25 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private string GetBaseId(PathString pathString)
+        private string GetBaseId()
         {
+            var path = _httpContext.Request.Path.Value;
+            var resourceName = _currentRequest.GetRequestResource().ResourceName;
+            var ns = GetNamespaceFromPath(path, resourceName);
+            var nonNameSpaced = path.Replace(ns, "");
+            var individualComponents = nonNameSpaced.Split('/');
 
-            return "";
+            if(individualComponents[1] != resourceName) {
+                throw new JsonApiException(500, $"Something went wrong in the middleware, we can't find the resourcename:{resourceName} ");
+            }
+            if(individualComponents.Length < 3)
+            {
+                return null;
+            }
+
+            return individualComponents[2];
         }
-        private string GetRelationshipId(PathString pathString)
+        private string GetRelationshipId()
         {
             return "hello";
         }
@@ -96,7 +109,6 @@ namespace JsonApiDotNetCore.Middleware
                             // check to see if it's the last position in the string
                             //   or if the next character is a /
                             var lastCharacterPosition = nextPosition + entityNameSpan.Length;
-
                             if (lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition].Equals(delimiter))
                             {
                                 return pathSpan.Slice(0, i).ToString();
@@ -139,7 +151,9 @@ namespace JsonApiDotNetCore.Middleware
             foreach (var acceptHeader in acceptHeaders)
             {
                 if (ContainsMediaTypeParameters(acceptHeader) == false)
+                {
                     continue;
+                }
 
                 FlushResponse(context, 406);
                 return false;
