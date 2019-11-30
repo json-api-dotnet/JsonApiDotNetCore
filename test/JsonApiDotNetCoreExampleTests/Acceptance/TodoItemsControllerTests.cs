@@ -294,7 +294,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotEmpty(deserializedBody);
 
             foreach (var todoItemResult in deserializedBody)
-                Assert.Contains(substring, todoItem.Description);
+                Assert.Contains(substring, todoItemResult.Description);
         }
 
         [Fact]
