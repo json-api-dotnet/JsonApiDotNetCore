@@ -63,7 +63,11 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (_routeValues.TryGetValue("id", out object stringId))
             {
-                return (string) stringId;
+                if ((string)stringId == string.Empty)
+                {
+                    throw new JsonApiException(400, "No empty string as id please.");
+                }
+                return (string)stringId;
             }
             else
             {

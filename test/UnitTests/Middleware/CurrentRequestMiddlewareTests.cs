@@ -42,7 +42,7 @@ namespace UnitTests.Middleware
         {
             // Arrange
             var id = "123";
-            var configuration = GetConfiguration($"/users/{id}");
+            var configuration = GetConfiguration($"/users/{id}", id: id);
             var currentRequest = configuration.CurrentRequest;
 
             // Act
@@ -65,51 +65,25 @@ namespace UnitTests.Middleware
             // Assert
             Assert.Null(currentRequest.BaseId);
         }
-        [Fact]
-        public async Task ParseUrlRel_UrlHasRelationshipIdSet_ShouldHaveBaseIdAndRelationshipIdSet()
-        {
-            // Arrange
-            var baseId = "5";
-            var relId = "23";
-            var configuration = GetConfiguration($"/users/{baseId}/relationships/books/{relId}", relType: typeof(TodoItem), relIdType: typeof(int));
-            var currentRequest = configuration.CurrentRequest;
-
-            // Act
-            await RunMiddlewareTask(configuration);
-
-            // Assert
-            Assert.Equal(baseId, currentRequest.BaseId);
-            Assert.Equal(relId, currentRequest.RelationshipId);
-        }
 
         [Fact]
-        public async Task ParseUrlBase_UrlHasNegativeBaseIdAndTypeIsInt_ShouldThrowJAException()
+        public async Task ParseUrlBase_UrlHasNegativeBaseIdAndTypeIsInt_ShouldNotThrowJAException()
         {
             // Arrange
             var configuration = GetConfiguration("/users/-5/");
 
-            // Act
-            var task = RunMiddlewareTask(configuration);
-
-            // Assert
-            var exception = await Assert.ThrowsAsync<JsonApiException>(async () =>
-            {
-                await task;
-            });
-            Assert.Equal(500, exception.GetStatusCode());
-            Assert.Contains("negative", exception.Message);
+            // Act / Assert
+            await RunMiddlewareTask(configuration);
         }
 
         [Theory]
-        [InlineData("12315K", typeof(int), true)]
-        [InlineData("12315K", typeof(int), false)]
-        [InlineData("5", typeof(Guid), true)]
-        [InlineData("5", typeof(Guid), false)]
-        public async Task ParseUrlBase_UrlHasIncorrectBaseIdSet_ShouldThrowException(string baseId, Type idType, bool addSlash)
+        [InlineData("", false)]
+        [InlineData("", true)]
+        public async Task ParseUrlBase_UrlHasIncorrectBaseIdSet_ShouldThrowException(string baseId, bool addSlash)
         {
             // Arrange
             var url = addSlash ? $"/users/{baseId}/" : $"/users/{baseId}";
-            var configuration = GetConfiguration(url, idType: idType);
+            var configuration = GetConfiguration(url, id: baseId);
 
             // Act
             var task = RunMiddlewareTask(configuration);
@@ -119,7 +93,7 @@ namespace UnitTests.Middleware
             {
                 await task;
             });
-            Assert.Equal(500, exception.GetStatusCode());
+            Assert.Equal(400, exception.GetStatusCode());
             Assert.Contains(baseId, exception.Message);
         }
 
@@ -141,17 +115,12 @@ namespace UnitTests.Middleware
             var resourceGraph = holder.ResourceGraph.Object;
             return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, currentRequest, resourceGraph);
         }
-        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", Type idType = null, string action = "", string id =null, Type relType = null, Type relIdType = null)
+        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id =null, Type relType = null)
         {
-            if((relType != null) != (relIdType != null))
-            {
-                throw new ArgumentException("Define both reltype and relidType or dont.");
-            }
             if (path.First() != '/')
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
-            idType ??= typeof(int);
             var middleware = new CurrentRequestMiddleware((context) =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
@@ -159,9 +128,9 @@ namespace UnitTests.Middleware
             var forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
-            var mockGraph = CreateMockResourceGraph(idType, resourceName, relIdType : relIdType);
+            var mockGraph = CreateMockResourceGraph(resourceName, includeRelationship: relType != null);
             var currentRequest = new CurrentRequest();
-            if (relType != null && relIdType != null)
+            if (relType != null)
             {
                 currentRequest.RequestRelationship = new HasManyAttribute
                 {
@@ -203,21 +172,21 @@ namespace UnitTests.Middleware
             return context;
         }
 
-        private Mock<IResourceGraph> CreateMockResourceGraph(Type idType, string resourceName, Type relIdType = null)
+        private Mock<IResourceGraph> CreateMockResourceGraph( string resourceName, bool includeRelationship = false)
         {
             var mockGraph = new Mock<IResourceGraph>();
             var resourceContext = new ResourceContext
             {
                 ResourceName = resourceName,
-                IdentityType = idType
+                IdentityType = typeof(string)
             };
              var seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
-            if (relIdType != null)
+            if (includeRelationship)
             {
                 var relResourceContext = new ResourceContext
                 {
                     ResourceName = "todoItems",
-                    IdentityType = relIdType
+                    IdentityType = typeof(string)
                 };
                 seq.Returns(relResourceContext);
             }
