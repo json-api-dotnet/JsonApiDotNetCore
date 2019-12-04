@@ -23,6 +23,21 @@ namespace UnitTests.Middleware
     public class CurrentRequestMiddlewareTests
     {
         [Fact]
+        public async Task ParseUrlBase_ObfuscatedIdClass_ShouldSetIdCorrectly()
+        {
+            // Arrange
+            var id = "ABC123ABC";
+            var configuration = GetConfiguration($"/obfuscatedIdModel/{id}", action: "GetAsync", id: id);
+            var currentRequest = configuration.CurrentRequest;
+
+            // Act
+            await RunMiddlewareTask(configuration);
+
+            // Assert
+            Assert.Equal(id, currentRequest.BaseId);
+
+        }
+        [Fact]
         public async Task ParseUrlBase_UrlHasBaseIdSet_ShouldSetCurrentRequestWithSaidId()
         {
             // Arrange
@@ -126,7 +141,7 @@ namespace UnitTests.Middleware
             var resourceGraph = holder.ResourceGraph.Object;
             return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, currentRequest, resourceGraph);
         }
-        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", Type idType = null, Type relType = null, Type relIdType = null)
+        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", Type idType = null, string action = "", string id =null, Type relType = null, Type relIdType = null)
         {
             if((relType != null) != (relIdType != null))
             {
@@ -153,7 +168,7 @@ namespace UnitTests.Middleware
                     RightType = relType
                 };
             }
-            var context = CreateHttpContext(path, isRelationship: relType != null);
+            var context = CreateHttpContext(path, isRelationship: relType != null, action: action, id: id);
             return new InvokeConfiguration
             {
                 MiddleWare = middleware,
@@ -172,14 +187,18 @@ namespace UnitTests.Middleware
             return mockOptions;
         }
 
-        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false)
+        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id =null)
         {
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString(path);
             context.Response.Body = new MemoryStream();
             var feature = new RouteValuesFeature();
             feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = isRelationship ? "relationships" : "noRel";
+            feature.RouteValues["action"] = isRelationship ? "GetRelationship" : action;
+            if(id != null)
+            {
+                feature.RouteValues["id"] = id;
+            }
             context.Features.Set<IRouteValuesFeature>(feature);
             return context;
         }

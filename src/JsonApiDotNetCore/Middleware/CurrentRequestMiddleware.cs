@@ -61,20 +61,14 @@ namespace JsonApiDotNetCore.Middleware
 
         private string GetBaseId()
         {
-            var resource = _currentRequest.GetRequestResource();
-            var individualComponents = SplitCurrentPath();
-            if (individualComponents.Length < 2)
+            if (_routeValues.TryGetValue("id", out object stringId))
+            {
+                return (string) stringId;
+            }
+            else
             {
                 return null;
             }
-            var indexOfResource = individualComponents.ToList().FindIndex(c => c == resource.ResourceName);
-            var baseId = individualComponents.ElementAtOrDefault(indexOfResource + 1);
-            if (baseId == null)
-            {
-                return null;
-            }
-            CheckIdType(baseId, resource.IdentityType);
-            return baseId;
         }
         private string GetRelationshipId()
         {
@@ -93,7 +87,6 @@ namespace JsonApiDotNetCore.Middleware
             var relType = _currentRequest.RequestRelationship.RightType;
             var relResource = _resourceGraph.GetResourceContext(relType);
             var relIdentityType = relResource.IdentityType;
-            CheckIdType(toReturn, relIdentityType);
             return toReturn;
         }
         private string[] SplitCurrentPath()
@@ -106,37 +99,6 @@ namespace JsonApiDotNetCore.Middleware
             return individualComponents;
         }
 
-
-        private void CheckIdType(string value, Type idType)
-        {
-            try
-            {
-                var converter = TypeDescriptor.GetConverter(idType);
-                if (converter != null)
-                {
-                    if (!converter.IsValid(value))
-                    {
-                        throw new JsonApiException(500, $"We could not convert the id '{value}'");
-                    }
-                    else
-                    {
-                        if (idType == typeof(int))
-                        {
-                            if ((int)converter.ConvertFromString(value) < 0)
-                            {
-                                throw new JsonApiException(500, "The base ID is an integer, and it is negative.");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (NotSupportedException)
-            {
-
-            }
-
-        }
-
         private string GetBasePath(string resourceName = null)
         {
             var r = _httpContext.Request;
@@ -147,7 +109,7 @@ namespace JsonApiDotNetCore.Middleware
             var ns = GetNameSpace(resourceName);
             var customRoute = GetCustomRoute(r.Path.Value, resourceName);
             var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
-            if(customRoute != null)
+            if (customRoute != null)
             {
                 toReturn += $"/{customRoute}";
             }
@@ -159,9 +121,9 @@ namespace JsonApiDotNetCore.Middleware
             var ns = GetNameSpace();
             var trimmedComponents = path.Trim('/').Split('/').ToList();
             var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
-            var newComponents = trimmedComponents.Take(resourceNameIndex ).ToArray();
+            var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
             var customRoute = string.Join('/', newComponents);
-            if(customRoute == ns)
+            if (customRoute == ns)
             {
                 return null;
             }
