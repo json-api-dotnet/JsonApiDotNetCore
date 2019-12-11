@@ -2,12 +2,12 @@
   <PropertyGroup>
     <NetCoreAppVersion>netcoreapp3.0</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.1</NetStandardVersion>
-    <AspNetCoreVersion>3.*</AspNetCoreVersion>
-    <MicrosoftLoggingVersion>3.*</MicrosoftLoggingVersion>
-    <MicrosoftConfigurationVersion>3.*</MicrosoftConfigurationVersion>
-    <MicrosoftOptionsVersion>3.*</MicrosoftOptionsVersion>
-    <EFCoreVersion>3.*</EFCoreVersion>
-    <EFCoreToolsVersion>3.*</EFCoreToolsVersion>
+    <AspNetCoreVersion>3.0</AspNetCoreVersion>
+    <MicrosoftLoggingVersion>3.0.*</MicrosoftLoggingVersion>
+    <MicrosoftConfigurationVersion>3.0.*</MicrosoftConfigurationVersion>
+    <MicrosoftOptionsVersion>3.0.*</MicrosoftOptionsVersion>
+    <EFCoreVersion>3.0.*</EFCoreVersion>
+    <EFCoreToolsVersion>3.0.*</EFCoreToolsVersion>
     <NpgsqlVersion>4.1.1</NpgsqlVersion>
     <NpgsqlPostgreSQLVersion>3.0.1</NpgsqlPostgreSQLVersion>
     <TuplesVersion>4.5.0</TuplesVersion>
