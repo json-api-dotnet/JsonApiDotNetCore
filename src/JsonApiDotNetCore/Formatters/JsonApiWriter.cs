@@ -47,13 +47,12 @@ namespace JsonApiDotNetCore.Formatters
             {
                 var requestedModel = _currentRequest.GetRequestResource();
                 var errors = new ErrorCollection();
-                errors.Add(new Error(404, $"The resource with type '{requestedModel.ResourceName}' and id 'unknown' could not be found"));
+                errors.Add(new Error(404, $"The resource with type '{requestedModel.ResourceName}' and id '{_currentRequest.BaseId}' could not be found"));
                 responseContent = _serializer.Serialize(errors);
                 response.StatusCode = 404;
             }
             else
             {
-
                 if (_serializer == null)
                 {
                     responseContent = JsonConvert.SerializeObject(context.Object);
@@ -68,7 +67,6 @@ namespace JsonApiDotNetCore.Formatters
                             var errors = new ErrorCollection();
                             errors.Add(new Error(pd.Status.Value, pd.Title, pd.Detail));
                             responseContent = _serializer.Serialize(errors);
-
                         }
                         else
                         {

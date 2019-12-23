@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             ClearDbContext();
         }
 
-        protected Task<(string, HttpResponseMessage)> Get(string route)
+        protected Task<(string Body, HttpResponseMessage Response)> Get(string route)
         {
             return SendRequest("GET", route);
         }
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _dbContext.SaveChanges();
         }
 
-        private async Task<(string, HttpResponseMessage)> SendRequest(string method, string route, string content = null)
+        private async Task<(string body, HttpResponseMessage response)> SendRequest(string method, string route, string content = null)
         {
             var request = new HttpRequestMessage(new HttpMethod(method), route);
             if (content != null)

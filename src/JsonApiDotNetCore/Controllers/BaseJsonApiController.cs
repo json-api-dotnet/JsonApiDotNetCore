@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -23,7 +25,7 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IDeleteService<T, TId> _delete;
         private readonly ILogger<BaseJsonApiController<T, TId>> _logger;
         private readonly IJsonApiOptions _jsonApiOptions;
-        
+
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceService<T, TId> resourceService,
@@ -101,7 +103,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            if (_getById == null) {
+            if (_getById == null)
+            {
                 throw Exceptions.UnSupportedRequestMethod;
             }
             var entity = await _getById.GetAsync(id);
@@ -122,21 +125,37 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
-            if (_getRelationships == null)
-                throw Exceptions.UnSupportedRequestMethod;
-            var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
-            if (relationship == null)
-            {
-                return NoResultFound();
-            }
-
-            return Ok(relationship);
+            return await GetRelationshipInternal(id, relationshipName, relationshipInUrl: true);
         }
 
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            if (_getRelationship == null) throw Exceptions.UnSupportedRequestMethod;
-            var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+            return await GetRelationshipInternal(id, relationshipName, relationshipInUrl: false);
+        }
+
+        protected virtual async Task<IActionResult> GetRelationshipInternal(TId id, string relationshipName, bool relationshipInUrl)
+        {
+            if (_getRelationship == null)
+            {
+                throw Exceptions.UnSupportedRequestMethod;
+            }
+            object relationship;
+            if (relationshipInUrl)
+            {
+                relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+            }
+            else
+            {
+                relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+            }
+            if(relationship == null)
+            {
+                return Ok(null);
+            }
+            if (((IEnumerable<object>)relationship).Count() == 0)
+            {
+                return Ok(null);
+            }
             return Ok(relationship);
         }
 

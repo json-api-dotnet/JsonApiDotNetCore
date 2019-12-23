@@ -5,7 +5,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -15,16 +17,15 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-    [Collection("WebHostCollection")]
-    public class NonExistentResourceTests
+    public class NonExistentResourceTests : FunctionalTestCollection<StandardApplicationFactory>
     {
-        private TestFixture<Startup> _fixture;
+        private StandardApplicationFactory _factory;
         private Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
-        public NonExistentResourceTests(TestFixture<Startup> fixture)
+        public NonExistentResourceTests(StandardApplicationFactory factory) : base(factory)
         {
-            _fixture = fixture;
+            _factory = factory;
             _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
@@ -51,7 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Resource_PersonNonExistent_ShouldReturn404WithCorrectError()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _factory.GetService<AppDbContext>();
             var person = _personFaker.Generate();
             context.People.Add(person);
             await context.SaveChangesAsync();
@@ -59,12 +60,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             context.People.Remove(person);
             context.SaveChanges();
 
-            var httpMethod = HttpMethod.Get;
             var route = $"/api/v1/people/{nonExistingId}";
-            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = (await Get(route)).Response;
             var body = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -79,36 +78,34 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
-        public async Task ResourceRelatedHasOne_TodoItemExistentOwnerIsNonExistent_ShouldReturn200WithNullData()
+        public async Task ResourceRelatedHasOne_TodoItemExistentToOneRelationshipIsNonExistent_ShouldReturn200WithNullData()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _factory.GetService<AppDbContext>();
             context.TodoItems.RemoveRange(context.TodoItems.ToList());
             var todoItem = _todoItemFaker.Generate();
             context.TodoItems.Add(todoItem);
             await context.SaveChangesAsync();
             var existingId = todoItem.Id;
+            var deserializer = new ResponseDeserializer(_factory.GetService<IResourceGraph>());
 
-            var httpMethod = HttpMethod.Get;
-            var route = $"/api/v1/todoItems/{existingId}/people";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var route = $"/api/v1/todoItems/{existingId}/oneToOnePerson";
 
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = (await Get(route)).Response;
             var body = await response.Content.ReadAsStringAsync();
 
             // Assert
-            var errorResult = JsonConvert.DeserializeObject<ErrorMessage>(body);
-            var title = errorResult.Errors.First().Title;
-            Assert.Contains(title, "found");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            var document = deserializer.DeserializeList<Person>(body);
+            Assert.Null(document.Data);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public async Task ResourceRelatedHasMany_PersonExistsToDoItemDoesNot_ShouldReturn200WithNullData()
+        public async Task ResourceRelatedHasMany_TodoItemExistsToManyRelationshipHasNoData_ShouldReturn200WithNullData()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
+            var context = _factory.GetService<AppDbContext>();
             context.TodoItems.RemoveRange(context.TodoItems.ToList());
             var todoItem = _todoItemFaker.Generate();
             context.TodoItems.Add(todoItem);
@@ -116,19 +113,19 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var existingId = todoItem.Id;
 
             var httpMethod = HttpMethod.Get;
-            var route = $"/api/v1/todoItems/{existingId}/people";
+            var route = $"/api/v1/todoItems/{existingId}/stakeHolders";
             var request = new HttpRequestMessage(httpMethod, route);
 
+            var deserializer = new ResponseDeserializer(_factory.GetService<IResourceGraph>());
+
             // Act
-            var response = await _fixture.Client.SendAsync(request);
+            var response = await _factory.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
 
             // Assert
-            var errorResult = JsonConvert.DeserializeObject<ErrorMessage>(body);
-            var title = errorResult.Errors.First().Title;
-            Assert.Contains(title, "todoitem");
-            Assert.Contains(title, "found");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            var parsed = deserializer.DeserializeList<TodoItem>(body);
+            Assert.Null(parsed.Data);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }
