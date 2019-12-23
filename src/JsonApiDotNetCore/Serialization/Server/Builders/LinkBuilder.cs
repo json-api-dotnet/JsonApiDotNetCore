@@ -63,19 +63,19 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         {
             if (_pageService.CurrentPage > 1)
             {
-                links.Prev = GetPageLink(primaryResource, _pageService.CurrentPage - 1, _pageService.PageSize);
+                links.Prev = GetPageLink(primaryResource, _pageService.CurrentPage - 1, _pageService.CurrentPageSize);
             }
 
             if (_pageService.CurrentPage < _pageService.TotalPages)
             {
-                links.Next = GetPageLink(primaryResource, _pageService.CurrentPage + 1, _pageService.PageSize);
+                links.Next = GetPageLink(primaryResource, _pageService.CurrentPage + 1, _pageService.CurrentPageSize);
             }
 
             if (_pageService.TotalPages > 0)
             {
-                links.Self = GetPageLink(primaryResource, _pageService.CurrentPage, _pageService.PageSize);
-                links.First = GetPageLink(primaryResource, 1, _pageService.PageSize);
-                links.Last = GetPageLink(primaryResource, _pageService.TotalPages, _pageService.PageSize);
+                links.Self = GetPageLink(primaryResource, _pageService.CurrentPage, _pageService.CurrentPageSize);
+                links.First = GetPageLink(primaryResource, 1, _pageService.CurrentPageSize);
+                links.Last = GetPageLink(primaryResource, _pageService.TotalPages, _pageService.CurrentPageSize);
             }
         }
 

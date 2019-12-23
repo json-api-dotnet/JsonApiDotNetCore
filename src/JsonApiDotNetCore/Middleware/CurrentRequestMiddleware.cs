@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -6,6 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
@@ -21,6 +23,7 @@ namespace JsonApiDotNetCore.Middleware
         private ICurrentRequest _currentRequest;
         private IResourceGraph _resourceGraph;
         private IJsonApiOptions _options;
+        private RouteValueDictionary _routeValues;
         private IControllerResourceMapping _controllerResourceMapping;
 
         public CurrentRequestMiddleware(RequestDelegate next)
@@ -39,12 +42,15 @@ namespace JsonApiDotNetCore.Middleware
             _controllerResourceMapping = controllerResourceMapping;
             _resourceGraph = resourceGraph;
             _options = options;
+            _routeValues = httpContext.GetRouteData().Values;
             var requestResource = GetCurrentEntity();
             if (requestResource != null)
             {
-                _currentRequest.SetRequestResource(GetCurrentEntity());
+                _currentRequest.SetRequestResource(requestResource);
                 _currentRequest.IsRelationshipPath = PathIsRelationship();
-                _currentRequest.BasePath = GetBasePath(_currentRequest.GetRequestResource().ResourceName);
+                _currentRequest.BasePath = GetBasePath(requestResource.ResourceName);
+                _currentRequest.BaseId = GetBaseId();
+                _currentRequest.RelationshipId = GetRelationshipId();
             }
 
             if (IsValid())
@@ -53,50 +59,93 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private string GetBasePath(string entityName)
+        private string GetBaseId()
+        {
+            if (_routeValues.TryGetValue("id", out object stringId))
+            {
+                if ((string)stringId == string.Empty)
+                {
+                    throw new JsonApiException(400, "No empty string as id please.");
+                }
+                return (string)stringId;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private string GetRelationshipId()
+        {
+            var resource = _currentRequest.GetRequestResource();
+            if (!_currentRequest.IsRelationshipPath)
+            {
+                return null;
+            }
+            var components = SplitCurrentPath();
+            var toReturn = components.ElementAtOrDefault(4);
+
+            if (toReturn == null)
+            {
+                return null;
+            }
+            var relType = _currentRequest.RequestRelationship.RightType;
+            var relResource = _resourceGraph.GetResourceContext(relType);
+            var relIdentityType = relResource.IdentityType;
+            return toReturn;
+        }
+        private string[] SplitCurrentPath()
+        {
+            var path = _httpContext.Request.Path.Value;
+            var ns = $"/{GetNameSpace()}";
+            var nonNameSpaced = path.Replace(ns, "");
+            nonNameSpaced = nonNameSpaced.Trim('/');
+            var individualComponents = nonNameSpaced.Split('/');
+            return individualComponents;
+        }
+
+        private string GetBasePath(string resourceName = null)
         {
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNamespaceFromPath(r.Path, entityName);
+                return GetNameSpace(resourceName);
             }
-            return $"{r.Scheme}://{r.Host}{GetNamespaceFromPath(r.Path, entityName)}";
+            var ns = GetNameSpace(resourceName);
+            var customRoute = GetCustomRoute(r.Path.Value, resourceName);
+            var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
+            if (customRoute != null)
+            {
+                toReturn += $"/{customRoute}";
+            }
+            return toReturn;
         }
 
-        internal static string GetNamespaceFromPath(string path, string entityName)
+        private object GetCustomRoute(string path, string resourceName)
         {
-            var entityNameSpan = entityName.AsSpan();
-            var pathSpan = path.AsSpan();
-            const char delimiter = '/';
-            for (var i = 0; i < pathSpan.Length; i++)
+            var ns = GetNameSpace();
+            var trimmedComponents = path.Trim('/').Split('/').ToList();
+            var resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+            var newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
+            var customRoute = string.Join('/', newComponents);
+            if (customRoute == ns)
             {
-                if (pathSpan[i].Equals(delimiter))
-                {
-                    var nextPosition = i + 1;
-                    if (pathSpan.Length > i + entityNameSpan.Length)
-                    {
-                        var possiblePathSegment = pathSpan.Slice(nextPosition, entityNameSpan.Length);
-                        if (entityNameSpan.SequenceEqual(possiblePathSegment))
-                        {
-                            // check to see if it's the last position in the string
-                            //   or if the next character is a /
-                            var lastCharacterPosition = nextPosition + entityNameSpan.Length;
-
-                            if (lastCharacterPosition == pathSpan.Length || pathSpan.Length >= lastCharacterPosition + 2 && pathSpan[lastCharacterPosition].Equals(delimiter))
-                            {
-                                return pathSpan.Slice(0, i).ToString();
-                            }
-                        }
-                    }
-                }
+                return null;
             }
+            else
+            {
+                return customRoute;
+            }
+        }
 
-            return string.Empty;
+        private string GetNameSpace(string resourceName = null)
+        {
+
+            return _options.Namespace;
         }
 
         protected bool PathIsRelationship()
         {
-            var actionName = (string)_httpContext.GetRouteData().Values["action"];
+            var actionName = (string)_routeValues["action"];
             return actionName.ToLower().Contains("relationships");
         }
 
@@ -124,7 +173,9 @@ namespace JsonApiDotNetCore.Middleware
             foreach (var acceptHeader in acceptHeaders)
             {
                 if (ContainsMediaTypeParameters(acceptHeader) == false)
+                {
                     continue;
+                }
 
                 FlushResponse(context, 406);
                 return false;
@@ -165,16 +216,21 @@ namespace JsonApiDotNetCore.Middleware
         /// <returns></returns>
         private ResourceContext GetCurrentEntity()
         {
-            var controllerName = (string)_httpContext.GetRouteValue("controller");
+            var controllerName = (string)_routeValues["controller"];
             if (controllerName == null)
+            {
                 return null;
+            }
             var resourceType = _controllerResourceMapping.GetAssociatedResource(controllerName);
             var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
+            {
                 return requestResource;
-            var rd = _httpContext.GetRouteData().Values;
-            if (rd.TryGetValue("relationshipName", out object relationshipName))
+            }
+            if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
+            {
                 _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+            }
             return requestResource;
         }
     }

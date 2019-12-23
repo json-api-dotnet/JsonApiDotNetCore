@@ -128,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var deserializedBody = JsonConvert.DeserializeObject<JObject>(body);
 
             var result = deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString();
-            Assert.EndsWith($"{route}/owner", deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString());
+            Assert.EndsWith($"{route}/owner", result);
         }
     }
 }
