@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Controllers
             }
             if (relationship == null)
             {
-                return Ok(null);
+                return Ok(relationship);
             }
 
             if (relationship.GetType() != typeof(T))

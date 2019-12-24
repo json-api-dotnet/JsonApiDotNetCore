@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Extensions;
+using System.Collections;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -124,8 +125,9 @@ namespace JsonApiDotNetCore.Services
             return entity;
         }
 
+        
         // triggered by GET /articles/1/relationships/{relationshipName}
-        public virtual async Task<(TResource model, bool emptyResults)> GetRelationshipsAsync(TId id, string relationshipName)
+        public virtual async Task<TResource> GetRelationshipsAsync(TId id, string relationshipName)
         {
             var relationship = GetRelationship(relationshipName);
 
@@ -142,8 +144,21 @@ namespace JsonApiDotNetCore.Services
 
 
             // lol
-            var relationshipValue = typeof(TResource).GetProperty(relationship.EntityPropertyName).GetValue(entity) ;
+            var relationshipValue = typeof(TResource).GetProperty(relationship.InternalRelationshipName).GetValue(entity) ;
             var relEmpty = relationshipValue == null;
+
+            if(relationshipValue == null)
+            {
+                return null;
+            }
+            var listCast = (IList) relationshipValue;
+            if(listCast != null)
+            {
+                if(listCast.Count == 0)
+                {
+                    return null;
+                }
+            }
 
             //if (entity == null)
             //{
@@ -158,7 +173,7 @@ namespace JsonApiDotNetCore.Services
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.GetRelationship).SingleOrDefault();
             }
 
-            return (entity, relEmpty);
+            return entity;
         }
 
         // triggered by GET /articles/1/{relationshipName}
@@ -347,7 +362,9 @@ namespace JsonApiDotNetCore.Services
         {
             var relationship = _currentRequestResource.Relationships.Single(r => r.Is(relationshipName));
             if (relationship == null)
+            {
                 throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+            }
             return relationship;
         }
 

@@ -110,6 +110,10 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <inheritdoc/>
         public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
         {
+            if(parent == null)
+            {
+                return null;
+            }
             var parentResourceContext = _provider.GetResourceContext(parent.GetType());
             var childNavigation = relationship.PublicRelationshipName;
             RelationshipLinks links = null;
