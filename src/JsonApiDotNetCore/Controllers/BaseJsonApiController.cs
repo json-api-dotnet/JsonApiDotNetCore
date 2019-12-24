@@ -135,26 +135,35 @@ namespace JsonApiDotNetCore.Controllers
 
         protected virtual async Task<IActionResult> GetRelationshipInternal(TId id, string relationshipName, bool relationshipInUrl)
         {
-            if (_getRelationship == null)
-            {
-                throw Exceptions.UnSupportedRequestMethod;
-            }
+
             object relationship;
             if (relationshipInUrl)
             {
-                relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
+                if (_getRelationships == null)
+                {
+                    throw Exceptions.UnSupportedRequestMethod;
+                }
+                relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             }
             else
             {
+                if (_getRelationship == null)
+                {
+                    throw Exceptions.UnSupportedRequestMethod;
+                }
                 relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
             }
-            if(relationship == null)
+            if (relationship == null)
             {
                 return Ok(null);
             }
-            if (((IEnumerable<object>)relationship).Count() == 0)
+
+            if (relationship.GetType() != typeof(T))
             {
-                return Ok(null);
+                if (((IEnumerable<object>)relationship).Count() == 0)
+                {
+                    return Ok(null);
+                }
             }
             return Ok(relationship);
         }
