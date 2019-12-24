@@ -125,7 +125,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         // triggered by GET /articles/1/relationships/{relationshipName}
-        public virtual async Task<TResource> GetRelationshipsAsync(TId id, string relationshipName)
+        public virtual async Task<(TResource model, bool emptyResults)> GetRelationshipsAsync(TId id, string relationshipName)
         {
             var relationship = GetRelationship(relationshipName);
 
@@ -135,14 +135,22 @@ namespace JsonApiDotNetCore.Services
             // TODO: it would be better if we could distinguish whether or not the relationship was not found,
             // vs the relationship not being set on the instance of T
 
-            var entityQuery = ApplyInclude(_repository.Get(id), chainPrefix: new List<RelationshipAttribute> { relationship });
+            var baseQuery = _repository.Get(id);
+            var entityQuery = ApplyInclude(baseQuery, chainPrefix: new List<RelationshipAttribute> { relationship });
+
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
-            if (entity == null)
-            {
-                /// TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
-                /// this error should be thrown when the relationship is not found.
-                throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
-            }
+
+
+            // lol
+            var relationshipValue = typeof(TResource).GetProperty(relationship.EntityPropertyName).GetValue(entity) ;
+            var relEmpty = relationshipValue == null;
+
+            //if (entity == null)
+            //{
+            //    /// TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
+            //    /// this error should be thrown when the relationship is not found.
+            //    throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
+            //}
 
             if (!IsNull(_hookExecutor, entity))
             {   // AfterRead and OnReturn resource hook execution.
@@ -150,7 +158,7 @@ namespace JsonApiDotNetCore.Services
                 entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.GetRelationship).SingleOrDefault();
             }
 
-            return entity;
+            return (entity, relEmpty);
         }
 
         // triggered by GET /articles/1/{relationshipName}

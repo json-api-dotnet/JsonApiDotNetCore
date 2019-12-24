@@ -48,6 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             [JsonProperty("errors")]
             public List<ErrorInnerMessage> Errors;
         }
+
         [Fact]
         public async Task Resource_PersonNonExistent_ShouldReturn404WithCorrectError()
         {
@@ -59,7 +60,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var nonExistingId = person.Id;
             context.People.Remove(person);
             context.SaveChanges();
-
             var route = $"/api/v1/people/{nonExistingId}";
 
             // Act
@@ -77,8 +77,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("404", code);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
-        [Fact]
-        public async Task ResourceRelatedHasOne_TodoItemExistentToOneRelationshipIsNonExistent_ShouldReturn200WithNullData()
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ResourceRelatedHasOne_TodoItemExistentToOneRelationshipIsNonExistent_ShouldReturn200WithNullData(bool full)
         {
             // Arrange
             var context = _factory.GetService<AppDbContext>();
@@ -89,7 +92,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var existingId = todoItem.Id;
             var deserializer = new ResponseDeserializer(_factory.GetService<IResourceGraph>());
 
-            var route = $"/api/v1/todoItems/{existingId}/oneToOnePerson";
+            var appendix = full ? "oneToOnePerson" : "relationships/oneToOnePerson";
+            var route = $"/api/v1/todoItems/{existingId}/{appendix}";
+
 
             // Act
             var response = (await Get(route)).Response;
@@ -101,8 +106,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Fact]
-        public async Task ResourceRelatedHasMany_TodoItemExistsToManyRelationshipHasNoData_ShouldReturn200WithNullData()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ResourceRelatedHasMany_TodoItemExistsToManyRelationshipHasNoData_ShouldReturn200WithNullData(bool withBaseEntity)
         {
             // Arrange
             var context = _factory.GetService<AppDbContext>();
@@ -113,9 +120,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var existingId = todoItem.Id;
 
             var httpMethod = HttpMethod.Get;
-            var route = $"/api/v1/todoItems/{existingId}/stakeHolders";
+            var appendix = withBaseEntity ? "stakeHolders" : "relationships/stakeHolders";
+            var route = $"/api/v1/todoItems/{existingId}/{appendix}";
             var request = new HttpRequestMessage(httpMethod, route);
-
             var deserializer = new ResponseDeserializer(_factory.GetService<IResourceGraph>());
 
             // Act
@@ -124,7 +131,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             var parsed = deserializer.DeserializeList<TodoItem>(body);
-            Assert.Null(parsed.Data);
+            Assert.NotNull(parsed.Data);
+            Assert.Empty(parsed.Data);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }
