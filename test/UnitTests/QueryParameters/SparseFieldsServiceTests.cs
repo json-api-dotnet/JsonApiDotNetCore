@@ -34,11 +34,10 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string attrName = "someField";
-            const string internalAttrName = "SomeField";
-            var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
-            var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
+            var attribute = new AttrAttribute(attrName);
+            var idAttribute = new AttrAttribute("id");
 
-            var query = new KeyValuePair<string, StringValues>($"fields", new StringValues(attrName));
+            var query = new KeyValuePair<string, StringValues>("fields", new StringValues(attrName));
 
             var resourceContext = new ResourceContext
             {
@@ -64,9 +63,8 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string attrName = "someField";
-            const string internalAttrName = "SomeField";
-            var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
-            var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
+            var attribute = new AttrAttribute(attrName);
+            var idAttribute = new AttrAttribute("id");
 
             var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
 
@@ -90,9 +88,8 @@ namespace UnitTests.QueryParameters
             const string type = "articles";
             const string relationship = "author.employer";
             const string attrName = "someField";
-            const string internalAttrName = "SomeField";
-            var attribute = new AttrAttribute(attrName) { InternalAttributeName = internalAttrName };
-            var idAttribute = new AttrAttribute("id") { InternalAttributeName = "Id" };
+            var attribute = new AttrAttribute(attrName);
+            var idAttribute = new AttrAttribute("id");
 
             var query = new KeyValuePair<string, StringValues>($"fields[{relationship}]", new StringValues(attrName));
 

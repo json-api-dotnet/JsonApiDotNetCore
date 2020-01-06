@@ -25,7 +25,7 @@ namespace Benchmarks.Query {
             var requestMock = new Mock<IRequestContext>();
             requestMock.Setup(m => m.GetRequestResource()).Returns(new ResourceContext {
                 Attributes = new List<AttrAttribute> {
-                    new AttrAttribute(ATTRIBUTE, ATTRIBUTE)
+                    new AttrAttribute(ATTRIBUTE)
                 }
             });
             var options = new JsonApiOptions();

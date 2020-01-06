@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization
             var ro = new ResourceObject { Type = resourceContext.ResourceName, Id = entity.StringId.NullIfEmpty() };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.InternalAttributeName != _identifiablePropertyName)).Any())
+            if (attributes != null && (attributes = attributes.Where(attr => attr.PropertyInfo.Name != _identifiablePropertyName)).Any())
                 ProcessAttributes(entity, attributes, ro);
 
             // populating the top-level "relationship" member of a resource object.

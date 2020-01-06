@@ -33,7 +33,7 @@ namespace JADNC.IntegrationTests.Data
                 arrangeContext.Add(todoItemUpdates);
                 arrangeContext.SaveChanges();
 
-                var descAttr = new AttrAttribute("description", "Description")
+                var descAttr = new AttrAttribute("description")
                 {
                     PropertyInfo = typeof(TodoItem).GetProperty(nameof(TodoItem.Description))
                 };

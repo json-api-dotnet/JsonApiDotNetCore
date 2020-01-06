@@ -29,7 +29,7 @@ namespace UnitTests.Models
             var attrs = resource.GetAllowedAttributes();
 
             // Assert
-            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.PropertyInfo.Name == nameof(Model.AlwaysExcluded));
         }
 
         [Fact]
@@ -42,8 +42,8 @@ namespace UnitTests.Models
             var attrs = resource.GetAllowedAttributes();
 
             // Assert
-            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.AlwaysExcluded));
-            Assert.DoesNotContain(attrs, a => a.InternalAttributeName == nameof(Model.Password));
+            Assert.DoesNotContain(attrs, a => a.PropertyInfo.Name == nameof(Model.AlwaysExcluded));
+            Assert.DoesNotContain(attrs, a => a.PropertyInfo.Name == nameof(Model.Password));
         }
     }
 

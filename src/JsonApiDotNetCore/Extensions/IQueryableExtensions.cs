@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Extensions
         }
 
         public static IQueryable<TSource> Select<TSource>(this IQueryable<TSource> source, IEnumerable<AttrAttribute> columns)
-            => CallGenericSelectMethod(source, columns.Select(attr => attr.InternalAttributeName).ToList());
+            => CallGenericSelectMethod(source, columns.Select(attr => attr.PropertyInfo.Name).ToList());
 
         public static IOrderedQueryable<TSource> Sort<TSource>(this IQueryable<TSource> source, SortQueryContext sortQuery)
         {
@@ -191,7 +191,7 @@ namespace JsonApiDotNetCore.Extensions
         private static IQueryable<TSource> CallGenericWhereContainsMethod<TSource>(IQueryable<TSource> source, FilterQueryContext filter)
         {
             var concreteType = typeof(TSource);
-            var property = concreteType.GetProperty(filter.Attribute.InternalAttributeName);
+            var property = concreteType.GetProperty(filter.Attribute.PropertyInfo.Name);
 
             try
             {
@@ -201,10 +201,10 @@ namespace JsonApiDotNetCore.Extensions
                 if (filter.IsAttributeOfRelationship)
                 {
                     var relation = Expression.PropertyOrField(entity, filter.Relationship.InternalRelationshipName);
-                    member = Expression.Property(relation, filter.Attribute.InternalAttributeName);
+                    member = Expression.Property(relation, filter.Attribute.PropertyInfo.Name);
                 }
                 else
-                    member = Expression.Property(entity, filter.Attribute.InternalAttributeName);
+                    member = Expression.Property(entity, filter.Attribute.PropertyInfo.Name);
 
                 var method = ContainsMethod.MakeGenericMethod(member.Type);
                 var obj = TypeHelper.ConvertListType(propertyValues, member.Type);
@@ -259,9 +259,9 @@ namespace JsonApiDotNetCore.Extensions
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
                 var relatedType = filter.Relationship.RightType;
-                property = relatedType.GetProperty(filter.Attribute.InternalAttributeName);
+                property = relatedType.GetProperty(filter.Attribute.PropertyInfo.Name);
                 if (property == null)
-                    throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
+                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid attribute of '{filter.Relationship.InternalRelationshipName}'");
 
                 var leftRelationship = Expression.PropertyOrField(parameter, filter.Relationship.InternalRelationshipName);
                 // {model.Relationship}
@@ -270,9 +270,9 @@ namespace JsonApiDotNetCore.Extensions
             // Is standalone attribute
             else
             {
-                property = concreteType.GetProperty(filter.Attribute.InternalAttributeName);
+                property = concreteType.GetProperty(filter.Attribute.PropertyInfo.Name);
                 if (property == null)
-                    throw new ArgumentException($"'{filter.Attribute.InternalAttributeName}' is not a valid property of '{concreteType}'");
+                    throw new ArgumentException($"'{filter.Attribute.PropertyInfo.Name}' is not a valid property of '{concreteType}'");
 
                 // {model.Id}
                 left = Expression.PropertyOrField(parameter, property.Name);
