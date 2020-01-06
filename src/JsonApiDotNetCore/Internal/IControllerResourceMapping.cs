@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace JsonApiDotNetCore.Internal
 {
     /// <summary>
-    /// Registery of which resource is associated with which controller.
+    /// Registry of which resource is associated with which controller.
     /// </summary>
     public interface IControllerResourceMapping
     {

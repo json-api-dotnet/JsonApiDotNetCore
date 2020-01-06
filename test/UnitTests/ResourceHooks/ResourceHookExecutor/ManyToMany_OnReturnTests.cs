@@ -71,7 +71,7 @@ namespace UnitTests.ResourceHooks
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
-            // asser
+            // Assert
             tagResourceMock.Verify(rd => rd.OnReturn(It.Is<HashSet<Tag>>((collection) => !collection.Except(tags).Any()), ResourcePipeline.Get), Times.Once());
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }

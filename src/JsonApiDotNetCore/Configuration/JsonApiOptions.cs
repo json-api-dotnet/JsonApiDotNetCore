@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Whether or not clients can provide ids when creating resources.
         /// Defaults to false.  When disabled the application will respond 
-        /// with a 403 Forbidden respponse if a client attempts to create a 
+        /// with a 403 Forbidden response if a client attempts to create a 
         /// resource with a defined id.
         /// </summary>
         /// <example>

@@ -269,7 +269,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         ///// its foreign key.
         ///// </summary>
         [Fact]
-        public async Task Cascade_Permission_Error__Create_ToOne_Relationship()
+        public async Task Cascade_Permission_Error_Create_ToOne_Relationship()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -315,7 +315,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
 
         [Fact]
-        public async Task Cascade_Permission_Error__Updating_ToOne_Relationship()
+        public async Task Cascade_Permission_Error_Updating_ToOne_Relationship()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -362,7 +362,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error__Updating_ToOne_Relationship_Deletion()
+        public async Task Cascade_Permission_Error_Updating_ToOne_Relationship_Deletion()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -411,7 +411,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
 
         [Fact]
-        public async Task Cascade_Permission_Error__Delete_ToOne_Relationship()
+        public async Task Cascade_Permission_Error_Delete_ToOne_Relationship()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -437,7 +437,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
 
         [Fact]
-        public async Task Cascade_Permission_Error__Create_ToMany_Relationship()
+        public async Task Cascade_Permission_Error_Create_ToMany_Relationship()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -486,7 +486,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error__Updating_ToMany_Relationship()
+        public async Task Cascade_Permission_Error_Updating_ToMany_Relationship()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -541,7 +541,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task Cascade_Permission_Error__Delete_ToMany_Relationship()
+        public async Task Cascade_Permission_Error_Delete_ToMany_Relationship()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();

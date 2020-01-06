@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Formatters
     /// <summary>
     /// Formats the response data used  https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0.
     /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
-    /// It onls depends on <see cref="IJsonApiSerializer"/>.
+    /// It only depends on <see cref="IJsonApiSerializer"/>.
     /// </summary>
     public class JsonApiWriter : IJsonApiWriter
     {
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Formatters
                 }
                 catch (Exception e)
                 {
-                    _logger?.LogError(new EventId(), e, "An error ocurred while formatting the response");
+                    _logger?.LogError(new EventId(), e, "An error occurred while formatting the response");
                     var errors = new ErrorCollection();
                     errors.Add(new Error(500, e.Message, ErrorMeta.FromException(e)));
                     responseContent = _serializer.Serialize(errors);

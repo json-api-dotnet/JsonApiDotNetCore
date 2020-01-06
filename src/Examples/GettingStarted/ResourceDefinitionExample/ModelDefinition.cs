@@ -13,7 +13,7 @@ namespace GettingStarted.ResourceDefinitionExample
             // this might be used if the incoming value gets hashed or
             // encrypted prior to being persisted and this value should
             // never be sent back to the client
-            HideFields(model => model.DontExpose);
+            HideFields(model => model.DoNotExpose);
         }
     }
 }

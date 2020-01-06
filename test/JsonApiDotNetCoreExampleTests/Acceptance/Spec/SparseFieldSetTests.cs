@@ -218,7 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
 
-            // Assert - check statusc ode
+            // Assert - check status code
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);

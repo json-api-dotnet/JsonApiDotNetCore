@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Hooks
     internal interface INode
     {
         /// <summary>
-        /// Each node representes the entities of a given type throughout a particular layer.
+        /// Each node represents the entities of a given type throughout a particular layer.
         /// </summary>
         RightType ResourceType { get; }
         /// <summary>

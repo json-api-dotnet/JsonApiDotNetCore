@@ -147,7 +147,7 @@ namespace JsonApiDotNetCore.Data
                 return false;
             }
             // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
-            // In this case we use relfection to figure out what kind of relationship is pointing back.
+            // In this case we use reflection to figure out what kind of relationship is pointing back.
             return !type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable));
         }
 
@@ -359,12 +359,12 @@ namespace JsonApiDotNetCore.Data
 
         /// <summary>
         /// Before assigning new relationship values (UpdateAsync), we need to
-        /// attach the current database values of the relationship to the dbcontext, else 
+        /// attach the current database values of the relationship to the dbContext, else 
         /// it will not perform a complete-replace which is required for 
         /// one-to-many and many-to-many.
         /// <para />
-        /// For example: a person `p1` has 2 todoitems: `t1` and `t2`.
-        /// If we want to update this todoitem set to `t3` and `t4`, simply assigning
+        /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
+        /// If we want to update this todo-item set to `t3` and `t4`, simply assigning
         /// `p1.todoItems = [t3, t4]` will result in EF Core adding them to the set,
         /// resulting in `[t1 ... t4]`. Instead, we should first include `[t1, t2]`,
         /// after which the reassignment  `p1.todoItems = [t3, t4]` will actually 
@@ -383,7 +383,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// Given a iidentifiable relationshipvalue, verify if an entity of the underlying 
+        /// Given a IIdentifiable relationship value, verify if an entity of the underlying 
         /// type with the same ID is already attached to the dbContext, and if so, return it.
         /// If not, attach the relationship value to the dbContext.
         /// 

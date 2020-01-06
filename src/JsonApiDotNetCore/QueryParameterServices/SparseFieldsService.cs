@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -49,18 +49,18 @@ namespace JsonApiDotNetCore.Query
             var fields = new List<string> { nameof(Identifiable.Id) };
             fields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
 
-            var keySplitted = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
+            var keySplit = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
-            if (keySplitted.Count() == 1)
+            if (keySplit.Count() == 1)
             {   // input format: fields=prop1,prop2
                 foreach (var field in fields)
                     RegisterRequestResourceField(field);
             }
             else
             {  // input format: fields[articles]=prop1,prop2
-                string navigation = keySplitted[1];
+                string navigation = keySplit[1];
                 // it is possible that the request resource has a relationship
-                // that is equal to the resource name, like with self-referering data types (eg directory structures)
+                // that is equal to the resource name, like with self-referencing data types (eg directory structures)
                 // if not, no longer support this type of sparse field selection.
                 if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
                     throw new JsonApiException(400, $"Use '?fields=...' instead of 'fields[{navigation}]':" +

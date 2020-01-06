@@ -1,14 +1,14 @@
-﻿namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Allows default valued attributes to be ommitted from the response payload
+    /// Allows default valued attributes to be omitted from the response payload
     /// </summary>
     public struct DefaultAttributeResponseBehavior
     {
 
         /// <param name="omitNullValuedAttributes">Do not serialize default value attributes</param>
         /// <param name="allowClientOverride">
-        /// Allow clients to override the serialization behavior through a query parmeter.
+        /// Allow clients to override the serialization behavior through a query parameter.
         /// <example>
         /// ```
         /// GET /articles?omitDefaultValuedAttributes=true
