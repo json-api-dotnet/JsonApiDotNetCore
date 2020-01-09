@@ -6662,12 +6662,6 @@ references:
   commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)
   fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute(System.String, System.Boolean, System.Boolean, System.Boolean)
   nameWithType: AttrAttribute.AttrAttribute(String, Boolean, Boolean, Boolean)
-- uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,System.String,System.Boolean)
-  name: AttrAttribute(String, String, Boolean)
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_System_String_System_String_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Models.AttrAttribute.#ctor(System.String,System.String,System.Boolean)
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.AttrAttribute(System.String, System.String, System.Boolean)
-  nameWithType: AttrAttribute.AttrAttribute(String, String, Boolean)
 - uid: JsonApiDotNetCore.Models.AttrAttribute.#ctor*
   name: AttrAttribute
   href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute__ctor_
@@ -6701,19 +6695,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.AttrAttribute.GetValue
   nameWithType: AttrAttribute.GetValue
-- uid: JsonApiDotNetCore.Models.AttrAttribute.InternalAttributeName
-  name: InternalAttributeName
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_InternalAttributeName
-  commentId: P:JsonApiDotNetCore.Models.AttrAttribute.InternalAttributeName
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.InternalAttributeName
-  nameWithType: AttrAttribute.InternalAttributeName
-- uid: JsonApiDotNetCore.Models.AttrAttribute.InternalAttributeName*
-  name: InternalAttributeName
-  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_InternalAttributeName_
-  commentId: Overload:JsonApiDotNetCore.Models.AttrAttribute.InternalAttributeName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Models.AttrAttribute.InternalAttributeName
-  nameWithType: AttrAttribute.InternalAttributeName
 - uid: JsonApiDotNetCore.Models.AttrAttribute.Is(System.String)
   name: Is(String)
   href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_Is_System_String_
@@ -6766,6 +6747,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.AttrAttribute.IsSortable
   nameWithType: AttrAttribute.IsSortable
+- uid: JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo
+  name: PropertyInfo
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_PropertyInfo
+  commentId: P:JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo
+  nameWithType: AttrAttribute.PropertyInfo
+- uid: JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo*
+  name: PropertyInfo
+  href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_PropertyInfo_
+  commentId: Overload:JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.AttrAttribute.PropertyInfo
+  nameWithType: AttrAttribute.PropertyInfo
 - uid: JsonApiDotNetCore.Models.AttrAttribute.PublicAttributeName
   name: PublicAttributeName
   href: api/JsonApiDotNetCore.Models.AttrAttribute.html#JsonApiDotNetCore_Models_AttrAttribute_PublicAttributeName
@@ -7353,12 +7347,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Models.IIdentifiable(Of T).Id
   nameWithType: IIdentifiable<T>.Id
   nameWithType.vb: IIdentifiable(Of T).Id
-- uid: JsonApiDotNetCore.Models.IRelationshipField
-  name: IRelationshipField
-  href: api/JsonApiDotNetCore.Models.IRelationshipField.html
-  commentId: T:JsonApiDotNetCore.Models.IRelationshipField
-  fullName: JsonApiDotNetCore.Models.IRelationshipField
-  nameWithType: IRelationshipField
 - uid: JsonApiDotNetCore.Models.IResourceDefinition
   name: IResourceDefinition
   href: api/JsonApiDotNetCore.Models.IResourceDefinition.html
