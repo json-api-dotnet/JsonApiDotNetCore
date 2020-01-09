@@ -34,33 +34,12 @@ namespace JsonApiDotNetCore.Models
             IsSortable = isSortable;
         }
 
-        public string ExposedInternalMemberName => InternalAttributeName;
-
-
-        /// <summary>
-        /// Do not use this overload in your applications.
-        /// Provides a method for instantiating instances of `AttrAttribute` and specifying
-        /// the internal property name.
-        /// The primary intent for this was to enable certain types of unit tests to be possible.
-        /// This overload will be deprecated and removed in future releases and an alternative
-        /// for unit tests will be provided.
-        /// </summary>
-        public AttrAttribute(string publicName, string internalName, bool isImmutable = false)
-        {
-            PublicAttributeName = publicName;
-            InternalAttributeName = internalName;
-            IsImmutable = isImmutable;
-        }
+        public string ExposedInternalMemberName => PropertyInfo.Name;
 
         /// <summary>
         /// How this attribute is exposed through the API
         /// </summary>
-        public string PublicAttributeName { get; internal set;}
-
-        /// <summary>
-        /// The internal property name this attribute belongs to.
-        /// </summary>
-        public string InternalAttributeName { get; internal set; }
+        public string PublicAttributeName { get; internal set; }
 
         /// <summary>
         /// Prevents PATCH requests from updating the value.
@@ -84,7 +63,7 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// The member property info
         /// </summary>
-        internal PropertyInfo PropertyInfo { get; set; }
+        public PropertyInfo PropertyInfo { get; set; }
 
         /// <summary>
         /// Get the value of the attribute for the given object.
@@ -119,7 +98,7 @@ namespace JsonApiDotNetCore.Models
         private PropertyInfo GetResourceProperty(object resource)
         {
             // There are some scenarios, especially ones where users are using a different
-            // data model than view model, where they may use a repository implmentation
+            // data model than view model, where they may use a repository implementation
             // that does not match the deserialized type. For now, we will continue to support
             // this use case.
             var targetType = resource.GetType();
@@ -127,7 +106,7 @@ namespace JsonApiDotNetCore.Models
             {
                 var propertyInfo = resource
                     .GetType()
-                    .GetProperty(InternalAttributeName);
+                    .GetProperty(PropertyInfo.Name);
 
                 return propertyInfo;
 

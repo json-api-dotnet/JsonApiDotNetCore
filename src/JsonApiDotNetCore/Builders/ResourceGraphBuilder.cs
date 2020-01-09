@@ -99,8 +99,7 @@ namespace JsonApiDotNetCore.Builders
                     var idAttr = new AttrAttribute()
                     {
                         PublicAttributeName = _formatter.FormatPropertyName(prop),
-                        PropertyInfo = prop,
-                        InternalAttributeName = prop.Name
+                        PropertyInfo = prop
                     };
                     attributes.Add(idAttr);
                     continue;
@@ -111,7 +110,6 @@ namespace JsonApiDotNetCore.Builders
                     continue;
 
                 attribute.PublicAttributeName = attribute.PublicAttributeName ?? _formatter.FormatPropertyName(prop);
-                attribute.InternalAttributeName = prop.Name;
                 attribute.PropertyInfo = prop;
 
                 attributes.Add(attribute);
