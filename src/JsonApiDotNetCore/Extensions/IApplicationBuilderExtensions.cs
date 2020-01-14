@@ -18,8 +18,9 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds necessary components such as routing to your application
         /// </summary>
         /// <param name="app"></param>
+        /// <param name="AddUserMiddleware"></param>
         /// <returns></returns>
-        public static void UseJsonApi(this IApplicationBuilder app)
+        public static void UseJsonApi(this IApplicationBuilder app, Action<IApplicationBuilder> AddUserMiddleware = null)
         {
             LogResourceGraphValidations(app);
             using (var scope = app.ApplicationServices.CreateScope())
@@ -30,6 +31,10 @@ namespace JsonApiDotNetCore.Extensions
 
             // An endpoint is selected and set on the HttpContext if a match is found
             app.UseRouting();
+
+            // user defined middleware to run after routing occurs.
+            if (AddUserMiddleware != null)
+                AddUserMiddleware(app);
 
             // middleware to run after routing occurs.
             app.UseMiddleware<CurrentRequestMiddleware>();
