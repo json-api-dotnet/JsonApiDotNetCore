@@ -20,17 +20,5 @@ namespace NoEntityFrameworkExample.Models
 
         [Attr]
         public Guid GuidProperty { get; set; }
-
-        [Attr]
-        public DateTime CreatedDate { get; set; }
-
-        [Attr(isFilterable: false, isSortable: false)]
-        public DateTime? AchievedDate { get; set; }
-
-        [Attr]
-        public DateTime? UpdatedDate { get; set; }
-
-        [Attr]
-        public DateTimeOffset? OffsetDate { get; set; }
     }
 }
