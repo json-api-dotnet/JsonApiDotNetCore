@@ -105,7 +105,7 @@ namespace UnitTests.Services
                 _sortService.Object, _sparseFieldsService.Object
             };
 
-            return new DefaultResourceService<TodoItem>(queryParamServices, new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
+            return new DefaultResourceService<TodoItem>(queryParamServices, new JsonApiOptions(), null, _repositoryMock.Object, _resourceGraph);
         }
     }
 }

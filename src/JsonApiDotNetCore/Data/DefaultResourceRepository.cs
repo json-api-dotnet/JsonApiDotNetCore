@@ -32,16 +32,8 @@ namespace JsonApiDotNetCore.Data
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
-            IGenericServiceFactory genericServiceFactory)
-            : this(targetedFields, contextResolver, resourceGraph, genericServiceFactory, null)
-        { }
-
-        public DefaultResourceRepository(
-            ITargetedFields targetedFields,
-            IDbContextResolver contextResolver,
-            IResourceGraph resourceGraph,
             IGenericServiceFactory genericServiceFactory,
-            ILoggerFactory loggerFactory = null)
+            ILoggerFactory loggerFactory)
         {
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
@@ -418,14 +410,8 @@ namespace JsonApiDotNetCore.Data
         public DefaultResourceRepository(ITargetedFields targetedFields,
                                        IDbContextResolver contextResolver,
                                        IResourceGraph resourceGraph,
-                                       IGenericServiceFactory genericServiceFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory) { }
-
-        public DefaultResourceRepository(ITargetedFields targetedFields,
-                                       IDbContextResolver contextResolver,
-                                       IResourceGraph resourceGraph,
                                        IGenericServiceFactory genericServiceFactory,
-                                       ILoggerFactory loggerFactory = null)
+                                       ILoggerFactory loggerFactory)
             : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) { }
     }
 }

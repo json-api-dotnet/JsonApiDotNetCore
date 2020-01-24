@@ -154,7 +154,7 @@ namespace JADNC.IntegrationTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
             var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null);
+            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, null);
             return (repository, targetedFields);
         }
 

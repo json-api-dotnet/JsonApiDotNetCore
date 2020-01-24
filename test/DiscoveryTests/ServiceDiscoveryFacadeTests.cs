@@ -34,6 +34,7 @@ namespace DiscoveryTests
             dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
             TestModelRepository._dbContextResolver = dbResolverMock.Object;
             _services.AddSingleton<IJsonApiOptions>(new JsonApiOptions());
+            _services.AddSingleton<ILoggerFactory>(new LoggerFactory());
             _services.AddScoped((_) => new Mock<ILinkBuilder>().Object);
             _services.AddScoped((_) => new Mock<ICurrentRequest>().Object);
             _services.AddScoped((_) => new Mock<ITargetedFields>().Object);
@@ -102,13 +103,12 @@ namespace DiscoveryTests
         {
             private static IResourceRepository<TestModel> _repo = new Mock<IResourceRepository<TestModel>>().Object;
 
-            public TestModelService(IEnumerable<IQueryParameterService> queryParameters,
-                                    IJsonApiOptions options,
-                                    IResourceRepository<TestModel, int> repository,
-                                    IResourceContextProvider provider,
-                                    IResourceHookExecutor hookExecutor = null,
-                                    ILoggerFactory loggerFactory = null)
-                : base(queryParameters, options, repository, provider, hookExecutor, loggerFactory) { }
+            public TestModelService(IEnumerable<IQueryParameterService> queryParameters, IJsonApiOptions options,
+                ILoggerFactory loggerFactory, IResourceRepository<TestModel, int> repository,
+                IResourceContextProvider provider, IResourceHookExecutor hookExecutor = null)
+                : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
+            {
+            }
         }
 
         public class TestModelRepository : DefaultResourceRepository<TestModel>
@@ -118,7 +118,7 @@ namespace DiscoveryTests
             public TestModelRepository(ITargetedFields targetedFields,
                                        IResourceGraph resourceGraph,
                                        IGenericServiceFactory genericServiceFactory)
-                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory) { }
+                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, null) { }
         }
     }
 }

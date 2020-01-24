@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Middleware
 
         public DefaultExceptionFilter(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<DefaultExceptionFilter>();
+            _logger = loggerFactory?.CreateLogger<DefaultExceptionFilter>();
         }
 
         public void OnException(ExceptionContext context)

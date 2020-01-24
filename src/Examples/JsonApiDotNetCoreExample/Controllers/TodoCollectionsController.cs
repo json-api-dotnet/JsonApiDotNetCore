@@ -17,12 +17,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         readonly IDbContextResolver _dbResolver;
 
-        public TodoCollectionsController(
-            IJsonApiOptions jsonApiOptions, 
-           IDbContextResolver contextResolver,
-           IResourceService<TodoItemCollection, Guid> resourceService,
-           ILoggerFactory loggerFactory)
-           : base(jsonApiOptions, resourceService, loggerFactory)
+        public TodoCollectionsController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+            IDbContextResolver contextResolver, IResourceService<TodoItemCollection, Guid> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         {
             _dbResolver = contextResolver;
         }
