@@ -62,13 +62,20 @@ namespace JsonApiDotNetCore.Models
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RelationshipAttribute attr))
+            if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
-            bool equalRelationshipName = PublicRelationshipName.Equals(attr.PublicRelationshipName);
 
-            return IsHasMany == attr.IsHasMany && equalRelationshipName;
+            var other = (RelationshipAttribute) obj;
+
+            return PublicRelationshipName == other.PublicRelationshipName && LeftType == other.LeftType &&
+                   RightType == other.RightType;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(PublicRelationshipName, LeftType, RightType);
         }
 
         /// <summary>

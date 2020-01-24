@@ -22,14 +22,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class UpdatingDataTests : EndToEndTest
     {
-        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
         private Faker<Person> _personFaker;
 
         public UpdatingDataTests(TestFixture<Startup> fixture) : base(fixture)
         { 
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
 
             _todoItemFaker = new Faker<TodoItem>()
