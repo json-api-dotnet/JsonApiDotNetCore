@@ -19,9 +19,9 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds necessary components such as routing to your application
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="AddUserMiddleware"></param>
+        /// <param name="insertExtraMiddleware">Action intended for extra middleware that requires to be added after routing but before executing</param>
         /// <returns></returns>
-        public static void UseJsonApi(this IApplicationBuilder app, Action<IApplicationBuilder> AddUserMiddleware = null)
+        public static void UseJsonApi(this IApplicationBuilder app, Action<IApplicationBuilder> insertExtraMiddleware = null)
         {
             LogResourceGraphValidations(app);
             using (var scope = app.ApplicationServices.CreateScope())
@@ -34,8 +34,8 @@ namespace JsonApiDotNetCore.Extensions
             app.UseRouting();
 
             // user defined middleware to run after routing occurs.
-            if (AddUserMiddleware != null)
-                AddUserMiddleware(app);
+            if (insertExtraMiddleware != null)
+                insertExtraMiddleware(app);
 
             // middleware to run after routing occurs.
             app.UseMiddleware<CurrentRequestMiddleware>();
