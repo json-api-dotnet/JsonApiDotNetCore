@@ -254,8 +254,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Applies include queries
         /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
         protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> chainPrefix = null)
         {
             var chains = _includeService.Get();

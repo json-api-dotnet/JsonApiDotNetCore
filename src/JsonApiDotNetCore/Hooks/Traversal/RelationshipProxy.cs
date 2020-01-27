@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Extensions;
@@ -81,8 +81,8 @@ namespace JsonApiDotNetCore.Hooks
         /// Internally knows how to do this depending on the type of RelationshipAttribute
         /// that this RelationshipProxy encapsulates.
         /// </summary>
-        /// <returns>The relationship value.</returns>
         /// <param name="entity">Parent entity.</param>
+        /// <param name="value">The relationship value.</param>
         public void SetValue(IIdentifiable entity, object value)
         {
             if (_isHasManyThrough)

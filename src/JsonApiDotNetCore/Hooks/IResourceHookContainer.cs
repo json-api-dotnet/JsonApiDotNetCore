@@ -211,7 +211,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <param name="succeeded">If set to <c>true</c> if the deletion was succeeded in the repository layer.</param>
+        /// <param name="succeeded">If set to <c>true</c> the deletion succeeded in the repository layer.</param>
         void AfterDelete(HashSet<TResource> entities, ResourcePipeline pipeline, bool succeeded);
     }
 

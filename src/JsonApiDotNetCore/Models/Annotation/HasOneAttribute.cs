@@ -16,6 +16,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
         /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
+        /// <param name="inverseNavigationProperty"></param>
         /// 
         /// <example>
         /// Using an alternative foreign key:

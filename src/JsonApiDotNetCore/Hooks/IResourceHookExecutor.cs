@@ -67,6 +67,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
@@ -75,6 +76,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
+        /// <param name="succeeded">If set to <c>true</c> the deletion succeeded.</param>
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         void AfterDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable;
     }

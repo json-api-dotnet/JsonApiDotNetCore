@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
+        /// <param name="inverseNavigationProperty"></param>
         /// 
         /// <example>
         /// 

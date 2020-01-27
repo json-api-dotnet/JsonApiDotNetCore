@@ -21,10 +21,6 @@ namespace JsonApiDotNetCore.Extensions
         /// <summary>
         /// Enabling JsonApiDotNetCore using manual declaration to build the ResourceGraph.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="options"></param>
-        /// <param name="resources"></param>
-        /// <returns></returns>
         public static IServiceCollection AddJsonApi(this IServiceCollection services,
                                                     Action<JsonApiOptions> options = null,
                                                     Action<IServiceDiscoveryFacade> discovery = null,
