@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Formatters
             }
         }
 
-        /// <summary> Checks if the deserialized payload has an ID included </summary
+        /// <summary> Checks if the deserialized payload has an ID included </summary>
         private bool CheckForId(object model)
         {
             if (model == null) return false;
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Formatters
             return false;
         }
 
-        /// <summary> Checks if the elements in the deserialized payload have an ID included </summary
+        /// <summary> Checks if the elements in the deserialized payload have an ID included </summary>
         private bool CheckForId(IList modelList)
         {
             foreach (var model in modelList)

@@ -113,9 +113,9 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="openGenericType">The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`</param>
         /// <param name="genericArguments">Parameters to the generic type</param>
         /// <example>
-        /// <code>
+        /// <code><![CDATA[
         /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IEnumerable<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {

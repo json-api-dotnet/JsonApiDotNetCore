@@ -215,7 +215,6 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Reflectively instantiates a hashset of a certain type. 
         /// </summary>
-        /// <summary>
         public static IEnumerable CreateHashSetFor(Type type, object elements = null)
         {
             return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
@@ -225,7 +224,7 @@ namespace JsonApiDotNetCore.Internal
         /// Gets the generic argument T of List{T}
         /// </summary>
         /// <returns>The type of the list</returns>
-        /// <param name="list">The list to be inspected/param>
+        /// <param name="list">The list to be inspected</param>
         public static Type GetListInnerType(IEnumerable list)
         {
             return list.GetType().GetGenericArguments()[0];
