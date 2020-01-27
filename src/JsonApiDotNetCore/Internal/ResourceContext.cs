@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>
         /// object for this resource. If set to <see cref="Link.NotConfigured"/>,
-        /// the configuration will be read from <see cref="IGlobalLinksConfiguration"/>.
+        /// the configuration will be read from <see cref="ILinksConfiguration"/>.
         ///  Defaults to <see cref="Link.NotConfigured"/>.
         /// </summary>
         public Link TopLevelLinks { get; internal set; } = Link.NotConfigured;
@@ -55,7 +56,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Configures which links to show in the <see cref="ResourceLinks"/>
         /// object for this resource. If set to <see cref="Link.NotConfigured"/>,
-        /// the configuration will be read from <see cref="IGlobalLinksConfiguration"/>.
+        /// the configuration will be read from <see cref="ILinksConfiguration"/>.
         /// Defaults to <see cref="Link.NotConfigured"/>.
         /// </summary>
         public Link ResourceLinks { get; internal set; } = Link.NotConfigured;
@@ -65,7 +66,7 @@ namespace JsonApiDotNetCore.Internal
         /// for all relationships of the resource for which this attribute was instantiated.
         /// If set to <see cref="Link.NotConfigured"/>, the configuration will
         /// be read from <see cref="RelationshipAttribute.RelationshipLinks"/>  or
-        /// <see cref="IGlobalLinksConfiguration"/>. Defaults to <see cref="Link.NotConfigured"/>.
+        /// <see cref="ILinksConfiguration"/>. Defaults to <see cref="Link.NotConfigured"/>.
         /// </summary>
         public Link RelationshipLinks { get; internal set; } = Link.NotConfigured;
 

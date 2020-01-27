@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

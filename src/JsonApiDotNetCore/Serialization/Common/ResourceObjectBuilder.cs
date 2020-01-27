@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <summary>
-        /// Gets the value for the <see cref="RelationshipEntry.Data"/> property.
+        /// Gets the value for the <see cref="ExposableData{T}.Data"/> property.
         /// </summary>
         protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable entity)
         {
