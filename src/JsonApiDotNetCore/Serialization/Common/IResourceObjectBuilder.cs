@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization
@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Serialization
     {
         /// <summary>
         /// Converts <paramref name="entity"/> into a <see cref="ResourceObject"/>.
-        /// Adds the attributes and relationships that are enlisted in <paramref name="attrs"/> and <paramref name="rels"/>
+        /// Adds the attributes and relationships that are enlisted in <paramref name="attributes"/> and <paramref name="relationships"/>
         /// </summary>
         /// <param name="entity">Entity to build a Resource Object for</param>
         /// <param name="attributes">Attributes to include in the building process</param>
