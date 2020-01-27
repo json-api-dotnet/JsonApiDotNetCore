@@ -37,10 +37,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc/>
         public IResourceHookContainer GetResourceHookContainer(RightType rightType, ResourceHook hook = ResourceHook.None)
         {
-            /// checking the cache if we have a reference for the requested container, 
-            /// regardless of the hook we will use it for. If the value is null, 
-            /// it means there was no implementation IResourceHookContainer at all, 
-            /// so we need not even bother.
+            // checking the cache if we have a reference for the requested container, 
+            // regardless of the hook we will use it for. If the value is null, 
+            // it means there was no implementation IResourceHookContainer at all, 
+            // so we need not even bother.
             if (!_hookContainers.TryGetValue(rightType, out IResourceHookContainer container))
             {
                 container = (_genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), rightType));
@@ -48,8 +48,8 @@ namespace JsonApiDotNetCore.Hooks
             }
             if (container == null) return container;
 
-            /// if there was a container, first check if it implements the hook we 
-            /// want to use it for.
+            // if there was a container, first check if it implements the hook we 
+            // want to use it for.
             List<ResourceHook> targetHooks;
             if (hook == ResourceHook.None)
             {

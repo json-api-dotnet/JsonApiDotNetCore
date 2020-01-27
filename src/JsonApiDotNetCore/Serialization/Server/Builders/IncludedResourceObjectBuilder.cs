@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Builders;
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 foreach (var resourceObject in _included)
                 {
                     if (resourceObject.Relationships != null)
-                    {   /// removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
+                    {   // removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
                         var pruned = resourceObject.Relationships.Where(p => p.Value.IsPopulated || p.Value.Links != null).ToDictionary(p => p.Key, p => p.Value);
                         if (!pruned.Any()) pruned = null;
                         resourceObject.Relationships = pruned;
@@ -49,9 +49,9 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// <inheritdoc/>
         public void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootEntity)
         {
-            /// We dont have to build a resource object for the root entity because
-            /// this one is already encoded in the documents primary data, so we process the chain
-            /// starting from the first related entity.
+            // We dont have to build a resource object for the root entity because
+            // this one is already encoded in the documents primary data, so we process the chain
+            // starting from the first related entity.
             var relationship = inclusionChain.First();
             var chainRemainder = ShiftChain(inclusionChain);
             var related = relationship.GetValue(rootEntity);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,9 +87,9 @@ namespace JsonApiDotNetCore.Serialization.Client
         private List<RelationshipAttribute> GetRelationshipsToSerialize(IIdentifiable entity)
         {
             var currentResourceType = entity.GetType();
-            /// only allow relationship attributes to be serialized if they were set using
-            /// <see cref="RelationshipsToInclude{T}(Expression{Func{T, dynamic}})"/>
-            /// and the current <paramref name="entity"/> is a main entry in the primary data.
+            // only allow relationship attributes to be serialized if they were set using
+            // <see cref="RelationshipsToInclude{T}(Expression{Func{T, dynamic}})"/>
+            // and the current <paramref name="entity"/> is a main entry in the primary data.
             if (RelationshipsToSerialize == null)
                 return _resourceGraph.GetRelationships(currentResourceType);
 

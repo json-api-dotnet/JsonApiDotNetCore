@@ -79,16 +79,16 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="nodes">Nodes.</param>
         public NodeLayer CreateNextLayer(IEnumerable<INode> nodes)
         {
-            /// first extract entities by parsing populated relationships in the entities
-            /// of previous layer
+            // first extract entities by parsing populated relationships in the entities
+            // of previous layer
             (var lefts, var rights) = ExtractEntities(nodes);
 
-            /// group them conveniently so we can make ChildNodes of them:
-            /// there might be several relationship attributes in rights dictionary
-            /// that point to the same right type. 
+            // group them conveniently so we can make ChildNodes of them:
+            // there might be several relationship attributes in rights dictionary
+            // that point to the same right type. 
             var leftsGrouped = GroupByRightTypeOfRelationship(lefts);
 
-            /// convert the groups into child nodes
+            // convert the groups into child nodes
             var nextNodes = leftsGrouped.Select(entry =>
             {
                 var nextNodeType = entry.Key;
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Hooks
                 return CreateNodeInstance(nextNodeType, populatedRelationships.ToArray(), relationshipsToPreviousLayer);
             }).ToList();
 
-            /// wrap the child nodes in a EntityChildLayer
+            // wrap the child nodes in a EntityChildLayer
             return new NodeLayer(nextNodes);
         }
 

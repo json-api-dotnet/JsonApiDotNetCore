@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <returns>List of allowed attributes in the serialized result</returns>
         private List<AttrAttribute> GetAttributesToSerialize(Type resourceType)
         {
-            /// Check the attributes cache to see if the allowed attrs for this resource type were determined before.
+            // Check the attributes cache to see if the allowed attrs for this resource type were determined before.
             if (_attributesToSerializeCache.TryGetValue(resourceType, out List<AttrAttribute> allowedAttributes))
                 return allowedAttributes;
 
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <returns>List of allowed relationships in the serialized result</returns>
         private List<RelationshipAttribute> GetRelationshipsToSerialize(Type resourceType)
         {
-            /// Check the relationships cache to see if the allowed attrs for this resource type were determined before.
+            // Check the relationships cache to see if the allowed attrs for this resource type were determined before.
             if (_relationshipsToSerializeCache.TryGetValue(resourceType, out List<RelationshipAttribute> allowedRelations))
                 return allowedRelations;
 
