@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Extensions.EntityFrameworkCore
         /// <summary>
         /// Enabling JsonApiDotNetCore using the EF Core DbContext to build the ResourceGraph.
         /// </summary>
-        /// <typeparam name="TContext"></typeparam>
+        /// <typeparam name="TDbContext"></typeparam>
         /// <param name="services"></param>
         /// <param name="options"></param>
         /// <param name="resources"></param>
