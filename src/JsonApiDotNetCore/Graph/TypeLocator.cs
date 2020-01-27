@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Graph
         /// Get all derivitives of the specified type.
         /// </summary>
         /// <param name="assembly">The assembly to search</param>
-        /// <param name="openGenericType">The inherited type</param>
+        /// <param name="inheritedType">The inherited type</param>
         /// <example>
         /// <code>
         /// GetDerivedGenericTypes(assembly, typeof(DbContext))
