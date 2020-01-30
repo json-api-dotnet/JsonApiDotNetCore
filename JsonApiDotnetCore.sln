@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore", "src\Js
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted", "src\Examples\GettingStarted\GettingStarted.csproj", "{067FFD7A-C66B-473D-8471-37F5C95DF61C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{CEB08B86-6BF1-4227-B20F-45AE9C1CC6D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{CEB08B86-6BF1-4227-B20F-45AE9C1CC6D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,7 +103,6 @@ Global
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Debug|x86.Build.0 = Debug|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Release|x64.ActiveCfg = Release|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Release|x64.Build.0 = Release|Any CPU
 		{DF0FCFB2-CB12-44BA-BBB5-1BE0BCFCD14C}.Release|x86.ActiveCfg = Release|Any CPU
