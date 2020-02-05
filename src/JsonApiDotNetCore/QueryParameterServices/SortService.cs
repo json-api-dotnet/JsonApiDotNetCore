@@ -14,7 +14,6 @@ namespace JsonApiDotNetCore.Query
         const char DESCENDING_SORT_OPERATOR = '-';
         private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
         private List<SortQueryContext> _queries;
-        private bool _isProcessed;
 
         public SortService(IResourceDefinitionProvider resourceDefinitionProvider,
                            IResourceGraph resourceGraph,
@@ -29,7 +28,6 @@ namespace JsonApiDotNetCore.Query
         public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
         {
             EnsureNoNestedResourceRoute();
-            CheckIfProcessed(); // disallow multiple sort parameters.
             var queries = BuildQueries(queryParameter.Value);
 
             _queries = queries.Select(BuildQueryContext).ToList();
@@ -86,14 +84,5 @@ namespace JsonApiDotNetCore.Query
                 Relationship = relationship
             };
         }
-
-        private void CheckIfProcessed()
-        {
-            if (_isProcessed)
-                throw new JsonApiException(400, "The sort query parameter occured in the URI more than once.");
-
-            _isProcessed = true;
-        }
-
     }
 }
