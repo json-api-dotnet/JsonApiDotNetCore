@@ -5,12 +5,13 @@
     <AssemblyName>JsonApiDotNetCore</AssemblyName>
     <PackageId>JsonApiDotNetCore</PackageId>
     <LangVersion>8.0</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
     <PackageProjectUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
