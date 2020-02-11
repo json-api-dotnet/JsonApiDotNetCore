@@ -340,7 +340,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public async Task<TResource> FirstOrDefaultAsync(IQueryable<TResource> entities)
+        public virtual async Task<TResource> FirstOrDefaultAsync(IQueryable<TResource> entities)
         {
             return (entities is IAsyncEnumerable<TResource>)
                ? await entities.FirstOrDefaultAsync()
