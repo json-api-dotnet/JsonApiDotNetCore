@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +15,10 @@ namespace JsonApiDotNetCore.Serialization.Client
     {
         private Type _currentTargetedResource;
         private readonly IResourceGraph _resourceGraph;
+
         public RequestSerializer(IResourceGraph resourceGraph,
                                 IResourceObjectBuilder resourceObjectBuilder)
-            : base(resourceObjectBuilder, resourceGraph)
+            : base(resourceObjectBuilder)
         {
             _resourceGraph = resourceGraph;
         }
