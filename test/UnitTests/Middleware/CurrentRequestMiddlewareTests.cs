@@ -101,14 +101,14 @@ namespace UnitTests.Middleware
         {
             public CurrentRequestMiddleware MiddleWare;
             public HttpContext HttpContext;
-            public Mock<IControllerResourceMapping> ControllerResourcemapping;
+            public Mock<IControllerResourceMapping> ControllerResourceMapping;
             public Mock<IJsonApiOptions> Options;
             public CurrentRequest CurrentRequest;
             public Mock<IResourceGraph> ResourceGraph;
         }
         private Task RunMiddlewareTask(InvokeConfiguration holder)
         {
-            var controllerResourceMapping = holder.ControllerResourcemapping.Object;
+            var controllerResourceMapping = holder.ControllerResourceMapping.Object;
             var context = holder.HttpContext;
             var options = holder.Options.Object;
             var currentRequest = holder.CurrentRequest;
@@ -141,7 +141,7 @@ namespace UnitTests.Middleware
             return new InvokeConfiguration
             {
                 MiddleWare = middleware,
-                ControllerResourcemapping = mockMapping,
+                ControllerResourceMapping = mockMapping,
                 Options = mockOptions,
                 CurrentRequest = currentRequest,
                 HttpContext = context,

@@ -121,7 +121,7 @@ namespace UnitTests.ResourceHooks
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
 
-            // asert
+            // Assert
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
         }
     }

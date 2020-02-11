@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_Included_Contains_SideloadeData_ForManyToOne()
+        public async Task GET_Included_Contains_SideLoadedData_ForManyToOne()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_ById_Included_Contains_SideloadeData_ForManyToOne()
+        public async Task GET_ById_Included_Contains_SideLoadedData_ForManyToOne()
         {
             // Arrange
             var person = _personFaker.Generate();
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         }
 
         [Fact]
-        public async Task GET_Included_Contains_SideloadeData_OneToMany()
+        public async Task GET_Included_Contains_SideLoadedData_OneToMany()
         {
             // Arrange
             _context.People.RemoveRange(_context.People); // ensure all people have todoItems

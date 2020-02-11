@@ -263,7 +263,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var entity = new OneToManyPrincipal { Id = 10 };
-            var serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
 
             // Act
             string serialized = serializer.SerializeSingle(entity);
@@ -336,7 +336,7 @@ namespace UnitTests.Serialization.Server
             // Arrange
             var meta = new Dictionary<string, object> { { "test", "meta" } };
             OneToManyPrincipal entity = null;
-            var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyToplevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
             // Act
             string serialized = serializer.SerializeSingle(entity);
             // Assert

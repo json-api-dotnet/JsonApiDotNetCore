@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Extensions;
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         }
 
         /// <summary>
-        /// Additional procesing required for client deserialization, responsible
+        /// Additional processing required for client deserialization, responsible
         /// for parsing the <see cref="Document.Included"/> property. When a relationship value is parsed,
         /// it goes through the included list to set its attributes and relationships.
         /// </summary>

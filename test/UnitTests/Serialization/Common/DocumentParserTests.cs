@@ -22,7 +22,7 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeResourceIdentifiers_SingleData_CanDeserialize()
         {
-            // arange
+            // Arrange
             var content = new Document
             {
                 Data = new ResourceObject
@@ -43,7 +43,7 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeResourceIdentifiers_EmptySingleData_CanDeserialize()
         {
-            // arange
+            // Arrange
             var content = new Document { };
             var body = JsonConvert.SerializeObject(content);
 
@@ -57,7 +57,7 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeResourceIdentifiers_ArrayData_CanDeserialize()
         {
-            // arange
+            // Arrange
             var content = new Document
             {
                 Data = new List<ResourceObject>

@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Models
         /// Hides specified attributes and relationships from the serialized output. Can be called directly in a resource definition implementation or
         /// in any resource hook to combine it with eg authorization.
         /// </summary>
-        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Arttribute2, e.Relationship1, e.Relationship2 }</param>
+        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Attribute2, e.Relationship1, e.Relationship2 }</param>
         public void HideFields(Expression<Func<TResource, dynamic>> selector)
         {
             var fieldsToHide = _resourceGraph.GetFields(selector);

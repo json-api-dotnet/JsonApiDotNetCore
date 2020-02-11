@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Hooks
     /// A helper class for retrieving meta data about hooks, 
     /// fetching database values and performing other recurring internal operations.
     /// 
-    /// Used internalyl by <see cref="ResourceHookExecutor"/>
+    /// Used internally by <see cref="ResourceHookExecutor"/>
     /// </summary>
     internal interface IHookExecutorHelper
     {
@@ -49,11 +49,11 @@ namespace JsonApiDotNetCore.Hooks
         IEnumerable LoadDbValues(Type repositoryEntityType, IEnumerable entities, ResourceHook hook, params RelationshipAttribute[] relationships);
 
         /// <summary>
-        /// Checks if the display database values option is allowed for the targetd hook, and for 
+        /// Checks if the display database values option is allowed for the targeted hook, and for 
         /// a given resource of type <paramref name="entityType"/> checks if this hook is implemented and if the
         /// database values option is enabled.
         /// </summary>
-        /// <returns><c>true</c>, if load db values was shoulded, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c>, if should load db values, <c>false</c> otherwise.</returns>
         /// <param name="entityType">Container entity type.</param>
         /// <param name="hook">Hook.</param>
         bool ShouldLoadDbValues(Type entityType, ResourceHook hook);

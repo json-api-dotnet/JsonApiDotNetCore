@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task CreateResource_ModelWithEntityFrameworkInHeritance_IsCreated()
+        public async Task CreateResource_ModelWithEntityFrameworkInheritance_IsCreated()
         {
             // Arrange
             var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });

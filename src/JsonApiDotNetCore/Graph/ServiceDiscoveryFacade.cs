@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Graph
         {
             AddDbContextResolvers(assembly);
 
-            var resourceDescriptors = TypeLocator.GetIdentifableTypes(assembly);
+            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
                 AddResource(assembly, resourceDescriptor);
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddResources(Assembly assembly)
         {
-            var identifiables = TypeLocator.GetIdentifableTypes(assembly);
+            var identifiables = TypeLocator.GetIdentifiableTypes(assembly);
             foreach (var identifiable in identifiables)
                 AddResource(assembly, identifiable);
 
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddServices(Assembly assembly)
         {
-            var resourceDescriptors = TypeLocator.GetIdentifableTypes(assembly);
+            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
                 AddServices(assembly, resourceDescriptor);
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddRepositories(Assembly assembly)
         {
-            var resourceDescriptors = TypeLocator.GetIdentifableTypes(assembly);
+            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
                 AddRepositories(assembly, resourceDescriptor);

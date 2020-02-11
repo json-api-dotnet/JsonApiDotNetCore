@@ -89,9 +89,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             var affectedThroughToMany = relationshipsDictionary.GetAffected(d => d.ToManies).ToList();
 
             // Assert
-            affectedThroughFirstToOne.ForEach((entitiy) => Assert.Contains(entitiy, FirstToOnesEntities));
-            affectedThroughSecondToOne.ForEach((entitiy) => Assert.Contains(entitiy, SecondToOnesEntities));
-            affectedThroughToMany.ForEach((entitiy) => Assert.Contains(entitiy, ToManiesEntities));
+            affectedThroughFirstToOne.ForEach((entity) => Assert.Contains(entity, FirstToOnesEntities));
+            affectedThroughSecondToOne.ForEach((entity) => Assert.Contains(entity, SecondToOnesEntities));
+            affectedThroughToMany.ForEach((entity) => Assert.Contains(entity, ToManiesEntities));
         }
 
         [Fact]
@@ -178,9 +178,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             var affectedThroughToMany = diffs.GetAffected(d => d.ToManies).ToList();
 
             // Assert
-            affectedThroughFirstToOne.ForEach((entitiy) => Assert.Contains(entitiy, FirstToOnesEntities));
-            affectedThroughSecondToOne.ForEach((entitiy) => Assert.Contains(entitiy, SecondToOnesEntities));
-            affectedThroughToMany.ForEach((entitiy) => Assert.Contains(entitiy, ToManiesEntities));
+            affectedThroughFirstToOne.ForEach((entity) => Assert.Contains(entity, FirstToOnesEntities));
+            affectedThroughSecondToOne.ForEach((entity) => Assert.Contains(entity, SecondToOnesEntities));
+            affectedThroughToMany.ForEach((entity) => Assert.Contains(entity, ToManiesEntities));
         }
 
         [Fact]
@@ -213,9 +213,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
             Assert.Contains(ToManyAttr, toManies.Keys);
             Assert.Equal(relationshipsDictionary.Keys.Count, toOnes.Keys.Count + toManies.Keys.Count + notTargeted.Keys.Count);
 
-            toOnes[FirstToOneAttr].ToList().ForEach((entitiy) =>
+            toOnes[FirstToOneAttr].ToList().ForEach((entity) =>
             {
-                Assert.Contains(entitiy, FirstToOnesEntities);
+                Assert.Contains(entity, FirstToOnesEntities);
             });
 
             toOnes[SecondToOneAttr].ToList().ForEach((entity) =>
@@ -223,9 +223,9 @@ namespace UnitTests.ResourceHooks.AffectedEntities
                 Assert.Contains(entity, SecondToOnesEntities);
             });
 
-            toManies[ToManyAttr].ToList().ForEach((entitiy) =>
+            toManies[ToManyAttr].ToList().ForEach((entity) =>
             {
-                Assert.Contains(entitiy, ToManiesEntities);
+                Assert.Contains(entity, ToManiesEntities);
             });
             Assert.Empty(notTargeted);
         }

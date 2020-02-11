@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Graph
         string FormatPropertyName(PropertyInfo property);
 
         /// <summary>
-        /// Aoplies the desired casing convention to the internal string.
+        /// Applies the desired casing convention to the internal string.
         /// This is generally applied to the type name after pluralization.
         /// </summary>
         string ApplyCasingConvention(string properName);
