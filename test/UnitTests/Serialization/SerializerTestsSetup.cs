@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -17,12 +17,12 @@ namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
-        protected readonly TopLevelLinks _dummyToplevelLinks;
+        protected readonly TopLevelLinks _dummyTopLevelLinks;
         protected readonly ResourceLinks _dummyResourceLinks;
         protected readonly RelationshipLinks _dummyRelationshipLinks;
         public SerializerTestsSetup()
         {
-            _dummyToplevelLinks = new TopLevelLinks
+            _dummyTopLevelLinks = new TopLevelLinks
             {
                 Self = "http://www.dummy.com/dummy-self-link",
                 Next = "http://www.dummy.com/dummy-next-link",

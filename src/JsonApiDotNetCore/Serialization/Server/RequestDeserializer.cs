@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         }
 
         /// <summary>
-        /// Additional procesing required for server deserialization. Flags a
+        /// Additional processing required for server deserialization. Flags a
         /// processed attribute or relationship as updated using <see cref="ITargetedFields"/>.
         /// </summary>
         /// <param name="entity">The entity that was constructed from the document's body</param>

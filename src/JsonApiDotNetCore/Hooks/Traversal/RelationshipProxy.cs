@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Extensions;
@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Hooks
     /// A wrapper for RelationshipAttribute with an abstraction layer that works on the 
     /// getters and setters of relationships. These are different in the case of 
     /// HasMany vs HasManyThrough, and HasManyThrough.
-    /// It also depends on if the jointable entity
+    /// It also depends on if the join table entity
     /// (eg ArticleTags) is identifiable (in which case we will traverse through 
     /// it and fire hooks for it, if defined) or not (in which case we skip 
     /// ArticleTags and go directly to Tags.
@@ -24,9 +24,9 @@ namespace JsonApiDotNetCore.Hooks
 
         /// <summary>
         /// The target type for this relationship attribute. 
-        /// For HasOne has HasMany this is trivial: just the righthand side.
-        /// For HasManyThrough it is either the ThroughProperty (when the jointable is 
-        /// Identifiable) or it is the righthand side (when the jointable is not identifiable)
+        /// For HasOne has HasMany this is trivial: just the right-hand side.
+        /// For HasManyThrough it is either the ThroughProperty (when the join table is 
+        /// Identifiable) or it is the right-hand side (when the join table is not identifiable)
         /// </summary>
         public Type RightType { get; private set; }
         public Type LeftType { get { return Attribute.LeftType; } }

@@ -55,7 +55,7 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void BuildIncluded_OverlappingDeeplyNestedCirculairChains_CanBuild()
+        public void BuildIncluded_OverlappingDeeplyNestedCircularChains_CanBuild()
         {
             // Arrange
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
@@ -73,9 +73,9 @@ namespace UnitTests.Serialization.Server
 
             // Assert
             Assert.Equal(10, result.Count);
-            var overlappingBlogResourcObject = result.Single((ro) => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
+            var overlappingBlogResourceObject = result.Single((ro) => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
 
-            Assert.Equal(2, overlappingBlogResourcObject.Relationships.Keys.ToList().Count);
+            Assert.Equal(2, overlappingBlogResourceObject.Relationships.Keys.ToList().Count);
             var nonOverlappingBlogs = result.Where((ro) => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
 
             foreach (var blog in nonOverlappingBlogs)
@@ -158,8 +158,8 @@ namespace UnitTests.Serialization.Server
         {
             var parsedChain = new List<RelationshipAttribute>();
             var resourceContext = _resourceGraph.GetResourceContext<Article>();
-            var splittedPath = chain.Split(QueryConstants.DOT);
-            foreach (var requestedRelationship in splittedPath)
+            var splitPath = chain.Split(QueryConstants.DOT);
+            foreach (var requestedRelationship in splitPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
                 parsedChain.Add(relationship);

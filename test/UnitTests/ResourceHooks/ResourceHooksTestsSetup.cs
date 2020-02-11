@@ -383,8 +383,8 @@ namespace UnitTests.ResourceHooks
         {
             var parsedChain = new List<RelationshipAttribute>();
             var resourceContext = _resourceGraph.GetResourceContext<TodoItem>();
-            var splittedPath = chain.Split(QueryConstants.DOT);
-            foreach (var requestedRelationship in splittedPath)
+            var splitPath = chain.Split(QueryConstants.DOT);
+            foreach (var requestedRelationship in splitPath)
             {
                 var relationship = resourceContext.Relationships.Single(r => r.PublicRelationshipName == requestedRelationship);
                 parsedChain.Add(relationship);

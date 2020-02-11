@@ -49,10 +49,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
        public void UpdateUnique(IEnumerable updated)
         {
-            List<TResource> casted = updated.Cast<TResource>().ToList();
-            foreach (var rpfl in _relationshipsFromPreviousLayer)
+            List<TResource> cast = updated.Cast<TResource>().ToList();
+            foreach (var group in _relationshipsFromPreviousLayer)
             {
-                rpfl.RightEntities = new HashSet<TResource>(rpfl.RightEntities.Intersect(casted, _comparer).Cast<TResource>());
+                group.RightEntities = new HashSet<TResource>(group.RightEntities.Intersect(cast, _comparer).Cast<TResource>());
             }
         }
 
@@ -63,10 +63,10 @@ namespace JsonApiDotNetCore.Hooks
         public void Reassign(IEnumerable updated = null)
         {
             var unique = (HashSet<TResource>)UniqueEntities;
-            foreach (var rfpl in _relationshipsFromPreviousLayer)
+            foreach (var group in _relationshipsFromPreviousLayer)
             {
-                var proxy = rfpl.Proxy;
-                var leftEntities = rfpl.LeftEntities;
+                var proxy = group.Proxy;
+                var leftEntities = group.LeftEntities;
 
                 foreach (IIdentifiable left in leftEntities)
                 {

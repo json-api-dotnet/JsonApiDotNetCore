@@ -80,8 +80,8 @@ namespace JsonApiDotNetCore.Hooks
             var parameterizedGetWhere = GetType()
                     .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
                     .MakeGenericMethod(entityTypeForRepository, idType);
-            var casted = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
-            var ids = casted.Select(e => e.StringId).Cast(idType);
+            var cast = ((IEnumerable<object>)entities).Cast<IIdentifiable>();
+            var ids = cast.Select(e => e.StringId).Cast(idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
             if (values == null) return null;
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(entityTypeForRepository), values.Cast(entityTypeForRepository));
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Hooks
             {
                 if (IsHasManyThrough(kvp, out var lefts, out var relationship)) continue;
 
-                // note that we dont't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
+                // note that we don't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
                 var includedLefts = LoadDbValues(relationship.LeftType, lefts, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
 
                 foreach (IIdentifiable ip in includedLefts)
@@ -171,17 +171,17 @@ namespace JsonApiDotNetCore.Hooks
                     {
                         dbRightEntityList = (IList)relationshipValue;
                     }
-                    var dbRightEntityListCasted = dbRightEntityList.Cast<IIdentifiable>().ToList();
-                    if (existingRightEntities != null) dbRightEntityListCasted = dbRightEntityListCasted.Except(existingRightEntities.Cast<IIdentifiable>(), _comparer).ToList();
+                    var dbRightEntityListCast = dbRightEntityList.Cast<IIdentifiable>().ToList();
+                    if (existingRightEntities != null) dbRightEntityListCast = dbRightEntityListCast.Except(existingRightEntities.Cast<IIdentifiable>(), _comparer).ToList();
 
-                    if (dbRightEntityListCasted.Any())
+                    if (dbRightEntityListCast.Any())
                     {
                         if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
                         {
                             affected = TypeHelper.CreateListFor(relationship.RightType);
                             implicitlyAffected[relationship] = affected;
                         }
-                        ((IList)affected).AddRange(dbRightEntityListCasted);
+                        ((IList)affected).AddRange(dbRightEntityListCast);
                     }
                 }
             }

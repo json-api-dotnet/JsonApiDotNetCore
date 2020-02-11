@@ -40,11 +40,11 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer { get { return null; } }
 
-        public RootNode(IEnumerable<TResource> uniqueEntities, RelationshipProxy[] poplatedRelationships, RelationshipProxy[] allRelationships)
+        public RootNode(IEnumerable<TResource> uniqueEntities, RelationshipProxy[] populatedRelationships, RelationshipProxy[] allRelationships)
         {
             ResourceType = typeof(TResource);
             _uniqueEntities = new HashSet<TResource>(uniqueEntities);
-            RelationshipsToNextLayer = poplatedRelationships;
+            RelationshipsToNextLayer = populatedRelationships;
             _allRelationshipsToNextLayer = allRelationships;
         }
 
@@ -54,8 +54,8 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="updated">Updated.</param>
         public void UpdateUnique(IEnumerable updated)
         {
-            var casted = updated.Cast<TResource>().ToList();
-            var intersected = _uniqueEntities.Intersect(casted, _comparer).Cast<TResource>();
+            var cast = updated.Cast<TResource>().ToList();
+            var intersected = _uniqueEntities.Intersect(cast, _comparer).Cast<TResource>();
             _uniqueEntities = new HashSet<TResource>(intersected);
         }
 

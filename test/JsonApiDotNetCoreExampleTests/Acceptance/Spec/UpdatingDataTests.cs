@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task PatchResource_ModelWithEntityFrameworkInHeritance_IsPatched()
+        public async Task PatchResource_ModelWithEntityFrameworkInheritance_IsPatched()
         {
             // Arrange
             var dbContext = PrepareTest<Startup>();
