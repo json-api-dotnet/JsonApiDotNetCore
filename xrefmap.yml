@@ -9320,12 +9320,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.BaseDocumentBuilder
   fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder
   nameWithType: BaseDocumentBuilder
-- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.#ctor(JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  name: BaseDocumentBuilder(IResourceObjectBuilder, IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder__ctor_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.#ctor(JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.BaseDocumentBuilder(JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  nameWithType: BaseDocumentBuilder.BaseDocumentBuilder(IResourceObjectBuilder, IResourceContextProvider)
+- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.#ctor(JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  name: BaseDocumentBuilder(IResourceObjectBuilder)
+  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder__ctor_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDocumentBuilder.#ctor(JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.BaseDocumentBuilder(JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  nameWithType: BaseDocumentBuilder.BaseDocumentBuilder(IResourceObjectBuilder)
 - uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.#ctor*
   name: BaseDocumentBuilder
   href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder__ctor_
@@ -9333,12 +9333,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder.BaseDocumentBuilder
   nameWithType: BaseDocumentBuilder.BaseDocumentBuilder
-- uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder._provider
-  name: _provider
-  href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder__provider
-  commentId: F:JsonApiDotNetCore.Serialization.BaseDocumentBuilder._provider
-  fullName: JsonApiDotNetCore.Serialization.BaseDocumentBuilder._provider
-  nameWithType: BaseDocumentBuilder._provider
 - uid: JsonApiDotNetCore.Serialization.BaseDocumentBuilder._resourceObjectBuilder
   name: _resourceObjectBuilder
   href: api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.html#JsonApiDotNetCore_Serialization_BaseDocumentBuilder__resourceObjectBuilder
@@ -10037,12 +10031,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetResourceLinks
   nameWithType: ILinkBuilder.GetResourceLinks
-- uid: JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks(JsonApiDotNetCore.Internal.ResourceContext)
-  name: GetTopLevelLinks(ResourceContext)
-  href: api/JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_GetTopLevelLinks_JsonApiDotNetCore_Internal_ResourceContext_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks(JsonApiDotNetCore.Internal.ResourceContext)
-  fullName: JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks(JsonApiDotNetCore.Internal.ResourceContext)
-  nameWithType: ILinkBuilder.GetTopLevelLinks(ResourceContext)
+- uid: JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks
+  name: GetTopLevelLinks()
+  href: api/JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_GetTopLevelLinks
+  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks
+  fullName: JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks()
+  nameWithType: ILinkBuilder.GetTopLevelLinks()
 - uid: JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.GetTopLevelLinks*
   name: GetTopLevelLinks
   href: api/JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_GetTopLevelLinks_
@@ -10221,12 +10215,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetResourceLinks
   nameWithType: LinkBuilder.GetResourceLinks
-- uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks(JsonApiDotNetCore.Internal.ResourceContext)
-  name: GetTopLevelLinks(ResourceContext)
-  href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetTopLevelLinks_JsonApiDotNetCore_Internal_ResourceContext_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks(JsonApiDotNetCore.Internal.ResourceContext)
-  fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks(JsonApiDotNetCore.Internal.ResourceContext)
-  nameWithType: LinkBuilder.GetTopLevelLinks(ResourceContext)
+- uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks
+  name: GetTopLevelLinks()
+  href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetTopLevelLinks
+  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks
+  fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks()
+  nameWithType: LinkBuilder.GetTopLevelLinks()
 - uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.GetTopLevelLinks*
   name: GetTopLevelLinks
   href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder_GetTopLevelLinks_
@@ -10588,15 +10582,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Serialization.Server.ResponseSerializer(Of TResource)
   nameWithType: ResponseSerializer<TResource>
   nameWithType.vb: ResponseSerializer(Of TResource)
-- uid: JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  name: ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_Server_ResponseSerializer_1__ctor_JsonApiDotNetCore_Serialization_Server_Builders_IMetaBuilder__0__JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_JsonApiDotNetCore_Serialization_Server_IFieldsToSerialize_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  name.vb: ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Serialization.Server.ResponseSerializer<TResource>.ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder<TResource>, JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  fullName.vb: JsonApiDotNetCore.Serialization.Server.ResponseSerializer(Of TResource).ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder(Of TResource), JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  nameWithType: ResponseSerializer<TResource>.ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceContextProvider)
-  nameWithType.vb: ResponseSerializer(Of TResource).ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder, IResourceContextProvider)
+- uid: JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  name: ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder)
+  href: api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_Server_ResponseSerializer_1__ctor_JsonApiDotNetCore_Serialization_Server_Builders_IMetaBuilder__0__JsonApiDotNetCore_Serialization_Server_Builders_ILinkBuilder_JsonApiDotNetCore_Serialization_Server_Builders_IIncludedResourceObjectBuilder_JsonApiDotNetCore_Serialization_Server_IFieldsToSerialize_JsonApiDotNetCore_Serialization_IResourceObjectBuilder_
+  commentId: M:JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder{`0},JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder,JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder,JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize,JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  name.vb: ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder)
+  fullName: JsonApiDotNetCore.Serialization.Server.ResponseSerializer<TResource>.ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder<TResource>, JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  fullName.vb: JsonApiDotNetCore.Serialization.Server.ResponseSerializer(Of TResource).ResponseSerializer(JsonApiDotNetCore.Serialization.Server.Builders.IMetaBuilder(Of TResource), JsonApiDotNetCore.Serialization.Server.Builders.ILinkBuilder, JsonApiDotNetCore.Serialization.Server.Builders.IIncludedResourceObjectBuilder, JsonApiDotNetCore.Serialization.Server.IFieldsToSerialize, JsonApiDotNetCore.Serialization.IResourceObjectBuilder)
+  nameWithType: ResponseSerializer<TResource>.ResponseSerializer(IMetaBuilder<TResource>, ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder)
+  nameWithType.vb: ResponseSerializer(Of TResource).ResponseSerializer(IMetaBuilder(Of TResource), ILinkBuilder, IIncludedResourceObjectBuilder, IFieldsToSerialize, IResourceObjectBuilder)
 - uid: JsonApiDotNetCore.Serialization.Server.ResponseSerializer`1.#ctor*
   name: ResponseSerializer
   href: api/JsonApiDotNetCore.Serialization.Server.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_Server_ResponseSerializer_1__ctor_
