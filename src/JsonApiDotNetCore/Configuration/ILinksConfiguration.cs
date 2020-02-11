@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Models;
+﻿using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Configuration
@@ -34,20 +34,20 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures globally which links to show in the <see cref="TopLevelLinks"/>
         /// object for a requested resource. Setting can be overriden per resource by
-        /// adding a <see cref="LinksAttribute"/> to the class definitio of that resource.
+        /// adding a <see cref="LinksAttribute"/> to the class definition of that resource.
         /// </summary>
         Link TopLevelLinks { get; }
 
         /// <summary>
         /// Configures globally which links to show in the <see cref="ResourceLinks"/>
         /// object for a requested resource. Setting can be overriden per resource by
-        /// adding a <see cref="LinksAttribute"/> to the class definitio of that resource.
+        /// adding a <see cref="LinksAttribute"/> to the class definition of that resource.
         /// </summary>
         Link ResourceLinks { get; }
         /// <summary>
         /// Configures globally which links to show in the <see cref="RelationshipLinks"/>
         /// object for a requested resource. Setting can be overriden per resource by
-        /// adding a <see cref="LinksAttribute"/> to the class definitio of that resource.
+        /// adding a <see cref="LinksAttribute"/> to the class definition of that resource.
         /// Option can also be specified per relationship by using the associated links argument
         /// in the constructor of <see cref="RelationshipAttribute"/>.
         /// </summary>

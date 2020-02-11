@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// Base clas for query parameters.
+    /// Base class for query parameters.
     /// </summary>
     public abstract class QueryParameterService
     {

@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -207,11 +207,11 @@ namespace UnitTests.ResourceHooks
             var diffPairCheck = (dbCheck && reqCheck);
 
             var updatedRelationship = entities.GetByRelationship<Person>().Single();
-            var diffcheck = updatedRelationship.Key.PublicRelationshipName == "oneToOnePerson";
+            var diffCheck = updatedRelationship.Key.PublicRelationshipName == "oneToOnePerson";
 
             var getAffectedCheck = entities.GetAffected(e => e.OneToOnePerson).Any();
 
-            return (dbCheck && reqCheck && diffcheck && getAffectedCheck);
+            return (dbCheck && reqCheck && diffCheck && getAffectedCheck);
         }
 
         private bool TodoCheck(IRelationshipsDictionary<TodoItem> rh, string checksum)

@@ -139,7 +139,7 @@ namespace UnitTests.ResourceHooks
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
 
-            // asert
+            // Assert
             VerifyNoOtherCalls(articleResourceMock, joinResourceMock, tagResourceMock);
         }
     }

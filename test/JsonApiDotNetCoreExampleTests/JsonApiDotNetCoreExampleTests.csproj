@@ -5,14 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="xunit.runner.json;appsettings.json">
+    <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../src/Examples/JsonApiDotNetCoreExample/JsonApiDotNetCoreExample.csproj" />
-    <ProjectReference Include="../../src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
     <ProjectReference Include="../UnitTests/UnitTests.csproj" />
   </ItemGroup>
 

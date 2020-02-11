@@ -236,19 +236,19 @@ namespace JsonApiDotNetCore.Hooks
         /// related to article2. Then, the following nested hooks need to be fired in the following order. 
         /// First the BeforeUpdateRelationship should be for owner1, then the 
         /// BeforeImplicitUpdateRelationship hook should be fired for
-        /// owner2, and lastely the BeforeImplicitUpdateRelationship for article2.</remarks>
+        /// owner2, and lastly the BeforeImplicitUpdateRelationship for article2.</remarks>
         void FireNestedBeforeUpdateHooks(ResourcePipeline pipeline, NodeLayer layer)
         {
             foreach (INode node in layer)
             {
-                var nestedHookcontainer = _executorHelper.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
+                var nestedHookContainer = _executorHelper.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
                 IEnumerable uniqueEntities = node.UniqueEntities;
                 RightType entityType = node.ResourceType;
-                Dictionary<RelationshipAttribute, IEnumerable> currenEntitiesGrouped;
+                Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGrouped;
                 Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGroupedInverse;
 
                 // fire the BeforeUpdateRelationship hook for owner_new
-                if (nestedHookcontainer != null)
+                if (nestedHookContainer != null)
                 {
                     if (uniqueEntities.Cast<IIdentifiable>().Any())
                     {
@@ -262,11 +262,11 @@ namespace JsonApiDotNetCore.Hooks
                         // we want want inverse relationship attribute:
                         // we now have the one pointing from article -> person, ]
                         // but we require the the one that points from person -> article             
-                        currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
-                        currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currenEntitiesGrouped);
+                        currentEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
+                        currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currentEntitiesGrouped);
 
                         var resourcesByRelationship = CreateRelationshipHelper(entityType, currentEntitiesGroupedInverse, dbValues);
-                        var allowedIds = CallHook(nestedHookcontainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
+                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueEntities), resourcesByRelationship, pipeline }).Cast<string>();
                         var updated = GetAllowedEntities(uniqueEntities, allowedIds);
                         node.UpdateUnique(updated);
                         node.Reassign();
@@ -293,20 +293,20 @@ namespace JsonApiDotNetCore.Hooks
                 // Fire the BeforeImplicitUpdateRelationship hook for article2
                 // For this, we need to query the database for the current owner 
                 // relationship value of owner_new.
-                currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
-                if (currenEntitiesGrouped.Any())
+                currentEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
+                if (currentEntitiesGrouped.Any())
                 {
                     // rightEntities is grouped by relationships from previous 
                     // layer, ie { HasOneAttribute:owner  =>  owner_new }. But 
                     // to load article2 onto owner_new, we need to have the 
                     // RelationshipAttribute from owner to article, which is the
                     // inverse of HasOneAttribute:owner
-                    currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currenEntitiesGrouped);
+                    currentEntitiesGroupedInverse = ReplaceKeysWithInverseRelationships(currentEntitiesGrouped);
                     // Note that currently in the JADNC implementation of hooks, 
                     // the root layer is ALWAYS homogenous, so we safely assume 
                     // that for every relationship to the previous layer, the 
                     // left type is the same.
-                    LeftType leftType = currenEntitiesGrouped.First().Key.LeftType;
+                    LeftType leftType = currentEntitiesGrouped.First().Key.LeftType;
                     FireForAffectedImplicits(leftType, currentEntitiesGroupedInverse, pipeline);
                 }
             }
@@ -347,7 +347,7 @@ namespace JsonApiDotNetCore.Hooks
         /// relevant (eg AfterRead from GetSingle pipeline).
         /// </summary>
         /// <param name="returnedList"> The collection returned from the hook</param>
-        /// <param name="pipeline">The pipeine from which the hook was fired</param>
+        /// <param name="pipeline">The pipeline from which the hook was fired</param>
         void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourcePipeline pipeline = 0)
         {
             if (pipeline == ResourcePipeline.GetSingle && returnedList.Count() > 1)
@@ -410,7 +410,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <summary>
-        /// Fitler the source set by removing the entities with id that are not 
+        /// Filter the source set by removing the entities with id that are not 
         /// in <paramref name="allowedIds"/>.
         /// </summary>
         HashSet<IIdentifiable> GetAllowedEntities(IEnumerable source, IEnumerable<string> allowedIds)
@@ -420,7 +420,7 @@ namespace JsonApiDotNetCore.Hooks
 
         /// <summary>
         /// given the set of <paramref name="uniqueEntities"/>, it will load all the 
-        /// values from the database of these entites.
+        /// values from the database of these entities.
         /// </summary>
         /// <returns>The db values.</returns>
         /// <param name="entityType">type of the entities to be loaded</param>
@@ -442,24 +442,23 @@ namespace JsonApiDotNetCore.Hooks
         void FireAfterUpdateRelationship(IResourceHookContainer container, INode node, ResourcePipeline pipeline)
         {
 
-            Dictionary<RelationshipAttribute, IEnumerable> currenEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
+            Dictionary<RelationshipAttribute, IEnumerable> currentEntitiesGrouped = node.RelationshipsFromPreviousLayer.GetRightEntities();
             // the relationships attributes in currenEntitiesGrouped will be pointing from a 
             // resource in the previouslayer to a resource in the current (nested) layer.
             // For the nested hook we need to replace these attributes with their inverse.
             // See the FireNestedBeforeUpdateHooks method for a more detailed example.
-            var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currenEntitiesGrouped));
+            var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currentEntitiesGrouped));
             CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { resourcesByRelationship, pipeline });
         }
 
         /// <summary>
-        /// Returns a list of StringIds from a list of IIdentifiables (<paramref name="entities"/>).
+        /// Returns a list of StringIds from a list of IIdentifiable entities (<paramref name="entities"/>).
         /// </summary>
         /// <returns>The ids.</returns>
-        /// <param name="entities">iidentifiable entities.</param>
+        /// <param name="entities">IIdentifiable entities.</param>
         HashSet<string> GetIds(IEnumerable entities)
         {
             return new HashSet<string>(entities.Cast<IIdentifiable>().Select(e => e.StringId));
         }
     }
 }
-

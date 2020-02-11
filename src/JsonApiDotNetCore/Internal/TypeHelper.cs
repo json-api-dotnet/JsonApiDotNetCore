@@ -88,14 +88,14 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Gets the property info that is referenced in the NavigatioAction expression.
+        /// Gets the property info that is referenced in the NavigationAction expression.
         /// Credits: https://stackoverflow.com/a/17116267/4441216
         /// </summary>
         public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> NavigationExpression)
         {
             MemberExpression Exp = null;
 
-            //this line is necessary, because sometimes the expression comes in as Convert(originalexpression)
+            //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
             if (NavigationExpression.Body is UnaryExpression)
             {
                 var UnExp = (UnaryExpression)NavigationExpression.Body;

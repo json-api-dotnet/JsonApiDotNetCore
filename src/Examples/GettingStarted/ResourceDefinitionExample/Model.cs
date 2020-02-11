@@ -5,6 +5,6 @@ namespace GettingStarted.ResourceDefinitionExample
     public class Model : Identifiable
     {
         [Attr]
-        public string DontExpose { get; set; }
+        public string DoNotExpose { get; set; }
     }
 }

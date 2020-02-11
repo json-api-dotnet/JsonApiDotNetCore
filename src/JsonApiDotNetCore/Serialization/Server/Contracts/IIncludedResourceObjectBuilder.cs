@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders
@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         List<ResourceObject> Build();
         /// <summary>
         /// Extracts the included entities from <paramref name="rootEntity"/> using the
-        /// (arbitrarly deeply nested) included relationships in <paramref name="inclusionChain"/>.
+        /// (arbitrarily deeply nested) included relationships in <paramref name="inclusionChain"/>.
         /// </summary>
         void IncludeRelationshipChain(List<RelationshipAttribute> inclusionChain, IIdentifiable rootEntity);
     }

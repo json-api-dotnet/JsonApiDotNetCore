@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization
         /// depending on the type of deserializers.
         /// </summary>
         /// <remarks>
-        /// See the impementation of this method in <see cref="ResponseDeserializer"/>
+        /// See the implementation of this method in <see cref="ResponseDeserializer"/>
         /// and <see cref="RequestDeserializer"/> for examples.
         /// </remarks>
         /// <param name="entity">The entity that was constructed from the document's body</param>
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         /// <param name="entity">The parsed entity</param>
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
-        /// <param name="relationshipAttributes">Exposed relatinships for <paramref name="entity"/></param>
+        /// <param name="relationshipAttributes">Exposed relationships for <paramref name="entity"/></param>
         /// <returns></returns>
         protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCore.Serialization
                 || foreignKey.PropertyType == typeof(string);
             if (id == null && !foreignKeyPropertyIsNullableType)
             {
-                // this happens when a non-optional relationship is deliberatedly set to null.
+                // this happens when a non-optional relationship is deliberately set to null.
                 // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }
