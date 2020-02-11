@@ -6948,12 +6948,12 @@ references:
   commentId: T:JsonApiDotNetCore.Models.HasManyAttribute
   fullName: JsonApiDotNetCore.Models.HasManyAttribute
   nameWithType: HasManyAttribute
-- uid: JsonApiDotNetCore.Models.HasManyAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String)
-  name: HasManyAttribute(String, Link, Boolean, String, String)
-  href: api/JsonApiDotNetCore.Models.HasManyAttribute.html#JsonApiDotNetCore_Models_HasManyAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.Models.HasManyAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String)
-  fullName: JsonApiDotNetCore.Models.HasManyAttribute.HasManyAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String, System.String)
-  nameWithType: HasManyAttribute.HasManyAttribute(String, Link, Boolean, String, String)
+- uid: JsonApiDotNetCore.Models.HasManyAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
+  name: HasManyAttribute(String, Link, Boolean, String)
+  href: api/JsonApiDotNetCore.Models.HasManyAttribute.html#JsonApiDotNetCore_Models_HasManyAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_
+  commentId: M:JsonApiDotNetCore.Models.HasManyAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
+  fullName: JsonApiDotNetCore.Models.HasManyAttribute.HasManyAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String)
+  nameWithType: HasManyAttribute.HasManyAttribute(String, Link, Boolean, String)
 - uid: JsonApiDotNetCore.Models.HasManyAttribute.#ctor*
   name: HasManyAttribute
   href: api/JsonApiDotNetCore.Models.HasManyAttribute.html#JsonApiDotNetCore_Models_HasManyAttribute__ctor_
@@ -7148,12 +7148,12 @@ references:
   commentId: T:JsonApiDotNetCore.Models.HasOneAttribute
   fullName: JsonApiDotNetCore.Models.HasOneAttribute
   nameWithType: HasOneAttribute
-- uid: JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String,System.String)
-  name: HasOneAttribute(String, Link, Boolean, String, String, String)
-  href: api/JsonApiDotNetCore.Models.HasOneAttribute.html#JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String,System.String)
-  fullName: JsonApiDotNetCore.Models.HasOneAttribute.HasOneAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String, System.String, System.String)
-  nameWithType: HasOneAttribute.HasOneAttribute(String, Link, Boolean, String, String, String)
+- uid: JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String)
+  name: HasOneAttribute(String, Link, Boolean, String, String)
+  href: api/JsonApiDotNetCore.Models.HasOneAttribute.html#JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String)
+  fullName: JsonApiDotNetCore.Models.HasOneAttribute.HasOneAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String, System.String)
+  nameWithType: HasOneAttribute.HasOneAttribute(String, Link, Boolean, String, String)
 - uid: JsonApiDotNetCore.Models.HasOneAttribute.#ctor*
   name: HasOneAttribute
   href: api/JsonApiDotNetCore.Models.HasOneAttribute.html#JsonApiDotNetCore_Models_HasOneAttribute__ctor_
@@ -7735,12 +7735,12 @@ references:
   commentId: T:JsonApiDotNetCore.Models.RelationshipAttribute
   fullName: JsonApiDotNetCore.Models.RelationshipAttribute
   nameWithType: RelationshipAttribute
-- uid: JsonApiDotNetCore.Models.RelationshipAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
-  name: RelationshipAttribute(String, Link, Boolean, String)
-  href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_
-  commentId: M:JsonApiDotNetCore.Models.RelationshipAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
-  fullName: JsonApiDotNetCore.Models.RelationshipAttribute.RelationshipAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String)
-  nameWithType: RelationshipAttribute.RelationshipAttribute(String, Link, Boolean, String)
+- uid: JsonApiDotNetCore.Models.RelationshipAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean)
+  name: RelationshipAttribute(String, Link, Boolean)
+  href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Models.RelationshipAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean)
+  fullName: JsonApiDotNetCore.Models.RelationshipAttribute.RelationshipAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean)
+  nameWithType: RelationshipAttribute.RelationshipAttribute(String, Link, Boolean)
 - uid: JsonApiDotNetCore.Models.RelationshipAttribute.#ctor*
   name: RelationshipAttribute
   href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute__ctor_
@@ -7761,19 +7761,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.RelationshipAttribute.CanInclude
   nameWithType: RelationshipAttribute.CanInclude
-- uid: JsonApiDotNetCore.Models.RelationshipAttribute.EntityPropertyName
-  name: EntityPropertyName
-  href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_EntityPropertyName
-  commentId: P:JsonApiDotNetCore.Models.RelationshipAttribute.EntityPropertyName
-  fullName: JsonApiDotNetCore.Models.RelationshipAttribute.EntityPropertyName
-  nameWithType: RelationshipAttribute.EntityPropertyName
-- uid: JsonApiDotNetCore.Models.RelationshipAttribute.EntityPropertyName*
-  name: EntityPropertyName
-  href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_EntityPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Models.RelationshipAttribute.EntityPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Models.RelationshipAttribute.EntityPropertyName
-  nameWithType: RelationshipAttribute.EntityPropertyName
 - uid: JsonApiDotNetCore.Models.RelationshipAttribute.Equals(System.Object)
   name: Equals(Object)
   href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_Equals_System_Object_

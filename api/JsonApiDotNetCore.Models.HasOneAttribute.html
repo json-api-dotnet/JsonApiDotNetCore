@@ -118,9 +118,6 @@
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_CanInclude">RelationshipAttribute.CanInclude</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_EntityPropertyName">RelationshipAttribute.EntityPropertyName</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_ToString">RelationshipAttribute.ToString()</a>
     </div>
     <div>
@@ -143,19 +140,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.%23ctor(System.String%2CJsonApiDotNetCore.Models.Links.Link%2CSystem.Boolean%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.%23ctor(System.String%2CJsonApiDotNetCore.Models.Links.Link%2CSystem.Boolean%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L31">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L30">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String,System.String)">HasOneAttribute(String, Link, Boolean, String, String, String)</h4>
+  <h4 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String,System.String)">HasOneAttribute(String, Link, Boolean, String, String)</h4>
   <div class="markdown level1 summary"><p>Create a HasOne relational link to another entity</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HasOneAttribute(string publicName = null, Link links = default(Link), bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public HasOneAttribute(string publicName = null, Link links = default(Link), bool canInclude = true, string withForeignKey = null, string inverseNavigationProperty = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -194,18 +191,12 @@
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">mappedBy</span></td>
-        <td><p>The name of the entity mapped property, defaults to null</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
         <td><span class="parametername">inverseNavigationProperty</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String_System_String__examples">Examples</h5>
+  <h5 id="JsonApiDotNetCore_Models_HasOneAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_System_String__examples">Examples</h5>
   <p>Using an alternative foreign key:</p>
 <pre><code>public class Article : Identifiable 
 {
@@ -221,7 +212,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_IdentifiablePropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.IdentifiablePropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L52">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L50">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasOneAttribute_IdentifiablePropertyName_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.IdentifiablePropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_IdentifiablePropertyName" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.IdentifiablePropertyName">IdentifiablePropertyName</h4>
@@ -254,7 +245,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_GetValue_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.GetValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L40">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L38">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasOneAttribute_GetValue_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.GetValue*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_GetValue_System_Object_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.GetValue(System.Object)">GetValue(Object)</h4>
@@ -303,7 +294,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Models_HasOneAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Models.HasOneAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L61">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Models/Annotation/HasOneAttribute.cs/#L59">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Models_HasOneAttribute_SetValue_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.SetValue*"></a>
   <h4 id="JsonApiDotNetCore_Models_HasOneAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Models.HasOneAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
