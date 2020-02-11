@@ -393,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html",
-          "hash": "+J7Qs+4GIOfovC4imLaukA=="
+          "hash": "nrGnj9fg8Bm1vBVX7eVYWg=="
         }
       },
       "is_incremental": false,
@@ -3550,16 +3550,16 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 258,
-          "skipped_file_count": 0
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 30,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 258,
           "skipped_file_count": 0
         }
       }
