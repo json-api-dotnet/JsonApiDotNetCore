@@ -77,7 +77,7 @@
 <p>A wrapper for RelationshipAttribute with an abstraction layer that works on the 
 getters and setters of relationships. These are different in the case of 
 HasMany vs HasManyThrough, and HasManyThrough.
-It also depends on if the jointable entity
+It also depends on if the join table entity
 (eg ArticleTags) is identifiable (in which case we will traverse through 
 it and fire hooks for it, if defined) or not (in which case we skip 
 ArticleTags and go directly to Tags.</p>
@@ -240,9 +240,9 @@ ArticleTags and go directly to Tags.</p>
   <a id="JsonApiDotNetCore_Hooks_RelationshipProxy_RightType_" data-uid="JsonApiDotNetCore.Hooks.RelationshipProxy.RightType*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_RelationshipProxy_RightType" data-uid="JsonApiDotNetCore.Hooks.RelationshipProxy.RightType">RightType</h4>
   <div class="markdown level1 summary"><p>The target type for this relationship attribute. 
-For HasOne has HasMany this is trivial: just the righthand side.
-For HasManyThrough it is either the ThroughProperty (when the jointable is 
-Identifiable) or it is the righthand side (when the jointable is not identifiable)</p>
+For HasOne has HasMany this is trivial: just the right-hand side.
+For HasManyThrough it is either the ThroughProperty (when the join table is 
+Identifiable) or it is the right-hand side (when the join table is not identifiable)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

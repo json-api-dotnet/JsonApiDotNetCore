@@ -99,7 +99,7 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
 <p>A wrapper for RelationshipAttribute with an abstraction layer that works on the 
 getters and setters of relationships. These are different in the case of 
 HasMany vs HasManyThrough, and HasManyThrough.
-It also depends on if the jointable entity
+It also depends on if the join table entity
 (eg ArticleTags) is identifiable (in which case we will traverse through 
 it and fire hooks for it, if defined) or not (in which case we skip 
 ArticleTags and go directly to Tags.</p>

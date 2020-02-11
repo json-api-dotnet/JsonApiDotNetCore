@@ -596,12 +596,12 @@ abstracting any EF Core APIs away from the service layer.</p>
   <a id="JsonApiDotNetCore_Data_DefaultResourceRepository_2_LoadCurrentRelationships_" data-uid="JsonApiDotNetCore.Data.DefaultResourceRepository`2.LoadCurrentRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Data_DefaultResourceRepository_2_LoadCurrentRelationships__0_JsonApiDotNetCore_Models_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Data.DefaultResourceRepository`2.LoadCurrentRelationships(`0,JsonApiDotNetCore.Models.RelationshipAttribute)">LoadCurrentRelationships(TResource, RelationshipAttribute)</h4>
   <div class="markdown level1 summary"><p>Before assigning new relationship values (UpdateAsync), we need to
-attach the current database values of the relationship to the dbcontext, else 
+attach the current database values of the relationship to the dbContext, else 
 it will not perform a complete-replace which is required for 
 one-to-many and many-to-many.
 <p>
-For example: a person <code>p1</code> has 2 todoitems: <code>t1</code> and <code>t2</code>.
-If we want to update this todoitem set to <code>t3</code> and <code>t4</code>, simply assigning
+For example: a person <code>p1</code> has 2 todo-items: <code>t1</code> and <code>t2</code>.
+If we want to update this todo-item set to <code>t3</code> and <code>t4</code>, simply assigning
 <code>p1.todoItems = [t3, t4]</code> will result in EF Core adding them to the set,
 resulting in <code>[t1 ... t4]</code>. Instead, we should first include <code>[t1, t2]</code>,
 after which the reassignment  <code>p1.todoItems = [t3, t4]</code> will actually 
