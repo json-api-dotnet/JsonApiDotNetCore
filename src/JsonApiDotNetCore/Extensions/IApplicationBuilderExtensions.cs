@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Extensions
         /// is responsible for registering middleware that are required for JsonApiDotNetCore.
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="skipRegisterMiddleware">Indicates if JsonApiDotNetCore should skip middleware registration. This enabl.</param>
+        /// <param name="skipRegisterMiddleware">Indicates if JsonApiDotNetCore should skip middleware registration. This enables a user to take full control of middleware registration.</param>
         /// <param name="useAuthentication">Indicates if .NET Core authentication middleware should be registered. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
         /// <param name="useAuthorization">Indicates if .NET Core authentication middleware should be registered. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
         /// <example>
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Extensions
         /// // JADNC requires routing
         /// app.UseRouting();
         /// // JADNC requires CurrentRequestMiddleware 
-        /// app.UseMiddleware<CurrentRequestMiddleware>();
+        /// app.UseMiddleware{CurrentRequestMiddleware}();
         /// // JANDC requires the endpoint feature enabled as follows
         /// app.UseEndpoints(endpoints => endpoints.MapControllers());
         /// </code>
