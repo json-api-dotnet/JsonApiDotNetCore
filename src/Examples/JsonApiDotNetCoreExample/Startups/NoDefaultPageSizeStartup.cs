@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
@@ -18,14 +17,8 @@ namespace JsonApiDotNetCoreExample
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            var loggerFactory = new LoggerFactory();
             var mvcBuilder = services.AddMvcCore();
             services
-                .AddSingleton<ILoggerFactory>(loggerFactory)
-                .AddLogging(builder =>
-                {
-                    builder.AddConsole();
-                })
                 .AddDbContext<AppDbContext>(options => options.UseNpgsql(GetDbConnectionString()), ServiceLifetime.Transient)
                 .AddJsonApi(options => {
                     options.Namespace = "api/v1";
