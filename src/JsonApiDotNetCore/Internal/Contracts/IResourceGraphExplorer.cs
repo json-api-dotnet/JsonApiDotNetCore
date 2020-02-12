@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Internal.Contracts
         /// exposed fields are returned.
         /// </summary>
         /// <typeparam name="TResource">The resource for which to retrieve attributes</typeparam>
-        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Arttribute2 }</param>
+        /// <param name="selector">Should be of the form: (TResource e) => new { e.Attribute1, e.Attribute2 }</param>
         List<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : IIdentifiable;
         /// <summary>
         /// Gets all relationships for <typeparamref name="TResource"/>

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -67,6 +67,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline) where TResource : class, IIdentifiable;
+
         /// <summary>
         /// Executes the After Cycle by firing the appropriate hooks if they are implemented. 
         /// <para />
@@ -75,6 +76,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entities">Target entities for the Before cycle.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
+        /// <param name="succeeded">If set to <c>true</c> the deletion succeeded.</param>
         /// <typeparam name="TResource">The type of the root entities</typeparam>
         void AfterDelete<TResource>(IEnumerable<TResource> entities, ResourcePipeline pipeline, bool succeeded) where TResource : class, IIdentifiable;
     }
@@ -92,8 +94,8 @@ namespace JsonApiDotNetCore.Hooks
         /// entities as well as any related relationship.
         /// </summary>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <param name="stringId">StringId of the requested entity in the case of 
-        /// <see cref="DefaultResourceService{X, Y, Z}.GetAsync(Z)"/>.</param>
+        /// <param name="stringId">StringId of the requested entity in the case of
+        /// <see cref="DefaultResourceService{TResource,TId}.GetAsync(TId)"/>.</param>
         /// <typeparam name="TResource">The type of the request entity</typeparam>
         void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null) where TResource : class, IIdentifiable;
         /// <summary>

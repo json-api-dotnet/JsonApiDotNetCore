@@ -71,6 +71,22 @@ namespace JsonApiDotNetCore.Configuration
         public int DefaultPageSize { get; set; }
 
         /// <summary>
+        /// Optional. When set, limits the maximum page size for all resources.
+        /// </summary>
+        /// <example>
+        /// <code>options.MaximumPageSize = 50;</code>
+        /// </example>
+        public int? MaximumPageSize { get; set; }
+
+        /// <summary>
+        /// Optional. When set, limits the maximum page number for all resources.
+        /// </summary>
+        /// <example>
+        /// <code>options.MaximumPageNumber = 100;</code>
+        /// </example>
+        public int? MaximumPageNumber { get; set; }
+
+        /// <summary>
         /// Whether or not the total-record count should be included in all document
         /// level meta objects.
         /// Defaults to false.
@@ -83,7 +99,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Whether or not clients can provide ids when creating resources.
         /// Defaults to false.  When disabled the application will respond 
-        /// with a 403 Forbidden respponse if a client attempts to create a 
+        /// with a 403 Forbidden response if a client attempts to create a 
         /// resource with a defined id.
         /// </summary>
         /// <example>

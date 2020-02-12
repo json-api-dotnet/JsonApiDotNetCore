@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Contracts;
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Query;
@@ -25,12 +25,12 @@ namespace JsonApiDotNetCore.Serialization.Server
 
         /// <inheritdoc/>
         public List<AttrAttribute> GetAllowedAttributes(Type type, RelationshipAttribute relationship = null)
-        {   // get the list of all exposed atttributes for the given type.
+        {   // get the list of all exposed attributes for the given type.
             var allowed = _resourceGraph.GetAttributes(type);
 
             var resourceDefinition = _provider.Get(type);
             if (resourceDefinition != null)
-                // The set of allowed attribrutes to be exposed was defined on the resource definition
+                // The set of allowed attributes to be exposed was defined on the resource definition
                 allowed = allowed.Intersect(resourceDefinition.GetAllowedAttributes()).ToList();
 
             var sparseFieldsSelection = _sparseFieldsService.Get(relationship);
@@ -52,10 +52,10 @@ namespace JsonApiDotNetCore.Serialization.Server
         {
             var resourceDefinition = _provider.Get(type);
             if (resourceDefinition != null)
-                // The set of allowed attribrutes to be exposed was defined on the resource definition
+                // The set of allowed attributes to be exposed was defined on the resource definition
                 return resourceDefinition.GetAllowedRelationships();
 
-            // The set of allowed attribrutes to be exposed was NOT defined on the resource definition: return all
+            // The set of allowed attributes to be exposed was NOT defined on the resource definition: return all
             return _resourceGraph.GetRelationships(type);
         }
     }

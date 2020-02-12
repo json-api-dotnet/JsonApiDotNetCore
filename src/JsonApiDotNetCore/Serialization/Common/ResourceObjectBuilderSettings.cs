@@ -9,6 +9,7 @@ namespace JsonApiDotNetCore.Serialization
     public class ResourceObjectBuilderSettings 
     {
         /// <param name="omitNullValuedAttributes">Omit null values from attributes</param>
+        /// <param name="omitDefaultValuedAttributes">Omit default values from attributes</param>
         public ResourceObjectBuilderSettings(bool omitNullValuedAttributes = false, bool omitDefaultValuedAttributes = false)
         {
             OmitNullValuedAttributes = omitNullValuedAttributes;

@@ -1,7 +1,7 @@
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// Query parameter service responsible for url queries of the form ?page[size]=X&page[number]=Y
+    /// Query parameter service responsible for url queries of the form ?page[size]=X&amp;page[number]=Y
     /// </summary>
     public interface IPageService : IQueryParameterService
     {

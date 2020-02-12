@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Extensions
     /// If a transaction already exists, commit, rollback and dispose
     /// will not be called. It is assumed the creator of the original
     /// transaction should be responsible for disposal.
-    /// <summary>
+    /// </summary>
     internal struct SafeTransactionProxy : IDbContextTransaction
     {
         private readonly bool _shouldExecute;

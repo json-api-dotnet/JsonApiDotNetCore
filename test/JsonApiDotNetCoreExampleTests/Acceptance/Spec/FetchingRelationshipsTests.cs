@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
-            var expectedBody = "{\"meta\":{\"copyright\":\"Copyright 2015 Example Corp.\",\"authors\":[\"Jared Nance\",\"Maurits Moeys\",\"Harro van der Kroft\"]},\"links\":{\"self\":\"http://localhost/api/v1/people\"},\"data\":null}";
+            var expectedBody = "{\"meta\":{\"copyright\":\"Copyright 2015 Example Corp.\",\"authors\":[\"Jared Nance\",\"Maurits Moeys\",\"Harro van der Kroft\"]},\"links\":{\"self\":\"http://localhost" + route + "\"},\"data\":null}";
 
             // Act
             var response = await client.SendAsync(request);

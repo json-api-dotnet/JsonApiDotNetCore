@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
-    /// A context class that provides extra meta data for a <see cref="TQuery"/>
+    /// A context class that provides extra meta data for a <typeparamref name="TQuery"/>
     /// that is used when applying url queries internally.
     /// </summary>
     public abstract class BaseQueryContext<TQuery> where TQuery : BaseQuery

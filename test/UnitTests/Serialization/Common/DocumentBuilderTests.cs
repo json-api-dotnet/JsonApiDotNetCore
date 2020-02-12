@@ -18,7 +18,7 @@ namespace UnitTests.Serialization.Serializer
         {
             var mock = new Mock<IResourceObjectBuilder>();
             mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IEnumerable<AttrAttribute>>(), It.IsAny<IEnumerable<RelationshipAttribute>>())).Returns(new ResourceObject());
-            _builder = new TestDocumentBuilder(mock.Object, _resourceGraph);
+            _builder = new TestDocumentBuilder(mock.Object);
         }
 
 

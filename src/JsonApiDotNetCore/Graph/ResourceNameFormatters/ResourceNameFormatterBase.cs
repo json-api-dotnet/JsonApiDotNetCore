@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Humanizer;
 using JsonApiDotNetCore.Models;
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Aoplies the desired casing convention to the internal string.
+        /// Applies the desired casing convention to the internal string.
         /// This is generally applied to the type name after pluralization.
         /// </summary>
         public abstract string ApplyCasingConvention(string properName);

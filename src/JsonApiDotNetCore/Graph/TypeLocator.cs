@@ -29,12 +29,12 @@ namespace JsonApiDotNetCore.Graph
         /// <summary>
         /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
         /// </summary>
-        public static IEnumerable<ResourceDescriptor> GetIdentifableTypes(Assembly assembly)
+        public static IEnumerable<ResourceDescriptor> GetIdentifiableTypes(Assembly assembly)
             => (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
-                    ? FindIdentifableTypes(assembly)
+                    ? FindIdentifiableTypes(assembly)
                     : _identifiableTypeCache[assembly];
 
-        private static IEnumerable<ResourceDescriptor> FindIdentifableTypes(Assembly assembly)
+        private static IEnumerable<ResourceDescriptor> FindIdentifiableTypes(Assembly assembly)
         {
             var descriptors = new List<ResourceDescriptor>();
             _identifiableTypeCache[assembly] = descriptors;
@@ -107,15 +107,15 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Get all derivitives of the concrete, generic type.
+        /// Get all derivatives of the concrete, generic type.
         /// </summary>
         /// <param name="assembly">The assembly to search</param>
         /// <param name="openGenericType">The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`</param>
         /// <param name="genericArguments">Parameters to the generic type</param>
         /// <example>
-        /// <code>
+        /// <code><![CDATA[
         /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IEnumerable<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {
@@ -124,10 +124,10 @@ namespace JsonApiDotNetCore.Graph
         }
 
         /// <summary>
-        /// Get all derivitives of the specified type.
+        /// Get all derivatives of the specified type.
         /// </summary>
         /// <param name="assembly">The assembly to search</param>
-        /// <param name="openGenericType">The inherited type</param>
+        /// <param name="inheritedType">The inherited type</param>
         /// <example>
         /// <code>
         /// GetDerivedGenericTypes(assembly, typeof(DbContext))

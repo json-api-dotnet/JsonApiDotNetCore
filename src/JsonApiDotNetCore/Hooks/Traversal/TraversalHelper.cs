@@ -79,16 +79,16 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="nodes">Nodes.</param>
         public NodeLayer CreateNextLayer(IEnumerable<INode> nodes)
         {
-            /// first extract entities by parsing populated relationships in the entities
-            /// of previous layer
+            // first extract entities by parsing populated relationships in the entities
+            // of previous layer
             (var lefts, var rights) = ExtractEntities(nodes);
 
-            /// group them conveniently so we can make ChildNodes of them:
-            /// there might be several relationship attributes in rights dictionary
-            /// that point to the same right type. 
+            // group them conveniently so we can make ChildNodes of them:
+            // there might be several relationship attributes in rights dictionary
+            // that point to the same right type. 
             var leftsGrouped = GroupByRightTypeOfRelationship(lefts);
 
-            /// convert the groups into child nodes
+            // convert the groups into child nodes
             var nextNodes = leftsGrouped.Select(entry =>
             {
                 var nextNodeType = entry.Key;
@@ -105,13 +105,13 @@ namespace JsonApiDotNetCore.Hooks
                 return CreateNodeInstance(nextNodeType, populatedRelationships.ToArray(), relationshipsToPreviousLayer);
             }).ToList();
 
-            /// wrap the child nodes in a EntityChildLayer
+            // wrap the child nodes in a EntityChildLayer
             return new NodeLayer(nextNodes);
         }
 
         /// <summary>
-        /// iterates throug the <paramref name="relationships"/> dictinary and groups the values 
-        /// by matching right type of the keys (which are relationshipattributes)
+        /// iterates through the <paramref name="relationships"/> dictionary and groups the values 
+        /// by matching right type of the keys (which are relationship attributes)
         /// </summary>
         Dictionary<RightType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByRightTypeOfRelationship(Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
         {
@@ -124,8 +124,8 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<INode> leftNodes)
         {
-            var leftEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevlayer->currentlayer  => prevLayerEntities
-            var rightEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevlayer->currentlayer   => currentLayerEntities
+            var leftEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevLayer->currentLayer  => prevLayerEntities
+            var rightEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevLayer->currentLayer   => currentLayerEntities
 
             foreach (var node in leftNodes)
             {
@@ -256,9 +256,9 @@ namespace JsonApiDotNetCore.Hooks
 
         /// <summary>
         /// Gets the type from relationship attribute. If the attribute is 
-        /// HasManyThrough, and the jointable entity is identifiable, then the target
-        /// type is the joinentity instead of the righthand side, because hooks might be 
-        /// implemented for the jointable entity.
+        /// HasManyThrough, and the join table entity is identifiable, then the target
+        /// type is the join entity instead of the right-hand side, because hooks might be 
+        /// implemented for the join table entity.
         /// </summary>
         /// <returns>The target type for traversal</returns>
         /// <param name="attr">Relationship attribute</param>
@@ -295,8 +295,8 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
-            var casted = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
-            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { casted });
+            var cast = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
+            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { cast });
         }
 
         /// <summary>

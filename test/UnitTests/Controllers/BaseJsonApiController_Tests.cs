@@ -172,7 +172,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateDisbled()
+        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateDisabled()
         {
             // Arrange
             const int id = 0;

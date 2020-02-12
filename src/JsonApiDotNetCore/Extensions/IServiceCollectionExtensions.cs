@@ -21,10 +21,6 @@ namespace JsonApiDotNetCore.Extensions
         /// <summary>
         /// Enabling JsonApiDotNetCore using manual declaration to build the ResourceGraph.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="options"></param>
-        /// <param name="resources"></param>
-        /// <returns></returns>
         public static IServiceCollection AddJsonApi(this IServiceCollection services,
                                                     Action<JsonApiOptions> options = null,
                                                     Action<IServiceDiscoveryFacade> discovery = null,
@@ -76,7 +72,7 @@ namespace JsonApiDotNetCore.Extensions
             {
                 foreach (var openGenericType in ServiceDiscoveryFacade.ServiceInterfaces)
                 {
-                    // A shorthand interface is one where the id type is ommitted
+                    // A shorthand interface is one where the id type is omitted
                     // e.g. IResourceService<T> is the shorthand for IResourceService<T, TId>
                     var isShorthandInterface = (openGenericType.GetTypeInfo().GenericTypeParameters.Length == 1);
                     if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
@@ -102,7 +98,7 @@ namespace JsonApiDotNetCore.Extensions
 
         private static HashSet<ResourceDescriptor> GetResourceTypesFromServiceImplementation(Type type)
         {
-            var resourceDecriptors = new HashSet<ResourceDescriptor>();
+            var resourceDescriptors = new HashSet<ResourceDescriptor>();
             var interfaces = type.GetInterfaces();
             foreach (var i in interfaces)
             {
@@ -111,11 +107,11 @@ namespace JsonApiDotNetCore.Extensions
                     var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
                     if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
                     {
-                        resourceDecriptors.Add(resourceDescriptor);
+                        resourceDescriptors.Add(resourceDescriptor);
                     }
                 }
             }
-            return resourceDecriptors;
+            return resourceDescriptors;
         }
     }
 }

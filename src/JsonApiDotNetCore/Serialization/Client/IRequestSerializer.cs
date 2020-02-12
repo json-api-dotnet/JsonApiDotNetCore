@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Models;
@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     public interface IRequestSerializer
     {
         /// <summary>
-        /// Creates and serializes a document for a single intance of a resource.
+        /// Creates and serializes a document for a single instance of a resource.
         /// </summary>
         /// <param name="entity">Entity to serialize</param>
         /// <returns>The serialized content</returns>

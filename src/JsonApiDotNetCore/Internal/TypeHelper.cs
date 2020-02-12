@@ -88,14 +88,14 @@ namespace JsonApiDotNetCore.Internal
         }
 
         /// <summary>
-        /// Gets the property info that is referenced in the NavigatioAction expression.
+        /// Gets the property info that is referenced in the NavigationAction expression.
         /// Credits: https://stackoverflow.com/a/17116267/4441216
         /// </summary>
         public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> NavigationExpression)
         {
             MemberExpression Exp = null;
 
-            //this line is necessary, because sometimes the expression comes in as Convert(originalexpression)
+            //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
             if (NavigationExpression.Body is UnaryExpression)
             {
                 var UnExp = (UnaryExpression)NavigationExpression.Body;
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The instance of the parameterized generic type</returns>
         /// <param name="parameters">Generic type parameters to be used in open type.</param>
         /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
-        /// <typeparam name="TOpen">Open generic type</typeparam>
+        /// <param name="openType">Open generic type</param>
         public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
         {
             var parameterizedType = openType.MakeGenericType(parameters);
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCore.Internal
         /// <returns>The instance of the parameterized generic type</returns>
         /// <param name="parameter">Generic type parameter to be used in open type.</param>
         /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
-        /// <typeparam name="TOpen">Open generic type</typeparam>
+        /// <param name="openType">Open generic type</param>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
             return CreateInstanceOfOpenType(openType, new Type[] { parameter }, constructorArguments);
@@ -215,7 +215,6 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Reflectively instantiates a hashset of a certain type. 
         /// </summary>
-        /// <summary>
         public static IEnumerable CreateHashSetFor(Type type, object elements = null)
         {
             return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
@@ -225,7 +224,7 @@ namespace JsonApiDotNetCore.Internal
         /// Gets the generic argument T of List{T}
         /// </summary>
         /// <returns>The type of the list</returns>
-        /// <param name="list">The list to be inspected/param>
+        /// <param name="list">The list to be inspected</param>
         public static Type GetListInnerType(IEnumerable list)
         {
             return list.GetType().GetGenericArguments()[0];

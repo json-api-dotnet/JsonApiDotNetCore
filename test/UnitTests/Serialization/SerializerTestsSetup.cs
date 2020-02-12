@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
@@ -18,12 +17,12 @@ namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
-        protected readonly TopLevelLinks _dummyToplevelLinks;
+        protected readonly TopLevelLinks _dummyTopLevelLinks;
         protected readonly ResourceLinks _dummyResourceLinks;
         protected readonly RelationshipLinks _dummyRelationshipLinks;
         public SerializerTestsSetup()
         {
-            _dummyToplevelLinks = new TopLevelLinks
+            _dummyTopLevelLinks = new TopLevelLinks
             {
                 Self = "http://www.dummy.com/dummy-self-link",
                 Next = "http://www.dummy.com/dummy-next-link",
@@ -49,9 +48,8 @@ namespace UnitTests.Serialization
             var included = GetIncludedRelationships(inclusionChains);
             var includedBuilder = GetIncludedBuilder();
             var fieldsToSerialize = GetSerializableFields();
-            var provider = GetResourceContextProvider();
             ResponseResourceObjectBuilder resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, included, _resourceGraph, GetSerializerSettingsProvider());
-            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, provider);
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder);
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(List<List<RelationshipAttribute>> inclusionChains = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) 
@@ -74,11 +72,6 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        private IResourceGraph GetResourceContextProvider()
-        {
-            return _resourceGraph;
-        }
-
         protected IMetaBuilder<T> GetMetaBuilder<T>(Dictionary<string, object> meta = null) where T : class, IIdentifiable
         {
             var mock = new Mock<IMetaBuilder<T>>();
@@ -96,7 +89,7 @@ namespace UnitTests.Serialization
         protected ILinkBuilder GetLinkBuilder(TopLevelLinks top = null, ResourceLinks resource = null, RelationshipLinks relationship = null)
         {
             var mock = new Mock<ILinkBuilder>();
-            mock.Setup(m => m.GetTopLevelLinks(It.IsAny<ResourceContext>())).Returns(top);
+            mock.Setup(m => m.GetTopLevelLinks()).Returns(top);
             mock.Setup(m => m.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
             mock.Setup(m => m.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
             return mock.Object;
@@ -131,7 +124,7 @@ namespace UnitTests.Serialization
         /// </summary>
         protected class TestDocumentBuilder : BaseDocumentBuilder
         {
-            public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder, IResourceContextProvider provider) : base(resourceObjectBuilder, provider) { }
+            public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
 
             public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
             {

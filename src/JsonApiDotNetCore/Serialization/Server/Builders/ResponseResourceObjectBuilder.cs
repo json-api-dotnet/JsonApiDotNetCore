@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -54,11 +54,11 @@ namespace JsonApiDotNetCore.Serialization.Server
 
             var links = _linkBuilder.GetRelationshipLinks(relationship, entity);
             if (links != null)
-                // if links relationshiplinks should be built for this entry, populate the "links" field.
+                // if links relationshipLinks should be built for this entry, populate the "links" field.
                 (relationshipEntry = relationshipEntry ?? new RelationshipEntry()).Links = links;
 
-            /// if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
-            /// (see the NullValueHandling settings on <see cref="ResourceObject"/>)
+            // if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
+            // (see the NullValueHandling settings on <see cref="ResourceObject"/>)
             return relationshipEntry;
         }
 

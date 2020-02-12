@@ -123,6 +123,45 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
+        public async Task Can_Fetch_Many_To_Many_Through_Id()
+        {
+            // Arrange
+            var context = _fixture.GetService<AppDbContext>();
+            var article = _articleFaker.Generate();
+            var tag = _tagFaker.Generate();
+            var articleTag = new ArticleTag
+            {
+                Article = article,
+                Tag = tag
+            };
+            context.ArticleTags.Add(articleTag);
+            await context.SaveChangesAsync();
+
+            var route = $"/api/v1/articles/{article.Id}/tags";
+
+            // @TODO - Use fixture
+            var builder = new WebHostBuilder()
+                .UseStartup<Startup>();
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+
+            // Act
+            var response = await client.GetAsync(route);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(HttpStatusCode.OK == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+
+            var document = JsonConvert.DeserializeObject<Document>(body);
+            Assert.Single(document.ManyData);
+
+            var tagResponse = _fixture.GetDeserializer().DeserializeList<Tag>(body).Data.First();
+            Assert.NotNull(tagResponse);
+            Assert.Equal(tag.Id, tagResponse.Id);
+            Assert.Equal(tag.Name, tagResponse.Name);
+        }
+
+        [Fact]
         public async Task Can_Fetch_Many_To_Many_Through_GetById_Relationship_Link()
         {
             // Arrange
@@ -159,7 +198,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.NotNull(tagResponse);
             Assert.Equal(tag.Id, tagResponse.Id);
         }
-
 
         [Fact]
         public async Task Can_Fetch_Many_To_Many_Through_Relationship_Link()

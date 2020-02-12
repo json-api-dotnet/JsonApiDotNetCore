@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <para />
         /// If relationships were updated with the updated entities, this will
         /// be reflected by the corresponding NavigationProperty being set. 
-        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IRelationshipsDictionary{T}, ResourcePipeline"/>
+        /// For each of these relationships, the <see cref="ResourceDefinition{T}.AfterUpdateRelationship(IRelationshipsDictionary{T}, ResourcePipeline)"/>
         /// hook is fired after the execution of this hook.
         /// </summary>
         /// <param name="entities">The unique set of affected entities.</param>
@@ -211,7 +211,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entities">The unique set of affected entities.</param>
         /// <param name="pipeline">An enum indicating from where the hook was triggered.</param>
-        /// <param name="succeeded">If set to <c>true</c> if the deletion was succeeded in the repository layer.</param>
+        /// <param name="succeeded">If set to <c>true</c> the deletion succeeded in the repository layer.</param>
         void AfterDelete(HashSet<TResource> entities, ResourcePipeline pipeline, bool succeeded);
     }
 

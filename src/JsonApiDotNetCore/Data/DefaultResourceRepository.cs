@@ -81,11 +81,11 @@ namespace JsonApiDotNetCore.Data
                 object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, entity, out bool relationshipWasAlreadyTracked);
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
                 if (relationshipWasAlreadyTracked || relationshipAttr is HasManyThroughAttribute)
-                    /// We only need to reassign the relationship value to the to-be-added
-                    /// entity when we're using a different instance of the relationship (because this different one
-                    /// was already tracked) than the one assigned to the to-be-created entity.
-                    /// Alternatively, even if we don't have to reassign anything because of already tracked 
-                    /// entities, we still need to assign the "through" entities in the case of many-to-many.
+                    // We only need to reassign the relationship value to the to-be-added
+                    // entity when we're using a different instance of the relationship (because this different one
+                    // was already tracked) than the one assigned to the to-be-created entity.
+                    // Alternatively, even if we don't have to reassign anything because of already tracked 
+                    // entities, we still need to assign the "through" entities in the case of many-to-many.
                     relationshipAttr.SetValue(entity, trackedRelationshipValue);
             }
             _dbSet.Add(entity);
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCore.Data
                 return false;
             }
             // relationshipAttr is null when we don't put a [RelationshipAttribute] on the inverse navigation property.
-            // In this case we use relfection to figure out what kind of relationship is pointing back.
+            // In this case we use reflection to figure out what kind of relationship is pointing back.
             return !type.GetProperty(internalRelationshipName).PropertyType.Inherits(typeof(IEnumerable));
         }
 
@@ -155,18 +155,18 @@ namespace JsonApiDotNetCore.Data
                 {
                     foreach (IIdentifiable single in collection.ToList())
                         _context.Entry(single).State = EntityState.Detached;
-                    /// detaching has many relationships is not sufficient to 
-                    /// trigger a full reload of relationships: the navigation 
-                    /// property actually needs to be nulled out, otherwise
-                    /// EF will still add duplicate instances to the collection
+                    // detaching has many relationships is not sufficient to 
+                    // trigger a full reload of relationships: the navigation 
+                    // property actually needs to be nulled out, otherwise
+                    // EF will still add duplicate instances to the collection
                     relationship.SetValue(entity, null);
                 }
                 else
                 {
                     _context.Entry(value).State = EntityState.Detached;
 
-                    /// temporary work around for https://github.com/aspnet/EntityFrameworkCore/issues/18621
-                    /// as soon as ef core 3.1 lands we can get rid of this again.
+                    // temporary work around for https://github.com/aspnet/EntityFrameworkCore/issues/18621
+                    // as soon as ef core 3.1 lands we can get rid of this again.
                     _context.Entry(entity).State = EntityState.Detached;
                 }
             }
@@ -184,16 +184,16 @@ namespace JsonApiDotNetCore.Data
 
             foreach (var relationshipAttr in _targetedFields.Relationships)
             {
-                /// loads databasePerson.todoItems
+                // loads databasePerson.todoItems
                 LoadCurrentRelationships(databaseEntity, relationshipAttr);
-                /// trackedRelationshipValue is either equal to updatedPerson.todoItems,
-                /// or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
-                /// which is the case if they were already tracked
+                // trackedRelationshipValue is either equal to updatedPerson.todoItems,
+                // or replaced with the same set (same ids) of todoItems from the EF Core change tracker,
+                // which is the case if they were already tracked
                 object trackedRelationshipValue = GetTrackedRelationshipValue(relationshipAttr, updatedEntity, out _);
-                /// loads into the db context any persons currently related
-                /// to the todoItems in trackedRelationshipValue
+                // loads into the db context any persons currently related
+                // to the todoItems in trackedRelationshipValue
                 LoadInverseRelationships(trackedRelationshipValue, relationshipAttr);
-                /// assigns the updated relationship to the database entity
+                // assigns the updated relationship to the database entity
                 //AssignRelationshipValue(databaseEntity, trackedRelationshipValue, relationshipAttr);
                 relationshipAttr.SetValue(databaseEntity, trackedRelationshipValue);
             }
@@ -332,7 +332,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public async Task<TResource> FirstOrDefaultAsync(IQueryable<TResource> entities)
+        public virtual async Task<TResource> FirstOrDefaultAsync(IQueryable<TResource> entities)
         {
             return (entities is IAsyncEnumerable<TResource>)
                ? await entities.FirstOrDefaultAsync()
@@ -351,12 +351,12 @@ namespace JsonApiDotNetCore.Data
 
         /// <summary>
         /// Before assigning new relationship values (UpdateAsync), we need to
-        /// attach the current database values of the relationship to the dbcontext, else 
+        /// attach the current database values of the relationship to the dbContext, else 
         /// it will not perform a complete-replace which is required for 
         /// one-to-many and many-to-many.
         /// <para />
-        /// For example: a person `p1` has 2 todoitems: `t1` and `t2`.
-        /// If we want to update this todoitem set to `t3` and `t4`, simply assigning
+        /// For example: a person `p1` has 2 todo-items: `t1` and `t2`.
+        /// If we want to update this todo-item set to `t3` and `t4`, simply assigning
         /// `p1.todoItems = [t3, t4]` will result in EF Core adding them to the set,
         /// resulting in `[t1 ... t4]`. Instead, we should first include `[t1, t2]`,
         /// after which the reassignment  `p1.todoItems = [t3, t4]` will actually 
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <summary>
-        /// Given a iidentifiable relationshipvalue, verify if an entity of the underlying 
+        /// Given a IIdentifiable relationship value, verify if an entity of the underlying 
         /// type with the same ID is already attached to the dbContext, and if so, return it.
         /// If not, attach the relationship value to the dbContext.
         /// 
@@ -387,17 +387,17 @@ namespace JsonApiDotNetCore.Data
 
             if (trackedEntity != null)
             {
-                /// there already was an instance of this type and ID tracked
-                /// by EF Core. Reattaching will produce a conflict, so from now on we 
-                /// will use the already attached instance instead. This entry might
-                /// contain updated fields as a result of business logic elsewhere in the application
+                // there already was an instance of this type and ID tracked
+                // by EF Core. Reattaching will produce a conflict, so from now on we 
+                // will use the already attached instance instead. This entry might
+                // contain updated fields as a result of business logic elsewhere in the application
                 return trackedEntity;
             }
 
-            /// the relationship pointer is new to EF Core, but we are sure
-            /// it exists in the database, so we attach it. In this case, as per
-            /// the json:api spec, we can also safely assume that no fields of 
-            /// this entity were updated.
+            // the relationship pointer is new to EF Core, but we are sure
+            // it exists in the database, so we attach it. In this case, as per
+            // the json:api spec, we can also safely assume that no fields of 
+            // this entity were updated.
             _context.Entry(relationshipValue).State = EntityState.Unchanged;
             return null;
         }

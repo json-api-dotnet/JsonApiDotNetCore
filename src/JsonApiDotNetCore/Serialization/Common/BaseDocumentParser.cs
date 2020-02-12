@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -32,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization
         /// depending on the type of deserializers.
         /// </summary>
         /// <remarks>
-        /// See the impementation of this method in <see cref="ResponseDeserializer"/>
+        /// See the implementation of this method in <see cref="ResponseDeserializer"/>
         /// and <see cref="RequestDeserializer"/> for examples.
         /// </remarks>
         /// <param name="entity">The entity that was constructed from the document's body</param>
@@ -86,7 +88,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         /// <param name="entity">The parsed entity</param>
         /// <param name="relationshipsValues">Relationships and their values, as in the serialized content</param>
-        /// <param name="relationshipAttributes">Exposed relatinships for <paramref name="entity"/></param>
+        /// <param name="relationshipAttributes">Exposed relationships for <paramref name="entity"/></param>
         /// <returns></returns>
         protected IIdentifiable SetRelationships(IIdentifiable entity, Dictionary<string, RelationshipEntry> relationshipsValues, List<RelationshipAttribute> relationshipAttributes)
         {
@@ -170,14 +172,14 @@ namespace JsonApiDotNetCore.Serialization
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
             if (foreignKeyProperty != null)
-                /// there is a FK from the current entity pointing to the related object,
-                /// i.e. we're populating the relationship from the dependent side.
+                // there is a FK from the current entity pointing to the related object,
+                // i.e. we're populating the relationship from the dependent side.
                 SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
 
             SetNavigation(entity, attr, relatedId);
 
-            /// depending on if this base parser is used client-side or server-side,
-            /// different additional processing per field needs to be executed.
+            // depending on if this base parser is used client-side or server-side,
+            // different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
 
             return entity;
@@ -193,7 +195,7 @@ namespace JsonApiDotNetCore.Serialization
                 || foreignKey.PropertyType == typeof(string);
             if (id == null && !foreignKeyPropertyIsNullableType)
             {
-                // this happens when a non-optional relationship is deliberatedly set to null.
+                // this happens when a non-optional relationship is deliberately set to null.
                 // For a server deserializer, it should be mapped to a BadRequest HTTP error code.
                 throw new FormatException($"Cannot set required relationship identifier '{attr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
             }

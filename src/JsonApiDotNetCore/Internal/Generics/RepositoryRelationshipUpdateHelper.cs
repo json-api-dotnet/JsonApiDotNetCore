@@ -79,8 +79,8 @@ namespace JsonApiDotNetCore.Internal.Generics
                 Expression idMember = Expression.Property(parameter, nameof(Identifiable.Id));
                 // [1,2,3].Contains(p.Id)
                 var callContains = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), new[] { idMember.Type }, target, idMember);
-                var containsLamdda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
-                value = await _context.Set<TRelatedResource>().Where(containsLamdda).ToListAsync();
+                var containsLambda = Expression.Lambda<Func<TRelatedResource, bool>>(callContains, parameter);
+                value = await _context.Set<TRelatedResource>().Where(containsLambda).ToListAsync();
             }
             relationship.SetValue(parent, value);
         }

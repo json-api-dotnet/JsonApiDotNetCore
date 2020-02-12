@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using Xunit;
 
@@ -61,7 +61,7 @@ namespace UnitTests.Models
         }
 
         [Fact]
-        public void HasManyAttribute_Doesnt_Equal_HasOneAttribute_With_Same_Name()
+        public void HasManyAttribute_Does_Not_Equal_HasOneAttribute_With_Same_Name()
         {
             RelationshipAttribute a = new HasManyAttribute("test");
             RelationshipAttribute b = new HasOneAttribute("test");

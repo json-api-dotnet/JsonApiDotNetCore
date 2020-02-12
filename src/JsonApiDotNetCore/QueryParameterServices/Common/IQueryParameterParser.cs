@@ -1,4 +1,5 @@
-﻿using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Query;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
