@@ -19,6 +19,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         bool IncludeTotalRecordCount { get; set; }
         int DefaultPageSize { get; }
+        int? MaximumPageSize { get; }
+        int? MaximumPageNumber { get; }
         bool ValidateModelState { get; }
         bool AllowClientGeneratedIds { get; }
         bool AllowCustomQueryParameters { get; set; }

@@ -9,9 +9,13 @@ namespace UnitTests.QueryParameters
 {
     public class PageServiceTests : QueryParametersUnitTestCollection
     {
-        public PageService GetService()
+        public PageService GetService(int? maximumPageSize = null, int? maximumPageNumber = null)
         {
-            return new PageService(new JsonApiOptions());
+            return new PageService(new JsonApiOptions
+            {
+                MaximumPageSize = maximumPageSize,
+                MaximumPageNumber = maximumPageNumber
+            });
         }
 
         [Fact]
@@ -28,14 +32,16 @@ namespace UnitTests.QueryParameters
         }
 
         [Theory]
-        [InlineData("1", 1, false)]
-        [InlineData("abcde", 0, true)]
-        [InlineData("", 0, true)]
-        public void Parse_PageSize_CanParse(string value, int expectedValue, bool shouldThrow)
+        [InlineData("1", 1, null, false)]
+        [InlineData("abcde", 0, null, true)]
+        [InlineData("", 0, null, true)]
+        [InlineData("5", 5, 10, false)]
+        [InlineData("5", 5, 3, true)]
+        public void Parse_PageSize_CanParse(string value, int expectedValue, int? maximumPageSize, bool shouldThrow)
         {
             // Arrange
             var query = new KeyValuePair<string, StringValues>($"page[size]", new StringValues(value));
-            var service = GetService();
+            var service = GetService(maximumPageSize: maximumPageSize);
 
             // Act
             if (shouldThrow)
@@ -51,15 +57,16 @@ namespace UnitTests.QueryParameters
         }
 
         [Theory]
-        [InlineData("1", 1, false)]
-        [InlineData("abcde", 0, true)]
-        [InlineData("", 0, true)]
-        public void Parse_PageNumber_CanParse(string value, int expectedValue, bool shouldThrow)
+        [InlineData("1", 1, null, false)]
+        [InlineData("abcde", 0, null, true)]
+        [InlineData("", 0, null, true)]
+        [InlineData("5", 5, 10, false)]
+        [InlineData("5", 5, 3, true)]
+        public void Parse_PageNumber_CanParse(string value, int expectedValue, int? maximumPageNumber, bool shouldThrow)
         {
             // Arrange
             var query = new KeyValuePair<string, StringValues>($"page[number]", new StringValues(value));
-            var service = GetService();
-
+            var service = GetService(maximumPageNumber: maximumPageNumber);
 
             // Act
             if (shouldThrow)
