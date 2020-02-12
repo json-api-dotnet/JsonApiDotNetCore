@@ -15,13 +15,26 @@ namespace JsonApiDotNetCore.Extensions
     public static class IApplicationBuilderExtensions
     {
         /// <summary>
-        /// Adds necessary components such as routing to your application
+        /// Runs several internal JsonApiDotNetCore services to ensure proper configuration and registers required middlewares. 
+        /// The <paramref name="skipRegisterMiddleware"/> can be used to skip any middleware registration, in which case the developer is
+        /// is responsible for registering middleware that are required for JsonApiDotNetCore.
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="skipRegisterMiddleware">Do not register any middleware</param>
-        /// <param name="useAuthentication">Register Authentication middleware</param>
-        /// <param name="useAuthorization">Register Authorization middleware</param>
-        /// <returns></returns>
+        /// <param name="skipRegisterMiddleware">Indicates if JsonApiDotNetCore should skip middleware registration. This enabl.</param>
+        /// <param name="useAuthentication">Indicates if .NET Core authentication middleware should be registered. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
+        /// <param name="useAuthorization">Indicates if .NET Core authentication middleware should be registered. Ignored when <paramref name="skipRegisterMiddleware"/> is set to true.</param>
+        /// <example>
+        /// This example illustrate which required middlewares should be registered when using the <paramref name="skipRegisterMiddleware"/> option.
+        /// <code>
+        /// app.UseJsonApi(skipRegisterMiddleware: true);
+        /// // JADNC requires routing
+        /// app.UseRouting();
+        /// // JADNC requires CurrentRequestMiddleware 
+        /// app.UseMiddleware<CurrentRequestMiddleware>();
+        /// // JANDC requires the endpoint feature enabled as follows
+        /// app.UseEndpoints(endpoints => endpoints.MapControllers());
+        /// </code>
+        /// </example>
         public static void UseJsonApi(this IApplicationBuilder app, bool skipRegisterMiddleware = false, bool useAuthentication = false, bool useAuthorization = false)
         {
             LogResourceGraphValidations(app);
