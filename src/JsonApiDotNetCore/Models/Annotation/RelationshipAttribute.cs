@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Models
 {
     public abstract class RelationshipAttribute : Attribute, IResourceField
     {
-        protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude, string mappedBy)
+        protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude)
         {
             if (relationshipLinks == Link.Paging)
                 throw new JsonApiSetupException($"{Link.Paging.ToString("g")} not allowed for argument {nameof(relationshipLinks)}");
@@ -15,7 +15,6 @@ namespace JsonApiDotNetCore.Models
             PublicRelationshipName = publicName;
             RelationshipLinks = relationshipLinks;
             CanInclude = canInclude;
-            EntityPropertyName = mappedBy;
         }
 
         public string ExposedInternalMemberName => InternalRelationshipName;
@@ -49,7 +48,6 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public Link RelationshipLinks { get; }
         public bool CanInclude { get; }
-        public string EntityPropertyName { get; }
 
         public abstract void SetValue(object entity, object newValue);
 

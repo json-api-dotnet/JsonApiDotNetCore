@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -18,6 +19,8 @@ namespace UnitTests
         private readonly IPageService _pageService;
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();
         private const string _host = "http://www.example.com";
+        private const int _baseId = 123;
+        private const string _relationshipName = "author";
         private const string _topSelf = "http://www.example.com/articles";
         private const string _resourceSelf = "http://www.example.com/articles/123";
         private const string _relSelf = "http://www.example.com/articles/123/relationships/author";
@@ -47,7 +50,7 @@ namespace UnitTests
             var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
 
             // Act
-            var links = builder.GetResourceLinks("articles", "123");
+            var links = builder.GetResourceLinks("articles", _baseId.ToString());
 
             // Assert
             if (expectedResult == null)
@@ -96,7 +99,7 @@ namespace UnitTests
             var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
 
             // Act
-            var links = builder.GetRelationshipLinks(attr, new Article { Id = 123 });
+            var links = builder.GetRelationshipLinks(attr, new Article { Id = _baseId });
 
             // Assert
             if (expectedSelfLink == null && expectedRelatedLink == null)
@@ -131,9 +134,17 @@ namespace UnitTests
         [InlineData(Link.None, Link.Self, _topSelf, false)]
         [InlineData(Link.None, Link.Paging, null, true)]
         [InlineData(Link.None, Link.None, null, false)]
+        [InlineData(Link.All, Link.Self, _resourceSelf, false)]
+        [InlineData(Link.Self, Link.Self, _resourceSelf, false)]
+        [InlineData(Link.Paging, Link.Self, _resourceSelf, false)]
+        [InlineData(Link.None, Link.Self, _resourceSelf, false)]
+        [InlineData(Link.All, Link.Self, _relRelated, false)]
+        [InlineData(Link.Self, Link.Self, _relRelated, false)]
+        [InlineData(Link.Paging, Link.Self, _relRelated, false)]
+        [InlineData(Link.None, Link.Self, _relRelated, false)]
         public void BuildTopLevelLinks_GlobalAndResourceConfiguration_ExpectedLinks(Link global,
                                                                                     Link resource,
-                                                                                    object expectedSelfLink,
+                                                                                    string expectedSelfLink,
                                                                                     bool pages)
         {
             // Arrange
@@ -141,10 +152,14 @@ namespace UnitTests
             var primaryResource = GetResourceContext<Article>(topLevelLinks: resource);
             _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
-            var builder = new LinkBuilder(config, GetRequestManager(), _pageService, _provider.Object);
+            bool useBaseId = expectedSelfLink != _topSelf;
+            string relationshipName = expectedSelfLink == _relRelated ? _relationshipName : null;
+            ICurrentRequest currentRequest = GetRequestManager(primaryResource, useBaseId, relationshipName);
+
+            var builder = new LinkBuilder(config, currentRequest, _pageService, _provider.Object);
 
             // Act
-            var links = builder.GetTopLevelLinks(primaryResource);
+            var links = builder.GetTopLevelLinks();
 
             // Assert
             if (!pages && expectedSelfLink == null)
@@ -153,11 +168,11 @@ namespace UnitTests
             }
             else
             {
-                Assert.True(CheckPages(links, pages));
+                Assert.True(CheckLinks(links, pages, expectedSelfLink));
             }
         }
 
-        private bool CheckPages(TopLevelLinks links, bool pages)
+        private bool CheckLinks(TopLevelLinks links, bool pages, string expectedSelfLink)
         {
             if (pages)
             {
@@ -167,13 +182,16 @@ namespace UnitTests
                     && links.Next == $"{_host}/articles?page[size]=10&page[number]=3"
                     && links.Last == $"{_host}/articles?page[size]=10&page[number]=3";
             }
-            return links.First == null && links.Prev == null && links.Next == null && links.Last == null;
+
+            return links.Self == expectedSelfLink && links.First == null && links.Prev == null && links.Next == null && links.Last == null;
         }
 
-        private ICurrentRequest GetRequestManager(ResourceContext resourceContext = null)
+        private ICurrentRequest GetRequestManager(ResourceContext resourceContext = null, bool useBaseId = false, string relationshipName = null)
         {
             var mock = new Mock<ICurrentRequest>();
             mock.Setup(m => m.BasePath).Returns(_host);
+            mock.Setup(m => m.BaseId).Returns(useBaseId ? _baseId.ToString() : null);
+            mock.Setup(m => m.RequestRelationship).Returns(relationshipName != null ? new HasOneAttribute(relationshipName) : null);
             mock.Setup(m => m.GetRequestResource()).Returns(resourceContext);
             return mock.Object;
         }

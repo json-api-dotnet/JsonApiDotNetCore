@@ -1,3 +1,4 @@
+using System.Text;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -27,17 +28,19 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         }
 
         /// <inheritdoc/>
-        public TopLevelLinks GetTopLevelLinks(ResourceContext primaryResource)
+        public TopLevelLinks GetTopLevelLinks()
         {
+            ResourceContext resourceContext = _currentRequest.GetRequestResource();
+
             TopLevelLinks topLevelLinks = null;
-            if (ShouldAddTopLevelLink(primaryResource, Link.Self))
+            if (ShouldAddTopLevelLink(resourceContext, Link.Self))
             {
-                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(primaryResource.ResourceName) };
+                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(resourceContext) };
             }
 
-            if (ShouldAddTopLevelLink(primaryResource, Link.Paging) && _pageService.CanPaginate)
+            if (ShouldAddTopLevelLink(resourceContext, Link.Paging) && _pageService.CanPaginate)
             {   
-                SetPageLinks(primaryResource, topLevelLinks ??= new TopLevelLinks());
+                SetPageLinks(resourceContext, topLevelLinks ??= new TopLevelLinks());
             }
 
             return topLevelLinks;
@@ -48,49 +51,67 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
-        private bool ShouldAddTopLevelLink(ResourceContext primaryResource, Link link)
+        private bool ShouldAddTopLevelLink(ResourceContext resourceContext, Link link)
         {
-            if (primaryResource.TopLevelLinks != Link.NotConfigured)
+            if (resourceContext.TopLevelLinks != Link.NotConfigured)
             {
-                return primaryResource.TopLevelLinks.HasFlag(link);
+                return resourceContext.TopLevelLinks.HasFlag(link);
             }
 
             return _options.TopLevelLinks.HasFlag(link);
         }
 
-        private void SetPageLinks(ResourceContext primaryResource, TopLevelLinks links)
+        private void SetPageLinks(ResourceContext resourceContext, TopLevelLinks links)
         {
             if (_pageService.CurrentPage > 1)
             {
-                links.Prev = GetPageLink(primaryResource, _pageService.CurrentPage - 1, _pageService.CurrentPageSize);
+                links.Prev = GetPageLink(resourceContext, _pageService.CurrentPage - 1, _pageService.CurrentPageSize);
             }
 
             if (_pageService.CurrentPage < _pageService.TotalPages)
             {
-                links.Next = GetPageLink(primaryResource, _pageService.CurrentPage + 1, _pageService.CurrentPageSize);
+                links.Next = GetPageLink(resourceContext, _pageService.CurrentPage + 1, _pageService.CurrentPageSize);
             }
 
             if (_pageService.TotalPages > 0)
             {
-                links.Self = GetPageLink(primaryResource, _pageService.CurrentPage, _pageService.CurrentPageSize);
-                links.First = GetPageLink(primaryResource, 1, _pageService.CurrentPageSize);
-                links.Last = GetPageLink(primaryResource, _pageService.TotalPages, _pageService.CurrentPageSize);
+                links.Self = GetPageLink(resourceContext, _pageService.CurrentPage, _pageService.CurrentPageSize);
+                links.First = GetPageLink(resourceContext, 1, _pageService.CurrentPageSize);
+                links.Last = GetPageLink(resourceContext, _pageService.TotalPages, _pageService.CurrentPageSize);
             }
         }
 
-        private string GetSelfTopLevelLink(string resourceName)
+        private string GetSelfTopLevelLink(ResourceContext resourceContext)
         {
-            return $"{GetBasePath()}/{resourceName}";
+            var builder = new StringBuilder();
+            builder.Append(GetBasePath());
+            builder.Append("/");
+            builder.Append(resourceContext.ResourceName);
+
+            string resourceId = _currentRequest.BaseId;
+            if (resourceId != null)
+            {
+                builder.Append("/");
+                builder.Append(resourceId);
+            }
+
+            if (_currentRequest.RequestRelationship != null)
+            {
+                builder.Append("/");
+                builder.Append(_currentRequest.RequestRelationship.PublicRelationshipName);
+            }
+
+            return builder.ToString();
         }
 
-        private string GetPageLink(ResourceContext primaryResource, int pageOffset, int pageSize)
+        private string GetPageLink(ResourceContext resourceContext, int pageOffset, int pageSize)
         {
             if (_pageService.Backwards)
             {
                 pageOffset = -pageOffset;
             }
 
-            return $"{GetBasePath()}/{primaryResource.ResourceName}?page[size]={pageSize}&page[number]={pageOffset}";
+            return $"{GetBasePath()}/{resourceContext.ResourceName}?page[size]={pageSize}&page[number]={pageOffset}";
         }
 
 

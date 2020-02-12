@@ -15,8 +15,6 @@ namespace JsonApiDotNetCore.Models
         /// <see cref="ILinksConfiguration"/> or <see cref="ResourceContext"/> is used.</param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
-        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
-        /// <param name="inverseNavigationProperty"></param>
         /// 
         /// <example>
         /// Using an alternative foreign key:
@@ -30,9 +28,8 @@ namespace JsonApiDotNetCore.Models
         /// }
         /// </code>
         /// </example>
-        public HasOneAttribute(string publicName = null, Link links = Link.NotConfigured, bool canInclude = true, string withForeignKey = null, string mappedBy = null, string inverseNavigationProperty = null)
-
-        : base(publicName, links, canInclude, mappedBy)
+        public HasOneAttribute(string publicName = null, Link links = Link.NotConfigured, bool canInclude = true, string withForeignKey = null, string inverseNavigationProperty = null)
+        : base(publicName, links, canInclude)
         {
             _explicitIdentifiablePropertyName = withForeignKey;
             InverseNavigation = inverseNavigationProperty;
