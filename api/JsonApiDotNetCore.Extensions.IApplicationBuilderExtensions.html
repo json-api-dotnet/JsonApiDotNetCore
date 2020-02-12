@@ -130,7 +130,10 @@
   </span>
   <a id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_" data-uid="JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi*"></a>
   <h4 id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_" data-uid="JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)">UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Runs several internal JsonApiDotNetCore services to ensure proper configuration and registers required middlewares. 
+The <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> can be used to skip any middleware registration, in which case the developer is
+is responsible for registering middleware that are required for JsonApiDotNetCore.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -154,20 +157,33 @@
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">skipRegisterMiddleware</span></td>
-        <td></td>
+        <td><p>Indicates if JsonApiDotNetCore should skip middleware registration. This enables a user to take full control of middleware registration.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">useAuthentication</span></td>
-        <td></td>
+        <td><p>Indicates if .NET Core authentication middleware should be registered. Ignored when <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> is set to true.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">useAuthorization</span></td>
-        <td></td>
+        <td><p>Indicates if .NET Core authentication middleware should be registered. Ignored when <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> is set to true.</p>
+</td>
       </tr>
     </tbody>
   </table>
+  <h5 id="JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean__examples">Examples</h5>
+  <p>This example illustrate which required middlewares should be registered when using the <code data-dev-comment-type="paramref" class="paramref">skipRegisterMiddleware</code> option.</p>
+<pre><code>app.UseJsonApi(skipRegisterMiddleware: true);
+// JADNC requires routing
+app.UseRouting();
+// JADNC requires CurrentRequestMiddleware 
+app.UseMiddleware{CurrentRequestMiddleware}();
+// JANDC requires the endpoint feature enabled as follows
+app.UseEndpoints(endpoints => endpoints.MapControllers());</code></pre>
+
 </article>
           </div>
           
