@@ -71,6 +71,22 @@ namespace JsonApiDotNetCore.Configuration
         public int DefaultPageSize { get; set; }
 
         /// <summary>
+        /// Optional. When set, limits the maximum page size for all resources.
+        /// </summary>
+        /// <example>
+        /// <code>options.MaximumPageSize = 50;</code>
+        /// </example>
+        public int? MaximumPageSize { get; set; }
+
+        /// <summary>
+        /// Optional. When set, limits the maximum page number for all resources.
+        /// </summary>
+        /// <example>
+        /// <code>options.MaximumPageNumber = 100;</code>
+        /// </example>
+        public int? MaximumPageNumber { get; set; }
+
+        /// <summary>
         /// Whether or not the total-record count should be included in all document
         /// level meta objects.
         /// Defaults to false.

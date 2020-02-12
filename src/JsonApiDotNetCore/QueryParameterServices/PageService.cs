@@ -83,6 +83,10 @@ namespace JsonApiDotNetCore.Query
                 {
                     ThrowBadPagingRequest(queryParameter, "value needs to be greater than zero");
                 }
+                else if (size > _options.MaximumPageSize)
+                {
+                    ThrowBadPagingRequest(queryParameter, $"page size cannot be higher than {_options.MaximumPageSize}.");
+                }
                 else
                 {
                     RequestedPageSize = size;
@@ -97,6 +101,10 @@ namespace JsonApiDotNetCore.Query
                 else if (number == 0)
                 {
                     ThrowBadPagingRequest(queryParameter, "page index is not zero-based");
+                }
+                else if (number > _options.MaximumPageNumber)
+                {
+                    ThrowBadPagingRequest(queryParameter, $"page index cannot be higher than {_options.MaximumPageNumber}.");
                 }
                 else
                 {
