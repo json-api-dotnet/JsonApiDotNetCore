@@ -7787,6 +7787,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.RelationshipAttribute.ExposedInternalMemberName
   nameWithType: RelationshipAttribute.ExposedInternalMemberName
+- uid: JsonApiDotNetCore.Models.RelationshipAttribute.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetHashCode
+  commentId: M:JsonApiDotNetCore.Models.RelationshipAttribute.GetHashCode
+  fullName: JsonApiDotNetCore.Models.RelationshipAttribute.GetHashCode()
+  nameWithType: RelationshipAttribute.GetHashCode()
+- uid: JsonApiDotNetCore.Models.RelationshipAttribute.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Models.RelationshipAttribute.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.RelationshipAttribute.GetHashCode
+  nameWithType: RelationshipAttribute.GetHashCode
 - uid: JsonApiDotNetCore.Models.RelationshipAttribute.GetValue(System.Object)
   name: GetValue(Object)
   href: api/JsonApiDotNetCore.Models.RelationshipAttribute.html#JsonApiDotNetCore_Models_RelationshipAttribute_GetValue_System_Object_
