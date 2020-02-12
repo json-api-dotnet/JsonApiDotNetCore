@@ -386,6 +386,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.LoadDatabaseValues
   nameWithType: IJsonApiOptions.LoadDatabaseValues
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber
+  name: MaximumPageNumber
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageNumber
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber
+  nameWithType: IJsonApiOptions.MaximumPageNumber
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber*
+  name: MaximumPageNumber
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageNumber_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber
+  nameWithType: IJsonApiOptions.MaximumPageNumber
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize
+  name: MaximumPageSize
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageSize
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize
+  nameWithType: IJsonApiOptions.MaximumPageSize
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize*
+  name: MaximumPageSize
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageSize_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageSize
+  nameWithType: IJsonApiOptions.MaximumPageSize
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.Namespace
   name: Namespace
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_Namespace
@@ -638,6 +664,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.LoadDatabaseValues
   nameWithType: JsonApiOptions.LoadDatabaseValues
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber
+  name: MaximumPageNumber
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageNumber
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber
+  nameWithType: JsonApiOptions.MaximumPageNumber
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber*
+  name: MaximumPageNumber
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageNumber_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber
+  nameWithType: JsonApiOptions.MaximumPageNumber
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize
+  name: MaximumPageSize
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageSize
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize
+  nameWithType: JsonApiOptions.MaximumPageSize
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize*
+  name: MaximumPageSize
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageSize_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageSize
+  nameWithType: JsonApiOptions.MaximumPageSize
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.Namespace
   name: Namespace
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_Namespace
