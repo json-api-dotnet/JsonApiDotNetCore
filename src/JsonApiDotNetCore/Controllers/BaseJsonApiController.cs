@@ -53,9 +53,7 @@ namespace JsonApiDotNetCore.Controllers
             _updateRelationships = updateRelationships;
             _delete = delete;
 
-            _logger = loggerFactory != null
-                ? loggerFactory.CreateLogger<BaseJsonApiController<T, TId>>()
-                : new Logger<BaseJsonApiController<T, TId>>(new LoggerFactory());
+            _logger = loggerFactory?.CreateLogger<BaseJsonApiController<T, TId>>();
         }
 
         public virtual async Task<IActionResult> GetAsync()
