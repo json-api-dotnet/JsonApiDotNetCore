@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
@@ -19,9 +18,11 @@ namespace JsonApiDotNetCore.Extensions
         /// Adds necessary components such as routing to your application
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="insertExtraMiddleware">Action intended for extra middleware that requires to be added after routing but before executing</param>
+        /// <param name="skipRegisterMiddleware">Do not register any middleware</param>
+        /// <param name="useAuthentication">Register Authentication middleware</param>
+        /// <param name="useAuthorization">Register Authorization middleware</param>
         /// <returns></returns>
-        public static void UseJsonApi(this IApplicationBuilder app, Action<IApplicationBuilder> insertExtraMiddleware = null)
+        public static void UseJsonApi(this IApplicationBuilder app, bool skipRegisterMiddleware = false, bool useAuthentication = false, bool useAuthorization = false)
         {
             LogResourceGraphValidations(app);
             using (var scope = app.ApplicationServices.CreateScope())
@@ -30,18 +31,26 @@ namespace JsonApiDotNetCore.Extensions
                 inverseRelationshipResolver?.Resolve();
             }
 
-            // An endpoint is selected and set on the HttpContext if a match is found
-            app.UseRouting();
+            if (!skipRegisterMiddleware) {
+                // An endpoint is selected and set on the HttpContext if a match is found
+                app.UseRouting();
 
-            // user defined middleware to run after routing occurs.
-            if (insertExtraMiddleware != null)
-                insertExtraMiddleware(app);
+                if (useAuthentication)
+                {
+                    app.UseAuthentication();
+                };
 
-            // middleware to run after routing occurs.
-            app.UseMiddleware<CurrentRequestMiddleware>();
+                if (useAuthorization)
+                {
+                    app.UseAuthorization();
+                };
 
-            // Executes the endpoints that was selected by routing.
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+                // middleware to run after routing occurs.
+                app.UseMiddleware<CurrentRequestMiddleware>();
+
+                // Executes the endpoints that was selected by routing.
+                app.UseEndpoints(endpoints => endpoints.MapControllers());
+            }
         }
 
         /// <summary>
