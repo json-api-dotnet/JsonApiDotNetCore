@@ -7,6 +7,8 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Serialization.Client;
+using JsonApiDotNetCore.Serialization.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -170,14 +172,14 @@ namespace JsonApiDotNetCore.Serialization
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
 
             if (foreignKeyProperty != null)
-                /// there is a FK from the current entity pointing to the related object,
-                /// i.e. we're populating the relationship from the dependent side.
+                // there is a FK from the current entity pointing to the related object,
+                // i.e. we're populating the relationship from the dependent side.
                 SetForeignKey(entity, foreignKeyProperty, attr, relatedId);
 
             SetNavigation(entity, attr, relatedId);
 
-            /// depending on if this base parser is used client-side or server-side,
-            /// different additional processing per field needs to be executed.
+            // depending on if this base parser is used client-side or server-side,
+            // different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
 
             return entity;

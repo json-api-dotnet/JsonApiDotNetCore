@@ -1,3 +1,4 @@
+﻿using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Configuration

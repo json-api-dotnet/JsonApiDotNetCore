@@ -51,8 +51,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
-        /// <param name="resourceContext"></param>
-        /// <param name="link"></param>
         private bool ShouldAddTopLevelLink(ResourceContext resourceContext, Link link)
         {
             if (resourceContext.TopLevelLinks != Link.NotConfigured)
@@ -170,7 +168,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
-        /// <param name="link"></param>
         private bool ShouldAddResourceLink(ResourceContext resourceContext, Link link)
         {
             if (resourceContext.ResourceLinks != Link.NotConfigured)
@@ -186,7 +183,6 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         /// the <see cref="ResourceContext"/>, and if not configured by checking with the
         /// global configuration in <see cref="ILinksConfiguration"/>.
         /// </summary>
-        /// <param name="link"></param>
         private bool ShouldAddRelationshipLink(ResourceContext resourceContext, RelationshipAttribute relationship, Link link)
         {
             if (relationship.RelationshipLinks != Link.NotConfigured)

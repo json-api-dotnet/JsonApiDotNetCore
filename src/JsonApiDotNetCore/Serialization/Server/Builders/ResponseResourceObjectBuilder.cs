@@ -57,8 +57,8 @@ namespace JsonApiDotNetCore.Serialization.Server
                 // if links relationshipLinks should be built for this entry, populate the "links" field.
                 (relationshipEntry = relationshipEntry ?? new RelationshipEntry()).Links = links;
 
-            /// if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
-            /// (see the NullValueHandling settings on <see cref="ResourceObject"/>)
+            // if neither "links" nor "data" was popupated, return null, which will omit this entry from the output.
+            // (see the NullValueHandling settings on <see cref="ResourceObject"/>)
             return relationshipEntry;
         }
 

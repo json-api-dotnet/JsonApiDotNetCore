@@ -74,7 +74,6 @@ namespace JsonApiDotNetCore.Controllers
         /// Base constructor with int as default
         /// </summary>
         /// <param name="jsonApiOptions"></param>
-        /// <param name="resourceGraph"></param>
         /// <param name="resourceService"></param>
         /// <param name="loggerFactory"></param>
         public JsonApiController(

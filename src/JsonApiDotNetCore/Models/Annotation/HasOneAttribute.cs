@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
@@ -14,7 +15,7 @@ namespace JsonApiDotNetCore.Models
         /// <see cref="ILinksConfiguration"/> or <see cref="ResourceContext"/> is used.</param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
         /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
-        /// 
+        /// <param name="inverseNavigationProperty"></param>
         /// <example>
         /// Using an alternative foreign key:
         /// 

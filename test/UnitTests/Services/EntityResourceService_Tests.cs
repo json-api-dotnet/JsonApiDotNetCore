@@ -47,7 +47,14 @@ namespace UnitTests.Services
             // Arrange
             const int id = 1;
             const string relationshipName = "collection";
-            var relationship = new RelationshipAttribute[] { new HasOneAttribute(relationshipName) };
+            var relationship = new RelationshipAttribute[]
+            {
+                new HasOneAttribute(relationshipName)
+                {
+                    LeftType = typeof(TodoItem),
+                    RightType = typeof(TodoItemCollection)
+                }
+            };
 
             var todoItem = new TodoItem();
             var query = new List<TodoItem> { todoItem }.AsQueryable();
@@ -73,7 +80,14 @@ namespace UnitTests.Services
             // Arrange
             const int id = 1;
             const string relationshipName = "collection";
-            var relationship = new RelationshipAttribute[] { new HasOneAttribute(relationshipName) };
+            var relationships = new RelationshipAttribute[]
+            {
+                new HasOneAttribute(relationshipName)
+                {
+                    LeftType = typeof(TodoItem),
+                    RightType = typeof(TodoItemCollection)
+                }
+            };
 
             var todoItem = new TodoItem
             {
@@ -83,7 +97,7 @@ namespace UnitTests.Services
             var query = new List<TodoItem> { todoItem }.AsQueryable();
 
             _repositoryMock.Setup(m => m.Get(id)).Returns(query);
-            _repositoryMock.Setup(m => m.Include(query, relationship)).Returns(query);
+            _repositoryMock.Setup(m => m.Include(query, relationships)).Returns(query);
             _repositoryMock.Setup(m => m.FirstOrDefaultAsync(query)).ReturnsAsync(todoItem);
 
             var repository = GetService();

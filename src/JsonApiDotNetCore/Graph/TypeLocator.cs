@@ -113,9 +113,9 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="openGenericType">The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`</param>
         /// <param name="genericArguments">Parameters to the generic type</param>
         /// <example>
-        /// <code>
+        /// <code><![CDATA[
         /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
-        /// </code>
+        /// ]]></code>
         /// </example>
         public static IEnumerable<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Graph
         /// Get all derivatives of the specified type.
         /// </summary>
         /// <param name="assembly">The assembly to search</param>
-        /// <param name="openGenericType">The inherited type</param>
+        /// <param name="inheritedType">The inherited type</param>
         /// <example>
         /// <code>
         /// GetDerivedGenericTypes(assembly, typeof(DbContext))

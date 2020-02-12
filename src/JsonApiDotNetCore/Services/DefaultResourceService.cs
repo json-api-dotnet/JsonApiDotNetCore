@@ -139,8 +139,8 @@ namespace JsonApiDotNetCore.Services
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
             {
-                /// TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
-                /// this error should be thrown when the relationship is not found.
+                // TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
+                // this error should be thrown when the relationship is not found.
                 throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
             }
 
@@ -254,8 +254,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Applies include queries
         /// </summary>
-        /// <param name="entities"></param>
-        /// <returns></returns>
         protected virtual IQueryable<TResource> ApplyInclude(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> chainPrefix = null)
         {
             var chains = _includeService.Get();

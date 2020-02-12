@@ -29,7 +29,6 @@ namespace JsonApiDotNetCore.Serialization.Server
         public RelationshipAttribute RequestRelationship { get; set; }
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
-        private readonly IIncludeService _includeService;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _primaryResourceType;
@@ -119,7 +118,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <returns>List of allowed attributes in the serialized result</returns>
         private List<AttrAttribute> GetAttributesToSerialize(Type resourceType)
         {
-            /// Check the attributes cache to see if the allowed attrs for this resource type were determined before.
+            // Check the attributes cache to see if the allowed attrs for this resource type were determined before.
             if (_attributesToSerializeCache.TryGetValue(resourceType, out List<AttrAttribute> allowedAttributes))
                 return allowedAttributes;
 
@@ -139,7 +138,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <returns>List of allowed relationships in the serialized result</returns>
         private List<RelationshipAttribute> GetRelationshipsToSerialize(Type resourceType)
         {
-            /// Check the relationships cache to see if the allowed attrs for this resource type were determined before.
+            // Check the relationships cache to see if the allowed attrs for this resource type were determined before.
             if (_relationshipsToSerializeCache.TryGetValue(resourceType, out List<RelationshipAttribute> allowedRelations))
                 return allowedRelations;
 

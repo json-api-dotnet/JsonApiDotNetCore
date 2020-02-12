@@ -91,9 +91,9 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var prop in properties)
             {
-                /// todo: investigate why this is added in the exposed attributes list
-                /// because it is not really defined attribute considered from the json:api
-                /// spec point of view.
+                // todo: investigate why this is added in the exposed attributes list
+                // because it is not really defined attribute considered from the json:api
+                // spec point of view.
                 if (prop.Name == nameof(Identifiable.Id))
                 {
                     var idAttr = new AttrAttribute()
