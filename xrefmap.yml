@@ -6993,18 +6993,18 @@ references:
   commentId: T:JsonApiDotNetCore.Models.HasManyThroughAttribute
   fullName: JsonApiDotNetCore.Models.HasManyThroughAttribute
   nameWithType: HasManyThroughAttribute
-- uid: JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
-  name: HasManyThroughAttribute(String, Link, Boolean, String)
-  href: api/JsonApiDotNetCore.Models.HasManyThroughAttribute.html#JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_
-  commentId: M:JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
-  fullName: JsonApiDotNetCore.Models.HasManyThroughAttribute.HasManyThroughAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String)
-  nameWithType: HasManyThroughAttribute.HasManyThroughAttribute(String, Link, Boolean, String)
-- uid: JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
-  name: HasManyThroughAttribute(String, String, Link, Boolean, String)
-  href: api/JsonApiDotNetCore.Models.HasManyThroughAttribute.html#JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_System_String_
-  commentId: M:JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean,System.String)
-  fullName: JsonApiDotNetCore.Models.HasManyThroughAttribute.HasManyThroughAttribute(System.String, System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean, System.String)
-  nameWithType: HasManyThroughAttribute.HasManyThroughAttribute(String, String, Link, Boolean, String)
+- uid: JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean)
+  name: HasManyThroughAttribute(String, Link, Boolean)
+  href: api/JsonApiDotNetCore.Models.HasManyThroughAttribute.html#JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean)
+  fullName: JsonApiDotNetCore.Models.HasManyThroughAttribute.HasManyThroughAttribute(System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean)
+  nameWithType: HasManyThroughAttribute.HasManyThroughAttribute(String, Link, Boolean)
+- uid: JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean)
+  name: HasManyThroughAttribute(String, String, Link, Boolean)
+  href: api/JsonApiDotNetCore.Models.HasManyThroughAttribute.html#JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_System_String_System_String_JsonApiDotNetCore_Models_Links_Link_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor(System.String,System.String,JsonApiDotNetCore.Models.Links.Link,System.Boolean)
+  fullName: JsonApiDotNetCore.Models.HasManyThroughAttribute.HasManyThroughAttribute(System.String, System.String, JsonApiDotNetCore.Models.Links.Link, System.Boolean)
+  nameWithType: HasManyThroughAttribute.HasManyThroughAttribute(String, String, Link, Boolean)
 - uid: JsonApiDotNetCore.Models.HasManyThroughAttribute.#ctor*
   name: HasManyThroughAttribute
   href: api/JsonApiDotNetCore.Models.HasManyThroughAttribute.html#JsonApiDotNetCore_Models_HasManyThroughAttribute__ctor_
