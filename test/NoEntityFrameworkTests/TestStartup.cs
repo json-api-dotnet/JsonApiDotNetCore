@@ -2,8 +2,6 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NoEntityFrameworkExample;
-using System;
-using UnitTests;
 
 namespace NoEntityFrameworkTests
 {

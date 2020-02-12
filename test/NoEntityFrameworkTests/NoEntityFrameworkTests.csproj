@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
-    <ProjectReference Include="../UnitTests/UnitTests.csproj" />
     <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
   <ItemGroup>
