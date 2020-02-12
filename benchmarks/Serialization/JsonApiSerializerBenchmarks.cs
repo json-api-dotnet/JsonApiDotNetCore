@@ -33,7 +33,7 @@ namespace Benchmarks.Serialization
             var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
 
             _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilderMock.Object, linkBuilderMock.Object,
-                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder, resourceGraph);
+                includeBuilderMock.Object, fieldsToSerialize, resourceObjectBuilder);
         }
 
         private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)
