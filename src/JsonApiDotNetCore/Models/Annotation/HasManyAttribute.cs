@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Models
         /// <param name="publicName">The relationship name as exposed by the API</param>
         /// <param name="relationshipLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
         /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
-        /// 
+        /// <param name="inverseNavigationProperty"></param>
         /// <example>
         /// 
         /// <code>
