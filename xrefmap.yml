@@ -2567,12 +2567,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.EnableDetailedErrors
   nameWithType: IApplicationBuilderExtensions.EnableDetailedErrors
-- uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
-  name: UseJsonApi(IApplicationBuilder)
-  href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html#JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_
-  commentId: M:JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
-  fullName: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
-  nameWithType: IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder)
+- uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)
+  name: UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)
+  href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html#JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_IApplicationBuilder_System_Boolean_System_Boolean_System_Boolean_
+  commentId: M:JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder,System.Boolean,System.Boolean,System.Boolean)
+  fullName: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder, System.Boolean, System.Boolean, System.Boolean)
+  nameWithType: IApplicationBuilderExtensions.UseJsonApi(IApplicationBuilder, Boolean, Boolean, Boolean)
 - uid: JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.UseJsonApi*
   name: UseJsonApi
   href: api/JsonApiDotNetCore.Extensions.IApplicationBuilderExtensions.html#JsonApiDotNetCore_Extensions_IApplicationBuilderExtensions_UseJsonApi_
