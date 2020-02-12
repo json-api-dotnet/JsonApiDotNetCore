@@ -22,23 +22,16 @@ $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BU
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
 dotnet restore
-
-dotnet build ./src/Examples/GettingStarted/GettingStarted.csproj
 CheckLastExitCode
 
-dotnet test ./test/UnitTests/UnitTests.csproj
+dotnet build -c Release
 CheckLastExitCode
 
-dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj
+# Workaround for random test failures, to be investigated later.
+dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj -c Release --no-build
 CheckLastExitCode
 
-dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj
-CheckLastExitCode
-
-dotnet test ./test/DiscoveryTests/DiscoveryTests.csproj
-CheckLastExitCode
-
-dotnet build ./src/JsonApiDotNetCore/JsonApiDotNetCore.csproj -c Release
+dotnet test -c Release --no-build
 CheckLastExitCode
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
