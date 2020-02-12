@@ -109,6 +109,9 @@ Sometimes the compiled files can be dirty / corrupt from other branches / failed
 dotnet clean
 ```
 
+#### Compiler warnings
+The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
+
 ## Compatibility
 
 A lot of changes were introduced in v4.0.0, the following chart should help you with compatibility issues between .NET Core versions
