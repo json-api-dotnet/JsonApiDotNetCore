@@ -85,7 +85,7 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-1.html">IResourceService</a>&lt;TResource&gt;</div>
-    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-1.html">IResourceCmdService</a>&lt;TResource&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-1.html">IResourceCommandService</a>&lt;TResource&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-1.html">ICreateService</a>&lt;TResource&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-1.html">IUpdateService</a>&lt;TResource&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-1.html">IUpdateRelationshipService</a>&lt;TResource&gt;</div>
@@ -96,7 +96,7 @@
     <div><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipsService-1.html">IGetRelationshipsService</a>&lt;TResource&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-1.html">IGetRelationshipService</a>&lt;TResource&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
-    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-2.html">IResourceCmdService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-2.html">IResourceCommandService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Services.IUpdateRelationshipService-2.html">IUpdateRelationshipService</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
@@ -153,7 +153,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Services_DefaultResourceService_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DefaultResourceService&lt;TResource&gt; : DefaultResourceService&lt;TResource, int&gt;, IResourceService&lt;TResource&gt;, IResourceCmdService&lt;TResource&gt;, ICreateService&lt;TResource&gt;, IUpdateService&lt;TResource&gt;, IUpdateRelationshipService&lt;TResource&gt;, IDeleteService&lt;TResource&gt;, IResourceQueryService&lt;TResource&gt;, IGetAllService&lt;TResource&gt;, IGetByIdService&lt;TResource&gt;, IGetRelationshipsService&lt;TResource&gt;, IGetRelationshipService&lt;TResource&gt;, IResourceService&lt;TResource, int&gt;, IResourceCmdService&lt;TResource, int&gt;, ICreateService&lt;TResource, int&gt;, IUpdateService&lt;TResource, int&gt;, IUpdateRelationshipService&lt;TResource, int&gt;, IDeleteService&lt;TResource, int&gt;, IResourceQueryService&lt;TResource, int&gt;, IGetAllService&lt;TResource, int&gt;, IGetByIdService&lt;TResource, int&gt;, IGetRelationshipsService&lt;TResource, int&gt;, IGetRelationshipService&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class DefaultResourceService&lt;TResource&gt; : DefaultResourceService&lt;TResource, int&gt;, IResourceService&lt;TResource&gt;, IResourceCommandService&lt;TResource&gt;, ICreateService&lt;TResource&gt;, IUpdateService&lt;TResource&gt;, IUpdateRelationshipService&lt;TResource&gt;, IDeleteService&lt;TResource&gt;, IResourceQueryService&lt;TResource&gt;, IGetAllService&lt;TResource&gt;, IGetByIdService&lt;TResource&gt;, IGetRelationshipsService&lt;TResource&gt;, IGetRelationshipService&lt;TResource&gt;, IResourceService&lt;TResource, int&gt;, IResourceCommandService&lt;TResource, int&gt;, ICreateService&lt;TResource, int&gt;, IUpdateService&lt;TResource, int&gt;, IUpdateRelationshipService&lt;TResource, int&gt;, IDeleteService&lt;TResource, int&gt;, IResourceQueryService&lt;TResource, int&gt;, IGetAllService&lt;TResource, int&gt;, IGetByIdService&lt;TResource, int&gt;, IGetRelationshipsService&lt;TResource, int&gt;, IGetRelationshipService&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -234,7 +234,7 @@
       <a class="xref" href="JsonApiDotNetCore.Services.IResourceService-1.html">IResourceService&lt;T&gt;</a>
   </div>
   <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-1.html">IResourceCmdService&lt;T&gt;</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-1.html">IResourceCommandService&lt;T&gt;</a>
   </div>
   <div>
       <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-1.html">ICreateService&lt;T&gt;</a>
@@ -267,7 +267,7 @@
       <a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService&lt;T, TId&gt;</a>
   </div>
   <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.IResourceCmdService-2.html">IResourceCmdService&lt;T, TId&gt;</a>
+      <a class="xref" href="JsonApiDotNetCore.Services.IResourceCommandService-2.html">IResourceCommandService&lt;T, TId&gt;</a>
   </div>
   <div>
       <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService&lt;T, TId&gt;</a>

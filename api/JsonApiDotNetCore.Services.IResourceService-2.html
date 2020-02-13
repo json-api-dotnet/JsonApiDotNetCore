@@ -106,7 +106,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Services_IResourceService_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceService&lt;T, in TId&gt; : IResourceCmdService&lt;T, TId&gt;, ICreateService&lt;T, TId&gt;, IUpdateService&lt;T, TId&gt;, IUpdateRelationshipService&lt;T, TId&gt;, IDeleteService&lt;T, TId&gt;, IResourceQueryService&lt;T, TId&gt;, IGetAllService&lt;T, TId&gt;, IGetByIdService&lt;T, TId&gt;, IGetRelationshipsService&lt;T, TId&gt;, IGetRelationshipService&lt;T, TId&gt; where T : class, IIdentifiable&lt;TId&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IResourceService&lt;T, in TId&gt; : IResourceCommandService&lt;T, TId&gt;, ICreateService&lt;T, TId&gt;, IUpdateService&lt;T, TId&gt;, IUpdateRelationshipService&lt;T, TId&gt;, IDeleteService&lt;T, TId&gt;, IResourceQueryService&lt;T, TId&gt;, IGetAllService&lt;T, TId&gt;, IGetByIdService&lt;T, TId&gt;, IGetRelationshipsService&lt;T, TId&gt;, IGetRelationshipService&lt;T, TId&gt; where T : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
