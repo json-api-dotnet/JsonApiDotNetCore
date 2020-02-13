@@ -98,7 +98,7 @@ IResourceService
 │   └── IGetRelationshipsService
 |       GET /{id}/relationships/{relationship}
 |
-└── IResourceCmdService
+└── IResourceCommandService
     |
     ├── ICreateService
     |   POST /

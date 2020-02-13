@@ -7,20 +7,20 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiCmdController<T> : JsonApiCmdController<T, int> where T : class, IIdentifiable<int>
+    public class JsonApiCommandController<T> : JsonApiCommandController<T, int> where T : class, IIdentifiable<int>
     {
-        public JsonApiCmdController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IResourceCmdService<T, int> cmdService)
-            : base(jsonApiOptions, loggerFactory, cmdService)
+        public JsonApiCommandController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+            IResourceCommandService<T, int> commandService)
+            : base(jsonApiOptions, loggerFactory, commandService)
         {
         }
     }
 
-    public class JsonApiCmdController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public class JsonApiCommandController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        public JsonApiCmdController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IResourceCmdService<T, TId> cmdService)
-            : base(jsonApiOptions, loggerFactory, null, cmdService)
+        public JsonApiCommandController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+            IResourceCommandService<T, TId> commandService)
+            : base(jsonApiOptions, loggerFactory, null, commandService)
         {
         }
 

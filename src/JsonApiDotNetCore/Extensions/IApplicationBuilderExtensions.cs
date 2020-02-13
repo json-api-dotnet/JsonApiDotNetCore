@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Extensions
     {
         /// <summary>
         /// Runs several internal JsonApiDotNetCore services to ensure proper configuration and registers required middlewares. 
-        /// The <paramref name="skipRegisterMiddleware"/> can be used to skip any middleware registration, in which case the developer is
+        /// The <paramref name="skipRegisterMiddleware"/> can be used to skip any middleware registration, in which case the developer
         /// is responsible for registering middleware that are required for JsonApiDotNetCore.
         /// </summary>
         /// <param name="app"></param>

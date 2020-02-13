@@ -17,8 +17,8 @@ namespace JsonApiDotNetCore.Graph
         internal static HashSet<Type> ServiceInterfaces = new HashSet<Type> {
             typeof(IResourceService<>),
             typeof(IResourceService<,>),
-            typeof(IResourceCmdService<>),
-            typeof(IResourceCmdService<,>),
+            typeof(IResourceCommandService<>),
+            typeof(IResourceCommandService<,>),
             typeof(IResourceQueryService<>),
             typeof(IResourceQueryService<,>),
             typeof(ICreateService<>),

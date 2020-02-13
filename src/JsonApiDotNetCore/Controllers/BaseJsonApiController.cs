@@ -30,9 +30,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IResourceQueryService<T, TId> queryService = null, IResourceCmdService<T, TId> cmdService = null)
-            : this(jsonApiOptions, loggerFactory, queryService, queryService, queryService, queryService, cmdService,
-                cmdService, cmdService, cmdService)
+            IResourceQueryService<T, TId> queryService = null, IResourceCommandService<T, TId> commandService = null)
+            : this(jsonApiOptions, loggerFactory, queryService, queryService, queryService, queryService, commandService,
+                commandService, commandService, commandService)
         {
         }
 
@@ -166,8 +166,8 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IResourceQueryService<T, int> queryService = null, IResourceCmdService<T, int> cmdService = null)
-            : base(jsonApiOptions, loggerFactory, queryService, cmdService)
+            IResourceQueryService<T, int> queryService = null, IResourceCommandService<T, int> commandService = null)
+            : base(jsonApiOptions, loggerFactory, queryService, commandService)
         {
         }
 
