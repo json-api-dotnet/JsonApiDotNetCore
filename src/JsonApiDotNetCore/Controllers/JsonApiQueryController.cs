@@ -9,21 +9,22 @@ namespace JsonApiDotNetCore.Controllers
 {
     public class JsonApiQueryController<T> : JsonApiQueryController<T, int> where T : class, IIdentifiable<int>
     {
-        public JsonApiQueryController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public JsonApiQueryController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceQueryService<T, int> queryService)
             : base(jsonApiOptions, loggerFactory, queryService)
-        {
-        }
+        { }
     }
 
     public class JsonApiQueryController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        public JsonApiQueryController(IJsonApiOptions jsonApiContext,
+        public JsonApiQueryController(
+            IJsonApiOptions jsonApiContext,
             ILoggerFactory loggerFactory,
             IResourceQueryService<T, TId> queryService)
             : base(jsonApiContext, loggerFactory, queryService)
-        {
-        }
+        { }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();

@@ -8,10 +8,11 @@ namespace GettingStarted
 {
     public class PeopleController : JsonApiController<Person>
     {
-        public PeopleController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public PeopleController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceService<Person> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
-        {
-        }
+        { }
     }
 }

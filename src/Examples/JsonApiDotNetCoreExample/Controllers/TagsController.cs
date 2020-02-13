@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         public TagsController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
-            IResourceService<Tag, int> resourceService) 
+            IResourceService<Tag, int> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }

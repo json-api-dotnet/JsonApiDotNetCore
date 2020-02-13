@@ -7,10 +7,11 @@ namespace GettingStarted.ResourceDefinitionExample
 {
     public class ModelsController : JsonApiController<Model>
     {
-        public ModelsController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public ModelsController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceService<Model> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
-        {
-        }
+        { }
     }
 }

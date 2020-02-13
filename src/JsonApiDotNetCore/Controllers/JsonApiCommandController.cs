@@ -9,20 +9,22 @@ namespace JsonApiDotNetCore.Controllers
 {
     public class JsonApiCommandController<T> : JsonApiCommandController<T, int> where T : class, IIdentifiable<int>
     {
-        public JsonApiCommandController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public JsonApiCommandController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceCommandService<T, int> commandService)
             : base(jsonApiOptions, loggerFactory, commandService)
-        {
-        }
+        { }
     }
 
     public class JsonApiCommandController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        public JsonApiCommandController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public JsonApiCommandController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceCommandService<T, TId> commandService)
             : base(jsonApiOptions, loggerFactory, null, commandService)
-        {
-        }
+        { }
 
         [HttpPost]
         public override async Task<IActionResult> PostAsync([FromBody] T entity)

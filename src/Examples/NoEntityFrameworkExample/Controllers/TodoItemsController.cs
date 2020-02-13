@@ -8,10 +8,11 @@ namespace NoEntityFrameworkExample.Controllers
 {
     public class TodoItemsController : JsonApiController<TodoItem>
     {
-        public TodoItemsController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public TodoItemsController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceService<TodoItem> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
-        {
-        }
+        { }
     }
 }

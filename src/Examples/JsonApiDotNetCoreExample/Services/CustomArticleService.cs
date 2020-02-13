@@ -14,12 +14,15 @@ namespace JsonApiDotNetCoreExample.Services
 {
     public class CustomArticleService : DefaultResourceService<Article>
     {
-        public CustomArticleService(IEnumerable<IQueryParameterService> queryParameters, IJsonApiOptions options,
-            ILoggerFactory loggerFactory, IResourceRepository<Article, int> repository,
-            IResourceContextProvider provider, IResourceHookExecutor hookExecutor = null)
+        public CustomArticleService(
+            IEnumerable<IQueryParameterService> queryParameters,
+            IJsonApiOptions options,
+            ILoggerFactory loggerFactory,
+            IResourceRepository<Article, int> repository,
+            IResourceContextProvider provider,
+            IResourceHookExecutor hookExecutor = null)
             : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
-        {
-        }
+        { }
 
         public override async Task<Article> GetAsync(int id)
         {

@@ -22,25 +22,33 @@ namespace JsonApiDotNetCore.Controllers
         private readonly IDeleteService<T, TId> _delete;
         private readonly ILogger<BaseJsonApiController<T, TId>> _logger;
 
-        protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        protected BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceService<T, TId> resourceService)
             : this(jsonApiOptions, loggerFactory, resourceService, resourceService, resourceService, resourceService,
                 resourceService, resourceService, resourceService, resourceService)
-        {
-        }
+        { }
 
-        protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IResourceQueryService<T, TId> queryService = null, IResourceCommandService<T, TId> commandService = null)
+        protected BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceQueryService<T, TId> queryService = null,
+            IResourceCommandService<T, TId> commandService = null)
             : this(jsonApiOptions, loggerFactory, queryService, queryService, queryService, queryService, commandService,
                 commandService, commandService, commandService)
-        {
-        }
+        { }
 
-        protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IGetAllService<T, TId> getAll = null, IGetByIdService<T, TId> getById = null,
+        protected BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IGetAllService<T, TId> getAll = null,
+            IGetByIdService<T, TId> getById = null,
             IGetRelationshipService<T, TId> getRelationship = null,
-            IGetRelationshipsService<T, TId> getRelationships = null, ICreateService<T, TId> create = null,
-            IUpdateService<T, TId> update = null, IUpdateRelationshipService<T, TId> updateRelationships = null,
+            IGetRelationshipsService<T, TId> getRelationships = null,
+            ICreateService<T, TId> create = null,
+            IUpdateService<T, TId> update = null,
+            IUpdateRelationshipService<T, TId> updateRelationships = null,
             IDeleteService<T, TId> delete = null)
         {
             _jsonApiOptions = jsonApiOptions;
@@ -159,27 +167,34 @@ namespace JsonApiDotNetCore.Controllers
 
     public abstract class BaseJsonApiController<T> : BaseJsonApiController<T, int> where T : class, IIdentifiable<int>
     {
-        protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        protected BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceService<T, int> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService, resourceService)
-        {
-        }
+        { }
 
-        protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IResourceQueryService<T, int> queryService = null, IResourceCommandService<T, int> commandService = null)
+        protected BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceQueryService<T, int> queryService = null,
+            IResourceCommandService<T, int> commandService = null)
             : base(jsonApiOptions, loggerFactory, queryService, commandService)
-        {
-        }
+        { }
 
-        protected BaseJsonApiController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-            IGetAllService<T, int> getAll = null, IGetByIdService<T, int> getById = null,
+        protected BaseJsonApiController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IGetAllService<T, int> getAll = null,
+            IGetByIdService<T, int> getById = null,
             IGetRelationshipService<T, int> getRelationship = null,
-            IGetRelationshipsService<T, int> getRelationships = null, ICreateService<T, int> create = null,
-            IUpdateService<T, int> update = null, IUpdateRelationshipService<T, int> updateRelationships = null,
+            IGetRelationshipsService<T, int> getRelationships = null,
+            ICreateService<T, int> create = null,
+            IUpdateService<T, int> update = null,
+            IUpdateRelationshipService<T, int> updateRelationships = null,
             IDeleteService<T, int> delete = null)
             : base(jsonApiOptions, loggerFactory, getAll, getById, getRelationship, getRelationships, create, update,
                 updateRelationships, delete)
-        {
-        }
+        { }
     }
 }

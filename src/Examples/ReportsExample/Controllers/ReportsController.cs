@@ -11,11 +11,12 @@ namespace ReportsExample.Controllers
     [Route("api/[controller]")]
     public class ReportsController : BaseJsonApiController<Report, int> 
     {
-        public ReportsController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public ReportsController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IGetAllService<Report> getAll)
             : base(jsonApiOptions, loggerFactory, getAll)
-        {
-        }
+        { }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();

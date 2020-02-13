@@ -8,10 +8,11 @@ namespace GettingStarted
 {
     public class ArticlesController : JsonApiController<Article>
     {
-        public ArticlesController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+        public ArticlesController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
             IResourceService<Article> resourceService)
             : base(jsonApiOptions, loggerFactory, resourceService)
-        {
-        }
+        { }
     }
 }

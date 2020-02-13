@@ -34,9 +34,13 @@ namespace JsonApiDotNetCore.Services
         private readonly ISparseFieldsService _sparseFieldsService;
         private readonly ResourceContext _currentRequestResource;
 
-        public DefaultResourceService(IEnumerable<IQueryParameterService> queryParameters, IJsonApiOptions options,
-            ILoggerFactory loggerFactory, IResourceRepository<TResource, TId> repository,
-            IResourceContextProvider provider, IResourceHookExecutor hookExecutor = null)
+        public DefaultResourceService(
+            IEnumerable<IQueryParameterService> queryParameters,
+            IJsonApiOptions options,
+            ILoggerFactory loggerFactory,
+            IResourceRepository<TResource, TId> repository,
+            IResourceContextProvider provider,
+            IResourceHookExecutor hookExecutor = null)
         {
             _includeService = queryParameters.FirstOrDefault<IIncludeService>();
             _sparseFieldsService = queryParameters.FirstOrDefault<ISparseFieldsService>();
@@ -350,11 +354,14 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceService(IEnumerable<IQueryParameterService> queryParameters, IJsonApiOptions options,
-            ILoggerFactory loggerFactory, IResourceRepository<TResource, int> repository,
-            IResourceContextProvider provider, IResourceHookExecutor hookExecutor = null)
+        public DefaultResourceService(
+            IEnumerable<IQueryParameterService> queryParameters,
+            IJsonApiOptions options,
+            ILoggerFactory loggerFactory,
+            IResourceRepository<TResource, int> repository,
+            IResourceContextProvider provider,
+            IResourceHookExecutor hookExecutor = null)
             : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
-        {
-        }
+        { }
     }
 }

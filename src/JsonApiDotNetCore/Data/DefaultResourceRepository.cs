@@ -407,11 +407,13 @@ namespace JsonApiDotNetCore.Data
     public class DefaultResourceRepository<TResource> : DefaultResourceRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceRepository(ITargetedFields targetedFields,
-                                       IDbContextResolver contextResolver,
-                                       IResourceGraph resourceGraph,
-                                       IGenericServiceFactory genericServiceFactory,
-                                       ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) { }
+        public DefaultResourceRepository(
+            ITargetedFields targetedFields, 
+            IDbContextResolver contextResolver, 
+            IResourceGraph resourceGraph, 
+            IGenericServiceFactory genericServiceFactory,
+            ILoggerFactory loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) 
+        { }
     }
 }

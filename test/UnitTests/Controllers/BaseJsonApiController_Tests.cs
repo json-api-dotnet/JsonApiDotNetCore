@@ -21,23 +21,27 @@ namespace UnitTests
 
         public class ResourceController : BaseJsonApiController<Resource>
         {
-            public ResourceController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
+            public ResourceController(
+                IJsonApiOptions jsonApiOptions,
+                ILoggerFactory loggerFactory,
                 IResourceService<Resource, int> resourceService)
                 : base(jsonApiOptions, loggerFactory, resourceService)
-            {
-            }
+            { }
 
-            public ResourceController(IJsonApiOptions jsonApiOptions, ILoggerFactory loggerFactory,
-                IGetAllService<Resource, int> getAll = null, IGetByIdService<Resource, int> getById = null,
+            public ResourceController(
+                IJsonApiOptions jsonApiOptions,
+                ILoggerFactory loggerFactory,
+                IGetAllService<Resource, int> getAll = null,
+                IGetByIdService<Resource, int> getById = null,
                 IGetRelationshipService<Resource, int> getRelationship = null,
                 IGetRelationshipsService<Resource, int> getRelationships = null,
-                ICreateService<Resource, int> create = null, IUpdateService<Resource, int> update = null,
+                ICreateService<Resource, int> create = null,
+                IUpdateService<Resource, int> update = null,
                 IUpdateRelationshipService<Resource, int> updateRelationships = null,
                 IDeleteService<Resource, int> delete = null)
                 : base(jsonApiOptions, loggerFactory, getAll, getById, getRelationship, getRelationships, create,
                     update, updateRelationships, delete)
-            {
-            }
+            { }
         }
 
         [Fact]

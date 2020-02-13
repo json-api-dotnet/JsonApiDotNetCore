@@ -103,12 +103,15 @@ namespace DiscoveryTests
         {
             private static IResourceRepository<TestModel> _repo = new Mock<IResourceRepository<TestModel>>().Object;
 
-            public TestModelService(IEnumerable<IQueryParameterService> queryParameters, IJsonApiOptions options,
-                ILoggerFactory loggerFactory, IResourceRepository<TestModel, int> repository,
-                IResourceContextProvider provider, IResourceHookExecutor hookExecutor = null)
+            public TestModelService(
+                IEnumerable<IQueryParameterService> queryParameters,
+                IJsonApiOptions options,
+                ILoggerFactory loggerFactory,
+                IResourceRepository<TestModel, int> repository,
+                IResourceContextProvider provider,
+                IResourceHookExecutor hookExecutor = null)
                 : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
-            {
-            }
+            { }
         }
 
         public class TestModelRepository : DefaultResourceRepository<TestModel>
