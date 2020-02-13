@@ -118,10 +118,13 @@ namespace DiscoveryTests
         {
             internal static IDbContextResolver _dbContextResolver;
 
-            public TestModelRepository(ITargetedFields targetedFields,
-                                       IResourceGraph resourceGraph,
-                                       IGenericServiceFactory genericServiceFactory)
-                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, null) { }
+            public TestModelRepository(
+                ITargetedFields targetedFields,
+                IResourceGraph resourceGraph,
+                IGenericServiceFactory genericServiceFactory,
+                ILoggerFactory loggerFactory)
+                : base(targetedFields, _dbContextResolver, resourceGraph, genericServiceFactory, loggerFactory)
+            { }
         }
     }
 }

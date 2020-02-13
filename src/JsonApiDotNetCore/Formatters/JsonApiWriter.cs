@@ -25,6 +25,8 @@ namespace JsonApiDotNetCore.Formatters
         {
             _serializer = serializer;
             _logger = loggerFactory.CreateLogger<JsonApiWriter>();
+
+            _logger.LogTrace("Executing constructor.");
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
@@ -57,7 +59,7 @@ namespace JsonApiDotNetCore.Formatters
                 }
                 catch (Exception e)
                 {
-                    _logger?.LogError(new EventId(), e, "An error occurred while formatting the response");
+                    _logger.LogError(new EventId(), e, "An error occurred while formatting the response");
                     var errors = new ErrorCollection();
                     errors.Add(new Error(500, e.Message, ErrorMeta.FromException(e)));
                     responseContent = _serializer.Serialize(errors);

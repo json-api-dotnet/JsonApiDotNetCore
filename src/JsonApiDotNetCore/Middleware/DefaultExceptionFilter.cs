@@ -14,12 +14,12 @@ namespace JsonApiDotNetCore.Middleware
 
         public DefaultExceptionFilter(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory?.CreateLogger<DefaultExceptionFilter>();
+            _logger = loggerFactory.CreateLogger<DefaultExceptionFilter>();
         }
 
         public void OnException(ExceptionContext context)
         {
-            _logger?.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
+            _logger.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
 
             var jsonApiException = JsonApiExceptionFactory.GetException(context.Exception);
 

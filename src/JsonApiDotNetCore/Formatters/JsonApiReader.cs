@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.Formatters
         {
             _deserializer = deserializer;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
+
+            _logger.LogTrace("Executing constructor.");
         }
 
         public async  Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
@@ -40,7 +42,7 @@ namespace JsonApiDotNetCore.Formatters
                 object model = _deserializer.Deserialize(body);
                 if (model == null)
                 {
-                    _logger?.LogError("An error occurred while de-serializing the payload");
+                    _logger.LogError("An error occurred while de-serializing the payload");
                 }
                 if (context.HttpContext.Request.Method == "PATCH")
                 {
@@ -55,7 +57,7 @@ namespace JsonApiDotNetCore.Formatters
                     }
                     if (idMissing)
                     {
-                        _logger?.LogError("Payload must include id attribute");
+                        _logger.LogError("Payload must include id attribute");
                         throw new JsonApiException(400, "Payload must include id attribute");
                     }
                 }
@@ -63,7 +65,7 @@ namespace JsonApiDotNetCore.Formatters
             }
             catch (Exception ex)
             {
-                _logger?.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
+                _logger.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
                 context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
                 return await InputFormatterResult.FailureAsync();
             }

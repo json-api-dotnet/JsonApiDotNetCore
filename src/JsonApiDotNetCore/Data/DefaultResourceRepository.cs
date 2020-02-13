@@ -27,6 +27,7 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericServiceFactory _genericServiceFactory;
+        private ILogger<DefaultResourceRepository<TResource, TId>> _logger;
 
         public DefaultResourceRepository(
             ITargetedFields targetedFields,
@@ -40,6 +41,9 @@ namespace JsonApiDotNetCore.Data
             _genericServiceFactory = genericServiceFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TResource>();
+            _logger = loggerFactory.CreateLogger<DefaultResourceRepository<TResource, TId>>();
+
+            _logger.LogTrace("Executing constructor.");
         }
 
         /// <inheritdoc />

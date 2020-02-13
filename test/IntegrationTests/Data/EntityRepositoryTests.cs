@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace JADNC.IntegrationTests.Data
@@ -154,7 +155,7 @@ namespace JADNC.IntegrationTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(context);
             var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItem>().Build();
             var targetedFields = new Mock<ITargetedFields>();
-            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, null);
+            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph, null, NullLoggerFactory.Instance);
             return (repository, targetedFields);
         }
 

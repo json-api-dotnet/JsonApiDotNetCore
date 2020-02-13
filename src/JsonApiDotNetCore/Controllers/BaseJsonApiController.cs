@@ -52,6 +52,7 @@ namespace JsonApiDotNetCore.Controllers
             IDeleteService<T, TId> delete = null)
         {
             _jsonApiOptions = jsonApiOptions;
+            _logger = loggerFactory.CreateLogger<BaseJsonApiController<T, TId>>();
             _getAll = getAll;
             _getById = getById;
             _getRelationship = getRelationship;
@@ -61,7 +62,7 @@ namespace JsonApiDotNetCore.Controllers
             _updateRelationships = updateRelationships;
             _delete = delete;
 
-            _logger = loggerFactory?.CreateLogger<BaseJsonApiController<T, TId>>();
+            _logger.LogTrace("Executing constructor.");
         }
 
         public virtual async Task<IActionResult> GetAsync()
