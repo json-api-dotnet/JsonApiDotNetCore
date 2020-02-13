@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +38,7 @@ namespace NoEntityFrameworkExample
                 );
             services.AddScoped<IResourceService<TodoItem>, TodoItemService>();
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>(); 
-            optionsBuilder.UseNpgsql(GetDbConnectionString()); 
+            optionsBuilder.UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton(optionsBuilder.Options);
             services.AddScoped<AppDbContext>();
