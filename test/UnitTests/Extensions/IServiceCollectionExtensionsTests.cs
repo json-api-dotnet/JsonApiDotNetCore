@@ -93,7 +93,7 @@ namespace UnitTests.Extensions
             // Assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceCmdService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceCommandService<IntResource>)));
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IResourceQueryService<IntResource>)));
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IGetAllService<IntResource>)));
             Assert.IsType<IntResourceService>(provider.GetService(typeof(IGetByIdService<IntResource>)));
@@ -116,7 +116,7 @@ namespace UnitTests.Extensions
             // Assert
             var provider = services.BuildServiceProvider();
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceService<GuidResource, Guid>)));
-            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceCmdService<GuidResource, Guid>)));
+            Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceCommandService<GuidResource, Guid>)));
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IResourceQueryService<GuidResource, Guid>)));
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IGetAllService<GuidResource, Guid>)));
             Assert.IsType<GuidResourceService>(provider.GetService(typeof(IGetByIdService<GuidResource, Guid>)));
