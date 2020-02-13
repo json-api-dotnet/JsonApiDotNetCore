@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
@@ -9,8 +10,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public ArticlesController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<Article> resourceService) 
-            : base(jsonApiOptions, resourceService)
+            ILoggerFactory loggerFactory,
+            IResourceService<Article> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }
 }

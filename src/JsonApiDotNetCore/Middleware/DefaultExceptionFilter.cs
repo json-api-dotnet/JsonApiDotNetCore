@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Middleware
 
         public void OnException(ExceptionContext context)
         {
-            _logger?.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
+            _logger.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
 
             var jsonApiException = JsonApiExceptionFactory.GetException(context.Exception);
 

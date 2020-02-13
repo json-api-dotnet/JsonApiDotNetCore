@@ -2,12 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -27,19 +25,12 @@ namespace JsonApiDotNetCoreExample
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var loggerFactory = new LoggerFactory();
             services
-                .AddSingleton<ILoggerFactory>(loggerFactory)
-                .AddLogging(builder =>
-                {
-                    builder.AddConsole();
-                    builder.AddConfiguration(Config.GetSection("Logging"));
-                })
                 .AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseLoggerFactory(new LoggerFactory(new[] { new DebugLoggerProvider() }))
-                           .EnableSensitiveDataLogging()
-                           .UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
+                    options
+                        .EnableSensitiveDataLogging()
+                        .UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
                 .AddJsonApi(options =>
                 {

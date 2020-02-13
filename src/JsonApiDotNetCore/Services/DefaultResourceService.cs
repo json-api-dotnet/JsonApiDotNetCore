@@ -35,12 +35,12 @@ namespace JsonApiDotNetCore.Services
         private readonly ResourceContext _currentRequestResource;
 
         public DefaultResourceService(
-                IEnumerable<IQueryParameterService> queryParameters,
-                IJsonApiOptions options,
-                IResourceRepository<TResource, TId> repository,
-                IResourceContextProvider provider,
-                IResourceHookExecutor hookExecutor = null,
-                ILoggerFactory loggerFactory = null)
+            IEnumerable<IQueryParameterService> queryParameters,
+            IJsonApiOptions options,
+            ILoggerFactory loggerFactory,
+            IResourceRepository<TResource, TId> repository,
+            IResourceContextProvider provider,
+            IResourceHookExecutor hookExecutor = null)
         {
             _includeService = queryParameters.FirstOrDefault<IIncludeService>();
             _sparseFieldsService = queryParameters.FirstOrDefault<ISparseFieldsService>();
@@ -48,12 +48,13 @@ namespace JsonApiDotNetCore.Services
             _sortService = queryParameters.FirstOrDefault<ISortService>();
             _filterService = queryParameters.FirstOrDefault<IFilterService>();
             _options = options;
+            _logger = loggerFactory.CreateLogger<DefaultResourceService<TResource, TId>>();
             _repository = repository;
             _hookExecutor = hookExecutor;
-            _logger = loggerFactory?.CreateLogger<DefaultResourceService<TResource, TId>>();
             _currentRequestResource = provider.GetResourceContext<TResource>();
-        }
 
+            _logger.LogTrace("Executing constructor.");
+        }
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {
@@ -211,11 +212,9 @@ namespace JsonApiDotNetCore.Services
             {
                 pageOffset = -pageOffset;
             }
-            if (_logger?.IsEnabled(LogLevel.Information) == true)
-            {
-                _logger?.LogInformation($"Applying paging query. Fetching page {pageOffset} " +
-                    $"with {_pageService.CurrentPageSize} entities");
-            }
+
+            _logger.LogInformation($"Applying paging query. Fetching page {pageOffset} " + 
+                                   $"with {_pageService.CurrentPageSize} entities");
 
             return await _repository.PageAsync(entities, _pageService.CurrentPageSize, pageOffset);
         }
@@ -355,12 +354,14 @@ namespace JsonApiDotNetCore.Services
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceService(IEnumerable<IQueryParameterService> queryParameters,
-                                      IJsonApiOptions options,
-                                      IResourceRepository<TResource, int> repository,
-                                      IResourceContextProvider provider,
-                                      IResourceHookExecutor hookExecutor = null,
-                                      ILoggerFactory loggerFactory = null)
-            : base(queryParameters, options, repository, provider, hookExecutor, loggerFactory) { }
+        public DefaultResourceService(
+            IEnumerable<IQueryParameterService> queryParameters,
+            IJsonApiOptions options,
+            ILoggerFactory loggerFactory,
+            IResourceRepository<TResource, int> repository,
+            IResourceContextProvider provider,
+            IResourceHookExecutor hookExecutor = null)
+            : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
+        { }
     }
 }

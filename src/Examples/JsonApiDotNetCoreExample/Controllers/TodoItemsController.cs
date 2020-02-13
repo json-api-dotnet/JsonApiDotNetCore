@@ -10,9 +10,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public TodoItemsController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<TodoItem> resourceService,
-            ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, resourceService, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<TodoItem> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }
 }

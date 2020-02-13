@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Data;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +17,11 @@ namespace JsonApiDotNetCoreExample.Controllers
         readonly IDbContextResolver _dbResolver;
 
         public TodoCollectionsController(
-            IJsonApiOptions jsonApiOptions, 
-           IDbContextResolver contextResolver,
-           IResourceService<TodoItemCollection, Guid> resourceService,
-           ILoggerFactory loggerFactory)
-           : base(jsonApiOptions, resourceService, loggerFactory)
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IDbContextResolver contextResolver,
+            IResourceService<TodoItemCollection, Guid> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         {
             _dbResolver = contextResolver;
         }

@@ -3,31 +3,28 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiQueryController<T>
-    : JsonApiQueryController<T, int> where T : class, IIdentifiable<int>
+    public class JsonApiQueryController<T> : JsonApiQueryController<T, int> where T : class, IIdentifiable<int>
     {
         public JsonApiQueryController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<T, int> resourceService)
-            : base(jsonApiOptions, resourceService) { }
+            ILoggerFactory loggerFactory,
+            IResourceQueryService<T, int> queryService)
+            : base(jsonApiOptions, loggerFactory, queryService)
+        { }
     }
 
-    public class JsonApiQueryController<T, TId>
-    : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public class JsonApiQueryController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiQueryController(
             IJsonApiOptions jsonApiContext,
-            IResourceQueryService<T, TId> resourceQueryService)
-            : base(jsonApiContext, resourceQueryService) { }
-
-
-        public JsonApiQueryController(
-            IJsonApiOptions jsonApiOptions,
-            IResourceService<T, TId> resourceService)
-            : base(jsonApiOptions, resourceService) { }
+            ILoggerFactory loggerFactory,
+            IResourceQueryService<T, TId> queryService)
+            : base(jsonApiContext, loggerFactory, queryService)
+        { }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync() => await base.GetAsync();

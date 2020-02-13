@@ -27,27 +27,23 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericServiceFactory _genericServiceFactory;
-
-        public DefaultResourceRepository(
-            ITargetedFields targetedFields,
-            IDbContextResolver contextResolver,
-            IResourceGraph resourceGraph,
-            IGenericServiceFactory genericServiceFactory)
-            : this(targetedFields, contextResolver, resourceGraph, genericServiceFactory, null)
-        { }
+        private ILogger<DefaultResourceRepository<TResource, TId>> _logger;
 
         public DefaultResourceRepository(
             ITargetedFields targetedFields,
             IDbContextResolver contextResolver,
             IResourceGraph resourceGraph,
             IGenericServiceFactory genericServiceFactory,
-            ILoggerFactory loggerFactory = null)
+            ILoggerFactory loggerFactory)
         {
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;
             _genericServiceFactory = genericServiceFactory;
             _context = contextResolver.GetContext();
             _dbSet = _context.Set<TResource>();
+            _logger = loggerFactory.CreateLogger<DefaultResourceRepository<TResource, TId>>();
+
+            _logger.LogTrace("Executing constructor.");
         }
 
         /// <inheritdoc />
@@ -415,17 +411,13 @@ namespace JsonApiDotNetCore.Data
     public class DefaultResourceRepository<TResource> : DefaultResourceRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DefaultResourceRepository(ITargetedFields targetedFields,
-                                       IDbContextResolver contextResolver,
-                                       IResourceGraph resourceGraph,
-                                       IGenericServiceFactory genericServiceFactory)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory) { }
-
-        public DefaultResourceRepository(ITargetedFields targetedFields,
-                                       IDbContextResolver contextResolver,
-                                       IResourceGraph resourceGraph,
-                                       IGenericServiceFactory genericServiceFactory,
-                                       ILoggerFactory loggerFactory = null)
-            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) { }
+        public DefaultResourceRepository(
+            ITargetedFields targetedFields, 
+            IDbContextResolver contextResolver, 
+            IResourceGraph resourceGraph, 
+            IGenericServiceFactory genericServiceFactory,
+            ILoggerFactory loggerFactory)
+            : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, loggerFactory) 
+        { }
     }
 }

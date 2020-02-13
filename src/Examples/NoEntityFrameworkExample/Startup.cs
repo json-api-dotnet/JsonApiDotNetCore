@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NoEntityFrameworkExample.Services;
 using Microsoft.EntityFrameworkCore;
 using NoEntityFrameworkExample.Data;
@@ -31,11 +30,7 @@ namespace NoEntityFrameworkExample
         {
             // Add framework services.
             var mvcBuilder = services.AddMvcCore();
-            services.AddLogging(builder =>
-                {
-                    builder.AddConfiguration(Configuration.GetSection("Logging"));
-                    builder.AddConsole();
-                }).AddJsonApi(
+            services.AddJsonApi(
                     options => options.Namespace = "api/v1",
                     resources: resources => resources.AddResource<TodoItem>("todoItems"),
                     mvcBuilder: mvcBuilder

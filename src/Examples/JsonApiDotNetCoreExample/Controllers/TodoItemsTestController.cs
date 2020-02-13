@@ -13,9 +13,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         protected AbstractTodoItemsController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<T, int> service,
-            ILoggerFactory loggerFactory)
-            : base(jsonApiOptions, service, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<T, int> service)
+            : base(jsonApiOptions, loggerFactory, service)
         { }
     }
 
@@ -24,9 +24,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public TodoItemsTestController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<TodoItem> service,
-            ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, service, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<TodoItem> service)
+            : base(jsonApiOptions, loggerFactory, service)
         { }
     }
 }

@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -119,7 +120,7 @@ namespace UnitTests.Services
                 _sortService.Object, _sparseFieldsService.Object
             };
 
-            return new DefaultResourceService<TodoItem>(queryParamServices, new JsonApiOptions(), _repositoryMock.Object, _resourceGraph);
+            return new DefaultResourceService<TodoItem>(queryParamServices, new JsonApiOptions(), NullLoggerFactory.Instance, _repositoryMock.Object, _resourceGraph);
         }
     }
 }

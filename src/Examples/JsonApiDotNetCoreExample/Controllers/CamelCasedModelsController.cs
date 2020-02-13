@@ -10,9 +10,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public KebabCasedModelsController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<KebabCasedModel> resourceService,
-            ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, resourceService, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<KebabCasedModel> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }
 }

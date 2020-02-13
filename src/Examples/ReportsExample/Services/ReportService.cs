@@ -2,36 +2,40 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
+using ReportsExample.Models;
 
-public class ReportService : IGetAllService<Report>
+namespace ReportsExample.Services
 {
-    private ILogger<ReportService> _logger;
-
-    public ReportService(ILoggerFactory loggerFactory)
+    public class ReportService : IGetAllService<Report>
     {
-        _logger = loggerFactory.CreateLogger<ReportService>();
-    }
+        private ILogger<ReportService> _logger;
 
-    public Task<IEnumerable<Report>> GetAsync()
-    {
-        _logger.LogError("GetAsync");
+        public ReportService(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<ReportService>();
+        }
 
-        var task = new Task<IEnumerable<Report>>(() => Get());
+        public Task<IEnumerable<Report>> GetAsync()
+        {
+            _logger.LogError("GetAsync");
+
+            var task = new Task<IEnumerable<Report>>(() => Get());
         
-        task.RunSynchronously(TaskScheduler.Default);
+            task.RunSynchronously(TaskScheduler.Default);
 
-        return task;
-    }
+            return task;
+        }
 
-    private IEnumerable<Report> Get()
-    {
-        return new List<Report> {
-            new Report {
-                Title = "My Report",
-                ComplexType = new ComplexType {
-                    CompoundPropertyName = "value"
+        private IEnumerable<Report> Get()
+        {
+            return new List<Report> {
+                new Report {
+                    Title = "My Report",
+                    ComplexType = new ComplexType {
+                        CompoundPropertyName = "value"
+                    }
                 }
-            }
-        };
+            };
+        }
     }
 }

@@ -18,6 +18,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Query;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests.ResourceHooks
 {
@@ -344,7 +345,7 @@ namespace UnitTests.ResourceHooks
         ) where TModel : class, IIdentifiable<int>
         {
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultResourceRepository<TModel, int>(null, resolver, null, null, null);
+            return new DefaultResourceRepository<TModel, int>(null, resolver, null, null, NullLoggerFactory.Instance);
         }
 
         IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>

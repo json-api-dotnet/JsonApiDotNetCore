@@ -8,11 +8,11 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public class PassportsController : JsonApiController<Passport>
     {
-        public PassportsController(IJsonApiOptions jsonApiOptions,
-                                   IResourceService<Passport, int> resourceService,
-                                   ILoggerFactory loggerFactory = null)
-            : base(jsonApiOptions, resourceService, loggerFactory)
-        {
-        }
+        public PassportsController(
+            IJsonApiOptions jsonApiOptions,
+            ILoggerFactory loggerFactory,
+            IResourceService<Passport, int> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
+        { }
     }
 }

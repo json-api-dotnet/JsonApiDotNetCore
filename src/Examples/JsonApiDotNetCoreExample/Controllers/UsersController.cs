@@ -10,9 +10,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public UsersController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<User> resourceService,
-            ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, resourceService, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<User> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }
 
@@ -20,9 +20,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public SuperUsersController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<SuperUser> resourceService,
-            ILoggerFactory loggerFactory)
-            : base(jsonApiOptions, resourceService, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<SuperUser> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }
 }

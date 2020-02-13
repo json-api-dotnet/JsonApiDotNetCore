@@ -3,26 +3,27 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiCommandController<T> : JsonApiCommandController<T, int>
-        where T : class, IIdentifiable<int>
+    public class JsonApiCommandController<T> : JsonApiCommandController<T, int> where T : class, IIdentifiable<int>
     {
         public JsonApiCommandController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<T, int> resourceService)
-            : base(jsonApiOptions, resourceService)
+            ILoggerFactory loggerFactory,
+            IResourceCommandService<T, int> commandService)
+            : base(jsonApiOptions, loggerFactory, commandService)
         { }
     }
 
-    public class JsonApiCommandController<T, TId>
-    : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public class JsonApiCommandController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
         public JsonApiCommandController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<T, TId> resourceService)
-        : base(jsonApiOptions, resourceService)
+            ILoggerFactory loggerFactory,
+            IResourceCommandService<T, TId> commandService)
+            : base(jsonApiOptions, loggerFactory, null, commandService)
         { }
 
         [HttpPost]

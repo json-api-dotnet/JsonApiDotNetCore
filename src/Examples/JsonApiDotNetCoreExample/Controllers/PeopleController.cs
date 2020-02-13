@@ -10,9 +10,9 @@ namespace JsonApiDotNetCoreExample.Controllers
     {
         public PeopleController(
             IJsonApiOptions jsonApiOptions,
-            IResourceService<Person> resourceService,
-            ILoggerFactory loggerFactory) 
-            : base(jsonApiOptions, resourceService, loggerFactory)
+            ILoggerFactory loggerFactory,
+            IResourceService<Person> resourceService)
+            : base(jsonApiOptions, loggerFactory, resourceService)
         { }
     }
 }

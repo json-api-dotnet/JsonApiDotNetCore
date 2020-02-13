@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace UnitTests.Data
@@ -66,7 +67,7 @@ namespace UnitTests.Data
             contextResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
             var resourceGraph = new Mock<IResourceGraph>();
             var targetedFields = new Mock<ITargetedFields>();
-            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph.Object, null);
+            var repository = new DefaultResourceRepository<TodoItem>(targetedFields.Object, contextResolverMock.Object, resourceGraph.Object, null, NullLoggerFactory.Instance);
             return repository;
         }
 
