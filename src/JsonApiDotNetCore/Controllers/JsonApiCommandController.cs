@@ -6,20 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiCmdController<T> : JsonApiCmdController<T, int>
+    public class JsonApiCommandController<T> : JsonApiCommandController<T, int>
         where T : class, IIdentifiable<int>
     {
-        public JsonApiCmdController(
+        public JsonApiCommandController(
             IJsonApiOptions jsonApiOptions,
             IResourceService<T, int> resourceService)
             : base(jsonApiOptions, resourceService)
         { }
     }
 
-    public class JsonApiCmdController<T, TId>
+    public class JsonApiCommandController<T, TId>
     : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        public JsonApiCmdController(
+        public JsonApiCommandController(
             IJsonApiOptions jsonApiOptions,
             IResourceService<T, TId> resourceService)
         : base(jsonApiOptions, resourceService)

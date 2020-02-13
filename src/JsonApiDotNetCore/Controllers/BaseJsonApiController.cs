@@ -48,17 +48,17 @@ namespace JsonApiDotNetCore.Controllers
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceQueryService<T, TId> queryService = null,
-            IResourceCmdService<T, TId> cmdService = null)
+            IResourceCommandService<T, TId> commandService = null)
         {
             _jsonApiOptions = jsonApiOptions;
             _getAll = queryService;
             _getById = queryService;
             _getRelationship = queryService;
             _getRelationships = queryService;
-            _create = cmdService;
-            _update = cmdService;
-            _updateRelationships = cmdService;
-            _delete = cmdService;
+            _create = commandService;
+            _update = commandService;
+            _updateRelationships = commandService;
+            _delete = commandService;
         }
 
         /// <param name="jsonApiOptions"></param>
@@ -205,8 +205,8 @@ namespace JsonApiDotNetCore.Controllers
         public BaseJsonApiController(
             IJsonApiOptions jsonApiOptions,
             IResourceQueryService<T, int> queryService = null,
-            IResourceCmdService<T, int> cmdService = null
-        ) : base(jsonApiOptions, queryService, cmdService) { }
+            IResourceCommandService<T, int> commandService = null
+        ) : base(jsonApiOptions, queryService, commandService) { }
 
 
         public BaseJsonApiController(
