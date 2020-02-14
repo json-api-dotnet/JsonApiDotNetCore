@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (i.IsGenericType)
                 {
                     var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
-                    if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
+                    if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor))
                     {
                         resourceDescriptors.Add(resourceDescriptor);
                     }

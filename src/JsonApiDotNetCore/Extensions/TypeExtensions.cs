@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             var enumerableTypes = enumerable.GetType()
                 .GetInterfaces()
-                .Where(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                 .ToList();
 
             var numberOfEnumerableTypes = enumerableTypes.Count;
