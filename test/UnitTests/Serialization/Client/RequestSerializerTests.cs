@@ -216,8 +216,7 @@ namespace UnitTests.Serialization.Client
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
-            IIdentifiable obj = null;
-            string serialized = _serializer.Serialize(obj);
+            string serialized = _serializer.Serialize((IIdentifiable) null);
 
             // Assert
             var expectedFormatted =

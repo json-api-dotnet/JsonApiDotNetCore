@@ -223,7 +223,7 @@ namespace JsonApiDotNetCore.Middleware
             var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
             {
-                return requestResource;
+                return null;
             }
             if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
             {

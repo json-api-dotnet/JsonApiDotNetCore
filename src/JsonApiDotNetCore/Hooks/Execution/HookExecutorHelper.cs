@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Hooks
                 container = (_genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), rightType));
                 _hookContainers[rightType] = container;
             }
-            if (container == null) return container;
+            if (container == null) return null;
 
             // if there was a container, first check if it implements the hook we 
             // want to use it for.

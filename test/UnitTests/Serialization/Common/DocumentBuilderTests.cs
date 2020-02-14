@@ -22,11 +22,8 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToDocument_NullEntity_CanBuild()
         {
-            // Arrange
-            TestResource entity = null;
-
             // Act
-            var document = _builder.Build(entity);
+            var document = _builder.Build((TestResource) null);
 
             // Assert
             Assert.Null(document.Data);

@@ -233,9 +233,9 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var serializer = GetResponseSerializer<TestResource>();
-            TestResource entity = null;
+            
             // Act
-            string serialized = serializer.SerializeSingle(entity);
+            string serialized = serializer.SerializeSingle(null);
 
             // Assert
             var expectedFormatted = @"{ ""data"": null }";
@@ -334,10 +334,11 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var meta = new Dictionary<string, object> { { "test", "meta" } };
-            OneToManyPrincipal entity = null;
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            
             // Act
-            string serialized = serializer.SerializeSingle(entity);
+            string serialized = serializer.SerializeSingle(null);
+            
             // Assert
             var expectedFormatted =
             @"{

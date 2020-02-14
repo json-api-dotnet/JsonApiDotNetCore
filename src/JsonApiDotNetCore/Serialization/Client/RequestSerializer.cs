@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public string Serialize(IIdentifiable entity)
         {
             if (entity == null)
-                return JsonConvert.SerializeObject(Build(entity, new List<AttrAttribute>(), new List<RelationshipAttribute>()));
+                return JsonConvert.SerializeObject(Build((IIdentifiable) null, new List<AttrAttribute>(), new List<RelationshipAttribute>()));
 
             _currentTargetedResource = entity.GetType();
             var document = Build(entity, GetAttributesToSerialize(entity), GetRelationshipsToSerialize(entity));
