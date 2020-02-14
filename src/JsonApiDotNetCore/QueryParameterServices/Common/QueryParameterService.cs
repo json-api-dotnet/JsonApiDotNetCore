@@ -20,14 +20,9 @@ namespace JsonApiDotNetCore.Query
         {
             _mainRequestResource = currentRequest.GetRequestResource();
             _resourceGraph = resourceGraph;
-            if (currentRequest.RequestRelationship != null)
-            {
-                _requestResource= resourceGraph.GetResourceContext(currentRequest.RequestRelationship.RightType);
-            }
-            else
-            {
-                _requestResource = _mainRequestResource;
-            }
+            _requestResource = currentRequest.RequestRelationship != null
+                ? resourceGraph.GetResourceContext(currentRequest.RequestRelationship.RightType)
+                : _mainRequestResource;
         }
 
         protected QueryParameterService() { }
@@ -53,11 +48,9 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         protected AttrAttribute GetAttribute(string target, RelationshipAttribute relationship = null)
         {
-            AttrAttribute attribute;
-            if (relationship != null)
-                attribute = _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => a.Is(target));
-            else
-                attribute = _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
+            var attribute = relationship != null
+                ? _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => a.Is(target))
+                : _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
 
             if (attribute == null)
                 throw new JsonApiException(400, $"'{target}' is not a valid attribute.");

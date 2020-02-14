@@ -188,10 +188,9 @@ namespace JsonApiDotNetCore.Services
             string[] relationshipIds = null;
             if (related != null)
             {
-                if (relationship is HasOneAttribute)
-                    relationshipIds = new string[] { ((IIdentifiable)related).StringId };
-                else
-                    relationshipIds = ((IEnumerable<IIdentifiable>)related).Select(e => e.StringId).ToArray();
+                relationshipIds = relationship is HasOneAttribute
+                    ? new[] {((IIdentifiable) related).StringId}
+                    : ((IEnumerable<IIdentifiable>) related).Select(e => e.StringId).ToArray();
             }
 
             await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds ?? new string[0] );

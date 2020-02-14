@@ -62,12 +62,10 @@ namespace JsonApiDotNetCore.Serialization.Client
                 return;
 
             if (field is HasOneAttribute hasOneAttr)
-            {   // add attributes and relationships of a parsed HasOne relationship
+            {
+                // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                if (rio == null)
-                    hasOneAttr.SetValue(entity, null);
-                else
-                    hasOneAttr.SetValue(entity, ParseIncludedRelationship(hasOneAttr, rio));
+                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio));
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
