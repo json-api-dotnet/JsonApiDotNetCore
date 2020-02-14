@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Self))
             {
-                links = links ?? new RelationshipLinks();
+                links ??= new RelationshipLinks();
                 links.Self = GetSelfRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation);
             }
 

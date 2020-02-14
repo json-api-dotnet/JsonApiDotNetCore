@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Internal
         public List<RelationshipAttribute> Relationships { get; set; }
 
         private List<IResourceField> _fields;
-        public List<IResourceField> Fields { get { return _fields = _fields ?? Attributes.Cast<IResourceField>().Concat(Relationships).ToList();  } }
+        public List<IResourceField> Fields { get { return _fields ??= Attributes.Cast<IResourceField>().Concat(Relationships).ToList();  } }
 
         /// <summary>
         /// Configures which links to show in the <see cref="TopLevelLinks"/>

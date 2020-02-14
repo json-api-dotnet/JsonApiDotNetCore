@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 var relData = GetRelationshipData(rel, entity);
                 if (relData != null)
-                    (ro.Relationships = ro.Relationships ?? new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
+                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicRelationshipName, relData);
             }
         }
 

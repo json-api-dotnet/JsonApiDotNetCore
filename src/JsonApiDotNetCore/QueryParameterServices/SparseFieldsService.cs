@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Query
             if (attr == null)
                 throw new JsonApiException(400, $"'{_requestResource.ResourceName}' does not contain '{field}'.");
 
-            (_selectedFields = _selectedFields ?? new List<AttrAttribute>()).Add(attr);
+            (_selectedFields ??= new List<AttrAttribute>()).Add(attr);
         }
     }
 }
