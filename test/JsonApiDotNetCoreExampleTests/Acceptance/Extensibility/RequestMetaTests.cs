@@ -49,9 +49,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             foreach (var hash in expectedMeta)
             {
-                if (hash.Value is IList)
+                if (hash.Value is IList listValue)
                 {
-                    var listValue = (IList)hash.Value;
                     for (var i = 0; i < listValue.Count; i++)
                         Assert.Equal(listValue[i].ToString(), ((IList)meta[hash.Key])[i].ToString());
                 }

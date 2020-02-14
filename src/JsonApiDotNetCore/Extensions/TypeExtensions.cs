@@ -17,9 +17,9 @@ namespace JsonApiDotNetCore.Extensions
             if (list == null) throw new ArgumentNullException(nameof(list));
             if (items == null) throw new ArgumentNullException(nameof(items));
 
-            if (list is List<T>)
+            if (list is List<T> genericList)
             {
-                ((List<T>)list).AddRange(items);
+                genericList.AddRange(items);
             }
             else
             {

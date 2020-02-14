@@ -101,8 +101,8 @@ namespace JsonApiDotNetCore.Serialization
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
-                if (attr is HasOneAttribute hasOne)
-                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipData);
+                if (attr is HasOneAttribute hasOneAttribute)
+                    SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
                 else
                     SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
 

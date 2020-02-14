@@ -96,21 +96,20 @@ namespace JsonApiDotNetCore.Internal
             MemberExpression Exp;
 
             //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
-            if (NavigationExpression.Body is UnaryExpression)
+            if (NavigationExpression.Body is UnaryExpression unaryExpression)
             {
-                var UnExp = (UnaryExpression)NavigationExpression.Body;
-                if (UnExp.Operand is MemberExpression)
+                if (unaryExpression.Operand is MemberExpression memberExpression)
                 {
-                    Exp = (MemberExpression)UnExp.Operand;
+                    Exp = memberExpression;
                 }
                 else
                 {
                     throw new ArgumentException();
                 }
             }
-            else if (NavigationExpression.Body is MemberExpression)
+            else if (NavigationExpression.Body is MemberExpression memberExpression)
             {
-                Exp = (MemberExpression)NavigationExpression.Body;
+                Exp = memberExpression;
             }
             else
             {
