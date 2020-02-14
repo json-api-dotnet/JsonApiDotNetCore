@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = entity == null ? null : (TResource)entity,
+                Data = (TResource) entity,
                 JsonApi = null,
                 Errors = null
             };
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = entities == null ? null : ((List<IIdentifiable>)entities).Cast<TResource>().ToList(),
+                Data = ((List<IIdentifiable>) entities)?.Cast<TResource>().ToList(),
                 JsonApi = null,
                 Errors = null
             };

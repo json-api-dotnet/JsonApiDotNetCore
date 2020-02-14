@@ -161,7 +161,7 @@ namespace JADNC.IntegrationTests.Data
 
         private AppDbContext GetContext(Guid? seed = null)
         {
-            Guid actualSeed = seed == null ? Guid.NewGuid() : seed.GetValueOrDefault();
+            Guid actualSeed = seed ?? Guid.NewGuid();
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: $"IntegrationDatabaseRepository{actualSeed}")
                 .Options;
