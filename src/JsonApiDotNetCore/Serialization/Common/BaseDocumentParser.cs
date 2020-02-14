@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Serialization
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
 
             if (data.Id != null)
-                entity.StringId = data.Id?.ToString();
+                entity.StringId = data.Id;
 
             return entity;
         }
