@@ -291,8 +291,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            /// we are expecting two, not three, because the request does 
-            /// a "complete replace".
+            // we are expecting two, not three, because the request does 
+            // a "complete replace".
             Assert.Equal(2, updatedTodoItems.Count);
         }
 
@@ -370,8 +370,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            /// we are expecting two, not three, because the request does 
-            /// a "complete replace".
+            // we are expecting two, not three, because the request does 
+            // a "complete replace".
             Assert.Equal(2, updatedTodoItems.Count);
         }
 

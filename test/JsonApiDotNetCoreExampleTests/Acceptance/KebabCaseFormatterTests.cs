@@ -20,15 +20,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task KebabCaseFormatter_GetAll_IsReturned()
         {
-            /// Arrange
+            // Arrange
             var model = _faker.Generate();
             _dbContext.KebabCasedModels.Add(model);
             _dbContext.SaveChanges();
 
-            /// Act
+            // Act
             var (body, response) = await Get("api/v1/kebab-cased-models");
 
-            /// Assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var responseItem = _deserializer.DeserializeList<KebabCasedModel>(body).Data;
             Assert.True(responseItem.Count > 0);
@@ -37,15 +37,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task KebabCaseFormatter_GetSingle_IsReturned()
         {
-            /// Arrange
+            // Arrange
             var model = _faker.Generate();
             _dbContext.KebabCasedModels.Add(model);
             _dbContext.SaveChanges();
 
-            /// Act
+            // Act
             var (body, response) = await Get($"api/v1/kebab-cased-models/{model.Id}");
 
-            /// Assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var responseItem = _deserializer.DeserializeSingle<KebabCasedModel>(body).Data;
             Assert.Equal(model.Id, responseItem.Id);
@@ -54,14 +54,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task KebabCaseFormatter_Create_IsCreated()
         {
-            /// Arrange
+            // Arrange
             var model = _faker.Generate();
             var serializer = GetSerializer<KebabCasedModel>(kcm => new { kcm.CompoundAttr });
 
-            /// Act
+            // Act
             var (body, response) = await Post($"api/v1/kebab-cased-models", serializer.Serialize(model));
 
-            /// Assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             var responseItem = _deserializer.DeserializeSingle<KebabCasedModel>(body).Data;
             var x = _dbContext.KebabCasedModels.Where(kcm => kcm.Id.Equals(responseItem.Id)).Single();
@@ -71,17 +71,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         [Fact]
         public async Task KebabCaseFormatter_Update_IsUpdated()
         {
-            /// Arrange
+            // Arrange
             var model = _faker.Generate();
             _dbContext.KebabCasedModels.Add(model);
             _dbContext.SaveChanges();
             model.CompoundAttr = _faker.Generate().CompoundAttr;
             var serializer = GetSerializer<KebabCasedModel>(kcm => new { kcm.CompoundAttr });
 
-            /// Act
+            // Act
             var (body, response) = await Patch($"api/v1/kebab-cased-models/{model.Id}", serializer.Serialize(model));
 
-            /// Assert
+            // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var responseItem = _deserializer.DeserializeSingle<KebabCasedModel>(body).Data;
             Assert.Equal(model.CompoundAttr, responseItem.CompoundAttr);
