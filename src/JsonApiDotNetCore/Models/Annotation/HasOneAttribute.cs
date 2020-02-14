@@ -38,8 +38,8 @@ namespace JsonApiDotNetCore.Models
 
         public override object GetValue(object entity)
         {
-            return entity?.GetType()?
-                 .GetProperty(InternalRelationshipName)?
+            return entity?.GetType()
+                .GetProperty(InternalRelationshipName)?
                  .GetValue(entity);
         }
 

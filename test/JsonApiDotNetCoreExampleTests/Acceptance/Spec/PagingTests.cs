@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             public bool Equals(T x, T y) => x?.StringId == y?.StringId;
 
-            public int GetHashCode(T obj) => obj?.StringId?.GetHashCode() ?? 0;
+            public int GetHashCode(T obj) => obj.StringId?.GetHashCode() ?? 0;
         }
     }
 }

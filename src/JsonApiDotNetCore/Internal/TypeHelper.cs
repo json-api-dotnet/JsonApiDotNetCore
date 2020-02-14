@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Internal
 
                 type = Nullable.GetUnderlyingType(type) ?? type;
 
-                var stringValue = value?.ToString();
+                var stringValue = value.ToString();
 
                 if (string.IsNullOrEmpty(stringValue))
                     return GetDefaultType(type);
