@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using Xunit;
 

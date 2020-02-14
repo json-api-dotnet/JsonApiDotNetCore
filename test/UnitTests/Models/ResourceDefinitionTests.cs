@@ -2,7 +2,6 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using System.Linq;
 using Xunit;
 

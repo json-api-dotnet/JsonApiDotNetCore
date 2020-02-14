@@ -6,7 +6,6 @@ using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;

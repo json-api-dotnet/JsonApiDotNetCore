@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Resources
 {

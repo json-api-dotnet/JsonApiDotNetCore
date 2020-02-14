@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Moq;
 using Xunit;
 using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
+
 namespace UnitTests.Serialization.Serializer
 {
     public class BaseDocumentBuilderTests : SerializerTestsSetup

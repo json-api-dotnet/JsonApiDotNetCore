@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -7,7 +6,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 

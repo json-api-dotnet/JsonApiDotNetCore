@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Formatters;

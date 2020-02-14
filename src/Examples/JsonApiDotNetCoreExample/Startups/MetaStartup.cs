@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Services;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExample
 {

@@ -5,8 +5,6 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
 using Moq;
 using Newtonsoft.Json;
-using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
 using Xunit;
 
 

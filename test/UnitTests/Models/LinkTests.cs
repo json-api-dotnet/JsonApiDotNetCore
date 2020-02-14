@@ -1,5 +1,4 @@
-﻿using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.Links;
+﻿using JsonApiDotNetCore.Models.Links;
 using Xunit;
 
 namespace UnitTests.Models

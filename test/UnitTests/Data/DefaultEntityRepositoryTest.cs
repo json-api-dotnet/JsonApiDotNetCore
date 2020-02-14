@@ -1,15 +1,11 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;

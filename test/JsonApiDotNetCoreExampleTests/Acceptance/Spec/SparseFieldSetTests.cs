@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,6 @@ using System.Net;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec

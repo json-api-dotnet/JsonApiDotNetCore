@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
@@ -9,8 +8,6 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
 using JsonApiDotNetCore.Serialization.Server.Builders;
-using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Models;
 using Moq;
 
 namespace UnitTests.Serialization

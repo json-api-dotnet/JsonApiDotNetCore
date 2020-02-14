@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models

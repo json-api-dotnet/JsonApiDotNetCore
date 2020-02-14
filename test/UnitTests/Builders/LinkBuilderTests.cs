@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;

@@ -5,13 +5,11 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Serialization.Server;
 
 namespace JsonApiDotNetCore.Extensions
 {

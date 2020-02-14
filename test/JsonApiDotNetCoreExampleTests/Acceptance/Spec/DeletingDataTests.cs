@@ -8,7 +8,6 @@ using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
