@@ -39,18 +39,16 @@ namespace NoEntityFrameworkExample.Services
 
         public async Task<IEnumerable<TodoItem>> GetAsync()
         {
-            return await QueryAsync<TodoItem>(async connection =>
-            {
-                return await connection.QueryAsync<TodoItem>("select * from \"TodoItems\"");
-            });
+            return await QueryAsync(async connection =>
+                await connection.QueryAsync<TodoItem>("select * from \"TodoItems\""));
         }
 
         public async Task<TodoItem> GetAsync(int id)
         {
-            return (await QueryAsync<TodoItem>(async connection =>
-            {
-                return await connection.QueryAsync<TodoItem>("select * from \"TodoItems\" where \"Id\"= @id", new { id });
-            })).SingleOrDefault();
+            var query = await QueryAsync(async connection => 
+                await connection.QueryAsync<TodoItem>("select * from \"TodoItems\" where \"Id\"= @id", new {id}));
+            
+            return query.SingleOrDefault();
         }
 
         public Task<object> GetRelationshipAsync(int id, string relationshipName)
