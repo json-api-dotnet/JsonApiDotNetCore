@@ -31,7 +31,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             var client = _fixture.Server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -78,7 +78,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // Arrange
             var description = Guid.NewGuid().ToString();
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems/";
+            var route = "/api/v1/todoItems/";
             var content = new
             {
                 data = new

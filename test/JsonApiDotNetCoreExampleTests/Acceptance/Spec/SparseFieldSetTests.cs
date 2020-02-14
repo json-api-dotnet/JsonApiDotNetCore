@@ -168,7 +168,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
+            var route = "/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
             var request = new HttpRequestMessage(httpMethod, route);
             var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todoItems").Build();
             var deserializer = new ResponseDeserializer(resourceGraph);

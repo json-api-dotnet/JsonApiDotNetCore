@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

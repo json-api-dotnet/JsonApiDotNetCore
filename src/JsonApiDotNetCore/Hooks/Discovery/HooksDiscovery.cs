@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     if (!_databaseValuesAttributeAllowed.Contains(hook))
                     {
-                        throw new JsonApiSetupException($"DatabaseValuesAttribute cannot be used on hook" +
+                        throw new JsonApiSetupException("DatabaseValuesAttribute cannot be used on hook" +
                             $"{hook.ToString("G")} in resource definition  {containerType.Name}");
                     }
                     var targetList = attr.value ? databaseValuesEnabledHooks : databaseValuesDisabledHooks;

@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample;
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

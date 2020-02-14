@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"testValues";
+            var route = "testValues";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/custom/route/todoItems";
+            var route = "/custom/route/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

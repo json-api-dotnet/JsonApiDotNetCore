@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var builder = new WebHostBuilder().UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner";
+            var route = "/api/v1/todoItems?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people?include=todoItems";
+            var route = "/api/v1/people?include=todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner";
+            var route = "/api/v1/todoItems?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
           
-            var route = $"/api/v1/todoItems?sort=-createdDate&page[size]=2&include=owner.role"; // last two todoItems
+            var route = "/api/v1/todoItems?sort=-createdDate&page[size]=2&include=owner.role"; // last two todoItems
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

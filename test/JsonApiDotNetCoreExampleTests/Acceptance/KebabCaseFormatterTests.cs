@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var serializer = GetSerializer<KebabCasedModel>(kcm => new { kcm.CompoundAttr });
 
             // Act
-            var (body, response) = await Post($"api/v1/kebab-cased-models", serializer.Serialize(model));
+            var (body, response) = await Post("api/v1/kebab-cased-models", serializer.Serialize(model));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);

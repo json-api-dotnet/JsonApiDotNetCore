@@ -40,7 +40,7 @@ namespace UnitTests.QueryParameters
         public void Parse_PageSize_CanParse(string value, int expectedValue, int? maximumPageSize, bool shouldThrow)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>($"page[size]", new StringValues(value));
+            var query = new KeyValuePair<string, StringValues>("page[size]", new StringValues(value));
             var service = GetService(maximumPageSize: maximumPageSize);
 
             // Act
@@ -65,7 +65,7 @@ namespace UnitTests.QueryParameters
         public void Parse_PageNumber_CanParse(string value, int expectedValue, int? maximumPageNumber, bool shouldThrow)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>($"page[number]", new StringValues(value));
+            var query = new KeyValuePair<string, StringValues>("page[number]", new StringValues(value));
             var service = GetService(maximumPageNumber: maximumPageNumber);
 
             // Act

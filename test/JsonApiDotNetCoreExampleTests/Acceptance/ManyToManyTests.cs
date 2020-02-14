@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
             context.ArticleTags.Add(articleTag);
             await context.SaveChangesAsync();
-            var route = $"/api/v1/articles?include=tags";
+            var route = "/api/v1/articles?include=tags";
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()

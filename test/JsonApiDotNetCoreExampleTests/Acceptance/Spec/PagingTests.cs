@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
 
-            string route = $"/api/v1/todoItems";
+            string route = "/api/v1/todoItems";
             if (pageNum != 1)
             {
                 route += $"?page[size]=5&page[number]={pageNum}";

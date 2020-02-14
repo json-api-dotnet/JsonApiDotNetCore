@@ -63,8 +63,8 @@ namespace JsonApiDotNetCore.Query
                 // if not, no longer support this type of sparse field selection.
                 if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
                     throw new JsonApiException(400, $"Use '?fields=...' instead of 'fields[{navigation}]':" +
-                        $" the square bracket navigations is now reserved " +
-                        $"for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
+                        " the square bracket navigations is now reserved " +
+                        "for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
 
                 if (navigation.Contains(QueryConstants.DOT))
                     throw new JsonApiException(400, $"fields[{navigation}] is not valid: deeply nested sparse field selection is not yet supported.");

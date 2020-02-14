@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             }
             catch (InvalidOperationException e)
             {
-                throw new InvalidOperationException($"A compound document MUST NOT include more than one resource object for each type and id pair."
+                throw new InvalidOperationException("A compound document MUST NOT include more than one resource object for each type and id pair."
                         + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
             }
         }

@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/users";
+            var route = "/api/v1/users";
 
             var request = new HttpRequestMessage(httpMethod, route)
             {
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Unauthorized_TodoItem()
         {
             // Arrange
-            var route = $"/api/v1/todoItems/1337";
+            var route = "/api/v1/todoItems/1337";
             var httpMethod = new HttpMethod("GET");
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Unauthorized_Passport()
         {
             // Arrange
-            var route = $"/api/v1/people/1?include=passport";
+            var route = "/api/v1/people/1?include=passport";
             var httpMethod = new HttpMethod("GET");
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Articles.AddRange(articles);
             await context.SaveChangesAsync();
 
-            var route = $"/api/v1/articles";
+            var route = "/api/v1/articles";
 
             var httpMethod = new HttpMethod("GET");
             var request = new HttpRequestMessage(httpMethod, route);
@@ -251,7 +251,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.ArticleTags.AddRange(articleTags);
             await context.SaveChangesAsync();
 
-            var route = $"/api/v1/articles?include=tags";
+            var route = "/api/v1/articles?include=tags";
 
             var httpMethod = new HttpMethod("GET");
             var request = new HttpRequestMessage(httpMethod, route);
@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -474,7 +474,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);

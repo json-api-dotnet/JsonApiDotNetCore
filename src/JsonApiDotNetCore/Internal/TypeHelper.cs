@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Internal
         public static object ConvertType(object value, Type type)
         {
             if (value == null && !IsNullable(type))
-                throw new FormatException($"Cannot convert null to a non-nullable type");
+                throw new FormatException("Cannot convert null to a non-nullable type");
 
             if (value == null)
                 return null;

@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<NoDefaultPageSizeStartup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<NoDefaultPageSizeStartup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems/123";
+            var route = "/api/v1/todoItems/123";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
