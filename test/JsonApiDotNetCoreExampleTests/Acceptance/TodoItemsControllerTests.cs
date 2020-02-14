@@ -526,8 +526,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/todoItems";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(serializer.Serialize(todoItem));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(serializer.Serialize(todoItem))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -592,8 +594,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/todoItems";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -645,8 +649,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -698,8 +704,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -750,8 +758,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -783,8 +793,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("DELETE");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(string.Empty);
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(string.Empty)};
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act

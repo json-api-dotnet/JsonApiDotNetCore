@@ -232,8 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection();
-            todoCollection.TodoItems = new List<TodoItem>();
+            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoCollection.Owner = person;
@@ -306,8 +305,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // this user may not be reattached to the db context in the repository.
 
             // Arrange
-            var todoCollection = new TodoItemCollection();
-            todoCollection.TodoItems = new List<TodoItem>();
+            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoCollection.Owner = person;
@@ -379,8 +377,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_With_Overlap()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection();
-            todoCollection.TodoItems = new List<TodoItem>();
+            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem1 = _todoItemFaker.Generate();
             var todoItem2 = _todoItemFaker.Generate();
@@ -472,9 +469,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -510,9 +509,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
 
-            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -560,8 +558,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -660,9 +660,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act

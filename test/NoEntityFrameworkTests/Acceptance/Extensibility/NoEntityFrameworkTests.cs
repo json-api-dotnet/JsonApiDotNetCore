@@ -92,8 +92,10 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
                 }
             };
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             var builder = new WebHostBuilder()

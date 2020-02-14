@@ -161,9 +161,10 @@ namespace UnitTests.Middleware
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString(path);
             context.Response.Body = new MemoryStream();
-            var feature = new RouteValuesFeature();
-            feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = isRelationship ? "GetRelationship" : action;
+            var feature = new RouteValuesFeature
+            {
+                RouteValues = {["controller"] = "fake!", ["action"] = isRelationship ? "GetRelationship" : action}
+            };
             if(id != null)
             {
                 feature.RouteValues["id"] = id;

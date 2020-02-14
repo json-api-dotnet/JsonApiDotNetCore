@@ -79,8 +79,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("POST");
             var route = $"/api/v1/users";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(serializer.Serialize(user));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(serializer.Serialize(user))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -113,8 +115,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var serializer = _fixture.GetSerializer<User>(p => new { p.Password });
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/users/{user.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(serializer.Serialize(user));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(serializer.Serialize(user))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act

@@ -249,9 +249,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         private HttpRequestMessage PrepareRequest(string method, string route, string content)
         {
             var httpMethod = new HttpMethod(method);
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
 
-            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
             return request;
         }

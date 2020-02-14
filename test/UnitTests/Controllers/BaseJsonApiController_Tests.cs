@@ -251,8 +251,14 @@ namespace UnitTests
             // Arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions { ValidateModelState = false }, NullLoggerFactory.Instance, create: serviceMock.Object);
-            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
+            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = false},
+                NullLoggerFactory.Instance, create: serviceMock.Object)
+            {
+                ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
 
             // Act
@@ -269,8 +275,11 @@ namespace UnitTests
             // Arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions { ValidateModelState = true }, NullLoggerFactory.Instance, create: serviceMock.Object);
-            controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = true},
+                NullLoggerFactory.Instance, create: serviceMock.Object)
+            {
+                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+            };
             controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
 
