@@ -202,8 +202,7 @@ namespace JsonApiDotNetCore.Services
         {
             if (!(_pageService.CurrentPageSize > 0))
             {
-                var allEntities = await _repository.ToListAsync(entities);
-                return allEntities as IEnumerable<TResource>;
+                return await _repository.ToListAsync(entities);
             }
 
             int pageOffset = _pageService.CurrentPage;

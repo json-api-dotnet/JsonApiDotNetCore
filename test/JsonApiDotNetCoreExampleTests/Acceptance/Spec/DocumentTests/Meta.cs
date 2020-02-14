@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
-            Assert.Equal((long)expectedCount, (long)documents.Meta["total-records"]);
+            Assert.Equal(expectedCount, (long)documents.Meta["total-records"]);
         }
 
         [Fact]

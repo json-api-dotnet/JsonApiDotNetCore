@@ -57,7 +57,7 @@ namespace UnitTests.Serialization.Client
             // Assert
             Assert.Null(result.Data);
             Assert.NotNull(result.Links);
-            TopLevelLinks links = (TopLevelLinks)result.Links;
+            TopLevelLinks links = result.Links;
             Assert.Equal(_linkValues["self"], links.Self);
             Assert.Equal(_linkValues["next"], links.Next);
             Assert.Equal(_linkValues["last"], links.Last);
@@ -80,7 +80,7 @@ namespace UnitTests.Serialization.Client
             // Assert
             Assert.Empty(result.Data);
             Assert.NotNull(result.Links);
-            TopLevelLinks links = (TopLevelLinks)result.Links;
+            TopLevelLinks links = result.Links;
             Assert.Equal(_linkValues["self"], links.Self);
             Assert.Equal(_linkValues["next"], links.Next);
             Assert.Equal(_linkValues["last"], links.Last);
