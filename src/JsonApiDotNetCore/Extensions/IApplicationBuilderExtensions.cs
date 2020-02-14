@@ -81,9 +81,9 @@ namespace JsonApiDotNetCore.Extensions
             var logger = app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>)) as ILogger;
             var resourceGraph = app.ApplicationServices.GetService(typeof(IResourceGraph)) as ResourceGraph;
 
-            if (logger != null && resourceGraph != null)
+            if (logger != null)
             {
-                resourceGraph.ValidationResults.ForEach((v) =>
+                resourceGraph?.ValidationResults.ForEach((v) =>
                     logger.Log(
                         v.LogLevel,
                         new EventId(),
