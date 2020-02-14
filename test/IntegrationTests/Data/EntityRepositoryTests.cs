@@ -23,7 +23,7 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             var itemId = 213;
             var seed = Guid.NewGuid();
-            using (var arrangeContext = GetContext(seed))
+            await using (var arrangeContext = GetContext(seed))
             {
                 var (repository, targetedFields) = Setup(arrangeContext);
                 var todoItemUpdates = new TodoItem
@@ -46,7 +46,7 @@ namespace JADNC.IntegrationTests.Data
             }
 
             // Assert - in different context
-            using var assertContext = GetContext(seed);
+            await using var assertContext = GetContext(seed);
             {
                 var (repository, targetedFields) = Setup(assertContext);
 
@@ -65,7 +65,7 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageNumberIsPositive_ReturnCorrectIdsAtTheFront(int pageSize, int pageNumber, int[] expectedResult)
         {
             // Arrange
-            using var context = GetContext();
+            await using var context = GetContext();
             var (repository, targetedFields) = Setup(context);
             context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
             await context.SaveChangesAsync();
@@ -84,7 +84,7 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageSizeNonPositive_DoNothing(int pageSize)
         {
             // Arrange
-            using var context = GetContext();
+            await using var context = GetContext();
             var (repository, targetedFields) = Setup(context);
             var items = TodoItems(2, 3, 1);
             context.AddRange(items);
@@ -102,7 +102,7 @@ namespace JADNC.IntegrationTests.Data
         {
             // Arrange
             var items = TodoItems(2, 3, 1);
-            using var context = GetContext();
+            await using var context = GetContext();
             var (repository, targetedFields) = Setup(context);
             context.AddRange(items);
 
@@ -117,7 +117,7 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageNumberIsZero_PretendsItsOne()
         {
             // Arrange
-            using var context = GetContext();
+            await using var context = GetContext();
             var (repository, targetedFields) = Setup(context);
             context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9));
             await context.SaveChangesAsync();
@@ -136,7 +136,7 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageNumberIsNegative_GiveBackReverseAmountOfIds(int pageSize, int pageNumber, int[] expectedIds)
         {
             // Arrange
-            using var context = GetContext();
+            await using var context = GetContext();
             var repository = Setup(context).Repository;
             context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
             context.SaveChanges();
