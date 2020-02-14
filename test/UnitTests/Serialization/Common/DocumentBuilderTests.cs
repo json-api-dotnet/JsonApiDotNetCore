@@ -26,7 +26,7 @@ namespace UnitTests.Serialization.Serializer
             TestResource entity = null;
 
             // Act
-            var document = _builder.Build(entity, null, null);
+            var document = _builder.Build(entity);
 
             // Assert
             Assert.Null(document.Data);
@@ -41,7 +41,7 @@ namespace UnitTests.Serialization.Serializer
             var entities = new List<TestResource>();
 
             // Act
-            var document = _builder.Build(entities, null, null);
+            var document = _builder.Build(entities);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -56,7 +56,7 @@ namespace UnitTests.Serialization.Serializer
             IIdentifiable dummy = new Identifiable();
 
             // Act
-            var document = _builder.Build(dummy, null, null);
+            var document = _builder.Build(dummy);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -70,7 +70,7 @@ namespace UnitTests.Serialization.Serializer
             var entities = new List<IIdentifiable>() { new Identifiable(), new Identifiable() };
 
             // Act
-            var document = _builder.Build(entities, null, null);
+            var document = _builder.Build(entities);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

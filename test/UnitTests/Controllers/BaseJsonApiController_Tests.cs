@@ -92,7 +92,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getById: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync(id));
@@ -121,7 +121,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationships: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipsAsync(id, string.Empty));
@@ -150,7 +150,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationship: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipAsync(id, string.Empty));
@@ -218,7 +218,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, update: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
@@ -312,7 +312,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, updateRelationships: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
@@ -341,8 +341,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance,
-                delete: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));

@@ -159,7 +159,7 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
-            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, null);
+            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
