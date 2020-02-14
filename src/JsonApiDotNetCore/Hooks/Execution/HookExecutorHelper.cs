@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Hooks
 
                 foreach (IIdentifiable ip in includedLefts)
                 {
-                    IList dbRightEntityList = null;
+                    IList dbRightEntityList;
                     var relationshipValue = relationship.GetValue(ip);
                     if (!(relationshipValue is IEnumerable))
                     {

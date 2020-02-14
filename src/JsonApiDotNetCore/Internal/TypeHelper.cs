@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> NavigationExpression)
         {
-            MemberExpression Exp = null;
+            MemberExpression Exp;
 
             //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
             if (NavigationExpression.Body is UnaryExpression)

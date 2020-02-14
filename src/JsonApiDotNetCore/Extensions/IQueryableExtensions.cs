@@ -244,8 +244,8 @@ namespace JsonApiDotNetCore.Extensions
         {
             var op = filter.Operation;
             var concreteType = typeof(TSource);
-            PropertyInfo relationProperty = null;
-            PropertyInfo property = null;
+            PropertyInfo relationProperty;
+            PropertyInfo property;
             MemberExpression left;
             ConstantExpression right;
 
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCore.Extensions
 
         private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
         {
-            var sourceBindings = new List<MemberAssignment>();
+            List<MemberAssignment> sourceBindings;
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
             var sourceProperties = new List<string>();
