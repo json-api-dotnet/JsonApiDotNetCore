@@ -19,7 +19,7 @@ namespace ReportsExample.Services
         {
             _logger.LogError("GetAsync");
 
-            var task = new Task<IEnumerable<Report>>(() => Get());
+            var task = new Task<IEnumerable<Report>>(Get);
         
             task.RunSynchronously(TaskScheduler.Default);
 

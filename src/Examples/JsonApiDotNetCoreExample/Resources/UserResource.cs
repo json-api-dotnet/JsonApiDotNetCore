@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
           return new QueryFilters
           {
-            { "firstCharacter", (users, queryFilter) => FirstCharacterFilter(users, queryFilter) }
+            { "firstCharacter", FirstCharacterFilter }
           };
         }
 
