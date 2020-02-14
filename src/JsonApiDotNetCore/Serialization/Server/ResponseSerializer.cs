@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Query;
 using Newtonsoft.Json;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization.Common;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
@@ -30,19 +30,23 @@ namespace JsonApiDotNetCore.Serialization.Server
         private readonly Dictionary<Type, List<AttrAttribute>> _attributesToSerializeCache = new Dictionary<Type, List<AttrAttribute>>();
         private readonly Dictionary<Type, List<RelationshipAttribute>> _relationshipsToSerializeCache = new Dictionary<Type, List<RelationshipAttribute>>();
         private readonly IFieldsToSerialize _fieldsToSerialize;
+        private readonly IJsonApiOptions _options;
         private readonly IMetaBuilder<TResource> _metaBuilder;
         private readonly Type _primaryResourceType;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
 
-        public ResponseSerializer(IMetaBuilder<TResource> metaBuilder,
-                                  ILinkBuilder linkBuilder,
-                                  IIncludedResourceObjectBuilder includedBuilder,
-                                  IFieldsToSerialize fieldsToSerialize,
-                                  IResourceObjectBuilder resourceObjectBuilder) :
-            base(resourceObjectBuilder)
+        public ResponseSerializer(
+            IMetaBuilder<TResource> metaBuilder,
+            ILinkBuilder linkBuilder,
+            IIncludedResourceObjectBuilder includedBuilder,
+            IFieldsToSerialize fieldsToSerialize,
+            IResourceObjectBuilder resourceObjectBuilder,
+            IJsonApiOptions options)
+            : base(resourceObjectBuilder)
         {
             _fieldsToSerialize = fieldsToSerialize;
+            _options = options;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _includedBuilder = includedBuilder;
@@ -53,7 +57,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         public string Serialize(object data)
         {
             if (data is ErrorCollection error)
-                return error.GetJson();
+                return error.GetJson(_options.SerializerSettings);
             if (data is IEnumerable entities)
                 return SerializeMany(entities);
             return SerializeSingle((IIdentifiable)data);
@@ -68,7 +72,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         internal string SerializeSingle(IIdentifiable entity)
         {
             if (RequestRelationship != null)
-               return JsonConvert.SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
+               return SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
 
             var (attributes, relationships) = GetFieldsToSerialize();
             var document = Build(entity, attributes, relationships);
@@ -77,8 +81,13 @@ namespace JsonApiDotNetCore.Serialization.Server
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
 
             AddTopLevelObjects(document);
-            return JsonConvert.SerializeObject(document);
+            return SerializeObject(document);
+        }
 
+        private string SerializeObject(object value)
+        {
+            using var scope = new JsonSerializerSettingsNullValueHandlingScope(_options.SerializerSettings, NullValueHandling.Include);
+            return JsonConvert.SerializeObject(value, scope.Settings);
         }
 
         private (List<AttrAttribute>, List<RelationshipAttribute>) GetFieldsToSerialize()
@@ -106,7 +115,7 @@ namespace JsonApiDotNetCore.Serialization.Server
             }
 
             AddTopLevelObjects(document);
-            return JsonConvert.SerializeObject(document);
+            return SerializeObject(document);
         }
 
         /// <summary>

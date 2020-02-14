@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Serialization.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,17 @@ namespace JsonApiDotNetCore.Internal
             Errors.Add(error);
         }
 
-        public string GetJson()
+        public string GetJson(JsonSerializerSettings serializerSettings)
         {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+            var beforeContractResolver = serializerSettings.ContractResolver;
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            using var scope = new JsonSerializerSettingsNullValueHandlingScope(serializerSettings, NullValueHandling.Ignore);
+            string json = JsonConvert.SerializeObject(this, serializerSettings);
+
+            serializerSettings.ContractResolver = beforeContractResolver;
+
+            return json;
         }
 
         public int GetErrorStatusCode()

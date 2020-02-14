@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace JsonApiDotNetCore.Configuration
 {
     public interface IJsonApiOptions : ILinksConfiguration, ISerializerOptions
@@ -25,6 +27,7 @@ namespace JsonApiDotNetCore.Configuration
         bool AllowClientGeneratedIds { get; }
         bool AllowCustomQueryParameters { get; set; }
         string Namespace { get; set; }
+        JsonSerializerSettings SerializerSettings { get; }
     }
 
     public interface ISerializerOptions
