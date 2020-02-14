@@ -236,7 +236,7 @@ namespace UnitTests
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
-            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
+            controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
 
             // Act
             await controller.PostAsync(resource);
@@ -254,7 +254,7 @@ namespace UnitTests
             var controller = new ResourceController(new JsonApiOptions {ValidateModelState = false},
                 NullLoggerFactory.Instance, create: serviceMock.Object)
             {
-                ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext
+                ControllerContext = new ControllerContext
                 {
                     HttpContext = new DefaultHttpContext()
                 }

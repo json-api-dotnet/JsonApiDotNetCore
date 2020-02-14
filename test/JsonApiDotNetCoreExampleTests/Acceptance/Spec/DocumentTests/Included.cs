@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     public class Included
     {
         private readonly AppDbContext _context;
-        private readonly Bogus.Faker<Person> _personFaker;
+        private readonly Faker<Person> _personFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<TodoItemCollection> _todoItemCollectionFaker;
 

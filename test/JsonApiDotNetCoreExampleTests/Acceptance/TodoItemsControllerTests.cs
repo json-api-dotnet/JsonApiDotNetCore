@@ -677,13 +677,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
-            todoItem.AchievedDate = System.DateTime.Now;
+            todoItem.AchievedDate = DateTime.Now;
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
             var newTodoItem = _todoItemFaker.Generate();
-            newTodoItem.AchievedDate = System.DateTime.Now.AddDays(2);
+            newTodoItem.AchievedDate = DateTime.Now.AddDays(2);
 
             var content = new
             {
@@ -732,7 +732,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
-            todoItem.AchievedDate = System.DateTime.Now;
+            todoItem.AchievedDate = DateTime.Now;
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
