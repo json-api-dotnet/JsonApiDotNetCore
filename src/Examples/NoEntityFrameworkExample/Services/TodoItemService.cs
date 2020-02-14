@@ -30,11 +30,9 @@ namespace NoEntityFrameworkExample.Services
 
         private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Open();
-                return await query(dbConnection);
-            }
+            using IDbConnection dbConnection = Connection;
+            dbConnection.Open();
+            return await query(dbConnection);
         }
 
         public async Task<IEnumerable<TodoItem>> GetAsync()
