@@ -22,7 +22,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
 
             // Act
             string serialized = _serializer.Serialize(entity);
@@ -53,7 +53,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithTargetedSetAttributes_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
@@ -78,7 +78,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_NoIdWithTargetedSetAttributes_CanBuild()
         {
             // Arrange
-            var entityNoId = new TestResource() { Id = 0, StringField = "value", NullableIntField = 123 };
+            var entityNoId = new TestResource { Id = 0, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
@@ -103,7 +103,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithoutTargetedAttributes_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => new { });
 
             // Act
@@ -177,8 +177,8 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var entities = new List<TestResource>
             {
-                new TestResource() { Id = 1, StringField = "value1", NullableIntField = 123 },
-                new TestResource() { Id = 2, StringField = "value2", NullableIntField = 123 }
+                new TestResource { Id = 1, StringField = "value1", NullableIntField = 123 },
+                new TestResource { Id = 2, StringField = "value2", NullableIntField = 123 }
             };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 

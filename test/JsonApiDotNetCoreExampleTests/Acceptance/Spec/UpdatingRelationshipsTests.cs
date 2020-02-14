@@ -581,7 +581,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
-            person.TodoItems = new List<TodoItem>() { todoItem };
+            person.TodoItems = new List<TodoItem> { todoItem };
             _context.People.Add(person);
             _context.SaveChanges();
 
@@ -683,7 +683,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person1 = _personFaker.Generate();
             person1.Passport = passport;
             var person2 = _personFaker.Generate();
-            context.People.AddRange(new List<Person>() { person1, person2 });
+            context.People.AddRange(new List<Person> { person1, person2 });
             await context.SaveChangesAsync();
             var passportId = person1.PassportId;
             var content = new
@@ -731,7 +731,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             person1.TodoItems = _todoItemFaker.Generate(3).ToList();
             var person2 = _personFaker.Generate();
             person2.TodoItems = _todoItemFaker.Generate(2).ToList();
-            context.People.AddRange(new List<Person>() { person1, person2 });
+            context.People.AddRange(new List<Person> { person1, person2 });
             await context.SaveChangesAsync();
             var todoItem1Id = person1.TodoItems[0].Id;
             var todoItem2Id = person1.TodoItems[1].Id;

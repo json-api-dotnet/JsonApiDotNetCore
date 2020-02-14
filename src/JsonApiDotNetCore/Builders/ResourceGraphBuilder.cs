@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Builders
                 // spec point of view.
                 if (prop.Name == nameof(Identifiable.Id))
                 {
-                    var idAttr = new AttrAttribute()
+                    var idAttr = new AttrAttribute
                     {
                         PublicAttributeName = _formatter.FormatPropertyName(prop),
                         PropertyInfo = prop

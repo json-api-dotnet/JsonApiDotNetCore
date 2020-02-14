@@ -37,7 +37,7 @@ namespace UnitTests.ResourceHooks
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
 
-            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
 

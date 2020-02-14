@@ -67,7 +67,7 @@ namespace UnitTests.Serialization.Serializer
         public void EntityToDocument_EntityList_CanBuild()
         {
             // Arrange
-            var entities = new List<IIdentifiable>() { new Identifiable(), new Identifiable() };
+            var entities = new List<IIdentifiable> { new Identifiable(), new Identifiable() };
 
             // Act
             var document = _builder.Build(entities);

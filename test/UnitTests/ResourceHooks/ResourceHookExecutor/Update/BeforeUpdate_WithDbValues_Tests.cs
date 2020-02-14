@@ -85,7 +85,7 @@ namespace UnitTests.ResourceHooks
             ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson));
 
             // Act
-            var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
+            var _todoList = new List<TodoItem> { new TodoItem { Id = this.todoList[0].Id } };
             hookExecutor.BeforeUpdate(_todoList, ResourcePipeline.Patch);
 
             // Assert

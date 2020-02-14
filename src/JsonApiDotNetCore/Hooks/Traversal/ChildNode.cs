@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Hooks
                     }
                     else if (currentValue is IIdentifiable relationshipSingle)
                     {
-                        if (!unique.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, _comparer).Any())
+                        if (!unique.Intersect(new HashSet<IIdentifiable> { relationshipSingle }, _comparer).Any())
                         {
                             proxy.SetValue(left, null);
                         }

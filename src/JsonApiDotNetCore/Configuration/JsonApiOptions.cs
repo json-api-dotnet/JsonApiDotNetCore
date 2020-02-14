@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public bool ValidateModelState { get; set; }
 
-        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
+        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };

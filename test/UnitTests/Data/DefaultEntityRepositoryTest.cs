@@ -23,7 +23,8 @@ namespace UnitTests.Data
 
             // Arrange
             var repository = Setup();
-            var todoItems = new List<TodoItem>() {
+            var todoItems = new List<TodoItem>
+            {
                 new TodoItem{ Id = 1 },
                 new TodoItem{ Id = 2 }
             };
@@ -43,7 +44,8 @@ namespace UnitTests.Data
 
             // Arrange
             var repository = Setup();
-            var todoItems = new List<TodoItem>() {
+            var todoItems = new List<TodoItem>
+            {
                 new TodoItem{ Id = 1 },
                 new TodoItem{ Id = 2 },
                 new TodoItem{ Id = 3 },

@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Hooks
             }
             else
             {
-                targetHooks = new List<ResourceHook>() { hook };
+                targetHooks = new List<ResourceHook> { hook };
             }
 
             foreach (ResourceHook targetHook in targetHooks)

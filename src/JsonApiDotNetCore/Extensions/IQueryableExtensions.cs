@@ -317,7 +317,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (props.Length > 1) // Nested property
                 {
                     if (nestedTypesAndProperties.TryGetValue(props[0], out var properties) == false)
-                        nestedTypesAndProperties.Add(props[0], new List<string>() { nameof(Identifiable.Id), props[1] });
+                        nestedTypesAndProperties.Add(props[0], new List<string> { nameof(Identifiable.Id), props[1] });
                     else
                         properties.Add(props[1]);
                 }

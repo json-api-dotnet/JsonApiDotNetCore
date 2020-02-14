@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
             var entity = base.Deserialize(body);
-            return new DeserializedSingleResponse<TResource>()
+            return new DeserializedSingleResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         public DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable
         {
             var entities = base.Deserialize(body);
-            return new DeserializedListResponse<TResource>()
+            return new DeserializedListResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,

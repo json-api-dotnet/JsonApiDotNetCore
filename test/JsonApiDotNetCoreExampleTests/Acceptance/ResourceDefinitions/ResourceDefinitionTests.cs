@@ -324,7 +324,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport() { IsLocked = true };
+            var passport = new Passport { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
             var newPassport = new Passport();
@@ -371,7 +371,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport() { IsLocked = true };
+            var passport = new Passport { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
             var newPassport = new Passport();

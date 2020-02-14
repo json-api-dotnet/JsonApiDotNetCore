@@ -64,7 +64,7 @@ namespace UnitTests.ResourceHooks
         {
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
-            var todoList = new List<TodoItem>() { todoItem };
+            var todoList = new List<TodoItem> { todoItem };
             person.OneToOneTodoItem = todoItem;
             todoItem.OneToOnePerson = person;
             return todoList;
@@ -74,7 +74,7 @@ namespace UnitTests.ResourceHooks
         {
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
-            var todoList = new List<TodoItem>() { todoItem };
+            var todoList = new List<TodoItem> { todoItem };
             person.AssignedTodoItems = todoList;
             todoItem.Owner = person;
             return todoList;
@@ -106,7 +106,7 @@ namespace UnitTests.ResourceHooks
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
 
-            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
 
@@ -134,7 +134,7 @@ namespace UnitTests.ResourceHooks
             }
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
-            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
     }

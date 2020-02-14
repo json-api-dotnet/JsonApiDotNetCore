@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             var hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
-            var calledContainers = new List<LeftType>() { typeof(TResource) };
+            var calledContainers = new List<LeftType> { typeof(TResource) };
             foreach (var chain in _includeService.Get())
                 RecursiveBeforeRead(chain, pipeline, calledContainers);
         }

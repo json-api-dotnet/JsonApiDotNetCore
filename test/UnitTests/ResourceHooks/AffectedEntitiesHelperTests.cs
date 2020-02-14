@@ -31,10 +31,10 @@ namespace UnitTests.ResourceHooks.AffectedEntities
         public readonly HasManyAttribute ToManyAttr;
 
         public readonly Dictionary<RelationshipAttribute, HashSet<Dummy>> Relationships = new Dictionary<RelationshipAttribute, HashSet<Dummy>>();
-        public readonly HashSet<Dummy> FirstToOnesEntities = new HashSet<Dummy> { new Dummy() { Id = 1 }, new Dummy() { Id = 2 }, new Dummy() { Id = 3 } };
-        public readonly HashSet<Dummy> SecondToOnesEntities = new HashSet<Dummy> { new Dummy() { Id = 4 }, new Dummy() { Id = 5 }, new Dummy() { Id = 6 } };
-        public readonly HashSet<Dummy> ToManiesEntities = new HashSet<Dummy> { new Dummy() { Id = 7 }, new Dummy() { Id = 8 }, new Dummy() { Id = 9 } };
-        public readonly HashSet<Dummy> NoRelationshipsEntities = new HashSet<Dummy> { new Dummy() { Id = 10 }, new Dummy() { Id = 11 }, new Dummy() { Id = 12 } };
+        public readonly HashSet<Dummy> FirstToOnesEntities = new HashSet<Dummy> { new Dummy { Id = 1 }, new Dummy { Id = 2 }, new Dummy { Id = 3 } };
+        public readonly HashSet<Dummy> SecondToOnesEntities = new HashSet<Dummy> { new Dummy { Id = 4 }, new Dummy { Id = 5 }, new Dummy { Id = 6 } };
+        public readonly HashSet<Dummy> ToManiesEntities = new HashSet<Dummy> { new Dummy { Id = 7 }, new Dummy { Id = 8 }, new Dummy { Id = 9 } };
+        public readonly HashSet<Dummy> NoRelationshipsEntities = new HashSet<Dummy> { new Dummy { Id = 10 }, new Dummy { Id = 11 }, new Dummy { Id = 12 } };
         public readonly HashSet<Dummy> AllEntities;
         public RelationshipDictionaryTests()
         {

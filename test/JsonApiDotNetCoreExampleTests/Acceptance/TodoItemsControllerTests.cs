@@ -563,7 +563,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", todoItem.Description },
                         { "ordinal", todoItem.Ordinal },
@@ -637,7 +637,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     id = todoItem.Id,
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
@@ -691,7 +691,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     id = todoItem.Id,
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
@@ -745,7 +745,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     id = todoItem.Id,
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
