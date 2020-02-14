@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Hooks;
@@ -26,18 +25,16 @@ namespace JsonApiDotNetCore.Models
     /// <typeparam name="TResource">The resource type</typeparam>
     public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
-        private readonly ResourceContext _resourceContext;
         private readonly IResourceGraph _resourceGraph;
         private List<AttrAttribute> _allowedAttributes;
         private List<RelationshipAttribute> _allowedRelationships;
         public ResourceDefinition(IResourceGraph resourceGraph)
         {
-            _resourceContext = resourceGraph.GetResourceContext(typeof(TResource));
-            _allowedAttributes = _resourceContext.Attributes;
-            _allowedRelationships = _resourceContext.Relationships;
+            var resourceContext = resourceGraph.GetResourceContext(typeof(TResource));
+            _allowedAttributes = resourceContext.Attributes;
+            _allowedRelationships = resourceContext.Relationships;
             _resourceGraph = resourceGraph;
         }
-
 
         public List<RelationshipAttribute> GetAllowedRelationships() => _allowedRelationships;
         public List<AttrAttribute> GetAllowedAttributes() => _allowedAttributes;
