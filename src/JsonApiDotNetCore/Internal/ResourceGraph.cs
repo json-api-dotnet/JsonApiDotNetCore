@@ -75,9 +75,9 @@ namespace JsonApiDotNetCore.Internal
         {
             IEnumerable<IResourceField> available;
             if (type == FieldFilterType.Attribute)
-                available = GetResourceContext(typeof(T)).Attributes.Cast<IResourceField>();
+                available = GetResourceContext(typeof(T)).Attributes;
             else if (type == FieldFilterType.Relationship)
-                available = GetResourceContext(typeof(T)).Relationships.Cast<IResourceField>();
+                available = GetResourceContext(typeof(T)).Relationships;
             else
                 available = GetResourceContext(typeof(T)).Fields;
 

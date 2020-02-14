@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Hooks
             _processedEntities = new Dictionary<RightType, HashSet<IIdentifiable>>();
             RegisterRelationshipProxies(typeof(TResource));
             var uniqueEntities = ProcessEntities(rootEntities);
-            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TResource), uniqueEntities.Cast<IIdentifiable>());
+            var populatedRelationshipsToNextLayer = GetPopulatedRelationships(typeof(TResource), uniqueEntities);
             var allRelationshipsFromType = _relationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.LeftType == typeof(TResource)).ToArray();
             return new RootNode<TResource>(uniqueEntities, populatedRelationshipsToNextLayer, allRelationshipsFromType);
         }
