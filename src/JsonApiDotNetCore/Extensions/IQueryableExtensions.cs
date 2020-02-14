@@ -356,14 +356,14 @@ namespace JsonApiDotNetCore.Extensions
                     Expression selectMethod = Expression.Call(
                         typeof(Enumerable),
                         "Select",
-                        new Type[] { singleType, singleType },
+                        new[] { singleType, singleType },
                         propertyExpression, body);
 
                     // { x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name}).ToList() }
                     bindExpression = Expression.Call(
                          typeof(Enumerable),
                          "ToList",
-                         new Type[] { singleType },
+                         new[] { singleType },
                          selectMethod);
                 }
                 // [HasOne] attribute

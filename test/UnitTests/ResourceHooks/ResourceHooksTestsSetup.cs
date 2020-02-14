@@ -241,7 +241,7 @@ namespace UnitTests.ResourceHooks
                 .Returns(enableDbValuesHooks);
             }
             mock.Setup(discovery => discovery.DatabaseValuesEnabledHooks)
-            .Returns(new ResourceHook[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
+            .Returns(new[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
 
             return mock.Object;
         }

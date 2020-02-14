@@ -135,7 +135,7 @@ namespace JsonApiDotNetCore.Hooks
             var query = repo.Get().Where(e => ids.Contains(e.Id));
             foreach (var inclusionChainElement in relationshipsToNextLayer)
             {
-                query = repo.Include(query, new RelationshipAttribute[] { inclusionChainElement });
+                query = repo.Include(query, new[] { inclusionChainElement });
             }
             return query.ToList();
         }

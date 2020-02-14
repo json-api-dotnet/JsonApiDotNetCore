@@ -189,7 +189,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="openType">Open generic type</param>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, constructorArguments);
+            return CreateInstanceOfOpenType(openType, new[] { parameter }, constructorArguments);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, hasInternalConstructor, constructorArguments);
+            return CreateInstanceOfOpenType(openType, new[] { parameter }, hasInternalConstructor, constructorArguments);
 
         }
 

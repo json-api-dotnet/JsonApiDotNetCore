@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <param name="rootNode">Root node.</param>
         public NodeLayer CreateNextLayer(INode rootNode)
         {
-            return CreateNextLayer(new INode[] { rootNode });
+            return CreateNextLayer(new[] { rootNode });
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCore.Hooks
                         if (proxy.IsContextRelation || uniqueRightEntities.Any())
                         {
                             AddToRelationshipGroup(rightEntitiesGrouped, proxy, uniqueRightEntities);
-                            AddToRelationshipGroup(leftEntitiesGrouped, proxy, new IIdentifiable[] { leftEntity });
+                            AddToRelationshipGroup(leftEntitiesGrouped, proxy, new[] { leftEntity });
                         }
                     }
                 }

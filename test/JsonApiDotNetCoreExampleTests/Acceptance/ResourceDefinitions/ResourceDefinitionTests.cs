@@ -235,7 +235,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             string toBeExcluded = "This should be not be included";
             tags[0].Name = toBeExcluded;
 
-            var articleTags = new ArticleTag[]
+            var articleTags = new[]
             {
                 new ArticleTag
                 {

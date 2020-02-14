@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)
         {
             var relationship = GetRelationship(relationshipName);
-            var entityQuery = _repository.Include(_repository.Get(id), new RelationshipAttribute[] { relationship });
+            var entityQuery = _repository.Include(_repository.Get(id), new[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
