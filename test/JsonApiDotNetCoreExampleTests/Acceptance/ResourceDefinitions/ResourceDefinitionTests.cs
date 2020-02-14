@@ -327,7 +327,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var passport = new Passport() { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport() { };
+            var newPassport = new Passport();
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -374,7 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var passport = new Passport() { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport() { };
+            var newPassport = new Passport();
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 

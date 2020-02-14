@@ -232,7 +232,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeMany_EmptyList_CanBuild()
         {
             // Arrange
-            var entities = new List<TestResource> { };
+            var entities = new List<TestResource>();
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act

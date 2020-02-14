@@ -601,10 +601,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                          { "todoItems", new
                             {
-                                data = new List<object>
-                                {
-
-                                }
+                                data = new List<object>()
                             }
                         }
                     }

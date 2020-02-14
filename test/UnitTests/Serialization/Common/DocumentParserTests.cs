@@ -43,7 +43,7 @@ namespace UnitTests.Serialization.Deserializer
         public void DeserializeResourceIdentifiers_EmptySingleData_CanDeserialize()
         {
             // Arrange
-            var content = new Document { };
+            var content = new Document();
             var body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -80,7 +80,7 @@ namespace UnitTests.Serialization.Deserializer
         [Fact]
         public void DeserializeResourceIdentifiers_EmptyArrayData_CanDeserialize()
         {
-            var content = new Document { Data = new List<ResourceObject> { } };
+            var content = new Document { Data = new List<ResourceObject>()};
             var body = JsonConvert.SerializeObject(content);
 
             // Act

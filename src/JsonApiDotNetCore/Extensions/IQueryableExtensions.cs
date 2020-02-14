@@ -307,7 +307,7 @@ namespace JsonApiDotNetCore.Extensions
             var sourceBindings = new List<MemberAssignment>();
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
-            var sourceProperties = new List<string>() { };
+            var sourceProperties = new List<string>();
 
             // Store all property names to it's own related property (name as key)
             var nestedTypesAndProperties = new Dictionary<string, List<string>>();

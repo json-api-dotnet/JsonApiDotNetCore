@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ namespace UnitTests.Serialization
                 {
                     Id = "1",
                     Type = mainType,
-                    Relationships = new Dictionary<string, RelationshipEntry> { }
+                    Relationships = new Dictionary<string, RelationshipEntry>()
                 }
             };
         }
