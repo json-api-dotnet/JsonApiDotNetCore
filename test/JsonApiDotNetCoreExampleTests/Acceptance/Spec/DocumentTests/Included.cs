@@ -203,7 +203,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var todoItem2 = _todoItemFaker.Generate();
             todoItem1.Owner = person;
             todoItem2.Owner = person;
-            _context.TodoItems.AddRange(new[] { todoItem1, todoItem2 });
+            _context.TodoItems.AddRange(todoItem1, todoItem2);
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()

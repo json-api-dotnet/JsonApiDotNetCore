@@ -287,7 +287,7 @@ namespace JsonApiDotNetCore.Hooks
         INode CreateNodeInstance(RightType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
-            return (INode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, new object[] { relationshipsToNext, prev });
+            return (INode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, relationshipsToNext, prev);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace JsonApiDotNetCore.Hooks
         IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             var cast = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
-            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, new object[] { cast });
+            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, cast);
         }
 
         /// <summary>
@@ -306,8 +306,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             var rightEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, rightEntities.Cast(thisLayerType));
             return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
-                thisLayerType,
-                new object[] { proxy, new HashSet<IIdentifiable>(leftEntities), rightEntitiesHashed });
+                thisLayerType, proxy, new HashSet<IIdentifiable>(leftEntities), rightEntitiesHashed);
         }
     }
 

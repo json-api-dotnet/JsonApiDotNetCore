@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newTodoItem1 = _todoItemFaker.Generate();
             var newTodoItem2 = _todoItemFaker.Generate();
-            _context.AddRange(new TodoItem[] { newTodoItem1, newTodoItem2 });
+            _context.AddRange(newTodoItem1, newTodoItem2);
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
@@ -313,7 +313,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newTodoItem1 = _todoItemFaker.Generate();
             var newTodoItem2 = _todoItemFaker.Generate();
-            _context.AddRange(new TodoItem[] { newTodoItem1, newTodoItem2 });
+            _context.AddRange(newTodoItem1, newTodoItem2);
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()

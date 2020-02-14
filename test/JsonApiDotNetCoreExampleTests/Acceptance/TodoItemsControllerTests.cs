@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.UpdatedDate = null;
 
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
@@ -192,7 +192,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             otherTodoItem.Assignee = null;
 
             _context.RemoveRange(_context.TodoItems);
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.UpdatedDate = new DateTime();
 
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
@@ -250,7 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.Assignee = new Person();
 
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
