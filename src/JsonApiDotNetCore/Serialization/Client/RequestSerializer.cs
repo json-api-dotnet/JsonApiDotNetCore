@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             _currentTargetedResource = entity.GetType();
             var attributes = GetAttributesToSerialize(entity);
             var relationships = GetRelationshipsToSerialize(entity);
-            var document = base.Build(entities, attributes, relationships);
+            var document = Build(entities, attributes, relationships);
             _currentTargetedResource = null;
             return JsonConvert.SerializeObject(document);
         }

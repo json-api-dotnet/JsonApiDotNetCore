@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var entity = base.Deserialize(body);
+            var entity = Deserialize(body);
             return new DeserializedSingleResponse<TResource>
             {
                 Links = _document.Links,
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var entities = base.Deserialize(body);
+            var entities = Deserialize(body);
             return new DeserializedListResponse<TResource>
             {
                 Links = _document.Links,
