@@ -61,7 +61,7 @@ namespace NoEntityFrameworkExample.Services
 
         public async Task<TodoItem> CreateAsync(TodoItem entity)
         {
-            return (await QueryAsync<TodoItem>(async connection =>
+            return (await QueryAsync(async connection =>
             {
                 var query = "insert into \"TodoItems\" (\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\") values (@description, @isLocked, @ordinal, @guidProperty) returning \"Id\",\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\"";
                 var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, guidProperty =  entity.GuidProperty, isLocked = entity.IsLocked});
