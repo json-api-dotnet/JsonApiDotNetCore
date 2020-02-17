@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Hooks
                     if (!_databaseValuesAttributeAllowed.Contains(hook))
                     {
                         throw new JsonApiSetupException("DatabaseValuesAttribute cannot be used on hook" +
-                            $"{hook.ToString("G")} in resource definition  {containerType.Name}");
+                            $"{hook:G} in resource definition  {containerType.Name}");
                     }
                     var targetList = attr.value ? databaseValuesEnabledHooks : databaseValuesDisabledHooks;
                     targetList.Add(hook);

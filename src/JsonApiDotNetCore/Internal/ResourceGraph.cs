@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Internal
 
         private void ThrowNotExposedError(string memberName, FieldFilterType type)
         {
-            throw new ArgumentException($"{memberName} is not an json:api exposed {type.ToString("g")}.");
+            throw new ArgumentException($"{memberName} is not an json:api exposed {type:g}.");
         }
 
         /// <summary>

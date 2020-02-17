@@ -9,13 +9,13 @@ namespace JsonApiDotNetCore.Models.Links
         public LinksAttribute(Link topLevelLinks = Link.NotConfigured, Link resourceLinks = Link.NotConfigured, Link relationshipLinks = Link.NotConfigured)
         {
             if (topLevelLinks == Link.Related)
-                throw new JsonApiSetupException($"{Link.Related.ToString("g")} not allowed for argument {nameof(topLevelLinks)}");
+                throw new JsonApiSetupException($"{Link.Related:g} not allowed for argument {nameof(topLevelLinks)}");
 
             if (resourceLinks == Link.Paging)
-                throw new JsonApiSetupException($"{Link.Paging.ToString("g")} not allowed for argument {nameof(resourceLinks)}");
+                throw new JsonApiSetupException($"{Link.Paging:g} not allowed for argument {nameof(resourceLinks)}");
 
             if (relationshipLinks == Link.Paging)
-                throw new JsonApiSetupException($"{Link.Paging.ToString("g")} not allowed for argument {nameof(relationshipLinks)}");
+                throw new JsonApiSetupException($"{Link.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
 
             TopLevelLinks = topLevelLinks;
             ResourceLinks = resourceLinks;
