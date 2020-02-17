@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExample
             services.AddClientSerialization(); 
         }
 
-        public virtual void Configure(
+        public void Configure(
             IApplicationBuilder app,
             AppDbContext context)
         {

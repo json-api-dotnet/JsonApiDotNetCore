@@ -20,7 +20,7 @@ namespace ReportsExample
             Config = builder.Build();
         }
 
-        public virtual void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddMvcCore();
             services.AddJsonApi(

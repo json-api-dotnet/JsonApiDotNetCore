@@ -44,35 +44,35 @@ namespace JsonApiDotNetCoreExample.Models
         public Guid? CollectionId { get; set; }
 
         [HasOne]
-        public virtual Person Owner { get; set; }
+        public Person Owner { get; set; }
 
         [HasOne]
-        public virtual Person Assignee { get; set; }
+        public Person Assignee { get; set; }
 
         [HasOne]
-        public virtual Person OneToOnePerson { get; set; }
+        public Person OneToOnePerson { get; set; }
 
-        public virtual int? OneToOnePersonId { get; set; }
+        public int? OneToOnePersonId { get; set; }
 
         [HasMany]
-        public virtual List<Person> StakeHolders { get; set; }
+        public List<Person> StakeHolders { get; set; }
 
         [HasOne]
-        public virtual TodoItemCollection Collection { get; set; }
+        public TodoItemCollection Collection { get; set; }
 
         // cyclical to-one structure
-        public virtual int? DependentOnTodoId { get; set; }
+        public int? DependentOnTodoId { get; set; }
 
         [HasOne]
-        public virtual TodoItem DependentOnTodo { get; set; }
+        public TodoItem DependentOnTodo { get; set; }
 
         // cyclical to-many structure
-        public virtual int? ParentTodoId {get; set;}
+        public int? ParentTodoId {get; set;}
 
         [HasOne]
-        public virtual TodoItem ParentTodo { get; set; }
+        public TodoItem ParentTodo { get; set; }
 
         [HasMany]
-        public virtual List<TodoItem> ChildrenTodos { get; set; }
+        public List<TodoItem> ChildrenTodos { get; set; }
     }
 }
