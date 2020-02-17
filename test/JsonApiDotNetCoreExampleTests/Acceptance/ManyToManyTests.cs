@@ -281,8 +281,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
 
-            var article = _articleFaker.Generate();
-
             var route = "/api/v1/articles";
             var request = new HttpRequestMessage(new HttpMethod("POST"), route);
             var content = new

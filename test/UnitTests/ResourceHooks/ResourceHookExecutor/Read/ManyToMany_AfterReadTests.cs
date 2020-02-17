@@ -18,7 +18,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateManyToManyData();
+            var (articles, _, tags) = CreateManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -36,7 +36,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateManyToManyData();
+            var (articles, _, tags) = CreateManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -53,7 +53,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateManyToManyData();
+            var (articles, _, _) = CreateManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -70,7 +70,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateManyToManyData();
+            var (articles, _, _) = CreateManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);

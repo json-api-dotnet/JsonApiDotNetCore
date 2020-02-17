@@ -29,7 +29,6 @@ namespace DiscoveryTests
 
         public ServiceDiscoveryFacadeTests()
         {
-            var contextMock = new Mock<DbContext>();
             var dbResolverMock = new Mock<IDbContextResolver>();
             dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
             TestModelRepository._dbContextResolver = dbResolverMock.Object;

@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
@@ -39,7 +39,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
+            var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
             todo.ParentTodo  = todo;
             todo.ChildrenTodos = new List<TodoItem> { todo };
@@ -58,7 +58,7 @@ var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObject
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            (var contextMock, var hookExecutor, var todoResourceMock) = CreateTestObjects(todoDiscovery);
+            var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var rootTodo = new TodoItem { Id = 1 };
             var child = new TodoItem { ParentTodo  = rootTodo, Id = 2 };
             rootTodo.ChildrenTodos = new List<TodoItem> { child };

@@ -42,13 +42,13 @@ namespace JADNC.IntegrationTests.Data
                 targetedFields.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
 
                 // Act
-                var updatedItem = await repository.UpdateAsync(todoItemUpdates);
+                await repository.UpdateAsync(todoItemUpdates);
             }
 
             // Assert - in different context
             await using var assertContext = GetContext(seed);
             {
-                var (repository, targetedFields) = Setup(assertContext);
+                var (repository, _) = Setup(assertContext);
 
                 var fetchedTodo = repository.Get(itemId).First();
                 Assert.NotNull(fetchedTodo);
@@ -66,7 +66,7 @@ namespace JADNC.IntegrationTests.Data
         {
             // Arrange
             await using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
+            var (repository, _) = Setup(context);
             context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
             await context.SaveChangesAsync();
 
@@ -85,7 +85,7 @@ namespace JADNC.IntegrationTests.Data
         {
             // Arrange
             await using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
+            var (repository, _) = Setup(context);
             var items = TodoItems(2, 3, 1);
             context.AddRange(items);
             await context.SaveChangesAsync();
@@ -103,7 +103,7 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             var items = TodoItems(2, 3, 1);
             await using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
+            var (repository, _) = Setup(context);
             context.AddRange(items);
 
             // Act
@@ -118,7 +118,7 @@ namespace JADNC.IntegrationTests.Data
         {
             // Arrange
             await using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
+            var (repository, _) = Setup(context);
             context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9));
             await context.SaveChangesAsync();
 

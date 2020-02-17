@@ -146,7 +146,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
             context.SaveChanges();
 
-            var totalCount = context.TodoItems.Count();
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems?filter[guidProperty]=in:{string.Join(",", guids)}";
             var request = new HttpRequestMessage(httpMethod, route);
@@ -191,7 +190,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
+            var documents = JsonConvert.DeserializeObject<Document>(body);
             var included = documents.Included;
 
             // Assert

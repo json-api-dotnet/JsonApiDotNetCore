@@ -74,7 +74,6 @@ namespace JsonApiDotNetCore.Middleware
         }
         private string GetRelationshipId()
         {
-            var resource = _currentRequest.GetRequestResource();
             if (!_currentRequest.IsRelationshipPath)
             {
                 return null;
@@ -82,13 +81,6 @@ namespace JsonApiDotNetCore.Middleware
             var components = SplitCurrentPath();
             var toReturn = components.ElementAtOrDefault(4);
 
-            if (toReturn == null)
-            {
-                return null;
-            }
-            var relType = _currentRequest.RequestRelationship.RightType;
-            var relResource = _resourceGraph.GetResourceContext(relType);
-            var relIdentityType = relResource.IdentityType;
             return toReturn;
         }
         private string[] SplitCurrentPath()

@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Query
 
             var operation = values[0];
             // remove prefix from value
-            if (Enum.TryParse(operation, out FilterOperation op) == false)
+            if (Enum.TryParse(operation, out FilterOperation _) == false)
                 return string.Empty;
 
             return operation;

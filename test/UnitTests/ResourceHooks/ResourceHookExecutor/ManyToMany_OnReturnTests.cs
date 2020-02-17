@@ -48,7 +48,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateDummyData();
+            var (articles, _, tags) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -66,7 +66,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateDummyData();
+            var (articles, _, tags) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -83,7 +83,7 @@ namespace UnitTests.ResourceHooks
             var articleDiscovery = SetDiscoverableHooks<Article>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateDummyData();
+            var (articles, _, _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -101,7 +101,7 @@ namespace UnitTests.ResourceHooks
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-            var (articles, joins, tags) = CreateDummyData();
+            var (articles, _, _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);

@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Hooks
             foreach (RelationshipAttribute attr in _resourceGraph.GetRelationships(type))
             {
                 if (!attr.CanInclude) continue;
-                if (!_relationshipProxies.TryGetValue(attr, out RelationshipProxy proxies))
+                if (!_relationshipProxies.TryGetValue(attr, out _))
                 {
                     RightType rightType = GetRightTypeFromRelationship(attr);
                     bool isContextRelation = false;

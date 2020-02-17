@@ -15,7 +15,7 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
         {
             // Arrange 
-            var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
+            var (article, author, _, reviewer, _) = GetAuthorChainInstances();
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             var builder = GetBuilder();
 
@@ -59,10 +59,10 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
-            var (article, author, authorFood, reviewer, reviewerFood) = GetAuthorChainInstances();
+            var (article, author, _, reviewer, reviewerFood) = GetAuthorChainInstances();
             var sharedBlog = author.Blogs.First();
             var sharedBlogAuthor = reviewer;
-            var (_reviewer, _reviewerSong, _author, _authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
+            var (_, _, _, authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
             var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
             var builder = GetBuilder();
 
@@ -81,10 +81,7 @@ namespace UnitTests.Serialization.Server
             foreach (var blog in nonOverlappingBlogs)
                 Assert.Single(blog.Relationships.Keys.ToList());
 
-            var sharedAuthorResourceObject = result.Single((ro) => ro.Type == "people" && ro.Id == sharedBlogAuthor.StringId);
-            var sharedAuthorSongRelation = sharedAuthorResourceObject.Relationships["favoriteSong"].SingleData;
-            Assert.Equal(_authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
-            var sharedAuthorFoodRelation = sharedAuthorResourceObject.Relationships["favoriteFood"].SingleData;
+            Assert.Equal(authorSong.StringId, sharedBlogAuthor.FavoriteSong.StringId);
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);
         }
 

@@ -64,7 +64,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             var responseItem = _deserializer.DeserializeSingle<KebabCasedModel>(body).Data;
-            var x = _dbContext.KebabCasedModels.Where(kcm => kcm.Id.Equals(responseItem.Id)).Single();
             Assert.Equal(model.CompoundAttr, responseItem.CompoundAttr);
         }
 

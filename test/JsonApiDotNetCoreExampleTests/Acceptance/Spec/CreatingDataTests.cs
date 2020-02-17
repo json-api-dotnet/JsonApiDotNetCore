@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             var createdSuperUser = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            var created = _dbContext.SuperUsers.First(e => e.Id.Equals(createdSuperUser.Id));
+            _dbContext.SuperUsers.First(e => e.Id.Equals(createdSuperUser.Id));
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItemCollection = new TodoItemCollection { Owner = owner };
 
             // Act
-            var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
+            var (_, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Id = clientDefinedId;
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
+            var (_, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
@@ -216,12 +216,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todoItems").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
-            var _deserializer = new ResponseDeserializer(resourceGraph);
             var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todoItems", "people");
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", content);
+            var (_, response) = await Post("/api/v1/todoItems", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Conflict, response);

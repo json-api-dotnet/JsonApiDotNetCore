@@ -79,7 +79,7 @@ namespace UnitTests.ResourceHooks
             Assert.Throws<JsonApiSetupException>(() =>
             {
                 // Arrange & act
-                var hookConfig = new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));
+                new HooksDiscovery<YetAnotherDummy>(MockProvider<YetAnotherDummy>(new YetAnotherDummyResourceDefinition()));
             });
         }
 

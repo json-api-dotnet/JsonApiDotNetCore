@@ -129,7 +129,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var returnedUser = _fixture.GetDeserializer().DeserializeSingle<User>(body).Data;
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.False(document.SingleData.Attributes.ContainsKey("password"));
             Assert.Equal(user.Username, document.SingleData.Attributes["username"]);
@@ -144,8 +143,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var route = "/api/v1/todoItems/1337";
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -160,8 +157,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         {
             // Arrange
             var route = "/api/v1/people/1?include=passport";
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -210,10 +205,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var route = "/api/v1/articles";
 
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
-
-
             // Act
             var response = await _fixture.Client.GetAsync(route);
 
@@ -252,10 +243,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             await context.SaveChangesAsync();
 
             var route = "/api/v1/articles?include=tags";
-
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
-
 
             // Act
             var response = await _fixture.Client.GetAsync(route);

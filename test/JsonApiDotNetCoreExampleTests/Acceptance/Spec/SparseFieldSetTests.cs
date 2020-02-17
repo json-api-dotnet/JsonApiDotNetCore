@@ -51,7 +51,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Select_Sparse_Fieldsets()
         {
             // Arrange
-            var fields = new List<string> { "Id", "Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem
             {
                 Description = "description",
@@ -61,9 +60,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
-            var expectedSql = StringExtensions.Normalize($@"SELECT 't'.'Id', 't'.'Description', 't'.'CreatedDate', 't'.'AchievedDate'
-                                FROM 'TodoItems' AS 't'
-                                WHERE 't'.'Id' = {todoItem.Id}");
 
             // Act
             var query = _dbContext

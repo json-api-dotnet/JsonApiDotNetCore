@@ -39,7 +39,7 @@ namespace UnitTests.Serialization.Server
         public void DeserializeAttributes_UpdatedImmutableMember_ThrowsInvalidOperationException()
         {
             // Arrange
-            SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
+            SetupFieldsManager(out _, out _);
             var content = new Document
             {
                 Data = new ResourceObject

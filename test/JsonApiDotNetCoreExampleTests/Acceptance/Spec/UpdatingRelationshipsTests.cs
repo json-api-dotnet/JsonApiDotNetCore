@@ -91,8 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             // Act
-            var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+            await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
@@ -108,7 +107,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange 
             var todoItem = _todoItemFaker.Generate();
-            var strayTodoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
@@ -147,10 +145,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             // Act
-            var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+            await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
-
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -213,10 +209,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             // Act
-            var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+            await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
-
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -584,12 +578,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             person.TodoItems = new List<TodoItem> { todoItem };
             _context.People.Add(person);
             _context.SaveChanges();
-
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
 
             var content = new
             {
