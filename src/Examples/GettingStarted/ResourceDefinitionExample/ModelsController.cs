@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GettingStarted.ResourceDefinitionExample
 {
-    public class ModelsController : JsonApiController<Model>
+    public sealed class ModelsController : JsonApiController<Model>
     {
         public ModelsController(
             IJsonApiOptions jsonApiOptions,

@@ -5,7 +5,7 @@ using System;
 
 namespace UnitTests
 {
-    public class TestScopedServiceProvider : IScopedServiceProvider
+    public sealed class TestScopedServiceProvider : IScopedServiceProvider
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock = new Mock<IHttpContextAccessor>();

@@ -9,7 +9,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
+    public sealed class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeUpdate, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
         private readonly ResourceHook[] targetHooksNoImplicit = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };

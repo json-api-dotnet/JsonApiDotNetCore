@@ -12,7 +12,7 @@ using TodoItem = NoEntityFrameworkExample.Models.TodoItem;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {
-    public class NoEntityFrameworkTests : IClassFixture<TestFixture>
+    public sealed class NoEntityFrameworkTests : IClassFixture<TestFixture>
     {
         private readonly TestFixture _fixture;
 

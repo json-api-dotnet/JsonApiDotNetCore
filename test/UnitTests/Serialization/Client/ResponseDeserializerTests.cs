@@ -9,7 +9,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Client
 {
-    public class ResponseDeserializerTests : DeserializerTestsSetup
+    public sealed class ResponseDeserializerTests : DeserializerTestsSetup
     {
         private readonly Dictionary<string, string> _linkValues = new Dictionary<string, string>();
         private readonly ResponseDeserializer _deserializer;

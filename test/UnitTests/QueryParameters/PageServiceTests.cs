@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class PageServiceTests : QueryParametersUnitTestCollection
+    public sealed class PageServiceTests : QueryParametersUnitTestCollection
     {
         public IPageService GetService(int? maximumPageSize = null, int? maximumPageNumber = null)
         {

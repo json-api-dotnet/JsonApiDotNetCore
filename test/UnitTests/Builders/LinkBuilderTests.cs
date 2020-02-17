@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace UnitTests
 {
-    public class LinkBuilderTests
+    public sealed class LinkBuilderTests
     {
         private readonly IPageService _pageService;
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();

@@ -7,7 +7,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class BaseDocumentBuilderTests : SerializerTestsSetup
+    public sealed class BaseDocumentBuilderTests : SerializerTestsSetup
     {
         private readonly TestDocumentBuilder _builder;
 

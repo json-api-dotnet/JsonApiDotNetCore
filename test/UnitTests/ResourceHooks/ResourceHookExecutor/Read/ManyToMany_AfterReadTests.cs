@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class ManyToMany_AfterReadTests : HooksTestsSetup
+    public sealed class ManyToMany_AfterReadTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.AfterRead };
 

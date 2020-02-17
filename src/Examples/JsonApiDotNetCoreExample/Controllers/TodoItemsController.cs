@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class TodoItemsController : JsonApiController<TodoItem>
+    public sealed class TodoItemsController : JsonApiController<TodoItem>
     {
         public TodoItemsController(
             IJsonApiOptions jsonApiOptions,

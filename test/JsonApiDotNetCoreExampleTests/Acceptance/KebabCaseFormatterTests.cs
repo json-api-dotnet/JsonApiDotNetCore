@@ -7,7 +7,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
-    public class KebabCaseFormatterTests : FunctionalTestCollection<KebabCaseApplicationFactory>
+    public sealed class KebabCaseFormatterTests : FunctionalTestCollection<KebabCaseApplicationFactory>
     {
         private readonly Faker<KebabCasedModel> _faker;
 

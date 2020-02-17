@@ -6,7 +6,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Server
 {
-    public class ResponseResourceObjectBuilderTests : SerializerTestsSetup
+    public sealed class ResponseResourceObjectBuilderTests : SerializerTestsSetup
     { 
         private readonly List<RelationshipAttribute> _relationshipsForBuild;
         private const string _relationshipName = "dependents";

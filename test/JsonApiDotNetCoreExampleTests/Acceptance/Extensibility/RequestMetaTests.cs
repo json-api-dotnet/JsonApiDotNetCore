@@ -12,7 +12,7 @@ using JsonApiDotNetCoreExample;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
-    public class RequestMetaTests
+    public sealed class RequestMetaTests
     {
         private readonly TestFixture<Startup> _fixture;
 

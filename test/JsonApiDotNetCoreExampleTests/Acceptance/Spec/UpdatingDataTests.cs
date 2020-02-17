@@ -19,7 +19,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class UpdatingDataTests : EndToEndTest
+    public sealed class UpdatingDataTests : EndToEndTest
     {
         private readonly AppDbContext _context;
         private readonly Faker<TodoItem> _todoItemFaker;

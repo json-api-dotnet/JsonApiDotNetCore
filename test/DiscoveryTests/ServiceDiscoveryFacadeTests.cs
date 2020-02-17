@@ -22,7 +22,7 @@ using Xunit;
 
 namespace DiscoveryTests
 {
-    public class ServiceDiscoveryFacadeTests
+    public sealed class ServiceDiscoveryFacadeTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
         private readonly ResourceGraphBuilder _resourceGraphBuilder = new ResourceGraphBuilder();
@@ -96,7 +96,7 @@ namespace DiscoveryTests
             Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
         }
 
-        public class TestModel : Identifiable { }
+        public sealed class TestModel : Identifiable { }
 
         public class TestModelService : DefaultResourceService<TestModel>
         {

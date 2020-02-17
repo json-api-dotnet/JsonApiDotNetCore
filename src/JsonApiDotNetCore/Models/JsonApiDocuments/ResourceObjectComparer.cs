@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Builders
 {
-    class ResourceObjectComparer : IEqualityComparer<ResourceObject>
+    internal sealed class ResourceObjectComparer : IEqualityComparer<ResourceObject>
     {
         public bool Equals(ResourceObject x, ResourceObject y)
         {

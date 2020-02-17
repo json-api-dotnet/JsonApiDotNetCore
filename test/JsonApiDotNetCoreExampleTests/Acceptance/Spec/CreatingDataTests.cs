@@ -12,7 +12,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-    public class CreatingDataTests : FunctionalTestCollection<StandardApplicationFactory>
+    public sealed class CreatingDataTests : FunctionalTestCollection<StandardApplicationFactory>
     {
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
@@ -282,7 +282,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     }
 
 
-    public class CreatingDataWithClientEnabledIdTests : FunctionalTestCollection<ClientEnabledIdsApplicationFactory>
+    public sealed class CreatingDataWithClientEnabledIdTests : FunctionalTestCollection<ClientEnabledIdsApplicationFactory>
     {
         private readonly Faker<TodoItem> _todoItemFaker;
 

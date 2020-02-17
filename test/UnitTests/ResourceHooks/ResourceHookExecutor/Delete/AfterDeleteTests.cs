@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class AfterDeleteTests : HooksTestsSetup
+    public sealed class AfterDeleteTests : HooksTestsSetup
     {
         readonly ResourceHook[] targetHooks = { ResourceHook.AfterDelete };
 

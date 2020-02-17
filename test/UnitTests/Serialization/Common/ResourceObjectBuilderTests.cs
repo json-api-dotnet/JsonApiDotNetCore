@@ -9,7 +9,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class ResourceObjectBuilderTests : SerializerTestsSetup
+    public sealed class ResourceObjectBuilderTests : SerializerTestsSetup
     {
         private readonly ResourceObjectBuilder _builder;
 

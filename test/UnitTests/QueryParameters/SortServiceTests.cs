@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class SortServiceTests : QueryParametersUnitTestCollection
+    public sealed class SortServiceTests : QueryParametersUnitTestCollection
     {
         public SortService GetService()
         {

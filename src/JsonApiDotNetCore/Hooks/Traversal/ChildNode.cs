@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Hooks
     /// Child node in the tree
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
-    internal class ChildNode<TResource> : INode where TResource : class, IIdentifiable
+    internal sealed class ChildNode<TResource> : INode where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         /// <inheritdoc />

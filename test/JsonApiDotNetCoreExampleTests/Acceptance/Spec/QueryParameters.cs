@@ -11,7 +11,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class QueryParameters
+    public sealed class QueryParameters
     {
         [Fact]
         public async Task Server_Returns_400_ForUnknownQueryParam()

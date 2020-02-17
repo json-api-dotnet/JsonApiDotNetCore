@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ReportsExample
 {
-    public class Startup
+    public sealed class Startup
     {
         public readonly IConfiguration Config;
 

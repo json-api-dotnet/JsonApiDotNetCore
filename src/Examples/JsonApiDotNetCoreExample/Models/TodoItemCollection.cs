@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Models;
 namespace JsonApiDotNetCoreExample.Models
 {
     [Resource("todoCollections")]
-    public class TodoItemCollection : Identifiable<Guid>
+    public sealed class TodoItemCollection : Identifiable<Guid>
     {
         [Attr]
         public string Name { get; set; }

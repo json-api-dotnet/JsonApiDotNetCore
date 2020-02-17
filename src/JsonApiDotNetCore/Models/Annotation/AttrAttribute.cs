@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class AttrAttribute : Attribute, IResourceField
+    public sealed class AttrAttribute : Attribute, IResourceField
     {
         /// <summary>
         /// Defines a public attribute exposed by the API
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Whether or not the provided exposed name is equivalent to the one defined in on the model
         /// </summary>
-        public virtual bool Is(string publicRelationshipName)
+        public bool Is(string publicRelationshipName)
             => string.Equals(publicRelationshipName, PublicAttributeName, StringComparison.OrdinalIgnoreCase);
     }
 }

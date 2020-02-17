@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class SameEntityTypeTests : HooksTestsSetup
+    public sealed class SameEntityTypeTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.OnReturn };
 

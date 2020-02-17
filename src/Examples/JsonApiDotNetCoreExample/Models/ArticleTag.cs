@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class ArticleTag
+    public sealed class ArticleTag
     {
         public int ArticleId { get; set; }
         public Article Article { get; set; }

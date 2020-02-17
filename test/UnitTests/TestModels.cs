@@ -4,8 +4,7 @@ using JsonApiDotNetCore.Models;
 
 namespace UnitTests.TestModels
 {
-
-    public class TestResource : Identifiable
+    public sealed class TestResource : Identifiable
     {
         [Attr] public string StringField { get; set; }
         [Attr] public DateTime DateTimeField { get; set; }
@@ -27,24 +26,24 @@ namespace UnitTests.TestModels
         public string CompoundName { get; set; }
     }
 
-    public class OneToOnePrincipal : IdentifiableWithAttribute
+    public sealed class OneToOnePrincipal : IdentifiableWithAttribute
     {
         [HasOne] public OneToOneDependent Dependent { get; set; }
     }
 
-    public class OneToOneDependent : IdentifiableWithAttribute
+    public sealed class OneToOneDependent : IdentifiableWithAttribute
     {
         [HasOne] public OneToOnePrincipal Principal { get; set; }
         public int? PrincipalId { get; set; }
     }
 
-    public class OneToOneRequiredDependent : IdentifiableWithAttribute
+    public sealed class OneToOneRequiredDependent : IdentifiableWithAttribute
     {
         [HasOne] public OneToOnePrincipal Principal { get; set; }
         public int PrincipalId { get; set; }
     }
 
-    public class OneToManyDependent : IdentifiableWithAttribute
+    public sealed class OneToManyDependent : IdentifiableWithAttribute
     {
         [HasOne] public OneToManyPrincipal Principal { get; set; }
         public int? PrincipalId { get; set; }
@@ -56,7 +55,7 @@ namespace UnitTests.TestModels
         public int PrincipalId { get; set; }
     }
 
-    public class OneToManyPrincipal : IdentifiableWithAttribute
+    public sealed class OneToManyPrincipal : IdentifiableWithAttribute
     {
         [HasMany] public List<OneToManyDependent> Dependents { get; set; }
     }
@@ -66,7 +65,7 @@ namespace UnitTests.TestModels
         [Attr] public string AttributeMember { get; set; }
     }
 
-    public class MultipleRelationshipsPrincipalPart : IdentifiableWithAttribute
+    public sealed class MultipleRelationshipsPrincipalPart : IdentifiableWithAttribute
     {
         [HasOne] public OneToOneDependent PopulatedToOne { get; set; }
         [HasOne] public OneToOneDependent EmptyToOne { get; set; }

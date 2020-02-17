@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Hooks
     /// The root node class of the breadth-first-traversal of entity data structures
     /// as performed by the <see cref="ResourceHookExecutor"/>
     /// </summary>
-    internal class RootNode<TResource> : INode where TResource : class, IIdentifiable
+    internal sealed class RootNode<TResource> : INode where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;

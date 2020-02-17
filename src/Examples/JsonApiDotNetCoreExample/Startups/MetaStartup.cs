@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExample
     /// This should be in JsonApiDotNetCoreExampleTests project but changes in .net core 3.0
     /// do no longer allow that. See https://github.com/aspnet/AspNetCore/issues/15373.
     /// </summary>
-    public class MetaStartup : Startup
+    public sealed class MetaStartup : Startup
     {
         public MetaStartup(IWebHostEnvironment env) : base(env) { }
 
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExample
         }
     }
 
-    public class MetaService : IRequestMeta
+    public sealed class MetaService : IRequestMeta
     {
         public Dictionary<string, object> GetMeta()
         {

@@ -18,7 +18,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class UpdatingRelationshipsTests
+    public sealed class UpdatingRelationshipsTests
     {
         private readonly TestFixture<Startup> _fixture;
         private AppDbContext _context;

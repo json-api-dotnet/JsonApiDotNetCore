@@ -9,7 +9,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Server
 {
-    public class ResponseSerializerTests : SerializerTestsSetup
+    public sealed class ResponseSerializerTests : SerializerTestsSetup
     {
         [Fact]
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanSerialize()
@@ -476,7 +476,7 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(expectedJson, result);
         }
 
-        class CustomError : Error
+        private sealed class CustomError : Error
         {
             public CustomError(int status, string title, string detail, string myProp)
             : base(status, title, detail)

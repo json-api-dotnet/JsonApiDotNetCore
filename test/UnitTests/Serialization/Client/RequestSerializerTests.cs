@@ -8,7 +8,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Client
 {
-    public class RequestSerializerTests : SerializerTestsSetup
+    public sealed class RequestSerializerTests : SerializerTestsSetup
     {
         private readonly RequestSerializer _serializer;
 

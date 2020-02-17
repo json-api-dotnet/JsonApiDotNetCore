@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class HasOneAttribute : RelationshipAttribute
+    public sealed class HasOneAttribute : RelationshipAttribute
     {
         /// <summary>
         /// Create a HasOne relational link to another entity

@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Passport : Identifiable
+    public sealed class Passport : Identifiable
     {
         public int? SocialSecurityNumber { get; set; }
         public bool IsLocked { get; set; }

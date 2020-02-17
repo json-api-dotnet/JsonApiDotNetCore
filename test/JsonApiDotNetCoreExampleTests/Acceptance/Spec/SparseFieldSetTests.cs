@@ -23,7 +23,7 @@ using JsonApiDotNetCore.Internal.Contracts;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class SparseFieldSetTests
+    public sealed class SparseFieldSetTests
     {
         private readonly AppDbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;

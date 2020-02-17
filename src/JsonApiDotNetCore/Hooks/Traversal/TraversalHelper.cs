@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Hooks
     /// Typically, the first layer is homogeneous (all entities have the same type),
     /// and further nodes can be mixed.
     /// </summary>
-    internal class TraversalHelper : ITraversalHelper
+    internal sealed class TraversalHelper : ITraversalHelper
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IResourceGraph _resourceGraph;
@@ -314,7 +314,7 @@ namespace JsonApiDotNetCore.Hooks
     /// A helper class that represents all entities in the current layer that
     /// are being traversed for which hooks will be executed (see IResourceHookExecutor)
     /// </summary>
-    internal class NodeLayer : IEnumerable<INode>
+    internal sealed class NodeLayer : IEnumerable<INode>
     {
         readonly List<INode> _collection;
 

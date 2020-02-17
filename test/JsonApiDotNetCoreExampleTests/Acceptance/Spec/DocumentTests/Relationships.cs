@@ -15,7 +15,7 @@ using JsonApiDotNetCoreExample.Models;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
-    public class Relationships
+    public sealed class Relationships
     {
         private readonly AppDbContext _context;
         private readonly Faker<TodoItem> _todoItemFaker;

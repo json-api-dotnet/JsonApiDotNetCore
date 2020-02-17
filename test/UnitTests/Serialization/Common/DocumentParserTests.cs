@@ -9,7 +9,7 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Deserializer
 {
-    public class BaseDocumentParserTests : DeserializerTestsSetup
+    public sealed class BaseDocumentParserTests : DeserializerTestsSetup
     {
         private readonly TestDocumentParser _deserializer;
 

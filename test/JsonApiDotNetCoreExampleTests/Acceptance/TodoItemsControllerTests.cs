@@ -20,7 +20,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class TodoItemControllerTests
+    public sealed class TodoItemControllerTests
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _context;

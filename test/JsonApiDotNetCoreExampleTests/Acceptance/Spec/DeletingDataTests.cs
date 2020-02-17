@@ -11,7 +11,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class DeletingDataTests
+    public sealed class DeletingDataTests
     {
         private readonly AppDbContext _context;
 

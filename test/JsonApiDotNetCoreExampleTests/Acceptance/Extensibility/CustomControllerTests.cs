@@ -15,7 +15,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
-    public class CustomControllerTests
+    public sealed class CustomControllerTests
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;

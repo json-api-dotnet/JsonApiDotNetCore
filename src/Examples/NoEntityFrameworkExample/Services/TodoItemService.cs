@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace NoEntityFrameworkExample.Services
 {
-    public class TodoItemService : IResourceService<TodoItem>
+    public sealed class TodoItemService : IResourceService<TodoItem>
     {
         private readonly string _connectionString;
 

@@ -15,7 +15,7 @@ using Xunit;
 
 namespace JADNC.IntegrationTests.Data
 {
-    public class EntityRepositoryTests
+    public sealed class EntityRepositoryTests
     {
         [Fact]
         public async Task UpdateAsync_AttributesUpdated_ShouldHaveSpecificallyThoseAttributesUpdated()
@@ -176,7 +176,7 @@ namespace JADNC.IntegrationTests.Data
             return ids.Select(id => new TodoItem { Id = id }).ToArray();
         }
 
-        private class IdComparer<T> : IEqualityComparer<T>
+        private sealed class IdComparer<T> : IEqualityComparer<T>
             where T : IIdentifiable
         {
             public bool Equals(T x, T y) => x?.StringId == y?.StringId;

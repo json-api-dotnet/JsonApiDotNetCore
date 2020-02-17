@@ -10,7 +10,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class ContentNegotiation
+    public sealed class ContentNegotiation
     {
         [Fact]
         public async Task Server_Sends_Correct_ContentType_Header()

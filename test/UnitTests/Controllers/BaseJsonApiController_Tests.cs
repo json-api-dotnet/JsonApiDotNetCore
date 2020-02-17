@@ -13,14 +13,14 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests
 {
-    public class BaseJsonApiController_Tests
+    public sealed class BaseJsonApiController_Tests
     {
-        public class Resource : Identifiable
+        public sealed class Resource : Identifiable
         {
             [Attr] public string TestAttribute { get; set; }
         }
 
-        public class ResourceController : BaseJsonApiController<Resource>
+        public sealed class ResourceController : BaseJsonApiController<Resource>
         {
             public ResourceController(
                 IJsonApiOptions jsonApiOptions,

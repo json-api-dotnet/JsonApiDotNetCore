@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class OmitNullServiceTests : QueryParametersUnitTestCollection
+    public sealed class OmitNullServiceTests : QueryParametersUnitTestCollection
     {
         public OmitNullService GetService(bool @default, bool @override)
         {

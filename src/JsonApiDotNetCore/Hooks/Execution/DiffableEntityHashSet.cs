@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Hooks
     }
 
     /// <inheritdoc />
-    public class DiffableEntityHashSet<TResource> : EntityHashSet<TResource>, IDiffableEntityHashSet<TResource> where TResource : class, IIdentifiable
+    public sealed class DiffableEntityHashSet<TResource> : EntityHashSet<TResource>, IDiffableEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Hooks
     /// A wrapper that contains an entity that is affected by the request, 
     /// matched to its current database value
     /// </summary>
-    public class EntityDiffPair<TResource> where TResource : class, IIdentifiable
+    public sealed class EntityDiffPair<TResource> where TResource : class, IIdentifiable
     {
         public EntityDiffPair(TResource entity, TResource databaseValue)
         {

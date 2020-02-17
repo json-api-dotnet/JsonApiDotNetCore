@@ -18,7 +18,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class ManyToManyTests
+    public sealed class ManyToManyTests
     {
         private static readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))

@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Hooks
     /// it and fire hooks for it, if defined) or not (in which case we skip 
     /// ArticleTags and go directly to Tags.
     /// </summary>
-    public class RelationshipProxy
+    internal sealed class RelationshipProxy
     {
         readonly bool _isHasManyThrough;
         readonly bool _skipJoinTable;

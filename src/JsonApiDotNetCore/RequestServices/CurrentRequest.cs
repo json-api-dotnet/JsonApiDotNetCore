@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Managers
 {
-    class CurrentRequest : ICurrentRequest
+    internal sealed class CurrentRequest : ICurrentRequest
     {
         private ResourceContext _resourceContext;
         public string BasePath { get; set; }

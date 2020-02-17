@@ -16,7 +16,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class AttributeFilterTests
+    public sealed class AttributeFilterTests
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;

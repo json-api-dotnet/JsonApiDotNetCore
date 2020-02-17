@@ -9,7 +9,7 @@ using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.Serialization.Server
 {
-    public class IncludedResourceObjectBuilderTests : SerializerTestsSetup
+    public sealed class IncludedResourceObjectBuilderTests : SerializerTestsSetup
     {
         [Fact]
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()

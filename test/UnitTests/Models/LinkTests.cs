@@ -1,9 +1,9 @@
-﻿using JsonApiDotNetCore.Models.Links;
+using JsonApiDotNetCore.Models.Links;
 using Xunit;
 
 namespace UnitTests.Models
 {
-    public class LinkTests
+    public sealed class LinkTests
     {
         [Fact]
         public void All_Contains_All_Flags_Except_None()

@@ -4,13 +4,13 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class PersonRole : Identifiable
+    public sealed class PersonRole : Identifiable
     {
         [HasOne]
         public Person Person { get; set; }
     }
 
-    public class Person : Identifiable, IIsLockable
+    public sealed class Person : Identifiable, IIsLockable
     {
         public bool IsLocked { get; set; }
 

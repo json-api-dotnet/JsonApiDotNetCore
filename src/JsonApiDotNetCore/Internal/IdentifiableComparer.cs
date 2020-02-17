@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Internal
     /// <summary>
     /// Compares `IIdentifiable` with each other based on ID
     /// </summary>
-    public class IdentifiableComparer : IEqualityComparer<IIdentifiable>
+    public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {
         internal static readonly IdentifiableComparer Instance = new IdentifiableComparer();
 

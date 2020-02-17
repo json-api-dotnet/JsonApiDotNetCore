@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace UnitTests.ResourceHooks.AffectedEntities
 {
-    public class Dummy : Identifiable
+    public sealed class Dummy : Identifiable
     {
         public string SomeUpdatedProperty { get; set; }
         public string SomeNotUpdatedProperty { get; set; }
@@ -21,10 +21,10 @@ namespace UnitTests.ResourceHooks.AffectedEntities
     }
 
     public class NotTargeted : Identifiable { }
-    public class ToMany : Identifiable { }
-    public class ToOne : Identifiable { }
+    public sealed class ToMany : Identifiable { }
+    public sealed class ToOne : Identifiable { }
 
-    public class RelationshipDictionaryTests
+    public sealed class RelationshipDictionaryTests
     {
         public readonly HasOneAttribute FirstToOneAttr;
         public readonly HasOneAttribute SecondToOneAttr;

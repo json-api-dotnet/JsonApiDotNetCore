@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeReadTests : HooksTestsSetup
+    public sealed class BeforeReadTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeRead };
 

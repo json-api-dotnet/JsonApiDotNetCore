@@ -9,7 +9,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class NoHttpPatchTests
+    public sealed class NoHttpPatchTests
     {
         [Fact]
         public async Task Allows_GET_Requests()

@@ -15,7 +15,7 @@ using Xunit;
 
 namespace UnitTests.Middleware
 {
-    public class CurrentRequestMiddlewareTests
+    public sealed class CurrentRequestMiddlewareTests
     {
         [Fact]
         public async Task ParseUrlBase_ObfuscatedIdClass_ShouldSetIdCorrectly()
@@ -92,7 +92,7 @@ namespace UnitTests.Middleware
             Assert.Contains(baseId, exception.Message);
         }
 
-        class InvokeConfiguration
+        private sealed class InvokeConfiguration
         {
             public CurrentRequestMiddleware MiddleWare;
             public HttpContext HttpContext;

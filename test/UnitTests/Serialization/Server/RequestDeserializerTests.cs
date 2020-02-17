@@ -10,7 +10,7 @@ using Xunit;
 
 namespace UnitTests.Serialization.Server
 {
-    public class RequestDeserializerTests : DeserializerTestsSetup
+    public sealed class RequestDeserializerTests : DeserializerTestsSetup
     {
         private readonly RequestDeserializer _deserializer;
         private readonly Mock<ITargetedFields> _fieldsManagerMock = new Mock<ITargetedFields>();

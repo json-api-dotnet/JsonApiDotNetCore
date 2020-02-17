@@ -14,10 +14,12 @@ using Xunit;
 
 namespace UnitTests
 {
-    public class ResourceGraphBuilder_Tests
+    public sealed class ResourceGraphBuilder_Tests
     {
-        class NonDbResource : Identifiable { }
-        class DbResource : Identifiable { }
+        sealed class NonDbResource : Identifiable { }
+
+        sealed class DbResource : Identifiable { }
+
         class TestContext : DbContext
         {
             public DbSet<DbResource> DbResources { get; set; }
@@ -118,7 +120,7 @@ namespace UnitTests
             Assert.Equal("relatedResources", resource.Relationships.Single(r => r.IsHasMany).PublicRelationshipName);
         }
 
-        public class TestResource : Identifiable
+        public sealed class TestResource : Identifiable
         {
             [Attr] public string CompoundAttribute { get; set; }
             [HasOne] public RelatedResource RelatedResource { get; set; }
@@ -127,7 +129,7 @@ namespace UnitTests
 
         public class RelatedResource : Identifiable { }
 
-        public class CamelCaseNameFormatter : IResourceNameFormatter
+        public sealed class CamelCaseNameFormatter : IResourceNameFormatter
         {
             public string ApplyCasingConvention(string properName) => ToCamelCase(properName);
 

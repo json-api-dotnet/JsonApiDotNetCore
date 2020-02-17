@@ -127,7 +127,7 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class QueryFilters : Dictionary<string, Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>> { }
+        public sealed class QueryFilters : Dictionary<string, Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>> { }
 
         /// <summary>
         /// Define a the default sort order if no sort key is provided.
@@ -166,6 +166,6 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class PropertySortOrder : List<(Expression<Func<TResource, dynamic>>, SortDirection)> { }
+        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>>, SortDirection)> { }
     }
 }

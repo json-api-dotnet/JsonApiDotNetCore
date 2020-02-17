@@ -12,7 +12,7 @@ using Xunit;
 
 namespace UnitTests.Data
 {
-    public class DefaultEntityRepositoryTest
+    public sealed class DefaultEntityRepositoryTest
     {
 
         [Fact]

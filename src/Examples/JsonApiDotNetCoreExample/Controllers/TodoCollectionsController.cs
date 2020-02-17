@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class TodoCollectionsController : JsonApiController<TodoItemCollection, Guid>
+    public sealed class TodoCollectionsController : JsonApiController<TodoItemCollection, Guid>
     {
         readonly IDbContextResolver _dbResolver;
 

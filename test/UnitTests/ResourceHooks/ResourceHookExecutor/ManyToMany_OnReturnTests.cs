@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class ManyToMany_OnReturnTests : HooksTestsSetup
+    public sealed class ManyToMany_OnReturnTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.OnReturn };
 

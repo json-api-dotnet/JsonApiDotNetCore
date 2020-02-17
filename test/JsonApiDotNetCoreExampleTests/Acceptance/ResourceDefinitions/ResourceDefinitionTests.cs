@@ -17,7 +17,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class ResourceDefinitionTests
+    public sealed class ResourceDefinitionTests
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _context;

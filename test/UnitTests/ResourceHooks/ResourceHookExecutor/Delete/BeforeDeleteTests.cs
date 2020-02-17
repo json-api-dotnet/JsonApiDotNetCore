@@ -5,7 +5,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeDeleteTests : HooksTestsSetup
+    public sealed class BeforeDeleteTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeDelete };
 

@@ -17,7 +17,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
-    public class Included
+    public sealed class Included
     {
         private readonly AppDbContext _context;
         private readonly Faker<Person> _personFaker;

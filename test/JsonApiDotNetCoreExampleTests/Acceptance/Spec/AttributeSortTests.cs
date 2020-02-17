@@ -7,7 +7,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class AttributeSortTests
+    public sealed class AttributeSortTests
     {
         private readonly TestFixture<Startup> _fixture;
 

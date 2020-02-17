@@ -15,7 +15,7 @@ using JsonApiDotNetCore.Configuration;
 namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
-    internal class HookExecutorHelper : IHookExecutorHelper
+    internal sealed class HookExecutorHelper : IHookExecutorHelper
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IJsonApiOptions _options;

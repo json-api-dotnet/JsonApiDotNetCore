@@ -13,7 +13,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class QueryFiltersTests
+    public sealed class QueryFiltersTests
     {
       private readonly TestFixture<Startup> _fixture;
       private readonly AppDbContext _context;

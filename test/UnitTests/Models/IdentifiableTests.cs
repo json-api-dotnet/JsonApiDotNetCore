@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UnitTests.Models
 {
-    public class IdentifiableTests
+    public sealed class IdentifiableTests
     {
         [Fact]
         public void Can_Set_StringId_To_Value_Type()
@@ -27,7 +27,7 @@ namespace UnitTests.Models
             Assert.Equal(string.Empty, stringId);
         }
 
-        private class IntId : Identifiable { 
+        private sealed class IntId : Identifiable { 
             public string ExposedGetStringId(object value) => GetStringId(value);
         }
     }

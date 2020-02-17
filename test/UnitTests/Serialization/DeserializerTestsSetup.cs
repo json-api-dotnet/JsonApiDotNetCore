@@ -7,7 +7,7 @@ namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
-        protected class TestDocumentParser : BaseDocumentParser
+        protected sealed class TestDocumentParser : BaseDocumentParser
         {
             public TestDocumentParser(IResourceGraph resourceGraph) : base(resourceGraph) { }
 

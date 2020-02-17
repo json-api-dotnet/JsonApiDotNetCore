@@ -15,7 +15,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
-    public class Meta
+    public sealed class Meta
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _context;

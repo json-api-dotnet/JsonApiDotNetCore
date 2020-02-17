@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// This sets all necessary parameters relating to the HttpContext for JADNC
     /// </summary>
-    public class CurrentRequestMiddleware
+    public sealed class CurrentRequestMiddleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Middleware
             return _options.Namespace;
         }
 
-        protected bool PathIsRelationship()
+        private bool PathIsRelationship()
         {
             var actionName = (string)_routeValues["action"];
             return actionName.ToLower().Contains("relationships");

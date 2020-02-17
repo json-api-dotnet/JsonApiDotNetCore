@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
+    public sealed class BeforeDelete_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeDelete, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
 

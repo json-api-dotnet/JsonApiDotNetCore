@@ -10,10 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests.ResourceHooks
 {
-    public class DiscoveryTests
+    public sealed class DiscoveryTests
     {
         public class Dummy : Identifiable { }
-        public class DummyResourceDefinition : ResourceDefinition<Dummy>
+        public sealed class DummyResourceDefinition : ResourceDefinition<Dummy>
         {
             public DummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<Dummy>().Build()) { }
 
@@ -46,7 +46,7 @@ namespace UnitTests.ResourceHooks
             public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
 
-        public class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
+        public sealed class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
         {
             public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<AnotherDummy>().Build()) { }
         }
@@ -62,7 +62,7 @@ namespace UnitTests.ResourceHooks
         }
 
         public class YetAnotherDummy : Identifiable { }
-        public class YetAnotherDummyResourceDefinition : ResourceDefinition<YetAnotherDummy>
+        public sealed class YetAnotherDummyResourceDefinition : ResourceDefinition<YetAnotherDummy>
         {
             public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<YetAnotherDummy>().Build()) { }
 
@@ -94,7 +94,7 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
-        public class GenericDummyResourceDefinition<TResource> : ResourceDefinition<TResource> where TResource : class, IIdentifiable<int>
+        public sealed class GenericDummyResourceDefinition<TResource> : ResourceDefinition<TResource> where TResource : class, IIdentifiable<int>
         {
             public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder().AddResource<TResource>().Build()) { }
 
