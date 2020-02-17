@@ -8,7 +8,7 @@ namespace ReportsExample.Services
 {
     public class ReportService : IGetAllService<Report>
     {
-        private ILogger<ReportService> _logger;
+        private readonly ILogger<ReportService> _logger;
 
         public ReportService(ILoggerFactory loggerFactory)
         {

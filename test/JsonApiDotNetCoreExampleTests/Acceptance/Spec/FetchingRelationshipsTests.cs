@@ -14,8 +14,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class FetchingRelationshipsTests
     {
-        private TestFixture<Startup> _fixture;
-        private Faker<TodoItem> _todoItemFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly Faker<TodoItem> _todoItemFaker;
 
         public FetchingRelationshipsTests(TestFixture<Startup> fixture)
         {

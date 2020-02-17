@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class PagingTests : TestFixture<Startup>
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
 
         public PagingTests(TestFixture<Startup> fixture)

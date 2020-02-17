@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
     [Collection("WebHostCollection")]
     public class RequestMetaTests
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
 
         public RequestMetaTests(TestFixture<Startup> fixture)
         {

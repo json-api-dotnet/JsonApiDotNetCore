@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
 
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         public ManyToManyTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;

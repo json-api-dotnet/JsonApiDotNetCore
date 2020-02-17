@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeeplyNestedInclusionTests
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
 
         public DeeplyNestedInclusionTests(TestFixture<Startup> fixture)
         {

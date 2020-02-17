@@ -8,7 +8,7 @@ namespace UnitTests
     public class TestScopedServiceProvider : IScopedServiceProvider
     {
         private readonly IServiceProvider _serviceProvider;
-        private Mock<IHttpContextAccessor> _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
 
         public TestScopedServiceProvider(IServiceProvider serviceProvider)
         {

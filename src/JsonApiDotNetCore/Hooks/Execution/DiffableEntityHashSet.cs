@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
-        private Dictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
+        private readonly Dictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
 
         public DiffableEntityHashSet(HashSet<TResource> requestEntities,
                           HashSet<TResource> databaseEntities,

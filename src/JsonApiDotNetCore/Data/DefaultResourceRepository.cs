@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Data
         private readonly DbSet<TResource> _dbSet;
         private readonly IResourceGraph _resourceGraph;
         private readonly IGenericServiceFactory _genericServiceFactory;
-        private ILogger<DefaultResourceRepository<TResource, TId>> _logger;
+        private readonly ILogger<DefaultResourceRepository<TResource, TId>> _logger;
 
         public DefaultResourceRepository(
             ITargetedFields targetedFields,

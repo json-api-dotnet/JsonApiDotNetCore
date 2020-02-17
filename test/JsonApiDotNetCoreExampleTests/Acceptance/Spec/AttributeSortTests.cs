@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class AttributeSortTests
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
 
         public AttributeSortTests(TestFixture<Startup> fixture)
         {

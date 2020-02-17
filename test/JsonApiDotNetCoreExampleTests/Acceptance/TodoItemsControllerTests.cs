@@ -22,10 +22,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class TodoItemControllerTests
     {
-        private TestFixture<Startup> _fixture;
-        private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public TodoItemControllerTests(TestFixture<Startup> fixture)
         {

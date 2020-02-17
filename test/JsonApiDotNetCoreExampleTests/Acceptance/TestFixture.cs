@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     public class TestFixture<TStartup> : IDisposable where TStartup : class
     {
         private readonly TestServer _server;
-        private IServiceProvider _services;
+        private readonly IServiceProvider _services;
         public TestFixture()
         {
             var builder = new WebHostBuilder()

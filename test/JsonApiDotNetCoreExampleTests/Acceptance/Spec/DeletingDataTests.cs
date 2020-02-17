@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeletingDataTests
     {
-        private AppDbContext _context;
+        private readonly AppDbContext _context;
 
         public DeletingDataTests(TestFixture<Startup> fixture)
         {

@@ -17,8 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Relationships
     {
-        private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
 
         public Relationships(TestFixture<Startup> fixture)
         {

@@ -17,8 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Meta
     {
-        private TestFixture<Startup> _fixture;
-        private AppDbContext _context;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly AppDbContext _context;
         public Meta(TestFixture<Startup> fixture)
         {
             _fixture = fixture;

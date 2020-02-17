@@ -15,9 +15,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
     [Collection("WebHostCollection")]
     public class QueryFiltersTests
     {
-      private TestFixture<Startup> _fixture;
-      private AppDbContext _context;
-      private Faker<User> _userFaker;
+      private readonly TestFixture<Startup> _fixture;
+      private readonly AppDbContext _context;
+      private readonly Faker<User> _userFaker;
 
       public QueryFiltersTests(TestFixture<Startup> fixture)
       {

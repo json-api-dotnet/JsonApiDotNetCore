@@ -21,9 +21,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class UpdatingDataTests : EndToEndTest
     {
-        private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public UpdatingDataTests(TestFixture<Startup> fixture) : base(fixture)
         { 
