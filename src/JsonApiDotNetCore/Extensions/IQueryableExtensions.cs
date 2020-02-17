@@ -243,17 +243,15 @@ namespace JsonApiDotNetCore.Extensions
         {
             var op = filter.Operation;
             var concreteType = typeof(TSource);
-            PropertyInfo relationProperty;
             PropertyInfo property;
             MemberExpression left;
-            ConstantExpression right;
 
             // {model}
             var parameter = Expression.Parameter(concreteType, "model");
             // Is relationship attribute
             if (filter.IsAttributeOfRelationship)
             {
-                relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
+                var relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
@@ -279,6 +277,7 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
+                ConstantExpression right;
                 if (op == FilterOperation.isnotnull || op == FilterOperation.isnull)
                     right = Expression.Constant(null);
                 else
@@ -329,12 +328,12 @@ namespace JsonApiDotNetCore.Extensions
 
             // Bind attributes on nested types
             var nestedBindings = new List<MemberAssignment>();
-            Expression bindExpression;
             foreach (var item in nestedTypesAndProperties)
             {
                 var nestedProperty = sourceType.GetProperty(item.Key);
                 var nestedPropertyType = nestedProperty.PropertyType;
                 // [HasMany] attribute
+                Expression bindExpression;
                 if (nestedPropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(nestedPropertyType))
                 {
                     // Concrete type of Collection
