@@ -109,10 +109,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// The resource from the request matching the resource from the database.
         /// </summary>
-        public TResource Entity { get; private set; }
+        public TResource Entity { get; }
         /// <summary>
         /// The resource from the database matching the resource from the request.
         /// </summary>
-        public TResource DatabaseValue { get; private set; }
+        public TResource DatabaseValue { get; }
     }
 }

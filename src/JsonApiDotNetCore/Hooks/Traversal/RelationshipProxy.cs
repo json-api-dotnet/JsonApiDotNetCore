@@ -28,9 +28,9 @@ namespace JsonApiDotNetCore.Hooks
         /// For HasManyThrough it is either the ThroughProperty (when the join table is 
         /// Identifiable) or it is the right-hand side (when the join table is not identifiable)
         /// </summary>
-        public Type RightType { get; private set; }
+        public Type RightType { get; }
         public Type LeftType { get { return Attribute.LeftType; } }
-        public bool IsContextRelation { get; private set; }
+        public bool IsContextRelation { get; }
 
         public RelationshipAttribute Attribute { get; set; }
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)

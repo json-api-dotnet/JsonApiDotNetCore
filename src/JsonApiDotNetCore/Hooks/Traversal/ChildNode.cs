@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         /// <inheritdoc />
-        public RightType ResourceType { get; private set; }
+        public RightType ResourceType { get; }
         /// <inheritdoc />
         public RelationshipProxy[] RelationshipsToNextLayer { get; set; }
         /// <inheritdoc />

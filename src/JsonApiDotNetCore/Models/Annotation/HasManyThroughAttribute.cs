@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Models
         /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
         /// this would be "ArticleTags".
         /// </example>
-        public string InternalThroughName { get; private set; }
+        public string InternalThroughName { get; }
 
         /// <summary>
         /// The join type.
