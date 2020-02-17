@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Context = new AppDbContext(GetService<DbContextOptions<AppDbContext>>());
         }
 
-        private bool disposedValue = false;
+        private bool disposedValue;
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

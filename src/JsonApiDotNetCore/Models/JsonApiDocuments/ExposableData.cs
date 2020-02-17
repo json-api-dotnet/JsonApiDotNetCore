@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -44,14 +44,14 @@ namespace JsonApiDotNetCore.Models
         /// Internally used to indicate if the document's primary data is
         /// "single" or "many".
         /// </summary>
-        internal bool IsManyData { get; private set; } = false;
+        internal bool IsManyData { get; private set; }
 
         /// <summary>
         /// Internally used to indicate if the document's primary data is
         /// should still be serialized when it's value is null. This is used when
         /// a single resource is requested but not present (eg /articles/1/author).
         /// </summary>
-        internal bool IsPopulated { get; private set; } = false;
+        internal bool IsPopulated { get; private set; }
 
         internal bool HasResource {  get { return IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null); } }
 
