@@ -9,7 +9,7 @@ namespace UnitTests.QueryParameters
 {
     public class PageServiceTests : QueryParametersUnitTestCollection
     {
-        public PageService GetService(int? maximumPageSize = null, int? maximumPageNumber = null)
+        public IPageService GetService(int? maximumPageSize = null, int? maximumPageNumber = null)
         {
             return new PageService(new JsonApiOptions
             {
@@ -52,7 +52,7 @@ namespace UnitTests.QueryParameters
             else
             {
                 service.Parse(query);
-                Assert.Equal(expectedValue, service.CurrentPageSize);
+                Assert.Equal(expectedValue, service.PageSize);
             }
         }
 
