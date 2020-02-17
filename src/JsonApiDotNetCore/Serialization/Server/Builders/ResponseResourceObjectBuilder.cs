@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         {
             RelationshipEntry relationshipEntry = null;
             List<List<RelationshipAttribute>> relationshipChains = null;
-            if (relationship == _requestRelationship || ShouldInclude(relationship, out relationshipChains ))
+            if (Equals(relationship, _requestRelationship) || ShouldInclude(relationship, out relationshipChains ))
             {
                 relationshipEntry = base.GetRelationshipData(relationship, entity);
                 if (relationshipChains != null && relationshipEntry.HasResource)
