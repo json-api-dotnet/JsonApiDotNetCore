@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks
 
     internal sealed class RelationshipsFromPreviousLayer<TRightResource> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TRightResource>> where TRightResource : class, IIdentifiable
     {
-        readonly IEnumerable<RelationshipGroup<TRightResource>> _collection;
+        private readonly IEnumerable<RelationshipGroup<TRightResource>> _collection;
 
         public RelationshipsFromPreviousLayer(IEnumerable<RelationshipGroup<TRightResource>> collection)
         {

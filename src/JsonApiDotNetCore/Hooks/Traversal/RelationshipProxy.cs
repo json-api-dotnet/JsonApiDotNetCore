@@ -19,8 +19,8 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal sealed class RelationshipProxy
     {
-        readonly bool _isHasManyThrough;
-        readonly bool _skipJoinTable;
+        private readonly bool _isHasManyThrough;
+        private readonly bool _skipJoinTable;
 
         /// <summary>
         /// The target type for this relationship attribute. 

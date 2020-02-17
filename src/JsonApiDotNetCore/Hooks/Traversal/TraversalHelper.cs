@@ -113,7 +113,7 @@ namespace JsonApiDotNetCore.Hooks
         /// iterates through the <paramref name="relationships"/> dictionary and groups the values 
         /// by matching right type of the keys (which are relationship attributes)
         /// </summary>
-        Dictionary<RightType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByRightTypeOfRelationship(Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
+        private Dictionary<RightType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByRightTypeOfRelationship(Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
         {
             return relationships.GroupBy(kvp => kvp.Key.RightType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
         }
@@ -122,7 +122,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Extracts the entities for the current layer by going through all populated relationships
         /// of the (left entities of the previous layer.
         /// </summary>
-        (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<INode> leftNodes)
+        private (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractEntities(IEnumerable<INode> leftNodes)
         {
             var leftEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevLayer->currentLayer  => prevLayerEntities
             var rightEntitiesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevLayer->currentLayer   => currentLayerEntities
@@ -173,7 +173,7 @@ namespace JsonApiDotNetCore.Hooks
         /// left type to any right type
         /// </summary>
         /// <returns>The relationships.</returns>
-        RelationshipProxy[] GetPopulatedRelationships(LeftType leftType, IEnumerable<IIdentifiable> lefts)
+        private RelationshipProxy[] GetPopulatedRelationships(LeftType leftType, IEnumerable<IIdentifiable> lefts)
         {
             var relationshipsFromLeftToRight = _relationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.LeftType == leftType);
             return relationshipsFromLeftToRight.Where(proxy => proxy.IsContextRelation || lefts.Any(p => proxy.GetValue(p) != null)).ToArray();
@@ -185,7 +185,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The entities.</returns>
         /// <param name="incomingEntities">Incoming entities.</param>
         /// <typeparam name="TResource">The 1st type parameter.</typeparam>
-        HashSet<TResource> ProcessEntities<TResource>(IEnumerable<TResource> incomingEntities) where TResource : class, IIdentifiable
+        private HashSet<TResource> ProcessEntities<TResource>(IEnumerable<TResource> incomingEntities) where TResource : class, IIdentifiable
         {
             Type type = typeof(TResource);
             var newEntities = UniqueInTree(incomingEntities, type);
@@ -198,7 +198,7 @@ namespace JsonApiDotNetCore.Hooks
         /// other models in the resource resourceGraphs by constructing RelationshipProxies .
         /// </summary>
         /// <param name="type">The type to parse</param>
-        void RegisterRelationshipProxies(RightType type)
+        private void RegisterRelationshipProxies(RightType type)
         {
             foreach (RelationshipAttribute attr in _resourceGraph.GetRelationships(type))
             {
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <param name="entities">Entities to register</param>
         /// <param name="entityType">Entity type.</param>
-        void RegisterProcessedEntities(IEnumerable<IIdentifiable> entities, Type entityType)
+        private void RegisterProcessedEntities(IEnumerable<IIdentifiable> entities, Type entityType)
         {
             var processedEntities = GetProcessedEntities(entityType);
             processedEntities.UnionWith(new HashSet<IIdentifiable>(entities));
@@ -231,7 +231,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The processed entities.</returns>
         /// <param name="entityType">Entity type.</param>
-        HashSet<IIdentifiable> GetProcessedEntities(Type entityType)
+        private HashSet<IIdentifiable> GetProcessedEntities(Type entityType)
         {
             if (!_processedEntities.TryGetValue(entityType, out HashSet<IIdentifiable> processedEntities))
             {
@@ -248,7 +248,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <returns>The in tree.</returns>
         /// <param name="entities">Entities.</param>
         /// <param name="entityType">Entity type.</param>
-        HashSet<TResource> UniqueInTree<TResource>(IEnumerable<TResource> entities, Type entityType) where TResource : class, IIdentifiable
+        private HashSet<TResource> UniqueInTree<TResource>(IEnumerable<TResource> entities, Type entityType) where TResource : class, IIdentifiable
         {
             var newEntities = entities.Except(GetProcessedEntities(entityType), _comparer).Cast<TResource>();
             return new HashSet<TResource>(newEntities);
@@ -262,7 +262,7 @@ namespace JsonApiDotNetCore.Hooks
         /// </summary>
         /// <returns>The target type for traversal</returns>
         /// <param name="attr">Relationship attribute</param>
-        RightType GetRightTypeFromRelationship(RelationshipAttribute attr)
+        private RightType GetRightTypeFromRelationship(RelationshipAttribute attr)
         {
             if (attr is HasManyThroughAttribute throughAttr && throughAttr.ThroughType.Inherits(typeof(IIdentifiable)))
             {
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCore.Hooks
             return attr.RightType;
         }
 
-        void AddToRelationshipGroup(Dictionary<RelationshipProxy, List<IIdentifiable>> target, RelationshipProxy proxy, IEnumerable<IIdentifiable> newEntities)
+        private void AddToRelationshipGroup(Dictionary<RelationshipProxy, List<IIdentifiable>> target, RelationshipProxy proxy, IEnumerable<IIdentifiable> newEntities)
         {
             if (!target.TryGetValue(proxy, out List<IIdentifiable> entities))
             {
@@ -284,7 +284,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Reflective helper method to create an instance of <see cref="ChildNode{TResource}"/>;
         /// </summary>
-        INode CreateNodeInstance(RightType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        private INode CreateNodeInstance(RightType nodeType, RelationshipProxy[] relationshipsToNext, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
             return (INode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, relationshipsToNext, prev);
@@ -293,7 +293,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Reflective helper method to create an instance of <see cref="RelationshipsFromPreviousLayer{TRight}"/>;
         /// </summary>
-        IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
+        private IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             var cast = relationshipsFromPrev.Cast(relationshipsFromPrev.First().GetType());
             return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, cast);
@@ -302,7 +302,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// Reflective helper method to create an instance of <see cref="RelationshipGroup{TRight}"/>;
         /// </summary>
-        IRelationshipGroup CreateRelationshipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> leftEntities, List<IIdentifiable> rightEntities)
+        private IRelationshipGroup CreateRelationshipGroupInstance(Type thisLayerType, RelationshipProxy proxy, List<IIdentifiable> leftEntities, List<IIdentifiable> rightEntities)
         {
             var rightEntitiesHashed = TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, rightEntities.Cast(thisLayerType));
             return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>),
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal sealed class NodeLayer : IEnumerable<INode>
     {
-        readonly List<INode> _collection;
+        private readonly List<INode> _collection;
 
         public bool AnyEntities()
         {

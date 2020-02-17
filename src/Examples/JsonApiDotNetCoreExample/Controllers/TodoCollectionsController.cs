@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public sealed class TodoCollectionsController : JsonApiController<TodoItemCollection, Guid>
     {
-        readonly IDbContextResolver _dbResolver;
+        private readonly IDbContextResolver _dbResolver;
 
         public TodoCollectionsController(
             IJsonApiOptions jsonApiOptions,

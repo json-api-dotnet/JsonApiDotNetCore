@@ -16,11 +16,11 @@ namespace UnitTests
 {
     public sealed class ResourceGraphBuilder_Tests
     {
-        sealed class NonDbResource : Identifiable { }
+        private sealed class NonDbResource : Identifiable { }
 
-        sealed class DbResource : Identifiable { }
+        private sealed class DbResource : Identifiable { }
 
-        class TestContext : DbContext
+        private class TestContext : DbContext
         {
             public DbSet<DbResource> DbResources { get; set; }
         }

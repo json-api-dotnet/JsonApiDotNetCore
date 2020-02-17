@@ -105,21 +105,20 @@ namespace JsonApiDotNetCore.Hooks
             return _options.LoadDatabaseValues;
         }
 
-        bool ShouldExecuteHook(RightType entityType, ResourceHook hook)
+        private bool ShouldExecuteHook(RightType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
             return discovery.ImplementedHooks.Contains(hook);
         }
 
-
-        void CheckForTargetHookExistence()
+        private void CheckForTargetHookExistence()
         {
             if (!_targetedHooksForRelatedEntities.Any())
                 throw new InvalidOperationException("Something is not right in the breadth first traversal of resource hook: " +
                     "trying to get meta information when no allowed hooks are set");
         }
 
-        IHooksDiscovery GetHookDiscovery(Type entityType)
+        private IHooksDiscovery GetHookDiscovery(Type entityType)
         {
             if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
             {
@@ -129,7 +128,7 @@ namespace JsonApiDotNetCore.Hooks
             return discovery;
         }
 
-        IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
+        private IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TResource, TId>();
             var query = repo.Get().Where(e => ids.Contains(e.Id));
@@ -140,7 +139,7 @@ namespace JsonApiDotNetCore.Hooks
             return query.ToList();
         }
 
-        IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
+        private IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
         {
             return _genericProcessorFactory.Get<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
         }
@@ -189,7 +188,7 @@ namespace JsonApiDotNetCore.Hooks
             return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.RightType, kvp.Value));
         }
 
-        bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,
+        private bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,
             out IEnumerable entities,
             out RelationshipAttribute attr)
         {

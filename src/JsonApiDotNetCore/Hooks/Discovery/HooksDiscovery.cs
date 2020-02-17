@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Discovers the implemented hooks for a model.
         /// </summary>
         /// <returns>The implemented hooks for model.</returns>
-        void DiscoverImplementedHooks(Type containerType)
+        private void DiscoverImplementedHooks(Type containerType)
         {
             if (containerType == null || containerType == _boundResourceDefinitionType)
             {

@@ -141,7 +141,7 @@ namespace UnitTests.ResourceHooks
 
     public class HooksTestsSetup : HooksDummyData
     {
-        (Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericServiceFactory>, IJsonApiOptions) CreateMocks()
+        private (Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericServiceFactory>, IJsonApiOptions) CreateMocks()
         {
             var pfMock = new Mock<IGenericServiceFactory>();
             var ufMock = new Mock<ITargetedFields>();
@@ -268,7 +268,7 @@ namespace UnitTests.ResourceHooks
             return options;
         }
 
-        void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
+        private void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
         {
             resourceDefinition
             .Setup(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
@@ -310,7 +310,7 @@ namespace UnitTests.ResourceHooks
             .Verifiable();
         }
 
-        void SetupProcessorFactoryForResourceDefinition<TModel>(
+        private void SetupProcessorFactoryForResourceDefinition<TModel>(
         Mock<IGenericServiceFactory> processorFactory,
         IResourceHookContainer<TModel> modelResource,
         IHooksDiscovery<TModel> discovery,
@@ -340,7 +340,7 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
+        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
         AppDbContext dbContext
         ) where TModel : class, IIdentifiable<int>
         {
@@ -348,19 +348,19 @@ namespace UnitTests.ResourceHooks
             return new DefaultResourceRepository<TModel, int>(null, resolver, null, null, NullLoggerFactory.Instance);
         }
 
-        IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
+        private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
             return mock.Object;
         }
 
-        void ResolveInverseRelationships(AppDbContext context)
+        private void ResolveInverseRelationships(AppDbContext context)
         {
             new InverseRelationships(_resourceGraph, new DbContextResolver<AppDbContext>(context)).Resolve();
         }
 
-        Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
+        private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
         <TModel>(IHooksDiscovery<TModel> discovery
         )
         where TModel : class, IIdentifiable<int>

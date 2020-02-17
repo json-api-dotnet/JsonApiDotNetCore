@@ -8,7 +8,7 @@ namespace UnitTests.ResourceHooks
 {
     public sealed class AfterDeleteTests : HooksTestsSetup
     {
-        readonly ResourceHook[] targetHooks = { ResourceHook.AfterDelete };
+        private readonly ResourceHook[] targetHooks = { ResourceHook.AfterDelete };
 
         [Fact]
         public void AfterDelete()

@@ -11,7 +11,7 @@ namespace UnitTests.ResourceHooks
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.OnReturn };
 
-        (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
+        private (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
         {
             var tagsSubset = _tagFaker.Generate(3).ToList();
             var joinsSubSet = _articleTagFaker.Generate(3).ToList();

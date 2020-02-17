@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Graph
     /// <summary>
     /// Used to locate types and facilitate auto-resource discovery
     /// </summary>
-    static class TypeLocator
+    internal static class TypeLocator
     {
         private static readonly Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
 
