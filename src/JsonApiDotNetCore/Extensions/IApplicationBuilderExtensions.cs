@@ -49,12 +49,12 @@ namespace JsonApiDotNetCore.Extensions
                 if (useAuthentication)
                 {
                     app.UseAuthentication();
-                };
+                }
 
                 if (useAuthorization)
                 {
                     app.UseAuthorization();
-                };
+                }
 
                 // middleware to run after routing occurs.
                 app.UseMiddleware<CurrentRequestMiddleware>();
