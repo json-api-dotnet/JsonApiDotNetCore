@@ -2,10 +2,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Bogus;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
@@ -15,18 +13,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class DeletingDataTests
     {
-        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
 
         public DeletingDataTests(TestFixture<Startup> fixture)
         {
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
-            _todoItemFaker = new Faker<TodoItem>()
-                .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-                .RuleFor(t => t.Ordinal, f => f.Random.Number())
-                .RuleFor(t => t.CreatedDate, f => f.Date.Past());
         }
 
         [Fact]

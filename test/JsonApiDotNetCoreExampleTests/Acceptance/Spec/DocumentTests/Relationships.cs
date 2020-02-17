@@ -17,13 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     [Collection("WebHostCollection")]
     public class Relationships
     {
-        private TestFixture<Startup> _fixture;
         private AppDbContext _context;
         private Faker<TodoItem> _todoItemFaker;
 
         public Relationships(TestFixture<Startup> fixture)
         {
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
              _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())

@@ -12,12 +12,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     [Collection("WebHostCollection")]
     public class ContentNegotiation
     {
-        private TestFixture<Startup> _fixture;
-        public ContentNegotiation(TestFixture<Startup> fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
         public async Task Server_Sends_Correct_ContentType_Header()
         {
