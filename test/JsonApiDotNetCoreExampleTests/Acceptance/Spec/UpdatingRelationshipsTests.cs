@@ -98,8 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                  .Where(ti => ti.Id == todoItem.Id)
                  .Include(ti => ti.ChildrenTodos).First();
 
-            updatedTodoItem.ChildrenTodos.Any((ti) => ti.Id == todoItem.Id);
-            Assert.Contains(updatedTodoItem.ChildrenTodos, (ti) => ti.Id == todoItem.Id);
+            Assert.Contains(updatedTodoItem.ChildrenTodos, ti => ti.Id == todoItem.Id);
         }
 
         [Fact]
