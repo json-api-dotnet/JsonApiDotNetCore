@@ -159,8 +159,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entityProperties"></param>
         /// <param name="attr"></param>
         /// <param name="relationshipData"></param>
-        /// <returns></returns>
-        private object SetHasOneRelationship(IIdentifiable entity,
+        private void SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
             RelationshipEntry relationshipData)
@@ -181,8 +180,6 @@ namespace JsonApiDotNetCore.Serialization
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
-
-            return entity;
         }
 
         /// <summary>
@@ -224,9 +221,10 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasMany relationship.
         /// </summary>
-        private object SetHasManyRelationship(IIdentifiable entity,
-                                              HasManyAttribute attr,
-                                              RelationshipEntry relationshipData)
+        private void SetHasManyRelationship(
+            IIdentifiable entity,
+            HasManyAttribute attr,
+            RelationshipEntry relationshipData)
         {
             if (relationshipData.Data != null)
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
@@ -241,8 +239,6 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             AfterProcessField(entity, attr, relationshipData);
-
-            return entity;
         }
 
         private object ConvertAttrValue(object newValue, Type targetType)

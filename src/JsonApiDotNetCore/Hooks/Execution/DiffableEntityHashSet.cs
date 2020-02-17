@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Hooks
             return new HashSet<TResource>();
         }
 
-        private HashSet<TResource> ThrowNoDbValuesError()
+        private void ThrowNoDbValuesError()
         {
             throw new MemberAccessException($"Cannot iterate over the diffs if the ${nameof(LoadDatabaseValues)} option is set to false");
         }
