@@ -67,7 +67,7 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             await using var context = GetContext();
             var (repository, _) = Setup(context);
-            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
+            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9).Cast<object>());
             await context.SaveChangesAsync();
 
             // Act
@@ -87,7 +87,7 @@ namespace JADNC.IntegrationTests.Data
             await using var context = GetContext();
             var (repository, _) = Setup(context);
             var items = TodoItems(2, 3, 1);
-            context.AddRange(items);
+            context.AddRange(items.Cast<object>());
             await context.SaveChangesAsync();
 
             // Act
@@ -104,7 +104,7 @@ namespace JADNC.IntegrationTests.Data
             var items = TodoItems(2, 3, 1);
             await using var context = GetContext();
             var (repository, _) = Setup(context);
-            context.AddRange(items);
+            context.AddRange(items.Cast<object>());
 
             // Act
             var result = await repository.PageAsync(context.Set<TodoItem>(), 2, 3);
@@ -119,7 +119,7 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             await using var context = GetContext();
             var (repository, _) = Setup(context);
-            context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9));
+            context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9).Cast<object>());
             await context.SaveChangesAsync();
 
             // Act
@@ -138,7 +138,7 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             await using var context = GetContext();
             var repository = Setup(context).Repository;
-            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
+            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9).Cast<object>());
             context.SaveChanges();
 
             // Act
