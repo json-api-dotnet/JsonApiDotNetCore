@@ -186,7 +186,7 @@ namespace JsonApiDotNetCore.Graph
                 RegisterServiceImplementations(assembly, serviceInterface, resourceDescriptor);
             }
         }
-        public int i = 0;
+        
         private void RegisterServiceImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
             if (resourceDescriptor.IdType == typeof(Guid) && interfaceType.GetTypeInfo().GenericTypeParameters.Length == 1)

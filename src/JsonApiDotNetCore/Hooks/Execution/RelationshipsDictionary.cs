@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,9 +91,9 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc />
-        public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> NavigationAction)
+        public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
-            var property = TypeHelper.ParseNavigationExpression(NavigationAction);
+            var property = TypeHelper.ParseNavigationExpression(navigationAction);
             return this.Where(p => p.Key.InternalRelationshipName == property.Name).Select(p => p.Value).SingleOrDefault();
         }
     }

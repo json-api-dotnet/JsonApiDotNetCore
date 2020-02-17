@@ -42,13 +42,13 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
         }
 
-        private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+        private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
 
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
             // Arrange, act
-            _facade.AddAssembly(typeof(Person).Assembly);
+            Facade.AddAssembly(typeof(Person).Assembly);
 
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
@@ -65,7 +65,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
             // Arrange, act
-            _facade.AddCurrentAssembly();
+            Facade.AddCurrentAssembly();
 
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
@@ -77,7 +77,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // Arrange, act
-            _facade.AddCurrentAssembly();
+            Facade.AddCurrentAssembly();
 
             // Assert
             var services = _services.BuildServiceProvider();
@@ -89,7 +89,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
             // Arrange, act
-            _facade.AddCurrentAssembly();
+            Facade.AddCurrentAssembly();
 
             // Assert
             var services = _services.BuildServiceProvider();

@@ -91,32 +91,32 @@ namespace JsonApiDotNetCore.Internal
         /// Gets the property info that is referenced in the NavigationAction expression.
         /// Credits: https://stackoverflow.com/a/17116267/4441216
         /// </summary>
-        public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> NavigationExpression)
+        public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> navigationExpression)
         {
-            MemberExpression Exp;
+            MemberExpression exp;
 
             //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
-            if (NavigationExpression.Body is UnaryExpression unaryExpression)
+            if (navigationExpression.Body is UnaryExpression unaryExpression)
             {
                 if (unaryExpression.Operand is MemberExpression memberExpression)
                 {
-                    Exp = memberExpression;
+                    exp = memberExpression;
                 }
                 else
                 {
                     throw new ArgumentException();
                 }
             }
-            else if (NavigationExpression.Body is MemberExpression memberExpression)
+            else if (navigationExpression.Body is MemberExpression memberExpression)
             {
-                Exp = memberExpression;
+                exp = memberExpression;
             }
             else
             {
                 throw new ArgumentException();
             }
 
-            return (PropertyInfo)Exp.Member;
+            return (PropertyInfo)exp.Member;
         }
 
         /// <summary>

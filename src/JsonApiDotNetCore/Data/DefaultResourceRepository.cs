@@ -235,16 +235,16 @@ namespace JsonApiDotNetCore.Data
         private IList GetTrackedManyRelationshipValue(IEnumerable<IIdentifiable> relationshipValueList, RelationshipAttribute relationshipAttr, ref bool wasAlreadyAttached)
         {
             if (relationshipValueList == null) return null;
-            bool _wasAlreadyAttached = false;
+            bool newWasAlreadyAttached = false;
             var trackedPointerCollection = relationshipValueList.Select(pointer =>
                 {   // convert each element in the value list to relationshipAttr.DependentType.
                     var tracked = AttachOrGetTracked(pointer);
-                    if (tracked != null) _wasAlreadyAttached = true;
+                    if (tracked != null) newWasAlreadyAttached = true;
                     return Convert.ChangeType(tracked ?? pointer, relationshipAttr.RightType);
                 })
                 .ToList()
                 .Cast(relationshipAttr.RightType);
-            if (_wasAlreadyAttached) wasAlreadyAttached = true;
+            if (newWasAlreadyAttached) wasAlreadyAttached = true;
             return (IList)trackedPointerCollection;
         }
 

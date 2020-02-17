@@ -71,15 +71,15 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc />
-        public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> NavigationAction)
+        public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
-            var propertyInfo = TypeHelper.ParseNavigationExpression(NavigationAction);
+            var propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
             var propertyType = propertyInfo.PropertyType;
             if (propertyType.Inherits(typeof(IEnumerable))) propertyType = TypeHelper.GetTypeOfList(propertyType);
             if (propertyType.Implements<IIdentifiable>())
             {
                 // the navigation action references a relationship. Redirect the call to the relationship dictionary. 
-                return base.GetAffected(NavigationAction);
+                return base.GetAffected(navigationAction);
             }
             else if (_updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> entities))
             {
