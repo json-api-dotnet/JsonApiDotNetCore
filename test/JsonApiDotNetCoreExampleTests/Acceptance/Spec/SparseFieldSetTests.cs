@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
-using StringExtensions = JsonApiDotNetCoreExampleTests.Helpers.Extensions.StringExtensions;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
 using JsonApiDotNetCore.Serialization.Client;

@@ -177,13 +177,5 @@ namespace UnitTests.ResourceHooks
         {
             return ids.Single() == checksum;
         }
-
-        private bool PersonCheck(string checksum, IRelationshipsDictionary<Person> helper)
-        {
-
-            var entries = helper.GetByRelationship<TodoItem>();
-            return entries.Single().Value.Single().LastName == checksum;
-        }
     }
 }
-

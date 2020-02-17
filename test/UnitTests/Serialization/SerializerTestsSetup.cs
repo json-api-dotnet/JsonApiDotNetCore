@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Query;
@@ -76,25 +75,12 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected ICurrentRequest GetRequestManager<T>() where T : class, IIdentifiable
-        {
-            var mock = new Mock<ICurrentRequest>();
-            mock.Setup(m => m.GetRequestResource()).Returns(_resourceGraph.GetResourceContext<T>());
-            return mock.Object;
-        }
-
         protected ILinkBuilder GetLinkBuilder(TopLevelLinks top = null, ResourceLinks resource = null, RelationshipLinks relationship = null)
         {
             var mock = new Mock<ILinkBuilder>();
             mock.Setup(m => m.GetTopLevelLinks()).Returns(top);
             mock.Setup(m => m.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
             mock.Setup(m => m.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
-            return mock.Object;
-        }
-
-        protected ISparseFieldsService GetFieldsQuery()
-        {
-            var mock = new Mock<ISparseFieldsService>();
             return mock.Object;
         }
 

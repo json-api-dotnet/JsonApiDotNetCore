@@ -73,23 +73,5 @@ namespace JsonApiDotNetCore.Models
             }
             propertyInfo.SetValue(entity, newValue);
         }
-
-        // HACK: this will likely require boxing
-        // we should be able to move some of the reflection into the ResourceGraphBuilder
-        /// <summary>
-        /// Gets the value of the independent identifier (e.g. Article.AuthorId)
-        /// </summary>
-        /// 
-        /// <param name="resource">
-        /// An instance of dependent resource
-        /// </param>
-        /// 
-        /// <returns>
-        /// The property value or null if the property does not exist on the model.
-        /// </returns>
-        internal object GetIdentifiablePropertyValue(object resource) => resource
-                .GetType()
-                .GetProperty(IdentifiablePropertyName)
-                ?.GetValue(resource);
     }
 }
