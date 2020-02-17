@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal class RootNode<TResource> : INode where TResource : class, IIdentifiable
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TResource> _uniqueEntities;
         public Type ResourceType { get; internal set; }

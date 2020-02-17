@@ -9,6 +9,7 @@ namespace JsonApiDotNetCore.Internal
     public class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {
         internal static readonly IdentifiableComparer Instance = new IdentifiableComparer();
+
         public bool Equals(IIdentifiable x, IIdentifiable y)
         {
             return x.StringId == y.StringId;

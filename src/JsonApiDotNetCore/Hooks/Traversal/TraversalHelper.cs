@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Hooks
     /// </summary>
     internal class TraversalHelper : ITraversalHelper
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IResourceGraph _resourceGraph;
         private readonly ITargetedFields _targetedFields;
         /// <summary>

@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <inheritdoc/>
     internal class HookExecutorHelper : IHookExecutorHelper
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IJsonApiOptions _options;
         protected readonly IGenericServiceFactory _genericProcessorFactory;
         protected readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;

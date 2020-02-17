@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Hooks
     /// <typeparam name="TResource"></typeparam>
     internal class ChildNode<TResource> : INode where TResource : class, IIdentifiable
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         /// <inheritdoc />
         public RightType ResourceType { get; private set; }
         /// <inheritdoc />
