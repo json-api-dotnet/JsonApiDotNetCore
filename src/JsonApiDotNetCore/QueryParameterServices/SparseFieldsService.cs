@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Query
 
             var keySplit = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
-            if (keySplit.Count() == 1)
+            if (keySplit.Length == 1)
             {   // input format: fields=prop1,prop2
                 foreach (var field in fields)
                     RegisterRequestResourceField(field);

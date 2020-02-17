@@ -139,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 context.TodoItems.Add(item);
                 // Exclude 2 items
-                if (guids.Count < (todoItems.Count() - 2))
+                if (guids.Count < (todoItems.Count - 2))
                     guids.Add(item.GuidProperty);
                 else 
                     notInGuids.Add(item.GuidProperty);
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(guids.Count(), deserializedTodoItems.Count());
+            Assert.Equal(guids.Count, deserializedTodoItems.Count);
             foreach (var item in deserializedTodoItems)
             {
                 Assert.Contains(item.GuidProperty, guids);
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(ownerFirstNames.Count(), documents.ManyData.Count());
+            Assert.Equal(ownerFirstNames.Count, documents.ManyData.Count);
             Assert.NotNull(included);
             Assert.NotEmpty(included);
             foreach (var item in included)
@@ -218,7 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 context.TodoItems.Add(item);
                 // Exclude 2 items
-                if (guids.Count < (todoItems.Count() - 2))
+                if (guids.Count < (todoItems.Count - 2))
                     guids.Add(item.GuidProperty);
                 else
                     notInGuids.Add(item.GuidProperty);
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(totalCount - notInGuids.Count(), deserializedTodoItems.Count());
+            Assert.Equal(totalCount - notInGuids.Count, deserializedTodoItems.Count);
             foreach (var item in deserializedTodoItems)
             {
                 Assert.DoesNotContain(item.GuidProperty, notInGuids);
