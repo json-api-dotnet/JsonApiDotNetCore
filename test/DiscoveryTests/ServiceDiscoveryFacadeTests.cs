@@ -101,8 +101,6 @@ namespace DiscoveryTests
 
         public class TestModelService : DefaultResourceService<TestModel>
         {
-            private static IResourceRepository<TestModel> _repo = new Mock<IResourceRepository<TestModel>>().Object;
-
             public TestModelService(
                 IEnumerable<IQueryParameterService> queryParameters,
                 IJsonApiOptions options,
