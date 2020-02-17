@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace JsonApiDotNetCore.Serialization.Server
 {
-    public class ResponseResourceObjectBuilder : ResourceObjectBuilder, IResourceObjectBuilder
+    public class ResponseResourceObjectBuilder : ResourceObjectBuilder
     {
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IIncludeService _includeService;

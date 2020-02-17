@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public abstract class HttpRestrictAttribute : ActionFilterAttribute, IAsyncActionFilter
+    public abstract class HttpRestrictAttribute : ActionFilterAttribute
     {
         protected abstract string[] Methods { get; }
 
