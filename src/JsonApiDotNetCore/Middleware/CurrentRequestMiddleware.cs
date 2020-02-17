@@ -98,9 +98,9 @@ namespace JsonApiDotNetCore.Middleware
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNameSpace(resourceName);
+                return GetNameSpace();
             }
-            var ns = GetNameSpace(resourceName);
+            var ns = GetNameSpace();
             var customRoute = GetCustomRoute(r.Path.Value, resourceName);
             var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
             if (customRoute != null)
@@ -127,9 +127,8 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private string GetNameSpace(string resourceName = null)
+        private string GetNameSpace()
         {
-
             return _options.Namespace;
         }
 
