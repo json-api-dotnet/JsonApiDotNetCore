@@ -8,16 +8,14 @@ namespace JsonApiDotNetCoreExampleTests.Helpers.Extensions
     {
         public static ResourceObject FindResource<TId>(this List<ResourceObject> included, string type, TId id)
         {
-            var document = included.Where(documentData => (
-                documentData.Type == type 
-                && documentData.Id == id.ToString()
-            )).FirstOrDefault();
+            var document = included.FirstOrDefault(documentData =>
+                documentData.Type == type && documentData.Id == id.ToString());
 
             return document;
         }
 
         public static int CountOfType(this List<ResourceObject> included, string type) {
-            return included.Where(documentData => documentData.Type == type).Count();
+            return included.Count(documentData => documentData.Type == type);
         }
     }
 }
