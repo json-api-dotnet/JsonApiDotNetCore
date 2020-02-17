@@ -116,7 +116,7 @@ namespace UnitTests.Middleware
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
-            var middleware = new CurrentRequestMiddleware((context) =>
+            var middleware = new CurrentRequestMiddleware(httpContext =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });
