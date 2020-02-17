@@ -21,9 +21,8 @@ namespace JsonApiDotNetCore.Extensions
                 if (_containsMethod == null)
                 {
                     _containsMethod = typeof(Enumerable)
-                      .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                      .Where(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Count() == 2)
-                      .First();
+                        .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                        .First(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Count() == 2);
                 }
                 return _containsMethod;
             }

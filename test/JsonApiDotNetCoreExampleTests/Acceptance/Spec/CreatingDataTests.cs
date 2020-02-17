@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             var createdSuperUser = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            var created = _dbContext.SuperUsers.Where(e => e.Id.Equals(createdSuperUser.Id)).First();
+            var created = _dbContext.SuperUsers.First(e => e.Id.Equals(createdSuperUser.Id));
         }
 
         [Fact]
