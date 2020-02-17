@@ -41,7 +41,7 @@ namespace UnitTests.ResourceHooks
         public class AnotherDummy : Identifiable { }
         public abstract class ResourceDefinitionBase<T> : ResourceDefinition<T> where T : class, IIdentifiable
         {
-            public ResourceDefinitionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
+            protected ResourceDefinitionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
             public override IEnumerable<T> BeforeDelete(IEntityHashSet<T> entities, ResourcePipeline pipeline) { return entities; }
             public override void AfterDelete(HashSet<T> entities, ResourcePipeline pipeline, bool succeeded) { }
         }
