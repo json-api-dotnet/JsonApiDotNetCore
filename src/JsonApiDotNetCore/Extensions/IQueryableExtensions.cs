@@ -302,7 +302,6 @@ namespace JsonApiDotNetCore.Extensions
 
         private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
         {
-            List<MemberAssignment> sourceBindings;
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
             var sourceProperties = new List<string>();
@@ -324,7 +323,7 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             // Bind attributes on TSource
-            sourceBindings = sourceProperties.Select(prop => Expression.Bind(sourceType.GetProperty(prop), Expression.PropertyOrField(parameter, prop))).ToList();
+            var sourceBindings = sourceProperties.Select(prop => Expression.Bind(sourceType.GetProperty(prop), Expression.PropertyOrField(parameter, prop))).ToList();
 
             // Bind attributes on nested types
             var nestedBindings = new List<MemberAssignment>();
