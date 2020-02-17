@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
 
@@ -144,10 +142,5 @@ namespace JsonApiDotNetCore.Configuration
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-
-        public void EnableExtension(JsonApiExtension extension)
-            => EnabledExtensions.Add(extension);
-
-        internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
     }
 }

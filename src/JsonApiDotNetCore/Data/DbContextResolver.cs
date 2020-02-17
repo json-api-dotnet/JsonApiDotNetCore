@@ -13,8 +13,5 @@ namespace JsonApiDotNetCore.Data
         }
 
         public DbContext GetContext() => _context;
-
-        public DbSet<TResource> GetDbSet<TResource>() where TResource : class =>  null;
-
     }
 }
