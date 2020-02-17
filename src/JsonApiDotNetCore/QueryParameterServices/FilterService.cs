@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Query
             if (string.Equals(op, FilterOperation.@in.ToString(), StringComparison.OrdinalIgnoreCase)
                 || string.Equals(op, FilterOperation.nin.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                (var _, var filterValue) = ParseFilterOperation(queryParameter.Value);
+                var (_, filterValue) = ParseFilterOperation(queryParameter.Value);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
             }
             else
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Query
                 var values = ((string)queryParameter.Value).Split(QueryConstants.COMMA);
                 foreach (var val in values)
                 {
-                    (var operation, var filterValue) = ParseFilterOperation(val);
+                    var (operation, filterValue) = ParseFilterOperation(val);
                     queries.Add(new FilterQuery(propertyName, filterValue, operation));
                 }
             }

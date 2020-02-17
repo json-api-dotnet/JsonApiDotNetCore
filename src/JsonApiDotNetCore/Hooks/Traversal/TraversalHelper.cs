@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Hooks
         {
             // first extract entities by parsing populated relationships in the entities
             // of previous layer
-            (var lefts, var rights) = ExtractEntities(nodes);
+            var (lefts, rights) = ExtractEntities(nodes);
 
             // group them conveniently so we can make ChildNodes of them:
             // there might be several relationship attributes in rights dictionary
