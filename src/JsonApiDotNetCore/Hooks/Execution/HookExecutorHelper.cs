@@ -19,10 +19,10 @@ namespace JsonApiDotNetCore.Hooks
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IJsonApiOptions _options;
-        protected readonly IGenericServiceFactory _genericProcessorFactory;
-        protected readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;
-        protected readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
-        protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
+        private readonly IGenericServiceFactory _genericProcessorFactory;
+        private readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;
+        private readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
+        private readonly List<ResourceHook> _targetedHooksForRelatedEntities;
 
         public HookExecutorHelper(IGenericServiceFactory genericProcessorFactory,
                                   IJsonApiOptions options)

@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <inheritdoc />
         public RightType ResourceType { get; }
         /// <inheritdoc />
-        public RelationshipProxy[] RelationshipsToNextLayer { get; set; }
+        public RelationshipProxy[] RelationshipsToNextLayer { get; }
         /// <inheritdoc />
         public IEnumerable UniqueEntities
         {

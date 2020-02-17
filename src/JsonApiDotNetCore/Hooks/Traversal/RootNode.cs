@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Hooks
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TResource> _uniqueEntities;
-        public Type ResourceType { get; internal set; }
+        public Type ResourceType { get; }
         public IEnumerable UniqueEntities => _uniqueEntities;
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
 

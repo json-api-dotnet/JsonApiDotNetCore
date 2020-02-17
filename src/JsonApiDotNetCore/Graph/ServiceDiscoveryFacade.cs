@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Graph
 {
     public class ServiceDiscoveryFacade : IServiceDiscoveryFacade
     {
-        internal static HashSet<Type> ServiceInterfaces = new HashSet<Type> {
+        internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type> {
             typeof(IResourceService<>),
             typeof(IResourceService<,>),
             typeof(IResourceCommandService<>),
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Graph
             typeof(IDeleteService<,>)
         };
 
-        internal static HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
+        private static readonly HashSet<Type> RepositoryInterfaces = new HashSet<Type> {
             typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
             typeof(IResourceWriteRepository<>),

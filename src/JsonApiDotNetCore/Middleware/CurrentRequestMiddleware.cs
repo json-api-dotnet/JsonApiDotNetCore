@@ -172,7 +172,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        internal static bool ContainsMediaTypeParameters(string mediaType)
+        private static bool ContainsMediaTypeParameters(string mediaType)
         {
             var incomingMediaTypeSpan = mediaType.AsSpan();
 

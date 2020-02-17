@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Internal
                 list.Add(ConvertType(item, targetType));
             return list;
         }
-        public static bool IsNullable(Type type)
+        private static bool IsNullable(Type type)
         {
             return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
         }
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="parameters">Generic type parameters to be used in open type.</param>
         /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
         /// <param name="openType">Open generic type</param>
-        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
+        private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
         {
             var parameterizedType = openType.MakeGenericType(parameters);
             return Activator.CreateInstance(parameterizedType, constructorArguments);
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Use this overload if you need to instantiate a type that has a internal constructor
         /// </summary>
-        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
+        private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
         {
             if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
             var parameterizedType = openType.MakeGenericType(parameters);

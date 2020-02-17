@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Internal
             Message = message;
         }
 
-        public LogLevel LogLevel { get; set; }
-        public string Message { get; set; }
+        public LogLevel LogLevel { get; }
+        public string Message { get; }
     }
 }

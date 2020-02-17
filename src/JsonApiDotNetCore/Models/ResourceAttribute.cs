@@ -9,6 +9,6 @@ namespace JsonApiDotNetCore.Models
             ResourceName = resourceName;
         }
 
-        public string ResourceName { get; set; }
+        public string ResourceName { get; }
     }
 }
