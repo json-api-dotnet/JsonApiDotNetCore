@@ -85,10 +85,6 @@ internal class TestAsyncQueryProvider<TResource> : IAsyncQueryProvider
 
 internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
-    public TestAsyncEnumerable(IEnumerable<T> enumerable)
-        : base(enumerable)
-    { }
-
     public TestAsyncEnumerable(Expression expression)
         : base(expression)
     { }
