@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Query
         /// `?include=some-relationship`
         /// <code>public class IncludeService : QueryParameterService  { /* ... */  } </code>
         /// </example>
-        public virtual string Name { get { return GetParameterNameFromType(); } }
+        public virtual string Name => GetParameterNameFromType();
 
         /// <summary>
         /// Gets the query parameter name from the implementing class name. Trims "Service"

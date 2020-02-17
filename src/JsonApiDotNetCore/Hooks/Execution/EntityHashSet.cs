@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using System.Collections;
 using JsonApiDotNetCore.Internal;
@@ -26,7 +26,8 @@ namespace JsonApiDotNetCore.Hooks
     public class EntityHashSet<TResource> : HashSet<TResource>, IEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> AffectedRelationships { get => _relationships; }
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> AffectedRelationships => _relationships;
+
         private readonly RelationshipsDictionary<TResource> _relationships;
 
         public EntityHashSet(HashSet<TResource> entities,

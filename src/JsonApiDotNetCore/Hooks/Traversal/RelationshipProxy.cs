@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Identifiable) or it is the right-hand side (when the join table is not identifiable)
         /// </summary>
         public Type RightType { get; }
-        public Type LeftType { get { return Attribute.LeftType; } }
+        public Type LeftType => Attribute.LeftType;
         public bool IsContextRelation { get; }
 
         public RelationshipAttribute Attribute { get; set; }

@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Query
         public int TotalPages => (TotalRecords == null || CurrentPageSize == 0) ? -1 : (int)Math.Ceiling(decimal.Divide(TotalRecords.Value, CurrentPageSize));
 
         /// <inheritdoc/>
-        public bool CanPaginate { get { return TotalPages > 1; } }
+        public bool CanPaginate => TotalPages > 1;
 
         /// <inheritdoc/>
         public int? TotalRecords { get; set; }

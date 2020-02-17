@@ -11,7 +11,11 @@ namespace JsonApiDotNetCore.Models
         /// see "primary data" in https://jsonapi.org/format/#document-top-level.
         /// </summary>
         [JsonProperty("data")]
-        public object Data { get { return GetPrimaryData(); } set { SetPrimaryData(value); } }
+        public object Data
+        {
+            get => GetPrimaryData();
+            set => SetPrimaryData(value);
+        }
 
         /// <summary>
         /// see https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
@@ -53,7 +57,7 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         internal bool IsPopulated { get; private set; }
 
-        internal bool HasResource {  get { return IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null); } }
+        internal bool HasResource => IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null);
 
         /// <summary>
         /// Gets the "single" or "many" data depending on which one was

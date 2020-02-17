@@ -99,10 +99,7 @@ internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>,
         throw new System.NotImplementedException();
     }
 
-    IQueryProvider IQueryable.Provider
-    {
-        get { return new TestAsyncQueryProvider<T>(this); }
-    }
+    IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
 }
 
 internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
@@ -119,13 +116,7 @@ internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
         _inner.Dispose();
     }
 
-    public T Current
-    {
-        get
-        {
-            return _inner.Current;
-        }
-    }
+    public T Current => _inner.Current;
 
     public Task<bool> MoveNext(CancellationToken cancellationToken)
     {

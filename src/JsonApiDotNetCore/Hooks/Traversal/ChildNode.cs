@@ -29,13 +29,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc />
-        public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer
-        {
-            get
-            {
-                return _relationshipsFromPreviousLayer;
-            }
-        }
+        public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => _relationshipsFromPreviousLayer;
 
         private readonly RelationshipsFromPreviousLayer<TResource> _relationshipsFromPreviousLayer;
 

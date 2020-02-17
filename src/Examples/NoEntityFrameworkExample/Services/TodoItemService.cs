@@ -20,13 +20,7 @@ namespace NoEntityFrameworkExample.Services
             _connectionString = config.GetValue<string>("Data:DefaultConnection");
         }
         
-        private IDbConnection Connection
-        {
-            get
-            {
-                return new NpgsqlConnection(_connectionString);
-            }
-        }
+        private IDbConnection Connection => new NpgsqlConnection(_connectionString);
 
         private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
         {
