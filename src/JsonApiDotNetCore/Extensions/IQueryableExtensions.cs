@@ -247,7 +247,7 @@ namespace JsonApiDotNetCore.Extensions
             PropertyInfo relationProperty = null;
             PropertyInfo property = null;
             MemberExpression left;
-            ConstantExpression right;
+            Expression right;
 
             // {model}
             var parameter = Expression.Parameter(concreteType, "model");
@@ -287,8 +287,8 @@ namespace JsonApiDotNetCore.Extensions
                     // convert the incoming value to the target value type
                     // "1" -> 1
                     var convertedValue = TypeHelper.ConvertType(filter.Value, property.PropertyType);
-                    // {1}
-                    right = Expression.Constant(convertedValue, property.PropertyType);
+
+                    right = CreateTupleAccessForConstantExpression(convertedValue, property.PropertyType);
                 }
 
                 var body = GetFilterExpressionLambda(left, right, filter.Operation);
@@ -300,6 +300,31 @@ namespace JsonApiDotNetCore.Extensions
             {
                 throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
             }
+        }
+
+        private static Expression CreateTupleAccessForConstantExpression(object value, Type type)
+        {
+            // To enable efficient query plan caching, inline constants (that vary per request) should be converted into query parameters.
+            // https://stackoverflow.com/questions/54075758/building-a-parameterized-entityframework-core-expression
+
+            // This method can be used to change a query like:
+            //   SELECT ... FROM ... WHERE x."Age" = 3
+            // into:
+            //   SELECT ... FROM ... WHERE x."Age" = @p0
+
+            // The code below builds the next expression for a type T that is unknown at compile time:
+            //   Expression.Property(Expression.Constant(Tuple.Create<T>(value)), "Item1")
+            // Which represents the next C# code:
+            //   Tuple.Create<T>(value).Item1;
+
+            MethodInfo tupleCreateMethod = typeof(Tuple).GetMethods()
+                .Single(m => m.Name == "Create" && m.IsGenericMethod && m.GetGenericArguments().Length == 1);
+            MethodInfo constructedTupleCreateMethod = tupleCreateMethod.MakeGenericMethod(type);
+
+            ConstantExpression constantExpression = Expression.Constant(value, type);
+
+            MethodCallExpression tupleCreateCall = Expression.Call(constructedTupleCreateMethod, constantExpression);
+            return Expression.Property(tupleCreateCall, "Item1");
         }
 
         private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
