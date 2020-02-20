@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
@@ -6,12 +9,15 @@ using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.QueryParameterServices.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.Server.Builders
 {
     public class LinkBuilder : ILinkBuilder
     {
         private readonly IResourceContextProvider _provider;
+        private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly ILinksConfiguration _options;
         private readonly ICurrentRequest _currentRequest;
         private readonly IPageService _pageService;
@@ -19,12 +25,14 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         public LinkBuilder(ILinksConfiguration options,
                            ICurrentRequest currentRequest,
                            IPageService pageService,
-                           IResourceContextProvider provider)
+                           IResourceContextProvider provider,
+                           IRequestQueryStringAccessor queryStringAccessor)
         {
             _options = options;
             _currentRequest = currentRequest;
             _pageService = pageService;
             _provider = provider;
+            _queryStringAccessor = queryStringAccessor;
         }
 
         /// <inheritdoc/>
@@ -101,6 +109,8 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 builder.Append(_currentRequest.RequestRelationship.PublicRelationshipName);
             }
 
+            builder.Append(_queryStringAccessor.QueryString.Value);
+
             return builder.ToString();
         }
 
@@ -111,9 +121,24 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
                 pageOffset = -pageOffset;
             }
 
-            return $"{GetBasePath()}/{resourceContext.ResourceName}?page[size]={pageSize}&page[number]={pageOffset}";
+            string queryString = BuildQueryString(parameters =>
+            {
+                parameters["page[size]"] = pageSize.ToString();
+                parameters["page[number]"] = pageOffset.ToString();
+            });
+
+            return $"{GetBasePath()}/{resourceContext.ResourceName}" + queryString;
         }
 
+        private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
+        {
+            var parameters = _queryStringAccessor.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
+            updateAction(parameters);
+            string queryString = QueryString.Create(parameters).Value;
+
+            queryString = queryString.Replace("%5B", "[").Replace("%5D", "]");
+            return queryString;
+        }
 
         /// <inheritdoc/>
         public ResourceLinks GetResourceLinks(string resourceName, string id)

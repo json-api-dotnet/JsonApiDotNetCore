@@ -21,6 +21,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.QueryParameterServices.Common;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -164,6 +165,8 @@ namespace JsonApiDotNetCore.Builders
 
         private void AddQueryParameterServices()
         {
+            _services.AddScoped<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
+
             _services.AddScoped<IIncludeService, IncludeService>();
             _services.AddScoped<IFilterService, FilterService>();
             _services.AddScoped<ISortService, SortService>();
