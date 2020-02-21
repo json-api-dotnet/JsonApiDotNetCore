@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,9 +13,7 @@ namespace JsonApiDotNetCore.Graph
     /// </summary>
     static class TypeLocator
     {
-        private static Dictionary<Assembly, Type[]> _typeCache = new Dictionary<Assembly, Type[]>();
-        private static Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
-
+        private static readonly ConcurrentDictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new ConcurrentDictionary<Assembly, List<ResourceDescriptor>>();
 
         /// <summary>
         /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
@@ -30,20 +29,16 @@ namespace JsonApiDotNetCore.Graph
         /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
         /// </summary>
         public static IEnumerable<ResourceDescriptor> GetIdentifiableTypes(Assembly assembly)
-            => (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
-                    ? FindIdentifiableTypes(assembly)
-                    : _identifiableTypeCache[assembly];
+        {
+            return _identifiableTypeCache.GetOrAdd(assembly, asm => FindIdentifiableTypes(asm).ToList());
+        }
 
         private static IEnumerable<ResourceDescriptor> FindIdentifiableTypes(Assembly assembly)
         {
-            var descriptors = new List<ResourceDescriptor>();
-            _identifiableTypeCache[assembly] = descriptors;
-
             foreach (var type in assembly.GetTypes())
             {
                 if (TryGetResourceDescriptor(type, out var descriptor))
                 {
-                    descriptors.Add(descriptor);
                     yield return descriptor;
                 }
             }
