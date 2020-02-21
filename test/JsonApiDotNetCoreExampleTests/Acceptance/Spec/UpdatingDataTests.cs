@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -79,8 +79,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+
             var body = await response.Content.ReadAsStringAsync();
-            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+            var document = JsonConvert.DeserializeObject<ErrorCollection>(body);
+            Assert.Single(document.Errors);
+
+            var error = document.Errors.Single();
+            Assert.Equal(422, error.StatusCode);
+            Assert.Equal("An error occurred while de-serializing the payload.", error.Title);
+            Assert.Equal("Property set method not found.", error.Detail);
         }
 
         [Fact]
@@ -128,8 +136,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 
+            var body = await response.Content.ReadAsStringAsync();
+            var document = JsonConvert.DeserializeObject<ErrorCollection>(body);
+            Assert.Single(document.Errors);
+
+            var error = document.Errors.Single();
+            Assert.Equal(422, error.StatusCode);
+            Assert.Equal("Payload must include id attribute.", error.Title);
+            Assert.Null(error.Detail);
         }
 
         [Fact]
