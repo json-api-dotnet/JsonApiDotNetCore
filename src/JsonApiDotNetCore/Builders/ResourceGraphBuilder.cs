@@ -179,18 +179,23 @@ namespace JsonApiDotNetCore.Builders
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
             relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
 
-        private List<EagerLoadAttribute> GetEagerLoads(Type entityType)
+        private List<EagerLoadAttribute> GetEagerLoads(Type entityType, int recursionDepth = 0)
         {
+            if (recursionDepth >= 500)
+            {
+                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
+            }
+
             var attributes = new List<EagerLoadAttribute>();
             var properties = entityType.GetProperties();
 
             foreach (var property in properties)
             {
-                var attribute = (EagerLoadAttribute)property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                var attribute = (EagerLoadAttribute) property.GetCustomAttribute(typeof(EagerLoadAttribute));
                 if (attribute == null) continue;
 
                 Type innerType = TypeOrElementType(property.PropertyType);
-                attribute.Children = GetEagerLoads(innerType);
+                attribute.Children = GetEagerLoads(innerType, recursionDepth + 1);
                 attribute.Property = property;
 
                 attributes.Add(attribute);
