@@ -42,6 +42,11 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public List<RelationshipAttribute> Relationships { get; set; }
 
+        /// <summary>
+        /// Related entities that are not exposed as resource relationships.
+        /// </summary>
+        public List<EagerLoadAttribute> EagerLoads { get; set; }
+
         private List<IResourceField> _fields;
         public List<IResourceField> Fields { get { return _fields = _fields ?? Attributes.Cast<IResourceField>().Concat(Relationships).ToList();  } }
 

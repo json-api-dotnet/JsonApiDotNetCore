@@ -79,9 +79,9 @@ namespace JsonApiDotNetCore.Builders
             IdentityType = idType,
             Attributes = GetAttributes(entityType),
             Relationships = GetRelationships(entityType),
+            EagerLoads = GetEagerLoads(entityType),
             ResourceDefinitionType = GetResourceDefinitionType(entityType)
         };
-
 
         protected virtual List<AttrAttribute> GetAttributes(Type entityType)
         {
@@ -178,6 +178,23 @@ namespace JsonApiDotNetCore.Builders
 
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
             relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+
+        private List<EagerLoadAttribute> GetEagerLoads(Type entityType)
+        {
+            var attributes = new List<EagerLoadAttribute>();
+            var properties = entityType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                var attribute = (EagerLoadAttribute)property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                if (attribute == null) continue;
+
+                attribute.Property = property;
+                attributes.Add(attribute);
+            }
+
+            return attributes;
+        }
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 

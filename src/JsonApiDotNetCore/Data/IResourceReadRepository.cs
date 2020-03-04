@@ -28,6 +28,10 @@ namespace JsonApiDotNetCore.Data
         /// </summary>
         IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields);
         /// <summary>
+        /// Include related entities that are not exposed as json:api relationships.
+        /// </summary>
+        IQueryable<TResource> EagerLoad(IQueryable<TResource> entities, IEnumerable<EagerLoadAttribute> attributes, string chainPrefix = null);
+        /// <summary>
         /// Include a relationship in the query
         /// </summary>
         /// <example>
