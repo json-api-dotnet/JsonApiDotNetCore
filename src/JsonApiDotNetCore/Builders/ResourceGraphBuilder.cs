@@ -189,11 +189,22 @@ namespace JsonApiDotNetCore.Builders
                 var attribute = (EagerLoadAttribute)property.GetCustomAttribute(typeof(EagerLoadAttribute));
                 if (attribute == null) continue;
 
+                Type innerType = TypeOrElementType(property.PropertyType);
+                attribute.Children = GetEagerLoads(innerType);
                 attribute.Property = property;
+
                 attributes.Add(attribute);
             }
 
             return attributes;
+        }
+
+        private static Type TypeOrElementType(Type type)
+        {
+            var interfaces = type.GetInterfaces()
+                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+
+            return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);

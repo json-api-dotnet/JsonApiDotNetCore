@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExample.Models
         [NotMapped]
         public string GrantedVisaCountries
         {
-            get => GrantedVisas == null ? null : string.Join(", ", GrantedVisas.Select(v => v.CountryCode));
+            get => GrantedVisas == null ? null : string.Join(", ", GrantedVisas.Select(v => v.TargetCountry.Name));
             // The setter is required only for deserialization in unit tests.
             set { }
         }

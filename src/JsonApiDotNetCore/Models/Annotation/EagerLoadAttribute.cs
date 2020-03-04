@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace JsonApiDotNetCore.Models
@@ -34,5 +35,7 @@ namespace JsonApiDotNetCore.Models
     public sealed class EagerLoadAttribute : Attribute
     {
         public PropertyInfo Property { get; internal set; }
+
+        public IList<EagerLoadAttribute> Children { get; internal set; }
     }
 }

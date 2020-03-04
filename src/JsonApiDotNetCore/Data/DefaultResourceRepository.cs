@@ -288,9 +288,10 @@ namespace JsonApiDotNetCore.Data
         {
             foreach (var attribute in attributes)
             {
-                entities = chainPrefix != null
-                    ? entities.Include(chainPrefix + "." + attribute.Property.Name)
-                    : entities.Include(attribute.Property.Name);
+                string path = chainPrefix != null ? chainPrefix + "." + attribute.Property.Name : attribute.Property.Name;
+                entities = entities.Include(path);
+
+                entities = EagerLoad(entities, attribute.Children, path);
             }
 
             return entities;

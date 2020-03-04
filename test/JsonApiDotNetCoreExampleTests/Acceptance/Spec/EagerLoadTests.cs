@@ -32,8 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             _countryFaker = new Faker<Country>()
                 .RuleFor(c => c.Name, f => f.Address.Country());
             _visaFaker = new Faker<Visa>()
-                .RuleFor(v => v.ExpiresAt, f => f.Date.Future())
-                .RuleFor(v => v.CountryCode, f => f.Address.CountryCode());
+                .RuleFor(v => v.ExpiresAt, f => f.Date.Future());
         }
 
         [Fact]
@@ -44,7 +43,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             passport.BirthCountry = _countryFaker.Generate();
             
             var visa1 = _visaFaker.Generate();
+            visa1.TargetCountry = _countryFaker.Generate();
+
             var visa2 = _visaFaker.Generate();
+            visa2.TargetCountry = _countryFaker.Generate();
+
             passport.GrantedVisas = new List<Visa> { visa1, visa2 };
 
             _dbContext.Add(passport);
@@ -59,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var resultPassport = _deserializer.DeserializeSingle<PassportClient>(body).Data;
             Assert.Equal(passport.Id, resultPassport.Id);
             Assert.Equal(passport.BirthCountry.Name, resultPassport.BirthCountryName);
-            Assert.Equal(visa1.CountryCode + ", " + visa2.CountryCode, resultPassport.GrantedVisaCountries);
+            Assert.Equal(visa1.TargetCountry.Name + ", " + visa2.TargetCountry.Name, resultPassport.GrantedVisaCountries);
         }
 
         [Fact]
@@ -137,7 +140,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var passport = _passportFaker.Generate();
             passport.BirthCountry = _countryFaker.Generate();
-            passport.GrantedVisas = new List<Visa> { _visaFaker.Generate() };
+            var visa = _visaFaker.Generate();
+            visa.TargetCountry = _countryFaker.Generate();
+            passport.GrantedVisas = new List<Visa> { visa };
 
             _dbContext.Add(passport);
             _dbContext.SaveChanges();
@@ -158,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(passport.Id, resultPassport.Id);
             Assert.Equal(passport.SocialSecurityNumber, resultPassport.SocialSecurityNumber);
             Assert.Equal(passport.BirthCountry.Name, resultPassport.BirthCountryName);
-            Assert.Equal(passport.GrantedVisas.First().CountryCode, resultPassport.GrantedVisaCountries);
+            Assert.Equal(passport.GrantedVisas.First().TargetCountry.Name, resultPassport.GrantedVisaCountries);
         }
     }
 }
