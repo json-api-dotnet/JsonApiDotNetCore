@@ -1,23 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>4.0.0</VersionPrefix>
     <TargetFrameworks>$(NetCoreAppVersion)</TargetFrameworks>
-    <AssemblyName>JsonApiDotNetCore</AssemblyName>
-    <PackageId>JsonApiDotNetCore</PackageId>
-    <LangVersion>8.0</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageTags>jsonapi;dotnet core;emberjs;ember</PackageTags>
+    <PackageTags>jsonapi;json:api;dotnet;core</PackageTags>
+    <Description>A framework for building json:api compliant web APIs. The ultimate goal of this library is to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination. You just need to focus on defining the resources and implementing your custom business logic. This library has been designed around dependency injection making extensibility incredibly easy.</Description>
     <PackageProjectUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +22,7 @@
     <PackageReference Include="Humanizer" Version="2.4.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(MicrosoftLoggingVersion)" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.ValueTuple" Version="$(TuplesVersion)" />
   </ItemGroup>
