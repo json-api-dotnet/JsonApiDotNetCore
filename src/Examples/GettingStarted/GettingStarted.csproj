@@ -4,12 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

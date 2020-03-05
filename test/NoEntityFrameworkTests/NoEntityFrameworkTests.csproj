@@ -1,22 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>NoEntityFrameworkTests</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <PackageId>NoEntityFrameworkTests</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
+
   <ItemGroup>
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../src/Examples/NoEntityFrameworkExample/NoEntityFrameworkExample.csproj" />
+    <ProjectReference Include="..\..\src\Examples\NoEntityFrameworkExample\NoEntityFrameworkExample.csproj" />
     <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
@@ -25,5 +22,4 @@
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
-
 </Project>

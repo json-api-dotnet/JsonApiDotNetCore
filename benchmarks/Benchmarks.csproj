@@ -3,12 +3,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
     <PackageReference Include="moq" Version="$(MoqVersion)" />
     <PackageReference Include="xunit" Version="$(xUnitVersion)" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../src/JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
   </ItemGroup>
 </Project>

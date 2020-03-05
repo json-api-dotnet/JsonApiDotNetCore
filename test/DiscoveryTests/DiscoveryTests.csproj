@@ -1,12 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/Examples/GettingStarted/GettingStarted.csproj" />
+    <ProjectReference Include="..\..\src\Examples\GettingStarted\GettingStarted.csproj" />
   </ItemGroup>
 
   <ItemGroup>

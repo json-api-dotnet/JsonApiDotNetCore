@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
-
-    <IsPackable>false</IsPackable>
-
-    <RootNamespace>JADNC.IntegrationTests</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
@@ -18,10 +18,4 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
-    <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
-  </ItemGroup>
-
 </Project>
