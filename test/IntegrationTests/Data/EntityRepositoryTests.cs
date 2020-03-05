@@ -23,15 +23,23 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             var itemId = 213;
             var seed = Guid.NewGuid();
+
+            var databaseEntity = new TodoItem
+            {
+                Id = itemId,
+                Description = "Before"
+            };
+
+            var todoItemUpdates = new TodoItem
+            {
+                Id = itemId,
+                Description = "After"
+            };
+
             await using (var arrangeContext = GetContext(seed))
             {
                 var (repository, targetedFields) = Setup(arrangeContext);
-                var todoItemUpdates = new TodoItem
-                {
-                    Id = itemId,
-                    Description = Guid.NewGuid().ToString()
-                };
-                arrangeContext.Add(todoItemUpdates);
+                arrangeContext.Add(databaseEntity);
                 arrangeContext.SaveChanges();
 
                 var descAttr = new AttrAttribute("description")
@@ -42,7 +50,7 @@ namespace JADNC.IntegrationTests.Data
                 targetedFields.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
 
                 // Act
-                await repository.UpdateAsync(todoItemUpdates);
+                await repository.UpdateAsync(todoItemUpdates, databaseEntity);
             }
 
             // Assert - in different context
@@ -52,8 +60,8 @@ namespace JADNC.IntegrationTests.Data
 
                 var fetchedTodo = repository.Get(itemId).First();
                 Assert.NotNull(fetchedTodo);
-                Assert.Equal(fetchedTodo.Ordinal, fetchedTodo.Ordinal);
-                Assert.Equal(fetchedTodo.Description, fetchedTodo.Description);
+                Assert.Equal(databaseEntity.Ordinal, fetchedTodo.Ordinal);
+                Assert.Equal(todoItemUpdates.Description, fetchedTodo.Description);
 
             }
         }

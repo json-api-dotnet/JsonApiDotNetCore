@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization
             if (_document.IsManyData)
             {
                 if (_document.ManyData.Count == 0)
-                    return new List<IIdentifiable>();
+                    return Array.Empty<IIdentifiable>();
 
                 return _document.ManyData.Select(ParseResourceObject).ToList();
             }

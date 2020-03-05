@@ -14,10 +14,12 @@ namespace JsonApiDotNetCore.Data
     {
         Task<TResource> CreateAsync(TResource entity);
 
-        Task<TResource> UpdateAsync(TResource entity);
+        Task UpdateAsync(TResource requestEntity, TResource databaseEntity);
 
         Task UpdateRelationshipsAsync(object parent, RelationshipAttribute relationship, IEnumerable<string> relationshipIds);
 
         Task<bool> DeleteAsync(TId id);
+
+        void FlushFromCache(TResource entity);
     }
 }

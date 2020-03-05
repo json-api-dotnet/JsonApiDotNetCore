@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,8 +8,24 @@ namespace JsonApiDotNetCoreExample.Models
 {
     public class Passport : Identifiable
     {
+        private int? _socialSecurityNumber;
+
         [Attr]
-        public int? SocialSecurityNumber { get; set; }
+        public int? SocialSecurityNumber
+        {
+            get => _socialSecurityNumber;
+            set
+            {
+                if (value != _socialSecurityNumber)
+                {
+                    LastSocialSecurityNumberChange = DateTime.Now;
+                    _socialSecurityNumber = value;
+                }
+            }
+        }
+
+        [Attr]
+        public DateTime LastSocialSecurityNumberChange { get; set; }
 
         [Attr]
         public bool IsLocked { get; set; }

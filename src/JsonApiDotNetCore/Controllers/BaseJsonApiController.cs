@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
-            return Ok(updatedEntity);
+            return updatedEntity == null ? Ok(null) : Ok(updatedEntity);
         }
 
         public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] object relationships)

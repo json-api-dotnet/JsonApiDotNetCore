@@ -12,6 +12,8 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Extensions;
+using JsonApiDotNetCore.RequestServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -29,6 +31,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IFilterService _filterService;
         private readonly ISortService _sortService;
         private readonly IResourceRepository<TResource, TId> _repository;
+        private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly ILogger _logger;
         private readonly IResourceHookExecutor _hookExecutor;
         private readonly IIncludeService _includeService;
@@ -41,6 +44,7 @@ namespace JsonApiDotNetCore.Services
             ILoggerFactory loggerFactory,
             IResourceRepository<TResource, TId> repository,
             IResourceContextProvider provider,
+            IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceHookExecutor hookExecutor = null)
         {
             _includeService = queryParameters.FirstOrDefault<IIncludeService>();
@@ -51,6 +55,7 @@ namespace JsonApiDotNetCore.Services
             _options = options;
             _logger = loggerFactory.CreateLogger<DefaultResourceService<TResource, TId>>();
             _repository = repository;
+            _resourceChangeTracker = resourceChangeTracker;
             _hookExecutor = hookExecutor;
             _currentRequestResource = provider.GetResourceContext<TResource>();
         }
@@ -183,25 +188,36 @@ namespace JsonApiDotNetCore.Services
             return relationship.GetValue(resource);
         }
 
-        public virtual async Task<TResource> UpdateAsync(TId id, TResource entity)
+        public virtual async Task<TResource> UpdateAsync(TId id, TResource requestEntity)
         {
-            _logger.LogTrace($"Entering {nameof(UpdateAsync)}('{id}', {(entity == null ? "null" : "object")}).");
+            _logger.LogTrace($"Entering {nameof(UpdateAsync)}('{id}', {(requestEntity == null ? "null" : "object")}).");
 
-            entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
-            entity = await _repository.UpdateAsync(entity);
-
-            if (entity == null)
+            TResource databaseEntity = await _repository.Get(id).FirstOrDefaultAsync();
+            if (databaseEntity == null)
             {
                 string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
                 throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
-            if (!IsNull(_hookExecutor, entity))
+            _resourceChangeTracker.SetInitiallyStoredAttributeValues(databaseEntity);
+            _resourceChangeTracker.SetRequestedAttributeValues(requestEntity);
+
+            requestEntity = IsNull(_hookExecutor) ? requestEntity : _hookExecutor.BeforeUpdate(AsList(requestEntity), ResourcePipeline.Patch).Single();
+
+            await _repository.UpdateAsync(requestEntity, databaseEntity);
+
+            if (!IsNull(_hookExecutor, databaseEntity))
             {
-                _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.Patch);
-                entity = _hookExecutor.OnReturn(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
+                _hookExecutor.AfterUpdate(AsList(databaseEntity), ResourcePipeline.Patch);
+                _hookExecutor.OnReturn(AsList(databaseEntity), ResourcePipeline.Patch);
             }
-            return entity;
+
+            _repository.FlushFromCache(databaseEntity);
+            TResource afterEntity = await _repository.Get(databaseEntity.Id).FirstOrDefaultAsync();
+            _resourceChangeTracker.SetFinallyStoredAttributeValues(afterEntity);
+
+            bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
+            return hasImplicitChanges ? afterEntity : null;
         }
 
         // triggered by PATCH /articles/1/relationships/{relationshipName}
@@ -229,7 +245,7 @@ namespace JsonApiDotNetCore.Services
                     : ((IEnumerable<IIdentifiable>) related).Select(e => e.StringId).ToArray();
             }
 
-            await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds ?? new string[0] );
+            await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds ?? Array.Empty<string>());
 
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.PatchRelationship);
         }
@@ -397,8 +413,9 @@ namespace JsonApiDotNetCore.Services
             ILoggerFactory loggerFactory,
             IResourceRepository<TResource, int> repository,
             IResourceContextProvider provider,
+            IResourceChangeTracker<TResource> resourceChangeTracker,
             IResourceHookExecutor hookExecutor = null)
-            : base(queryParameters, options, loggerFactory, repository, provider, hookExecutor)
+            : base(queryParameters, options, loggerFactory, repository, provider, resourceChangeTracker, hookExecutor)
         { }
     }
 }

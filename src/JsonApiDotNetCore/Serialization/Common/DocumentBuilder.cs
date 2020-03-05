@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">Attributes to include in the building process</param>
         /// <param name="relationships">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
-        protected Document Build(IIdentifiable entity, List<AttrAttribute> attributes, List<RelationshipAttribute> relationships)
+        protected Document Build(IIdentifiable entity, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
         {
             if (entity == null)
                 return new Document();
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">Attributes to include in the building process</param>
         /// <param name="relationships">Relationships to include in the building process</param>
         /// <returns>The resource object that was built</returns>
-        protected Document Build(IEnumerable entities, List<AttrAttribute> attributes, List<RelationshipAttribute> relationships)
+        protected Document Build(IEnumerable entities, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
         {
             var data = new List<ResourceObject>();
             foreach (IIdentifiable entity in entities)

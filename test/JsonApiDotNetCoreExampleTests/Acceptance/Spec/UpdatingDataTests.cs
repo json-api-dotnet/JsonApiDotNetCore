@@ -46,19 +46,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var dbContext = PrepareTest<Startup>();
-            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel });
-            var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User" };
+            var serializer = GetSerializer<SuperUser>(e => new { e.SecurityLevel, e.Username, e.Password });
+            var superUser = new SuperUser { SecurityLevel = 1337, Username = "Super", Password = "User", LastPasswordChange = DateTime.Now.AddMinutes(-15) };
             dbContext.SuperUsers.Add(superUser);
             dbContext.SaveChanges();
-            var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674 };
+            var su = new SuperUser { Id = superUser.Id, SecurityLevel = 2674, Username = "Power", Password = "secret" };
+            var content = serializer.Serialize(su);
 
             // Act
-            var (body, response) = await Patch($"/api/v1/superUsers/{su.Id}", serializer.Serialize(su));
+            var (body, response) = await Patch($"/api/v1/superUsers/{su.Id}", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.OK, response);
             var updated = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            Assert.Equal(2674, updated.SecurityLevel);
+            Assert.Equal(su.SecurityLevel, updated.SecurityLevel);
+            Assert.Equal(su.Username, updated.Username);
+            Assert.Equal(su.Password, updated.Password);
         }
 
         [Fact]
@@ -253,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Patch_Entity_With_HasMany_Does_Not_Included_Relationships()
+        public async Task Patch_Entity_With_HasMany_Does_Not_Include_Relationships()
         {
             // Arrange
             var todoItem = _todoItemFaker.Generate();

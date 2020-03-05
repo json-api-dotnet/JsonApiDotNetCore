@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Graph;
@@ -110,12 +110,12 @@ namespace UnitTests.Serialization
         {
             public TestDocumentBuilder(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
 
-            public new Document Build(IIdentifiable entity, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
+            public new Document Build(IIdentifiable entity, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
                 return base.Build(entity, attributes, relationships);
             }
 
-            public new Document Build(IEnumerable entities, List<AttrAttribute> attributes = null, List<RelationshipAttribute> relationships = null)
+            public new Document Build(IEnumerable entities, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
                 return base.Build(entities, attributes, relationships);
             }
