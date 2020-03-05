@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="moq" Version="$(MoqVersion)" />
-    <PackageReference Include="Bogus" Version="$(BogusVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
