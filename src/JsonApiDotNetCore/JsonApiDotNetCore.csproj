@@ -39,7 +39,4 @@
   <ItemGroup Condition="'$(GenerateDocumentation)' == 'true'">
     <PackageReference Include="docfx.console" Version="2.33.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Graph\ResourceNameFormatters\" />
-  </ItemGroup>
 </Project>
