@@ -13,6 +13,11 @@ namespace JsonApiDotNetCore.Internal.Query
         @in = 7, // prefix with @ to use keyword
         nin = 8,
         isnull = 9,
-        isnotnull = 10
+        isnotnull = 10,
+        notlike = 11,
+        sw = 12, //start with
+        notsw = 13, //doesn't start with
+        ew = 14, // end with,
+        notew = 15 // doesn't end with
     }
 }

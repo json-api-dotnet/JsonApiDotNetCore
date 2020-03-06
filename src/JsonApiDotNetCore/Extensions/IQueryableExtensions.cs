@@ -149,7 +149,28 @@ namespace JsonApiDotNetCore.Extensions
                     body = Expression.GreaterThanOrEqual(left, right);
                     break;
                 case FilterOperation.like:
-                    body = Expression.Call(left, "Contains", null, right);
+                case FilterOperation.notlike:
+                    body = Expression.Call(left, nameof(string.Contains), null, right);
+                    if(operation== FilterOperation.notlike)
+                    {
+                        body = Expression.Not(body);
+                    }
+                    break;
+                case FilterOperation.sw:
+                case FilterOperation.notsw:
+                    body = Expression.Call(left, nameof(string.StartsWith), null, right);
+                    if (operation == FilterOperation.notsw)
+                    {
+                        body = Expression.Not(body);
+                    }
+                    break;
+                case FilterOperation.ew:
+                case FilterOperation.notew:
+                    body = Expression.Call(left, nameof(string.EndsWith), null, right);
+                    if (operation == FilterOperation.notew)
+                    {
+                        body = Expression.Not(body);
+                    }
                     break;
                 // {model.Id != 1}
                 case FilterOperation.ne:
