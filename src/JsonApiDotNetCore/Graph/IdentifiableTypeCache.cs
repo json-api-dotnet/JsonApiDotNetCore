@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,19 +11,14 @@ namespace JsonApiDotNetCore.Graph
     /// </summary>
     internal sealed class IdentifiableTypeCache
     {
-        private readonly IDictionary<Assembly, List<ResourceDescriptor>> _typeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
+        private readonly ConcurrentDictionary<Assembly, List<ResourceDescriptor>> _typeCache = new ConcurrentDictionary<Assembly, List<ResourceDescriptor>>();
 
         /// <summary>
         /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
         /// </summary>
         public IEnumerable<ResourceDescriptor> GetIdentifiableTypes(Assembly assembly)
         {
-            if (!_typeCache.ContainsKey(assembly))
-            {
-                _typeCache[assembly] = FindIdentifiableTypes(assembly).ToList();
-            }
-
-            return _typeCache[assembly];
+            return _typeCache.GetOrAdd(assembly, asm => FindIdentifiableTypes(asm).ToList());
         }
 
         private static IEnumerable<ResourceDescriptor> FindIdentifiableTypes(Assembly assembly)
