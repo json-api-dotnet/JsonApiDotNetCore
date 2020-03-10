@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Graph
         };
         private readonly IServiceCollection _services;
         private readonly IResourceGraphBuilder _resourceGraphBuilder;
-        private readonly List<ResourceDescriptor> _identifiables = new List<ResourceDescriptor>();
+        private readonly IdentifiableTypeCache _typeCache = new IdentifiableTypeCache();
 
         public ServiceDiscoveryFacade(IServiceCollection services, IResourceGraphBuilder resourceGraphBuilder)
         {
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Graph
         {
             AddDbContextResolvers(assembly);
 
-            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(assembly);
+            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
                 AddResource(assembly, resourceDescriptor);
@@ -77,7 +77,6 @@ namespace JsonApiDotNetCore.Graph
             }
             return this;
         }
-
 
         public IEnumerable<Type> FindDerivedTypes(Type baseType)
         {
@@ -109,9 +108,9 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddResources(Assembly assembly)
         {
-            var identifiables = TypeLocator.GetIdentifiableTypes(assembly);
-            foreach (var identifiable in identifiables)
-                AddResource(assembly, identifiable);
+            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
+            foreach (var resourceDescriptor in resourceDescriptors)
+                AddResource(assembly, resourceDescriptor);
 
             return this;
         }
@@ -149,7 +148,7 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddServices(Assembly assembly)
         {
-            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(assembly);
+            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
                 AddServices(assembly, resourceDescriptor);
@@ -171,7 +170,7 @@ namespace JsonApiDotNetCore.Graph
         /// <param name="assembly">The assembly to search for resources in.</param>
         public ServiceDiscoveryFacade AddRepositories(Assembly assembly)
         {
-            var resourceDescriptors = TypeLocator.GetIdentifiableTypes(assembly);
+            var resourceDescriptors = _typeCache.GetIdentifiableTypes(assembly);
             foreach (var resourceDescriptor in resourceDescriptors)
             {
                 AddRepositories(assembly, resourceDescriptor);

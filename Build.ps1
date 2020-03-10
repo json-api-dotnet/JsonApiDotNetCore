@@ -27,21 +27,7 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
-# Workaround: running 'dotnet test -c Release' fails for yet unknown reasons on AppVeyor, so we run tests one by one.
-
-dotnet test ./test/JsonApiDotNetCoreExampleTests/JsonApiDotNetCoreExampleTests.csproj -c Release --no-build
-CheckLastExitCode
-
-dotnet test ./test/DiscoveryTests/DiscoveryTests.csproj -c Release --no-build
-CheckLastExitCode
-
-dotnet test ./test/IntegrationTests/IntegrationTests.csproj -c Release --no-build
-CheckLastExitCode
-
-dotnet test ./test/UnitTests/UnitTests.csproj -c Release --no-build
-CheckLastExitCode
-
-dotnet test ./test/NoEntityFrameworkTests/NoEntityFrameworkTests.csproj -c Release --no-build
+dotnet test -c Release --no-build
 CheckLastExitCode
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
