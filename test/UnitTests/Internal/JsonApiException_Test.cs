@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public class JsonApiException_Test
+    public sealed class JsonApiException_Test
     {
         [Fact]
         public void Can_GetStatusCode()

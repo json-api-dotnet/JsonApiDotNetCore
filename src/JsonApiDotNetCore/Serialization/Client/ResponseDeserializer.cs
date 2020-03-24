@@ -18,12 +18,12 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public DeserializedSingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var entity = base.Deserialize(body);
-            return new DeserializedSingleResponse<TResource>()
+            var entity = Deserialize(body);
+            return new DeserializedSingleResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = entity == null ? null : (TResource)entity,
+                Data = (TResource) entity,
                 JsonApi = null,
                 Errors = null
             };
@@ -32,12 +32,12 @@ namespace JsonApiDotNetCore.Serialization.Client
         /// <inheritdoc/>
         public DeserializedListResponse<TResource> DeserializeList<TResource>(string body) where TResource : class, IIdentifiable
         {
-            var entities = base.Deserialize(body);
-            return new DeserializedListResponse<TResource>()
+            var entities = Deserialize(body);
+            return new DeserializedListResponse<TResource>
             {
                 Links = _document.Links,
                 Meta = _document.Meta,
-                Data = entities == null ? null : ((List<IIdentifiable>)entities).Cast<TResource>().ToList(),
+                Data = ((List<IIdentifiable>) entities)?.Cast<TResource>().ToList(),
                 JsonApi = null,
                 Errors = null
             };
@@ -62,12 +62,10 @@ namespace JsonApiDotNetCore.Serialization.Client
                 return;
 
             if (field is HasOneAttribute hasOneAttr)
-            {   // add attributes and relationships of a parsed HasOne relationship
+            {
+                // add attributes and relationships of a parsed HasOne relationship
                 var rio = data.SingleData;
-                if (rio == null)
-                    hasOneAttr.SetValue(entity, null);
-                else
-                    hasOneAttr.SetValue(entity, ParseIncludedRelationship(hasOneAttr, rio));
+                hasOneAttr.SetValue(entity, rio == null ? null : ParseIncludedRelationship(hasOneAttr, rio));
             }
             else if (field is HasManyAttribute hasManyAttr)
             {  // add attributes and relationships of a parsed HasMany relationship
@@ -108,7 +106,7 @@ namespace JsonApiDotNetCore.Serialization.Client
             }
             catch (InvalidOperationException e)
             {
-                throw new InvalidOperationException($"A compound document MUST NOT include more than one resource object for each type and id pair."
+                throw new InvalidOperationException("A compound document MUST NOT include more than one resource object for each type and id pair."
                         + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
             }
         }

@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using Xunit;
 
 namespace UnitTests.Models
 {
-    public class AttributesEqualsTests
+    public sealed class AttributesEqualsTests
     {
         [Fact]
         public void HasManyAttribute_Equals_Returns_True_When_Same_Name()

@@ -107,13 +107,11 @@ namespace JsonApiDotNetCore.Formatters
         /// <returns>String content of body sent to server.</returns>
         private async Task<string> GetRequestBody(Stream body)
         {
-            using (var reader = new StreamReader(body))
-            {
-                // This needs to be set to async because
-                // Synchronous IO operations are 
-                // https://github.com/aspnet/AspNetCore/issues/7644
-                return await reader.ReadToEndAsync();
-            }
+            using var reader = new StreamReader(body);
+            // This needs to be set to async because
+            // Synchronous IO operations are 
+            // https://github.com/aspnet/AspNetCore/issues/7644
+            return await reader.ReadToEndAsync();
         }
     }
 }

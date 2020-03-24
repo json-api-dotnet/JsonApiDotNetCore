@@ -17,10 +17,10 @@ namespace JsonApiDotNetCore.Hooks
     /// it and fire hooks for it, if defined) or not (in which case we skip 
     /// ArticleTags and go directly to Tags.
     /// </summary>
-    public class RelationshipProxy
+    internal sealed class RelationshipProxy
     {
-        readonly bool _isHasManyThrough;
-        readonly bool _skipJoinTable;
+        private readonly bool _isHasManyThrough;
+        private readonly bool _skipJoinTable;
 
         /// <summary>
         /// The target type for this relationship attribute. 
@@ -28,9 +28,9 @@ namespace JsonApiDotNetCore.Hooks
         /// For HasManyThrough it is either the ThroughProperty (when the join table is 
         /// Identifiable) or it is the right-hand side (when the join table is not identifiable)
         /// </summary>
-        public Type RightType { get; private set; }
-        public Type LeftType { get { return Attribute.LeftType; } }
-        public bool IsContextRelation { get; private set; }
+        public Type RightType { get; }
+        public Type LeftType => Attribute.LeftType;
+        public bool IsContextRelation { get; }
 
         public RelationshipAttribute Attribute { get; set; }
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)

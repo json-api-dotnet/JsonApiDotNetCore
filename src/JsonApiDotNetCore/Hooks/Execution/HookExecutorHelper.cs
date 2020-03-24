@@ -15,14 +15,14 @@ using JsonApiDotNetCore.Configuration;
 namespace JsonApiDotNetCore.Hooks
 {
     /// <inheritdoc/>
-    internal class HookExecutorHelper : IHookExecutorHelper
+    internal sealed class HookExecutorHelper : IHookExecutorHelper
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IJsonApiOptions _options;
-        protected readonly IGenericServiceFactory _genericProcessorFactory;
-        protected readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;
-        protected readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
-        protected readonly List<ResourceHook> _targetedHooksForRelatedEntities;
+        private readonly IGenericServiceFactory _genericProcessorFactory;
+        private readonly Dictionary<RightType, IResourceHookContainer> _hookContainers;
+        private readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
+        private readonly List<ResourceHook> _targetedHooksForRelatedEntities;
 
         public HookExecutorHelper(IGenericServiceFactory genericProcessorFactory,
                                   IJsonApiOptions options)
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Hooks
                 container = (_genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceDefinition<>), rightType));
                 _hookContainers[rightType] = container;
             }
-            if (container == null) return container;
+            if (container == null) return null;
 
             // if there was a container, first check if it implements the hook we 
             // want to use it for.
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Hooks
             }
             else
             {
-                targetHooks = new List<ResourceHook>() { hook };
+                targetHooks = new List<ResourceHook> { hook };
             }
 
             foreach (ResourceHook targetHook in targetHooks)
@@ -105,21 +105,20 @@ namespace JsonApiDotNetCore.Hooks
             return _options.LoadDatabaseValues;
         }
 
-        bool ShouldExecuteHook(RightType entityType, ResourceHook hook)
+        private bool ShouldExecuteHook(RightType entityType, ResourceHook hook)
         {
             var discovery = GetHookDiscovery(entityType);
             return discovery.ImplementedHooks.Contains(hook);
         }
 
-
-        void CheckForTargetHookExistence()
+        private void CheckForTargetHookExistence()
         {
             if (!_targetedHooksForRelatedEntities.Any())
                 throw new InvalidOperationException("Something is not right in the breadth first traversal of resource hook: " +
                     "trying to get meta information when no allowed hooks are set");
         }
 
-        IHooksDiscovery GetHookDiscovery(Type entityType)
+        private IHooksDiscovery GetHookDiscovery(Type entityType)
         {
             if (!_hookDiscoveries.TryGetValue(entityType, out IHooksDiscovery discovery))
             {
@@ -129,18 +128,18 @@ namespace JsonApiDotNetCore.Hooks
             return discovery;
         }
 
-        IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
+        private IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IEnumerable<TId> ids, RelationshipAttribute[] relationshipsToNextLayer) where TResource : class, IIdentifiable<TId>
         {
             var repo = GetRepository<TResource, TId>();
             var query = repo.Get().Where(e => ids.Contains(e.Id));
             foreach (var inclusionChainElement in relationshipsToNextLayer)
             {
-                query = repo.Include(query, new RelationshipAttribute[] { inclusionChainElement });
+                query = repo.Include(query, new[] { inclusionChainElement });
             }
             return query.ToList();
         }
 
-        IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
+        private IResourceReadRepository<TResource, TId> GetRepository<TResource, TId>() where TResource : class, IIdentifiable<TId>
         {
             return _genericProcessorFactory.Get<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
         }
@@ -160,7 +159,7 @@ namespace JsonApiDotNetCore.Hooks
 
                 foreach (IIdentifiable ip in includedLefts)
                 {
-                    IList dbRightEntityList = null;
+                    IList dbRightEntityList;
                     var relationshipValue = relationship.GetValue(ip);
                     if (!(relationshipValue is IEnumerable))
                     {
@@ -189,7 +188,7 @@ namespace JsonApiDotNetCore.Hooks
             return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.RightType, kvp.Value));
         }
 
-        bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,
+        private bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,
             out IEnumerable entities,
             out RelationshipAttribute attr)
         {

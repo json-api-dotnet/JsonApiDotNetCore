@@ -1,12 +1,13 @@
 using System;
 namespace JsonApiDotNetCore.Hooks
 {
-    public class LoadDatabaseValues : Attribute
+    public sealed class LoadDatabaseValues : Attribute
     {
-        public readonly bool value;
+        public readonly bool Value;
+
         public LoadDatabaseValues(bool mode = true)
         {
-            value = mode;
+            Value = mode;
         }
     }
 }

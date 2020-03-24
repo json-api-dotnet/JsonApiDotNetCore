@@ -5,18 +5,16 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;
 using Moq;
 using Newtonsoft.Json;
-using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
 using Xunit;
 
 
 namespace UnitTests.Serialization.Server
 {
-    public class RequestDeserializerTests : DeserializerTestsSetup
+    public sealed class RequestDeserializerTests : DeserializerTestsSetup
     {
         private readonly RequestDeserializer _deserializer;
         private readonly Mock<ITargetedFields> _fieldsManagerMock = new Mock<ITargetedFields>();
-        public RequestDeserializerTests() : base()
+        public RequestDeserializerTests()
         {
             _deserializer = new RequestDeserializer(_resourceGraph, _fieldsManagerMock.Object);
         }
@@ -41,7 +39,7 @@ namespace UnitTests.Serialization.Server
         public void DeserializeAttributes_UpdatedImmutableMember_ThrowsInvalidOperationException()
         {
             // Arrange
-            SetupFieldsManager(out List<AttrAttribute> attributesToUpdate, out List<RelationshipAttribute> relationshipsToUpdate);
+            SetupFieldsManager(out _, out _);
             var content = new Document
             {
                 Data = new ResourceObject

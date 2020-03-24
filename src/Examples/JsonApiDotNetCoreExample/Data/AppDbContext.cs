@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExample.Data
 {
-    public class AppDbContext : DbContext
+    public sealed class AppDbContext : DbContext
     {
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<Passport> Passports { get; set; }

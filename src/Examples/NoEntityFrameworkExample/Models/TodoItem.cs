@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Models;
 
 namespace NoEntityFrameworkExample.Models
 {
-    public class TodoItem : Identifiable
+    public sealed class TodoItem : Identifiable
     {
         public TodoItem()
         {

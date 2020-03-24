@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Models;
@@ -22,9 +22,9 @@ namespace JsonApiDotNetCore.Hooks
         Dictionary<RelationshipAttribute, IEnumerable> GetLeftEntities();
     }
 
-    internal class RelationshipsFromPreviousLayer<TRightResource> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TRightResource>> where TRightResource : class, IIdentifiable
+    internal sealed class RelationshipsFromPreviousLayer<TRightResource> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TRightResource>> where TRightResource : class, IIdentifiable
     {
-        readonly IEnumerable<RelationshipGroup<TRightResource>> _collection;
+        private readonly IEnumerable<RelationshipGroup<TRightResource>> _collection;
 
         public RelationshipsFromPreviousLayer(IEnumerable<RelationshipGroup<TRightResource>> collection)
         {

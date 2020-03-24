@@ -12,9 +12,9 @@ using JsonApiDotNetCoreExample;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
-    public class RequestMetaTests
+    public sealed class RequestMetaTests
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
 
         public RequestMetaTests(TestFixture<Startup> fixture)
         {
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -49,9 +49,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             foreach (var hash in expectedMeta)
             {
-                if (hash.Value is IList)
+                if (hash.Value is IList listValue)
                 {
-                    var listValue = (IList)hash.Value;
                     for (var i = 0; i < listValue.Count; i++)
                         Assert.Equal(listValue[i].ToString(), ((IList)meta[hash.Key])[i].ToString());
                 }

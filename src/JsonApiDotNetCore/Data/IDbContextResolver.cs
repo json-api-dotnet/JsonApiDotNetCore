@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -9,7 +8,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class IncludeServiceTests : QueryParametersUnitTestCollection
+    public sealed class IncludeServiceTests : QueryParametersUnitTestCollection
     {
 
         public IncludeService GetService(ResourceContext resourceContext = null)

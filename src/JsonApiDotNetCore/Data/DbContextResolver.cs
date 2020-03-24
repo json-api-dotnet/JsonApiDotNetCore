@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Data
 {
-    public class DbContextResolver<TContext> : IDbContextResolver
+    public sealed class DbContextResolver<TContext> : IDbContextResolver
         where TContext : DbContext
     {
         private readonly TContext _context;
@@ -13,8 +13,5 @@ namespace JsonApiDotNetCore.Data
         }
 
         public DbContext GetContext() => _context;
-
-        public DbSet<TResource> GetDbSet<TResource>() where TResource : class =>  null;
-
     }
 }

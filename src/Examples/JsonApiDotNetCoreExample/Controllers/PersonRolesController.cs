@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class PersonRolesController : JsonApiController<PersonRole>
+    public sealed class PersonRolesController : JsonApiController<PersonRole>
     {
         public PersonRolesController(
             IJsonApiOptions jsonApiOptions,

@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Models
     /// <summary>
     /// https://jsonapi.org/format/#document-structure
     /// </summary>
-    public class Document : ExposableData<ResourceObject>
+    public sealed class Document : ExposableData<ResourceObject>
     {
         /// <summary>
         /// see "meta" in https://jsonapi.org/format/#document-top-level

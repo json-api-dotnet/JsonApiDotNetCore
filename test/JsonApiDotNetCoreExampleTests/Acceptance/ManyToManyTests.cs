@@ -18,7 +18,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class ManyToManyTests
+    public sealed class ManyToManyTests
     {
         private static readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
         private static readonly Faker<Tag> _tagFaker = new Faker<Tag>().RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10));
 
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         public ManyToManyTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
             context.ArticleTags.Add(articleTag);
             await context.SaveChangesAsync();
-            var route = $"/api/v1/articles?include=tags";
+            var route = "/api/v1/articles?include=tags";
 
             // @TODO - Use fixture
             var builder = new WebHostBuilder()
@@ -280,8 +280,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Tags.Add(tag);
             context.AuthorDifferentDbContextName.Add(author);
             await context.SaveChangesAsync();
-
-            var article = _articleFaker.Generate();
 
             var route = "/api/v1/articles";
             var request = new HttpRequestMessage(new HttpMethod("POST"), route);

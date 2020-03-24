@@ -6,7 +6,6 @@ using Bogus;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -14,9 +13,9 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class PagingTests : TestFixture<Startup>
+    public sealed class PagingTests : TestFixture<Startup>
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
 
         public PagingTests(TestFixture<Startup> fixture)
@@ -88,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
 
-            string route = $"/api/v1/todoItems";
+            string route = "/api/v1/todoItems";
             if (pageNum != 1)
             {
                 route += $"?page[size]=5&page[number]={pageNum}";
@@ -139,12 +138,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
         }
 
-        private class IdComparer<T> : IEqualityComparer<T>
+        private sealed class IdComparer<T> : IEqualityComparer<T>
             where T : IIdentifiable
         {
             public bool Equals(T x, T y) => x?.StringId == y?.StringId;
 
-            public int GetHashCode(T obj) => obj?.StringId?.GetHashCode() ?? 0;
+            public int GetHashCode(T obj) => obj.StringId?.GetHashCode() ?? 0;
         }
     }
 }

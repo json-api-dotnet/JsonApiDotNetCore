@@ -64,7 +64,7 @@ namespace UnitTests.ResourceHooks
         {
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
-            var todoList = new List<TodoItem>() { todoItem };
+            var todoList = new List<TodoItem> { todoItem };
             person.OneToOneTodoItem = todoItem;
             todoItem.OneToOnePerson = person;
             return todoList;
@@ -74,7 +74,7 @@ namespace UnitTests.ResourceHooks
         {
             var todoItem = _todoFaker.Generate();
             var person = _personFaker.Generate();
-            var todoList = new List<TodoItem>() { todoItem };
+            var todoList = new List<TodoItem> { todoItem };
             person.AssignedTodoItems = todoList;
             todoItem.Owner = person;
             return todoList;
@@ -106,7 +106,7 @@ namespace UnitTests.ResourceHooks
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
 
-            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
 
@@ -134,14 +134,14 @@ namespace UnitTests.ResourceHooks
             }
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
-            var articles = new List<Article>() { articleTagsSubset, articleWithAllTags };
+            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
             return (articles, allJoins, allTags);
         }
     }
 
     public class HooksTestsSetup : HooksDummyData
     {
-        (Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericServiceFactory>, IJsonApiOptions) CreateMocks()
+        private (Mock<ITargetedFields>, Mock<IIncludeService>, Mock<IGenericServiceFactory>, IJsonApiOptions) CreateMocks()
         {
             var pfMock = new Mock<IGenericServiceFactory>();
             var ufMock = new Mock<ITargetedFields>();
@@ -159,7 +159,7 @@ namespace UnitTests.ResourceHooks
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, iqMock, gpfMock, options) = CreateMocks();
 
-            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, null);
+            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
@@ -241,7 +241,7 @@ namespace UnitTests.ResourceHooks
                 .Returns(enableDbValuesHooks);
             }
             mock.Setup(discovery => discovery.DatabaseValuesEnabledHooks)
-            .Returns(new ResourceHook[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
+            .Returns(new[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
 
             return mock.Object;
         }
@@ -268,7 +268,7 @@ namespace UnitTests.ResourceHooks
             return options;
         }
 
-        void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
+        private void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
         {
             resourceDefinition
             .Setup(rd => rd.BeforeCreate(It.IsAny<IEntityHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
@@ -310,7 +310,7 @@ namespace UnitTests.ResourceHooks
             .Verifiable();
         }
 
-        void SetupProcessorFactoryForResourceDefinition<TModel>(
+        private void SetupProcessorFactoryForResourceDefinition<TModel>(
         Mock<IGenericServiceFactory> processorFactory,
         IResourceHookContainer<TModel> modelResource,
         IHooksDiscovery<TModel> discovery,
@@ -340,7 +340,7 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
+        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
         AppDbContext dbContext
         ) where TModel : class, IIdentifiable<int>
         {
@@ -348,19 +348,19 @@ namespace UnitTests.ResourceHooks
             return new DefaultResourceRepository<TModel, int>(null, resolver, null, null, NullLoggerFactory.Instance);
         }
 
-        IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
+        private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(r => r.GetContext()).Returns(dbContext);
             return mock.Object;
         }
 
-        void ResolveInverseRelationships(AppDbContext context)
+        private void ResolveInverseRelationships(AppDbContext context)
         {
             new InverseRelationships(_resourceGraph, new DbContextResolver<AppDbContext>(context)).Resolve();
         }
 
-        Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
+        private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
         <TModel>(IHooksDiscovery<TModel> discovery
         )
         where TModel : class, IIdentifiable<int>

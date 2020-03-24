@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = new string[] { "value" };
+            var result = new[] { "value" };
             return Ok(result);
         }
     }

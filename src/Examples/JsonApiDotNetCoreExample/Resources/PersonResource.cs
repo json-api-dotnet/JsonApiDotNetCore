@@ -11,11 +11,6 @@ namespace JsonApiDotNetCoreExample.Resources
     {
         public PersonResource(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
-        public override IEnumerable<Person> BeforeUpdate(IDiffableEntityHashSet<Person> entities, ResourcePipeline pipeline)
-        {
-            return base.BeforeUpdate(entities, pipeline);
-        }
-
         public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> entitiesByRelationship, ResourcePipeline pipeline)
         {
             BeforeImplicitUpdateRelationship(entitiesByRelationship, pipeline);
@@ -31,7 +26,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             return new Dictionary<string, object> {
                 { "copyright", "Copyright 2015 Example Corp." },
-                { "authors", new string[] { "Jared Nance", "Maurits Moeys", "Harro van der Kroft" } }
+                { "authors", new[] { "Jared Nance", "Maurits Moeys", "Harro van der Kroft" } }
             };
         }
     }
