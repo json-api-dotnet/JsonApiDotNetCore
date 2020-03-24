@@ -4,16 +4,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../JsonApiDotNetCore/JsonApiDotNetCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(EFCoreVersion)" />
   </ItemGroup>
 </Project>
