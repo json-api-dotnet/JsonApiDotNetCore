@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class KebabCasedModelsController : JsonApiController<KebabCasedModel>
+    public sealed class KebabCasedModelsController : JsonApiController<KebabCasedModel>
     {
         public KebabCasedModelsController(
             IJsonApiOptions jsonApiOptions,

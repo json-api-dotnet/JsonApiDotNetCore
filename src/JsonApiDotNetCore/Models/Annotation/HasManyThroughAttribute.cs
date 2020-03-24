@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Models
     /// public List&lt;ArticleTag&gt; ArticleTags { get; set; }
     /// </code>
     /// </example>
-    public class HasManyThroughAttribute : HasManyAttribute
+    public sealed class HasManyThroughAttribute : HasManyAttribute
     {
         /// <summary>
         /// Create a HasMany relationship through a many-to-many join relationship.
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Models
         /// In the `[HasManyThrough("tags", nameof(ArticleTags))]` example
         /// this would be "ArticleTags".
         /// </example>
-        public string InternalThroughName { get; private set; }
+        public string InternalThroughName { get; }
 
         /// <summary>
         /// The join type.

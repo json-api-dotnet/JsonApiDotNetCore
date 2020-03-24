@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests
 {
-    public class JsonApiControllerMixin_Tests : JsonApiControllerMixin
+    public sealed class JsonApiControllerMixin_Tests : JsonApiControllerMixin
     {
 
         [Fact]

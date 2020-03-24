@@ -29,11 +29,11 @@ namespace JsonApiDotNetCore.Hooks
     }
 
     /// <inheritdoc />
-    public class DiffableEntityHashSet<TResource> : EntityHashSet<TResource>, IDiffableEntityHashSet<TResource> where TResource : class, IIdentifiable
+    public sealed class DiffableEntityHashSet<TResource> : EntityHashSet<TResource>, IDiffableEntityHashSet<TResource> where TResource : class, IIdentifiable
     {
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
-        private Dictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
+        private readonly Dictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
 
         public DiffableEntityHashSet(HashSet<TResource> requestEntities,
                           HashSet<TResource> databaseEntities,
@@ -71,15 +71,15 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc />
-        public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> NavigationAction)
+        public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
-            var propertyInfo = TypeHelper.ParseNavigationExpression(NavigationAction);
+            var propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
             var propertyType = propertyInfo.PropertyType;
             if (propertyType.Inherits(typeof(IEnumerable))) propertyType = TypeHelper.GetTypeOfList(propertyType);
             if (propertyType.Implements<IIdentifiable>())
             {
                 // the navigation action references a relationship. Redirect the call to the relationship dictionary. 
-                return base.GetAffected(NavigationAction);
+                return base.GetAffected(navigationAction);
             }
             else if (_updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> entities))
             {
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Hooks
             return new HashSet<TResource>();
         }
 
-        private HashSet<TResource> ThrowNoDbValuesError()
+        private void ThrowNoDbValuesError()
         {
             throw new MemberAccessException($"Cannot iterate over the diffs if the ${nameof(LoadDatabaseValues)} option is set to false");
         }
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Hooks
     /// A wrapper that contains an entity that is affected by the request, 
     /// matched to its current database value
     /// </summary>
-    public class EntityDiffPair<TResource> where TResource : class, IIdentifiable
+    public sealed class EntityDiffPair<TResource> where TResource : class, IIdentifiable
     {
         public EntityDiffPair(TResource entity, TResource databaseValue)
         {
@@ -109,10 +109,10 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// The resource from the request matching the resource from the database.
         /// </summary>
-        public TResource Entity { get; private set; }
+        public TResource Entity { get; }
         /// <summary>
         /// The resource from the database matching the resource from the request.
         /// </summary>
-        public TResource DatabaseValue { get; private set; }
+        public TResource DatabaseValue { get; }
     }
 }

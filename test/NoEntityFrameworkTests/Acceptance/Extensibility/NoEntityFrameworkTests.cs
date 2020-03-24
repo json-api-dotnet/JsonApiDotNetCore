@@ -12,7 +12,7 @@ using TodoItem = NoEntityFrameworkExample.Models.TodoItem;
 
 namespace NoEntityFrameworkTests.Acceptance.Extensibility
 {
-    public class NoEntityFrameworkTests : IClassFixture<TestFixture>
+    public sealed class NoEntityFrameworkTests : IClassFixture<TestFixture>
     {
         private readonly TestFixture _fixture;
 
@@ -31,7 +31,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             var client = _fixture.Server.CreateClient();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var request = new HttpRequestMessage(httpMethod, route);
 
@@ -78,7 +78,7 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
             // Arrange
             var description = Guid.NewGuid().ToString();
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems/";
+            var route = "/api/v1/todoItems/";
             var content = new
             {
                 data = new
@@ -92,8 +92,10 @@ namespace NoEntityFrameworkTests.Acceptance.Extensibility
                 }
             };
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             var builder = new WebHostBuilder()

@@ -9,7 +9,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-    public class NestedResourceTests : FunctionalTestCollection<StandardApplicationFactory>
+    public sealed class NestedResourceTests : FunctionalTestCollection<StandardApplicationFactory>
     {
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;

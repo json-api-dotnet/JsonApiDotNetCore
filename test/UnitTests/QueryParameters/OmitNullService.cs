@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class OmitNullServiceTests : QueryParametersUnitTestCollection
+    public sealed class OmitNullServiceTests : QueryParametersUnitTestCollection
     {
         public OmitNullService GetService(bool @default, bool @override)
         {
@@ -39,7 +39,7 @@ namespace UnitTests.QueryParameters
         public void Parse_QueryConfigWithApiSettings_CanParse(string queryConfig, bool @default, bool @override, bool expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>($"omitNull", new StringValues(queryConfig));
+            var query = new KeyValuePair<string, StringValues>("omitNull", new StringValues(queryConfig));
             var service = GetService(@default, @override);
 
             // Act

@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Query
     public class FilterService : QueryParameterService, IFilterService
     {
         private readonly List<FilterQueryContext> _filters;
-        private IResourceDefinition _requestResourceDefinition;
+        private readonly IResourceDefinition _requestResourceDefinition;
 
         public FilterService(IResourceDefinitionProvider resourceDefinitionProvider, IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
@@ -39,15 +39,12 @@ namespace JsonApiDotNetCore.Query
         private FilterQueryContext GetQueryContexts(FilterQuery query)
         {
             var queryContext = new FilterQueryContext(query);
-            if (_requestResourceDefinition != null)
+            var customQuery = _requestResourceDefinition?.GetCustomQueryFilter(query.Target);
+            if (customQuery != null)
             {
-                var customQuery = _requestResourceDefinition.GetCustomQueryFilter(query.Target);
-                if (customQuery != null)
-                {
-                    queryContext.IsCustom = true;
-                    queryContext.CustomQuery = customQuery;
-                    return queryContext;
-                }
+                queryContext.IsCustom = true;
+                queryContext.CustomQuery = customQuery;
+                return queryContext;
             }
 
             queryContext.Relationship = GetRelationship(query.Relationship);
@@ -72,7 +69,7 @@ namespace JsonApiDotNetCore.Query
             if (string.Equals(op, FilterOperation.@in.ToString(), StringComparison.OrdinalIgnoreCase)
                 || string.Equals(op, FilterOperation.nin.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                (var _, var filterValue) = ParseFilterOperation(queryParameter.Value);
+                var (_, filterValue) = ParseFilterOperation(queryParameter.Value);
                 queries.Add(new FilterQuery(propertyName, filterValue, op));
             }
             else
@@ -80,7 +77,7 @@ namespace JsonApiDotNetCore.Query
                 var values = ((string)queryParameter.Value).Split(QueryConstants.COMMA);
                 foreach (var val in values)
                 {
-                    (var operation, var filterValue) = ParseFilterOperation(val);
+                    var (operation, filterValue) = ParseFilterOperation(val);
                     queries.Add(new FilterQuery(propertyName, filterValue, operation));
                 }
             }
@@ -114,7 +111,7 @@ namespace JsonApiDotNetCore.Query
 
             var operation = values[0];
             // remove prefix from value
-            if (Enum.TryParse(operation, out FilterOperation op) == false)
+            if (Enum.TryParse(operation, out FilterOperation _) == false)
                 return string.Empty;
 
             return operation;

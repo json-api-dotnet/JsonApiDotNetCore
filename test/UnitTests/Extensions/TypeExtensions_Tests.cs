@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.Extensions
 {
-    public class TypeExtensions_Tests
+    public sealed class TypeExtensions_Tests
     {
         [Fact]
         public void GetCollection_Creates_List_If_T_Implements_Interface()
@@ -63,7 +63,7 @@ namespace UnitTests.Extensions
             Assert.False(result);
         }
 
-        private class Model : IIdentifiable
+        private sealed class Model : IIdentifiable
         {
             public string StringId { get; set; }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Hooks
         /// Discovers the implemented hooks for a model.
         /// </summary>
         /// <returns>The implemented hooks for model.</returns>
-        void DiscoverImplementedHooks(Type containerType)
+        private void DiscoverImplementedHooks(Type containerType)
         {
             if (containerType == null || containerType == _boundResourceDefinitionType)
             {
@@ -69,10 +69,10 @@ namespace JsonApiDotNetCore.Hooks
                 {
                     if (!_databaseValuesAttributeAllowed.Contains(hook))
                     {
-                        throw new JsonApiSetupException($"DatabaseValuesAttribute cannot be used on hook" +
-                            $"{hook.ToString("G")} in resource definition  {containerType.Name}");
+                        throw new JsonApiSetupException("DatabaseValuesAttribute cannot be used on hook" +
+                            $"{hook:G} in resource definition  {containerType.Name}");
                     }
-                    var targetList = attr.value ? databaseValuesEnabledHooks : databaseValuesDisabledHooks;
+                    var targetList = attr.Value ? databaseValuesEnabledHooks : databaseValuesDisabledHooks;
                     targetList.Add(hook);
                 }
             }

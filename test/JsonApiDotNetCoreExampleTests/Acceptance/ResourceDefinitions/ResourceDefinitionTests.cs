@@ -17,13 +17,13 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class ResourceDefinitionTests
+    public sealed class ResourceDefinitionTests
     {
-        private TestFixture<Startup> _fixture;
-        private AppDbContext _context;
-        private Faker<User> _userFaker;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly AppDbContext _context;
+        private readonly Faker<User> _userFaker;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
         private static readonly Faker<Article> _articleFaker = new Faker<Article>()
             .RuleFor(a => a.Name, f => f.Random.AlphaNumeric(10))
             .RuleFor(a => a.Author, f => new Author());
@@ -77,10 +77,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/users";
+            var route = "/api/v1/users";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(serializer.Serialize(user));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(serializer.Serialize(user))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -113,8 +115,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var serializer = _fixture.GetSerializer<User>(p => new { p.Password });
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/users/{user.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(serializer.Serialize(user));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(serializer.Serialize(user))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -125,7 +129,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // response assertions
             var body = await response.Content.ReadAsStringAsync();
-            var returnedUser = _fixture.GetDeserializer().DeserializeSingle<User>(body).Data;
             var document = JsonConvert.DeserializeObject<Document>(body);
             Assert.False(document.SingleData.Attributes.ContainsKey("password"));
             Assert.Equal(user.Username, document.SingleData.Attributes["username"]);
@@ -139,9 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Unauthorized_TodoItem()
         {
             // Arrange
-            var route = $"/api/v1/todoItems/1337";
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
+            var route = "/api/v1/todoItems/1337";
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -155,9 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         public async Task Unauthorized_Passport()
         {
             // Arrange
-            var route = $"/api/v1/people/1?include=passport";
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
+            var route = "/api/v1/people/1?include=passport";
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -204,11 +203,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.Articles.AddRange(articles);
             await context.SaveChangesAsync();
 
-            var route = $"/api/v1/articles";
-
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
-
+            var route = "/api/v1/articles";
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -231,7 +226,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             string toBeExcluded = "This should be not be included";
             tags[0].Name = toBeExcluded;
 
-            var articleTags = new ArticleTag[]
+            var articleTags = new[]
             {
                 new ArticleTag
                 {
@@ -247,11 +242,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             context.ArticleTags.AddRange(articleTags);
             await context.SaveChangesAsync();
 
-            var route = $"/api/v1/articles?include=tags";
-
-            var httpMethod = new HttpMethod("GET");
-            var request = new HttpRequestMessage(httpMethod, route);
-
+            var route = "/api/v1/articles?include=tags";
 
             // Act
             var response = await _fixture.Client.GetAsync(route);
@@ -297,7 +288,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);
@@ -320,10 +311,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport() { IsLocked = true };
+            var passport = new Passport { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport() { };
+            var newPassport = new Passport();
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -367,10 +358,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
             var person = _personFaker.Generate();
-            var passport = new Passport() { IsLocked = true };
+            var passport = new Passport { IsLocked = true };
             person.Passport = passport;
             context.People.AddRange(person);
-            var newPassport = new Passport() { };
+            var newPassport = new Passport();
             context.Passports.Add(newPassport);
             await context.SaveChangesAsync();
 
@@ -470,7 +461,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
             var request = new HttpRequestMessage(httpMethod, route);
 
             string serializedContent = JsonConvert.SerializeObject(content);

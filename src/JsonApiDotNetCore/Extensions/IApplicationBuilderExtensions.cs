@@ -4,9 +4,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Extensions
@@ -51,12 +49,12 @@ namespace JsonApiDotNetCore.Extensions
                 if (useAuthentication)
                 {
                     app.UseAuthentication();
-                };
+                }
 
                 if (useAuthorization)
                 {
                     app.UseAuthorization();
-                };
+                }
 
                 // middleware to run after routing occurs.
                 app.UseMiddleware<CurrentRequestMiddleware>();
@@ -81,9 +79,9 @@ namespace JsonApiDotNetCore.Extensions
             var logger = app.ApplicationServices.GetService(typeof(ILogger<ResourceGraphBuilder>)) as ILogger;
             var resourceGraph = app.ApplicationServices.GetService(typeof(IResourceGraph)) as ResourceGraph;
 
-            if (logger != null && resourceGraph != null)
+            if (logger != null)
             {
-                resourceGraph.ValidationResults.ForEach((v) =>
+                resourceGraph?.ValidationResults.ForEach((v) =>
                     logger.Log(
                         v.LogLevel,
                         new EventId(),

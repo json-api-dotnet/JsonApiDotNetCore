@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class ResourceObject : ResourceIdentifierObject
+    public sealed class ResourceObject : ResourceIdentifierObject
     {
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Attributes { get; set; }

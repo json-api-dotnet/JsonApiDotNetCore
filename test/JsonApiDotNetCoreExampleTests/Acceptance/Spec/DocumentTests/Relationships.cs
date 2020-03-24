@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample;
@@ -15,15 +15,13 @@ using JsonApiDotNetCoreExample.Models;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
-    public class Relationships
+    public sealed class Relationships
     {
-        private TestFixture<Startup> _fixture;
-        private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
 
         public Relationships(TestFixture<Startup> fixture)
         {
-            _fixture = fixture;
             _context = fixture.GetService<AppDbContext>();
              _todoItemFaker = new Faker<TodoItem>()
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
@@ -101,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

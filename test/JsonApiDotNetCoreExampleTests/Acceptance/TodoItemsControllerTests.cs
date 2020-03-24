@@ -20,12 +20,12 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class TodoItemControllerTests
+    public sealed class TodoItemControllerTests
     {
-        private TestFixture<Startup> _fixture;
-        private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public TodoItemControllerTests(TestFixture<Startup> fixture)
         {
@@ -161,11 +161,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.UpdatedDate = null;
 
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?filter[updatedDate]=isnotnull:";
+            var route = "/api/v1/todoItems?filter[updatedDate]=isnotnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -192,11 +192,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             otherTodoItem.Assignee = null;
 
             _context.RemoveRange(_context.TodoItems);
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?filter[assignee.id]=isnotnull:";
+            var route = "/api/v1/todoItems?filter[assignee.id]=isnotnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -220,11 +220,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.UpdatedDate = new DateTime();
 
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?filter[updatedDate]=isnull:";
+            var route = "/api/v1/todoItems?filter[updatedDate]=isnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -250,11 +250,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var otherTodoItem = _todoItemFaker.Generate();
             otherTodoItem.Assignee = new Person();
 
-            _context.TodoItems.AddRange(new[] { todoItem, otherTodoItem });
+            _context.TodoItems.AddRange(todoItem, otherTodoItem);
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?filter[assignee.id]=isnull:";
+            var route = "/api/v1/todoItems?filter[assignee.id]=isnull:";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?sort=ordinal";
+            var route = "/api/v1/todoItems?sort=ordinal";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -431,7 +431,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?sort=-ordinal";
+            var route = "/api/v1/todoItems?sort=-ordinal";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
@@ -524,10 +524,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             todoItem.OffsetDate = nowOffset;
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(serializer.Serialize(todoItem));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(serializer.Serialize(todoItem))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -561,7 +563,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 data = new
                 {
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", todoItem.Description },
                         { "ordinal", todoItem.Ordinal },
@@ -590,10 +592,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             };
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -633,7 +637,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     id = todoItem.Id,
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
@@ -645,8 +649,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -671,13 +677,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
-            todoItem.AchievedDate = System.DateTime.Now;
+            todoItem.AchievedDate = DateTime.Now;
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
             var newTodoItem = _todoItemFaker.Generate();
-            newTodoItem.AchievedDate = System.DateTime.Now.AddDays(2);
+            newTodoItem.AchievedDate = DateTime.Now.AddDays(2);
 
             var content = new
             {
@@ -685,7 +691,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     id = todoItem.Id,
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
@@ -698,8 +704,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -724,7 +732,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             _context.SaveChanges();
 
             var todoItem = _todoItemFaker.Generate();
-            todoItem.AchievedDate = System.DateTime.Now;
+            todoItem.AchievedDate = DateTime.Now;
             todoItem.Owner = person;
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
@@ -737,7 +745,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
                 {
                     id = todoItem.Id,
                     type = "todoItems",
-                    attributes = new Dictionary<string, object>()
+                    attributes = new Dictionary<string, object>
                     {
                         { "description", newTodoItem.Description },
                         { "ordinal", newTodoItem.Ordinal },
@@ -750,8 +758,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -783,8 +793,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var httpMethod = new HttpMethod("DELETE");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(string.Empty);
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(string.Empty)};
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act

@@ -1,4 +1,4 @@
-﻿using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeUpdateTests : HooksTestsSetup
+    public sealed class BeforeUpdateTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
 

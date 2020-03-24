@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
 

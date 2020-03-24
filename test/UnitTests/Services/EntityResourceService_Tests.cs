@@ -16,7 +16,7 @@ using Xunit;
 
 namespace UnitTests.Services
 {
-    public class EntityResourceService_Tests
+    public sealed class EntityResourceService_Tests
     {
         private readonly Mock<IResourceRepository<TodoItem>> _repositoryMock = new Mock<IResourceRepository<TodoItem>>();
         private readonly IResourceGraph _resourceGraph;

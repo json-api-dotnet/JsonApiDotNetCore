@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class UsersController : JsonApiController<User>
+    public sealed class UsersController : JsonApiController<User>
     {
         public UsersController(
             IJsonApiOptions jsonApiOptions,
@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         { }
     }
 
-    public class SuperUsersController : JsonApiController<SuperUser>
+    public sealed class SuperUsersController : JsonApiController<SuperUser>
     {
         public SuperUsersController(
             IJsonApiOptions jsonApiOptions,

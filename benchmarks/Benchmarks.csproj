@@ -11,6 +11,5 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
     <PackageReference Include="moq" Version="$(MoqVersion)" />
-    <PackageReference Include="xunit" Version="$(xUnitVersion)" />
   </ItemGroup>
 </Project>

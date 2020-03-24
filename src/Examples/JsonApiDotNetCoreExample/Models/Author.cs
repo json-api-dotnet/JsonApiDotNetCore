@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Author : Identifiable
+    public sealed class Author : Identifiable
     {
         [Attr]
         public string Name { get; set; }
