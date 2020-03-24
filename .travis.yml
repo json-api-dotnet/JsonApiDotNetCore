@@ -5,7 +5,7 @@ services:
 before_script:
   - psql -c 'create database JsonApiDotNetCoreExample;' -U postgres
 mono: none
-dotnet: 3.0.100 # https://www.microsoft.com/net/download/linux
+dotnet: 3.1.2
 branches:
   only:
     - master
