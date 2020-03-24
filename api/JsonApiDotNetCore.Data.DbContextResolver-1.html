@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class DbContextResolver&lt;TContext&gt;
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.51.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -88,7 +88,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Data_DbContextResolver_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DbContextResolver&lt;TContext&gt; : object, IDbContextResolver where TContext : DbContext</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class DbContextResolver&lt;TContext&gt; : object, IDbContextResolver where TContext : DbContext</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -167,52 +167,6 @@
     <tbody>
       <tr>
         <td><span class="xref">DbContext</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Data_DbContextResolver_1_GetDbSet__1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Data.DbContextResolver%601.GetDbSet%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Data/DbContextResolver.cs/#L17">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Data_DbContextResolver_1_GetDbSet_" data-uid="JsonApiDotNetCore.Data.DbContextResolver`1.GetDbSet*"></a>
-  <h4 id="JsonApiDotNetCore_Data_DbContextResolver_1_GetDbSet__1" data-uid="JsonApiDotNetCore.Data.DbContextResolver`1.GetDbSet``1">GetDbSet&lt;TResource&gt;()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DbSet&lt;TResource&gt; GetDbSet&lt;TResource&gt;()
-    where TResource : class</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">DbSet</span>&lt;TResource&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TResource</span></td>
         <td></td>
       </tr>
     </tbody>

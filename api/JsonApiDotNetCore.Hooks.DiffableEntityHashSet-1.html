@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class DiffableEntityHashSet&lt;TResource&gt;
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.51.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,7 +73,11 @@
   
   <h1 id="JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1" data-uid="JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1" class="text-break">Class DiffableEntityHashSet&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Implementation of IResourceHashSet{TResource}.</p>
+<p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
+<p>Also contains information about updated relationships through 
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -105,7 +109,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DiffableEntityHashSet&lt;TResource&gt; : EntityHashSet&lt;TResource&gt;, IDiffableEntityHashSet&lt;TResource&gt;, IEntityHashSet&lt;TResource&gt;, IByAffectedRelationships&lt;TResource&gt;, IRelationshipGetters&lt;TResource&gt;, IReadOnlyCollection&lt;TResource&gt; where TResource : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class DiffableEntityHashSet&lt;TResource&gt; : EntityHashSet&lt;TResource&gt;, IDiffableEntityHashSet&lt;TResource&gt;, IEntityHashSet&lt;TResource&gt;, IByAffectedRelationships&lt;TResource&gt;, IRelationshipGetters&lt;TResource&gt;, IReadOnlyCollection&lt;TResource&gt; where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -182,11 +186,13 @@
   </span>
   <a id="JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetAffected_" data-uid="JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetAffected*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetAffected_Expression_Func__0_System_Object___" data-uid="JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetAffected(Expression{Func{`0,System.Object}})">GetAffected(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a collection of all the entities for the property within <code data-dev-comment-type="paramref" class="paramref">navigationAction</code>
+has been affected by the request</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HashSet&lt;TResource&gt; GetAffected(Expression&lt;Func&lt;TResource, object&gt;&gt; NavigationAction)</code></pre>
+    <pre><code class="lang-csharp hljs">public HashSet&lt;TResource&gt; GetAffected(Expression&lt;Func&lt;TResource, object&gt;&gt; navigationAction)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -200,7 +206,7 @@
     <tbody>
       <tr>
         <td><span class="xref">Expression</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
-        <td><span class="parametername">NavigationAction</span></td>
+        <td><span class="parametername">navigationAction</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -229,7 +235,9 @@
   </span>
   <a id="JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetDiffs_" data-uid="JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_DiffableEntityHashSet_1_GetDiffs" data-uid="JsonApiDotNetCore.Hooks.DiffableEntityHashSet`1.GetDiffs">GetDiffs()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Iterates over diffs, which is the affected entity from the request
+with their associated current value from the database.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">

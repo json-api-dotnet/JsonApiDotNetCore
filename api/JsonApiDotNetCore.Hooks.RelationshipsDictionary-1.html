@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class RelationshipsDictionary&lt;TResource&gt;
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.51.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -158,11 +158,13 @@ with the two helper methods defined on IAffectedRelationships{TRightResource}.</
   </span>
   <a id="JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetAffected_" data-uid="JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetAffected*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetAffected_Expression_Func__0_System_Object___" data-uid="JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetAffected(Expression{Func{`0,System.Object}})">GetAffected(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a collection of all the entities for the property within <code data-dev-comment-type="paramref" class="paramref">navigationAction</code>
+has been affected by the request</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HashSet&lt;TResource&gt; GetAffected(Expression&lt;Func&lt;TResource, object&gt;&gt; NavigationAction)</code></pre>
+    <pre><code class="lang-csharp hljs">public HashSet&lt;TResource&gt; GetAffected(Expression&lt;Func&lt;TResource, object&gt;&gt; navigationAction)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -176,7 +178,7 @@ with the two helper methods defined on IAffectedRelationships{TRightResource}.</
     <tbody>
       <tr>
         <td><span class="xref">Expression</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
-        <td><span class="parametername">NavigationAction</span></td>
+        <td><span class="parametername">navigationAction</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -205,7 +207,8 @@ with the two helper methods defined on IAffectedRelationships{TRightResource}.</
   </span>
   <a id="JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship_" data-uid="JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship_Type_" data-uid="JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship(Type)">GetByRelationship(Type)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a dictionary of all entities that have an affected relationship to type <code data-dev-comment-type="paramref" class="paramref">relatedResourceType</code></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -252,7 +255,8 @@ with the two helper methods defined on IAffectedRelationships{TRightResource}.</
   </span>
   <a id="JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship_" data-uid="JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_RelationshipsDictionary_1_GetByRelationship__1" data-uid="JsonApiDotNetCore.Hooks.RelationshipsDictionary`1.GetByRelationship``1">GetByRelationship&lt;TRelatedResource&gt;()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a dictionary of all entities that have an affected relationship to type <code data-dev-comment-type="typeparamref" class="typeparamref">TLeftResource</code></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">

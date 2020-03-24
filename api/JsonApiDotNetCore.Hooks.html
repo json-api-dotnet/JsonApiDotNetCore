@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace JsonApiDotNetCore.Hooks
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.51.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -78,7 +78,11 @@
     <h3 id="classes">Classes
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.DiffableEntityHashSet-1.html">DiffableEntityHashSet&lt;TResource&gt;</a></h4>
-      <section></section>
+      <section><p>Implementation of IResourceHashSet{TResource}.</p>
+<p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
+<p>Also contains information about updated relationships through 
+implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.EntityDiffPair-1.html">EntityDiffPair&lt;TResource&gt;</a></h4>
       <section><p>A wrapper that contains an entity that is affected by the request, 
 matched to its current database value</p>
@@ -94,16 +98,6 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.LoadDatabaseValues.html">LoadDatabaseValues</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Hooks.RelationshipProxy.html">RelationshipProxy</a></h4>
-      <section><p>A class used internally for resource hook execution. Not intended for developer use.</p>
-<p>A wrapper for RelationshipAttribute with an abstraction layer that works on the 
-getters and setters of relationships. These are different in the case of 
-HasMany vs HasManyThrough, and HasManyThrough.
-It also depends on if the join table entity
-(eg ArticleTags) is identifiable (in which case we will traverse through 
-it and fire hooks for it, if defined) or not (in which case we skip 
-ArticleTags and go directly to Tags.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html">RelationshipsDictionary&lt;TResource&gt;</a></h4>
       <section><p>Implementation of IAffectedRelationships{TRightResource}</p>
 <p>It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary

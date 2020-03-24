@@ -612,19 +612,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DisableErrorStackTraces
   nameWithType: JsonApiOptions.DisableErrorStackTraces
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.EnableExtension(JsonApiDotNetCore.Models.JsonApiExtension)
-  name: EnableExtension(JsonApiExtension)
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_EnableExtension_JsonApiDotNetCore_Models_JsonApiExtension_
-  commentId: M:JsonApiDotNetCore.Configuration.JsonApiOptions.EnableExtension(JsonApiDotNetCore.Models.JsonApiExtension)
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.EnableExtension(JsonApiDotNetCore.Models.JsonApiExtension)
-  nameWithType: JsonApiOptions.EnableExtension(JsonApiExtension)
-- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.EnableExtension*
-  name: EnableExtension
-  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_EnableExtension_
-  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.EnableExtension
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.EnableExtension
-  nameWithType: JsonApiOptions.EnableExtension
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.EnableResourceHooks
   name: EnableResourceHooks
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_EnableResourceHooks
@@ -1803,24 +1790,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Data.DbContextResolver(Of TContext).GetContext
   nameWithType: DbContextResolver<TContext>.GetContext
   nameWithType.vb: DbContextResolver(Of TContext).GetContext
-- uid: JsonApiDotNetCore.Data.DbContextResolver`1.GetDbSet*
-  name: GetDbSet
-  href: api/JsonApiDotNetCore.Data.DbContextResolver-1.html#JsonApiDotNetCore_Data_DbContextResolver_1_GetDbSet_
-  commentId: Overload:JsonApiDotNetCore.Data.DbContextResolver`1.GetDbSet
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Data.DbContextResolver<TContext>.GetDbSet
-  fullName.vb: JsonApiDotNetCore.Data.DbContextResolver(Of TContext).GetDbSet
-  nameWithType: DbContextResolver<TContext>.GetDbSet
-  nameWithType.vb: DbContextResolver(Of TContext).GetDbSet
-- uid: JsonApiDotNetCore.Data.DbContextResolver`1.GetDbSet``1
-  name: GetDbSet<TResource>()
-  href: api/JsonApiDotNetCore.Data.DbContextResolver-1.html#JsonApiDotNetCore_Data_DbContextResolver_1_GetDbSet__1
-  commentId: M:JsonApiDotNetCore.Data.DbContextResolver`1.GetDbSet``1
-  name.vb: GetDbSet(Of TResource)()
-  fullName: JsonApiDotNetCore.Data.DbContextResolver<TContext>.GetDbSet<TResource>()
-  fullName.vb: JsonApiDotNetCore.Data.DbContextResolver(Of TContext).GetDbSet(Of TResource)()
-  nameWithType: DbContextResolver<TContext>.GetDbSet<TResource>()
-  nameWithType.vb: DbContextResolver(Of TContext).GetDbSet(Of TResource)()
 - uid: JsonApiDotNetCore.Data.DefaultResourceRepository`1
   name: DefaultResourceRepository<TResource>
   href: api/JsonApiDotNetCore.Data.DefaultResourceRepository-1.html
@@ -3392,12 +3361,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.FindDerivedTypes
   nameWithType: ServiceDiscoveryFacade.FindDerivedTypes
-- uid: JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.i
-  name: i
-  href: api/JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Graph_ServiceDiscoveryFacade_i
-  commentId: F:JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.i
-  fullName: JsonApiDotNetCore.Graph.ServiceDiscoveryFacade.i
-  nameWithType: ServiceDiscoveryFacade.i
 - uid: JsonApiDotNetCore.Hooks
   name: JsonApiDotNetCore.Hooks
   href: api/JsonApiDotNetCore.Hooks.html
@@ -4348,109 +4311,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues.LoadDatabaseValues
   nameWithType: LoadDatabaseValues.LoadDatabaseValues
-- uid: JsonApiDotNetCore.Hooks.LoadDatabaseValues.value
-  name: value
-  href: api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html#JsonApiDotNetCore_Hooks_LoadDatabaseValues_value
-  commentId: F:JsonApiDotNetCore.Hooks.LoadDatabaseValues.value
-  fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues.value
-  nameWithType: LoadDatabaseValues.value
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy
-  name: RelationshipProxy
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html
-  commentId: T:JsonApiDotNetCore.Hooks.RelationshipProxy
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy
-  nameWithType: RelationshipProxy
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.#ctor(JsonApiDotNetCore.Models.RelationshipAttribute,Type,System.Boolean)
-  name: RelationshipProxy(RelationshipAttribute, Type, Boolean)
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy__ctor_JsonApiDotNetCore_Models_RelationshipAttribute_Type_System_Boolean_
-  commentId: M:JsonApiDotNetCore.Hooks.RelationshipProxy.#ctor(JsonApiDotNetCore.Models.RelationshipAttribute,Type,System.Boolean)
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.RelationshipProxy(JsonApiDotNetCore.Models.RelationshipAttribute, Type, System.Boolean)
-  nameWithType: RelationshipProxy.RelationshipProxy(RelationshipAttribute, Type, Boolean)
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.#ctor*
-  name: RelationshipProxy
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy__ctor_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.RelationshipProxy
-  nameWithType: RelationshipProxy.RelationshipProxy
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.Attribute
-  name: Attribute
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_Attribute
-  commentId: P:JsonApiDotNetCore.Hooks.RelationshipProxy.Attribute
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.Attribute
-  nameWithType: RelationshipProxy.Attribute
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.Attribute*
-  name: Attribute
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_Attribute_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.Attribute
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.Attribute
-  nameWithType: RelationshipProxy.Attribute
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.GetValue(JsonApiDotNetCore.Models.IIdentifiable)
-  name: GetValue(IIdentifiable)
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_GetValue_JsonApiDotNetCore_Models_IIdentifiable_
-  commentId: M:JsonApiDotNetCore.Hooks.RelationshipProxy.GetValue(JsonApiDotNetCore.Models.IIdentifiable)
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.GetValue(JsonApiDotNetCore.Models.IIdentifiable)
-  nameWithType: RelationshipProxy.GetValue(IIdentifiable)
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.GetValue*
-  name: GetValue
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_GetValue_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.GetValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.GetValue
-  nameWithType: RelationshipProxy.GetValue
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.IsContextRelation
-  name: IsContextRelation
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_IsContextRelation
-  commentId: P:JsonApiDotNetCore.Hooks.RelationshipProxy.IsContextRelation
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.IsContextRelation
-  nameWithType: RelationshipProxy.IsContextRelation
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.IsContextRelation*
-  name: IsContextRelation
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_IsContextRelation_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.IsContextRelation
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.IsContextRelation
-  nameWithType: RelationshipProxy.IsContextRelation
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.LeftType
-  name: LeftType
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_LeftType
-  commentId: P:JsonApiDotNetCore.Hooks.RelationshipProxy.LeftType
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.LeftType
-  nameWithType: RelationshipProxy.LeftType
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.LeftType*
-  name: LeftType
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_LeftType_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.LeftType
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.LeftType
-  nameWithType: RelationshipProxy.LeftType
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.RightType
-  name: RightType
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_RightType
-  commentId: P:JsonApiDotNetCore.Hooks.RelationshipProxy.RightType
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.RightType
-  nameWithType: RelationshipProxy.RightType
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.RightType*
-  name: RightType
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_RightType_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.RightType
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.RightType
-  nameWithType: RelationshipProxy.RightType
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue(JsonApiDotNetCore.Models.IIdentifiable,System.Object)
-  name: SetValue(IIdentifiable, Object)
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_SetValue_JsonApiDotNetCore_Models_IIdentifiable_System_Object_
-  commentId: M:JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue(JsonApiDotNetCore.Models.IIdentifiable,System.Object)
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue(JsonApiDotNetCore.Models.IIdentifiable, System.Object)
-  nameWithType: RelationshipProxy.SetValue(IIdentifiable, Object)
-- uid: JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue*
-  name: SetValue
-  href: api/JsonApiDotNetCore.Hooks.RelationshipProxy.html#JsonApiDotNetCore_Hooks_RelationshipProxy_SetValue_
-  commentId: Overload:JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Hooks.RelationshipProxy.SetValue
-  nameWithType: RelationshipProxy.SetValue
+- uid: JsonApiDotNetCore.Hooks.LoadDatabaseValues.Value
+  name: Value
+  href: api/JsonApiDotNetCore.Hooks.LoadDatabaseValues.html#JsonApiDotNetCore_Hooks_LoadDatabaseValues_Value
+  commentId: F:JsonApiDotNetCore.Hooks.LoadDatabaseValues.Value
+  fullName: JsonApiDotNetCore.Hooks.LoadDatabaseValues.Value
+  nameWithType: LoadDatabaseValues.Value
 - uid: JsonApiDotNetCore.Hooks.RelationshipsDictionary`1
   name: RelationshipsDictionary<TResource>
   href: api/JsonApiDotNetCore.Hooks.RelationshipsDictionary-1.html
@@ -6454,19 +6320,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.Invoke
   nameWithType: CurrentRequestMiddleware.Invoke
-- uid: JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.PathIsRelationship
-  name: PathIsRelationship()
-  href: api/JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.html#JsonApiDotNetCore_Middleware_CurrentRequestMiddleware_PathIsRelationship
-  commentId: M:JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.PathIsRelationship
-  fullName: JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.PathIsRelationship()
-  nameWithType: CurrentRequestMiddleware.PathIsRelationship()
-- uid: JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.PathIsRelationship*
-  name: PathIsRelationship
-  href: api/JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.html#JsonApiDotNetCore_Middleware_CurrentRequestMiddleware_PathIsRelationship_
-  commentId: Overload:JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.PathIsRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Middleware.CurrentRequestMiddleware.PathIsRelationship
-  nameWithType: CurrentRequestMiddleware.PathIsRelationship
 - uid: JsonApiDotNetCore.Middleware.DefaultExceptionFilter
   name: DefaultExceptionFilter
   href: api/JsonApiDotNetCore.Middleware.DefaultExceptionFilter.html
@@ -7451,18 +7304,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.IResourceField.ExposedInternalMemberName
   nameWithType: IResourceField.ExposedInternalMemberName
-- uid: JsonApiDotNetCore.Models.JsonApiExtension
-  name: JsonApiExtension
-  href: api/JsonApiDotNetCore.Models.JsonApiExtension.html
-  commentId: T:JsonApiDotNetCore.Models.JsonApiExtension
-  fullName: JsonApiDotNetCore.Models.JsonApiExtension
-  nameWithType: JsonApiExtension
-- uid: JsonApiDotNetCore.Models.JsonApiExtension.Operations
-  name: Operations
-  href: api/JsonApiDotNetCore.Models.JsonApiExtension.html#JsonApiDotNetCore_Models_JsonApiExtension_Operations
-  commentId: F:JsonApiDotNetCore.Models.JsonApiExtension.Operations
-  fullName: JsonApiDotNetCore.Models.JsonApiExtension.Operations
-  nameWithType: JsonApiExtension.Operations
 - uid: JsonApiDotNetCore.Models.Links
   name: JsonApiDotNetCore.Models.Links
   href: api/JsonApiDotNetCore.Models.Links.html
@@ -8758,45 +8599,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.IPageService.CurrentPage
   nameWithType: IPageService.CurrentPage
-- uid: JsonApiDotNetCore.Query.IPageService.CurrentPageSize
-  name: CurrentPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CurrentPageSize
-  commentId: P:JsonApiDotNetCore.Query.IPageService.CurrentPageSize
-  fullName: JsonApiDotNetCore.Query.IPageService.CurrentPageSize
-  nameWithType: IPageService.CurrentPageSize
-- uid: JsonApiDotNetCore.Query.IPageService.CurrentPageSize*
-  name: CurrentPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_CurrentPageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.IPageService.CurrentPageSize
+- uid: JsonApiDotNetCore.Query.IPageService.PageSize
+  name: PageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_PageSize
+  commentId: P:JsonApiDotNetCore.Query.IPageService.PageSize
+  fullName: JsonApiDotNetCore.Query.IPageService.PageSize
+  nameWithType: IPageService.PageSize
+- uid: JsonApiDotNetCore.Query.IPageService.PageSize*
+  name: PageSize
+  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_PageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.IPageService.PageSize
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IPageService.CurrentPageSize
-  nameWithType: IPageService.CurrentPageSize
-- uid: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  name: DefaultPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_DefaultPageSize
-  commentId: P:JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  fullName: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  nameWithType: IPageService.DefaultPageSize
-- uid: JsonApiDotNetCore.Query.IPageService.DefaultPageSize*
-  name: DefaultPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_DefaultPageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IPageService.DefaultPageSize
-  nameWithType: IPageService.DefaultPageSize
-- uid: JsonApiDotNetCore.Query.IPageService.RequestedPageSize
-  name: RequestedPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_RequestedPageSize
-  commentId: P:JsonApiDotNetCore.Query.IPageService.RequestedPageSize
-  fullName: JsonApiDotNetCore.Query.IPageService.RequestedPageSize
-  nameWithType: IPageService.RequestedPageSize
-- uid: JsonApiDotNetCore.Query.IPageService.RequestedPageSize*
-  name: RequestedPageSize
-  href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_RequestedPageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.IPageService.RequestedPageSize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.IPageService.RequestedPageSize
-  nameWithType: IPageService.RequestedPageSize
+  fullName: JsonApiDotNetCore.Query.IPageService.PageSize
+  nameWithType: IPageService.PageSize
 - uid: JsonApiDotNetCore.Query.IPageService.TotalPages
   name: TotalPages
   href: api/JsonApiDotNetCore.Query.IPageService.html#JsonApiDotNetCore_Query_IPageService_TotalPages
@@ -9069,19 +8884,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.CurrentPage
   nameWithType: PageService.CurrentPage
-- uid: JsonApiDotNetCore.Query.PageService.CurrentPageSize
-  name: CurrentPageSize
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CurrentPageSize
-  commentId: P:JsonApiDotNetCore.Query.PageService.CurrentPageSize
-  fullName: JsonApiDotNetCore.Query.PageService.CurrentPageSize
-  nameWithType: PageService.CurrentPageSize
-- uid: JsonApiDotNetCore.Query.PageService.CurrentPageSize*
-  name: CurrentPageSize
-  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_CurrentPageSize_
-  commentId: Overload:JsonApiDotNetCore.Query.PageService.CurrentPageSize
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Query.PageService.CurrentPageSize
-  nameWithType: PageService.CurrentPageSize
 - uid: JsonApiDotNetCore.Query.PageService.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_DefaultPageSize
@@ -9095,6 +8897,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.PageService.DefaultPageSize
   nameWithType: PageService.DefaultPageSize
+- uid: JsonApiDotNetCore.Query.PageService.PageSize
+  name: PageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_PageSize
+  commentId: P:JsonApiDotNetCore.Query.PageService.PageSize
+  fullName: JsonApiDotNetCore.Query.PageService.PageSize
+  nameWithType: PageService.PageSize
+- uid: JsonApiDotNetCore.Query.PageService.PageSize*
+  name: PageSize
+  href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_PageSize_
+  commentId: Overload:JsonApiDotNetCore.Query.PageService.PageSize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Query.PageService.PageSize
+  nameWithType: PageService.PageSize
 - uid: JsonApiDotNetCore.Query.PageService.Parse(KeyValuePair{System.String,StringValues})
   name: Parse(KeyValuePair<String, StringValues>)
   href: api/JsonApiDotNetCore.Query.PageService.html#JsonApiDotNetCore_Query_PageService_Parse_KeyValuePair_System_String_StringValues__
