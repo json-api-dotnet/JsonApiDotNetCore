@@ -2,7 +2,7 @@ using System;
 
 namespace JsonApiDotNetCore.Internal
 {
-    public class JsonApiSetupException : Exception
+    public sealed class JsonApiSetupException : Exception
     {
         public JsonApiSetupException(string message) 
             : base(message) { }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public class QueryParameterActionFilter : IAsyncActionFilter, IQueryParameterActionFilter
+    public sealed class QueryParameterActionFilter : IAsyncActionFilter, IQueryParameterActionFilter
     {
         private readonly IQueryParameterDiscovery _queryParser;
         public QueryParameterActionFilter(IQueryParameterDiscovery queryParser) => _queryParser = queryParser;

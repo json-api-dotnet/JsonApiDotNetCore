@@ -4,8 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +12,7 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
-    public class CreatingDataTests : FunctionalTestCollection<StandardApplicationFactory>
+    public sealed class CreatingDataTests : FunctionalTestCollection<StandardApplicationFactory>
     {
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
@@ -43,7 +41,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
             var createdSuperUser = _deserializer.DeserializeSingle<SuperUser>(body).Data;
-            var created = _dbContext.SuperUsers.Where(e => e.Id.Equals(createdSuperUser.Id)).First();
+            var first = _dbContext.SuperUsers.FirstOrDefault(e => e.Id.Equals(createdSuperUser.Id));
+            Assert.NotNull(first);
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var todoItemCollection = new TodoItemCollection { Owner = owner };
 
             // Act
-            var (body, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
+            var (_, response) = await Post("/api/v1/todoCollections", serializer.Serialize(todoItemCollection));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Created, response);
@@ -73,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Id = clientDefinedId;
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
+            var (_, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
@@ -216,12 +215,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
-            var resourceGraph = new ResourceGraphBuilder().AddResource<TodoItemClient>("todoItems").AddResource<Person>().AddResource<TodoItemCollectionClient, Guid>().Build();
-            var _deserializer = new ResponseDeserializer(resourceGraph);
             var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todoItems", "people");
 
             // Act
-            var (body, response) = await Post("/api/v1/todoItems", content);
+            var (_, response) = await Post("/api/v1/todoItems", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Conflict, response);
@@ -285,7 +282,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
     }
 
 
-    public class CreatingDataWithClientEnabledIdTests : FunctionalTestCollection<ClientEnabledIdsApplicationFactory>
+    public sealed class CreatingDataWithClientEnabledIdTests : FunctionalTestCollection<ClientEnabledIdsApplicationFactory>
     {
         private readonly Faker<TodoItem> _todoItemFaker;
 

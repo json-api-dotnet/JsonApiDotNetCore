@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Graph
     /// <summary>
     /// Used to locate types and facilitate auto-resource discovery
     /// </summary>
-    static class TypeLocator
+    internal static class TypeLocator
     {
         /// <summary>
         /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class FilterServiceTests : QueryParametersUnitTestCollection
+    public sealed class FilterServiceTests : QueryParametersUnitTestCollection
     {
         public FilterService GetService()
         {

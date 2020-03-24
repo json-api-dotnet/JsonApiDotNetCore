@@ -1,22 +1,18 @@
-using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace UnitTests.Data
 {
-    public class DefaultEntityRepositoryTest
+    public sealed class DefaultEntityRepositoryTest
     {
 
         [Fact]
@@ -27,7 +23,8 @@ namespace UnitTests.Data
 
             // Arrange
             var repository = Setup();
-            var todoItems = new List<TodoItem>() {
+            var todoItems = new List<TodoItem>
+            {
                 new TodoItem{ Id = 1 },
                 new TodoItem{ Id = 2 }
             };
@@ -47,7 +44,8 @@ namespace UnitTests.Data
 
             // Arrange
             var repository = Setup();
-            var todoItems = new List<TodoItem>() {
+            var todoItems = new List<TodoItem>
+            {
                 new TodoItem{ Id = 1 },
                 new TodoItem{ Id = 2 },
                 new TodoItem{ Id = 3 },

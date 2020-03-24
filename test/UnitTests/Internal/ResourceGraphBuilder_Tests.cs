@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public class ResourceGraphBuilder_Tests
+    public sealed class ResourceGraphBuilder_Tests
     {
         [Fact]
         public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_DoNot_Implement_IIdentifiable()

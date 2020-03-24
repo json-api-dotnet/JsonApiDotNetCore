@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Article : Identifiable
+    public sealed class Article : Identifiable
     {
         [Attr]
         public string Name { get; set; }

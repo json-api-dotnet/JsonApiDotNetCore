@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Hooks
@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Hooks
         HashSet<IIdentifiable> LeftEntities { get; }
     }
 
-    internal class RelationshipGroup<TRight> : IRelationshipGroup where TRight : class, IIdentifiable
+    internal sealed class RelationshipGroup<TRight> : IRelationshipGroup where TRight : class, IIdentifiable
     {
         public RelationshipProxy Proxy { get; }
         public HashSet<IIdentifiable> LeftEntities { get; }

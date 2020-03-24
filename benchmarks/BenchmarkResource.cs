@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace Benchmarks
 {
-    public class BenchmarkResource : Identifiable
+    public sealed class BenchmarkResource : Identifiable
     {
         [Attr(BenchmarkResourcePublicNames.NameAttr)] 
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace Benchmarks
         public string Value { get; set; }
     }
 
-    public static class BenchmarkResourcePublicNames
+    internal static class BenchmarkResourcePublicNames
     {
         public const string NameAttr = "full-name";
         public const string Type = "simple-types";

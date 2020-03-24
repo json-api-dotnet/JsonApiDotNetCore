@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,25 +8,22 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Xunit;
-using StringExtensions = JsonApiDotNetCoreExampleTests.Helpers.Extensions.StringExtensions;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using System.Net;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
-using JsonApiDotNetCore.Services;
 using JsonApiDotNetCore.Internal.Contracts;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class SparseFieldSetTests
+    public sealed class SparseFieldSetTests
     {
         private readonly AppDbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;
@@ -53,7 +49,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Select_Sparse_Fieldsets()
         {
             // Arrange
-            var fields = new List<string> { "Id", "Description", "CreatedDate", "AchievedDate" };
             var todoItem = new TodoItem
             {
                 Description = "description",
@@ -63,9 +58,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             };
             _dbContext.TodoItems.Add(todoItem);
             await _dbContext.SaveChangesAsync();
-            var expectedSql = StringExtensions.Normalize($@"SELECT 't'.'Id', 't'.'Description', 't'.'CreatedDate', 't'.'AchievedDate'
-                                FROM 'TodoItems' AS 't'
-                                WHERE 't'.'Id' = {todoItem.Id}");
 
             // Act
             var query = _dbContext
@@ -170,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             using var server = new TestServer(builder);
             var client = server.CreateClient();
 
-            var route = $"/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
+            var route = "/api/v1/todoItems?include=owner&fields[owner]=firstName,age";
             var request = new HttpRequestMessage(httpMethod, route);
             var resourceGraph = new ResourceGraphBuilder().AddResource<Person>().AddResource<TodoItemClient>("todoItems").Build();
             var deserializer = new ResponseDeserializer(resourceGraph);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Models;
@@ -6,11 +5,10 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Client;
 using Xunit;
 using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.Serialization.Client
 {
-    public class RequestSerializerTests : SerializerTestsSetup
+    public sealed class RequestSerializerTests : SerializerTestsSetup
     {
         private readonly RequestSerializer _serializer;
 
@@ -24,7 +22,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
 
             // Act
             string serialized = _serializer.Serialize(entity);
@@ -55,7 +53,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithTargetedSetAttributes_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
@@ -80,7 +78,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_NoIdWithTargetedSetAttributes_CanBuild()
         {
             // Arrange
-            var entityNoId = new TestResource() { Id = 0, StringField = "value", NullableIntField = 123 };
+            var entityNoId = new TestResource { Id = 0, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
@@ -105,7 +103,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithoutTargetedAttributes_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => new { });
 
             // Act
@@ -179,8 +177,8 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var entities = new List<TestResource>
             {
-                new TestResource() { Id = 1, StringField = "value1", NullableIntField = 123 },
-                new TestResource() { Id = 2, StringField = "value2", NullableIntField = 123 }
+                new TestResource { Id = 1, StringField = "value1", NullableIntField = 123 },
+                new TestResource { Id = 2, StringField = "value2", NullableIntField = 123 }
             };
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
@@ -218,8 +216,7 @@ namespace UnitTests.Serialization.Client
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
-            IIdentifiable obj = null;
-            string serialized = _serializer.Serialize(obj);
+            string serialized = _serializer.Serialize((IIdentifiable) null);
 
             // Assert
             var expectedFormatted =
@@ -234,7 +231,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeMany_EmptyList_CanBuild()
         {
             // Arrange
-            var entities = new List<TestResource> { };
+            var entities = new List<TestResource>();
             _serializer.AttributesToSerialize = _resourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act

@@ -17,10 +17,10 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
-    public class Included
+    public sealed class Included
     {
         private readonly AppDbContext _context;
-        private readonly Bogus.Faker<Person> _personFaker;
+        private readonly Faker<Person> _personFaker;
         private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<TodoItemCollection> _todoItemCollectionFaker;
 
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var builder = new WebHostBuilder().UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner";
+            var route = "/api/v1/todoItems?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people?include=todoItems";
+            var route = "/api/v1/people?include=todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -203,14 +203,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var todoItem2 = _todoItemFaker.Generate();
             todoItem1.Owner = person;
             todoItem2.Owner = person;
-            _context.TodoItems.AddRange(new[] { todoItem1, todoItem2 });
+            _context.TodoItems.AddRange(todoItem1, todoItem2);
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner";
+            var route = "/api/v1/todoItems?include=owner";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var httpMethod = new HttpMethod("GET");
           
-            var route = $"/api/v1/todoItems?sort=-createdDate&page[size]=2&include=owner.role"; // last two todoItems
+            var route = "/api/v1/todoItems?sort=-createdDate&page[size]=2&include=owner.role"; // last two todoItems
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

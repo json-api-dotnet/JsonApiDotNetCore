@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExample
                 {
                     options
                         .EnableSensitiveDataLogging()
-                        .UseNpgsql(GetDbConnectionString(), options => options.SetPostgresVersion(new Version(9,6)));
+                        .UseNpgsql(GetDbConnectionString(), innerOptions => innerOptions.SetPostgresVersion(new Version(9,6)));
                 }, ServiceLifetime.Transient)
                 .AddJsonApi(options =>
                 {
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExample
             services.AddClientSerialization(); 
         }
 
-        public virtual void Configure(
+        public void Configure(
             IApplicationBuilder app,
             AppDbContext context)
         {

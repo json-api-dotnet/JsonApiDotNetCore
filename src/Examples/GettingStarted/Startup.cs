@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Extensions;
 
 namespace GettingStarted
 {
-    public class Startup
+    public sealed class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {

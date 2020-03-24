@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -14,7 +13,7 @@ using JsonApiDotNetCore.Serialization.Server.Builders;
 
 namespace UnitTests
 {
-    public class LinkBuilderTests
+    public sealed class LinkBuilderTests
     {
         private readonly IPageService _pageService;
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();
@@ -213,7 +212,7 @@ namespace UnitTests
             mock.Setup(m => m.CanPaginate).Returns(true);
             mock.Setup(m => m.CurrentPage).Returns(2);
             mock.Setup(m => m.TotalPages).Returns(3);
-            mock.Setup(m => m.CurrentPageSize).Returns(10);
+            mock.Setup(m => m.PageSize).Returns(10);
             return mock.Object;
 
         }

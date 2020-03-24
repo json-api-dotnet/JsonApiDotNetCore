@@ -12,13 +12,13 @@ namespace JsonApiDotNetCore.Hooks
     /// Child node in the tree
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
-    internal class ChildNode<TResource> : INode where TResource : class, IIdentifiable
+    internal sealed class ChildNode<TResource> : INode where TResource : class, IIdentifiable
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         /// <inheritdoc />
-        public RightType ResourceType { get; private set; }
+        public RightType ResourceType { get; }
         /// <inheritdoc />
-        public RelationshipProxy[] RelationshipsToNextLayer { get; set; }
+        public RelationshipProxy[] RelationshipsToNextLayer { get; }
         /// <inheritdoc />
         public IEnumerable UniqueEntities
         {
@@ -29,13 +29,7 @@ namespace JsonApiDotNetCore.Hooks
         }
 
         /// <inheritdoc />
-        public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer
-        {
-            get
-            {
-                return _relationshipsFromPreviousLayer;
-            }
-        }
+        public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => _relationshipsFromPreviousLayer;
 
         private readonly RelationshipsFromPreviousLayer<TResource> _relationshipsFromPreviousLayer;
 
@@ -79,7 +73,7 @@ namespace JsonApiDotNetCore.Hooks
                     }
                     else if (currentValue is IIdentifiable relationshipSingle)
                     {
-                        if (!unique.Intersect(new HashSet<IIdentifiable>() { relationshipSingle }, _comparer).Any())
+                        if (!unique.Intersect(new HashSet<IIdentifiable> { relationshipSingle }, _comparer).Any())
                         {
                             proxy.SetValue(left, null);
                         }

@@ -1,4 +1,4 @@
-﻿using str = JsonApiDotNetCore.Extensions.StringExtensions;
+using str = JsonApiDotNetCore.Extensions.StringExtensions;
 
 namespace JsonApiDotNetCore.Graph
 {
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Graph
     /// // > "todo-item"
     /// </code>
     /// </example>
-    public class KebabCaseFormatter : BaseResourceNameFormatter
+    public sealed class KebabCaseFormatter : BaseResourceNameFormatter
     {
         /// <inheritdoc/>
         public override string ApplyCasingConvention(string properName) => str.Dasherize(properName);

@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Hooks;
@@ -26,18 +25,16 @@ namespace JsonApiDotNetCore.Models
     /// <typeparam name="TResource">The resource type</typeparam>
     public class ResourceDefinition<TResource> : IResourceDefinition, IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
-        private readonly ResourceContext _resourceContext;
         private readonly IResourceGraph _resourceGraph;
         private List<AttrAttribute> _allowedAttributes;
         private List<RelationshipAttribute> _allowedRelationships;
         public ResourceDefinition(IResourceGraph resourceGraph)
         {
-            _resourceContext = resourceGraph.GetResourceContext(typeof(TResource));
-            _allowedAttributes = _resourceContext.Attributes;
-            _allowedRelationships = _resourceContext.Relationships;
+            var resourceContext = resourceGraph.GetResourceContext(typeof(TResource));
+            _allowedAttributes = resourceContext.Attributes;
+            _allowedRelationships = resourceContext.Relationships;
             _resourceGraph = resourceGraph;
         }
-
 
         public List<RelationshipAttribute> GetAllowedRelationships() => _allowedRelationships;
         public List<AttrAttribute> GetAllowedAttributes() => _allowedAttributes;
@@ -130,7 +127,7 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class QueryFilters : Dictionary<string, Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>> { }
+        public sealed class QueryFilters : Dictionary<string, Func<IQueryable<TResource>, FilterQuery, IQueryable<TResource>>> { }
 
         /// <summary>
         /// Define a the default sort order if no sort key is provided.
@@ -169,6 +166,6 @@ namespace JsonApiDotNetCore.Models
         /// method signature.
         /// See <see cref="GetQueryFilters" /> for usage details.
         /// </summary>
-        public class PropertySortOrder : List<(Expression<Func<TResource, dynamic>>, SortDirection)> { }
+        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>>, SortDirection)> { }
     }
 }

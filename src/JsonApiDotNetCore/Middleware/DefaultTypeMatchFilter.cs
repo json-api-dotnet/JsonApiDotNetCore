@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Action filter used to verify the incoming type matches the target type, else return a 409
     /// </summary>
-    public class DefaultTypeMatchFilter : IActionFilter
+    public sealed class DefaultTypeMatchFilter : IActionFilter
     {
         private readonly IResourceContextProvider _provider;
 

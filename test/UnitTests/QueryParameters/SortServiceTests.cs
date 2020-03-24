@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class SortServiceTests : QueryParametersUnitTestCollection
+    public sealed class SortServiceTests : QueryParametersUnitTestCollection
     {
         public SortService GetService()
         {
@@ -33,7 +33,7 @@ namespace UnitTests.QueryParameters
         public void Parse_InvalidSortQuery_ThrowsJsonApiException(string stringSortQuery)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>($"sort", stringSortQuery);
+            var query = new KeyValuePair<string, StringValues>("sort", stringSortQuery);
             var sortService = GetService();
 
             // Act, assert

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace UnitTests.QueryParameters
 {
-    public class SparseFieldsServiceTests : QueryParametersUnitTestCollection
+    public sealed class SparseFieldsServiceTests : QueryParametersUnitTestCollection
     {
         public SparseFieldsService GetService(ResourceContext resourceContext = null)
         {

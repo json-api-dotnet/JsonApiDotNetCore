@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,11 +16,11 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class FetchingDataTests
+    public sealed class FetchingDataTests
     {
-        private TestFixture<Startup> _fixture;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public FetchingDataTests(TestFixture<Startup> fixture)
         {
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<NoDefaultPageSizeStartup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var builder = new WebHostBuilder()
                 .UseStartup<NoDefaultPageSizeStartup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems/123";
+            var route = "/api/v1/todoItems/123";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);

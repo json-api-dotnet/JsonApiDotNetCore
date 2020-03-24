@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
@@ -9,7 +8,7 @@ namespace JsonApiDotNetCoreExample.Models
         [Attr] public string Password { get; set; }
     }
 
-    public class SuperUser : User
+    public sealed class SuperUser : User
     {
         [Attr] public int SecurityLevel { get; set; }
     }

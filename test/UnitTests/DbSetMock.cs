@@ -37,7 +37,7 @@ public static class ListExtensions
     }
 }
 
-internal class TestAsyncQueryProvider<TResource> : IAsyncQueryProvider
+internal sealed class TestAsyncQueryProvider<TResource> : IAsyncQueryProvider
 {
     private readonly IQueryProvider _inner;
 
@@ -83,12 +83,8 @@ internal class TestAsyncQueryProvider<TResource> : IAsyncQueryProvider
     }
 }
 
-internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+internal sealed class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
-    public TestAsyncEnumerable(IEnumerable<T> enumerable)
-        : base(enumerable)
-    { }
-
     public TestAsyncEnumerable(Expression expression)
         : base(expression)
     { }
@@ -103,13 +99,10 @@ internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>,
         throw new System.NotImplementedException();
     }
 
-    IQueryProvider IQueryable.Provider
-    {
-        get { return new TestAsyncQueryProvider<T>(this); }
-    }
+    IQueryProvider IQueryable.Provider => new TestAsyncQueryProvider<T>(this);
 }
 
-internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+internal sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     private readonly IEnumerator<T> _inner;
 
@@ -123,13 +116,7 @@ internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
         _inner.Dispose();
     }
 
-    public T Current
-    {
-        get
-        {
-            return _inner.Current;
-        }
-    }
+    public T Current => _inner.Current;
 
     public Task<bool> MoveNext(CancellationToken cancellationToken)
     {

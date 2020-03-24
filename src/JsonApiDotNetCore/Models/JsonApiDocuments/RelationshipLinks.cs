@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.Links
 {
-    public class RelationshipLinks
+    public sealed class RelationshipLinks
     {
         /// <summary>
         /// see "links" bulletin at https://jsonapi.org/format/#document-resource-object-relationships

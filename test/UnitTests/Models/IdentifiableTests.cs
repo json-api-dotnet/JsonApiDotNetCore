@@ -3,21 +3,19 @@ using Xunit;
 
 namespace UnitTests.Models
 {
-    public class IdentifiableTests
+    public sealed class IdentifiableTests
     {
         [Fact]
         public void Can_Set_StringId_To_Value_Type()
         {
-            var resource = new IntId();
-            resource.StringId = "1";
+            var resource = new IntId {StringId = "1"};
             Assert.Equal(1, resource.Id);
         }
 
         [Fact]
         public void Setting_StringId_To_Null_Sets_Id_As_Default()
         {
-            var resource = new IntId();
-            resource.StringId = null;
+            var resource = new IntId {StringId = null};
             Assert.Equal(0, resource.Id);
         }
 
@@ -29,7 +27,7 @@ namespace UnitTests.Models
             Assert.Equal(string.Empty, stringId);
         }
 
-        private class IntId : Identifiable { 
+        private sealed class IntId : Identifiable { 
             public string ExposedGetStringId(object value) => GetStringId(value);
         }
     }
