@@ -2,7 +2,7 @@ using System;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class DisableQueryAttribute : Attribute
+    public sealed class DisableQueryAttribute : Attribute
     {
         /// <summary>
         /// Disabled one of the native query parameters for a controller.

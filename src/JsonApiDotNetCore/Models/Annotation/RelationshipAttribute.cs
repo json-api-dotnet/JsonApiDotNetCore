@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Models
         protected RelationshipAttribute(string publicName, Link relationshipLinks, bool canInclude)
         {
             if (relationshipLinks == Link.Paging)
-                throw new JsonApiSetupException($"{Link.Paging.ToString("g")} not allowed for argument {nameof(relationshipLinks)}");
+                throw new JsonApiSetupException($"{Link.Paging:g} not allowed for argument {nameof(relationshipLinks)}");
 
             PublicRelationshipName = publicName;
             RelationshipLinks = relationshipLinks;

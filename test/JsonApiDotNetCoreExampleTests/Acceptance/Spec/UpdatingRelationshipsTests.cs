@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -14,19 +12,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class UpdatingRelationshipsTests
+    public sealed class UpdatingRelationshipsTests
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         private AppDbContext _context;
-        private Bogus.Faker<Person> _personFaker;
-        private Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
+        private readonly Faker<TodoItem> _todoItemFaker;
 
         public UpdatingRelationshipsTests(TestFixture<Startup> fixture)
         {
@@ -94,16 +91,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             // Act
-            var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+            await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
                  .Include(ti => ti.ChildrenTodos).First();
 
-            updatedTodoItem.ChildrenTodos.Any((ti) => ti.Id == todoItem.Id);
-            Assert.Contains(updatedTodoItem.ChildrenTodos, (ti) => ti.Id == todoItem.Id);
+            Assert.Contains(updatedTodoItem.ChildrenTodos, ti => ti.Id == todoItem.Id);
         }
 
         [Fact]
@@ -111,7 +106,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange 
             var todoItem = _todoItemFaker.Generate();
-            var strayTodoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
             _context.SaveChanges();
 
@@ -150,10 +144,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             // Act
-            var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+            await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
-
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -216,10 +208,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             // Act
-            var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
+            await client.SendAsync(request);
             _context = _fixture.GetService<AppDbContext>();
-
 
             var updatedTodoItem = _context.TodoItems.AsNoTracking()
                  .Where(ti => ti.Id == todoItem.Id)
@@ -232,8 +222,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection();
-            todoCollection.TodoItems = new List<TodoItem>();
+            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoCollection.Owner = person;
@@ -243,7 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newTodoItem1 = _todoItemFaker.Generate();
             var newTodoItem2 = _todoItemFaker.Generate();
-            _context.AddRange(new TodoItem[] { newTodoItem1, newTodoItem2 });
+            _context.AddRange(newTodoItem1, newTodoItem2);
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
@@ -291,8 +280,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            /// we are expecting two, not three, because the request does 
-            /// a "complete replace".
+            // we are expecting two, not three, because the request does 
+            // a "complete replace".
             Assert.Equal(2, updatedTodoItems.Count);
         }
 
@@ -306,8 +295,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // this user may not be reattached to the db context in the repository.
 
             // Arrange
-            var todoCollection = new TodoItemCollection();
-            todoCollection.TodoItems = new List<TodoItem>();
+            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
             todoCollection.Owner = person;
@@ -318,7 +306,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var newTodoItem1 = _todoItemFaker.Generate();
             var newTodoItem2 = _todoItemFaker.Generate();
-            _context.AddRange(new TodoItem[] { newTodoItem1, newTodoItem2 });
+            _context.AddRange(newTodoItem1, newTodoItem2);
             _context.SaveChanges();
 
             var builder = new WebHostBuilder()
@@ -370,8 +358,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            /// we are expecting two, not three, because the request does 
-            /// a "complete replace".
+            // we are expecting two, not three, because the request does 
+            // a "complete replace".
             Assert.Equal(2, updatedTodoItems.Count);
         }
 
@@ -379,8 +367,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Can_Update_ToMany_Relationship_By_Patching_Resource_With_Overlap()
         {
             // Arrange
-            var todoCollection = new TodoItemCollection();
-            todoCollection.TodoItems = new List<TodoItem>();
+            var todoCollection = new TodoItemCollection {TodoItems = new List<TodoItem>()};
             var person = _personFaker.Generate();
             var todoItem1 = _todoItemFaker.Generate();
             var todoItem2 = _todoItemFaker.Generate();
@@ -472,9 +459,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/people/{person.Id}/relationships/todoItems";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -510,9 +499,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
 
-            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -560,8 +548,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -584,15 +574,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Arrange
             var person = _personFaker.Generate();
             var todoItem = _todoItemFaker.Generate();
-            person.TodoItems = new List<TodoItem>() { todoItem };
+            person.TodoItems = new List<TodoItem> { todoItem };
             _context.People.Add(person);
             _context.SaveChanges();
-
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
 
             var content = new
             {
@@ -604,10 +588,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
                     {
                          { "todoItems", new
                             {
-                                data = new List<object>
-                                {
-
-                                }
+                                data = new List<object>()
                             }
                         }
                     }
@@ -660,9 +641,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var httpMethod = new HttpMethod("PATCH");
             var route = $"/api/v1/todoItems/{todoItem.Id}/relationships/owner";
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(content))
+            };
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(content));
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
 
             // Act
@@ -687,7 +670,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var person1 = _personFaker.Generate();
             person1.Passport = passport;
             var person2 = _personFaker.Generate();
-            context.People.AddRange(new List<Person>() { person1, person2 });
+            context.People.AddRange(new List<Person> { person1, person2 });
             await context.SaveChangesAsync();
             var passportId = person1.PassportId;
             var content = new
@@ -735,7 +718,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             person1.TodoItems = _todoItemFaker.Generate(3).ToList();
             var person2 = _personFaker.Generate();
             person2.TodoItems = _todoItemFaker.Generate(2).ToList();
-            context.People.AddRange(new List<Person>() { person1, person2 });
+            context.People.AddRange(new List<Person> { person1, person2 });
             await context.SaveChangesAsync();
             var todoItem1Id = person1.TodoItems[0].Id;
             var todoItem2Id = person1.TodoItems[1].Id;

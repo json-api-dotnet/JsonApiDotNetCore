@@ -4,13 +4,13 @@ using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class PersonRole : Identifiable
+    public sealed class PersonRole : Identifiable
     {
         [HasOne]
         public Person Person { get; set; }
     }
 
-    public class Person : Identifiable, IIsLockable
+    public sealed class Person : Identifiable, IIsLockable
     {
         public bool IsLocked { get; set; }
 
@@ -24,30 +24,30 @@ namespace JsonApiDotNetCoreExample.Models
         public int Age { get; set; }
 
         [HasMany]
-        public virtual List<TodoItem> TodoItems { get; set; }
+        public List<TodoItem> TodoItems { get; set; }
 
         [HasMany]
-        public virtual List<TodoItem> AssignedTodoItems { get; set; }
+        public List<TodoItem> AssignedTodoItems { get; set; }
 
         [HasMany]
-        public virtual List<TodoItemCollection> todoCollections { get; set; }
+        public List<TodoItemCollection> todoCollections { get; set; }
 
         [HasOne]
-        public virtual PersonRole Role { get; set; } 
+        public PersonRole Role { get; set; }
         public int? PersonRoleId { get; set; }
 
         [HasOne]
-        public virtual TodoItem OneToOneTodoItem { get; set; }
+        public TodoItem OneToOneTodoItem { get; set; }
 
         [HasOne]
-        public virtual TodoItem StakeHolderTodoItem { get; set; }
-        public virtual int? StakeHolderTodoItemId { get; set; }
+        public TodoItem StakeHolderTodoItem { get; set; }
+        public int? StakeHolderTodoItemId { get; set; }
 
         [HasOne(links: Link.All, canInclude: false)]
-        public virtual TodoItem UnIncludeableItem { get; set; }
+        public TodoItem UnIncludeableItem { get; set; }
 
         [HasOne]
-        public virtual Passport Passport { get; set; }
+        public Passport Passport { get; set; }
         public int? PassportId { get; set; }
     }
 }

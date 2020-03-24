@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GettingStarted
 {
-    public class ArticlesController : JsonApiController<Article>
+    public sealed class ArticlesController : JsonApiController<Article>
     {
         public ArticlesController(
             IJsonApiOptions jsonApiOptions,

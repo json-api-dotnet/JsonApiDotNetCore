@@ -22,14 +22,13 @@ using Xunit;
 
 namespace DiscoveryTests
 {
-    public class ServiceDiscoveryFacadeTests
+    public sealed class ServiceDiscoveryFacadeTests
     {
         private readonly IServiceCollection _services = new ServiceCollection();
         private readonly ResourceGraphBuilder _resourceGraphBuilder = new ResourceGraphBuilder();
 
         public ServiceDiscoveryFacadeTests()
         {
-            var contextMock = new Mock<DbContext>();
             var dbResolverMock = new Mock<IDbContextResolver>();
             dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
             TestModelRepository._dbContextResolver = dbResolverMock.Object;
@@ -43,13 +42,13 @@ namespace DiscoveryTests
             _services.AddScoped((_) => new Mock<IResourceContextProvider>().Object);
         }
 
-        private ServiceDiscoveryFacade _facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
+        private ServiceDiscoveryFacade Facade => new ServiceDiscoveryFacade(_services, _resourceGraphBuilder);
 
         [Fact]
         public void AddAssembly_Adds_All_Resources_To_Graph()
         {
             // Arrange, act
-            _facade.AddAssembly(typeof(Person).Assembly);
+            Facade.AddAssembly(typeof(Person).Assembly);
 
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
@@ -66,7 +65,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Resources_To_Graph()
         {
             // Arrange, act
-            _facade.AddCurrentAssembly();
+            Facade.AddCurrentAssembly();
 
             // Assert
             var resourceGraph = _resourceGraphBuilder.Build();
@@ -78,7 +77,7 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Services_To_Container()
         {
             // Arrange, act
-            _facade.AddCurrentAssembly();
+            Facade.AddCurrentAssembly();
 
             // Assert
             var services = _services.BuildServiceProvider();
@@ -90,19 +89,17 @@ namespace DiscoveryTests
         public void AddCurrentAssembly_Adds_Repositories_To_Container()
         {
             // Arrange, act
-            _facade.AddCurrentAssembly();
+            Facade.AddCurrentAssembly();
 
             // Assert
             var services = _services.BuildServiceProvider();
             Assert.IsType<TestModelRepository>(services.GetService<IResourceRepository<TestModel>>());
         }
 
-        public class TestModel : Identifiable { }
+        public sealed class TestModel : Identifiable { }
 
         public class TestModelService : DefaultResourceService<TestModel>
         {
-            private static IResourceRepository<TestModel> _repo = new Mock<IResourceRepository<TestModel>>().Object;
-
             public TestModelService(
                 IEnumerable<IQueryParameterService> queryParameters,
                 IJsonApiOptions options,

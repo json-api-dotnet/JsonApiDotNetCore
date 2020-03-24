@@ -5,7 +5,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public class TypeLocator_Tests
+    public sealed class TypeLocator_Tests
     {
         [Fact]
         public void GetGenericInterfaceImplementation_Gets_Implementation()
@@ -139,11 +139,11 @@ namespace UnitTests.Internal
 
     
     public interface IGenericInterface<T> { }
-    public class Implementation : IGenericInterface<int> { }
+    public sealed class Implementation : IGenericInterface<int> { }
 
 
     public class BaseType<T> { }
-    public class DerivedType : BaseType<int> { }
+    public sealed class DerivedType : BaseType<int> { }
 
-    public class Model : Identifiable { }
+    public sealed class Model : Identifiable { }
 }

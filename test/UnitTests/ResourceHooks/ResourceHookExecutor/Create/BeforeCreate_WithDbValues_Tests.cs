@@ -9,7 +9,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeCreate_WithDbValues_Tests : HooksTestsSetup
+    public sealed class BeforeCreate_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeCreate, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
         private readonly ResourceHook[] targetHooksNoImplicit = { ResourceHook.BeforeCreate, ResourceHook.BeforeUpdateRelationship };
@@ -177,13 +177,5 @@ namespace UnitTests.ResourceHooks
         {
             return ids.Single() == checksum;
         }
-
-        private bool PersonCheck(string checksum, IRelationshipsDictionary<Person> helper)
-        {
-
-            var entries = helper.GetByRelationship<TodoItem>();
-            return entries.Single().Value.Single().LastName == checksum;
-        }
     }
 }
-

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Formatters
 {
-    public class JsonApiOutputFormatter : IOutputFormatter
+    public sealed class JsonApiOutputFormatter : IOutputFormatter
     {
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
         {

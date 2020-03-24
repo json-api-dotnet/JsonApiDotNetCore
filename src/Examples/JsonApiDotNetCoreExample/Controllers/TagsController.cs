@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public class TagsController : JsonApiController<Tag>
+    public sealed class TagsController : JsonApiController<Tag>
     {
         public TagsController(
             IJsonApiOptions jsonApiOptions,

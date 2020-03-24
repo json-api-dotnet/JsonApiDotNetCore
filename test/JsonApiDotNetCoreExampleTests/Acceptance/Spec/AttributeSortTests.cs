@@ -7,9 +7,9 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class AttributeSortTests
+    public sealed class AttributeSortTests
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
 
         public AttributeSortTests(TestFixture<Startup> fixture)
         {
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems?include=owner&sort=achievedDate";
+            var route = "/api/v1/todoItems?include=owner&sort=achievedDate";
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act

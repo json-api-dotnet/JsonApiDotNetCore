@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
@@ -21,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// Represents a deserialized document with "single data".
     /// </summary>
     /// <typeparam name="TResource">Type of the resource in the primary data</typeparam>
-    public class DeserializedSingleResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
+    public sealed class DeserializedSingleResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
     { 
         public TResource Data { get; set;  }
     }
@@ -30,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.Client
     /// Represents a deserialized document with "many data".
     /// </summary>
     /// <typeparam name="TResource">Type of the resource(s) in the primary data</typeparam>
-    public class DeserializedListResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
+    public sealed class DeserializedListResponse<TResource> : DeserializedResponseBase where TResource : class, IIdentifiable
     {
         public List<TResource> Data { get; set; }
     }

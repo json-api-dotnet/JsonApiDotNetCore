@@ -5,7 +5,7 @@ using NoEntityFrameworkExample;
 
 namespace NoEntityFrameworkTests
 {
-    public class TestStartup : Startup
+    public sealed class TestStartup : Startup
     {
         public TestStartup(IWebHostEnvironment env) : base(env)
         { }

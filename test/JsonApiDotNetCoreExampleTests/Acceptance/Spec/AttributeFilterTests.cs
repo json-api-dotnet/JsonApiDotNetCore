@@ -16,10 +16,10 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class AttributeFilterTests
+    public sealed class AttributeFilterTests
     {
-        private TestFixture<Startup> _fixture;
-        private Faker<TodoItem> _todoItemFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly Faker<TodoItem> _todoItemFaker;
         private readonly Faker<Person> _personFaker;
 
         public AttributeFilterTests(TestFixture<Startup> fixture)
@@ -139,14 +139,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 context.TodoItems.Add(item);
                 // Exclude 2 items
-                if (guids.Count < (todoItems.Count() - 2))
+                if (guids.Count < (todoItems.Count - 2))
                     guids.Add(item.GuidProperty);
                 else 
                     notInGuids.Add(item.GuidProperty);
             }
             context.SaveChanges();
 
-            var totalCount = context.TodoItems.Count();
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems?filter[guidProperty]=in:{string.Join(",", guids)}";
             var request = new HttpRequestMessage(httpMethod, route);
@@ -160,7 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(guids.Count(), deserializedTodoItems.Count());
+            Assert.Equal(guids.Count, deserializedTodoItems.Count);
             foreach (var item in deserializedTodoItems)
             {
                 Assert.Contains(item.GuidProperty, guids);
@@ -191,12 +190,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
+            var documents = JsonConvert.DeserializeObject<Document>(body);
             var included = documents.Included;
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(ownerFirstNames.Count(), documents.ManyData.Count());
+            Assert.Equal(ownerFirstNames.Count, documents.ManyData.Count);
             Assert.NotNull(included);
             Assert.NotEmpty(included);
             foreach (var item in included)
@@ -218,7 +217,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             {
                 context.TodoItems.Add(item);
                 // Exclude 2 items
-                if (guids.Count < (todoItems.Count() - 2))
+                if (guids.Count < (todoItems.Count - 2))
                     guids.Add(item.GuidProperty);
                 else
                     notInGuids.Add(item.GuidProperty);
@@ -239,7 +238,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(totalCount - notInGuids.Count(), deserializedTodoItems.Count());
+            Assert.Equal(totalCount - notInGuids.Count, deserializedTodoItems.Count);
             foreach (var item in deserializedTodoItems)
             {
                 Assert.DoesNotContain(item.GuidProperty, notInGuids);

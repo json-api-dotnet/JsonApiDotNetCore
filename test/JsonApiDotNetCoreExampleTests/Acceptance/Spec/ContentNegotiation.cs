@@ -10,14 +10,8 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class ContentNegotiation
+    public sealed class ContentNegotiation
     {
-        private TestFixture<Startup> _fixture;
-        public ContentNegotiation(TestFixture<Startup> fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
         public async Task Server_Sends_Correct_ContentType_Header()
         {
@@ -48,10 +42,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
-            request.Content = new StringContent(string.Empty);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
-            request.Content.Headers.ContentType.CharSet = "ISO-8859-4";
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(string.Empty)};
+            request.Content.Headers.ContentType =
+                new MediaTypeHeaderValue("application/vnd.api+json") {CharSet = "ISO-8859-4"};
 
             // Act
             var response = await client.SendAsync(request);
@@ -70,8 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var route = "/api/v1/todoItems";
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var acceptHeader = new MediaTypeWithQualityHeaderValue("application/vnd.api+json");
-            acceptHeader.CharSet = "ISO-8859-4";
+            var acceptHeader = new MediaTypeWithQualityHeaderValue("application/vnd.api+json") {CharSet = "ISO-8859-4"};
             client.DefaultRequestHeaders
                     .Accept
                     .Add(acceptHeader);

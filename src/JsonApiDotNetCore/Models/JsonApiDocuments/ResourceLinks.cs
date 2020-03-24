@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.Links
 {
-    public class ResourceLinks
+    public sealed class ResourceLinks
     {
         /// <summary>
         /// https://jsonapi.org/format/#document-resource-object-links

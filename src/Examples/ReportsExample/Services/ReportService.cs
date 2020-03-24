@@ -8,7 +8,7 @@ namespace ReportsExample.Services
 {
     public class ReportService : IGetAllService<Report>
     {
-        private ILogger<ReportService> _logger;
+        private readonly ILogger<ReportService> _logger;
 
         public ReportService(ILoggerFactory loggerFactory)
         {
@@ -19,7 +19,7 @@ namespace ReportsExample.Services
         {
             _logger.LogError("GetAsync");
 
-            var task = new Task<IEnumerable<Report>>(() => Get());
+            var task = new Task<IEnumerable<Report>>(Get);
         
             task.RunSynchronously(TaskScheduler.Default);
 

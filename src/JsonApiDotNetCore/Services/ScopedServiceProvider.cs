@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Services
     /// <summary>
     /// A service provider that uses the current HttpContext request scope
     /// </summary>
-    public class RequestScopedServiceProvider : IScopedServiceProvider
+    public sealed class RequestScopedServiceProvider : IScopedServiceProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

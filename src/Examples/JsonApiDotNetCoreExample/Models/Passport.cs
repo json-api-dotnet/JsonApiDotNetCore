@@ -2,12 +2,12 @@ using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Passport : Identifiable
+    public sealed class Passport : Identifiable
     {
-        public virtual int? SocialSecurityNumber { get; set; }
-        public virtual bool IsLocked { get; set; }
+        public int? SocialSecurityNumber { get; set; }
+        public bool IsLocked { get; set; }
 
         [HasOne]
-        public virtual Person Person { get; set; }
+        public Person Person { get; set; }
     }
 }

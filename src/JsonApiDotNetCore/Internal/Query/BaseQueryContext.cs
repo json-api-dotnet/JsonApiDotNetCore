@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Internal.Query
         public string GetPropertyPath()
         {
             if (IsAttributeOfRelationship)
-                return string.Format("{0}.{1}", Relationship.InternalRelationshipName, Attribute.PropertyInfo.Name);
+                return $"{Relationship.InternalRelationshipName}.{Attribute.PropertyInfo.Name}";
 
             return Attribute.PropertyInfo.Name;
         }

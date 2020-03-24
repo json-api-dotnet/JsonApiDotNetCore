@@ -1,4 +1,4 @@
-﻿using str = JsonApiDotNetCore.Extensions.StringExtensions;
+using str = JsonApiDotNetCore.Extensions.StringExtensions;
 
 namespace JsonApiDotNetCore.Graph
 {
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Graph
     /// // > "todoItem"
     /// </code>
     /// </example>
-    public class CamelCaseFormatter: BaseResourceNameFormatter
+    public sealed class CamelCaseFormatter: BaseResourceNameFormatter
     {
         /// <inheritdoc/>
         public override string ApplyCasingConvention(string properName) => str.Camelize(properName);

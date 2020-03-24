@@ -6,11 +6,10 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Xunit;
 using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.Serialization.Serializer
 {
-    public class ResourceObjectBuilderTests : SerializerTestsSetup
+    public sealed class ResourceObjectBuilderTests : SerializerTestsSetup
     {
         private readonly ResourceObjectBuilder _builder;
 
@@ -39,7 +38,7 @@ namespace UnitTests.Serialization.Serializer
         public void EntityToResourceObject_ResourceWithId_CanBuild()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1 };
+            var entity = new TestResource { Id = 1 };
 
             // Act
             var resourceObject = _builder.Build(entity);
@@ -57,7 +56,7 @@ namespace UnitTests.Serialization.Serializer
         public void EntityToResourceObject_ResourceWithIncludedAttrs_CanBuild(string stringFieldValue, int? intFieldValue)
         {
             // Arrange
-            var entity = new TestResource() { StringField = stringFieldValue, NullableIntField = intFieldValue };
+            var entity = new TestResource { StringField = stringFieldValue, NullableIntField = intFieldValue };
             var attrs = _resourceGraph.GetAttributes<TestResource>(tr => new { tr.StringField, tr.NullableIntField });
 
             // Act

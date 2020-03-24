@@ -11,13 +11,13 @@ namespace JsonApiDotNetCore.Hooks
     /// The root node class of the breadth-first-traversal of entity data structures
     /// as performed by the <see cref="ResourceHookExecutor"/>
     /// </summary>
-    internal class RootNode<TResource> : INode where TResource : class, IIdentifiable
+    internal sealed class RootNode<TResource> : INode where TResource : class, IIdentifiable
     {
-        private readonly IdentifiableComparer _comparer = new IdentifiableComparer();
+        private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
         private HashSet<TResource> _uniqueEntities;
-        public Type ResourceType { get; internal set; }
-        public IEnumerable UniqueEntities { get { return _uniqueEntities; } }
+        public Type ResourceType { get; }
+        public IEnumerable UniqueEntities => _uniqueEntities;
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
 
         public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Hooks
         /// <summary>
         /// The root node does not have a parent layer and therefore does not have any relationships to any previous layer
         /// </summary>
-        public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer { get { return null; } }
+        public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => null;
 
         public RootNode(IEnumerable<TResource> uniqueEntities, RelationshipProxy[] populatedRelationships, RelationshipProxy[] allRelationships)
         {

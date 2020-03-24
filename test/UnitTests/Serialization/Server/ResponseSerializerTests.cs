@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,13 +9,13 @@ using UnitTests.TestModels;
 
 namespace UnitTests.Serialization.Server
 {
-    public class ResponseSerializerTests : SerializerTestsSetup
+    public sealed class ResponseSerializerTests : SerializerTestsSetup
     {
         [Fact]
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             var serializer = GetResponseSerializer<TestResource>();
 
             // Act
@@ -50,7 +49,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeMany_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // Arrange
-            var entity = new TestResource() { Id = 1, StringField = "value", NullableIntField = 123 };
+            var entity = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             var serializer = GetResponseSerializer<TestResource>();
 
             // Act
@@ -234,9 +233,9 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var serializer = GetResponseSerializer<TestResource>();
-            TestResource entity = null;
+            
             // Act
-            string serialized = serializer.SerializeSingle(entity);
+            string serialized = serializer.SerializeSingle(null);
 
             // Assert
             var expectedFormatted = @"{ ""data"": null }";
@@ -335,10 +334,11 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var meta = new Dictionary<string, object> { { "test", "meta" } };
-            OneToManyPrincipal entity = null;
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            
             // Act
-            string serialized = serializer.SerializeSingle(entity);
+            string serialized = serializer.SerializeSingle(null);
+            
             // Assert
             var expectedFormatted =
             @"{
@@ -361,7 +361,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingleWithRequestRelationship_NullToOneRelationship_CanSerialize()
         {
             // Arrange
-            var entity = new OneToOnePrincipal() { Id = 2, Dependent = null };
+            var entity = new OneToOnePrincipal { Id = 2, Dependent = null };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
             var requestRelationship = _resourceGraph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
             serializer.RequestRelationship = requestRelationship;
@@ -379,7 +379,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingleWithRequestRelationship_PopulatedToOneRelationship_CanSerialize()
         {
             // Arrange
-            var entity = new OneToOnePrincipal() { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
+            var entity = new OneToOnePrincipal { Id = 2, Dependent = new OneToOneDependent { Id = 1 } };
             var serializer = GetResponseSerializer<OneToOnePrincipal>();
             var requestRelationship = _resourceGraph.GetRelationships((OneToOnePrincipal t) => t.Dependent).First();
             serializer.RequestRelationship = requestRelationship;
@@ -406,7 +406,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingleWithRequestRelationship_EmptyToManyRelationship_CanSerialize()
         {
             // Arrange
-            var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent>() };
+            var entity = new OneToManyPrincipal { Id = 2, Dependents = new List<OneToManyDependent>() };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
             var requestRelationship = _resourceGraph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
             serializer.RequestRelationship = requestRelationship;
@@ -425,7 +425,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingleWithRequestRelationship_PopulatedToManyRelationship_CanSerialize()
         {
             // Arrange
-            var entity = new OneToManyPrincipal() { Id = 2, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 1 } } };
+            var entity = new OneToManyPrincipal { Id = 2, Dependents = new List<OneToManyDependent> { new OneToManyDependent { Id = 1 } } };
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
             var requestRelationship = _resourceGraph.GetRelationships((OneToManyPrincipal t) => t.Dependents).First();
             serializer.RequestRelationship = requestRelationship;
@@ -476,7 +476,7 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(expectedJson, result);
         }
 
-        class CustomError : Error
+        private sealed class CustomError : Error
         {
             public CustomError(int status, string title, string detail, string myProp)
             : base(status, title, detail)

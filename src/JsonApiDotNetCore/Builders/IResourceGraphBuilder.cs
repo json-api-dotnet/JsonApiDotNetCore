@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Builders
 {

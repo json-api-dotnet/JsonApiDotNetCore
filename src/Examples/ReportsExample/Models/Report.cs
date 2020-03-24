@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace ReportsExample.Models
 {
-    public class Report : Identifiable
+    public sealed class Report : Identifiable
     {
         [Attr]
         public string Title { get; set; }
@@ -11,7 +11,7 @@ namespace ReportsExample.Models
         public ComplexType ComplexType { get; set; }
     }
 
-    public class ComplexType
+    public sealed class ComplexType
     {
         public string CompoundPropertyName { get; set; }
     }

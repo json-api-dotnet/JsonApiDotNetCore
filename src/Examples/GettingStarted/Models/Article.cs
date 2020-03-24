@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Models;
 
 namespace GettingStarted.Models
 {
-    public class Article : Identifiable
+    public sealed class Article : Identifiable
     {
         [Attr]
         public string Title { get; set; }

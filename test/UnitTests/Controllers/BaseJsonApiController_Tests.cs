@@ -13,14 +13,14 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace UnitTests
 {
-    public class BaseJsonApiController_Tests
+    public sealed class BaseJsonApiController_Tests
     {
-        public class Resource : Identifiable
+        public sealed class Resource : Identifiable
         {
             [Attr] public string TestAttribute { get; set; }
         }
 
-        public class ResourceController : BaseJsonApiController<Resource>
+        public sealed class ResourceController : BaseJsonApiController<Resource>
         {
             public ResourceController(
                 IJsonApiOptions jsonApiOptions,
@@ -92,7 +92,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getById: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync(id));
@@ -121,7 +121,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationships: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipsAsync(id, string.Empty));
@@ -150,7 +150,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationship: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipAsync(id, string.Empty));
@@ -218,7 +218,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, update: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
@@ -236,7 +236,7 @@ namespace UnitTests
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
-            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
+            controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
 
             // Act
             await controller.PostAsync(resource);
@@ -251,8 +251,14 @@ namespace UnitTests
             // Arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions { ValidateModelState = false }, NullLoggerFactory.Instance, create: serviceMock.Object);
-            controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext { HttpContext = new DefaultHttpContext() };
+            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = false},
+                NullLoggerFactory.Instance, create: serviceMock.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
 
             // Act
@@ -269,8 +275,11 @@ namespace UnitTests
             // Arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions { ValidateModelState = true }, NullLoggerFactory.Instance, create: serviceMock.Object);
-            controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = true},
+                NullLoggerFactory.Instance, create: serviceMock.Object)
+            {
+                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+            };
             controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
 
@@ -303,7 +312,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, updateRelationships: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
@@ -332,8 +341,7 @@ namespace UnitTests
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance,
-                delete: null);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));

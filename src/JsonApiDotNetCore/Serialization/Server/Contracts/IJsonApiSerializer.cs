@@ -1,6 +1,4 @@
-﻿using JsonApiDotNetCore.Models;
-
-namespace JsonApiDotNetCore.Serialization.Server
+﻿namespace JsonApiDotNetCore.Serialization.Server
 {
     /// <summary>
     /// Serializer used internally in JsonApiDotNetCore to serialize responses.
