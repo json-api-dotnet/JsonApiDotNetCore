@@ -245,7 +245,8 @@ namespace JsonApiDotNetCore.Extensions
             var concreteType = typeof(TSource);
             PropertyInfo property;
             MemberExpression left;
-
+            Expression right;
+            
             // {model}
             var parameter = Expression.Parameter(concreteType, "model");
             // Is relationship attribute
@@ -277,7 +278,6 @@ namespace JsonApiDotNetCore.Extensions
 
             try
             {
-                ConstantExpression right;
                 if (op == FilterOperation.isnotnull || op == FilterOperation.isnull)
                     right = Expression.Constant(null);
                 else
