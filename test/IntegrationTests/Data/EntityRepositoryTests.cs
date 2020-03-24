@@ -15,7 +15,7 @@ using Xunit;
 
 namespace JADNC.IntegrationTests.Data
 {
-    public class EntityRepositoryTests
+    public sealed class EntityRepositoryTests
     {
         [Fact]
         public async Task UpdateAsync_AttributesUpdated_ShouldHaveSpecificallyThoseAttributesUpdated()
@@ -23,7 +23,7 @@ namespace JADNC.IntegrationTests.Data
             // Arrange
             var itemId = 213;
             var seed = Guid.NewGuid();
-            using (var arrangeContext = GetContext(seed))
+            await using (var arrangeContext = GetContext(seed))
             {
                 var (repository, targetedFields) = Setup(arrangeContext);
                 var todoItemUpdates = new TodoItem
@@ -42,13 +42,13 @@ namespace JADNC.IntegrationTests.Data
                 targetedFields.Setup(m => m.Relationships).Returns(new List<RelationshipAttribute>());
 
                 // Act
-                var updatedItem = await repository.UpdateAsync(todoItemUpdates);
+                await repository.UpdateAsync(todoItemUpdates);
             }
 
             // Assert - in different context
-            using var assertContext = GetContext(seed);
+            await using var assertContext = GetContext(seed);
             {
-                var (repository, targetedFields) = Setup(assertContext);
+                var (repository, _) = Setup(assertContext);
 
                 var fetchedTodo = repository.Get(itemId).First();
                 Assert.NotNull(fetchedTodo);
@@ -65,9 +65,9 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageNumberIsPositive_ReturnCorrectIdsAtTheFront(int pageSize, int pageNumber, int[] expectedResult)
         {
             // Arrange
-            using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
-            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
+            await using var context = GetContext();
+            var (repository, _) = Setup(context);
+            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9).Cast<object>());
             await context.SaveChangesAsync();
 
             // Act
@@ -84,10 +84,10 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageSizeNonPositive_DoNothing(int pageSize)
         {
             // Arrange
-            using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
+            await using var context = GetContext();
+            var (repository, _) = Setup(context);
             var items = TodoItems(2, 3, 1);
-            context.AddRange(items);
+            context.AddRange(items.Cast<object>());
             await context.SaveChangesAsync();
 
             // Act
@@ -102,9 +102,9 @@ namespace JADNC.IntegrationTests.Data
         {
             // Arrange
             var items = TodoItems(2, 3, 1);
-            using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
-            context.AddRange(items);
+            await using var context = GetContext();
+            var (repository, _) = Setup(context);
+            context.AddRange(items.Cast<object>());
 
             // Act
             var result = await repository.PageAsync(context.Set<TodoItem>(), 2, 3);
@@ -117,9 +117,9 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageNumberIsZero_PretendsItsOne()
         {
             // Arrange
-            using var context = GetContext();
-            var (repository, targetedFields) = Setup(context);
-            context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9));
+            await using var context = GetContext();
+            var (repository, _) = Setup(context);
+            context.AddRange(TodoItems(2, 3, 4, 5, 6, 7, 8, 9).Cast<object>());
             await context.SaveChangesAsync();
 
             // Act
@@ -136,9 +136,9 @@ namespace JADNC.IntegrationTests.Data
         public async Task Paging_PageNumberIsNegative_GiveBackReverseAmountOfIds(int pageSize, int pageNumber, int[] expectedIds)
         {
             // Arrange
-            using var context = GetContext();
+            await using var context = GetContext();
             var repository = Setup(context).Repository;
-            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9));
+            context.AddRange(TodoItems(1, 2, 3, 4, 5, 6, 7, 8, 9).Cast<object>());
             context.SaveChanges();
 
             // Act
@@ -161,7 +161,7 @@ namespace JADNC.IntegrationTests.Data
 
         private AppDbContext GetContext(Guid? seed = null)
         {
-            Guid actualSeed = seed == null ? Guid.NewGuid() : seed.GetValueOrDefault();
+            Guid actualSeed = seed ?? Guid.NewGuid();
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: $"IntegrationDatabaseRepository{actualSeed}")
                 .Options;
@@ -176,12 +176,12 @@ namespace JADNC.IntegrationTests.Data
             return ids.Select(id => new TodoItem { Id = id }).ToArray();
         }
 
-        private class IdComparer<T> : IEqualityComparer<T>
+        private sealed class IdComparer<T> : IEqualityComparer<T>
             where T : IIdentifiable
         {
             public bool Equals(T x, T y) => x?.StringId == y?.StringId;
 
-            public int GetHashCode(T obj) => obj?.StringId?.GetHashCode() ?? 0;
+            public int GetHashCode(T obj) => obj.StringId?.GetHashCode() ?? 0;
         }
     }
 }

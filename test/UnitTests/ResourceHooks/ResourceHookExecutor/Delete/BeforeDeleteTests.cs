@@ -1,12 +1,11 @@
-﻿using JsonApiDotNetCore.Hooks;
+using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
-using System.Collections.Generic;
 using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeDeleteTests : HooksTestsSetup
+    public sealed class BeforeDeleteTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeDelete };
 
@@ -15,7 +14,7 @@ namespace UnitTests.ResourceHooks
         {
             // Arrange
             var discovery = SetDiscoverableHooks<TodoItem>(targetHooks, DisableDbValues);
-            (var _, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
+            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();
             // Act
@@ -31,7 +30,7 @@ namespace UnitTests.ResourceHooks
         {
             // Arrange
             var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            (var _, var hookExecutor, var resourceDefinitionMock) = CreateTestObjects(discovery);
+            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
 
             var todoList = CreateTodoWithOwner();
             // Act

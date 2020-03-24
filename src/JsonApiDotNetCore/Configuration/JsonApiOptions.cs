@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Graph;
-using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Links;
 using Newtonsoft.Json;
 
@@ -52,7 +50,7 @@ namespace JsonApiDotNetCore.Configuration
         /// 
         /// Defaults to <see langword="false"/>.
         /// </summary>
-        public bool LoadDatabaseValues { get; set; } = false;
+        public bool LoadDatabaseValues { get; set; }
 
         /// <summary>
         /// The base URL Namespace
@@ -140,14 +138,9 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public bool ValidateModelState { get; set; }
 
-        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings()
+        public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-
-        public void EnableExtension(JsonApiExtension extension)
-            => EnabledExtensions.Add(extension);
-
-        internal List<JsonApiExtension> EnabledExtensions { get; set; } = new List<JsonApiExtension>();
     }
 }

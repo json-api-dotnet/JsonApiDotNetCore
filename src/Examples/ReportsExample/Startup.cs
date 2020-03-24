@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ReportsExample
 {
-    public class Startup
+    public sealed class Startup
     {
         public readonly IConfiguration Config;
 
@@ -20,7 +20,7 @@ namespace ReportsExample
             Config = builder.Build();
         }
 
-        public virtual void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddMvcCore();
             services.AddJsonApi(

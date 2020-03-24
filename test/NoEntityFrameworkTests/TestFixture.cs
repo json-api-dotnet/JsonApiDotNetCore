@@ -14,9 +14,9 @@ namespace NoEntityFrameworkTests
 {
     public class TestFixture : IDisposable
     {
-        public AppDbContext Context { get; private set; }
-        public TestServer Server { get; private set; }
-        private IServiceProvider _services;
+        public AppDbContext Context { get; }
+        public TestServer Server { get; }
+        private readonly IServiceProvider _services;
         public TestFixture()
         {
             var builder = new WebHostBuilder().UseStartup<Startup>();

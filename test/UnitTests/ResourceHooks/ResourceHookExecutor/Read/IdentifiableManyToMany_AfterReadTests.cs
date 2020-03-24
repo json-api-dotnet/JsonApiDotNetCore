@@ -7,7 +7,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class IdentifiableManyToMany_AfterReadTests : HooksTestsSetup
+    public sealed class IdentifiableManyToMany_AfterReadTests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.AfterRead };
 
@@ -60,7 +60,7 @@ namespace UnitTests.ResourceHooks
 
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
-            var (articles, joins, tags) = CreateIdentifiableManyToManyData();
+            var (articles, _, tags) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -79,7 +79,7 @@ namespace UnitTests.ResourceHooks
             var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateIdentifiableManyToManyData();
+            var (articles, joins, _) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -98,7 +98,7 @@ namespace UnitTests.ResourceHooks
             var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateIdentifiableManyToManyData();
+            var (articles, _, _) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -116,7 +116,7 @@ namespace UnitTests.ResourceHooks
             var joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, hookExecutor, articleResourceMock, joinResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
-            var (articles, joins, tags) = CreateIdentifiableManyToManyData();
+            var (articles, _, _) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);

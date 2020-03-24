@@ -10,11 +10,9 @@ namespace JsonApiDotNetCore.Graph
     /// <summary>
     /// Used to locate types and facilitate auto-resource discovery
     /// </summary>
-    static class TypeLocator
+    internal static class TypeLocator
     {
-        private static Dictionary<Assembly, Type[]> _typeCache = new Dictionary<Assembly, Type[]>();
-        private static Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
-
+        private static readonly Dictionary<Assembly, List<ResourceDescriptor>> _identifiableTypeCache = new Dictionary<Assembly, List<ResourceDescriptor>>();
 
         /// <summary>
         /// Determine whether or not this is a json:api resource by checking if it implements <see cref="IIdentifiable"/>.
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCore.Graph
         /// Get all implementations of <see cref="IIdentifiable"/> in the assembly
         /// </summary>
         public static IEnumerable<ResourceDescriptor> GetIdentifiableTypes(Assembly assembly)
-            => (_identifiableTypeCache.TryGetValue(assembly, out var descriptors) == false)
+            => (_identifiableTypeCache.TryGetValue(assembly, out _) == false)
                     ? FindIdentifiableTypes(assembly)
                     : _identifiableTypeCache[assembly];
 

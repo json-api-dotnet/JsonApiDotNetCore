@@ -101,8 +101,8 @@ namespace JsonApiDotNetCore.Serialization
                 if (!relationshipsValues.TryGetValue(attr.PublicRelationshipName, out RelationshipEntry relationshipData) || !relationshipData.IsPopulated)
                     continue;
 
-                if (attr is HasOneAttribute hasOne)
-                    SetHasOneRelationship(entity, entityProperties, (HasOneAttribute)attr, relationshipData);
+                if (attr is HasOneAttribute hasOneAttribute)
+                    SetHasOneRelationship(entity, entityProperties, hasOneAttribute, relationshipData);
                 else
                     SetHasManyRelationship(entity, (HasManyAttribute)attr, relationshipData);
 
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Serialization
             entity = SetRelationships(entity, data.Relationships, resourceContext.Relationships);
 
             if (data.Id != null)
-                entity.StringId = data.Id?.ToString();
+                entity.StringId = data.Id;
 
             return entity;
         }
@@ -159,14 +159,13 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="entityProperties"></param>
         /// <param name="attr"></param>
         /// <param name="relationshipData"></param>
-        /// <returns></returns>
-        private object SetHasOneRelationship(IIdentifiable entity,
+        private void SetHasOneRelationship(IIdentifiable entity,
             PropertyInfo[] entityProperties,
             HasOneAttribute attr,
             RelationshipEntry relationshipData)
         {
             var rio = (ResourceIdentifierObject)relationshipData.Data;
-            var relatedId = rio?.Id ?? null;
+            var relatedId = rio?.Id;
 
             // this does not make sense in the following case: if we're setting the dependent of a one-to-one relationship, IdentifiablePropertyName should be null.
             var foreignKeyProperty = entityProperties.FirstOrDefault(p => p.Name == attr.IdentifiablePropertyName);
@@ -181,8 +180,6 @@ namespace JsonApiDotNetCore.Serialization
             // depending on if this base parser is used client-side or server-side,
             // different additional processing per field needs to be executed.
             AfterProcessField(entity, attr, relationshipData);
-
-            return entity;
         }
 
         /// <summary>
@@ -224,9 +221,10 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasMany relationship.
         /// </summary>
-        private object SetHasManyRelationship(IIdentifiable entity,
-                                              HasManyAttribute attr,
-                                              RelationshipEntry relationshipData)
+        private void SetHasManyRelationship(
+            IIdentifiable entity,
+            HasManyAttribute attr,
+            RelationshipEntry relationshipData)
         {
             if (relationshipData.Data != null)
             {   // if the relationship is set to null, no need to set the navigation property to null: this is the default value.
@@ -241,8 +239,6 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             AfterProcessField(entity, attr, relationshipData);
-
-            return entity;
         }
 
         private object ConvertAttrValue(object newValue, Type targetType)

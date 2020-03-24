@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,11 +19,11 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class UpdatingDataTests : EndToEndTest
+    public sealed class UpdatingDataTests : EndToEndTest
     {
-        private AppDbContext _context;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly AppDbContext _context;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public UpdatingDataTests(TestFixture<Startup> fixture) : base(fixture)
         { 
@@ -79,7 +78,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(422, Convert.ToInt32(response.StatusCode));
         }
 
@@ -249,9 +247,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         private HttpRequestMessage PrepareRequest(string method, string route, string content)
         {
             var httpMethod = new HttpMethod(method);
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(httpMethod, route) {Content = new StringContent(content)};
 
-            request.Content = new StringContent(content);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.api+json");
             return request;
         }

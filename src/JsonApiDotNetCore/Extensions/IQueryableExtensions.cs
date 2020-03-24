@@ -21,9 +21,8 @@ namespace JsonApiDotNetCore.Extensions
                 if (_containsMethod == null)
                 {
                     _containsMethod = typeof(Enumerable)
-                      .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                      .Where(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Count() == 2)
-                      .First();
+                        .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                        .First(m => m.Name == nameof(Enumerable.Contains) && m.GetParameters().Length == 2);
                 }
                 return _containsMethod;
             }
@@ -244,17 +243,16 @@ namespace JsonApiDotNetCore.Extensions
         {
             var op = filter.Operation;
             var concreteType = typeof(TSource);
-            PropertyInfo relationProperty = null;
-            PropertyInfo property = null;
+            PropertyInfo property;
             MemberExpression left;
             Expression right;
-
+            
             // {model}
             var parameter = Expression.Parameter(concreteType, "model");
             // Is relationship attribute
             if (filter.IsAttributeOfRelationship)
             {
-                relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
+                var relationProperty = concreteType.GetProperty(filter.Relationship.InternalRelationshipName);
                 if (relationProperty == null)
                     throw new ArgumentException($"'{filter.Relationship.InternalRelationshipName}' is not a valid relationship of '{concreteType}'");
 
@@ -329,10 +327,9 @@ namespace JsonApiDotNetCore.Extensions
 
         private static IQueryable<TSource> CallGenericSelectMethod<TSource>(IQueryable<TSource> source, List<string> columns)
         {
-            var sourceBindings = new List<MemberAssignment>();
             var sourceType = typeof(TSource);
             var parameter = Expression.Parameter(source.ElementType, "x");
-            var sourceProperties = new List<string>() { };
+            var sourceProperties = new List<string>();
 
             // Store all property names to it's own related property (name as key)
             var nestedTypesAndProperties = new Dictionary<string, List<string>>();
@@ -342,7 +339,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (props.Length > 1) // Nested property
                 {
                     if (nestedTypesAndProperties.TryGetValue(props[0], out var properties) == false)
-                        nestedTypesAndProperties.Add(props[0], new List<string>() { nameof(Identifiable.Id), props[1] });
+                        nestedTypesAndProperties.Add(props[0], new List<string> { nameof(Identifiable.Id), props[1] });
                     else
                         properties.Add(props[1]);
                 }
@@ -351,16 +348,16 @@ namespace JsonApiDotNetCore.Extensions
             }
 
             // Bind attributes on TSource
-            sourceBindings = sourceProperties.Select(prop => Expression.Bind(sourceType.GetProperty(prop), Expression.PropertyOrField(parameter, prop))).ToList();
+            var sourceBindings = sourceProperties.Select(prop => Expression.Bind(sourceType.GetProperty(prop), Expression.PropertyOrField(parameter, prop))).ToList();
 
             // Bind attributes on nested types
             var nestedBindings = new List<MemberAssignment>();
-            Expression bindExpression;
             foreach (var item in nestedTypesAndProperties)
             {
                 var nestedProperty = sourceType.GetProperty(item.Key);
                 var nestedPropertyType = nestedProperty.PropertyType;
                 // [HasMany] attribute
+                Expression bindExpression;
                 if (nestedPropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(nestedPropertyType))
                 {
                     // Concrete type of Collection
@@ -381,14 +378,14 @@ namespace JsonApiDotNetCore.Extensions
                     Expression selectMethod = Expression.Call(
                         typeof(Enumerable),
                         "Select",
-                        new Type[] { singleType, singleType },
+                        new[] { singleType, singleType },
                         propertyExpression, body);
 
                     // { x.Items.Select(y => new Item() {Id = y.Id, Name = y.Name}).ToList() }
                     bindExpression = Expression.Call(
                          typeof(Enumerable),
                          "ToList",
-                         new Type[] { singleType },
+                         new[] { singleType },
                          selectMethod);
                 }
                 // [HasOne] attribute

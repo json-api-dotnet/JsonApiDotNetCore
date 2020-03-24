@@ -15,11 +15,11 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
-    public class CustomControllerTests
+    public sealed class CustomControllerTests
     {
-        private TestFixture<Startup> _fixture;
-        private Faker<TodoItem> _todoItemFaker;
-        private Faker<Person> _personFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public CustomControllerTests(TestFixture<Startup> fixture)
         {
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"testValues";
+            var route = "testValues";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/custom/route/todoItems";
+            var route = "/custom/route/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();

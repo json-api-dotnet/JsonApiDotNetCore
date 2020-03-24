@@ -65,19 +65,19 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
         {
             if (_pageService.CurrentPage > 1)
             {
-                links.Prev = GetPageLink(resourceContext, _pageService.CurrentPage - 1, _pageService.CurrentPageSize);
+                links.Prev = GetPageLink(resourceContext, _pageService.CurrentPage - 1, _pageService.PageSize);
             }
 
             if (_pageService.CurrentPage < _pageService.TotalPages)
             {
-                links.Next = GetPageLink(resourceContext, _pageService.CurrentPage + 1, _pageService.CurrentPageSize);
+                links.Next = GetPageLink(resourceContext, _pageService.CurrentPage + 1, _pageService.PageSize);
             }
 
             if (_pageService.TotalPages > 0)
             {
-                links.Self = GetPageLink(resourceContext, _pageService.CurrentPage, _pageService.CurrentPageSize);
-                links.First = GetPageLink(resourceContext, 1, _pageService.CurrentPageSize);
-                links.Last = GetPageLink(resourceContext, _pageService.TotalPages, _pageService.CurrentPageSize);
+                links.Self = GetPageLink(resourceContext, _pageService.CurrentPage, _pageService.PageSize);
+                links.First = GetPageLink(resourceContext, 1, _pageService.PageSize);
+                links.Last = GetPageLink(resourceContext, _pageService.TotalPages, _pageService.PageSize);
             }
         }
 
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Serialization.Server.Builders
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, Link.Self))
             {
-                links = links ?? new RelationshipLinks();
+                links ??= new RelationshipLinks();
                 links.Self = GetSelfRelationshipLink(parentResourceContext.ResourceName, parent.StringId, childNavigation);
             }
 

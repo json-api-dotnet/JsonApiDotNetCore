@@ -8,19 +8,11 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Gets the requested or default page size
         /// </summary>
-        int CurrentPageSize { get; }
-        /// <summary>
-        /// Default size to be used in pagination
-        /// </summary>
-        int DefaultPageSize { get; set; }
-        /// <summary>
-        /// Currently requested page size to be used in pagination
-        /// </summary>
-        int? RequestedPageSize { get; set; }
+        int PageSize { get; }
         /// <summary>
         /// The page requested. Note that the page number is one-based.
         /// </summary>
-        int CurrentPage { get; set; }
+        int CurrentPage { get; }
         /// <summary>
         /// Total amount of pages for request
         /// </summary>

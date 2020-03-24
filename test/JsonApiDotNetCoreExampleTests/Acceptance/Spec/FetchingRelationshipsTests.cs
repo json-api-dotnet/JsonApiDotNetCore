@@ -12,10 +12,10 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class FetchingRelationshipsTests
+    public sealed class FetchingRelationshipsTests
     {
-        private TestFixture<Startup> _fixture;
-        private Faker<TodoItem> _todoItemFaker;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly Faker<TodoItem> _todoItemFaker;
 
         public FetchingRelationshipsTests(TestFixture<Startup> fixture)
         {

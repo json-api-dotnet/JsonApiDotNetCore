@@ -5,13 +5,11 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Serialization.Server;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -105,7 +103,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (i.IsGenericType)
                 {
                     var firstGenericArgument = i.GenericTypeArguments.FirstOrDefault();
-                    if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor) == true)
+                    if (TypeLocator.TryGetResourceDescriptor(firstGenericArgument, out var resourceDescriptor))
                     {
                         resourceDescriptors.Add(resourceDescriptor);
                     }

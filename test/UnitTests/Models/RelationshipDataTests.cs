@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace UnitTests.Models
 {
-    public class RelationshipDataTests
+    public sealed class RelationshipDataTests
     {
         [Fact]
         public void Setting_ExposeData_To_List_Sets_ManyData()

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UnitTests.Builders
 {
-    public class LinkTests
+    public sealed class LinkTests
     {
         [Theory]
         [InlineData(Link.All, Link.Self, true)]

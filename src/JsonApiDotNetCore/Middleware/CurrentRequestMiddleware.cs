@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -7,7 +6,6 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 
@@ -16,7 +14,7 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// This sets all necessary parameters relating to the HttpContext for JADNC
     /// </summary>
-    public class CurrentRequestMiddleware
+    public sealed class CurrentRequestMiddleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
@@ -76,7 +74,6 @@ namespace JsonApiDotNetCore.Middleware
         }
         private string GetRelationshipId()
         {
-            var resource = _currentRequest.GetRequestResource();
             if (!_currentRequest.IsRelationshipPath)
             {
                 return null;
@@ -84,13 +81,6 @@ namespace JsonApiDotNetCore.Middleware
             var components = SplitCurrentPath();
             var toReturn = components.ElementAtOrDefault(4);
 
-            if (toReturn == null)
-            {
-                return null;
-            }
-            var relType = _currentRequest.RequestRelationship.RightType;
-            var relResource = _resourceGraph.GetResourceContext(relType);
-            var relIdentityType = relResource.IdentityType;
             return toReturn;
         }
         private string[] SplitCurrentPath()
@@ -108,9 +98,9 @@ namespace JsonApiDotNetCore.Middleware
             var r = _httpContext.Request;
             if (_options.RelativeLinks)
             {
-                return GetNameSpace(resourceName);
+                return GetNameSpace();
             }
-            var ns = GetNameSpace(resourceName);
+            var ns = GetNameSpace();
             var customRoute = GetCustomRoute(r.Path.Value, resourceName);
             var toReturn = $"{r.Scheme}://{r.Host}/{ns}";
             if (customRoute != null)
@@ -137,13 +127,12 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private string GetNameSpace(string resourceName = null)
+        private string GetNameSpace()
         {
-
             return _options.Namespace;
         }
 
-        protected bool PathIsRelationship()
+        private bool PathIsRelationship()
         {
             var actionName = (string)_routeValues["action"];
             return actionName.ToLower().Contains("relationships");
@@ -183,7 +172,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        internal static bool ContainsMediaTypeParameters(string mediaType)
+        private static bool ContainsMediaTypeParameters(string mediaType)
         {
             var incomingMediaTypeSpan = mediaType.AsSpan();
 
@@ -225,7 +214,7 @@ namespace JsonApiDotNetCore.Middleware
             var requestResource = _resourceGraph.GetResourceContext(resourceType);
             if (requestResource == null)
             {
-                return requestResource;
+                return null;
             }
             if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
             {

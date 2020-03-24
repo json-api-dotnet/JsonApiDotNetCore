@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Query
     /// <inheritdoc/>
     public class SortService : QueryParameterService, ISortService
     {
-        const char DESCENDING_SORT_OPERATOR = '-';
+        private const char DESCENDING_SORT_OPERATOR = '-';
         private readonly IResourceDefinitionProvider _resourceDefinitionProvider;
         private List<SortQueryContext> _queries;
 

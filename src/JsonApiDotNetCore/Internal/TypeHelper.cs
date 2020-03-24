@@ -17,14 +17,14 @@ namespace JsonApiDotNetCore.Internal
                 list.Add(ConvertType(item, targetType));
             return list;
         }
-        public static bool IsNullable(Type type)
+        private static bool IsNullable(Type type)
         {
             return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
         }
         public static object ConvertType(object value, Type type)
         {
             if (value == null && !IsNullable(type))
-                throw new FormatException($"Cannot convert null to a non-nullable type");
+                throw new FormatException("Cannot convert null to a non-nullable type");
 
             if (value == null)
                 return null;
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Internal
 
                 type = Nullable.GetUnderlyingType(type) ?? type;
 
-                var stringValue = value?.ToString();
+                var stringValue = value.ToString();
 
                 if (string.IsNullOrEmpty(stringValue))
                     return GetDefaultType(type);
@@ -91,33 +91,32 @@ namespace JsonApiDotNetCore.Internal
         /// Gets the property info that is referenced in the NavigationAction expression.
         /// Credits: https://stackoverflow.com/a/17116267/4441216
         /// </summary>
-        public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> NavigationExpression)
+        public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> navigationExpression)
         {
-            MemberExpression Exp = null;
+            MemberExpression exp;
 
             //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
-            if (NavigationExpression.Body is UnaryExpression)
+            if (navigationExpression.Body is UnaryExpression unaryExpression)
             {
-                var UnExp = (UnaryExpression)NavigationExpression.Body;
-                if (UnExp.Operand is MemberExpression)
+                if (unaryExpression.Operand is MemberExpression memberExpression)
                 {
-                    Exp = (MemberExpression)UnExp.Operand;
+                    exp = memberExpression;
                 }
                 else
                 {
                     throw new ArgumentException();
                 }
             }
-            else if (NavigationExpression.Body is MemberExpression)
+            else if (navigationExpression.Body is MemberExpression memberExpression)
             {
-                Exp = (MemberExpression)NavigationExpression.Body;
+                exp = memberExpression;
             }
             else
             {
                 throw new ArgumentException();
             }
 
-            return (PropertyInfo)Exp.Member;
+            return (PropertyInfo)exp.Member;
         }
 
         /// <summary>
@@ -144,7 +143,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="parameters">Generic type parameters to be used in open type.</param>
         /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
         /// <param name="openType">Open generic type</param>
-        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
+        private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
         {
             var parameterizedType = openType.MakeGenericType(parameters);
             return Activator.CreateInstance(parameterizedType, constructorArguments);
@@ -171,7 +170,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Use this overload if you need to instantiate a type that has a internal constructor
         /// </summary>
-        public static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
+        private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, bool hasInternalConstructor, params object[] constructorArguments)
         {
             if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
             var parameterizedType = openType.MakeGenericType(parameters);
@@ -189,7 +188,7 @@ namespace JsonApiDotNetCore.Internal
         /// <param name="openType">Open generic type</param>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, constructorArguments);
+            return CreateInstanceOfOpenType(openType, new[] { parameter }, constructorArguments);
         }
 
         /// <summary>
@@ -197,7 +196,7 @@ namespace JsonApiDotNetCore.Internal
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new Type[] { parameter }, hasInternalConstructor, constructorArguments);
+            return CreateInstanceOfOpenType(openType, new[] { parameter }, hasInternalConstructor, constructorArguments);
 
         }
 

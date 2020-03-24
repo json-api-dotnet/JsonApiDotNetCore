@@ -20,7 +20,6 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using JsonApiDotNetCore.Extensions;
 
 namespace JsonApiDotNetCore.Builders
 {

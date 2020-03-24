@@ -12,7 +12,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
-    public class NullValuedAttributeHandlingTests : IAsyncLifetime
+    public sealed class NullValuedAttributeHandlingTests : IAsyncLifetime
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _dbContext;

@@ -3,11 +3,10 @@ using System.Linq;
 using JsonApiDotNetCore.Models;
 using Xunit;
 using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
 
 namespace UnitTests.Serialization.Server
 {
-    public class ResponseResourceObjectBuilderTests : SerializerTestsSetup
+    public sealed class ResponseResourceObjectBuilderTests : SerializerTestsSetup
     { 
         private readonly List<RelationshipAttribute> _relationshipsForBuild;
         private const string _relationshipName = "dependents";

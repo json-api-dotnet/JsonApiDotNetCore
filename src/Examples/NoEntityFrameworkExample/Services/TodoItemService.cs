@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace NoEntityFrameworkExample.Services
 {
-    public class TodoItemService : IResourceService<TodoItem>
+    public sealed class TodoItemService : IResourceService<TodoItem>
     {
         private readonly string _connectionString;
 
@@ -20,37 +20,27 @@ namespace NoEntityFrameworkExample.Services
             _connectionString = config.GetValue<string>("Data:DefaultConnection");
         }
         
-        private IDbConnection Connection
-        {
-            get
-            {
-                return new NpgsqlConnection(_connectionString);
-            }
-        }
+        private IDbConnection Connection => new NpgsqlConnection(_connectionString);
 
         private async Task<IEnumerable<T>> QueryAsync<T>(Func<IDbConnection, Task<IEnumerable<T>>> query)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Open();
-                return await query(dbConnection);
-            }
+            using IDbConnection dbConnection = Connection;
+            dbConnection.Open();
+            return await query(dbConnection);
         }
 
         public async Task<IEnumerable<TodoItem>> GetAsync()
         {
-            return await QueryAsync<TodoItem>(async connection =>
-            {
-                return await connection.QueryAsync<TodoItem>("select * from \"TodoItems\"");
-            });
+            return await QueryAsync(async connection =>
+                await connection.QueryAsync<TodoItem>("select * from \"TodoItems\""));
         }
 
         public async Task<TodoItem> GetAsync(int id)
         {
-            return (await QueryAsync<TodoItem>(async connection =>
-            {
-                return await connection.QueryAsync<TodoItem>("select * from \"TodoItems\" where \"Id\"= @id", new { id });
-            })).SingleOrDefault();
+            var query = await QueryAsync(async connection => 
+                await connection.QueryAsync<TodoItem>("select * from \"TodoItems\" where \"Id\"= @id", new {id}));
+            
+            return query.SingleOrDefault();
         }
 
         public Task<object> GetRelationshipAsync(int id, string relationshipName)
@@ -65,7 +55,7 @@ namespace NoEntityFrameworkExample.Services
 
         public async Task<TodoItem> CreateAsync(TodoItem entity)
         {
-            return (await QueryAsync<TodoItem>(async connection =>
+            return (await QueryAsync(async connection =>
             {
                 var query = "insert into \"TodoItems\" (\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\") values (@description, @isLocked, @ordinal, @guidProperty) returning \"Id\",\"Description\", \"IsLocked\", \"Ordinal\", \"GuidProperty\"";
                 var result = await connection.QueryAsync<TodoItem>(query, new { description = entity.Description, ordinal = entity.Ordinal, guidProperty =  entity.GuidProperty, isLocked = entity.IsLocked});
