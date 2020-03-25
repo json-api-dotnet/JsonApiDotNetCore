@@ -1,16 +1,10 @@
 <Project>
   <PropertyGroup>
-    <NetCoreAppVersion>netcoreapp3.0</NetCoreAppVersion>
+    <NetCoreAppVersion>netcoreapp3.1</NetCoreAppVersion>
     <NetStandardVersion>netstandard2.1</NetStandardVersion>
-    <AspNetCoreVersion>3.0</AspNetCoreVersion>
-    <MicrosoftLoggingVersion>3.0.*</MicrosoftLoggingVersion>
-    <MicrosoftConfigurationVersion>3.0.*</MicrosoftConfigurationVersion>
-    <MicrosoftOptionsVersion>3.0.*</MicrosoftOptionsVersion>
-    <EFCoreVersion>3.0.*</EFCoreVersion>
-    <EFCoreToolsVersion>3.0.*</EFCoreToolsVersion>
-    <NpgsqlVersion>4.1.1</NpgsqlVersion>
-    <NpgsqlPostgreSQLVersion>3.0.1</NpgsqlPostgreSQLVersion>
-    <TuplesVersion>4.5.0</TuplesVersion>
+    <AspNetCoreVersion>3.1.*</AspNetCoreVersion>
+    <EFCoreVersion>3.1.*</EFCoreVersion>
+    <NpgsqlPostgreSQLVersion>3.1.*</NpgsqlPostgreSQLVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -20,9 +14,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <TestSdkVersion>16.3.0</TestSdkVersion>
     <XUnitVersion>2.4.1</XUnitVersion>
-    <BogusVersion>28.4.1</BogusVersion>
+    <BogusVersion>29.0.1</BogusVersion>
     <MoqVersion>4.13.1</MoqVersion>
   </PropertyGroup>
 </Project>

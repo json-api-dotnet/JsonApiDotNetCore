@@ -9,7 +9,10 @@ using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.QueryParameterServices.Common;
 using JsonApiDotNetCore.Serialization.Server.Builders;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace UnitTests
 {
@@ -17,10 +20,13 @@ namespace UnitTests
     {
         private readonly IPageService _pageService;
         private readonly Mock<IResourceGraph> _provider = new Mock<IResourceGraph>();
+        private readonly IRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor("?foo=bar");
         private const string _host = "http://www.example.com";
         private const int _baseId = 123;
         private const string _relationshipName = "author";
-        private const string _topSelf = "http://www.example.com/articles";
+        private const string _topSelf = "http://www.example.com/articles?foo=bar";
+        private const string _topResourceSelf = "http://www.example.com/articles/123?foo=bar";
+        private const string _topRelatedSelf = "http://www.example.com/articles/123/author?foo=bar";
         private const string _resourceSelf = "http://www.example.com/articles/123";
         private const string _relSelf = "http://www.example.com/articles/123/relationships/author";
         private const string _relRelated = "http://www.example.com/articles/123/author";
@@ -46,7 +52,7 @@ namespace UnitTests
             var config = GetConfiguration(resourceLinks: global);
             var primaryResource = GetResourceContext<Article>(resourceLinks: resource);
             _provider.Setup(m => m.GetResourceContext("articles")).Returns(primaryResource);
-            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
+            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
 
             // Act
             var links = builder.GetResourceLinks("articles", _baseId.ToString());
@@ -94,7 +100,7 @@ namespace UnitTests
             var config = GetConfiguration(relationshipLinks: global);
             var primaryResource = GetResourceContext<Article>(relationshipLinks: resource);
             _provider.Setup(m => m.GetResourceContext(typeof(Article))).Returns(primaryResource);
-            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object);
+            var builder = new LinkBuilder(config, GetRequestManager(), null, _provider.Object, _queryStringAccessor);
             var attr = new HasOneAttribute(links: relationship) { RightType = typeof(Author), PublicRelationshipName = "author" };
 
             // Act
@@ -133,14 +139,14 @@ namespace UnitTests
         [InlineData(Link.None, Link.Self, _topSelf, false)]
         [InlineData(Link.None, Link.Paging, null, true)]
         [InlineData(Link.None, Link.None, null, false)]
-        [InlineData(Link.All, Link.Self, _resourceSelf, false)]
-        [InlineData(Link.Self, Link.Self, _resourceSelf, false)]
-        [InlineData(Link.Paging, Link.Self, _resourceSelf, false)]
-        [InlineData(Link.None, Link.Self, _resourceSelf, false)]
-        [InlineData(Link.All, Link.Self, _relRelated, false)]
-        [InlineData(Link.Self, Link.Self, _relRelated, false)]
-        [InlineData(Link.Paging, Link.Self, _relRelated, false)]
-        [InlineData(Link.None, Link.Self, _relRelated, false)]
+        [InlineData(Link.All, Link.Self, _topResourceSelf, false)]
+        [InlineData(Link.Self, Link.Self, _topResourceSelf, false)]
+        [InlineData(Link.Paging, Link.Self, _topResourceSelf, false)]
+        [InlineData(Link.None, Link.Self, _topResourceSelf, false)]
+        [InlineData(Link.All, Link.Self, _topRelatedSelf, false)]
+        [InlineData(Link.Self, Link.Self, _topRelatedSelf, false)]
+        [InlineData(Link.Paging, Link.Self, _topRelatedSelf, false)]
+        [InlineData(Link.None, Link.Self, _topRelatedSelf, false)]
         public void BuildTopLevelLinks_GlobalAndResourceConfiguration_ExpectedLinks(Link global,
                                                                                     Link resource,
                                                                                     string expectedSelfLink,
@@ -152,10 +158,10 @@ namespace UnitTests
             _provider.Setup(m => m.GetResourceContext<Article>()).Returns(primaryResource);
 
             bool useBaseId = expectedSelfLink != _topSelf;
-            string relationshipName = expectedSelfLink == _relRelated ? _relationshipName : null;
+            string relationshipName = expectedSelfLink == _topRelatedSelf ? _relationshipName : null;
             ICurrentRequest currentRequest = GetRequestManager(primaryResource, useBaseId, relationshipName);
 
-            var builder = new LinkBuilder(config, currentRequest, _pageService, _provider.Object);
+            var builder = new LinkBuilder(config, currentRequest, _pageService, _provider.Object, _queryStringAccessor);
 
             // Act
             var links = builder.GetTopLevelLinks();
@@ -175,11 +181,11 @@ namespace UnitTests
         {
             if (pages)
             {
-                return links.Self == $"{_host}/articles?page[size]=10&page[number]=2"
-                    && links.First == $"{_host}/articles?page[size]=10&page[number]=1"
-                    && links.Prev == $"{_host}/articles?page[size]=10&page[number]=1"
-                    && links.Next == $"{_host}/articles?page[size]=10&page[number]=3"
-                    && links.Last == $"{_host}/articles?page[size]=10&page[number]=3";
+                return links.Self == $"{_host}/articles?foo=bar&page[size]=10&page[number]=2"
+                    && links.First == $"{_host}/articles?foo=bar&page[size]=10&page[number]=1"
+                    && links.Prev == $"{_host}/articles?foo=bar&page[size]=10&page[number]=1"
+                    && links.Next == $"{_host}/articles?foo=bar&page[size]=10&page[number]=3"
+                    && links.Last == $"{_host}/articles?foo=bar&page[size]=10&page[number]=3";
             }
 
             return links.Self == expectedSelfLink && links.First == null && links.Prev == null && links.Next == null && links.Last == null;
@@ -228,6 +234,18 @@ namespace UnitTests
                 RelationshipLinks = relationshipLinks,
                 ResourceName = typeof(TResource).Name.Dasherize() + "s"
             };
+        }
+
+        private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
+        {
+            public QueryString QueryString { get; }
+            public IQueryCollection Query { get; }
+
+            public FakeRequestQueryStringAccessor(string queryString)
+            {
+                QueryString = new QueryString(queryString);
+                Query = new QueryCollection(QueryHelpers.ParseQuery(queryString));
+            }
         }
     }
 }
