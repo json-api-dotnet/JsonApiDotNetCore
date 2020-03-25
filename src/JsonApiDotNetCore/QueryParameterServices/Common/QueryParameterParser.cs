@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Http;
 namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc/>
-    public class QueryParameterDiscovery : IQueryParameterDiscovery
+    public class QueryParameterParser : IQueryParameterParser
     {
         private readonly IJsonApiOptions _options;
         private readonly IEnumerable<IQueryParameterService> _queryServices;
 
-        public QueryParameterDiscovery(IJsonApiOptions options, IEnumerable<IQueryParameterService> queryServices)
+        public QueryParameterParser(IJsonApiOptions options, IEnumerable<IQueryParameterService> queryServices)
         {
             _options = options;
             _queryServices = queryServices;

@@ -8,8 +8,8 @@ namespace JsonApiDotNetCore.Middleware
 {
     public sealed class QueryParameterActionFilter : IAsyncActionFilter, IQueryParameterActionFilter
     {
-        private readonly IQueryParameterDiscovery _queryParser;
-        public QueryParameterActionFilter(IQueryParameterDiscovery queryParser) => _queryParser = queryParser;
+        private readonly IQueryParameterParser _queryParser;
+        public QueryParameterActionFilter(IQueryParameterParser queryParser) => _queryParser = queryParser;
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

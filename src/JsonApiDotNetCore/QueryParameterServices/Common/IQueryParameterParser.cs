@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Services
     /// Responsible for populating the various service implementations of
     /// <see cref="IQueryParameterService"/>.
     /// </summary>
-    public interface IQueryParameterDiscovery
+    public interface IQueryParameterParser
     {
         void Parse(IQueryCollection query, DisableQueryAttribute disabledQuery = null);
     }

@@ -14,8 +14,8 @@ namespace Benchmarks.Query
     [MarkdownExporter, SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 20), MemoryDiagnoser]
     public class QueryParserBenchmarks
     {
-        private readonly QueryParameterDiscovery _queryParameterDiscoveryForSort;
-        private readonly QueryParameterDiscovery _queryParameterDiscoveryForAll;
+        private readonly QueryParameterParser _queryParameterParserForSort;
+        private readonly QueryParameterParser _queryParameterParserForAll;
 
         public QueryParserBenchmarks()
         {
@@ -27,11 +27,11 @@ namespace Benchmarks.Query
 
             IResourceDefinitionProvider resourceDefinitionProvider = DependencyFactory.CreateResourceDefinitionProvider(resourceGraph);
 
-            _queryParameterDiscoveryForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, resourceDefinitionProvider, options);
-            _queryParameterDiscoveryForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, resourceDefinitionProvider, options);
+            _queryParameterParserForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, resourceDefinitionProvider, options);
+            _queryParameterParserForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, resourceDefinitionProvider, options);
         }
 
-        private static QueryParameterDiscovery CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph,
+        private static QueryParameterParser CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph,
             CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider, IJsonApiOptions options)
         {
             ISortService sortService = new SortService(resourceDefinitionProvider, resourceGraph, currentRequest);
@@ -41,10 +41,10 @@ namespace Benchmarks.Query
                 sortService
             };
 
-            return new QueryParameterDiscovery(options, queryServices);
+            return new QueryParameterParser(options, queryServices);
         }
 
-        private static QueryParameterDiscovery CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
+        private static QueryParameterParser CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
             CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider, IJsonApiOptions options)
         {
             IIncludeService includeService = new IncludeService(resourceGraph, currentRequest);
@@ -61,11 +61,11 @@ namespace Benchmarks.Query
                 omitNullService
             };
 
-            return new QueryParameterDiscovery(options, queryServices);
+            return new QueryParameterParser(options, queryServices);
         }
 
         [Benchmark]
-        public void AscendingSort() => _queryParameterDiscoveryForSort.Parse(new QueryCollection(
+        public void AscendingSort() => _queryParameterParserForSort.Parse(new QueryCollection(
             new Dictionary<string, StringValues>
             {
                 {"sort", BenchmarkResourcePublicNames.NameAttr}
@@ -73,7 +73,7 @@ namespace Benchmarks.Query
         ), null);
 
         [Benchmark]
-        public void DescendingSort() => _queryParameterDiscoveryForSort.Parse(new QueryCollection(
+        public void DescendingSort() => _queryParameterParserForSort.Parse(new QueryCollection(
             new Dictionary<string, StringValues>
             {
                 {"sort", $"-{BenchmarkResourcePublicNames.NameAttr}"}
@@ -81,7 +81,7 @@ namespace Benchmarks.Query
         ), null);
 
         [Benchmark]
-        public void ComplexQuery() => Run(100, () => _queryParameterDiscoveryForAll.Parse(new QueryCollection(
+        public void ComplexQuery() => Run(100, () => _queryParameterParserForAll.Parse(new QueryCollection(
             new Dictionary<string, StringValues>
             {
                 {$"filter[{BenchmarkResourcePublicNames.NameAttr}]", new StringValues(new[] {"abc", "eq:abc"})},
