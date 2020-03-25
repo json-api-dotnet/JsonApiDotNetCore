@@ -14,11 +14,11 @@ namespace JsonApiDotNetCore.Internal
         public JsonApiException(Error error)
         : base(error.Title) => _errors.Add(error);
             
-        public JsonApiException(int statusCode, string message, string source = null)
+        public JsonApiException(int statusCode, string message, ErrorSource source = null)
         : base(message)
             => _errors.Add(new Error(statusCode, message, null, GetMeta(), source));
 
-        public JsonApiException(int statusCode, string message, string detail, string source = null)
+        public JsonApiException(int statusCode, string message, string detail, ErrorSource source = null)
         : base(message)
             => _errors.Add(new Error(statusCode, message, detail, GetMeta(), source));
 

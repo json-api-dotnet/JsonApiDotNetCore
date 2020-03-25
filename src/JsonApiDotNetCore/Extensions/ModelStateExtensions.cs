@@ -34,9 +34,9 @@ namespace JsonApiDotNetCore.Extensions
                             title: entry.Key,
                             detail: modelError.ErrorMessage,
                             meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
-                            source: attrName == null ? null : new
+                            source: attrName == null ? null : new ErrorSource
                             {
-                                pointer = $"/data/attributes/{attrName}"
+                                Pointer = $"/data/attributes/{attrName}"
                             }));
                     }
                 }

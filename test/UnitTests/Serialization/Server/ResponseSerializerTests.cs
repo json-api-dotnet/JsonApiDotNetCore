@@ -458,12 +458,15 @@ namespace UnitTests.Serialization.Server
 
             var expectedJson = JsonConvert.SerializeObject(new
             {
-                errors = new dynamic[] {
-                    new {
+                errors = new[]
+                {
+                    new
+                    {
                         myCustomProperty = "custom",
+                        id = error.Id,
+                        status = "507",
                         title = "title",
-                        detail = "detail",
-                        status = "507"
+                        detail = "detail"
                     }
                 }
             });
