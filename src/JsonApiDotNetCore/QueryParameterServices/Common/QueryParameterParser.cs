@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Query;
-using Microsoft.AspNetCore.Http;
+using JsonApiDotNetCore.QueryParameterServices.Common;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -12,24 +12,26 @@ namespace JsonApiDotNetCore.Services
     public class QueryParameterParser : IQueryParameterParser
     {
         private readonly IJsonApiOptions _options;
+        private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly IEnumerable<IQueryParameterService> _queryServices;
 
-        public QueryParameterParser(IJsonApiOptions options, IEnumerable<IQueryParameterService> queryServices)
+        public QueryParameterParser(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor, IEnumerable<IQueryParameterService> queryServices)
         {
             _options = options;
+            _queryStringAccessor = queryStringAccessor;
             _queryServices = queryServices;
         }
 
         /// <summary>
-        /// For a query parameter in <paramref name="query"/>, calls
+        /// For a parameter in the query string of the request URL, calls
         /// the <see cref="IQueryParameterService.Parse(KeyValuePair{string, Microsoft.Extensions.Primitives.StringValues})"/>
         /// method of the corresponding service.
         /// </summary>
-        public virtual void Parse(IQueryCollection query, DisableQueryAttribute disabled)
+        public virtual void Parse(DisableQueryAttribute disabled)
         {
             var disabledQuery = disabled?.QueryParams;
 
-            foreach (var pair in query)
+            foreach (var pair in _queryStringAccessor.Query)
             {
                 bool parsed = false;
                 foreach (var service in _queryServices)

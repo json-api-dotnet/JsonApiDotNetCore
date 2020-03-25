@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Middleware
             // gets the DisableQueryAttribute if set on the controller that is targeted by the current request.
             DisableQueryAttribute disabledQuery = context.Controller.GetType().GetTypeInfo().GetCustomAttribute(typeof(DisableQueryAttribute)) as DisableQueryAttribute;
 
-            _queryParser.Parse(context.HttpContext.Request.Query, disabledQuery);
+            _queryParser.Parse(disabledQuery);
             await next();
         }
     }

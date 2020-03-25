@@ -5,15 +5,17 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers;
 using JsonApiDotNetCore.Query;
+using JsonApiDotNetCore.QueryParameterServices.Common;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Benchmarks.Query
 {
     [MarkdownExporter, SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 20), MemoryDiagnoser]
     public class QueryParserBenchmarks
     {
+        private readonly FakeRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor();
         private readonly QueryParameterParser _queryParameterParserForSort;
         private readonly QueryParameterParser _queryParameterParserForAll;
 
@@ -27,12 +29,13 @@ namespace Benchmarks.Query
 
             IResourceDefinitionProvider resourceDefinitionProvider = DependencyFactory.CreateResourceDefinitionProvider(resourceGraph);
 
-            _queryParameterParserForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, resourceDefinitionProvider, options);
-            _queryParameterParserForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, resourceDefinitionProvider, options);
+            _queryParameterParserForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, currentRequest, resourceDefinitionProvider, options, _queryStringAccessor);
+            _queryParameterParserForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, currentRequest, resourceDefinitionProvider, options, _queryStringAccessor);
         }
 
         private static QueryParameterParser CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph,
-            CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider, IJsonApiOptions options)
+            CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider,
+            IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
             ISortService sortService = new SortService(resourceDefinitionProvider, resourceGraph, currentRequest);
 
@@ -41,11 +44,12 @@ namespace Benchmarks.Query
                 sortService
             };
 
-            return new QueryParameterParser(options, queryServices);
+            return new QueryParameterParser(options, queryStringAccessor, queryServices);
         }
 
         private static QueryParameterParser CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph,
-            CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider, IJsonApiOptions options)
+            CurrentRequest currentRequest, IResourceDefinitionProvider resourceDefinitionProvider,
+            IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
             IIncludeService includeService = new IncludeService(resourceGraph, currentRequest);
             IFilterService filterService = new FilterService(resourceDefinitionProvider, resourceGraph, currentRequest);
@@ -61,40 +65,51 @@ namespace Benchmarks.Query
                 omitNullService
             };
 
-            return new QueryParameterParser(options, queryServices);
+            return new QueryParameterParser(options, queryStringAccessor, queryServices);
         }
 
         [Benchmark]
-        public void AscendingSort() => _queryParameterParserForSort.Parse(new QueryCollection(
-            new Dictionary<string, StringValues>
-            {
-                {"sort", BenchmarkResourcePublicNames.NameAttr}
-            }
-        ), null);
+        public void AscendingSort()
+        {
+            var queryString = $"?sort={BenchmarkResourcePublicNames.NameAttr}";
+
+            _queryStringAccessor.SetQueryString(queryString);
+            _queryParameterParserForSort.Parse(null);
+        }
 
         [Benchmark]
-        public void DescendingSort() => _queryParameterParserForSort.Parse(new QueryCollection(
-            new Dictionary<string, StringValues>
-            {
-                {"sort", $"-{BenchmarkResourcePublicNames.NameAttr}"}
-            }
-        ), null);
+        public void DescendingSort()
+        {
+            var queryString = $"?sort=-{BenchmarkResourcePublicNames.NameAttr}";
+
+            _queryStringAccessor.SetQueryString(queryString);
+            _queryParameterParserForSort.Parse(null);
+        }
 
         [Benchmark]
-        public void ComplexQuery() => Run(100, () => _queryParameterParserForAll.Parse(new QueryCollection(
-            new Dictionary<string, StringValues>
-            {
-                {$"filter[{BenchmarkResourcePublicNames.NameAttr}]", new StringValues(new[] {"abc", "eq:abc"})},
-                {"sort", $"-{BenchmarkResourcePublicNames.NameAttr}"},
-                {"include", "child"},
-                {"page[size]", "1"},
-                {"fields", BenchmarkResourcePublicNames.NameAttr}
-            }
-        ), null));
+        public void ComplexQuery() => Run(100, () =>
+        {
+            var queryString = $"?filter[{BenchmarkResourcePublicNames.NameAttr}]=abc,eq:abc&sort=-{BenchmarkResourcePublicNames.NameAttr}&include=child&page[size]=1&fields={BenchmarkResourcePublicNames.NameAttr}";
+
+            _queryStringAccessor.SetQueryString(queryString);
+            _queryParameterParserForAll.Parse(null);
+        });
 
         private void Run(int iterations, Action action) { 
             for (int i = 0; i < iterations; i++)
                 action();
+        }
+
+        private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
+        {
+            public QueryString QueryString { get; private set; }
+            public IQueryCollection Query { get; private set; }
+
+            public void SetQueryString(string queryString)
+            {
+                QueryString = new QueryString(queryString);
+                Query = new QueryCollection(QueryHelpers.ParseQuery(queryString));
+            }
         }
     }
 }

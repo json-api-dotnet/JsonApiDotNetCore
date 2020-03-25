@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Query;
-using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -10,6 +9,6 @@ namespace JsonApiDotNetCore.Services
     /// </summary>
     public interface IQueryParameterParser
     {
-        void Parse(IQueryCollection query, DisableQueryAttribute disabledQuery = null);
+        void Parse(DisableQueryAttribute disabledQuery = null);
     }
 }
