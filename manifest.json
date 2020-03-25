@@ -33,7 +33,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Builders.JsonApiApplicationBuilder.html",
-          "hash": "kkKuS/fzIuxN2Afh77EmVA=="
+          "hash": "bQ5giDBXKxJVkGqWF5B8MQ=="
         }
       },
       "is_incremental": false,
@@ -1737,7 +1737,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.QueryParameterActionFilter.html",
-          "hash": "r5x+o/bfebuiqGPYpFflEA=="
+          "hash": "OdMgiJsX9CEJ4RMh5g930Q=="
         }
       },
       "is_incremental": false,
@@ -2309,6 +2309,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html",
+          "hash": "aB0fadU3S3D1FqGVchDxPg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryParameterServices.Common.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryParameterServices.Common.html",
+          "hash": "Ol8vqr1i5HwWfFsimMIE1g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Serialization.BaseDocumentBuilder.yml",
       "output": {
         ".html": {
@@ -2529,7 +2553,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html",
-          "hash": "ZfVpTQDJrtu7S1W1Z+psWA=="
+          "hash": "R5vacfEHEOQP+LnL+dZ2SQ=="
         }
       },
       "is_incremental": false,
@@ -2897,11 +2921,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Services.IQueryParameterDiscovery.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.IQueryParameterParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Services.IQueryParameterDiscovery.html",
-          "hash": "jJmYM6ELvJTOWA9fLKhfEA=="
+          "relative_path": "api/JsonApiDotNetCore.Services.IQueryParameterParser.html",
+          "hash": "y/6eZ6xWDimjws9QTKyTBQ=="
         }
       },
       "is_incremental": false,
@@ -3053,11 +3077,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Services.QueryParameterDiscovery.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Services.QueryParameterParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Services.QueryParameterDiscovery.html",
-          "hash": "5018uPaQEUjbYmpS920KaA=="
+          "relative_path": "api/JsonApiDotNetCore.Services.QueryParameterParser.html",
+          "hash": "GWDCg/pjuwWqz9QOscvexg=="
         }
       },
       "is_incremental": false,
@@ -3081,7 +3105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.html",
-          "hash": "fZ1T20vJgsaXpkFT3SatEA=="
+          "hash": "2CdFSv4iqjfnqepP76AgAw=="
         }
       },
       "is_incremental": false,
@@ -3108,7 +3132,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "zT44zFNKwKlMbd9WJH1auw=="
+          "hash": "JiWCHnBfNZp2lL4jgO9nqQ=="
         }
       },
       "is_incremental": false,
@@ -3528,7 +3552,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 256,
+          "total_file_count": 258,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

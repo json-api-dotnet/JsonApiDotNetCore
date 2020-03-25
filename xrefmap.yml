@@ -6498,12 +6498,12 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.QueryParameterActionFilter
   fullName: JsonApiDotNetCore.Middleware.QueryParameterActionFilter
   nameWithType: QueryParameterActionFilter
-- uid: JsonApiDotNetCore.Middleware.QueryParameterActionFilter.#ctor(JsonApiDotNetCore.Services.IQueryParameterDiscovery)
-  name: QueryParameterActionFilter(IQueryParameterDiscovery)
-  href: api/JsonApiDotNetCore.Middleware.QueryParameterActionFilter.html#JsonApiDotNetCore_Middleware_QueryParameterActionFilter__ctor_JsonApiDotNetCore_Services_IQueryParameterDiscovery_
-  commentId: M:JsonApiDotNetCore.Middleware.QueryParameterActionFilter.#ctor(JsonApiDotNetCore.Services.IQueryParameterDiscovery)
-  fullName: JsonApiDotNetCore.Middleware.QueryParameterActionFilter.QueryParameterActionFilter(JsonApiDotNetCore.Services.IQueryParameterDiscovery)
-  nameWithType: QueryParameterActionFilter.QueryParameterActionFilter(IQueryParameterDiscovery)
+- uid: JsonApiDotNetCore.Middleware.QueryParameterActionFilter.#ctor(JsonApiDotNetCore.Services.IQueryParameterParser)
+  name: QueryParameterActionFilter(IQueryParameterParser)
+  href: api/JsonApiDotNetCore.Middleware.QueryParameterActionFilter.html#JsonApiDotNetCore_Middleware_QueryParameterActionFilter__ctor_JsonApiDotNetCore_Services_IQueryParameterParser_
+  commentId: M:JsonApiDotNetCore.Middleware.QueryParameterActionFilter.#ctor(JsonApiDotNetCore.Services.IQueryParameterParser)
+  fullName: JsonApiDotNetCore.Middleware.QueryParameterActionFilter.QueryParameterActionFilter(JsonApiDotNetCore.Services.IQueryParameterParser)
+  nameWithType: QueryParameterActionFilter.QueryParameterActionFilter(IQueryParameterParser)
 - uid: JsonApiDotNetCore.Middleware.QueryParameterActionFilter.#ctor*
   name: QueryParameterActionFilter
   href: api/JsonApiDotNetCore.Middleware.QueryParameterActionFilter.html#JsonApiDotNetCore_Middleware_QueryParameterActionFilter__ctor_
@@ -9163,6 +9163,44 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Query.SparseFieldsService.Parse
   nameWithType: SparseFieldsService.Parse
+- uid: JsonApiDotNetCore.QueryParameterServices.Common
+  name: JsonApiDotNetCore.QueryParameterServices.Common
+  href: api/JsonApiDotNetCore.QueryParameterServices.Common.html
+  commentId: N:JsonApiDotNetCore.QueryParameterServices.Common
+  fullName: JsonApiDotNetCore.QueryParameterServices.Common
+  nameWithType: JsonApiDotNetCore.QueryParameterServices.Common
+- uid: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor
+  name: IRequestQueryStringAccessor
+  href: api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html
+  commentId: T:JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor
+  fullName: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor
+  nameWithType: IRequestQueryStringAccessor
+- uid: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.Query
+  name: Query
+  href: api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html#JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_Query
+  commentId: P:JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.Query
+  fullName: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.Query
+  nameWithType: IRequestQueryStringAccessor.Query
+- uid: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.Query*
+  name: Query
+  href: api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html#JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_Query_
+  commentId: Overload:JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.Query
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.Query
+  nameWithType: IRequestQueryStringAccessor.Query
+- uid: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString
+  name: QueryString
+  href: api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html#JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_QueryString
+  commentId: P:JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString
+  fullName: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString
+  nameWithType: IRequestQueryStringAccessor.QueryString
+- uid: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString*
+  name: QueryString
+  href: api/JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.html#JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_QueryString_
+  commentId: Overload:JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor.QueryString
+  nameWithType: IRequestQueryStringAccessor.QueryString
 - uid: JsonApiDotNetCore.Serialization
   name: JsonApiDotNetCore.Serialization
   href: api/JsonApiDotNetCore.Serialization.html
@@ -10018,12 +10056,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder
   fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder
   nameWithType: LinkBuilder
-- uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.ILinksConfiguration,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Query.IPageService,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  name: LinkBuilder(ILinksConfiguration, ICurrentRequest, IPageService, IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_ILinksConfiguration_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Query_IPageService_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.ILinksConfiguration,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Query.IPageService,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.LinkBuilder(JsonApiDotNetCore.Configuration.ILinksConfiguration, JsonApiDotNetCore.Managers.Contracts.ICurrentRequest, JsonApiDotNetCore.Query.IPageService, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider)
-  nameWithType: LinkBuilder.LinkBuilder(ILinksConfiguration, ICurrentRequest, IPageService, IResourceContextProvider)
+- uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.ILinksConfiguration,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Query.IPageService,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor)
+  name: LinkBuilder(ILinksConfiguration, ICurrentRequest, IPageService, IResourceContextProvider, IRequestQueryStringAccessor)
+  href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_ILinksConfiguration_JsonApiDotNetCore_Managers_Contracts_ICurrentRequest_JsonApiDotNetCore_Query_IPageService_JsonApiDotNetCore_Internal_Contracts_IResourceContextProvider_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_
+  commentId: M:JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.ILinksConfiguration,JsonApiDotNetCore.Managers.Contracts.ICurrentRequest,JsonApiDotNetCore.Query.IPageService,JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor)
+  fullName: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.LinkBuilder(JsonApiDotNetCore.Configuration.ILinksConfiguration, JsonApiDotNetCore.Managers.Contracts.ICurrentRequest, JsonApiDotNetCore.Query.IPageService, JsonApiDotNetCore.Internal.Contracts.IResourceContextProvider, JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor)
+  nameWithType: LinkBuilder.LinkBuilder(ILinksConfiguration, ICurrentRequest, IPageService, IResourceContextProvider, IRequestQueryStringAccessor)
 - uid: JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.#ctor*
   name: LinkBuilder
   href: api/JsonApiDotNetCore.Serialization.Server.Builders.LinkBuilder.html#JsonApiDotNetCore_Serialization_Server_Builders_LinkBuilder__ctor_
@@ -11040,25 +11078,25 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IGetRelationshipsService(Of T, TId).GetRelationshipsAsync
   nameWithType: IGetRelationshipsService<T, TId>.GetRelationshipsAsync
   nameWithType.vb: IGetRelationshipsService(Of T, TId).GetRelationshipsAsync
-- uid: JsonApiDotNetCore.Services.IQueryParameterDiscovery
-  name: IQueryParameterDiscovery
-  href: api/JsonApiDotNetCore.Services.IQueryParameterDiscovery.html
-  commentId: T:JsonApiDotNetCore.Services.IQueryParameterDiscovery
-  fullName: JsonApiDotNetCore.Services.IQueryParameterDiscovery
-  nameWithType: IQueryParameterDiscovery
-- uid: JsonApiDotNetCore.Services.IQueryParameterDiscovery.Parse(IQueryCollection,JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  name: Parse(IQueryCollection, DisableQueryAttribute)
-  href: api/JsonApiDotNetCore.Services.IQueryParameterDiscovery.html#JsonApiDotNetCore_Services_IQueryParameterDiscovery_Parse_IQueryCollection_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
-  commentId: M:JsonApiDotNetCore.Services.IQueryParameterDiscovery.Parse(IQueryCollection,JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  fullName: JsonApiDotNetCore.Services.IQueryParameterDiscovery.Parse(IQueryCollection, JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  nameWithType: IQueryParameterDiscovery.Parse(IQueryCollection, DisableQueryAttribute)
-- uid: JsonApiDotNetCore.Services.IQueryParameterDiscovery.Parse*
+- uid: JsonApiDotNetCore.Services.IQueryParameterParser
+  name: IQueryParameterParser
+  href: api/JsonApiDotNetCore.Services.IQueryParameterParser.html
+  commentId: T:JsonApiDotNetCore.Services.IQueryParameterParser
+  fullName: JsonApiDotNetCore.Services.IQueryParameterParser
+  nameWithType: IQueryParameterParser
+- uid: JsonApiDotNetCore.Services.IQueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  name: Parse(DisableQueryAttribute)
+  href: api/JsonApiDotNetCore.Services.IQueryParameterParser.html#JsonApiDotNetCore_Services_IQueryParameterParser_Parse_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
+  commentId: M:JsonApiDotNetCore.Services.IQueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  fullName: JsonApiDotNetCore.Services.IQueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  nameWithType: IQueryParameterParser.Parse(DisableQueryAttribute)
+- uid: JsonApiDotNetCore.Services.IQueryParameterParser.Parse*
   name: Parse
-  href: api/JsonApiDotNetCore.Services.IQueryParameterDiscovery.html#JsonApiDotNetCore_Services_IQueryParameterDiscovery_Parse_
-  commentId: Overload:JsonApiDotNetCore.Services.IQueryParameterDiscovery.Parse
+  href: api/JsonApiDotNetCore.Services.IQueryParameterParser.html#JsonApiDotNetCore_Services_IQueryParameterParser_Parse_
+  commentId: Overload:JsonApiDotNetCore.Services.IQueryParameterParser.Parse
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Services.IQueryParameterDiscovery.Parse
-  nameWithType: IQueryParameterDiscovery.Parse
+  fullName: JsonApiDotNetCore.Services.IQueryParameterParser.Parse
+  nameWithType: IQueryParameterParser.Parse
 - uid: JsonApiDotNetCore.Services.IRequestMeta
   name: IRequestMeta
   href: api/JsonApiDotNetCore.Services.IRequestMeta.html
@@ -11208,41 +11246,41 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IUpdateService(Of T, TId).UpdateAsync
   nameWithType: IUpdateService<T, TId>.UpdateAsync
   nameWithType.vb: IUpdateService(Of T, TId).UpdateAsync
-- uid: JsonApiDotNetCore.Services.QueryParameterDiscovery
-  name: QueryParameterDiscovery
-  href: api/JsonApiDotNetCore.Services.QueryParameterDiscovery.html
-  commentId: T:JsonApiDotNetCore.Services.QueryParameterDiscovery
-  fullName: JsonApiDotNetCore.Services.QueryParameterDiscovery
-  nameWithType: QueryParameterDiscovery
-- uid: JsonApiDotNetCore.Services.QueryParameterDiscovery.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService})
-  name: QueryParameterDiscovery(IJsonApiOptions, IEnumerable<IQueryParameterService>)
-  href: api/JsonApiDotNetCore.Services.QueryParameterDiscovery.html#JsonApiDotNetCore_Services_QueryParameterDiscovery__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__
-  commentId: M:JsonApiDotNetCore.Services.QueryParameterDiscovery.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService})
-  name.vb: QueryParameterDiscovery(IJsonApiOptions, IEnumerable(Of IQueryParameterService))
-  fullName: JsonApiDotNetCore.Services.QueryParameterDiscovery.QueryParameterDiscovery(JsonApiDotNetCore.Configuration.IJsonApiOptions, IEnumerable<JsonApiDotNetCore.Query.IQueryParameterService>)
-  fullName.vb: JsonApiDotNetCore.Services.QueryParameterDiscovery.QueryParameterDiscovery(JsonApiDotNetCore.Configuration.IJsonApiOptions, IEnumerable(Of JsonApiDotNetCore.Query.IQueryParameterService))
-  nameWithType: QueryParameterDiscovery.QueryParameterDiscovery(IJsonApiOptions, IEnumerable<IQueryParameterService>)
-  nameWithType.vb: QueryParameterDiscovery.QueryParameterDiscovery(IJsonApiOptions, IEnumerable(Of IQueryParameterService))
-- uid: JsonApiDotNetCore.Services.QueryParameterDiscovery.#ctor*
-  name: QueryParameterDiscovery
-  href: api/JsonApiDotNetCore.Services.QueryParameterDiscovery.html#JsonApiDotNetCore_Services_QueryParameterDiscovery__ctor_
-  commentId: Overload:JsonApiDotNetCore.Services.QueryParameterDiscovery.#ctor
+- uid: JsonApiDotNetCore.Services.QueryParameterParser
+  name: QueryParameterParser
+  href: api/JsonApiDotNetCore.Services.QueryParameterParser.html
+  commentId: T:JsonApiDotNetCore.Services.QueryParameterParser
+  fullName: JsonApiDotNetCore.Services.QueryParameterParser
+  nameWithType: QueryParameterParser
+- uid: JsonApiDotNetCore.Services.QueryParameterParser.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor,IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService})
+  name: QueryParameterParser(IJsonApiOptions, IRequestQueryStringAccessor, IEnumerable<IQueryParameterService>)
+  href: api/JsonApiDotNetCore.Services.QueryParameterParser.html#JsonApiDotNetCore_Services_QueryParameterParser__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_QueryParameterServices_Common_IRequestQueryStringAccessor_IEnumerable_JsonApiDotNetCore_Query_IQueryParameterService__
+  commentId: M:JsonApiDotNetCore.Services.QueryParameterParser.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor,IEnumerable{JsonApiDotNetCore.Query.IQueryParameterService})
+  name.vb: QueryParameterParser(IJsonApiOptions, IRequestQueryStringAccessor, IEnumerable(Of IQueryParameterService))
+  fullName: JsonApiDotNetCore.Services.QueryParameterParser.QueryParameterParser(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor, IEnumerable<JsonApiDotNetCore.Query.IQueryParameterService>)
+  fullName.vb: JsonApiDotNetCore.Services.QueryParameterParser.QueryParameterParser(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.QueryParameterServices.Common.IRequestQueryStringAccessor, IEnumerable(Of JsonApiDotNetCore.Query.IQueryParameterService))
+  nameWithType: QueryParameterParser.QueryParameterParser(IJsonApiOptions, IRequestQueryStringAccessor, IEnumerable<IQueryParameterService>)
+  nameWithType.vb: QueryParameterParser.QueryParameterParser(IJsonApiOptions, IRequestQueryStringAccessor, IEnumerable(Of IQueryParameterService))
+- uid: JsonApiDotNetCore.Services.QueryParameterParser.#ctor*
+  name: QueryParameterParser
+  href: api/JsonApiDotNetCore.Services.QueryParameterParser.html#JsonApiDotNetCore_Services_QueryParameterParser__ctor_
+  commentId: Overload:JsonApiDotNetCore.Services.QueryParameterParser.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Services.QueryParameterDiscovery.QueryParameterDiscovery
-  nameWithType: QueryParameterDiscovery.QueryParameterDiscovery
-- uid: JsonApiDotNetCore.Services.QueryParameterDiscovery.Parse(IQueryCollection,JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  name: Parse(IQueryCollection, DisableQueryAttribute)
-  href: api/JsonApiDotNetCore.Services.QueryParameterDiscovery.html#JsonApiDotNetCore_Services_QueryParameterDiscovery_Parse_IQueryCollection_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
-  commentId: M:JsonApiDotNetCore.Services.QueryParameterDiscovery.Parse(IQueryCollection,JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  fullName: JsonApiDotNetCore.Services.QueryParameterDiscovery.Parse(IQueryCollection, JsonApiDotNetCore.Controllers.DisableQueryAttribute)
-  nameWithType: QueryParameterDiscovery.Parse(IQueryCollection, DisableQueryAttribute)
-- uid: JsonApiDotNetCore.Services.QueryParameterDiscovery.Parse*
+  fullName: JsonApiDotNetCore.Services.QueryParameterParser.QueryParameterParser
+  nameWithType: QueryParameterParser.QueryParameterParser
+- uid: JsonApiDotNetCore.Services.QueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  name: Parse(DisableQueryAttribute)
+  href: api/JsonApiDotNetCore.Services.QueryParameterParser.html#JsonApiDotNetCore_Services_QueryParameterParser_Parse_JsonApiDotNetCore_Controllers_DisableQueryAttribute_
+  commentId: M:JsonApiDotNetCore.Services.QueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  fullName: JsonApiDotNetCore.Services.QueryParameterParser.Parse(JsonApiDotNetCore.Controllers.DisableQueryAttribute)
+  nameWithType: QueryParameterParser.Parse(DisableQueryAttribute)
+- uid: JsonApiDotNetCore.Services.QueryParameterParser.Parse*
   name: Parse
-  href: api/JsonApiDotNetCore.Services.QueryParameterDiscovery.html#JsonApiDotNetCore_Services_QueryParameterDiscovery_Parse_
-  commentId: Overload:JsonApiDotNetCore.Services.QueryParameterDiscovery.Parse
+  href: api/JsonApiDotNetCore.Services.QueryParameterParser.html#JsonApiDotNetCore_Services_QueryParameterParser_Parse_
+  commentId: Overload:JsonApiDotNetCore.Services.QueryParameterParser.Parse
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Services.QueryParameterDiscovery.Parse
-  nameWithType: QueryParameterDiscovery.Parse
+  fullName: JsonApiDotNetCore.Services.QueryParameterParser.Parse
+  nameWithType: QueryParameterParser.Parse
 - uid: JsonApiDotNetCore.Services.RequestScopedServiceProvider
   name: RequestScopedServiceProvider
   href: api/JsonApiDotNetCore.Services.RequestScopedServiceProvider.html
