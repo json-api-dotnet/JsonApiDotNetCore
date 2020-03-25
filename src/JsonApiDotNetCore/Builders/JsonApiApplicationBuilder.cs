@@ -20,6 +20,7 @@ using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Serialization.Server.Builders;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using JsonApiDotNetCore.QueryParameterServices.Common;
 
 namespace JsonApiDotNetCore.Builders
 {
@@ -141,13 +142,15 @@ namespace JsonApiDotNetCore.Builders
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             _services.AddSingleton(resourceGraph);
             _services.AddSingleton<IResourceContextProvider>(resourceGraph);
+            _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
+
             _services.AddScoped<ICurrentRequest, CurrentRequest>();
             _services.AddScoped<IScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
             _services.AddScoped(typeof(RepositoryRelationshipUpdateHelper<>));
-            _services.AddScoped<IQueryParameterDiscovery, QueryParameterDiscovery>();
+            _services.AddScoped<IQueryParameterParser, QueryParameterParser>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
             _services.AddScoped<IResourceDefinitionProvider, ResourceDefinitionProvider>();
             _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
