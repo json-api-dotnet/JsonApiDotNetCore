@@ -284,7 +284,7 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
-        public virtual IQueryable<TResource> EagerLoad(IQueryable<TResource> entities, IEnumerable<EagerLoadAttribute> attributes, string chainPrefix = null)
+        private IQueryable<TResource> EagerLoad(IQueryable<TResource> entities, IEnumerable<EagerLoadAttribute> attributes, string chainPrefix = null)
         {
             foreach (var attribute in attributes)
             {
