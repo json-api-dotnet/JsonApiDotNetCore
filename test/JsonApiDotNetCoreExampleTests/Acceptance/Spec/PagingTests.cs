@@ -3,10 +3,11 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
-using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -14,9 +15,9 @@ using Person = JsonApiDotNetCoreExample.Models.Person;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
     [Collection("WebHostCollection")]
-    public class PagingTests : TestFixture<Startup>
+    public sealed class PagingTests : TestFixture<Startup>
     {
-        private TestFixture<Startup> _fixture;
+        private readonly TestFixture<Startup> _fixture;
         private readonly Faker<TodoItem> _todoItemFaker;
 
         public PagingTests(TestFixture<Startup> fixture)
@@ -78,7 +79,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var totalCount = 20;
-            var person = new Person();
+            var person = new Person
+            {
+                LastName = "&Ampersand"
+            };
             var todoItems = _todoItemFaker.Generate(totalCount).ToList();
 
             foreach (var todoItem in todoItems)
@@ -88,11 +92,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.TodoItems.AddRange(todoItems);
             Context.SaveChanges();
 
-            string route = $"/api/v1/todoItems";
-            if (pageNum != 1)
-            {
-                route += $"?page[size]=5&page[number]={pageNum}";
-            }
+            var options = GetService<IJsonApiOptions>();
+            options.AllowCustomQueryParameters = true;
+
+            string routePrefix = "/api/v1/todoItems?filter[owner.lastName]=" + WebUtility.UrlEncode(person.LastName) + 
+                                 "&fields[owner]=firstName&include=owner&sort=ordinal&omitDefault=true&omitNull=true&foo=bar,baz";
+            string route = pageNum != 1 ? routePrefix + $"&page[size]=5&page[number]={pageNum}" : routePrefix;
+
             // Act
             var response = await Client.GetAsync(route);
 
@@ -101,10 +107,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var body = await response.Content.ReadAsStringAsync();
             var links = JsonConvert.DeserializeObject<Document>(body).Links;
 
-            Assert.EndsWith($"/api/v1/todoItems?page[size]=5&page[number]={selfLink}", links.Self);
+            Assert.EndsWith($"{routePrefix}&page[size]=5&page[number]={selfLink}", links.Self);
             if (firstLink.HasValue)
             {
-                Assert.EndsWith($"/api/v1/todoItems?page[size]=5&page[number]={firstLink.Value}", links.First);
+                Assert.EndsWith($"{routePrefix}&page[size]=5&page[number]={firstLink.Value}", links.First);
             }
             else
             {
@@ -113,7 +119,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             if (prevLink.HasValue)
             {
-                Assert.EndsWith($"/api/v1/todoItems?page[size]=5&page[number]={prevLink}", links.Prev);
+                Assert.EndsWith($"{routePrefix}&page[size]=5&page[number]={prevLink}", links.Prev);
             }
             else
             {
@@ -122,7 +128,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             if (nextLink.HasValue)
             {
-                Assert.EndsWith($"/api/v1/todoItems?page[size]=5&page[number]={nextLink}", links.Next);
+                Assert.EndsWith($"{routePrefix}&page[size]=5&page[number]={nextLink}", links.Next);
             }
             else
             {
@@ -131,7 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             if (lastLink.HasValue)
             {
-                Assert.EndsWith($"/api/v1/todoItems?page[size]=5&page[number]={lastLink}", links.Last);
+                Assert.EndsWith($"{routePrefix}&page[size]=5&page[number]={lastLink}", links.Last);
             }
             else
             {
@@ -139,12 +145,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             }
         }
 
-        private class IdComparer<T> : IEqualityComparer<T>
+        private sealed class IdComparer<T> : IEqualityComparer<T>
             where T : IIdentifiable
         {
             public bool Equals(T x, T y) => x?.StringId == y?.StringId;
 
-            public int GetHashCode(T obj) => obj?.StringId?.GetHashCode() ?? 0;
+            public int GetHashCode(T obj) => obj.StringId?.GetHashCode() ?? 0;
         }
     }
 }

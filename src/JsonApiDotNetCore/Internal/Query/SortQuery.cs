@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCore.Internal.Query
+namespace JsonApiDotNetCore.Internal.Query
 {
     /// <summary>
     /// Internal representation of the raw articles?sort[field] query from the URL.

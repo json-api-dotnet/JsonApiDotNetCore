@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExample;
@@ -9,7 +9,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance
 {
     [Collection("WebHostCollection")]
-    public class nohttpdeleteTests
+    public sealed class NoHttpDeleteTests
     {
         [Fact]
         public async Task Allows_GET_Requests()

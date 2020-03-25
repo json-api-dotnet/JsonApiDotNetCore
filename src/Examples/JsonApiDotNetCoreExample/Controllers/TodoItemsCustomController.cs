@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExample.Controllers
             IJsonApiOptions options,
             IResourceService<T, int> resourceService,
             ILoggerFactory loggerFactory)
-            : base(options, resourceService, loggerFactory)
+            : base(options, resourceService)
         {
         }
     }
@@ -36,23 +36,20 @@ namespace JsonApiDotNetCoreExample.Controllers
     public class CustomJsonApiController<T, TId>
     : ControllerBase where T : class, IIdentifiable<TId>
     {
-        private readonly ILogger _logger;
         private readonly IJsonApiOptions _options;
         private readonly IResourceService<T, TId> _resourceService;
 
-        protected IActionResult Forbidden()
+        private IActionResult Forbidden()
         {
             return new StatusCodeResult(403);
         }
 
         public CustomJsonApiController(
             IJsonApiOptions options,
-            IResourceService<T, TId> resourceService,
-            ILoggerFactory loggerFactory)
+            IResourceService<T, TId> resourceService)
         {
             _options = options;
             _resourceService = resourceService;
-            _logger = loggerFactory.CreateLogger<JsonApiController<T, TId>>();
         }
 
         public CustomJsonApiController(
@@ -62,14 +59,14 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             var entities = await _resourceService.GetAsync();
             return Ok(entities);
         }
 
         [HttpGet("{id}")]
-        public virtual async Task<IActionResult> GetAsync(TId id)
+        public async Task<IActionResult> GetAsync(TId id)
         {
             var entity = await _resourceService.GetAsync(id);
 
@@ -80,7 +77,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpGet("{id}/relationships/{relationshipName}")]
-        public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
+        public async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
             var relationship = _resourceService.GetRelationshipAsync(id, relationshipName);
             if (relationship == null)
@@ -90,14 +87,14 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpGet("{id}/{relationshipName}")]
-        public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
+        public async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
             var relationship = await _resourceService.GetRelationshipAsync(id, relationshipName);
             return Ok(relationship);
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
+        public async Task<IActionResult> PostAsync([FromBody] T entity)
         {
             if (entity == null)
                 return UnprocessableEntity();
@@ -111,7 +108,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}")]
-        public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
+        public async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
             if (entity == null)
                 return UnprocessableEntity();
@@ -125,14 +122,14 @@ namespace JsonApiDotNetCoreExample.Controllers
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
+        public async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] List<ResourceObject> relationships)
         {
             await _resourceService.UpdateRelationshipsAsync(id, relationshipName, relationships);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> DeleteAsync(TId id)
+        public async Task<IActionResult> DeleteAsync(TId id)
         {
             var wasDeleted = await _resourceService.DeleteAsync(id);
 

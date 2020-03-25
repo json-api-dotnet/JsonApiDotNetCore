@@ -1,26 +1,21 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Routing;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace UnitTests.Middleware
 {
-    public class CurrentRequestMiddlewareTests
+    public sealed class CurrentRequestMiddlewareTests
     {
         [Fact]
         public async Task ParseUrlBase_ObfuscatedIdClass_ShouldSetIdCorrectly()
@@ -97,7 +92,7 @@ namespace UnitTests.Middleware
             Assert.Contains(baseId, exception.Message);
         }
 
-        class InvokeConfiguration
+        private sealed class InvokeConfiguration
         {
             public CurrentRequestMiddleware MiddleWare;
             public HttpContext HttpContext;
@@ -121,7 +116,7 @@ namespace UnitTests.Middleware
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
-            var middleware = new CurrentRequestMiddleware((context) =>
+            var middleware = new CurrentRequestMiddleware(httpContext =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });
@@ -161,9 +156,10 @@ namespace UnitTests.Middleware
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString(path);
             context.Response.Body = new MemoryStream();
-            var feature = new RouteValuesFeature();
-            feature.RouteValues["controller"] = "fake!";
-            feature.RouteValues["action"] = isRelationship ? "GetRelationship" : action;
+            var feature = new RouteValuesFeature
+            {
+                RouteValues = {["controller"] = "fake!", ["action"] = isRelationship ? "GetRelationship" : action}
+            };
             if(id != null)
             {
                 feature.RouteValues["id"] = id;

@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
@@ -36,8 +35,8 @@ namespace JsonApiDotNetCore.Models
         /// </summary>
         public override object GetValue(object entity)
         {
-           return entity?.GetType()?
-                .GetProperty(InternalRelationshipName)?
+           return entity?.GetType()
+               .GetProperty(InternalRelationshipName)?
                 .GetValue(entity);
         }
 

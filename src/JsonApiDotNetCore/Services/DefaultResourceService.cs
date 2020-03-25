@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Services
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)
         {
             var relationship = GetRelationship(relationshipName);
-            var entityQuery = _repository.Include(_repository.Get(id), new RelationshipAttribute[] { relationship });
+            var entityQuery = _repository.Include(_repository.Get(id), new[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
                 throw new JsonApiException(404, $"Entity with id {id} could not be found.");
@@ -188,10 +188,9 @@ namespace JsonApiDotNetCore.Services
             string[] relationshipIds = null;
             if (related != null)
             {
-                if (relationship is HasOneAttribute)
-                    relationshipIds = new string[] { ((IIdentifiable)related).StringId };
-                else
-                    relationshipIds = ((IEnumerable<IIdentifiable>)related).Select(e => e.StringId).ToArray();
+                relationshipIds = relationship is HasOneAttribute
+                    ? new[] {((IIdentifiable) related).StringId}
+                    : ((IEnumerable<IIdentifiable>) related).Select(e => e.StringId).ToArray();
             }
 
             await _repository.UpdateRelationshipsAsync(entity, relationship, relationshipIds ?? new string[0] );
@@ -201,10 +200,9 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
         {
-            if (!(_pageService.CurrentPageSize > 0))
+            if (!(_pageService.PageSize > 0))
             {
-                var allEntities = await _repository.ToListAsync(entities);
-                return allEntities as IEnumerable<TResource>;
+                return await _repository.ToListAsync(entities);
             }
 
             int pageOffset = _pageService.CurrentPage;
@@ -214,9 +212,9 @@ namespace JsonApiDotNetCore.Services
             }
 
             _logger.LogInformation($"Applying paging query. Fetching page {pageOffset} " + 
-                                   $"with {_pageService.CurrentPageSize} entities");
+                                   $"with {_pageService.PageSize} entities");
 
-            return await _repository.PageAsync(entities, _pageService.CurrentPageSize, pageOffset);
+            return await _repository.PageAsync(entities, _pageService.PageSize, pageOffset);
         }
 
         /// <summary>

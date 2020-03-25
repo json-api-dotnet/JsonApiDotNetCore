@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JsonApiDotNetCore.Serialization.Server
+﻿namespace JsonApiDotNetCore.Serialization.Server
 {
     public interface IJsonApiSerializerFactory
     {

@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Internal.Contracts;
-using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
@@ -18,7 +17,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
           return new QueryFilters
           {
-            { "firstCharacter", (users, queryFilter) => FirstCharacterFilter(users, queryFilter) }
+            { "firstCharacter", FirstCharacterFilter }
           };
         }
 
@@ -26,8 +25,8 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             switch (filterQuery.Operation)
             {
-                /// In EF core >= 3.0 we need to explicitly evaluate the query first. This could probably be translated
-                /// into a query by building expression trees.
+                // In EF core >= 3.0 we need to explicitly evaluate the query first. This could probably be translated
+                // into a query by building expression trees.
                 case "lt":
                     return users.ToList().Where(u => u.Username.First() < filterQuery.Value[0]).AsQueryable();
                 default:

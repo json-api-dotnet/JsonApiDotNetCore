@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,7 +11,11 @@ namespace JsonApiDotNetCore.Models
         /// see "primary data" in https://jsonapi.org/format/#document-top-level.
         /// </summary>
         [JsonProperty("data")]
-        public object Data { get { return GetPrimaryData(); } set { SetPrimaryData(value); } }
+        public object Data
+        {
+            get => GetPrimaryData();
+            set => SetPrimaryData(value);
+        }
 
         /// <summary>
         /// see https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
@@ -44,16 +48,16 @@ namespace JsonApiDotNetCore.Models
         /// Internally used to indicate if the document's primary data is
         /// "single" or "many".
         /// </summary>
-        internal bool IsManyData { get; private set; } = false;
+        internal bool IsManyData { get; private set; }
 
         /// <summary>
         /// Internally used to indicate if the document's primary data is
         /// should still be serialized when it's value is null. This is used when
         /// a single resource is requested but not present (eg /articles/1/author).
         /// </summary>
-        internal bool IsPopulated { get; private set; } = false;
+        internal bool IsPopulated { get; private set; }
 
-        internal bool HasResource {  get { return IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null); } }
+        internal bool HasResource => IsPopulated && ((IsManyData && ManyData.Any()) || SingleData != null);
 
         /// <summary>
         /// Gets the "single" or "many" data depending on which one was

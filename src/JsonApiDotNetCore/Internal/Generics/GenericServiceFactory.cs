@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Internal.Generics
         TInterface Get<TInterface>(Type openGenericType, Type resourceType, Type keyType);
     }
 
-    public class GenericServiceFactory : IGenericServiceFactory
+    public sealed class GenericServiceFactory : IGenericServiceFactory
     {
         private readonly IServiceProvider _serviceProvider;
 

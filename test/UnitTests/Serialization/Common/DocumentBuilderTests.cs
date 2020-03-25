@@ -1,16 +1,13 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using Moq;
 using Xunit;
 using UnitTests.TestModels;
-using Person = UnitTests.TestModels.Person;
+
 namespace UnitTests.Serialization.Serializer
 {
-    public class BaseDocumentBuilderTests : SerializerTestsSetup
+    public sealed class BaseDocumentBuilderTests : SerializerTestsSetup
     {
         private readonly TestDocumentBuilder _builder;
 
@@ -25,11 +22,8 @@ namespace UnitTests.Serialization.Serializer
         [Fact]
         public void EntityToDocument_NullEntity_CanBuild()
         {
-            // Arrange
-            TestResource entity = null;
-
             // Act
-            var document = _builder.Build(entity, null, null);
+            var document = _builder.Build((TestResource) null);
 
             // Assert
             Assert.Null(document.Data);
@@ -44,7 +38,7 @@ namespace UnitTests.Serialization.Serializer
             var entities = new List<TestResource>();
 
             // Act
-            var document = _builder.Build(entities, null, null);
+            var document = _builder.Build(entities);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -59,7 +53,7 @@ namespace UnitTests.Serialization.Serializer
             IIdentifiable dummy = new Identifiable();
 
             // Act
-            var document = _builder.Build(dummy, null, null);
+            var document = _builder.Build(dummy);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -70,10 +64,10 @@ namespace UnitTests.Serialization.Serializer
         public void EntityToDocument_EntityList_CanBuild()
         {
             // Arrange
-            var entities = new List<IIdentifiable>() { new Identifiable(), new Identifiable() };
+            var entities = new List<IIdentifiable> { new Identifiable(), new Identifiable() };
 
             // Act
-            var document = _builder.Build(entities, null, null);
+            var document = _builder.Build(entities);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

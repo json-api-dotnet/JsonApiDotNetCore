@@ -5,7 +5,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public class TypeHelper_Tests
+    public sealed class TypeHelper_Tests
     {
         [Fact]
         public void Can_Convert_DateTimeOffsets()
@@ -136,7 +136,7 @@ namespace UnitTests.Internal
             Test = 1
         }
 
-        private class ComplexType : BaseType
+        private sealed class ComplexType : BaseType
         {
             public int Property { get; set; }
         }

@@ -1,4 +1,3 @@
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Formatters;
@@ -23,7 +22,7 @@ using JsonApiDotNetCore.Extensions.EntityFrameworkCore;
 
 namespace UnitTests.Extensions
 {
-    public class IServiceCollectionExtensionsTests
+    public sealed class IServiceCollectionExtensionsTests
     {
         [Fact]
         public void AddJsonApiInternals_Adds_All_Required_Services()
@@ -155,7 +154,7 @@ namespace UnitTests.Extensions
             Assert.Equal("intResources", resource.ResourceName);
         }
 
-        public class IntResource : Identifiable { }
+        public sealed class IntResource : Identifiable { }
         public class GuidResource : Identifiable<Guid> { }
 
         private class IntResourceService : IResourceService<IntResource>

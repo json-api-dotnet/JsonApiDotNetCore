@@ -15,10 +15,10 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
     [Collection("WebHostCollection")]
-    public class Meta
+    public sealed class Meta
     {
-        private TestFixture<Startup> _fixture;
-        private AppDbContext _context;
+        private readonly TestFixture<Startup> _fixture;
+        private readonly AppDbContext _context;
         public Meta(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(documents.Meta);
-            Assert.Equal((long)expectedCount, (long)documents.Meta["total-records"]);
+            Assert.Equal(expectedCount, (long)documents.Meta["total-records"]);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("POST");
-            var route = $"/api/v1/todoItems";
+            var route = "/api/v1/todoItems";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .UseStartup<MetaStartup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people";
+            var route = "/api/v1/people";
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
@@ -191,9 +191,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             foreach (var hash in expectedMeta)
             {
-                if (hash.Value is IList)
+                if (hash.Value is IList listValue)
                 {
-                    var listValue = (IList)hash.Value;
                     for (var i = 0; i < listValue.Count; i++)
                         Assert.Equal(listValue[i].ToString(), ((IList)documents.Meta[hash.Key])[i].ToString());
                 }

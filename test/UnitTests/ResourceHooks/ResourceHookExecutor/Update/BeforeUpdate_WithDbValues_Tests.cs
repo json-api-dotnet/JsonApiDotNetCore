@@ -9,7 +9,7 @@ using Xunit;
 
 namespace UnitTests.ResourceHooks
 {
-    public class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
+    public sealed class BeforeUpdate_WithDbValues_Tests : HooksTestsSetup
     {
         private readonly ResourceHook[] targetHooks = { ResourceHook.BeforeUpdate, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship };
         private readonly ResourceHook[] targetHooksNoImplicit = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
@@ -85,7 +85,7 @@ namespace UnitTests.ResourceHooks
             ufMock.Setup(c => c.Relationships).Returns(_resourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson));
 
             // Act
-            var _todoList = new List<TodoItem>() { new TodoItem { Id = this.todoList[0].Id } };
+            var _todoList = new List<TodoItem> { new TodoItem { Id = this.todoList[0].Id } };
             hookExecutor.BeforeUpdate(_todoList, ResourcePipeline.Patch);
 
             // Assert
@@ -204,7 +204,6 @@ namespace UnitTests.ResourceHooks
             var diffPair = entities.GetDiffs().Single();
             var dbCheck = diffPair.DatabaseValue.Description == checksum;
             var reqCheck = diffPair.Entity.Description == null;
-            var diffPairCheck = (dbCheck && reqCheck);
 
             var updatedRelationship = entities.GetByRelationship<Person>().Single();
             var diffCheck = updatedRelationship.Key.PublicRelationshipName == "oneToOnePerson";

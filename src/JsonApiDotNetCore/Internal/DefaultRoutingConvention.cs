@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Internal
     /// public class SomeVeryCustomController{SomeResource} : JsonApiMixin { }
     /// // => /someVeryCustoms/relationship/relatedResource
     /// </example>
-    public class DefaultRoutingConvention : IJsonApiRoutingConvention, IControllerResourceMapping
+    public class DefaultRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly string _namespace;
         private readonly IResourceNameFormatter _formatter;

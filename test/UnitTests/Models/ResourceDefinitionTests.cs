@@ -1,24 +1,13 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Services;
 using System.Linq;
 using Xunit;
 
 namespace UnitTests.Models
 {
-    public class ResourceDefinition_Scenario_Tests
+    public sealed class ResourceDefinition_Scenario_Tests
     {
-        private readonly IResourceGraph _resourceGraph;
-
-        public ResourceDefinition_Scenario_Tests()
-        {
-            _resourceGraph = new ResourceGraphBuilder()
-                .AddResource<Model>("models")
-                .Build();
-        }
-
         [Fact]
         public void Request_Filter_Uses_Member_Expression()
         {
@@ -54,7 +43,7 @@ namespace UnitTests.Models
         [Attr] public string Prop { get; set; }
     }
 
-    public class RequestFilteredResource : ResourceDefinition<Model>
+    public sealed class RequestFilteredResource : ResourceDefinition<Model>
     {
         // this constructor will be resolved from the container
         // that means you can take on any dependency that is also defined in the container

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
@@ -51,7 +50,7 @@ namespace JsonApiDotNetCore.Query
 
             var keySplit = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
-            if (keySplit.Count() == 1)
+            if (keySplit.Length == 1)
             {   // input format: fields=prop1,prop2
                 foreach (var field in fields)
                     RegisterRequestResourceField(field);
@@ -64,8 +63,8 @@ namespace JsonApiDotNetCore.Query
                 // if not, no longer support this type of sparse field selection.
                 if (navigation == _requestResource.ResourceName && !_requestResource.Relationships.Any(a => a.Is(navigation)))
                     throw new JsonApiException(400, $"Use '?fields=...' instead of 'fields[{navigation}]':" +
-                        $" the square bracket navigations is now reserved " +
-                        $"for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
+                        " the square bracket navigations is now reserved " +
+                        "for relationships only. See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/555#issuecomment-543100865");
 
                 if (navigation.Contains(QueryConstants.DOT))
                     throw new JsonApiException(400, $"fields[{navigation}] is not valid: deeply nested sparse field selection is not yet supported.");
@@ -103,7 +102,7 @@ namespace JsonApiDotNetCore.Query
             if (attr == null)
                 throw new JsonApiException(400, $"'{_requestResource.ResourceName}' does not contain '{field}'.");
 
-            (_selectedFields = _selectedFields ?? new List<AttrAttribute>()).Add(attr);
+            (_selectedFields ??= new List<AttrAttribute>()).Add(attr);
         }
     }
 }

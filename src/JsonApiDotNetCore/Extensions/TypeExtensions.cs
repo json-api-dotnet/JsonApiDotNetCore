@@ -17,9 +17,9 @@ namespace JsonApiDotNetCore.Extensions
             if (list == null) throw new ArgumentNullException(nameof(list));
             if (items == null) throw new ArgumentNullException(nameof(items));
 
-            if (list is List<T>)
+            if (list is List<T> genericList)
             {
-                ((List<T>)list).AddRange(items);
+                genericList.AddRange(items);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Extensions
         {
             var enumerableTypes = enumerable.GetType()
                 .GetInterfaces()
-                .Where(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                 .ToList();
 
             var numberOfEnumerableTypes = enumerableTypes.Count;
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCore.Extensions
         /// <summary>
         /// Whether or not a type implements an interface.
         /// </summary>
-        public static bool Implements(this Type concreteType, Type interfaceType) 
+        private static bool Implements(this Type concreteType, Type interfaceType) 
             => interfaceType?.IsAssignableFrom(concreteType) == true;
 
         /// <summary>
