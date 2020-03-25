@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
-    public class JsonApiQueryController<T> : JsonApiQueryController<T, int> where T : class, IIdentifiable<int>
+    public abstract class JsonApiQueryController<T> : JsonApiQueryController<T, int> where T : class, IIdentifiable<int>
     {
-        public JsonApiQueryController(
+        protected JsonApiQueryController(
             IJsonApiOptions jsonApiOptions,
             ILoggerFactory loggerFactory,
             IResourceQueryService<T, int> queryService)
@@ -17,9 +17,9 @@ namespace JsonApiDotNetCore.Controllers
         { }
     }
 
-    public class JsonApiQueryController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
+    public abstract class JsonApiQueryController<T, TId> : BaseJsonApiController<T, TId> where T : class, IIdentifiable<TId>
     {
-        public JsonApiQueryController(
+        protected JsonApiQueryController(
             IJsonApiOptions jsonApiContext,
             ILoggerFactory loggerFactory,
             IResourceQueryService<T, TId> queryService)

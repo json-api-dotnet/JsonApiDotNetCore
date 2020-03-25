@@ -4,10 +4,10 @@ using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class Identifiable : Identifiable<int>
+    public abstract class Identifiable : Identifiable<int>
     { }
 
-    public class Identifiable<T> : IIdentifiable<T>
+    public abstract class Identifiable<T> : IIdentifiable<T>
     {
         /// <summary>
         /// The resource identifier
