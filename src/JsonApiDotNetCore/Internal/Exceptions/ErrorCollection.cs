@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Internal
         public HttpStatusCode GetErrorStatusCode()
         {
             var statusCodes = Errors
-                .Select(e => int.Parse(e.Status))
+                .Select(e => (int)e.Status)
                 .Distinct()
                 .ToList();
 

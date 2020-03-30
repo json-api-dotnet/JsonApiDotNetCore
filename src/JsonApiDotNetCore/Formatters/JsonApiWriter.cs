@@ -82,8 +82,8 @@ namespace JsonApiDotNetCore.Formatters
                     ? new ErrorLinks {About = problemDetails.Type}
                     : null,
                 Status = problemDetails.Status != null
-                    ? problemDetails.Status.Value.ToString()
-                    : HttpStatusCode.InternalServerError.ToString("d"),
+                    ? (HttpStatusCode)problemDetails.Status.Value
+                    : HttpStatusCode.InternalServerError,
                 Title = problemDetails.Title,
                 Detail = problemDetails.Detail
             };

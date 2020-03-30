@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Internal
 
         public Error(HttpStatusCode status, string title, ErrorMeta meta = null, ErrorSource source = null)
         {
-            Status = status.ToString("d");
+            Status = status;
             Title = title;
             Meta = meta;
             Source = source;
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Internal
 
         public Error(HttpStatusCode status, string title, string detail, ErrorMeta meta = null, ErrorSource source = null)
         {
-            Status = status.ToString("d");
+            Status = status;
             Title = title;
             Detail = detail;
             Meta = meta;
@@ -35,8 +35,15 @@ namespace JsonApiDotNetCore.Internal
         [JsonProperty("links")]
         public ErrorLinks Links { get; set; }
 
+        [JsonIgnore]
+        public HttpStatusCode Status { get; set; }
+
         [JsonProperty("status")]
-        public string Status { get; set; }
+        public string StatusText
+        {
+            get => Status.ToString("d");
+            set => Status = (HttpStatusCode)int.Parse(value);
+        }
 
         [JsonProperty("code")]
         public string Code { get; set; }
