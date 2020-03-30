@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -67,10 +68,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, null);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync());
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync());
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -96,10 +98,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync(id));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(id));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -125,10 +128,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipsAsync(id, string.Empty));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipsAsync(id, string.Empty));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -154,10 +158,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipAsync(id, string.Empty));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipAsync(id, string.Empty));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
         [Fact]
@@ -222,10 +227,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Patch, exception.Method);
         }
 
         [Fact]
@@ -316,10 +322,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Patch, exception.Method);
         }
 
         [Fact]
@@ -345,10 +352,11 @@ namespace UnitTests
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.DeleteAsync(id));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
+            Assert.Equal(HttpMethod.Delete, exception.Method);
         }
     }
 }

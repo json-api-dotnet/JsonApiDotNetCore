@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
@@ -67,14 +68,14 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync()
         {
-            if (_getAll == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var entities = await _getAll.GetAsync();
             return Ok(entities);
         }
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
-            if (_getById == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var entity = await _getById.GetAsync(id);
             if (entity == null)
             {
@@ -88,8 +89,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
-            if (_getRelationships == null)
-                throw Exceptions.UnSupportedRequestMethod;
+            if (_getRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
             {
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
-            if (_getRelationship == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
             return Ok(relationship);
         }
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
             if (_create == null)
-                throw Exceptions.UnSupportedRequestMethod;
+                throw new RequestMethodNotAllowedException(HttpMethod.Post);
 
             if (entity == null)
                 return UnprocessableEntity();
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
-            if (_update == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             if (entity == null)
                 return UnprocessableEntity();
 
@@ -151,14 +151,14 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
-            if (_updateRelationships == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_updateRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _updateRelationships.UpdateRelationshipsAsync(id, relationshipName, relationships);
             return Ok();
         }
 
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
-            if (_delete == null) throw Exceptions.UnSupportedRequestMethod;
+            if (_delete == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
             var wasDeleted = await _delete.DeleteAsync(id);
             if (!wasDeleted)
                 return NotFound();

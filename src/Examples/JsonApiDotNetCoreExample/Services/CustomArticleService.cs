@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExample.Services
             var newEntity = await base.GetAsync(id);
             if(newEntity == null)
             {
-                throw new JsonApiException(HttpStatusCode.NotFound, "The entity could not be found");
+                throw new JsonApiException(HttpStatusCode.NotFound, "The resource could not be found.");
             }
             newEntity.Name = "None for you Glen Coco";
             return newEntity;

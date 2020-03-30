@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Services
             var entityQuery = _repository.Include(_repository.Get(id), new[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
-                throw new JsonApiException(HttpStatusCode.NotFound, $"Entity with id {id} could not be found.");
+                throw new JsonApiException(HttpStatusCode.NotFound, $"Resource with id {id} could not be found.");
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
 
