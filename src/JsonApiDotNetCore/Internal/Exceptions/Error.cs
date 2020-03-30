@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -11,17 +12,17 @@ namespace JsonApiDotNetCore.Internal
     {
         public Error() { }
 
-        public Error(int status, string title, ErrorMeta meta = null, ErrorSource source = null)
+        public Error(HttpStatusCode status, string title, ErrorMeta meta = null, ErrorSource source = null)
         {
-            Status = status.ToString();
+            Status = status.ToString("d");
             Title = title;
             Meta = meta;
             Source = source;
         }
 
-        public Error(int status, string title, string detail, ErrorMeta meta = null, ErrorSource source = null)
+        public Error(HttpStatusCode status, string title, string detail, ErrorMeta meta = null, ErrorSource source = null)
         {
-            Status = status.ToString();
+            Status = status.ToString("d");
             Title = title;
             Detail = detail;
             Meta = meta;

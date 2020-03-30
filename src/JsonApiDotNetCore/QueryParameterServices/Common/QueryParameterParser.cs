@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
@@ -48,7 +49,7 @@ namespace JsonApiDotNetCore.Services
                     continue;
 
                 if (!_options.AllowCustomQueryParameters)
-                    throw new JsonApiException(400, $"{pair} is not a valid query.");
+                    throw new JsonApiException(HttpStatusCode.BadRequest, $"{pair} is not a valid query.");
             }
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -51,7 +52,7 @@ namespace JsonApiDotNetCore.Query
             var attribute = GetAttribute(query.Attribute, queryContext.Relationship);
 
             if (attribute.IsFilterable == false)
-                throw new JsonApiException(400, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
             queryContext.Attribute = attribute;
 
             return queryContext;

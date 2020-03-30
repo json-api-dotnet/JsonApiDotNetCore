@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -53,7 +54,7 @@ namespace JsonApiDotNetCore.Query
                 : _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
 
             if (attribute == null)
-                throw new JsonApiException(400, $"'{target}' is not a valid attribute.");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"'{target}' is not a valid attribute.");
 
             return attribute;
         }
@@ -66,7 +67,7 @@ namespace JsonApiDotNetCore.Query
             if (propertyName == null) return null;
             var relationship = _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
             if (relationship == null)
-                throw new JsonApiException(400, $"{propertyName} is not a valid relationship on {_requestResource.ResourceName}.");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"{propertyName} is not a valid relationship on {_requestResource.ResourceName}.");
 
             return relationship;
         }
@@ -78,7 +79,7 @@ namespace JsonApiDotNetCore.Query
         {
             if (_requestResource != _mainRequestResource)
             {
-                throw new JsonApiException(400, $"Query parameter {Name} is currently not supported on nested resource endpoints (i.e. of the form '/article/1/author?{Name}=...'");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"Query parameter {Name} is currently not supported on nested resource endpoints (i.e. of the form '/article/1/author?{Name}=...'");
             }
         }
     }

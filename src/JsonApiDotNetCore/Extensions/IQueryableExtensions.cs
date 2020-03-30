@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
@@ -181,7 +182,7 @@ namespace JsonApiDotNetCore.Extensions
                     }
                     break;
                 default:
-                    throw new JsonApiException(500, $"Unknown filter operation {operation}");
+                    throw new JsonApiException(HttpStatusCode.InternalServerError, $"Unknown filter operation {operation}");
             }
 
             return body;
@@ -227,7 +228,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
             }
         }
 
@@ -296,7 +297,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"Could not cast {filter.Value} to {property.PropertyType.Name}");
             }
         }
 

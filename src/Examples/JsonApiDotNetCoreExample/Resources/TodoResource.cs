@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
@@ -16,7 +17,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (stringId == "1337")
             {
-                throw new JsonApiException(403, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
+                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
             }
         }
 

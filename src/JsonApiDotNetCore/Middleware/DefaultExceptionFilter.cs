@@ -23,10 +23,10 @@ namespace JsonApiDotNetCore.Middleware
 
             var jsonApiException = JsonApiExceptionFactory.GetException(context.Exception);
 
-            var error = jsonApiException.GetError();
-            var result = new ObjectResult(error)
+            var errors = jsonApiException.GetErrors();
+            var result = new ObjectResult(errors)
             {
-                StatusCode = jsonApiException.GetStatusCode()
+                StatusCode = (int)jsonApiException.GetStatusCode()
             };
             context.Result = result;
         }

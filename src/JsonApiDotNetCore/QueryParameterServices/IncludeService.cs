@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Query
         {
             var value = (string)queryParameter.Value;
             if (string.IsNullOrWhiteSpace(value))
-                throw new JsonApiException(400, "Include parameter must not be empty if provided");
+                throw new JsonApiException(HttpStatusCode.BadRequest, "Include parameter must not be empty if provided");
 
             var chains = value.Split(QueryConstants.COMMA).ToList();
             foreach (var chain in chains)
@@ -59,12 +60,12 @@ namespace JsonApiDotNetCore.Query
 
         private JsonApiException CannotIncludeError(ResourceContext resourceContext, string requestedRelationship)
         {
-           return new JsonApiException(400, $"Including the relationship {requestedRelationship} on {resourceContext.ResourceName} is not allowed");
+           return new JsonApiException(HttpStatusCode.BadRequest, $"Including the relationship {requestedRelationship} on {resourceContext.ResourceName} is not allowed");
         }
 
         private JsonApiException InvalidRelationshipError(ResourceContext resourceContext, string requestedRelationship)
         {
-           return new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {resourceContext.ResourceName}",
+           return new JsonApiException(HttpStatusCode.BadRequest, $"Invalid relationship {requestedRelationship} on {resourceContext.ResourceName}",
                 $"{resourceContext.ResourceName} does not have a relationship named {requestedRelationship}");
         }
     }

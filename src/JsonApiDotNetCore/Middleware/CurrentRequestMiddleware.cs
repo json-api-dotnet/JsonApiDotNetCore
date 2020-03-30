@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 if ((string)stringId == string.Empty)
                 {
-                    throw new JsonApiException(400, "No empty string as id please.");
+                    throw new JsonApiException(HttpStatusCode.BadRequest, "No empty string as id please.");
                 }
                 return (string)stringId;
             }
@@ -148,7 +149,7 @@ namespace JsonApiDotNetCore.Middleware
             var contentType = context.Request.ContentType;
             if (contentType != null && ContainsMediaTypeParameters(contentType))
             {
-                FlushResponse(context, 415);
+                FlushResponse(context, HttpStatusCode.UnsupportedMediaType);
                 return false;
             }
             return true;
@@ -166,7 +167,7 @@ namespace JsonApiDotNetCore.Middleware
                     continue;
                 }
 
-                FlushResponse(context, 406);
+                FlushResponse(context, HttpStatusCode.NotAcceptable);
                 return false;
             }
             return true;
@@ -193,9 +194,9 @@ namespace JsonApiDotNetCore.Middleware
             );
         }
 
-        private void FlushResponse(HttpContext context, int statusCode)
+        private void FlushResponse(HttpContext context, HttpStatusCode statusCode)
         {
-            context.Response.StatusCode = statusCode;
+            context.Response.StatusCode = (int)statusCode;
             context.Response.Body.Flush();
         }
 

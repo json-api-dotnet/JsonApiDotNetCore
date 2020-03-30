@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCore.Internal
             if (exceptionType == typeof(JsonApiException))
                 return (JsonApiException)exception;
 
-            return new JsonApiException(500, exceptionType.Name, exception);
+            return new JsonApiException(HttpStatusCode.InternalServerError, exceptionType.Name, exception);
         }
     }
 }

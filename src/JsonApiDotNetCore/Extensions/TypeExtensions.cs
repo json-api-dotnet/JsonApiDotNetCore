@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -100,7 +101,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (Exception e)
             {
-                throw new JsonApiException(500, $"Type '{type}' cannot be instantiated using the default constructor.", e);
+                throw new JsonApiException(HttpStatusCode.InternalServerError, $"Type '{type}' cannot be instantiated using the default constructor.", e);
             }
         }
 

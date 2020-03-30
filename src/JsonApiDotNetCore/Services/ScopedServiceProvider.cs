@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Net;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -27,7 +28,7 @@ namespace JsonApiDotNetCore.Services
         public object GetService(Type serviceType)
         {
             if (_httpContextAccessor.HttpContext == null)
-                throw new JsonApiException(500,
+                throw new JsonApiException(HttpStatusCode.InternalServerError,
                     "Cannot resolve scoped service outside the context of an HTTP Request.",
                     detail: "If you are hitting this error in automated tests, you should instead inject your own "
                             + "IScopedServiceProvider implementation. See the GitHub repository for how we do this internally. "

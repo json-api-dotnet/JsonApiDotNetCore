@@ -10,6 +10,7 @@ using Moq;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -88,7 +89,7 @@ namespace UnitTests.Middleware
             {
                 await task;
             });
-            Assert.Equal(400, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.BadRequest, exception.GetStatusCode());
             Assert.Contains(baseId, exception.Message);
         }
 

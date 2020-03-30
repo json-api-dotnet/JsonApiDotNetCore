@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -41,7 +42,7 @@ namespace JsonApiDotNetCoreExample.Controllers
 
         private IActionResult Forbidden()
         {
-            return new StatusCodeResult(403);
+            return new StatusCodeResult((int)HttpStatusCode.Forbidden);
         }
 
         public CustomJsonApiController(

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
@@ -19,7 +20,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (pipeline == ResourcePipeline.GetSingle && isIncluded)
             {
-                throw new JsonApiException(403, "Not allowed to include passports on individual people", new UnauthorizedAccessException());
+                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to include passports on individual people", new UnauthorizedAccessException());
             }
         }
 
@@ -34,7 +35,7 @@ namespace JsonApiDotNetCoreExample.Resources
             {
                 if (entity.IsLocked)
                 {
-                    throw new JsonApiException(403, "Not allowed to update fields or relations of locked persons", new UnauthorizedAccessException());
+                    throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update fields or relations of locked persons", new UnauthorizedAccessException());
                 }
             }
         }

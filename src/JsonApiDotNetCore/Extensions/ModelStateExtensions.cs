@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -25,12 +26,12 @@ namespace JsonApiDotNetCore.Extensions
                 {
                     if (modelError.Exception is JsonApiException jex)
                     {
-                        collection.Errors.AddRange(jex.GetError().Errors);
+                        collection.Errors.AddRange(jex.GetErrors().Errors);
                     }
                     else
                     {
                         collection.Errors.Add(new Error(
-                            status: 422,
+                            status: HttpStatusCode.UnprocessableEntity,
                             title: entry.Key,
                             detail: modelError.ErrorMessage,
                             meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,

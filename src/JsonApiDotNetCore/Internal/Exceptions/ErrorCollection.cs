@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ namespace JsonApiDotNetCore.Internal
             });
         }
 
-        public int GetErrorStatusCode()
+        public HttpStatusCode GetErrorStatusCode()
         {
             var statusCodes = Errors
                 .Select(e => int.Parse(e.Status))
@@ -36,16 +38,17 @@ namespace JsonApiDotNetCore.Internal
                 .ToList();
 
             if (statusCodes.Count == 1)
-                return statusCodes[0];
+                return (HttpStatusCode)statusCodes[0];
 
-            return int.Parse(statusCodes.Max().ToString()[0] + "00");
+            var statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");
+            return (HttpStatusCode)statusCode;
         }
 
         public IActionResult AsActionResult()
         {
             return new ObjectResult(this)
             {
-                StatusCode = GetErrorStatusCode()
+                StatusCode = (int)GetErrorStatusCode()
             };
         }
     }

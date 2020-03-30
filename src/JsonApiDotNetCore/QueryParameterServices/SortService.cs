@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -51,7 +52,7 @@ namespace JsonApiDotNetCore.Query
 
             var sortSegments = value.Split(QueryConstants.COMMA);
             if (sortSegments.Any(s => s == string.Empty))
-                throw new JsonApiException(400, "The sort URI segment contained a null value.");
+                throw new JsonApiException(HttpStatusCode.BadRequest, "The sort URI segment contained a null value.");
 
             foreach (var sortSegment in sortSegments)
             {
@@ -76,7 +77,7 @@ namespace JsonApiDotNetCore.Query
             var attribute = GetAttribute(query.Attribute, relationship);
 
             if (attribute.IsSortable == false)
-                throw new JsonApiException(400, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
 
             return new SortQueryContext(query)
             {

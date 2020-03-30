@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
@@ -133,7 +134,7 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = _provider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
-                throw new JsonApiException(400,
+                throw new JsonApiException(HttpStatusCode.BadRequest,
                      message: $"This API does not contain a json:api resource named '{data.Type}'.",
                      detail: "This resource is not registered on the ResourceGraph. "
                              + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "

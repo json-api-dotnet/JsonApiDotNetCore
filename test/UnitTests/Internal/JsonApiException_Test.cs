@@ -1,3 +1,4 @@
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using Xunit;
 
@@ -12,20 +13,20 @@ namespace UnitTests.Internal
             var exception = new JsonApiException(errors);
 
             // Add First 422 error
-            errors.Add(new Error(422, "Something wrong"));
-            Assert.Equal(422, exception.GetStatusCode());
+            errors.Add(new Error(HttpStatusCode.UnprocessableEntity, "Something wrong"));
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, exception.GetStatusCode());
 
             // Add a second 422 error
-            errors.Add(new Error(422, "Something else wrong"));
-            Assert.Equal(422, exception.GetStatusCode());
+            errors.Add(new Error(HttpStatusCode.UnprocessableEntity, "Something else wrong"));
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, exception.GetStatusCode());
 
             // Add 4xx error not 422
-            errors.Add(new Error(401, "Unauthorized"));
-            Assert.Equal(400, exception.GetStatusCode());
+            errors.Add(new Error(HttpStatusCode.Unauthorized, "Unauthorized"));
+            Assert.Equal(HttpStatusCode.BadRequest, exception.GetStatusCode());
 
             // Add 5xx error not 4xx
-            errors.Add(new Error(502, "Not good"));
-            Assert.Equal(500, exception.GetStatusCode());
+            errors.Add(new Error(HttpStatusCode.BadGateway, "Not good"));
+            Assert.Equal(HttpStatusCode.InternalServerError, exception.GetStatusCode());
         }
     }
 }

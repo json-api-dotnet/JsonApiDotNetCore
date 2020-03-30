@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task Response400IfUpdatingNotSettableAttribute()
+        public async Task Response422IfUpdatingNotSettableAttribute()
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
         }
 
         [Fact]
@@ -126,8 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
-            Assert.Equal(422, Convert.ToInt32(response.StatusCode));
-
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
         }
 
         [Fact]

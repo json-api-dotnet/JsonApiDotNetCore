@@ -1,3 +1,4 @@
+using System.Net;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
@@ -69,7 +70,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync());
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
 
         [Fact]
@@ -98,7 +99,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetAsync(id));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
 
         [Fact]
@@ -127,7 +128,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipsAsync(id, string.Empty));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
 
         [Fact]
@@ -156,7 +157,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.GetRelationshipAsync(id, string.Empty));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
 
         [Fact]
@@ -224,7 +225,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
 
         [Fact]
@@ -318,7 +319,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
 
         [Fact]
@@ -347,7 +348,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<JsonApiException>(() => controller.DeleteAsync(id));
 
             // Assert
-            Assert.Equal(405, exception.GetStatusCode());
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.GetStatusCode());
         }
     }
 }

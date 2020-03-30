@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
@@ -17,7 +18,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (pipeline == ResourcePipeline.GetSingle && entities.Single().Name == "Classified")
             {
-                throw new JsonApiException(403, "You are not allowed to see this article!", new UnauthorizedAccessException());
+                throw new JsonApiException(HttpStatusCode.Forbidden, "You are not allowed to see this article!", new UnauthorizedAccessException());
             }
             return entities.Where(t => t.Name != "This should be not be included");
         }

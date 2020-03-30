@@ -1,3 +1,4 @@
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace JsonApiDotNetCore.Controllers
     {
         protected IActionResult Forbidden()
         {
-            return new StatusCodeResult(403);
+            return new StatusCodeResult((int)HttpStatusCode.Forbidden);
         }
 
         protected IActionResult Error(Error error)

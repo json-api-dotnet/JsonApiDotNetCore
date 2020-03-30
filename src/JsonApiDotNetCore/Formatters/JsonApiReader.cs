@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -58,7 +59,7 @@ namespace JsonApiDotNetCore.Formatters
                     if (idMissing)
                     {
                         _logger.LogError("Payload must include id attribute");
-                        throw new JsonApiException(400, "Payload must include id attribute");
+                        throw new JsonApiException(HttpStatusCode.BadRequest, "Payload must include id attribute");
                     }
                 }
                 return await InputFormatterResult.SuccessAsync(model);

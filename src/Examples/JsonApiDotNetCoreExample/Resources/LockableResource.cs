@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Models;
@@ -18,7 +19,7 @@ namespace JsonApiDotNetCoreExample.Resources
             {
                 if (e.IsLocked)
                 {
-                    throw new JsonApiException(403, "Not allowed to update fields or relations of locked todo item", new UnauthorizedAccessException());
+                    throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update fields or relations of locked todo item", new UnauthorizedAccessException());
                 }
             }
         }

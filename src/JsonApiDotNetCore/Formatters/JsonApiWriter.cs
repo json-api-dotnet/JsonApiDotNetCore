@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
@@ -47,10 +48,10 @@ namespace JsonApiDotNetCore.Formatters
                 response.ContentType = Constants.ContentType;
                 try
                 {
-                    if (context.Object is ProblemDetails pd)
+                    if (context.Object is ProblemDetails problemDetails)
                     {
                         var errors = new ErrorCollection();
-                        errors.Add(new Error(pd.Status.Value, pd.Title, pd.Detail));
+                        errors.Add(ConvertProblemDetailsToError(problemDetails));
                         responseContent = _serializer.Serialize(errors);
                     } else
                     {
@@ -61,13 +62,31 @@ namespace JsonApiDotNetCore.Formatters
                 {
                     _logger.LogError(new EventId(), e, "An error occurred while formatting the response");
                     var errors = new ErrorCollection();
-                    errors.Add(new Error(500, e.Message, ErrorMeta.FromException(e)));
+                    errors.Add(new Error(HttpStatusCode.InternalServerError, e.Message, ErrorMeta.FromException(e)));
                     responseContent = _serializer.Serialize(errors);
-                    response.StatusCode = 500;
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
             }
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
+        }
+
+        private static Error ConvertProblemDetailsToError(ProblemDetails problemDetails)
+        {
+            return new Error
+            {
+                Id = !string.IsNullOrWhiteSpace(problemDetails.Instance)
+                    ? problemDetails.Instance
+                    : Guid.NewGuid().ToString(),
+                Links = !string.IsNullOrWhiteSpace(problemDetails.Type)
+                    ? new ErrorLinks {About = problemDetails.Type}
+                    : null,
+                Status = problemDetails.Status != null
+                    ? problemDetails.Status.Value.ToString()
+                    : HttpStatusCode.InternalServerError.ToString("d"),
+                Title = problemDetails.Title,
+                Detail = problemDetails.Detail
+            };
         }
     }
 }

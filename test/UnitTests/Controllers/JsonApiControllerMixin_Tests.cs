@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -15,26 +16,26 @@ namespace UnitTests
             // Arrange
             var errors422 = new ErrorCollection {
                 Errors = new List<Error> {
-                    new Error(422, "bad specific"),
-                    new Error(422, "bad other specific"),
+                    new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
+                    new Error(HttpStatusCode.UnprocessableEntity, "bad other specific"),
                 }
             };
 
             var errors400 = new ErrorCollection {
                 Errors = new List<Error> {
-                    new Error(200, "weird"),
-                    new Error(400, "bad"),
-                    new Error(422, "bad specific"),
+                    new Error(HttpStatusCode.OK, "weird"),
+                    new Error(HttpStatusCode.BadRequest, "bad"),
+                    new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
                 }
             };
 
             var errors500 = new ErrorCollection {
                 Errors = new List<Error> {
-                    new Error(200, "weird"),
-                    new Error(400, "bad"),
-                    new Error(422, "bad specific"),
-                    new Error(500, "really bad"),
-                    new Error(502, "really bad specific"),
+                    new Error(HttpStatusCode.OK, "weird"),
+                    new Error(HttpStatusCode.BadRequest, "bad"),
+                    new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
+                    new Error(HttpStatusCode.InternalServerError, "really bad"),
+                    new Error(HttpStatusCode.BadGateway, "really bad specific"),
                 }
             };
             
@@ -48,9 +49,9 @@ namespace UnitTests
             var response400 = Assert.IsType<ObjectResult>(result400);
             var response500 = Assert.IsType<ObjectResult>(result500);
 
-            Assert.Equal(422, response422.StatusCode);
-            Assert.Equal(400, response400.StatusCode);
-            Assert.Equal(500, response500.StatusCode);
+            Assert.Equal((int)HttpStatusCode.UnprocessableEntity, response422.StatusCode);
+            Assert.Equal((int)HttpStatusCode.BadRequest, response400.StatusCode);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, response500.StatusCode);
         }
     }
 }

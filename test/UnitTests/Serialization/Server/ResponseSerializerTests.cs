@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -452,7 +453,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeError_CustomError_CanSerialize()
         {
             // Arrange
-            var error = new CustomError(507, "title", "detail", "custom");
+            var error = new CustomError(HttpStatusCode.InsufficientStorage, "title", "detail", "custom");
             var errorCollection = new ErrorCollection();
             errorCollection.Add(error);
 
@@ -481,7 +482,7 @@ namespace UnitTests.Serialization.Server
 
         private sealed class CustomError : Error
         {
-            public CustomError(int status, string title, string detail, string myProp)
+            public CustomError(HttpStatusCode status, string title, string detail, string myProp)
             : base(status, title, detail)
             {
                 MyCustomProperty = myProp;

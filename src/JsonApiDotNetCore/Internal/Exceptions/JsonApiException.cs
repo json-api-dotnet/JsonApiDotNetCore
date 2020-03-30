@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -14,21 +15,21 @@ namespace JsonApiDotNetCore.Internal
         public JsonApiException(Error error)
         : base(error.Title) => _errors.Add(error);
             
-        public JsonApiException(int statusCode, string message, ErrorSource source = null)
+        public JsonApiException(HttpStatusCode status, string message, ErrorSource source = null)
         : base(message)
-            => _errors.Add(new Error(statusCode, message, null, GetMeta(), source));
+            => _errors.Add(new Error(status, message, null, GetMeta(), source));
 
-        public JsonApiException(int statusCode, string message, string detail, ErrorSource source = null)
+        public JsonApiException(HttpStatusCode status, string message, string detail, ErrorSource source = null)
         : base(message)
-            => _errors.Add(new Error(statusCode, message, detail, GetMeta(), source));
+            => _errors.Add(new Error(status, message, detail, GetMeta(), source));
 
-        public JsonApiException(int statusCode, string message, Exception innerException)
+        public JsonApiException(HttpStatusCode status, string message, Exception innerException)
         : base(message, innerException)
-            => _errors.Add(new Error(statusCode, message, innerException.Message, GetMeta(innerException)));
+            => _errors.Add(new Error(status, message, innerException.Message, GetMeta(innerException)));
 
-        public ErrorCollection GetError() => _errors;
+        public ErrorCollection GetErrors() => _errors;
 
-        public int GetStatusCode()
+        public HttpStatusCode GetStatusCode()
         {
             return _errors.GetErrorStatusCode();
         }

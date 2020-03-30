@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Query;
@@ -47,7 +48,7 @@ namespace UnitTests.QueryParameters
             if (shouldThrow)
             {
                 var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
-                Assert.Equal(400, ex.GetStatusCode());
+                Assert.Equal(HttpStatusCode.BadRequest, ex.GetStatusCode());
             }
             else
             {
@@ -72,7 +73,7 @@ namespace UnitTests.QueryParameters
             if (shouldThrow)
             {
                 var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
-                Assert.Equal(400, ex.GetStatusCode());
+                Assert.Equal(HttpStatusCode.BadRequest, ex.GetStatusCode());
             }
             else
             {

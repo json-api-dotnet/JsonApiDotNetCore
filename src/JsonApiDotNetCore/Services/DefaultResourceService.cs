@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
@@ -142,7 +143,7 @@ namespace JsonApiDotNetCore.Services
             {
                 // TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
                 // this error should be thrown when the relationship is not found.
-                throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
+                throw new JsonApiException(HttpStatusCode.NotFound, $"Relationship '{relationshipName}' not found.");
             }
 
             if (!IsNull(_hookExecutor, entity))
@@ -181,7 +182,7 @@ namespace JsonApiDotNetCore.Services
             var entityQuery = _repository.Include(_repository.Get(id), new[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
             if (entity == null)
-                throw new JsonApiException(404, $"Entity with id {id} could not be found.");
+                throw new JsonApiException(HttpStatusCode.NotFound, $"Entity with id {id} could not be found.");
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
 
@@ -334,7 +335,7 @@ namespace JsonApiDotNetCore.Services
         {
             var relationship = _currentRequestResource.Relationships.Single(r => r.Is(relationshipName));
             if (relationship == null)
-                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+                throw new JsonApiException(HttpStatusCode.UnprocessableEntity, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
             return relationship;
         }
 

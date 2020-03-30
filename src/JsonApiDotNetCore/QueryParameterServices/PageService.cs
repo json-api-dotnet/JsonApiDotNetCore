@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -116,7 +117,7 @@ namespace JsonApiDotNetCore.Query
 
         private void ThrowBadPagingRequest(KeyValuePair<string, StringValues> parameter, string message)
         {
-            throw new JsonApiException(400, $"Invalid page query parameter '{parameter.Key}={parameter.Value}': {message}");
+            throw new JsonApiException(HttpStatusCode.BadRequest, $"Invalid page query parameter '{parameter.Key}={parameter.Value}': {message}");
         }
 
     }
