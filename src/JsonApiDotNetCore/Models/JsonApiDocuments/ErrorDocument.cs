@@ -7,7 +7,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
-    public class ErrorDocument
+    public sealed class ErrorDocument
     {
         public IList<Error> Errors { get; }
 

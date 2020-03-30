@@ -451,10 +451,10 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void SerializeError_CustomError_CanSerialize()
+        public void SerializeError_Error_CanSerialize()
         {
             // Arrange
-            var error = new CustomError(HttpStatusCode.InsufficientStorage, "title", "detail", "custom");
+            var error = new Error(HttpStatusCode.InsufficientStorage, "title", "detail");
             var errorDocument = new ErrorDocument();
             errorDocument.Errors.Add(error);
 
@@ -464,7 +464,6 @@ namespace UnitTests.Serialization.Server
                 {
                     new
                     {
-                        myCustomProperty = "custom",
                         id = error.Id,
                         status = "507",
                         title = "title",
@@ -479,16 +478,6 @@ namespace UnitTests.Serialization.Server
 
             // Assert
             Assert.Equal(expectedJson, result);
-        }
-
-        private sealed class CustomError : Error
-        {
-            public CustomError(HttpStatusCode status, string title, string detail, string myProp)
-            : base(status, title, detail)
-            {
-                MyCustomProperty = myProp;
-            }
-            public string MyCustomProperty { get; set; }
         }
     }
 }

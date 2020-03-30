@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Models.Links
     /// <summary>
     /// see links section in https://jsonapi.org/format/#document-top-level
     /// </summary>
-    public class TopLevelLinks
+    public sealed class TopLevelLinks
     {
         [JsonProperty("self")]
         public string Self { get; set; }

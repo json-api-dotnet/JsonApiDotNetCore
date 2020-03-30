@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
-    public class ErrorMeta
+    public sealed class ErrorMeta
     {
         [JsonProperty("stackTrace")]
         public ICollection<string> StackTrace { get; set; }

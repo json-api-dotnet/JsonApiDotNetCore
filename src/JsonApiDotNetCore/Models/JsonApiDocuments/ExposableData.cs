@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Models
 {
-    public class ExposableData<T> where T : class
+    public abstract class ExposableData<T> where T : class
     {
         /// <summary>
         /// see "primary data" in https://jsonapi.org/format/#document-top-level.

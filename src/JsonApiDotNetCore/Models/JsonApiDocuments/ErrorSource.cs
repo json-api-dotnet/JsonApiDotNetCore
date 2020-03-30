@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
-    public class ErrorSource
+    public sealed class ErrorSource
     {
         [JsonProperty("pointer")]
         public string Pointer { get; set; }

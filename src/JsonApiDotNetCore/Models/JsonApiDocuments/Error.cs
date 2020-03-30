@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
-    public class Error
+    public sealed class Error
     {
         public Error() { }
 
