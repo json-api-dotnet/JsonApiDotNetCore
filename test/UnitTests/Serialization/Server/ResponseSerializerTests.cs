@@ -455,8 +455,8 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var error = new CustomError(HttpStatusCode.InsufficientStorage, "title", "detail", "custom");
-            var errorCollection = new ErrorCollection();
-            errorCollection.Add(error);
+            var errorDocument = new ErrorDocument();
+            errorDocument.Errors.Add(error);
 
             var expectedJson = JsonConvert.SerializeObject(new
             {
@@ -475,7 +475,7 @@ namespace UnitTests.Serialization.Server
             var serializer = GetResponseSerializer<OneToManyPrincipal>();
 
             // Act
-            var result = serializer.Serialize(errorCollection);
+            var result = serializer.Serialize(errorDocument);
 
             // Assert
             Assert.Equal(expectedJson, result);

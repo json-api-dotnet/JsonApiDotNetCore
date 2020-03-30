@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -23,12 +24,10 @@ namespace JsonApiDotNetCore.Middleware
 
             var jsonApiException = JsonApiExceptionFactory.GetException(context.Exception);
 
-            var errors = jsonApiException.GetErrors();
-            var result = new ObjectResult(errors)
+            context.Result = new ObjectResult(new ErrorDocument(jsonApiException.Error))
             {
-                StatusCode = (int)jsonApiException.GetStatusCode()
+                StatusCode = (int) jsonApiException.Error.Status
             };
-            context.Result = result;
         }
     }
 }

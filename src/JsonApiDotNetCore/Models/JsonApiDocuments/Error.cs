@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
@@ -61,15 +59,5 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
 
         public bool ShouldSerializeMeta() => JsonApiOptions.DisableErrorStackTraces == false;
         public bool ShouldSerializeSource() => JsonApiOptions.DisableErrorSource == false;
-
-        public IActionResult AsActionResult()
-        {
-            var errorCollection = new ErrorCollection
-            {
-                Errors = new List<Error> { this }
-            };
-
-            return errorCollection.AsActionResult();
-        }
     }
 }

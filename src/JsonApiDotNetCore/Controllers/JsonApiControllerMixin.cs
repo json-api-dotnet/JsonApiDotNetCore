@@ -1,5 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,13 @@ namespace JsonApiDotNetCore.Controllers
 
         protected IActionResult Error(Error error)
         {
-          return error.AsActionResult();
+            return Errors(new[] {error});
         }
 
-        protected IActionResult Errors(ErrorCollection errors)
+        protected IActionResult Errors(IEnumerable<Error> errors)
         {
-          return errors.AsActionResult();
+            var document = new ErrorDocument(errors.ToList());
+            return document.AsActionResult();
         }
     }
 }

@@ -51,8 +51,8 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// <inheritdoc/>
         public string Serialize(object data)
         {
-            if (data is ErrorCollection error)
-                return error.GetJson();
+            if (data is ErrorDocument errorDocument)
+                return errorDocument.GetJson();
             if (data is IEnumerable entities)
                 return SerializeMany(entities);
             return SerializeSingle((IIdentifiable)data);

@@ -15,35 +15,32 @@ namespace UnitTests
         public void Errors_Correctly_Infers_Status_Code()
         {
             // Arrange
-            var errors422 = new ErrorCollection {
-                Errors = new List<Error> {
-                    new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
-                    new Error(HttpStatusCode.UnprocessableEntity, "bad other specific"),
-                }
+            var errors422 = new List<Error>
+            {
+                new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
+                new Error(HttpStatusCode.UnprocessableEntity, "bad other specific")
             };
 
-            var errors400 = new ErrorCollection {
-                Errors = new List<Error> {
-                    new Error(HttpStatusCode.OK, "weird"),
-                    new Error(HttpStatusCode.BadRequest, "bad"),
-                    new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
-                }
+            var errors400 = new List<Error>
+            {
+                new Error(HttpStatusCode.OK, "weird"),
+                new Error(HttpStatusCode.BadRequest, "bad"),
+                new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
             };
 
-            var errors500 = new ErrorCollection {
-                Errors = new List<Error> {
-                    new Error(HttpStatusCode.OK, "weird"),
-                    new Error(HttpStatusCode.BadRequest, "bad"),
-                    new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
-                    new Error(HttpStatusCode.InternalServerError, "really bad"),
-                    new Error(HttpStatusCode.BadGateway, "really bad specific"),
-                }
+            var errors500 = new List<Error>
+            {
+                new Error(HttpStatusCode.OK, "weird"),
+                new Error(HttpStatusCode.BadRequest, "bad"),
+                new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
+                new Error(HttpStatusCode.InternalServerError, "really bad"),
+                new Error(HttpStatusCode.BadGateway, "really bad specific"),
             };
             
             // Act
-            var result422 = this.Errors(errors422);
-            var result400 = this.Errors(errors400);
-            var result500 = this.Errors(errors500);
+            var result422 = Errors(errors422);
+            var result400 = Errors(errors400);
+            var result500 = Errors(errors500);
             
             // Assert
             var response422 = Assert.IsType<ObjectResult>(result422);

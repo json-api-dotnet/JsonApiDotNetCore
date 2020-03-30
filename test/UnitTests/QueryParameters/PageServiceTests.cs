@@ -48,7 +48,7 @@ namespace UnitTests.QueryParameters
             if (shouldThrow)
             {
                 var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
-                Assert.Equal(HttpStatusCode.BadRequest, ex.GetStatusCode());
+                Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace UnitTests.QueryParameters
             if (shouldThrow)
             {
                 var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
-                Assert.Equal(HttpStatusCode.BadRequest, ex.GetStatusCode());
+                Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
             }
             else
             {

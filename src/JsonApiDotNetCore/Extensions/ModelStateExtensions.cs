@@ -10,10 +10,10 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class ModelStateExtensions
     {
-        public static ErrorCollection ConvertToErrorCollection<TResource>(this ModelStateDictionary modelState)
+        public static ErrorDocument ConvertToErrorDocument<TResource>(this ModelStateDictionary modelState)
             where TResource : class, IIdentifiable
         {
-            ErrorCollection collection = new ErrorCollection();
+            ErrorDocument document = new ErrorDocument();
 
             foreach (var pair in modelState.Where(x => x.Value.Errors.Any()))
             {
@@ -25,16 +25,16 @@ namespace JsonApiDotNetCore.Extensions
                 {
                     if (modelError.Exception is JsonApiException jsonApiException)
                     {
-                        collection.Errors.AddRange(jsonApiException.GetErrors().Errors);
+                        document.Errors.Add(jsonApiException.Error);
                     }
                     else
                     {
-                        collection.Errors.Add(FromModelError(modelError, propertyName, attributeName));
+                        document.Errors.Add(FromModelError(modelError, propertyName, attributeName));
                     }
                 }
             }
 
-            return collection;
+            return document;
         }
 
         private static Error FromModelError(ModelError modelError, string propertyName, string attributeName)

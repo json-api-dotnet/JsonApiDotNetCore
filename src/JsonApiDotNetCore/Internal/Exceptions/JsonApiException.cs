@@ -6,36 +6,40 @@ namespace JsonApiDotNetCore.Internal
 {
     public class JsonApiException : Exception
     {
-        private readonly ErrorCollection _errors = new ErrorCollection();
-
-        public JsonApiException(ErrorCollection errorCollection)
-        {
-            _errors = errorCollection;
-        }
+        public Error Error { get; }
 
         public JsonApiException(Error error)
-        : base(error.Title) => _errors.Add(error);
-            
-        public JsonApiException(HttpStatusCode status, string message, ErrorSource source = null)
-        : base(message)
-            => _errors.Add(new Error(status, message, null, GetMeta(), source));
-
-        public JsonApiException(HttpStatusCode status, string message, string detail, ErrorSource source = null)
-        : base(message)
-            => _errors.Add(new Error(status, message, detail, GetMeta(), source));
-
-        public JsonApiException(HttpStatusCode status, string message, Exception innerException)
-        : base(message, innerException)
-            => _errors.Add(new Error(status, message, innerException.Message, GetMeta(innerException)));
-
-        public ErrorCollection GetErrors() => _errors;
-
-        public HttpStatusCode GetStatusCode()
+            : base(error.Title)
         {
-            return _errors.GetErrorStatusCode();
+            Error = error;
         }
 
-        private ErrorMeta GetMeta() => ErrorMeta.FromException(this);
-        private ErrorMeta GetMeta(Exception e) => ErrorMeta.FromException(e);
+        public JsonApiException(HttpStatusCode status, string message, ErrorSource source = null)
+            : base(message)
+        {
+            Error = new Error(status, message, null, GetMeta(), source);
+        }
+
+        public JsonApiException(HttpStatusCode status, string message, string detail, ErrorSource source = null)
+            : base(message)
+        {
+            Error = new Error(status, message, detail, GetMeta(), source);
+        }
+
+        public JsonApiException(HttpStatusCode status, string message, Exception innerException)
+            : base(message, innerException)
+        {
+            Error = new Error(status, message, innerException.Message, GetMeta(innerException));
+        }
+
+        private ErrorMeta GetMeta()
+        {
+            return ErrorMeta.FromException(this);
+        }
+
+        private ErrorMeta GetMeta(Exception e)
+        {
+            return ErrorMeta.FromException(e);
+        }
     }
 }

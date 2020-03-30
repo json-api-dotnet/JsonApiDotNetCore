@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -80,7 +81,7 @@ namespace UnitTests.QueryParameters
             // Act, assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
             Assert.Contains("relationships only", ex.Message);
-            Assert.Equal(HttpStatusCode.BadRequest, ex.GetErrors().GetErrorStatusCode());
+            Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
         }
 
         [Fact]
@@ -106,7 +107,7 @@ namespace UnitTests.QueryParameters
             // Act, assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
             Assert.Contains("deeply nested", ex.Message);
-            Assert.Equal(HttpStatusCode.BadRequest, ex.GetErrors().GetErrorStatusCode());
+            Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
         }
 
         [Fact]
@@ -129,7 +130,7 @@ namespace UnitTests.QueryParameters
 
             // Act , assert
             var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
-            Assert.Equal(HttpStatusCode.BadRequest, ex.GetStatusCode());
+            Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
         }
     }
 }

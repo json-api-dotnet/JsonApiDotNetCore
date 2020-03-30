@@ -7,23 +7,32 @@ using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
-    public class ErrorCollection
+    public class ErrorDocument
     {
-        public ErrorCollection()
-        { 
+        public IList<Error> Errors { get; }
+
+        public ErrorDocument()
+        {
             Errors = new List<Error>();
         }
-        
-        public List<Error> Errors { get; set; }
 
-        public void Add(Error error)
+        public ErrorDocument(Error error)
         {
-            Errors.Add(error);
+            Errors = new List<Error>
+            {
+                error
+            };
+        }
+
+        public ErrorDocument(IList<Error> errors)
+        {
+            Errors = errors;
         }
 
         public string GetJson()
         {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings {
+            return JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            {
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
