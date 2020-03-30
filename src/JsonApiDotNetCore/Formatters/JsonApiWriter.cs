@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;

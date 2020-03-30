@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 

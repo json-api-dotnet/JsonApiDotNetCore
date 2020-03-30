@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
 using Xunit;
 using UnitTests.TestModels;

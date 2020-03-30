@@ -1,6 +1,7 @@
 using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers

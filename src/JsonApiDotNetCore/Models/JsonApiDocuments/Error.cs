@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
     public class Error
     {
@@ -72,31 +71,5 @@ namespace JsonApiDotNetCore.Internal
 
             return errorCollection.AsActionResult();
         }
-    }
-
-    public class ErrorLinks
-    {
-        [JsonProperty("about")]
-        public string About { get; set; }
-    }
-
-    public class ErrorMeta
-    {
-        [JsonProperty("stackTrace")]
-        public ICollection<string> StackTrace { get; set; }
-
-        public static ErrorMeta FromException(Exception e)
-            => new ErrorMeta {
-                StackTrace = e.Demystify().ToString().Split(new[] { "\n"}, int.MaxValue, StringSplitOptions.RemoveEmptyEntries)
-            };
-    }
-
-    public class ErrorSource
-    {
-        [JsonProperty("pointer")]
-        public string Pointer { get; set; }
-
-        [JsonProperty("parameter")]
-        public string Parameter { get; set; }
     }
 }

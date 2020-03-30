@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Internal
 {

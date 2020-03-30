@@ -3,6 +3,7 @@ using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.Extensions

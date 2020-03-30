@@ -1,5 +1,6 @@
 using System.Net;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Xunit;
 
 namespace UnitTests.Internal
