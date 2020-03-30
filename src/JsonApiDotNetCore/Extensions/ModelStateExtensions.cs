@@ -10,40 +10,46 @@ namespace JsonApiDotNetCore.Extensions
 {
     public static class ModelStateExtensions
     {
-        public static ErrorCollection ConvertToErrorCollection<T>(this ModelStateDictionary modelState) where T : class, IIdentifiable
+        public static ErrorCollection ConvertToErrorCollection<TResource>(this ModelStateDictionary modelState)
+            where TResource : class, IIdentifiable
         {
             ErrorCollection collection = new ErrorCollection();
-            foreach (var entry in modelState)
+
+            foreach (var pair in modelState.Where(x => x.Value.Errors.Any()))
             {
-                if (entry.Value.Errors.Any() == false)
-                {
-                    continue;
-                }
+                var propertyName = pair.Key;
+                PropertyInfo property = typeof(TResource).GetProperty(propertyName);
+                string attributeName = property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName;
 
-                var targetedProperty = typeof(T).GetProperty(entry.Key);
-                var attrName = targetedProperty.GetCustomAttribute<AttrAttribute>().PublicAttributeName;
-
-                foreach (var modelError in entry.Value.Errors)
+                foreach (var modelError in pair.Value.Errors)
                 {
-                    if (modelError.Exception is JsonApiException jex)
+                    if (modelError.Exception is JsonApiException jsonApiException)
                     {
-                        collection.Errors.AddRange(jex.GetErrors().Errors);
+                        collection.Errors.AddRange(jsonApiException.GetErrors().Errors);
                     }
                     else
                     {
-                        collection.Errors.Add(new Error(
-                            status: HttpStatusCode.UnprocessableEntity,
-                            title: entry.Key,
-                            detail: modelError.ErrorMessage,
-                            meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
-                            source: attrName == null ? null : new ErrorSource
-                            {
-                                Pointer = $"/data/attributes/{attrName}"
-                            }));
+                        collection.Errors.Add(FromModelError(modelError, propertyName, attributeName));
                     }
                 }
             }
+
             return collection;
+        }
+
+        private static Error FromModelError(ModelError modelError, string propertyName, string attributeName)
+        {
+            return new Error
+            {
+                Status = HttpStatusCode.UnprocessableEntity,
+                Title = "Input validation failed.",
+                Detail = propertyName + ": " + modelError.ErrorMessage,
+                Source = attributeName == null ? null : new ErrorSource
+                {
+                    Pointer = $"/data/attributes/{attributeName}"
+                },
+                Meta = modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null
+            };
         }
     }
 }
