@@ -14,16 +14,16 @@ namespace JsonApiDotNetCore.Internal
             Error = error;
         }
 
-        public JsonApiException(HttpStatusCode status, string message, ErrorSource source = null)
+        public JsonApiException(HttpStatusCode status, string message)
             : base(message)
         {
-            Error = new Error(status, message, null, GetMeta(), source);
+            Error = new Error(status, message, null, GetMeta());
         }
 
-        public JsonApiException(HttpStatusCode status, string message, string detail, ErrorSource source = null)
+        public JsonApiException(HttpStatusCode status, string message, string detail)
             : base(message)
         {
-            Error = new Error(status, message, detail, GetMeta(), source);
+            Error = new Error(status, message, detail, GetMeta());
         }
 
         public JsonApiException(HttpStatusCode status, string message, Exception innerException)

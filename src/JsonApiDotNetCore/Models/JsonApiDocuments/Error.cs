@@ -9,21 +9,19 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
     {
         public Error() { }
 
-        public Error(HttpStatusCode status, string title, ErrorMeta meta = null, ErrorSource source = null)
+        public Error(HttpStatusCode status, string title, ErrorMeta meta = null)
         {
             Status = status;
             Title = title;
             Meta = meta;
-            Source = source;
         }
 
-        public Error(HttpStatusCode status, string title, string detail, ErrorMeta meta = null, ErrorSource source = null)
+        public Error(HttpStatusCode status, string title, string detail, ErrorMeta meta = null)
         {
             Status = status;
             Title = title;
             Detail = detail;
             Meta = meta;
-            Source = source;
         }
 
         [JsonProperty("id")]
@@ -54,10 +52,11 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         [JsonProperty("source")]
         public ErrorSource Source { get; set; }
 
+        public bool ShouldSerializeSource() => Source != null && (Source.Pointer != null || Source.Parameter != null);
+
         [JsonProperty("meta")]
         public ErrorMeta Meta { get; set; }
 
         public bool ShouldSerializeMeta() => JsonApiOptions.DisableErrorStackTraces == false;
-        public bool ShouldSerializeSource() => JsonApiOptions.DisableErrorSource == false;
     }
 }

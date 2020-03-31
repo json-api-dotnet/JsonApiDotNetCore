@@ -33,11 +33,6 @@ namespace JsonApiDotNetCore.Configuration
         public static bool DisableErrorStackTraces { get; set; } = true;
 
         /// <summary>
-        /// Whether or not source URLs should be serialized in Error objects
-        /// </summary>
-        public static bool DisableErrorSource { get; set; } = true;
-
-        /// <summary>
         /// Whether or not ResourceHooks are enabled. 
         /// 
         /// Default is set to <see langword="true"/>

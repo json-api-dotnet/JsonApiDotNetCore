@@ -71,7 +71,6 @@ namespace JsonApiDotNetCore.Extensions
         public static void EnableDetailedErrors(this IApplicationBuilder app)
         {
             JsonApiOptions.DisableErrorStackTraces = false;
-            JsonApiOptions.DisableErrorSource = false;
         }
 
         private static void LogResourceGraphValidations(IApplicationBuilder app)
