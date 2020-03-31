@@ -39,9 +39,8 @@ namespace JsonApiDotNetCore.Extensions
 
         private static Error FromModelError(ModelError modelError, string propertyName, string attributeName)
         {
-            var error = new Error
+            var error = new Error(HttpStatusCode.UnprocessableEntity)
             {
-                Status = HttpStatusCode.UnprocessableEntity,
                 Title = "Input validation failed.",
                 Detail = propertyName + ": " + modelError.ErrorMessage,
                 Source = attributeName == null ? null : new ErrorSource

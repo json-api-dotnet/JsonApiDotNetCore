@@ -14,19 +14,19 @@ namespace UnitTests.Internal
             var document = new ErrorDocument(errors);
 
             // Add First 422 error
-            errors.Add(new Error(HttpStatusCode.UnprocessableEntity, "Something wrong"));
+            errors.Add(new Error(HttpStatusCode.UnprocessableEntity) {Title = "Something wrong"});
             Assert.Equal(HttpStatusCode.UnprocessableEntity, document.GetErrorStatusCode());
 
             // Add a second 422 error
-            errors.Add(new Error(HttpStatusCode.UnprocessableEntity, "Something else wrong"));
+            errors.Add(new Error(HttpStatusCode.UnprocessableEntity) {Title = "Something else wrong"});
             Assert.Equal(HttpStatusCode.UnprocessableEntity, document.GetErrorStatusCode());
 
             // Add 4xx error not 422
-            errors.Add(new Error(HttpStatusCode.Unauthorized, "Unauthorized"));
+            errors.Add(new Error(HttpStatusCode.Unauthorized) {Title = "Unauthorized"});
             Assert.Equal(HttpStatusCode.BadRequest, document.GetErrorStatusCode());
 
             // Add 5xx error not 4xx
-            errors.Add(new Error(HttpStatusCode.BadGateway, "Not good"));
+            errors.Add(new Error(HttpStatusCode.BadGateway) {Title = "Not good"});
             Assert.Equal(HttpStatusCode.InternalServerError, document.GetErrorStatusCode());
         }
     }

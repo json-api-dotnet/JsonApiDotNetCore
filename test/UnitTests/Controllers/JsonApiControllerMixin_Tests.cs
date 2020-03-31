@@ -17,24 +17,24 @@ namespace UnitTests
             // Arrange
             var errors422 = new List<Error>
             {
-                new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
-                new Error(HttpStatusCode.UnprocessableEntity, "bad other specific")
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad other specific"}
             };
 
             var errors400 = new List<Error>
             {
-                new Error(HttpStatusCode.OK, "weird"),
-                new Error(HttpStatusCode.BadRequest, "bad"),
-                new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
+                new Error(HttpStatusCode.OK) {Title = "weird"},
+                new Error(HttpStatusCode.BadRequest) {Title = "bad"},
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
             };
 
             var errors500 = new List<Error>
             {
-                new Error(HttpStatusCode.OK, "weird"),
-                new Error(HttpStatusCode.BadRequest, "bad"),
-                new Error(HttpStatusCode.UnprocessableEntity, "bad specific"),
-                new Error(HttpStatusCode.InternalServerError, "really bad"),
-                new Error(HttpStatusCode.BadGateway, "really bad specific"),
+                new Error(HttpStatusCode.OK) {Title = "weird"},
+                new Error(HttpStatusCode.BadRequest) {Title = "bad"},
+                new Error(HttpStatusCode.UnprocessableEntity) {Title = "bad specific"},
+                new Error(HttpStatusCode.InternalServerError) {Title = "really bad"},
+                new Error(HttpStatusCode.BadGateway) {Title = "really bad specific"},
             };
             
             // Act

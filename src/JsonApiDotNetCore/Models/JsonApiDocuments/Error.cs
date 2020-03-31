@@ -12,19 +12,9 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
     /// </summary>
     public sealed class Error
     {
-        public Error() { }
-
-        public Error(HttpStatusCode status, string title)
+        public Error(HttpStatusCode status)
         {
             Status = status;
-            Title = title;
-        }
-
-        public Error(HttpStatusCode status, string title, string detail)
-        {
-            Status = status;
-            Title = title;
-            Detail = detail;
         }
 
         /// <summary>

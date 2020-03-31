@@ -72,14 +72,22 @@ namespace JsonApiDotNetCore.Formatters
 
         private static Error ConvertExceptionToError(Exception exception)
         {
-            var error = new Error(HttpStatusCode.InternalServerError, exception.Message) {Meta = new ErrorMeta()};
+            var error = new Error(HttpStatusCode.InternalServerError)
+            {
+                Title = exception.Message,
+                Meta = new ErrorMeta()
+            };
             error.Meta.IncludeExceptionStackTrace(exception);
             return error;
         }
 
         private static Error ConvertProblemDetailsToError(ProblemDetails problemDetails)
         {
-            return new Error
+            var status = problemDetails.Status != null
+                ? (HttpStatusCode)problemDetails.Status.Value
+                : HttpStatusCode.InternalServerError;
+
+            return new Error(status)
             {
                 Id = !string.IsNullOrWhiteSpace(problemDetails.Instance)
                     ? problemDetails.Instance
@@ -87,9 +95,6 @@ namespace JsonApiDotNetCore.Formatters
                 Links = !string.IsNullOrWhiteSpace(problemDetails.Type)
                     ? new ErrorLinks {About = problemDetails.Type}
                     : null,
-                Status = problemDetails.Status != null
-                    ? (HttpStatusCode)problemDetails.Status.Value
-                    : HttpStatusCode.InternalServerError,
                 Title = problemDetails.Title,
                 Detail = problemDetails.Detail
             };
