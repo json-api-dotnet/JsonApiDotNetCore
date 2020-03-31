@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using Newtonsoft.Json;
@@ -13,19 +14,17 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
     {
         public Error() { }
 
-        public Error(HttpStatusCode status, string title, ErrorMeta meta = null)
+        public Error(HttpStatusCode status, string title)
         {
             Status = status;
             Title = title;
-            Meta = meta;
         }
 
-        public Error(HttpStatusCode status, string title, string detail, ErrorMeta meta = null)
+        public Error(HttpStatusCode status, string title, string detail)
         {
             Status = status;
             Title = title;
             Detail = detail;
-            Meta = meta;
         }
 
         /// <summary>
@@ -87,6 +86,6 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         [JsonProperty("meta")]
         public ErrorMeta Meta { get; set; }
 
-        public bool ShouldSerializeMeta() => JsonApiOptions.DisableErrorStackTraces == false;
+        public bool ShouldSerializeMeta() => Meta != null && Meta.Data.Any() && !JsonApiOptions.DisableErrorStackTraces;
     }
 }

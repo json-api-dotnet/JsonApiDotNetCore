@@ -17,29 +17,35 @@ namespace JsonApiDotNetCore.Internal
         public JsonApiException(HttpStatusCode status, string message)
             : base(message)
         {
-            Error = new Error(status, message, null, GetMeta());
+            Error = new Error(status, message)
+            {
+                Meta = CreateErrorMeta(this)
+            };
         }
 
         public JsonApiException(HttpStatusCode status, string message, string detail)
             : base(message)
         {
-            Error = new Error(status, message, detail, GetMeta());
+            Error = new Error(status, message, detail)
+            {
+                Meta = CreateErrorMeta(this)
+            };
         }
 
         public JsonApiException(HttpStatusCode status, string message, Exception innerException)
             : base(message, innerException)
         {
-            Error = new Error(status, message, innerException.Message, GetMeta(innerException));
+            Error = new Error(status, message, innerException.Message)
+            {
+                Meta = CreateErrorMeta(innerException)
+            };
         }
 
-        private ErrorMeta GetMeta()
+        private static ErrorMeta CreateErrorMeta(Exception exception)
         {
-            return ErrorMeta.FromException(this);
-        }
-
-        private ErrorMeta GetMeta(Exception e)
-        {
-            return ErrorMeta.FromException(e);
+            var meta = new ErrorMeta();
+            meta.IncludeExceptionStackTrace(exception);
+            return meta;
         }
     }
 }

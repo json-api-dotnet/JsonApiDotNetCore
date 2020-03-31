@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore.Extensions
 
         private static Error FromModelError(ModelError modelError, string propertyName, string attributeName)
         {
-            return new Error
+            var error = new Error
             {
                 Status = HttpStatusCode.UnprocessableEntity,
                 Title = "Input validation failed.",
@@ -48,8 +48,15 @@ namespace JsonApiDotNetCore.Extensions
                 {
                     Pointer = $"/data/attributes/{attributeName}"
                 },
-                Meta = modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null
             };
+
+            if (modelError.Exception != null)
+            {
+                error.Meta = new ErrorMeta();
+                error.Meta.IncludeExceptionStackTrace(modelError.Exception);
+            }
+
+            return error;
         }
     }
 }

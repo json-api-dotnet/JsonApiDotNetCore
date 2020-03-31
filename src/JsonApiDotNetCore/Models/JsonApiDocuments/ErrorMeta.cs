@@ -5,14 +5,18 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
+    /// <summary>
+    /// A meta object containing non-standard meta-information about the error.
+    /// </summary>
     public sealed class ErrorMeta
     {
-        [JsonProperty("stackTrace")]
-        public ICollection<string> StackTrace { get; set; }
+        [JsonExtensionData]
+        public Dictionary<string, object> Data { get; } = new Dictionary<string, object>();
 
-        public static ErrorMeta FromException(Exception e)
-            => new ErrorMeta {
-                StackTrace = e.Demystify().ToString().Split(new[] { "\n"}, int.MaxValue, StringSplitOptions.RemoveEmptyEntries)
-            };
+        public void IncludeExceptionStackTrace(Exception exception)
+        {
+            Data["stackTrace"] = exception.Demystify().ToString()
+                .Split(new[] {"\n"}, int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }

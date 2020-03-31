@@ -51,8 +51,7 @@ namespace JsonApiDotNetCore.Formatters
                 {
                     if (context.Object is ProblemDetails problemDetails)
                     {
-                        var document = new ErrorDocument();
-                        document.Errors.Add(ConvertProblemDetailsToError(problemDetails));
+                        var document = new ErrorDocument(ConvertProblemDetailsToError(problemDetails));
                         responseContent = _serializer.Serialize(document);
                     } else
                     {
@@ -62,14 +61,20 @@ namespace JsonApiDotNetCore.Formatters
                 catch (Exception e)
                 {
                     _logger.LogError(new EventId(), e, "An error occurred while formatting the response");
-                    var document = new ErrorDocument();
-                    document.Errors.Add(new Error(HttpStatusCode.InternalServerError, e.Message, ErrorMeta.FromException(e)));
+                    var document = new ErrorDocument(ConvertExceptionToError(e));
                     responseContent = _serializer.Serialize(document);
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
             }
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
+        }
+
+        private static Error ConvertExceptionToError(Exception exception)
+        {
+            var error = new Error(HttpStatusCode.InternalServerError, exception.Message) {Meta = new ErrorMeta()};
+            error.Meta.IncludeExceptionStackTrace(exception);
+            return error;
         }
 
         private static Error ConvertProblemDetailsToError(ProblemDetails problemDetails)
