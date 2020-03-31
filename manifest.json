@@ -381,7 +381,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Data.DefaultResourceRepository-1.html",
-          "hash": "gQvr6fDarlr60OtXyWTzUg=="
+          "hash": "k0bGMbuh8AgXfYl4fRrwuA=="
         }
       },
       "is_incremental": false,
@@ -393,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Data.DefaultResourceRepository-2.html",
-          "hash": "mRKoLuBnH6a0oYX3fIXdpw=="
+          "hash": "7pR2f0olqYhMxrVRqhJWnA=="
         }
       },
       "is_incremental": false,
@@ -1569,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Internal.ResourceContext.html",
-          "hash": "xOqpXt3cW13qg1sXfIAi6w=="
+          "hash": "OJ0MrxxZIeMcYNtSwnh2DA=="
         }
       },
       "is_incremental": false,
@@ -1774,6 +1774,18 @@
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Models.Document.html",
           "hash": "vj89MR2pkel2AQ6LhvbvAg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Models.EagerLoadAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Models.EagerLoadAttribute.html",
+          "hash": "BvkBSTF/P5YQobHQmZBFsw=="
         }
       },
       "is_incremental": false,
@@ -2085,7 +2097,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Models.html",
-          "hash": "SApPvCnUodvMZZ0m2GHUaQ=="
+          "hash": "WeV9ZnvCo+N8tJwcXX2H3w=="
         }
       },
       "is_incremental": false,
@@ -3132,7 +3144,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "JiWCHnBfNZp2lL4jgO9nqQ=="
+          "hash": "lzp+LNHrVzamOZrCLkAbCw=="
         }
       },
       "is_incremental": false,
@@ -3552,7 +3564,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 258,
+          "total_file_count": 259,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

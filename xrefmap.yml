@@ -5875,6 +5875,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Internal.ResourceContext.Attributes
   nameWithType: ResourceContext.Attributes
+- uid: JsonApiDotNetCore.Internal.ResourceContext.EagerLoads
+  name: EagerLoads
+  href: api/JsonApiDotNetCore.Internal.ResourceContext.html#JsonApiDotNetCore_Internal_ResourceContext_EagerLoads
+  commentId: P:JsonApiDotNetCore.Internal.ResourceContext.EagerLoads
+  fullName: JsonApiDotNetCore.Internal.ResourceContext.EagerLoads
+  nameWithType: ResourceContext.EagerLoads
+- uid: JsonApiDotNetCore.Internal.ResourceContext.EagerLoads*
+  name: EagerLoads
+  href: api/JsonApiDotNetCore.Internal.ResourceContext.html#JsonApiDotNetCore_Internal_ResourceContext_EagerLoads_
+  commentId: Overload:JsonApiDotNetCore.Internal.ResourceContext.EagerLoads
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Internal.ResourceContext.EagerLoads
+  nameWithType: ResourceContext.EagerLoads
 - uid: JsonApiDotNetCore.Internal.ResourceContext.Fields
   name: Fields
   href: api/JsonApiDotNetCore.Internal.ResourceContext.html#JsonApiDotNetCore_Internal_ResourceContext_Fields
@@ -6711,6 +6724,38 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Models.Document.Meta
   nameWithType: Document.Meta
+- uid: JsonApiDotNetCore.Models.EagerLoadAttribute
+  name: EagerLoadAttribute
+  href: api/JsonApiDotNetCore.Models.EagerLoadAttribute.html
+  commentId: T:JsonApiDotNetCore.Models.EagerLoadAttribute
+  fullName: JsonApiDotNetCore.Models.EagerLoadAttribute
+  nameWithType: EagerLoadAttribute
+- uid: JsonApiDotNetCore.Models.EagerLoadAttribute.Children
+  name: Children
+  href: api/JsonApiDotNetCore.Models.EagerLoadAttribute.html#JsonApiDotNetCore_Models_EagerLoadAttribute_Children
+  commentId: P:JsonApiDotNetCore.Models.EagerLoadAttribute.Children
+  fullName: JsonApiDotNetCore.Models.EagerLoadAttribute.Children
+  nameWithType: EagerLoadAttribute.Children
+- uid: JsonApiDotNetCore.Models.EagerLoadAttribute.Children*
+  name: Children
+  href: api/JsonApiDotNetCore.Models.EagerLoadAttribute.html#JsonApiDotNetCore_Models_EagerLoadAttribute_Children_
+  commentId: Overload:JsonApiDotNetCore.Models.EagerLoadAttribute.Children
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.EagerLoadAttribute.Children
+  nameWithType: EagerLoadAttribute.Children
+- uid: JsonApiDotNetCore.Models.EagerLoadAttribute.Property
+  name: Property
+  href: api/JsonApiDotNetCore.Models.EagerLoadAttribute.html#JsonApiDotNetCore_Models_EagerLoadAttribute_Property
+  commentId: P:JsonApiDotNetCore.Models.EagerLoadAttribute.Property
+  fullName: JsonApiDotNetCore.Models.EagerLoadAttribute.Property
+  nameWithType: EagerLoadAttribute.Property
+- uid: JsonApiDotNetCore.Models.EagerLoadAttribute.Property*
+  name: Property
+  href: api/JsonApiDotNetCore.Models.EagerLoadAttribute.html#JsonApiDotNetCore_Models_EagerLoadAttribute_Property_
+  commentId: Overload:JsonApiDotNetCore.Models.EagerLoadAttribute.Property
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Models.EagerLoadAttribute.Property
+  nameWithType: EagerLoadAttribute.Property
 - uid: JsonApiDotNetCore.Models.ExposableData`1
   name: ExposableData<T>
   href: api/JsonApiDotNetCore.Models.ExposableData-1.html
