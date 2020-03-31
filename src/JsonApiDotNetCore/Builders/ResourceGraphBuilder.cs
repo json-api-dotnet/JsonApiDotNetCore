@@ -79,9 +79,9 @@ namespace JsonApiDotNetCore.Builders
             IdentityType = idType,
             Attributes = GetAttributes(entityType),
             Relationships = GetRelationships(entityType),
+            EagerLoads = GetEagerLoads(entityType),
             ResourceDefinitionType = GetResourceDefinitionType(entityType)
         };
-
 
         protected virtual List<AttrAttribute> GetAttributes(Type entityType)
         {
@@ -178,6 +178,39 @@ namespace JsonApiDotNetCore.Builders
 
         protected virtual Type GetRelationshipType(RelationshipAttribute relation, PropertyInfo prop) =>
             relation.IsHasMany ? prop.PropertyType.GetGenericArguments()[0] : prop.PropertyType;
+
+        private List<EagerLoadAttribute> GetEagerLoads(Type entityType, int recursionDepth = 0)
+        {
+            if (recursionDepth >= 500)
+            {
+                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
+            }
+
+            var attributes = new List<EagerLoadAttribute>();
+            var properties = entityType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                var attribute = (EagerLoadAttribute) property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                if (attribute == null) continue;
+
+                Type innerType = TypeOrElementType(property.PropertyType);
+                attribute.Children = GetEagerLoads(innerType, recursionDepth + 1);
+                attribute.Property = property;
+
+                attributes.Add(attribute);
+            }
+
+            return attributes;
+        }
+
+        private static Type TypeOrElementType(Type type)
+        {
+            var interfaces = type.GetInterfaces()
+                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+
+            return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
+        }
 
         private Type GetResourceDefinitionType(Type entityType) => typeof(ResourceDefinition<>).MakeGenericType(entityType);
 

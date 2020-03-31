@@ -47,9 +47,14 @@ namespace JsonApiDotNetCore.Data
         }
 
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Get() => _dbSet;
+        public virtual IQueryable<TResource> Get()
+        {
+            var resourceContext = _resourceGraph.GetResourceContext<TResource>();
+            return EagerLoad(_dbSet, resourceContext.EagerLoads);
+        }
+
         /// <inheritdoc />
-        public virtual IQueryable<TResource> Get(TId id) => _dbSet.Where(e => e.Id.Equals(id));
+        public virtual IQueryable<TResource> Get(TId id) => Get().Where(e => e.Id.Equals(id));
 
         /// <inheritdoc />
         public virtual IQueryable<TResource> Select(IQueryable<TResource> entities, IEnumerable<AttrAttribute> fields = null)
@@ -279,6 +284,19 @@ namespace JsonApiDotNetCore.Data
             return true;
         }
 
+        private IQueryable<TResource> EagerLoad(IQueryable<TResource> entities, IEnumerable<EagerLoadAttribute> attributes, string chainPrefix = null)
+        {
+            foreach (var attribute in attributes)
+            {
+                string path = chainPrefix != null ? chainPrefix + "." + attribute.Property.Name : attribute.Property.Name;
+                entities = entities.Include(path);
+
+                entities = EagerLoad(entities, attribute.Children, path);
+            }
+
+            return entities;
+        }
+
         public virtual IQueryable<TResource> Include(IQueryable<TResource> entities, IEnumerable<RelationshipAttribute> inclusionChain = null)
         {
             if (inclusionChain == null || !inclusionChain.Any())
@@ -288,9 +306,14 @@ namespace JsonApiDotNetCore.Data
 
             string internalRelationshipPath = null;
             foreach (var relationship in inclusionChain)
-                internalRelationshipPath = (internalRelationshipPath == null)
+            {
+                internalRelationshipPath = internalRelationshipPath == null
                     ? relationship.RelationshipPath
                     : $"{internalRelationshipPath}.{relationship.RelationshipPath}";
+
+                var resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
+                entities = EagerLoad(entities, resourceContext.EagerLoads, internalRelationshipPath);
+            }
 
             return entities.Include(internalRelationshipPath);
         }

@@ -13,6 +13,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Graph;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;
@@ -186,8 +187,13 @@ namespace UnitTests.ResourceHooks
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, dbContext);
-            SetupProcessorFactoryForResourceDefinition(gpfMock, nestedResource.Object, nestedDiscovery, dbContext);
+            var resourceGraph = new ResourceGraphBuilder()
+                .AddResource<TMain>()
+                .AddResource<TNested>()
+                .Build();
+
+            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, dbContext, resourceGraph);
+            SetupProcessorFactoryForResourceDefinition(gpfMock, nestedResource.Object, nestedDiscovery, dbContext, resourceGraph);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
@@ -217,9 +223,15 @@ namespace UnitTests.ResourceHooks
 
             var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, dbContext);
-            SetupProcessorFactoryForResourceDefinition(gpfMock, firstNestedResource.Object, firstNestedDiscovery, dbContext);
-            SetupProcessorFactoryForResourceDefinition(gpfMock, secondNestedResource.Object, secondNestedDiscovery, dbContext);
+            var resourceGraph = new ResourceGraphBuilder()
+                .AddResource<TMain>()
+                .AddResource<TFirstNested>()
+                .AddResource<TSecondNested>()
+                .Build();
+
+            SetupProcessorFactoryForResourceDefinition(gpfMock, mainResource.Object, mainDiscovery, dbContext, resourceGraph);
+            SetupProcessorFactoryForResourceDefinition(gpfMock, firstNestedResource.Object, firstNestedDiscovery, dbContext, resourceGraph);
+            SetupProcessorFactoryForResourceDefinition(gpfMock, secondNestedResource.Object, secondNestedDiscovery, dbContext, resourceGraph);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, options);
             var traversalHelper = new TraversalHelper(_resourceGraph, ufMock.Object);
@@ -314,7 +326,8 @@ namespace UnitTests.ResourceHooks
         Mock<IGenericServiceFactory> processorFactory,
         IResourceHookContainer<TModel> modelResource,
         IHooksDiscovery<TModel> discovery,
-        AppDbContext dbContext = null
+        AppDbContext dbContext = null,
+        IResourceGraph resourceGraph = null
         )
         where TModel : class, IIdentifiable<int>
         {
@@ -329,7 +342,7 @@ namespace UnitTests.ResourceHooks
                 var idType = TypeHelper.GetIdentifierType<TModel>();
                 if (idType == typeof(int))
                 {
-                    IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext);
+                    IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, resourceGraph);
                     processorFactory.Setup(c => c.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
@@ -341,11 +354,11 @@ namespace UnitTests.ResourceHooks
         }
 
         private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(
-        AppDbContext dbContext
+        AppDbContext dbContext, IResourceGraph resourceGraph
         ) where TModel : class, IIdentifiable<int>
         {
             IDbContextResolver resolver = CreateTestDbResolver<TModel>(dbContext);
-            return new DefaultResourceRepository<TModel, int>(null, resolver, null, null, NullLoggerFactory.Instance);
+            return new DefaultResourceRepository<TModel, int>(null, resolver, resourceGraph, null, NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver<TModel>(AppDbContext dbContext) where TModel : class, IIdentifiable<int>
@@ -395,4 +408,3 @@ namespace UnitTests.ResourceHooks
         }
     }
 }
-

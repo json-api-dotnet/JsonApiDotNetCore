@@ -4,6 +4,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="xunit.runner.json"> 
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
     <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
   </ItemGroup>
@@ -14,11 +20,5 @@
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="xunit.runner.json"> 
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
-    </None>
   </ItemGroup>
 </Project>
