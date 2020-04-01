@@ -74,6 +74,12 @@ namespace JsonApiDotNetCore.Builders
                 options.OutputFormatters.Insert(0, new JsonApiOutputFormatter());
                 options.Conventions.Insert(0, routingConvention);
             });
+
+            if (JsonApiOptions.ValidateModelState)
+            {
+                _mvcBuilder.AddDataAnnotations();
+            }
+
             _services.AddSingleton<IControllerResourceMapping>(routingConvention);
         }
 

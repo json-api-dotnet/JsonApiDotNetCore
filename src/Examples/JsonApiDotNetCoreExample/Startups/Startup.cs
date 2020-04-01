@@ -38,6 +38,7 @@ namespace JsonApiDotNetCoreExample
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
                     options.LoadDatabaseValues = true;
+                    options.ValidateModelState = true;
                 },
                 discovery => discovery.AddCurrentAssembly());
             // once all tests have been moved to WebApplicationFactory format we can get rid of this line below

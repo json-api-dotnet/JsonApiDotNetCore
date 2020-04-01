@@ -184,43 +184,6 @@ namespace UnitTests
         }
 
         [Fact]
-        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateDisabled()
-        {
-            // Arrange
-            const int id = 0;
-            var resource = new Resource();
-            var serviceMock = new Mock<IUpdateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, update: serviceMock.Object);
-
-            // Act
-            var response = await controller.PatchAsync(id, resource);
-
-            // Assert
-            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Once);
-            Assert.IsNotType<BadRequestObjectResult>(response);
-        }
-
-        [Fact]
-        public async Task PatchAsync_ModelStateInvalid_ValidateModelStateEnabled()
-        {
-            // Arrange
-            const int id = 0;
-            var resource = new Resource();
-            var serviceMock = new Mock<IUpdateService<Resource>>();
-
-            var controller = new ResourceController(new JsonApiOptions { ValidateModelState = true }, NullLoggerFactory.Instance, update: serviceMock.Object);
-            controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
-
-            // Act
-            var response = await controller.PatchAsync(id, resource);
-
-            // Assert
-            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<UnprocessableEntityObjectResult>(response);
-            Assert.IsType<ErrorDocument>(((UnprocessableEntityObjectResult)response).Value);
-        }
-
-        [Fact]
         public async Task PatchAsync_Throws_405_If_No_Service()
         {
             // Arrange
@@ -251,53 +214,6 @@ namespace UnitTests
 
             // Assert
             serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task PostAsync_ModelStateInvalid_ValidateModelStateDisabled()
-        {
-            // Arrange
-            var resource = new Resource();
-            var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = false},
-                NullLoggerFactory.Instance, create: serviceMock.Object)
-            {
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = new DefaultHttpContext()
-                }
-            };
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
-
-            // Act
-            var response = await controller.PostAsync(resource);
-
-            // Assert
-            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Once);
-            Assert.IsNotType<BadRequestObjectResult>(response);
-        }
-
-        [Fact]
-        public async Task PostAsync_ModelStateInvalid_ValidateModelStateEnabled()
-        {
-            // Arrange
-            var resource = new Resource();
-            var serviceMock = new Mock<ICreateService<Resource>>();
-            var controller = new ResourceController(new JsonApiOptions {ValidateModelState = true},
-                NullLoggerFactory.Instance, create: serviceMock.Object)
-            {
-                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
-            };
-            controller.ModelState.AddModelError("TestAttribute", "Failed Validation");
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>())).ReturnsAsync(resource);
-
-            // Act
-            var response = await controller.PostAsync(resource);
-
-            // Assert
-            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>()), Times.Never);
-            Assert.IsType<UnprocessableEntityObjectResult>(response);
-            Assert.IsType<ErrorDocument>(((UnprocessableEntityObjectResult)response).Value);
         }
 
         [Fact]

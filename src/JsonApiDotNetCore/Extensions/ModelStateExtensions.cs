@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Extensions
             {
                 var propertyName = pair.Key;
                 PropertyInfo property = typeof(TResource).GetProperty(propertyName);
-                string attributeName = property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName;
+                string attributeName = property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? property?.Name;
 
                 foreach (var modelError in pair.Value.Errors)
                 {
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Extensions
             var error = new Error(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Input validation failed.",
-                Detail = propertyName + ": " + modelError.ErrorMessage,
+                Detail = modelError.ErrorMessage,
                 Source = attributeName == null ? null : new ErrorSource
                 {
                     Pointer = $"/data/attributes/{attributeName}"
