@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
@@ -26,7 +25,7 @@ namespace JsonApiDotNetCore.Formatters
             _logger.LogTrace("Executing constructor.");
         }
 
-        public async  Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
+        public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -37,39 +36,28 @@ namespace JsonApiDotNetCore.Formatters
                 return await InputFormatterResult.SuccessAsync(null);
             }
 
+            string body = await GetRequestBody(context.HttpContext.Request.Body);
+
+            object model;
             try
             {
-                var body = await GetRequestBody(context.HttpContext.Request.Body);
-                object model = _deserializer.Deserialize(body);
-                if (model == null)
-                {
-                    _logger.LogError("An error occurred while de-serializing the payload");
-                }
-                if (context.HttpContext.Request.Method == "PATCH")
-                {
-                    bool idMissing;
-                    if (model is IList list)
-                    {
-                        idMissing = CheckForId(list);
-                    }
-                    else
-                    {
-                        idMissing = CheckForId(model);
-                    }
-                    if (idMissing)
-                    {
-                        _logger.LogError("Payload must include id attribute");
-                        throw new JsonApiException(HttpStatusCode.BadRequest, "Payload must include id attribute");
-                    }
-                }
-                return await InputFormatterResult.SuccessAsync(model);
+                model = _deserializer.Deserialize(body);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _logger.LogError(new EventId(), ex, "An error occurred while de-serializing the payload");
-                context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
-                return await InputFormatterResult.FailureAsync();
+                throw new InvalidRequestBodyException(null, exception);
             }
+
+            if (context.HttpContext.Request.Method == "PATCH")
+            {
+                var hasMissingId = model is IList list ? CheckForId(list) : CheckForId(model);
+                if (hasMissingId)
+                {
+                    throw new InvalidRequestBodyException("Payload must include id attribute.");
+                }
+            }
+
+            return await InputFormatterResult.SuccessAsync(model);
         }
 
         /// <summary> Checks if the deserialized payload has an ID included </summary>

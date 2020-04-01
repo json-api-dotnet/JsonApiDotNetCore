@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -125,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
-        public async Task GetSingleResource_ResourceDoesNotExist_ReturnsNotFoundWithNullData()
+        public async Task GetSingleResource_ResourceDoesNotExist_ReturnsNotFound()
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
@@ -143,11 +144,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             // Act
             var response = await client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var document = JsonConvert.DeserializeObject<Document>(body);
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            Assert.Null(document.Data);
+
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].Status);
+            Assert.Equal("NotFound", errorDocument.Errors[0].Title);
         }
     }
 }

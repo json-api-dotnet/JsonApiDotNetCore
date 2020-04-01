@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
+    [ApiController]
     [DisableRoutingConvention, Route("custom/route/todoItems")]
     public class TodoItemsCustomController : CustomJsonApiController<TodoItem>
     {

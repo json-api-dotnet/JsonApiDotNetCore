@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using JsonApiDotNetCore.Configuration;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
@@ -27,7 +26,7 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         /// A link that leads to further details about this particular occurrence of the problem.
         /// </summary>
         [JsonProperty("links")]
-        public ErrorLinks Links { get; set; }
+        public ErrorLinks Links { get; set; } = new ErrorLinks();
 
         public bool ShouldSerializeLinks() => Links?.About != null;
 
@@ -57,7 +56,7 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         public string Title { get; set; }
 
         /// <summary>
-        /// A human-readable explanation specific to this occurrence of the problem. Like title, this field’s value can be localized.
+        /// A human-readable explanation specific to this occurrence of the problem. Like title, this fieldâ€™s value can be localized.
         /// </summary>
         [JsonProperty("detail")]
         public string Detail { get; set; }
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         /// An object containing references to the source of the error.
         /// </summary>
         [JsonProperty("source")]
-        public ErrorSource Source { get; set; }
+        public ErrorSource Source { get; set; } = new ErrorSource();
 
         public bool ShouldSerializeSource() => Source != null && (Source.Pointer != null || Source.Parameter != null);
 
@@ -74,8 +73,8 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         /// An object containing non-standard meta-information (key/value pairs) about the error.
         /// </summary>
         [JsonProperty("meta")]
-        public ErrorMeta Meta { get; set; }
+        public ErrorMeta Meta { get; set; } = new ErrorMeta();
 
-        public bool ShouldSerializeMeta() => Meta != null && Meta.Data.Any() && !JsonApiOptions.DisableErrorStackTraces;
+        public bool ShouldSerializeMeta() => Meta != null && Meta.Data.Any();
     }
 }

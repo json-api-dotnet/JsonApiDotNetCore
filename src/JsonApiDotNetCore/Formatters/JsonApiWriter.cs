@@ -1,13 +1,14 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
+using JsonApiDotNetCore.Internal.Exceptions;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
@@ -15,20 +16,16 @@ namespace JsonApiDotNetCore.Formatters
     /// <summary>
     /// Formats the response data used  https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0.
     /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
-    /// It only depends on <see cref="IJsonApiSerializer"/>.
     /// </summary>
     public class JsonApiWriter : IJsonApiWriter
     {
-        private readonly ILogger<JsonApiWriter> _logger;
         private readonly IJsonApiSerializer _serializer;
+        private readonly IExceptionHandler _exceptionHandler;
 
-        public JsonApiWriter(IJsonApiSerializer serializer,
-                             ILoggerFactory loggerFactory)
+        public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler)
         {
             _serializer = serializer;
-            _logger = loggerFactory.CreateLogger<JsonApiWriter>();
-
-            _logger.LogTrace("Executing constructor.");
+            _exceptionHandler = exceptionHandler;
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
@@ -49,55 +46,44 @@ namespace JsonApiDotNetCore.Formatters
                 response.ContentType = Constants.ContentType;
                 try
                 {
-                    if (context.Object is ProblemDetails problemDetails)
-                    {
-                        var document = new ErrorDocument(ConvertProblemDetailsToError(problemDetails));
-                        responseContent = _serializer.Serialize(document);
-                    } else
-                    {
-                        responseContent = _serializer.Serialize(context.Object);
-                    }
+                    responseContent = SerializeResponse(context.Object, (HttpStatusCode)response.StatusCode);
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    _logger.LogError(new EventId(), e, "An error occurred while formatting the response");
-                    var document = new ErrorDocument(ConvertExceptionToError(e));
-                    responseContent = _serializer.Serialize(document);
-                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    var errorDocument = _exceptionHandler.HandleException(exception);
+                    responseContent = _serializer.Serialize(errorDocument);
                 }
             }
+
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
         }
 
-        private static Error ConvertExceptionToError(Exception exception)
+        private string SerializeResponse(object contextObject, HttpStatusCode statusCode)
         {
-            var error = new Error(HttpStatusCode.InternalServerError)
+            if (contextObject is ProblemDetails problemDetails)
             {
-                Title = exception.Message,
-                Meta = new ErrorMeta()
-            };
-            error.Meta.IncludeExceptionStackTrace(exception);
-            return error;
+                throw new ActionResultException(problemDetails);
+            }
+
+            if (contextObject == null && !IsSuccessStatusCode(statusCode))
+            {
+                throw new ActionResultException(statusCode);
+            }
+
+            try
+            {
+                return _serializer.Serialize(contextObject);
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidResponseBodyException(exception);
+            }
         }
 
-        private static Error ConvertProblemDetailsToError(ProblemDetails problemDetails)
+        private bool IsSuccessStatusCode(HttpStatusCode statusCode)
         {
-            var status = problemDetails.Status != null
-                ? (HttpStatusCode)problemDetails.Status.Value
-                : HttpStatusCode.InternalServerError;
-
-            return new Error(status)
-            {
-                Id = !string.IsNullOrWhiteSpace(problemDetails.Instance)
-                    ? problemDetails.Instance
-                    : Guid.NewGuid().ToString(),
-                Links = !string.IsNullOrWhiteSpace(problemDetails.Type)
-                    ? new ErrorLinks {About = problemDetails.Type}
-                    : null,
-                Title = problemDetails.Title,
-                Detail = problemDetails.Detail
-            };
+            return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
         }
     }
 }

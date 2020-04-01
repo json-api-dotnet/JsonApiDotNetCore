@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -129,6 +130,31 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             var result = deserializedBody["data"]["relationships"]["owner"]["links"]["related"].ToString();
             Assert.EndsWith($"{route}/owner", result);
+        }
+
+        [Fact]
+        public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
+        {
+            // Arrange
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var httpMethod = new HttpMethod("GET");
+            var route = "/custom/route/todoItems/99999999";
+
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal("https://tools.ietf.org/html/rfc7231#section-6.5.4", errorDocument.Errors[0].Links.About);
         }
     }
 }

@@ -34,6 +34,7 @@ namespace JsonApiDotNetCoreExample
                 }, ServiceLifetime.Transient)
                 .AddJsonApi(options =>
                 {
+                    options.IncludeExceptionStackTraceInErrors = true;
                     options.Namespace = "api/v1";
                     options.DefaultPageSize = 5;
                     options.IncludeTotalRecordCount = true;
@@ -50,7 +51,6 @@ namespace JsonApiDotNetCoreExample
             AppDbContext context)
         {
             context.Database.EnsureCreated();
-            app.EnableDetailedErrors();
             app.UseJsonApi();
         }
 

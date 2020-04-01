@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Middleware;
@@ -62,15 +61,6 @@ namespace JsonApiDotNetCore.Extensions
                 // Executes the endpoints that was selected by routing.
                 app.UseEndpoints(endpoints => endpoints.MapControllers());
             }
-        }
-
-        /// <summary>
-        /// Configures your application to return stack traces in error results.
-        /// </summary>
-        /// <param name="app"></param>
-        public static void EnableDetailedErrors(this IApplicationBuilder app)
-        {
-            JsonApiOptions.DisableErrorStackTraces = false;
         }
 
         private static void LogResourceGraphValidations(IApplicationBuilder app)

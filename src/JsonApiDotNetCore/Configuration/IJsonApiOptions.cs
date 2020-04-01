@@ -1,7 +1,15 @@
+using System;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
+
 namespace JsonApiDotNetCore.Configuration
 {
     public interface IJsonApiOptions : ILinksConfiguration, ISerializerOptions
     {
+        /// <summary>
+        /// Whether or not <see cref="Exception"/> stack traces should be serialized in <see cref="ErrorMeta"/> objects.
+        /// </summary>
+        bool IncludeExceptionStackTraceInErrors { get; set; }
+
         /// <summary>
         /// Whether or not database values should be included by default
         /// for resource hooks. Ignored if EnableResourceHooks is set false.

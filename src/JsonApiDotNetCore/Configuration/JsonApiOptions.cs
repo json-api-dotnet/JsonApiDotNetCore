@@ -9,7 +9,6 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public class JsonApiOptions : IJsonApiOptions
     {
-
         /// <inheritdoc/>
         public bool RelativeLinks { get; set; } = false;
 
@@ -27,10 +26,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IRelatedIdMapper RelatedIdMapper { get; set; } = new DefaultRelatedIdMapper();
 
-        /// <summary>
-        /// Whether or not stack traces should be serialized in Error objects
-        /// </summary>
-        public static bool DisableErrorStackTraces { get; set; } = true;
+        /// <inheritdoc/>
+        public bool IncludeExceptionStackTraceInErrors { get; set; } = false;
 
         /// <summary>
         /// Whether or not ResourceHooks are enabled. 

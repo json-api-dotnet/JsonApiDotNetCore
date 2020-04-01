@@ -1,9 +1,11 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -79,9 +81,7 @@ namespace JsonApiDotNetCore.Controllers
             var entity = await _getById.GetAsync(id);
             if (entity == null)
             {
-                // remove the null argument as soon as this has been resolved:
-                // https://github.com/aspnet/AspNetCore/issues/16969
-                return NotFound(null);
+                return NotFound();
             }
 
             return Ok(entity);
@@ -93,9 +93,7 @@ namespace JsonApiDotNetCore.Controllers
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
             {
-                // remove the null argument as soon as this has been resolved:
-                // https://github.com/aspnet/AspNetCore/issues/16969
-                return NotFound(null);
+                return NotFound();
             }
 
             return Ok(relationship);
@@ -120,7 +118,7 @@ namespace JsonApiDotNetCore.Controllers
                 return Forbidden();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorDocument<T>());
+                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
 
             entity = await _create.CreateAsync(entity);
 
@@ -134,15 +132,13 @@ namespace JsonApiDotNetCore.Controllers
                 return UnprocessableEntity();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                return UnprocessableEntity(ModelState.ConvertToErrorDocument<T>());
+                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
 
             if (updatedEntity == null)
             {
-                // remove the null argument as soon as this has been resolved:
-                // https://github.com/aspnet/AspNetCore/issues/16969
-                return NotFound(null);
+                return NotFound();
             }
 
 

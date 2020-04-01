@@ -1,32 +1,27 @@
-using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
     /// Global exception filter that wraps any thrown error with a JsonApiException.
     /// </summary>
-    public sealed class DefaultExceptionFilter : ActionFilterAttribute, IExceptionFilter
+    public class DefaultExceptionFilter : ActionFilterAttribute, IExceptionFilter
     {
-        private readonly ILogger _logger;
+        private readonly IExceptionHandler _exceptionHandler;
 
-        public DefaultExceptionFilter(ILoggerFactory loggerFactory)
+        public DefaultExceptionFilter(IExceptionHandler exceptionHandler)
         {
-            _logger = loggerFactory.CreateLogger<DefaultExceptionFilter>();
+            _exceptionHandler = exceptionHandler;
         }
 
         public void OnException(ExceptionContext context)
         {
-            _logger.LogError(new EventId(), context.Exception, "An unhandled exception occurred during the request");
+            var errorDocument = _exceptionHandler.HandleException(context.Exception);
 
-            var jsonApiException = JsonApiExceptionFactory.GetException(context.Exception);
-
-            context.Result = new ObjectResult(new ErrorDocument(jsonApiException.Error))
+            context.Result = new ObjectResult(errorDocument)
             {
-                StatusCode = (int) jsonApiException.Error.Status
+                StatusCode = (int) errorDocument.GetErrorStatusCode()
             };
         }
     }

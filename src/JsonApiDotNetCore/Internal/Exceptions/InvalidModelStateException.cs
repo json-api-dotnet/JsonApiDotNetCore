@@ -1,43 +1,54 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace JsonApiDotNetCore.Extensions
+namespace JsonApiDotNetCore.Internal
 {
-    public static class ModelStateExtensions
+    public class InvalidModelStateException : Exception
     {
-        public static ErrorDocument ConvertToErrorDocument<TResource>(this ModelStateDictionary modelState)
-            where TResource : class, IIdentifiable
+        public IList<Error> Errors { get; }
+
+        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType, IJsonApiOptions options)
         {
-            ErrorDocument document = new ErrorDocument();
+            Errors = FromModelState(modelState, resourceType, options);
+        }
+
+        private static List<Error> FromModelState(ModelStateDictionary modelState, Type resourceType,
+            IJsonApiOptions options)
+        {
+            List<Error> errors = new List<Error>();
 
             foreach (var pair in modelState.Where(x => x.Value.Errors.Any()))
             {
                 var propertyName = pair.Key;
-                PropertyInfo property = typeof(TResource).GetProperty(propertyName);
+                PropertyInfo property = resourceType.GetProperty(propertyName);
+                
+                // TODO: Need access to ResourceContext here, in order to determine attribute name when not explicitly set.
                 string attributeName = property?.GetCustomAttribute<AttrAttribute>().PublicAttributeName ?? property?.Name;
 
                 foreach (var modelError in pair.Value.Errors)
                 {
                     if (modelError.Exception is JsonApiException jsonApiException)
                     {
-                        document.Errors.Add(jsonApiException.Error);
+                        errors.Add(jsonApiException.Error);
                     }
                     else
                     {
-                        document.Errors.Add(FromModelError(modelError, propertyName, attributeName));
+                        errors.Add(FromModelError(modelError, attributeName, options));
                     }
                 }
             }
 
-            return document;
+            return errors;
         }
 
-        private static Error FromModelError(ModelError modelError, string propertyName, string attributeName)
+        private static Error FromModelError(ModelError modelError, string attributeName, IJsonApiOptions options)
         {
             var error = new Error(HttpStatusCode.UnprocessableEntity)
             {
@@ -46,12 +57,11 @@ namespace JsonApiDotNetCore.Extensions
                 Source = attributeName == null ? null : new ErrorSource
                 {
                     Pointer = $"/data/attributes/{attributeName}"
-                },
+                }
             };
 
-            if (modelError.Exception != null)
+            if (options.IncludeExceptionStackTraceInErrors && modelError.Exception != null)
             {
-                error.Meta = new ErrorMeta();
                 error.Meta.IncludeExceptionStackTrace(modelError.Exception);
             }
 
