@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -11,23 +13,34 @@ namespace JsonApiDotNetCore.Query
 
         public OmitDefaultService(IJsonApiOptions options)
         {
-            Config = options.DefaultAttributeResponseBehavior.OmitDefaultValuedAttributes;
+            OmitAttributeIfValueIsDefault = options.DefaultAttributeResponseBehavior.OmitAttributeIfValueIsDefault;
             _options = options;
         }
 
         /// <inheritdoc/>
-        public bool Config { get; private set; }
+        public bool OmitAttributeIfValueIsDefault { get; private set; }
+
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
+        {
+            return _options.DefaultAttributeResponseBehavior.AllowQueryStringOverride &&
+                   !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.OmitDefault);
+        }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool CanParse(string parameterName)
         {
-            if (!_options.DefaultAttributeResponseBehavior.AllowClientOverride)
-                return;
+            return parameterName == "omitDefault";
+        }
 
-            if (!bool.TryParse(queryParameter.Value, out var config))
-                return;
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            if (!bool.TryParse(parameterValue, out var omitAttributeIfValueIsDefault))
+            {
+                throw new JsonApiException(HttpStatusCode.BadRequest, "Value must be 'true' or 'false'.");
+            }
 
-            Config = config;
+            OmitAttributeIfValueIsDefault = omitAttributeIfValueIsDefault;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -19,16 +20,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_OmitNullService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
-            var service = GetService(true, true);
+            var filterService = GetService(true, true);
 
             // Act
-            var name = service.Name;
+            bool result = filterService.CanParse("omitNull");
 
             // Assert
-            Assert.Equal("omitnull", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService(true, true);
+
+            // Act
+            bool result = filterService.CanParse("omit-null");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Theory]
@@ -43,10 +57,13 @@ namespace UnitTests.QueryParameters
             var service = GetService(@default, @override);
 
             // Act
-            service.Parse(query);
+            if (service.CanParse(query.Key) && service.IsEnabled(DisableQueryAttribute.Empty))
+            {
+                service.Parse(query.Key, query.Value);
+            }
 
             // Assert
-            Assert.Equal(expected, service.Config);
+            Assert.Equal(expected, service.OmitAttributeIfValueIsNull);
         }
     }
 }

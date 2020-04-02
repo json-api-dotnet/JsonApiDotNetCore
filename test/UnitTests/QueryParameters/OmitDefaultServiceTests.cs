@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -19,16 +20,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_OmitNullService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
-            var service = GetService(true, true);
+            var filterService = GetService(true, true);
 
             // Act
-            var name = service.Name;
+            bool result = filterService.CanParse("omitDefault");
 
             // Assert
-            Assert.Equal("omitdefault", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService(true, true);
+
+            // Act
+            bool result = filterService.CanParse("omit-default");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Theory]
@@ -39,14 +53,17 @@ namespace UnitTests.QueryParameters
         public void Parse_QueryConfigWithApiSettings_CanParse(string queryConfig, bool @default, bool @override, bool expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>("omitNull", new StringValues(queryConfig));
+            var query = new KeyValuePair<string, StringValues>("omitDefault", new StringValues(queryConfig));
             var service = GetService(@default, @override);
 
             // Act
-            service.Parse(query);
+            if (service.CanParse(query.Key) && service.IsEnabled(DisableQueryAttribute.Empty))
+            {
+                service.Parse(query.Key, query.Value);
+            }
 
             // Assert
-            Assert.Equal(expected, service.Config);
+            Assert.Equal(expected, service.OmitAttributeIfValueIsDefault);
         }
     }
 }

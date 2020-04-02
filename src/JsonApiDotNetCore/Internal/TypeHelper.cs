@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Internal
                 if (type == typeof(TimeSpan))
                     return TimeSpan.Parse(stringValue);
 
-                if (type.GetTypeInfo().IsEnum)
+                if (type.IsEnum)
                     return Enum.Parse(type, stringValue);
 
                 return Convert.ChangeType(stringValue, type);
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Internal
 
         private static object GetDefaultType(Type type)
         {
-            if (type.GetTypeInfo().IsValueType)
+            if (type.IsValueType)
             {
                 return Activator.CreateInstance(type);
             }

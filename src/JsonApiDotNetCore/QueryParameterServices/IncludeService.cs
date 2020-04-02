@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -27,9 +28,21 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            var value = (string)queryParameter.Value;
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Include);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "include";
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            var value = (string)parameterValue;
             if (string.IsNullOrWhiteSpace(value))
                 throw new JsonApiException(HttpStatusCode.BadRequest, "Include parameter must not be empty if provided");
 

@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -12,13 +13,13 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 {
     [Collection("WebHostCollection")]
-    public sealed class NullValuedAttributeHandlingTests : IAsyncLifetime
+    public sealed class OmitAttributeIfValueIsNullTests : IAsyncLifetime
     {
         private readonly TestFixture<Startup> _fixture;
         private readonly AppDbContext _dbContext;
         private readonly TodoItem _todoItem;
 
-        public NullValuedAttributeHandlingTests(TestFixture<Startup> fixture)
+        public OmitAttributeIfValueIsNullTests(TestFixture<Startup> fixture)
         {
             _fixture = fixture;
             _dbContext = fixture.GetService<AppDbContext>();
@@ -55,34 +56,33 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         [InlineData(null, false, "true", false)]
         [InlineData(null, true, "true", true)]
         [InlineData(null, true, "false", false)]
-        [InlineData(null, true, "foo", false)]
-        [InlineData(null, false, "foo", false)]
-        [InlineData(true, true, "foo", true)]
-        [InlineData(true, false, "foo", true)]
+        [InlineData(null, true, "this-is-not-a-boolean-value", false)]
+        [InlineData(null, false, "this-is-not-a-boolean-value", false)]
+        [InlineData(true, true, "this-is-not-a-boolean-value", true)]
+        [InlineData(true, false, "this-is-not-a-boolean-value", true)]
         [InlineData(null, true, null, false)]
         [InlineData(null, false, null, false)]
-        public async Task CheckNullBehaviorCombination(bool? omitNullValuedAttributes, bool? allowClientOverride,
-            string clientOverride, bool omitsNulls)
+        public async Task CheckNullBehaviorCombination(bool? omitAttributeIfValueIsNull, bool? allowQueryStringOverride,
+            string queryStringOverride, bool expectNullsMissing)
         {
 
             // Override some null handling options
             NullAttributeResponseBehavior nullAttributeResponseBehavior;
-            if (omitNullValuedAttributes.HasValue && allowClientOverride.HasValue)
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitNullValuedAttributes.Value, allowClientOverride.Value);
-            else if (omitNullValuedAttributes.HasValue)
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitNullValuedAttributes.Value);
-            else if (allowClientOverride.HasValue)
-                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(allowClientOverride: allowClientOverride.Value);
+            if (omitAttributeIfValueIsNull.HasValue && allowQueryStringOverride.HasValue)
+                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitAttributeIfValueIsNull.Value, allowQueryStringOverride.Value);
+            else if (omitAttributeIfValueIsNull.HasValue)
+                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(omitAttributeIfValueIsNull.Value);
+            else if (allowQueryStringOverride.HasValue)
+                nullAttributeResponseBehavior = new NullAttributeResponseBehavior(allowQueryStringOverride: allowQueryStringOverride.Value);
             else
                 nullAttributeResponseBehavior = new NullAttributeResponseBehavior();
 
             var jsonApiOptions = _fixture.GetService<IJsonApiOptions>();
             jsonApiOptions.NullAttributeResponseBehavior = nullAttributeResponseBehavior;
-            jsonApiOptions.AllowCustomQueryParameters = true;
 
             var httpMethod = new HttpMethod("GET");
-            var queryString = allowClientOverride.HasValue
-                ? $"&omitNull={clientOverride}"
+            var queryString = allowQueryStringOverride.HasValue
+                ? $"&omitNull={queryStringOverride}"
                 : "";
             var route = $"/api/v1/todoItems/{_todoItem.Id}?include=owner{queryString}";
             var request = new HttpRequestMessage(httpMethod, route);
@@ -92,11 +92,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             var body = await response.Content.ReadAsStringAsync();
             var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
-            // Assert: does response contain a null valued attribute?
-            Assert.Equal(omitsNulls, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
-            Assert.Equal(omitsNulls, !deserializeBody.Included[0].Attributes.ContainsKey("lastName"));
+            if (queryString.Length > 0 && !bool.TryParse(queryStringOverride, out _))
+            {
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            }
+            else if (allowQueryStringOverride == false && queryStringOverride != null)
+            {
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            }
+            else
+            {
+                // Assert: does response contain a null valued attribute?
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
+                Assert.Equal(expectNullsMissing, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
+                Assert.Equal(expectNullsMissing, !deserializeBody.Included[0].Attributes.ContainsKey("lastName"));
+            }
         }
     }
-
 }

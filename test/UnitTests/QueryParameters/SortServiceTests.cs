@@ -14,16 +14,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_SortService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
             var filterService = GetService();
 
             // Act
-            var name = filterService.Name;
+            bool result = filterService.CanParse("sort");
 
             // Assert
-            Assert.Equal("sort", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService();
+
+            // Act
+            bool result = filterService.CanParse("sorting");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Theory]
@@ -37,7 +50,7 @@ namespace UnitTests.QueryParameters
             var sortService = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => sortService.Parse(query));
+            var exception = Assert.Throws<JsonApiException>(() => sortService.Parse(query.Key, query.Value));
             Assert.Contains("sort", exception.Message);
         }
     }

@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             options.AllowCustomQueryParameters = true;
 
             string routePrefix = "/api/v1/todoItems?filter[owner.lastName]=" + WebUtility.UrlEncode(person.LastName) + 
-                                 "&fields[owner]=firstName&include=owner&sort=ordinal&omitDefault=true&omitNull=true&foo=bar,baz";
+                                 "&fields[owner]=firstName&include=owner&sort=ordinal&foo=bar,baz";
             string route = pageNum != 1 ? routePrefix + $"&page[size]=5&page[number]={pageNum}" : routePrefix;
 
             // Act

@@ -10,23 +10,35 @@ namespace UnitTests.QueryParameters
 {
     public sealed class IncludeServiceTests : QueryParametersUnitTestCollection
     {
-
         public IncludeService GetService(ResourceContext resourceContext = null)
         {
             return new IncludeService(_resourceGraph, MockCurrentRequest(resourceContext ?? _articleResourceContext));
         }
 
         [Fact]
-        public void Name_IncludeService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
             var filterService = GetService();
 
             // Act
-            var name = filterService.Name;
+            bool result = filterService.CanParse("include");
 
             // Assert
-            Assert.Equal("include", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService();
+
+            // Act
+            bool result = filterService.CanParse("includes");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Fact]
@@ -38,7 +50,7 @@ namespace UnitTests.QueryParameters
             var service = GetService();
 
             // Act
-            service.Parse(query);
+            service.Parse(query.Key, query.Value);
 
             // Assert
             var chains = service.Get();
@@ -60,7 +72,7 @@ namespace UnitTests.QueryParameters
             var service = GetService(_resourceGraph.GetResourceContext<Food>());
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>( () => service.Parse(query));
+            var exception = Assert.Throws<JsonApiException>( () => service.Parse(query.Key, query.Value));
             Assert.Contains("Invalid", exception.Message);
         }
 
@@ -73,7 +85,7 @@ namespace UnitTests.QueryParameters
             var service = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
             Assert.Contains("not allowed", exception.Message);
         }
 
@@ -86,7 +98,7 @@ namespace UnitTests.QueryParameters
             var service = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
             Assert.Contains("Invalid", exception.Message);
         }
 
@@ -99,7 +111,7 @@ namespace UnitTests.QueryParameters
             var service = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
             Assert.Contains("Include parameter must not be empty if provided", exception.Message);
         }
     }

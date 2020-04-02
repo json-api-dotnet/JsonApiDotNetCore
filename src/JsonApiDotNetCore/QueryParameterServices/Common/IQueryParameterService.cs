@@ -1,21 +1,26 @@
-﻿using System.Collections.Generic;
+using JsonApiDotNetCore.Controllers;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
 {
     /// <summary>
-    /// Base interface that all query parameter services should inherit.
+    /// The interface to implement for parsing specific query string parameters.
     /// </summary>
     public interface IQueryParameterService
     {
         /// <summary>
-        /// Parses the value of the query parameter. Invoked in the middleware.
+        /// Indicates whether using this service is blocked using <see cref="DisableQueryAttribute"/> on a controller.
         /// </summary>
-        /// <param name="queryParameter">the value of the query parameter as retrieved from the url</param>
-        void Parse(KeyValuePair<string, StringValues> queryParameter);
+        bool IsEnabled(DisableQueryAttribute disableQueryAttribute);
+
         /// <summary>
-        /// The name of the query parameter as matched in the URL query string.
+        /// Indicates whether this service supports parsing the specified query string parameter.
         /// </summary>
-        string Name { get; }
+        bool CanParse(string parameterName);
+
+        /// <summary>
+        /// Parses the value of the query string parameter.
+        /// </summary>
+        void Parse(string parameterName, StringValues parameterValue);
     }
 }

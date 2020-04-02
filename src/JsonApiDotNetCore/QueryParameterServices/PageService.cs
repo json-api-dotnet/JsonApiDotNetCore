@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -64,29 +64,41 @@ namespace JsonApiDotNetCore.Query
         public int? TotalRecords { get; set; }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            EnsureNoNestedResourceRoute();
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Page);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "page[size]" || parameterName == "page[number]";
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            EnsureNoNestedResourceRoute(parameterName);
             // expected input = page[size]=<integer>
             //                  page[number]=<integer greater than zero> 
-            var propertyName = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
+            var propertyName = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
 
             const string SIZE = "size";
             const string NUMBER = "number";
 
             if (propertyName == SIZE)
             {
-                if (!int.TryParse(queryParameter.Value, out var size))
+                if (!int.TryParse(parameterValue, out var size))
                 {
-                    ThrowBadPagingRequest(queryParameter, "value could not be parsed as an integer");
+                    ThrowBadPagingRequest(parameterName, parameterValue, "value could not be parsed as an integer");
                 }
                 else if (size < 1)
                 {
-                    ThrowBadPagingRequest(queryParameter, "value needs to be greater than zero");
+                    ThrowBadPagingRequest(parameterName, parameterValue, "value needs to be greater than zero");
                 }
                 else if (size > _options.MaximumPageSize)
                 {
-                    ThrowBadPagingRequest(queryParameter, $"page size cannot be higher than {_options.MaximumPageSize}.");
+                    ThrowBadPagingRequest(parameterName, parameterValue, $"page size cannot be higher than {_options.MaximumPageSize}.");
                 }
                 else
                 {
@@ -95,17 +107,17 @@ namespace JsonApiDotNetCore.Query
             }
             else if (propertyName == NUMBER)
             { 
-                if (!int.TryParse(queryParameter.Value, out var number))
+                if (!int.TryParse(parameterValue, out var number))
                 {
-                    ThrowBadPagingRequest(queryParameter, "value could not be parsed as an integer");
+                    ThrowBadPagingRequest(parameterName, parameterValue, "value could not be parsed as an integer");
                 }
                 else if (number == 0)
                 {
-                    ThrowBadPagingRequest(queryParameter, "page index is not zero-based");
+                    ThrowBadPagingRequest(parameterName, parameterValue, "page index is not zero-based");
                 }
                 else if (number > _options.MaximumPageNumber)
                 {
-                    ThrowBadPagingRequest(queryParameter, $"page index cannot be higher than {_options.MaximumPageNumber}.");
+                    ThrowBadPagingRequest(parameterName, parameterValue, $"page index cannot be higher than {_options.MaximumPageNumber}.");
                 }
                 else
                 {
@@ -115,10 +127,9 @@ namespace JsonApiDotNetCore.Query
             }
         }
 
-        private void ThrowBadPagingRequest(KeyValuePair<string, StringValues> parameter, string message)
+        private void ThrowBadPagingRequest(string parameterName, StringValues parameterValue, string message)
         {
-            throw new JsonApiException(HttpStatusCode.BadRequest, $"Invalid page query parameter '{parameter.Key}={parameter.Value}': {message}");
+            throw new JsonApiException(HttpStatusCode.BadRequest, $"Invalid page query parameter '{parameterName}={parameterValue}': {message}");
         }
-
     }
 }

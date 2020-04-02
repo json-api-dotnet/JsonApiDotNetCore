@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -26,15 +27,6 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
-        {
-            EnsureNoNestedResourceRoute();
-            var queries = BuildQueries(queryParameter.Value);
-
-            _queries = queries.Select(BuildQueryContext).ToList();
-        }
-
-        /// <inheritdoc/>
         public List<SortQueryContext> Get()
         {
             if (_queries == null)
@@ -44,6 +36,27 @@ namespace JsonApiDotNetCore.Query
                     return requestResourceDefinition.DefaultSort()?.Select(d => BuildQueryContext(new SortQuery(d.Item1.PublicAttributeName, d.Item2))).ToList();
             }
             return _queries.ToList();
+        }
+
+        /// <inheritdoc/>
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
+        {
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "sort";
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            EnsureNoNestedResourceRoute(parameterName);
+            var queries = BuildQueries(parameterValue);
+
+            _queries = queries.Select(BuildQueryContext).ToList();
         }
 
         private List<SortQuery> BuildQueries(string value)

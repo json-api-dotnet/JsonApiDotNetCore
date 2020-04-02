@@ -1,34 +1,26 @@
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Allows null attributes to be omitted from the response payload
+    /// Determines how attributes that contain null are serialized in the response payload.
     /// </summary>
     public struct NullAttributeResponseBehavior
     {
-        /// <param name="omitNullValuedAttributes">Do not serialize null attributes</param>
-        /// <param name="allowClientOverride">
-        /// Allow clients to override the serialization behavior through a query parameter.
-        /// <example>
-        /// ```
-        /// GET /articles?omitNullValuedAttributes=true
-        /// ```
-        /// </example>
-        /// </param>
-        public NullAttributeResponseBehavior(bool omitNullValuedAttributes = false, bool allowClientOverride = false)
+        /// <param name="omitAttributeIfValueIsNull">Determines whether to serialize attributes that contain null.</param>
+        /// <param name="allowQueryStringOverride">Determines whether serialization behavior can be controlled by a query string parameter.</param>
+        public NullAttributeResponseBehavior(bool omitAttributeIfValueIsNull = false, bool allowQueryStringOverride = false)
         {
-            OmitNullValuedAttributes = omitNullValuedAttributes;
-            AllowClientOverride = allowClientOverride;
+            OmitAttributeIfValueIsNull = omitAttributeIfValueIsNull;
+            AllowQueryStringOverride = allowQueryStringOverride;
         }
 
         /// <summary>
-        /// Do not include null attributes in the response payload.
+        /// Determines whether to serialize attributes that contain null.
         /// </summary>
-        public bool OmitNullValuedAttributes { get; }
+        public bool OmitAttributeIfValueIsNull { get; }
 
         /// <summary>
-        /// Allows clients to specify a `omitNullValuedAttributes` boolean query param to control
-        /// serialization behavior.
+        /// Determines whether serialization behavior can be controlled by a query string parameter.
         /// </summary>
-        public bool AllowClientOverride { get; }
+        public bool AllowQueryStringOverride { get; }
     }
 }

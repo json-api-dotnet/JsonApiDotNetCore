@@ -15,16 +15,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_FilterService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
             var filterService = GetService();
 
             // Act
-            var name = filterService.Name;
+            bool result = filterService.CanParse("filter[age]");
 
             // Assert
-            Assert.Equal("filter", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService();
+
+            // Act
+            bool result = filterService.CanParse("other");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Theory]
@@ -50,7 +63,7 @@ namespace UnitTests.QueryParameters
             var filterService = GetService();
 
             // Act
-            filterService.Parse(query);
+            filterService.Parse(query.Key, query.Value);
             var filter = filterService.Get().Single();
 
             // Assert

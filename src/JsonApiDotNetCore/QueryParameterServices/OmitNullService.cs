@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query
@@ -11,23 +13,35 @@ namespace JsonApiDotNetCore.Query
 
         public OmitNullService(IJsonApiOptions options)
         {
-            Config = options.NullAttributeResponseBehavior.OmitNullValuedAttributes;
+            OmitAttributeIfValueIsNull = options.NullAttributeResponseBehavior.OmitAttributeIfValueIsNull;
             _options = options;
         }
 
         /// <inheritdoc/>
-        public bool Config { get; private set; }
+        public bool OmitAttributeIfValueIsNull { get; private set; }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
         {
-            if (!_options.NullAttributeResponseBehavior.AllowClientOverride)
-                return;
+            return _options.NullAttributeResponseBehavior.AllowQueryStringOverride &&
+                   !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.OmitNull);
+        }
 
-            if (!bool.TryParse(queryParameter.Value, out var config))
-                return;
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName == "omitNull";
+        }
 
-            Config = config;
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            if (!bool.TryParse(parameterValue, out var omitAttributeIfValueIsNull))
+            {
+                throw new JsonApiException(HttpStatusCode.BadRequest, "Value must be 'true' or 'false'.");
+            }
+
+            OmitAttributeIfValueIsNull = omitAttributeIfValueIsNull;
         }
     }
 }

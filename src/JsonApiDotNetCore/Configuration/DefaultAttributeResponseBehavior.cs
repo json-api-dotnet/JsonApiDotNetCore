@@ -1,35 +1,26 @@
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Allows default valued attributes to be omitted from the response payload
+    /// Determines how attributes that contain a default value are serialized in the response payload.
     /// </summary>
     public struct DefaultAttributeResponseBehavior
     {
-
-        /// <param name="omitNullValuedAttributes">Do not serialize default value attributes</param>
-        /// <param name="allowClientOverride">
-        /// Allow clients to override the serialization behavior through a query parameter.
-        /// <example>
-        /// ```
-        /// GET /articles?omitDefaultValuedAttributes=true
-        /// ```
-        /// </example>
-        /// </param>
-        public DefaultAttributeResponseBehavior(bool omitNullValuedAttributes = false, bool allowClientOverride = false)
+        /// <param name="omitAttributeIfValueIsDefault">Determines whether to serialize attributes that contain their types' default value.</param>
+        /// <param name="allowQueryStringOverride">Determines whether serialization behavior can be controlled by a query string parameter.</param>
+        public DefaultAttributeResponseBehavior(bool omitAttributeIfValueIsDefault = false, bool allowQueryStringOverride = false)
         {
-            OmitDefaultValuedAttributes = omitNullValuedAttributes;
-            AllowClientOverride = allowClientOverride;
+            OmitAttributeIfValueIsDefault = omitAttributeIfValueIsDefault;
+            AllowQueryStringOverride = allowQueryStringOverride;
         }
 
         /// <summary>
-        /// Do (not) include default valued attributes in the response payload.
+        /// Determines whether to serialize attributes that contain their types' default value.
         /// </summary>
-        public bool OmitDefaultValuedAttributes { get; }
+        public bool OmitAttributeIfValueIsDefault { get; }
 
         /// <summary>
-        /// Allows clients to specify a `omitDefaultValuedAttributes` boolean query param to control
-        /// serialization behavior.
+        /// Determines whether serialization behavior can be controlled by a query string parameter.
         /// </summary>
-        public bool AllowClientOverride { get; }
+        public bool AllowQueryStringOverride { get; }
     }
 }

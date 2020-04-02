@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
@@ -22,8 +23,6 @@ namespace JsonApiDotNetCore.Query
         /// </summary>
         private readonly Dictionary<RelationshipAttribute, List<AttrAttribute>> _selectedRelationshipFields;
 
-        public override string Name => "fields";
-
         public SparseFieldsService(IResourceGraph resourceGraph, ICurrentRequest currentRequest) : base(resourceGraph, currentRequest)
         {
             _selectedFields = new List<AttrAttribute>();
@@ -41,15 +40,28 @@ namespace JsonApiDotNetCore.Query
         }
 
         /// <inheritdoc/>
-        public virtual void Parse(KeyValuePair<string, StringValues> queryParameter)
-        {   // expected: articles?fields=prop1,prop2
+        public bool IsEnabled(DisableQueryAttribute disableQueryAttribute)
+        {
+            return !disableQueryAttribute.ContainsParameter(StandardQueryStringParameters.Fields);
+        }
+
+        /// <inheritdoc/>
+        public bool CanParse(string parameterName)
+        {
+            return parameterName.StartsWith("fields");
+        }
+
+        /// <inheritdoc/>
+        public virtual void Parse(string parameterName, StringValues parameterValue)
+        {
+            // expected: articles?fields=prop1,prop2
             //           articles?fields[articles]=prop1,prop2  <-- this form in invalid UNLESS "articles" is actually a relationship on Article
             //           articles?fields[relationship]=prop1,prop2
-            EnsureNoNestedResourceRoute();
+            EnsureNoNestedResourceRoute(parameterName);
             var fields = new List<string> { nameof(Identifiable.Id) };
-            fields.AddRange(((string)queryParameter.Value).Split(QueryConstants.COMMA));
+            fields.AddRange(((string)parameterValue).Split(QueryConstants.COMMA));
 
-            var keySplit = queryParameter.Key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
+            var keySplit = parameterName.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET);
 
             if (keySplit.Length == 1)
             {   // input format: fields=prop1,prop2

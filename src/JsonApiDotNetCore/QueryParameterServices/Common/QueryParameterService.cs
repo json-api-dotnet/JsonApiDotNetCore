@@ -17,6 +17,8 @@ namespace JsonApiDotNetCore.Query
         protected readonly ResourceContext _requestResource;
         private readonly ResourceContext _mainRequestResource;
 
+        protected QueryParameterService() { }
+
         protected QueryParameterService(IResourceGraph resourceGraph, ICurrentRequest currentRequest)
         {
             _mainRequestResource = currentRequest.GetRequestResource();
@@ -25,24 +27,6 @@ namespace JsonApiDotNetCore.Query
                 ? resourceGraph.GetResourceContext(currentRequest.RequestRelationship.RightType)
                 : _mainRequestResource;
         }
-
-        protected QueryParameterService() { }
-
-        /// <summary>
-        /// Derives the name of the query parameter from the name of the implementing type.
-        /// </summary>
-        /// <example>
-        /// The following query param service will match the query  displayed in URL
-        /// `?include=some-relationship`
-        /// <code>public class IncludeService : QueryParameterService  { /* ... */  } </code>
-        /// </example>
-        public virtual string Name => GetParameterNameFromType();
-
-        /// <summary>
-        /// Gets the query parameter name from the implementing class name. Trims "Service"
-        /// from the name if present.
-        /// </summary>
-        private string GetParameterNameFromType() => new Regex("Service$").Replace(GetType().Name, string.Empty).ToLower();
 
         /// <summary>
         /// Helper method for parsing query parameters into attributes
@@ -75,11 +59,11 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Throw an exception if query parameters are requested that are unsupported on nested resource routes.
         /// </summary>
-        protected void EnsureNoNestedResourceRoute()
+        protected void EnsureNoNestedResourceRoute(string parameterName)
         {
             if (_requestResource != _mainRequestResource)
             {
-                throw new JsonApiException(HttpStatusCode.BadRequest, $"Query parameter {Name} is currently not supported on nested resource endpoints (i.e. of the form '/article/1/author?{Name}=...'");
+                throw new JsonApiException(HttpStatusCode.BadRequest, $"Query parameter {parameterName} is currently not supported on nested resource endpoints (i.e. of the form '/article/1/author?{parameterName}=...'");
             }
         }
     }

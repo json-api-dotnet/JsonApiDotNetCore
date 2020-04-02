@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Serialization
             foreach (var attr in attributes)
             {
                 var value = attr.GetValue(entity);
-                if (!(value == default && _settings.OmitDefaultValuedAttributes) && !(value == null && _settings.OmitNullValuedAttributes))
+                if (!(value == default && _settings.OmitAttributeIfValueIsDefault) && !(value == null && _settings.OmitAttributeIfValueIsNull))
                     ro.Attributes.Add(attr.PublicAttributeName, value);
             }
         }

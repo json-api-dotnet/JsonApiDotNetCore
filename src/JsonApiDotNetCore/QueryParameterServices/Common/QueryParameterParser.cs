@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
@@ -23,45 +24,28 @@ namespace JsonApiDotNetCore.Services
             _queryServices = queryServices;
         }
 
-        /// <summary>
-        /// For a parameter in the query string of the request URL, calls
-        /// the <see cref="IQueryParameterService.Parse(KeyValuePair{string, Microsoft.Extensions.Primitives.StringValues})"/>
-        /// method of the corresponding service.
-        /// </summary>
-        public virtual void Parse(DisableQueryAttribute disabled)
+        /// <inheritdoc/>
+        public virtual void Parse(DisableQueryAttribute disableQueryAttribute)
         {
-            var disabledQuery = disabled?.QueryParams;
+            disableQueryAttribute ??= DisableQueryAttribute.Empty;
 
             foreach (var pair in _queryStringAccessor.Query)
             {
-                bool parsed = false;
-                foreach (var service in _queryServices)
+                var service = _queryServices.FirstOrDefault(s => s.CanParse(pair.Key));
+                if (service != null)
                 {
-                    if (pair.Key.ToLower().StartsWith(service.Name, StringComparison.Ordinal))
+                    if (!service.IsEnabled(disableQueryAttribute))
                     {
-                        if (disabledQuery == null || !IsDisabled(disabledQuery, service))
-                            service.Parse(pair);
-                        parsed = true;
-                        break;
+                        throw new JsonApiException(HttpStatusCode.BadRequest, $"{pair} is not available for this resource.");
                     }
+
+                    service.Parse(pair.Key, pair.Value);
                 }
-                if (parsed)
-                    continue;
-
-                if (!_options.AllowCustomQueryParameters)
+                else if (!_options.AllowCustomQueryParameters)
+                {
                     throw new JsonApiException(HttpStatusCode.BadRequest, $"{pair} is not a valid query.");
+                }
             }
-        }
-
-        private bool IsDisabled(string disabledQuery, IQueryParameterService targetsService)
-        {
-            if (disabledQuery == QueryParams.All.ToString("G").ToLower())
-                return true;
-
-            if (disabledQuery == targetsService.Name)
-                return true;
-
-            return false;
         }
     }
 }

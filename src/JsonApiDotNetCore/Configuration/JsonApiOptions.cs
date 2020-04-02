@@ -108,16 +108,13 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowCustomQueryParameters { get; set; }
 
         /// <summary>
-        /// The default behavior for serializing null attributes.
+        /// The default behavior for serializing attributes that contain null.
         /// </summary>
-        /// <example>
-        /// <code>
-        /// options.NullAttributeResponseBehavior = new NullAttributeResponseBehavior {
-        ///  // ...
-        ///};
-        /// </code>
-        /// </example>
         public NullAttributeResponseBehavior NullAttributeResponseBehavior { get; set; }
+
+        /// <summary>
+        /// The default behavior for serializing attributes that contain their types' default value.
+        /// </summary>
         public DefaultAttributeResponseBehavior DefaultAttributeResponseBehavior { get; set; }
 
         /// <summary>

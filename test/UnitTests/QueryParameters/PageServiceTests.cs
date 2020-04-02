@@ -10,7 +10,7 @@ namespace UnitTests.QueryParameters
 {
     public sealed class PageServiceTests : QueryParametersUnitTestCollection
     {
-        public IPageService GetService(int? maximumPageSize = null, int? maximumPageNumber = null)
+        public PageService GetService(int? maximumPageSize = null, int? maximumPageNumber = null)
         {
             return new PageService(new JsonApiOptions
             {
@@ -20,16 +20,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_PageService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
             var filterService = GetService();
 
             // Act
-            var name = filterService.Name;
+            bool result = filterService.CanParse("page[size]");
 
             // Assert
-            Assert.Equal("page", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService();
+
+            // Act
+            bool result = filterService.CanParse("page[some]");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Theory]
@@ -47,12 +60,12 @@ namespace UnitTests.QueryParameters
             // Act
             if (shouldThrow)
             {
-                var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
+                var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
                 Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
             }
             else
             {
-                service.Parse(query);
+                service.Parse(query.Key, query.Value);
                 Assert.Equal(expectedValue, service.PageSize);
             }
         }
@@ -72,12 +85,12 @@ namespace UnitTests.QueryParameters
             // Act
             if (shouldThrow)
             {
-                var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
+                var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
                 Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
             }
             else
             {
-                service.Parse(query);
+                service.Parse(query.Key, query.Value);
                 Assert.Equal(expectedValue, service.CurrentPage);
             }
         }

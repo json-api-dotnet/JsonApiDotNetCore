@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -18,16 +17,29 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Name_SparseFieldsService_IsCorrect()
+        public void CanParse_FilterService_SucceedOnMatch()
         {
             // Arrange
             var filterService = GetService();
 
             // Act
-            var name = filterService.Name;
+            bool result = filterService.CanParse("fields[customer]");
 
             // Assert
-            Assert.Equal("fields", name);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void CanParse_FilterService_FailOnMismatch()
+        {
+            // Arrange
+            var filterService = GetService();
+
+            // Act
+            bool result = filterService.CanParse("other");
+
+            // Assert
+            Assert.False(result);
         }
 
         [Fact]
@@ -50,7 +62,7 @@ namespace UnitTests.QueryParameters
             var service = GetService(resourceContext);
 
             // Act
-            service.Parse(query);
+            service.Parse(query.Key, query.Value);
             var result = service.Get();
 
             // Assert
@@ -79,7 +91,7 @@ namespace UnitTests.QueryParameters
             var service = GetService(resourceContext);
 
             // Act, assert
-            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
             Assert.Contains("relationships only", ex.Message);
             Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
         }
@@ -105,7 +117,7 @@ namespace UnitTests.QueryParameters
             var service = GetService(resourceContext);
 
             // Act, assert
-            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
             Assert.Contains("deeply nested", ex.Message);
             Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
         }
@@ -129,7 +141,7 @@ namespace UnitTests.QueryParameters
             var service = GetService(resourceContext);
 
             // Act , assert
-            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query));
+            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
             Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
         }
     }
