@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using Microsoft.Extensions.Primitives;
@@ -54,18 +56,20 @@ namespace JsonApiDotNetCore.Query
         public virtual void Parse(string parameterName, StringValues parameterValue)
         {
             EnsureNoNestedResourceRoute(parameterName);
-            var queries = BuildQueries(parameterValue);
+            var queries = BuildQueries(parameterValue, parameterName);
 
             _queries = queries.Select(BuildQueryContext).ToList();
         }
 
-        private List<SortQuery> BuildQueries(string value)
+        private List<SortQuery> BuildQueries(string value, string parameterName)
         {
             var sortParameters = new List<SortQuery>();
 
             var sortSegments = value.Split(QueryConstants.COMMA);
             if (sortSegments.Any(s => s == string.Empty))
-                throw new JsonApiException(HttpStatusCode.BadRequest, "The sort URI segment contained a null value.");
+            {
+                throw new InvalidQueryStringParameterException(parameterName, "The list of fields to sort on contains empty elements.", null);
+            }
 
             foreach (var sortSegment in sortSegments)
             {
@@ -89,8 +93,11 @@ namespace JsonApiDotNetCore.Query
             var relationship = GetRelationship(query.Relationship);
             var attribute = GetAttribute(query.Attribute, relationship);
 
-            if (attribute.IsSortable == false)
-                throw new JsonApiException(HttpStatusCode.BadRequest, $"Sort is not allowed for attribute '{attribute.PublicAttributeName}'.");
+            if (!attribute.IsSortable)
+            {
+                throw new InvalidQueryStringParameterException("sort", "Sorting on the requested attribute is not allowed.",
+                    $"Sorting on attribute '{attribute.PublicAttributeName}' is not allowed.");
+            }
 
             return new SortQueryContext(query)
             {

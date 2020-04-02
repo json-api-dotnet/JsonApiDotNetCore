@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -100,7 +101,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await _fixture.Client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].Status);
+            Assert.Equal("Filtering on the requested attribute is not allowed.", errorDocument.Errors[0].Title);
+            Assert.Equal("Filtering on attribute 'achievedDate' is not allowed.", errorDocument.Errors[0].Detail);
+            Assert.Equal("filter[achievedDate]", errorDocument.Errors[0].Source.Parameter);
         }
 
         [Fact]

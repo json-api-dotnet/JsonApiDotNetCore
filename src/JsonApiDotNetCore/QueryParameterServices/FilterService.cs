@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
 using JsonApiDotNetCore.Models;
@@ -39,7 +38,7 @@ namespace JsonApiDotNetCore.Query
         /// <inheritdoc/>
         public bool CanParse(string parameterName)
         {
-            return parameterName.StartsWith("filter");
+            return parameterName.StartsWith("filter[") && parameterName.EndsWith("]");
         }
 
         /// <inheritdoc/>
@@ -47,10 +46,10 @@ namespace JsonApiDotNetCore.Query
         {
             EnsureNoNestedResourceRoute(parameterName);
             var queries = GetFilterQueries(parameterName, parameterValue);
-            _filters.AddRange(queries.Select(GetQueryContexts));
+            _filters.AddRange(queries.Select(x => GetQueryContexts(x, parameterName)));
         }
 
-        private FilterQueryContext GetQueryContexts(FilterQuery query)
+        private FilterQueryContext GetQueryContexts(FilterQuery query, string parameterName)
         {
             var queryContext = new FilterQueryContext(query);
             var customQuery = _requestResourceDefinition?.GetCustomQueryFilter(query.Target);
@@ -64,8 +63,12 @@ namespace JsonApiDotNetCore.Query
             queryContext.Relationship = GetRelationship(query.Relationship);
             var attribute = GetAttribute(query.Attribute, queryContext.Relationship);
 
-            if (attribute.IsFilterable == false)
-                throw new JsonApiException(HttpStatusCode.BadRequest, $"Filter is not allowed for attribute '{attribute.PublicAttributeName}'.");
+            if (!attribute.IsFilterable)
+            {
+                throw new InvalidQueryStringParameterException(parameterName, "Filtering on the requested attribute is not allowed.",
+                    $"Filtering on attribute '{attribute.PublicAttributeName}' is not allowed.");
+            }
+
             queryContext.Attribute = attribute;
 
             return queryContext;

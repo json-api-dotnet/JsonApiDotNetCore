@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
@@ -93,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Context.SaveChanges();
 
             var options = GetService<IJsonApiOptions>();
-            options.AllowCustomQueryParameters = true;
+            options.AllowCustomQueryStringParameters = true;
 
             string routePrefix = "/api/v1/todoItems?filter[owner.lastName]=" + WebUtility.UrlEncode(person.LastName) + 
                                  "&fields[owner]=firstName&include=owner&sort=ordinal&foo=bar,baz";

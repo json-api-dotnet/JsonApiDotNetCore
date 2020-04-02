@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Internal.Exceptions
 {
-    public sealed class ActionResultException : JsonApiException
+    /// <summary>
+    /// The error that is thrown when an <see cref="IActionResult"/> with non-success status is returned from a controller method.
+    /// </summary>
+    public sealed class UnsuccessfulActionResultException : JsonApiException
     {
-        public ActionResultException(HttpStatusCode status) 
+        public UnsuccessfulActionResultException(HttpStatusCode status) 
             : base(new Error(status)
         {
             Title = status.ToString()
@@ -14,7 +17,7 @@ namespace JsonApiDotNetCore.Internal.Exceptions
         {
         }
 
-        public ActionResultException(ProblemDetails problemDetails)
+        public UnsuccessfulActionResultException(ProblemDetails problemDetails)
             : base(ToError(problemDetails))
         {
         }

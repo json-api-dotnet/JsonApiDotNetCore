@@ -1,10 +1,12 @@
 using System;
 using System.Net;
-using System.Net.Http;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Internal
 {
+    /// <summary>
+    /// The error that is thrown when deserializing the request body fails.
+    /// </summary>
     public sealed class InvalidRequestBodyException : JsonApiException
     {
         public InvalidRequestBodyException(string message, Exception innerException = null)

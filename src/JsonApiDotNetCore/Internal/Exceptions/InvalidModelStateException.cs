@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.Internal
 {
+    /// <summary>
+    /// The error that is thrown when model state validation fails.
+    /// </summary>
     public class InvalidModelStateException : Exception
     {
         public IList<Error> Errors { get; }

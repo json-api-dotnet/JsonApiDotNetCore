@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
@@ -36,7 +37,7 @@ namespace UnitTests.QueryParameters
             var filterService = GetService();
 
             // Act
-            bool result = filterService.CanParse("other");
+            bool result = filterService.CanParse("fieldset");
 
             // Assert
             Assert.False(result);
@@ -51,7 +52,7 @@ namespace UnitTests.QueryParameters
             var attribute = new AttrAttribute(attrName);
             var idAttribute = new AttrAttribute("id");
 
-            var query = new KeyValuePair<string, StringValues>("fields", new StringValues(attrName));
+            var query = new KeyValuePair<string, StringValues>("fields", attrName);
 
             var resourceContext = new ResourceContext
             {
@@ -72,15 +73,16 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void Parse_TypeNameAsNavigation_Throws400ErrorWithRelationshipsOnlyMessage()
+        public void Parse_InvalidRelationship_ThrowsJsonApiException()
         {
             // Arrange
             const string type = "articles";
-            const string attrName = "someField";
+            var attrName = "someField";
             var attribute = new AttrAttribute(attrName);
             var idAttribute = new AttrAttribute("id");
+            var queryParameterName = "fields[missing]";
 
-            var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
+            var query = new KeyValuePair<string, StringValues>(queryParameterName, attrName);
 
             var resourceContext = new ResourceContext
             {
@@ -91,13 +93,17 @@ namespace UnitTests.QueryParameters
             var service = GetService(resourceContext);
 
             // Act, assert
-            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
-            Assert.Contains("relationships only", ex.Message);
-            Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+            
+            Assert.Equal(queryParameterName, exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("Sparse field navigation path refers to an invalid relationship.", exception.Error.Title);
+            Assert.Equal("'missing' in 'fields[missing]' is not a valid relationship of articles.", exception.Error.Detail);
+            Assert.Equal(queryParameterName, exception.Error.Source.Parameter);
         }
 
         [Fact]
-        public void Parse_DeeplyNestedSelection_Throws400ErrorWithDeeplyNestedMessage()
+        public void Parse_DeeplyNestedSelection_ThrowsJsonApiException()
         {
             // Arrange
             const string type = "articles";
@@ -105,8 +111,9 @@ namespace UnitTests.QueryParameters
             const string attrName = "someField";
             var attribute = new AttrAttribute(attrName);
             var idAttribute = new AttrAttribute("id");
+            var queryParameterName = $"fields[{relationship}]";
 
-            var query = new KeyValuePair<string, StringValues>($"fields[{relationship}]", new StringValues(attrName));
+            var query = new KeyValuePair<string, StringValues>(queryParameterName, attrName);
 
             var resourceContext = new ResourceContext
             {
@@ -117,9 +124,13 @@ namespace UnitTests.QueryParameters
             var service = GetService(resourceContext);
 
             // Act, assert
-            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
-            Assert.Contains("deeply nested", ex.Message);
-            Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+            
+            Assert.Equal(queryParameterName, exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("Deeply nested sparse field selection is currently not supported.", exception.Error.Title);
+            Assert.Equal($"Parameter fields[{relationship}] is currently not supported.", exception.Error.Detail);
+            Assert.Equal(queryParameterName, exception.Error.Source.Parameter);
         }
 
         [Fact]
@@ -128,8 +139,38 @@ namespace UnitTests.QueryParameters
             // Arrange
             const string type = "articles";
             const string attrName = "dne";
+            var idAttribute = new AttrAttribute("id");
 
-            var query = new KeyValuePair<string, StringValues>($"fields[{type}]", new StringValues(attrName));
+            var query = new KeyValuePair<string, StringValues>("fields", attrName);
+
+            var resourceContext = new ResourceContext
+            {
+                ResourceName = type,
+                Attributes = new List<AttrAttribute> {idAttribute},
+                Relationships = new List<RelationshipAttribute>()
+            };
+
+            var service = GetService(resourceContext);
+
+            // Act, assert
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+            
+            Assert.Equal("fields", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("The specified field does not exist on the requested resource.", exception.Error.Title);
+            Assert.Equal($"The field '{attrName}' does not exist on resource '{type}'.", exception.Error.Detail);
+            Assert.Equal("fields", exception.Error.Source.Parameter);
+        }
+
+        [Fact]
+        public void Parse_LegacyNotation_ThrowsJsonApiException()
+        {
+            // Arrange
+            const string type = "articles";
+            const string attrName = "dne";
+            var queryParameterName = $"fields[{type}]";
+
+            var query = new KeyValuePair<string, StringValues>(queryParameterName, attrName);
 
             var resourceContext = new ResourceContext
             {
@@ -140,9 +181,14 @@ namespace UnitTests.QueryParameters
 
             var service = GetService(resourceContext);
 
-            // Act , assert
-            var ex = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
-            Assert.Equal(HttpStatusCode.BadRequest, ex.Error.Status);
+            // Act, assert
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+            
+            Assert.Equal(queryParameterName, exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.StartsWith("Square bracket notation in 'filter' is now reserved for relationships only", exception.Error.Title);
+            Assert.Equal($"Use '?fields=...' instead of '?fields[{type}]=...'.", exception.Error.Detail);
+            Assert.Equal(queryParameterName, exception.Error.Source.Parameter);
         }
     }
 }

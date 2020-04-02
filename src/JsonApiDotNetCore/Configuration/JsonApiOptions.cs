@@ -98,14 +98,14 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowClientGeneratedIds { get; set; }
 
         /// <summary>
-        /// Whether or not to allow all custom query parameters.
+        /// Whether or not to allow all custom query string parameters.
         /// </summary>
         /// <example>
         /// <code>
-        /// options.AllowCustomQueryParameters = true;
+        /// options.AllowCustomQueryStringParameters = true;
         /// </code>
         /// </example>
-        public bool AllowCustomQueryParameters { get; set; }
+        public bool AllowCustomQueryStringParameters { get; set; }
 
         /// <summary>
         /// The default behavior for serializing attributes that contain null.

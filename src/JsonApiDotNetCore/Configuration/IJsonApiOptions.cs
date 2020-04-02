@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Configuration
         int? MaximumPageNumber { get; }
         bool ValidateModelState { get; }
         bool AllowClientGeneratedIds { get; }
-        bool AllowCustomQueryParameters { get; set; }
+        bool AllowCustomQueryStringParameters { get; set; }
         string Namespace { get; set; }
     }
 

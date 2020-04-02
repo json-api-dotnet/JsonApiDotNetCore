@@ -4,6 +4,9 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Internal
 {
+    /// <summary>
+    /// The error that is thrown when a request is received that contains an unsupported HTTP verb.
+    /// </summary>
     public sealed class RequestMethodNotAllowedException : JsonApiException
     {
         public HttpMethod Method { get; }

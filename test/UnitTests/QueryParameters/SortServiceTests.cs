@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Internal;
+using System.Net;
+using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -50,8 +51,13 @@ namespace UnitTests.QueryParameters
             var sortService = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => sortService.Parse(query.Key, query.Value));
-            Assert.Contains("sort", exception.Message);
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => sortService.Parse(query.Key, query.Value));
+            
+            Assert.Equal("sort", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("The list of fields to sort on contains empty elements.", exception.Error.Title);
+            Assert.Null(exception.Error.Detail);
+            Assert.Equal("sort", exception.Error.Source.Parameter);
         }
     }
 }

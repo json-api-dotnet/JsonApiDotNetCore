@@ -2,6 +2,8 @@ using JsonApiDotNetCoreExample;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -28,7 +30,15 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await _fixture.Client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].Status);
+            Assert.Equal("Sorting on the requested attribute is not allowed.", errorDocument.Errors[0].Title);
+            Assert.Equal("Sorting on attribute 'achievedDate' is not allowed.", errorDocument.Errors[0].Detail);
+            Assert.Equal("sort", errorDocument.Errors[0].Source.Parameter);
         }
     }
 }

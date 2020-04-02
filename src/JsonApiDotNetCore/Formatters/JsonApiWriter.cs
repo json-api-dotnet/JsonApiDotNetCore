@@ -63,12 +63,12 @@ namespace JsonApiDotNetCore.Formatters
         {
             if (contextObject is ProblemDetails problemDetails)
             {
-                throw new ActionResultException(problemDetails);
+                throw new UnsuccessfulActionResultException(problemDetails);
             }
 
             if (contextObject == null && !IsSuccessStatusCode(statusCode))
             {
-                throw new ActionResultException(statusCode);
+                throw new UnsuccessfulActionResultException(statusCode);
             }
 
             try

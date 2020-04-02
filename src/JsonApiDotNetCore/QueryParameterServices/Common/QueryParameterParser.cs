@@ -5,6 +5,7 @@ using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.QueryParameterServices.Common;
 
@@ -31,6 +32,12 @@ namespace JsonApiDotNetCore.Services
 
             foreach (var pair in _queryStringAccessor.Query)
             {
+                if (string.IsNullOrWhiteSpace(pair.Value))
+                {
+                    throw new InvalidQueryStringParameterException(pair.Key, "Missing query string parameter value.",
+                        $"Missing value for '{pair.Key}' query string parameter.");
+                }
+
                 var service = _queryServices.FirstOrDefault(s => s.CanParse(pair.Key));
                 if (service != null)
                 {
@@ -41,9 +48,10 @@ namespace JsonApiDotNetCore.Services
 
                     service.Parse(pair.Key, pair.Value);
                 }
-                else if (!_options.AllowCustomQueryParameters)
+                else if (!_options.AllowCustomQueryStringParameters)
                 {
-                    throw new JsonApiException(HttpStatusCode.BadRequest, $"{pair} is not a valid query.");
+                    throw new InvalidQueryStringParameterException(pair.Key, "Unknown query string parameter.",
+                        $"Query string parameter '{pair.Key}' is unknown. Set '{nameof(IJsonApiOptions.AllowCustomQueryStringParameters)}' to 'true' in options to ignore unknown parameters.");
                 }
             }
         }

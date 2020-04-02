@@ -59,7 +59,7 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             var queryValue = @operator + value;
-            var query = new KeyValuePair<string, StringValues>($"filter[{key}]", new StringValues(queryValue));
+            var query = new KeyValuePair<string, StringValues>($"filter[{key}]", queryValue);
             var filterService = GetService();
 
             // Act

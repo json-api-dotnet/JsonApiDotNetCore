@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using UnitTests.TestModels;
@@ -46,7 +48,7 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string chain = "author.blogs.reviewer.favoriteFood,reviewer.blogs.author.favoriteSong";
-            var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
+            var query = new KeyValuePair<string, StringValues>("include", chain);
             var service = GetService();
 
             // Act
@@ -68,12 +70,17 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string chain = "author.blogs.reviewer.favoriteFood,reviewer.blogs.author.favoriteSong";
-            var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
+            var query = new KeyValuePair<string, StringValues>("include", chain);
             var service = GetService(_resourceGraph.GetResourceContext<Food>());
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>( () => service.Parse(query.Key, query.Value));
-            Assert.Contains("Invalid", exception.Message);
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+
+            Assert.Equal("include", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("The requested relationship to include does not exist.", exception.Error.Title);
+            Assert.Equal("The relationship 'author' on 'foods' does not exist.", exception.Error.Detail);
+            Assert.Equal("include", exception.Error.Source.Parameter);
         }
 
         [Fact]
@@ -81,12 +88,17 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string chain = "cannotInclude";
-            var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
+            var query = new KeyValuePair<string, StringValues>("include", chain);
             var service = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
-            Assert.Contains("not allowed", exception.Message);
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
+
+            Assert.Equal("include", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("Including the requested relationship is not allowed.", exception.Error.Title);
+            Assert.Equal("Including the relationship 'cannotInclude' on 'articles' is not allowed.", exception.Error.Detail);
+            Assert.Equal("include", exception.Error.Source.Parameter);
         }
 
         [Fact]
@@ -94,25 +106,17 @@ namespace UnitTests.QueryParameters
         {
             // Arrange
             const string chain = "nonsense";
-            var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
+            var query = new KeyValuePair<string, StringValues>("include", chain);
             var service = GetService();
 
             // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
-            Assert.Contains("Invalid", exception.Message);
-        }
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
 
-        [Fact]
-        public void Parse_EmptyChain_ThrowsJsonApiException()
-        {
-            // Arrange
-            const string chain = "";
-            var query = new KeyValuePair<string, StringValues>("include", new StringValues(chain));
-            var service = GetService();
-
-            // Act, assert
-            var exception = Assert.Throws<JsonApiException>(() => service.Parse(query.Key, query.Value));
-            Assert.Contains("Include parameter must not be empty if provided", exception.Message);
+            Assert.Equal("include", exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal("The requested relationship to include does not exist.", exception.Error.Title);
+            Assert.Equal("The relationship 'nonsense' on 'articles' does not exist.", exception.Error.Detail);
+            Assert.Equal("include", exception.Error.Source.Parameter);
         }
     }
 }

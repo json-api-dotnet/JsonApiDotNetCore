@@ -50,10 +50,10 @@ namespace UnitTests.QueryParameters
         [InlineData("false", true, false, true)]
         [InlineData("true", false, true, true)]
         [InlineData("true", false, false, false)]
-        public void Parse_QueryConfigWithApiSettings_CanParse(string queryConfig, bool @default, bool @override, bool expected)
+        public void Parse_QueryConfigWithApiSettings_CanParse(string queryValue, bool @default, bool @override, bool expected)
         {
             // Arrange
-            var query = new KeyValuePair<string, StringValues>("omitNull", new StringValues(queryConfig));
+            var query = new KeyValuePair<string, StringValues>("omitNull", queryValue);
             var service = GetService(@default, @override);
 
             // Act
