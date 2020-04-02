@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreExample.Models
     public class Tag : Identifiable
     {
         [Attr]
-        [MaxLength(15)]
+        [RegularExpression(@"^\W$")]
         public string Name { get; set; }
     }
 }

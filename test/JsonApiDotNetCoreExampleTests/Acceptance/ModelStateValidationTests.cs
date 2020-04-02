@@ -21,12 +21,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task When_posting_tag_with_long_name_it_must_fail()
+        public async Task When_posting_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
             var tag = new Tag
             {
-                Name = new string('X', 50)
+                Name = "!@#$%^&*().-"
             };
 
             var serializer = GetSerializer<Tag>();
@@ -52,17 +52,17 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].Status);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
-            Assert.Equal("The field Name must be a string or array type with a maximum length of '15'.", errorDocument.Errors[0].Detail);
+            Assert.Equal("The field Name must match the regular expression '^\\W$'.", errorDocument.Errors[0].Detail);
             Assert.Equal("/data/attributes/Name", errorDocument.Errors[0].Source.Pointer);
         }
 
         [Fact]
-        public async Task When_posting_tag_with_long_name_without_model_state_validation_it_must_succeed()
+        public async Task When_posting_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
             var tag = new Tag
             {
-                Name = new string('X', 50)
+                Name = "!@#$%^&*().-"
             };
 
             var serializer = GetSerializer<Tag>();
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
         }
 
         [Fact]
-        public async Task When_patching_tag_with_long_name_it_must_fail()
+        public async Task When_patching_tag_with_invalid_name_it_must_fail()
         {
             // Arrange
             var existingTag = new Tag
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var updatedTag = new Tag
             {
                 Id = existingTag.Id,
-                Name = new string('X', 50)
+                Name = "!@#$%^&*().-"
             };
 
             var serializer = GetSerializer<Tag>();
@@ -126,12 +126,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].Status);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
-            Assert.Equal("The field Name must be a string or array type with a maximum length of '15'.", errorDocument.Errors[0].Detail);
+            Assert.Equal("The field Name must match the regular expression '^\\W$'.", errorDocument.Errors[0].Detail);
             Assert.Equal("/data/attributes/Name", errorDocument.Errors[0].Source.Pointer);
         }
 
         [Fact]
-        public async Task When_patching_tag_with_long_name_without_model_state_validation_it_must_succeed()
+        public async Task When_patching_tag_with_invalid_name_without_model_state_validation_it_must_succeed()
         {
             // Arrange
             var existingTag = new Tag
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var updatedTag = new Tag
             {
                 Id = existingTag.Id,
-                Name = new string('X', 50)
+                Name = "!@#$%^&*().-"
             };
 
             var serializer = GetSerializer<Tag>();
