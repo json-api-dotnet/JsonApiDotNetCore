@@ -60,8 +60,8 @@ namespace JsonApiDotNetCore.Query
                 return queryContext;
             }
 
-            queryContext.Relationship = GetRelationship(query.Relationship);
-            var attribute = GetAttribute(query.Attribute, queryContext.Relationship);
+            queryContext.Relationship = GetRelationship(parameterName, query.Relationship);
+            var attribute = GetAttribute(parameterName, query.Attribute, queryContext.Relationship);
 
             if (!attribute.IsFilterable)
             {

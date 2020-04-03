@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var builder = new WebHostBuilder().UseStartup<Startup>();
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems" + queryString;
+            var route = "/api/v1/todoItems" + queryString;
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -66,5 +66,62 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal("Missing value for 'include' query string parameter.", errorDocument.Errors[0].Detail);
             Assert.Equal("include", errorDocument.Errors[0].Source.Parameter);
         }
+
+        [Fact]
+        public async Task Server_Returns_400_ForUnknownQueryParameter_Attribute()
+        {
+            // Arrange
+            const string queryString = "?sort=notSoGood";
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var httpMethod = new HttpMethod("GET");
+            var route = "/api/v1/todoItems" + queryString;
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The attribute requested in query string does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("The attribute 'notSoGood' does not exist on resource 'todoItems'.", errorDocument.Errors[0].Detail);
+            Assert.Equal("sort", errorDocument.Errors[0].Source.Parameter);
+        }
+
+        [Fact]
+        public async Task Server_Returns_400_ForUnknownQueryParameter_RelatedAttribute()
+        {
+            // Arrange
+            const string queryString = "?sort=notSoGood.evenWorse";
+
+            var builder = new WebHostBuilder().UseStartup<Startup>();
+            var httpMethod = new HttpMethod("GET");
+            var route = "/api/v1/todoItems" + queryString;
+            var server = new TestServer(builder);
+            var client = server.CreateClient();
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The relationship requested in query string does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("The relationship 'notSoGood' does not exist on resource 'todoItems'.", errorDocument.Errors[0].Detail);
+            Assert.Equal("sort", errorDocument.Errors[0].Source.Parameter);
+        }
+
     }
 }

@@ -90,8 +90,8 @@ namespace JsonApiDotNetCore.Query
 
         private SortQueryContext BuildQueryContext(SortQuery query)
         {
-            var relationship = GetRelationship(query.Relationship);
-            var attribute = GetAttribute(query.Attribute, relationship);
+            var relationship = GetRelationship("sort", query.Relationship);
+            var attribute = GetAttribute("sort", query.Attribute, relationship);
 
             if (!attribute.IsSortable)
             {

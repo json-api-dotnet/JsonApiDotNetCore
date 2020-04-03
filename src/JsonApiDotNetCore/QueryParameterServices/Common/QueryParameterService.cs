@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -32,14 +31,18 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Helper method for parsing query parameters into attributes
         /// </summary>
-        protected AttrAttribute GetAttribute(string target, RelationshipAttribute relationship = null)
+        protected AttrAttribute GetAttribute(string queryParameterName, string target, RelationshipAttribute relationship = null)
         {
             var attribute = relationship != null
                 ? _resourceGraph.GetAttributes(relationship.RightType).FirstOrDefault(a => a.Is(target))
                 : _requestResource.Attributes.FirstOrDefault(attr => attr.Is(target));
 
             if (attribute == null)
-                throw new JsonApiException(HttpStatusCode.BadRequest, $"'{target}' is not a valid attribute.");
+            {
+                throw new InvalidQueryStringParameterException(queryParameterName,
+                    "The attribute requested in query string does not exist.",
+                    $"The attribute '{target}' does not exist on resource '{_requestResource.ResourceName}'.");
+            }
 
             return attribute;
         }
@@ -47,12 +50,16 @@ namespace JsonApiDotNetCore.Query
         /// <summary>
         /// Helper method for parsing query parameters into relationships attributes
         /// </summary>
-        protected RelationshipAttribute GetRelationship(string propertyName)
+        protected RelationshipAttribute GetRelationship(string queryParameterName, string propertyName)
         {
             if (propertyName == null) return null;
             var relationship = _requestResource.Relationships.FirstOrDefault(r => r.Is(propertyName));
             if (relationship == null)
-                throw new JsonApiException(HttpStatusCode.BadRequest, $"{propertyName} is not a valid relationship on {_requestResource.ResourceName}.");
+            {
+                throw new InvalidQueryStringParameterException(queryParameterName,
+                    "The relationship requested in query string does not exist.",
+                    $"The relationship '{propertyName}' does not exist on resource '{_requestResource.ResourceName}'.");
+            }
 
             return relationship;
         }
