@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Exceptions;
 using Xunit;
 
 namespace UnitTests.Middleware

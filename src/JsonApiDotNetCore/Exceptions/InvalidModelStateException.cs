@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Exceptions
 {
     /// <summary>
     /// The error that is thrown when model state validation fails.

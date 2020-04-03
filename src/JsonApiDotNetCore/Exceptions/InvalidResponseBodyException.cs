@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
-namespace JsonApiDotNetCore.Internal.Exceptions
+namespace JsonApiDotNetCore.Exceptions
 {
     /// <summary>
     /// The error that is thrown when serializing the response body fails.

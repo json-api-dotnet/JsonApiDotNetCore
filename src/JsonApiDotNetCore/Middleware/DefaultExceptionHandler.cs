@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.Extensions.Logging;
 

@@ -1,7 +1,7 @@
 using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
-namespace JsonApiDotNetCore.Internal.Exceptions
+namespace JsonApiDotNetCore.Exceptions
 {
     /// <summary>
     /// The error that is thrown when parsing the request query string fails.

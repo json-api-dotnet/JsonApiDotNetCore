@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Exceptions
 {
     public class JsonApiException : Exception
     {

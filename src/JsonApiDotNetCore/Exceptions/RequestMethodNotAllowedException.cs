@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
-namespace JsonApiDotNetCore.Internal
+namespace JsonApiDotNetCore.Exceptions
 {
     /// <summary>
     /// The error that is thrown when a request is received that contains an unsupported HTTP verb.

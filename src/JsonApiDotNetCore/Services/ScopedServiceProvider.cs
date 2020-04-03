@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Net;
+using JsonApiDotNetCore.Exceptions;
 
 namespace JsonApiDotNetCore.Services
 {

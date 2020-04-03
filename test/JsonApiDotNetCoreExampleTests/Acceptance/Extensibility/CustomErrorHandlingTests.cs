@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.JsonApiDocuments;

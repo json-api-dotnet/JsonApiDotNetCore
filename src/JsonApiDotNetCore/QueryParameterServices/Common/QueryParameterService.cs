@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;

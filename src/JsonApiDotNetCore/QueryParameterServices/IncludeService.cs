@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Managers.Contracts;
-using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Models;
 using Microsoft.Extensions.Primitives;
 

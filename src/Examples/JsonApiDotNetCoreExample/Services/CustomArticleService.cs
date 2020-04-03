@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Exceptions;
 
 namespace JsonApiDotNetCoreExample.Services
 {

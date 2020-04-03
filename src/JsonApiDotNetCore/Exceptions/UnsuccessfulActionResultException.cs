@@ -2,7 +2,7 @@ using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCore.Internal.Exceptions
+namespace JsonApiDotNetCore.Exceptions
 {
     /// <summary>
     /// The error that is thrown when an <see cref="IActionResult"/> with non-success status is returned from a controller method.

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
-using JsonApiDotNetCore.Internal.Exceptions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;

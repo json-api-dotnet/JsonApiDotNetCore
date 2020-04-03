@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using Microsoft.AspNetCore.Mvc.Filters;
 

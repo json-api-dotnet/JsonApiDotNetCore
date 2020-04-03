@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Internal.Exceptions;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
