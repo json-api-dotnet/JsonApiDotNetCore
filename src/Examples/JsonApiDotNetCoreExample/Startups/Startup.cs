@@ -6,6 +6,8 @@ using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using JsonApiDotNetCore.Extensions;
 using System;
+using JsonApiDotNetCore.Query;
+using JsonApiDotNetCoreExample.Services;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -25,6 +27,9 @@ namespace JsonApiDotNetCoreExample
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<SkipCacheQueryParameterService>();
+            services.AddScoped<IQueryParameterService>(sp => sp.GetService<SkipCacheQueryParameterService>());
+
             services
                 .AddDbContext<AppDbContext>(options =>
                 {

@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace JsonApiDotNetCore.Controllers
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableQueryAttribute : Attribute
     {
         private readonly List<string> _parameterNames;

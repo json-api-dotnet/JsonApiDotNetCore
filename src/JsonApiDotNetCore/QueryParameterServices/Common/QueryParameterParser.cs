@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.QueryParameterServices.Common;
 
@@ -43,7 +40,9 @@ namespace JsonApiDotNetCore.Services
                 {
                     if (!service.IsEnabled(disableQueryAttribute))
                     {
-                        throw new JsonApiException(HttpStatusCode.BadRequest, $"{pair} is not available for this resource.");
+                        throw new InvalidQueryStringParameterException(pair.Key,
+                            "Usage of one or more query string parameters is not allowed at the requested endpoint.",
+                            $"The parameter '{pair.Key}' cannot be used at this endpoint.");
                     }
 
                     service.Parse(pair.Key, pair.Value);
