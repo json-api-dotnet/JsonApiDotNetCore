@@ -135,11 +135,10 @@ namespace JsonApiDotNetCore.Serialization
             var resourceContext = _provider.GetResourceContext(data.Type);
             if (resourceContext == null)
             {
-                throw new JsonApiException(HttpStatusCode.BadRequest,
-                     message: $"This API does not contain a json:api resource named '{data.Type}'.",
-                     detail: "This resource is not registered on the ResourceGraph. "
-                             + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
-                             + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
+                throw new InvalidRequestBodyException("Payload includes unknown resource type.",
+                    $"The resource '{data.Type}' is not registered on the resource graph. " +
+                    "If you are using Entity Framework, make sure the DbSet matches the expected resource name. " +
+                    "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
             }
 
             var entity = resourceContext.ResourceType.New<IIdentifiable>();

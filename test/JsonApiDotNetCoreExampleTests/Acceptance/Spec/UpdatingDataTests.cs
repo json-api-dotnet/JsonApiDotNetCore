@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
-            Assert.Equal("Payload must include id attribute.", error.Title);
+            Assert.Equal("Failed to deserialize request body: Payload must include id attribute.", error.Title);
             Assert.Null(error.Detail);
         }
         

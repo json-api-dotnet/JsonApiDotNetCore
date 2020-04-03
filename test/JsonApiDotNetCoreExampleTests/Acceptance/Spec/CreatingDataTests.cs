@@ -238,6 +238,31 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task CreateResource_UnknownEntityType_Fails()
+        {
+            // Arrange
+            string content = JsonConvert.SerializeObject(new
+            {
+                data = new
+                {
+                    type = "something"
+                }
+            });
+
+            // Act
+            var (body, response) = await Post("/api/v1/todoItems", content);
+
+            // Assert
+            AssertEqualStatusCode(HttpStatusCode.UnprocessableEntity, response);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Failed to deserialize request body: Payload includes unknown resource type.", errorDocument.Errors[0].Title);
+            Assert.StartsWith("The resource 'something' is not registered on the resource graph.", errorDocument.Errors[0].Detail);
+        }
+
+        [Fact]
         public async Task CreateRelationship_ToOneWithImplicitRemove_IsCreated()
         {
             // Arrange

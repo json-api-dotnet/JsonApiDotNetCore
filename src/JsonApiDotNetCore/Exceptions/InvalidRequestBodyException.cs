@@ -9,11 +9,28 @@ namespace JsonApiDotNetCore.Exceptions
     /// </summary>
     public sealed class InvalidRequestBodyException : JsonApiException
     {
-        public InvalidRequestBodyException(string message, Exception innerException = null)
+        public InvalidRequestBodyException(string reason)
+            : this(reason, null, null)
+        {
+        }
+
+        public InvalidRequestBodyException(string reason, string details)
+            : this(reason, details, null)
+        {
+        }
+
+        public InvalidRequestBodyException(Exception innerException)
+            : this(null, null, innerException)
+        {
+        }
+
+        private InvalidRequestBodyException(string reason, string details = null, Exception innerException = null)
             : base(new Error(HttpStatusCode.UnprocessableEntity)
             {
-                Title = message ?? "Failed to deserialize request body.",
-                Detail = innerException?.Message
+                Title = reason != null
+                    ? "Failed to deserialize request body: " + reason
+                    : "Failed to deserialize request body.",
+                Detail = details ?? innerException?.Message
             }, innerException)
         {
         }
