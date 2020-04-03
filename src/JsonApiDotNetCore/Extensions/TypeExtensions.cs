@@ -79,18 +79,23 @@ namespace JsonApiDotNetCore.Extensions
             if (t == null) throw new ArgumentNullException(nameof(t));
 
             var listType = typeof(List<>).MakeGenericType(t);
-            var list = (IEnumerable)Activator.CreateInstance(listType);
+            var list = (IEnumerable)CreateNewInstance(listType);
             return list;
         }
 
+        public static object New(this Type t)
+        {
+            return New<object>(t);
+        }
+
         /// <summary>
-        /// Creates a new instance of type t, casting it to the specified TInterface 
+        /// Creates a new instance of type t, casting it to the specified type.
         /// </summary>
-        public static TInterface New<TInterface>(this Type t)
+        public static T New<T>(this Type t)
         {
             if (t == null) throw new ArgumentNullException(nameof(t));
 
-            var instance = (TInterface)CreateNewInstance(t);
+            var instance = (T)CreateNewInstance(t);
             return instance;
         }
 
@@ -100,9 +105,9 @@ namespace JsonApiDotNetCore.Extensions
             {
                 return Activator.CreateInstance(type);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                throw new JsonApiException(HttpStatusCode.InternalServerError, $"Type '{type}' cannot be instantiated using the default constructor.", e);
+                throw new ObjectCreationException(type, exception);
             }
         }
 

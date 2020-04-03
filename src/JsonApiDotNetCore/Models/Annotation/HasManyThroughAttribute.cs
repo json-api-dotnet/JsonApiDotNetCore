@@ -6,6 +6,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
+using TypeExtensions = JsonApiDotNetCore.Extensions.TypeExtensions;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -112,12 +113,12 @@ namespace JsonApiDotNetCore.Models
             }
             else
             {
-                var throughRelationshipCollection = (IList)Activator.CreateInstance(ThroughProperty.PropertyType);
+                var throughRelationshipCollection = ThroughProperty.PropertyType.New<IList>();
                 ThroughProperty.SetValue(entity, throughRelationshipCollection);
 
                 foreach (IIdentifiable pointer in (IList)newValue)
                 {
-                    var throughInstance = Activator.CreateInstance(ThroughType);
+                    var throughInstance = ThroughType.New();
                     LeftProperty.SetValue(throughInstance, entity);
                     RightProperty.SetValue(throughInstance, pointer);
                     throughRelationshipCollection.Add(throughInstance);

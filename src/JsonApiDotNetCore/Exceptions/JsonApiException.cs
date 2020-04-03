@@ -38,15 +38,5 @@ namespace JsonApiDotNetCore.Exceptions
                 Detail = detail
             };
         }
-
-        public JsonApiException(HttpStatusCode status, string message, Exception innerException)
-            : base(message, innerException)
-        {
-            Error = new Error(status)
-            {
-                Title = message,
-                Detail = innerException.Message
-            };
-        }
     }
 }

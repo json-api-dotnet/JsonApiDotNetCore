@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
+using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Internal
@@ -68,7 +69,7 @@ namespace JsonApiDotNetCore.Internal
         {
             if (type.IsValueType)
             {
-                return Activator.CreateInstance(type);
+                return type.New();
             }
             return null;
         }

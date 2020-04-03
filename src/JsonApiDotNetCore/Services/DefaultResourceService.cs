@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<bool> DeleteAsync(TId id)
         {
-            var entity = (TResource)Activator.CreateInstance(typeof(TResource));
+            var entity = typeof(TResource).New<TResource>();
             entity.Id = id;
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
             var succeeded = await _repository.DeleteAsync(entity.Id);
