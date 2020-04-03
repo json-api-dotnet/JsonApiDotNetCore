@@ -4,9 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -214,14 +216,25 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task CreateResource_EntityTypeMismatch_IsConflict()
         {
             // Arrange
-            var serializer = GetSerializer<TodoItemCollection>(e => new { }, e => new { e.Owner });
-            var content = serializer.Serialize(_todoItemFaker.Generate()).Replace("todoItems", "people");
+            string content = JsonConvert.SerializeObject(new
+            {
+                data = new
+                {
+                    type = "people"
+                }
+            });
 
             // Act
-            var (_, response) = await Post("/api/v1/todoItems", content);
+            var (body, response) = await Post("/api/v1/todoItems", content);
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Conflict, response);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Conflict, errorDocument.Errors[0].Status);
+            Assert.Equal("Resource type mismatch between request body and endpoint URL.", errorDocument.Errors[0].Title);
+            Assert.Equal("Expected resource of type 'todoItems' in POST request body at endpoint '/api/v1/todoItems', instead of 'people'.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
