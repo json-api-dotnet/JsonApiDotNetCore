@@ -54,7 +54,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => sortService.Parse(query.Key, query.Value));
             
             Assert.Equal("sort", exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("The list of fields to sort on contains empty elements.", exception.Error.Title);
             Assert.Null(exception.Error.Detail);
             Assert.Equal("sort", exception.Error.Source.Parameter);

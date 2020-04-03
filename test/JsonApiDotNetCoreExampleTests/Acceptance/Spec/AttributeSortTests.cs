@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Sorting on the requested attribute is not allowed.", errorDocument.Errors[0].Title);
             Assert.Equal("Sorting on attribute 'achievedDate' is not allowed.", errorDocument.Errors[0].Detail);
             Assert.Equal("sort", errorDocument.Errors[0].Source.Parameter);

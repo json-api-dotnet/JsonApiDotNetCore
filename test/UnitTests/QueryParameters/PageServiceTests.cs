@@ -63,7 +63,7 @@ namespace UnitTests.QueryParameters
                 var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
 
                 Assert.Equal("page[size]", exception.QueryParameterName);
-                Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+                Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
                 Assert.Equal("The specified value is not in the range of valid values.", exception.Error.Title);
                 Assert.StartsWith($"Value '{value}' is invalid, because it must be a whole number that is greater than zero", exception.Error.Detail);
                 Assert.Equal("page[size]", exception.Error.Source.Parameter);
@@ -93,7 +93,7 @@ namespace UnitTests.QueryParameters
                 var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
 
                 Assert.Equal("page[number]", exception.QueryParameterName);
-                Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+                Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
                 Assert.Equal("The specified value is not in the range of valid values.", exception.Error.Title);
                 Assert.StartsWith($"Value '{value}' is invalid, because it must be a whole number that is non-zero", exception.Error.Detail);
                 Assert.Equal("page[number]", exception.Error.Source.Parameter);

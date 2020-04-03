@@ -77,7 +77,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
 
             Assert.Equal("include", exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("The requested relationship to include does not exist.", exception.Error.Title);
             Assert.Equal("The relationship 'author' on 'foods' does not exist.", exception.Error.Detail);
             Assert.Equal("include", exception.Error.Source.Parameter);
@@ -95,7 +95,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
 
             Assert.Equal("include", exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("Including the requested relationship is not allowed.", exception.Error.Title);
             Assert.Equal("Including the relationship 'cannotInclude' on 'articles' is not allowed.", exception.Error.Detail);
             Assert.Equal("include", exception.Error.Source.Parameter);
@@ -113,7 +113,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
 
             Assert.Equal("include", exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("The requested relationship to include does not exist.", exception.Error.Title);
             Assert.Equal("The relationship 'nonsense' on 'articles' does not exist.", exception.Error.Detail);
             Assert.Equal("include", exception.Error.Source.Parameter);

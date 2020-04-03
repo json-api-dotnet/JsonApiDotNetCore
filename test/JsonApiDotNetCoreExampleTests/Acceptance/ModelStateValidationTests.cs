@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
             Assert.Equal("The field Name must match the regular expression '^\\W$'.", errorDocument.Errors[0].Detail);
             Assert.Equal("/data/attributes/Name", errorDocument.Errors[0].Source.Pointer);
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Input validation failed.", errorDocument.Errors[0].Title);
             Assert.Equal("The field Name must match the regular expression '^\\W$'.", errorDocument.Errors[0].Detail);
             Assert.Equal("/data/attributes/Name", errorDocument.Errors[0].Source.Pointer);

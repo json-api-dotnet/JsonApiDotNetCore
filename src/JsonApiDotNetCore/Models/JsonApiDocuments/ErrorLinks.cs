@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
         /// <summary>
         /// A URL that leads to further details about this particular occurrence of the problem.
         /// </summary>
-        [JsonProperty("about")]
+        [JsonProperty]
         public string About { get; set; }
     }
 }

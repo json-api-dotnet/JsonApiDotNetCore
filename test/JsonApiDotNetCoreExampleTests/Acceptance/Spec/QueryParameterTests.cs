@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Unknown query string parameter.", errorDocument.Errors[0].Title);
             Assert.Equal("Query string parameter 'someKey' is unknown. Set 'AllowCustomQueryStringParameters' to 'true' in options to ignore unknown parameters.", errorDocument.Errors[0].Detail);
             Assert.Equal("someKey", errorDocument.Errors[0].Source.Parameter);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Missing query string parameter value.", errorDocument.Errors[0].Title);
             Assert.Equal("Missing value for 'include' query string parameter.", errorDocument.Errors[0].Detail);
             Assert.Equal("include", errorDocument.Errors[0].Source.Parameter);

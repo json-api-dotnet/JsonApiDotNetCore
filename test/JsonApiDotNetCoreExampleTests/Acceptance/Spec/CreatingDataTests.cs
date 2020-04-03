@@ -232,7 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.Conflict, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.Conflict, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Resource type mismatch between request body and endpoint URL.", errorDocument.Errors[0].Title);
             Assert.Equal("Expected resource of type 'todoItems' in POST request body at endpoint '/api/v1/todoItems', instead of 'people'.", errorDocument.Errors[0].Detail);
         }

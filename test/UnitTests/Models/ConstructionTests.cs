@@ -38,7 +38,7 @@ namespace UnitTests.Models
             var exception = Assert.Throws<ObjectCreationException>(action);
 
             Assert.Equal(typeof(ResourceWithParameters), exception.Type);
-            Assert.Equal(HttpStatusCode.InternalServerError, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.InternalServerError, exception.Error.StatusCode);
             Assert.Equal("Failed to create an object instance using its default constructor.", exception.Error.Title);
             Assert.Equal("Failed to create an instance of 'UnitTests.Models.ConstructionTests+ResourceWithParameters' using its default constructor.", exception.Error.Detail);
         }

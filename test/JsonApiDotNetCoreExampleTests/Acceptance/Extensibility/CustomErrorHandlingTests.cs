@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.Extensions.Logging;
@@ -28,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             Assert.Single(errorDocument.Errors);
             Assert.Equal("For support, email to: support@company.com?subject=YouTube",
                 errorDocument.Errors[0].Meta.Data["support"]);
-            Assert.NotEmpty((string[]) errorDocument.Errors[0].Meta.Data["stackTrace"]);
+            Assert.NotEmpty((string[]) errorDocument.Errors[0].Meta.Data["StackTrace"]);
 
             Assert.Single(loggerFactory.Logger.Messages);
             Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages[0].LogLevel);

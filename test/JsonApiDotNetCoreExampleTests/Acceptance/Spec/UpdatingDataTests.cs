@@ -86,7 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.Status);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body.", error.Title);
             Assert.Equal("Property set method not found.", error.Detail);
         }
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.Status);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Payload must include id attribute.", error.Title);
             Assert.Null(error.Detail);
         }
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Single(document.Errors);
 
             var error = document.Errors.Single();
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.Status);
+            Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body.", error.Title);
             Assert.StartsWith("Invalid character after parsing", error.Detail);
         }

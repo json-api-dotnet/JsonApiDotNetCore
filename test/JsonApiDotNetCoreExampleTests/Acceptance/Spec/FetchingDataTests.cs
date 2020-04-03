@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             Assert.Single(errorDocument.Errors);
-            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].Status);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("NotFound", errorDocument.Errors[0].Title);
         }
     }

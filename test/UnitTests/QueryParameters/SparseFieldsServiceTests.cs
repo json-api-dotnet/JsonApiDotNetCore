@@ -96,7 +96,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
             
             Assert.Equal(queryParameterName, exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("Sparse field navigation path refers to an invalid relationship.", exception.Error.Title);
             Assert.Equal("'missing' in 'fields[missing]' is not a valid relationship of articles.", exception.Error.Detail);
             Assert.Equal(queryParameterName, exception.Error.Source.Parameter);
@@ -127,7 +127,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
             
             Assert.Equal(queryParameterName, exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("Deeply nested sparse field selection is currently not supported.", exception.Error.Title);
             Assert.Equal($"Parameter fields[{relationship}] is currently not supported.", exception.Error.Detail);
             Assert.Equal(queryParameterName, exception.Error.Source.Parameter);
@@ -156,7 +156,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
             
             Assert.Equal("fields", exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Equal("The specified field does not exist on the requested resource.", exception.Error.Title);
             Assert.Equal($"The field '{attrName}' does not exist on resource '{type}'.", exception.Error.Detail);
             Assert.Equal("fields", exception.Error.Source.Parameter);
@@ -185,7 +185,7 @@ namespace UnitTests.QueryParameters
             var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(query.Key, query.Value));
             
             Assert.Equal(queryParameterName, exception.QueryParameterName);
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.StartsWith("Square bracket notation in 'filter' is now reserved for relationships only", exception.Error.Title);
             Assert.Equal($"Use '?fields=...' instead of '?fields[{type}]=...'.", exception.Error.Detail);
             Assert.Equal(queryParameterName, exception.Error.Source.Parameter);

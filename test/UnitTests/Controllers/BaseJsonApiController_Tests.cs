@@ -73,7 +73,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync());
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
@@ -103,7 +103,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(id));
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
@@ -133,7 +133,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipsAsync(id, string.Empty));
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
@@ -163,7 +163,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipAsync(id, string.Empty));
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
 
@@ -195,7 +195,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, It.IsAny<Resource>()));
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Patch, exception.Method);
         }
 
@@ -243,7 +243,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchRelationshipsAsync(id, string.Empty, null));
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Patch, exception.Method);
         }
 
@@ -273,7 +273,7 @@ namespace UnitTests
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.DeleteAsync(id));
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Error.StatusCode);
             Assert.Equal(HttpMethod.Delete, exception.Method);
         }
     }

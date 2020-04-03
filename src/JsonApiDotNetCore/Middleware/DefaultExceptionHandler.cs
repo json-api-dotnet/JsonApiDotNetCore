@@ -65,10 +65,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private void ApplyOptions(Error error, Exception exception)
         {
-            if (_options.IncludeExceptionStackTraceInErrors)
-            {
-                error.Meta.IncludeExceptionStackTrace(exception);
-            }
+            error.Meta.IncludeExceptionStackTrace(_options.IncludeExceptionStackTraceInErrors ? exception : null);
         }
     }
 }

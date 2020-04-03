@@ -90,7 +90,7 @@ namespace UnitTests.Middleware
             {
                 await task;
             });
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.Status);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
             Assert.Contains(baseId, exception.Message);
         }
 
