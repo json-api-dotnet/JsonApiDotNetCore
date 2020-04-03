@@ -1,9 +1,11 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance
@@ -19,10 +21,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             const string method = "GET";
 
             // Act
-            var statusCode = await MakeRequestAsync(route, method);
+            var response = await MakeRequestAsync(route, method);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, statusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
@@ -33,10 +35,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             const string method = "POST";
 
             // Act
-            var statusCode = await MakeRequestAsync(route, method);
+            var response = await MakeRequestAsync(route, method);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, statusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
@@ -47,10 +49,10 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             const string method = "PATCH";
 
             // Act
-            var statusCode = await MakeRequestAsync(route, method);
+            var response = await MakeRequestAsync(route, method);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, statusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
@@ -61,13 +63,20 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             const string method = "DELETE";
 
             // Act
-            var statusCode = await MakeRequestAsync(route, method);
+            var response = await MakeRequestAsync(route, method);
 
             // Assert
-            Assert.Equal(HttpStatusCode.MethodNotAllowed, statusCode);
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The request method is not allowed.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource does not support DELETE requests.", errorDocument.Errors[0].Detail);
         }
 
-        private async Task<HttpStatusCode> MakeRequestAsync(string route, string method)
+        private async Task<HttpResponseMessage> MakeRequestAsync(string route, string method)
         {
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
@@ -76,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
             var response = await client.SendAsync(request);
-            return response.StatusCode;
+            return response;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
@@ -18,7 +19,9 @@ namespace JsonApiDotNetCore.Controllers
             var method = context.HttpContext.Request.Method;
 
             if (CanExecuteAction(method) == false)
-                throw new JsonApiException(HttpStatusCode.MethodNotAllowed, $"This resource does not support {method} requests.");
+            {
+                throw new RequestMethodNotAllowedException(new HttpMethod(method));
+            }
 
             await next();
         }
