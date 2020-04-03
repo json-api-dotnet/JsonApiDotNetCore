@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (stringId == "1337")
             {
-                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update author of any TodoItem", new UnauthorizedAccessException());
+                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update author of any TodoItem");
             }
         }
 

@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (pipeline == ResourcePipeline.GetSingle && isIncluded)
             {
-                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to include passports on individual people", new UnauthorizedAccessException());
+                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to include passports on individual people");
             }
         }
 
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExample.Resources
             {
                 if (entity.IsLocked)
                 {
-                    throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update fields or relations of locked persons", new UnauthorizedAccessException());
+                    throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update fields or relations of locked persons");
                 }
             }
         }
