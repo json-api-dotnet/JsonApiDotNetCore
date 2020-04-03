@@ -6,7 +6,6 @@ using System.Reflection;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
-using TypeExtensions = JsonApiDotNetCore.Extensions.TypeExtensions;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -27,6 +26,7 @@ namespace JsonApiDotNetCore.Models
     /// public List&lt;ArticleTag&gt; ArticleTags { get; set; }
     /// </code>
     /// </example>
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
         /// <summary>

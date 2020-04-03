@@ -1,9 +1,11 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasOneAttribute : RelationshipAttribute
     {
         /// <summary>

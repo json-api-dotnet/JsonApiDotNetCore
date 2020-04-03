@@ -1,7 +1,9 @@
+using System;
 using JsonApiDotNetCore.Models.Links;
 
 namespace JsonApiDotNetCore.Models
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public class HasManyAttribute : RelationshipAttribute
     {
         /// <summary>

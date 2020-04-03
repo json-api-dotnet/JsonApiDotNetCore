@@ -32,6 +32,7 @@ namespace JsonApiDotNetCore.Models
     /// }
     /// ]]></example>
     /// </remarks>
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class EagerLoadAttribute : Attribute
     {
         public PropertyInfo Property { get; internal set; }

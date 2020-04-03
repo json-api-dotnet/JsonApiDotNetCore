@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class AttrAttribute : Attribute, IResourceField
     {
         /// <summary>

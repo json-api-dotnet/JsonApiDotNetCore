@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Internal;
 
 namespace JsonApiDotNetCore.Models.Links
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class LinksAttribute : Attribute
     {
         public LinksAttribute(Link topLevelLinks = Link.NotConfigured, Link resourceLinks = Link.NotConfigured, Link relationshipLinks = Link.NotConfigured)

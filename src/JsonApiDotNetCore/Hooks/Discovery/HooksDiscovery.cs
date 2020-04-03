@@ -64,12 +64,12 @@ namespace JsonApiDotNetCore.Hooks
                     continue;
 
                 implementedHooks.Add(hook);
-                var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValues>().SingleOrDefault();
+                var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValuesAttribute>().SingleOrDefault();
                 if (attr != null)
                 {
                     if (!_databaseValuesAttributeAllowed.Contains(hook))
                     {
-                        throw new JsonApiSetupException("DatabaseValuesAttribute cannot be used on hook" +
+                        throw new JsonApiSetupException($"{nameof(LoadDatabaseValuesAttribute)} cannot be used on hook" +
                             $"{hook:G} in resource definition  {containerType.Name}");
                     }
                     var targetList = attr.Value ? databaseValuesEnabledHooks : databaseValuesDisabledHooks;
