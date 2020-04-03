@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JsonApiDotNetCore.Graph;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -9,24 +10,21 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
     public sealed class ErrorDocument
     {
-        public IList<Error> Errors { get; }
+        public IReadOnlyList<Error> Errors { get; }
 
         public ErrorDocument()
+            : this(new List<Error>())
         {
-            Errors = new List<Error>();
         }
 
-        public ErrorDocument(Error error)
+        public ErrorDocument(Error error) 
+            : this(new[] {error})
         {
-            Errors = new List<Error>
-            {
-                error
-            };
         }
 
-        public ErrorDocument(IList<Error> errors)
+        public ErrorDocument(IEnumerable<Error> errors)
         {
-            Errors = errors;
+            Errors = errors.ToList();
         }
 
         public string GetJson()

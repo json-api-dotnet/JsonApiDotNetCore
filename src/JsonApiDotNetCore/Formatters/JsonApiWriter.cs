@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Serialization.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -71,6 +73,8 @@ namespace JsonApiDotNetCore.Formatters
                 throw new UnsuccessfulActionResultException(statusCode);
             }
 
+            contextObject = WrapErrors(contextObject);
+
             try
             {
                 return _serializer.Serialize(contextObject);
@@ -79,6 +83,21 @@ namespace JsonApiDotNetCore.Formatters
             {
                 throw new InvalidResponseBodyException(exception);
             }
+        }
+
+        private static object WrapErrors(object contextObject)
+        {
+            if (contextObject is IEnumerable<Error> errors)
+            {
+                contextObject = new ErrorDocument(errors);
+            }
+
+            if (contextObject is Error error)
+            {
+                contextObject = new ErrorDocument(error);
+            }
+
+            return contextObject;
         }
 
         private bool IsSuccessStatusCode(HttpStatusCode statusCode)

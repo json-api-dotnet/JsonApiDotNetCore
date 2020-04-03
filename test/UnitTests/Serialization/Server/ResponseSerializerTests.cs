@@ -455,8 +455,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var error = new Error(HttpStatusCode.InsufficientStorage) {Title = "title", Detail = "detail"};
-            var errorDocument = new ErrorDocument();
-            errorDocument.Errors.Add(error);
+            var errorDocument = new ErrorDocument(error);
 
             var expectedJson = JsonConvert.SerializeObject(new
             {
