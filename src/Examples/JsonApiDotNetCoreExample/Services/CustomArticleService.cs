@@ -1,16 +1,13 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Data;
 using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Query;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Exceptions;
 
 namespace JsonApiDotNetCoreExample.Services
 {
@@ -29,13 +26,13 @@ namespace JsonApiDotNetCoreExample.Services
         public override async Task<Article> GetAsync(int id)
         {
             var newEntity = await base.GetAsync(id);
-            if(newEntity == null)
+
+            if (newEntity != null)
             {
-                throw new JsonApiException(HttpStatusCode.NotFound, "The resource could not be found.");
+                newEntity.Name = "None for you Glen Coco";
             }
-            newEntity.Name = "None for you Glen Coco";
+
             return newEntity;
         }
     }
-
 }

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
@@ -19,9 +18,13 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (pipeline == ResourcePipeline.GetSingle && entities.Single().Name == "Classified")
             {
-                throw new JsonApiException(HttpStatusCode.Forbidden, "You are not allowed to see this article!");
+                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
+                {
+                    Title = "You are not allowed to see this article."
+                });
             }
-            return entities.Where(t => t.Name != "This should be not be included");
+
+            return entities.Where(t => t.Name != "This should not be included");
         }
     }
 }

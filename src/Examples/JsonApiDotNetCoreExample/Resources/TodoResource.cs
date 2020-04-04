@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCoreExample.Resources
 {
@@ -18,7 +19,10 @@ namespace JsonApiDotNetCoreExample.Resources
         {
             if (stringId == "1337")
             {
-                throw new JsonApiException(HttpStatusCode.Forbidden, "Not allowed to update author of any TodoItem");
+                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
+                {
+                    Title = "You are not allowed to update the author of todo items."
+                });
             }
         }
 

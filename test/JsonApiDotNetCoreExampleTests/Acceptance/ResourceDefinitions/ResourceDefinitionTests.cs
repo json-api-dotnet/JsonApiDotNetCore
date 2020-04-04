@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
             var context = _fixture.GetService<AppDbContext>();
 
             var articles = _articleFaker.Generate(3).ToList();
-            string toBeExcluded = "This should be not be included";
+            string toBeExcluded = "This should not be included";
             articles[0].Name = toBeExcluded;
 
 
@@ -223,7 +223,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             var article = _articleFaker.Generate();
             var tags = _tagFaker.Generate(2);
-            string toBeExcluded = "This should be not be included";
+            string toBeExcluded = "This should not be included";
             tags[0].Name = toBeExcluded;
 
             var articleTags = new[]

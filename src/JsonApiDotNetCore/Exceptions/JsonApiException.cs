@@ -8,13 +8,7 @@ namespace JsonApiDotNetCore.Exceptions
     {
         public Error Error { get; }
 
-        public JsonApiException(Error error)
-            : base(error.Title)
-        {
-            Error = error;
-        }
-
-        public JsonApiException(Error error, Exception innerException)
+        public JsonApiException(Error error, Exception innerException = null)
             : base(error.Title, innerException)
         {
             Error = error;
@@ -26,16 +20,6 @@ namespace JsonApiDotNetCore.Exceptions
             Error = new Error(status)
             {
                 Title = message
-            };
-        }
-
-        public JsonApiException(HttpStatusCode status, string message, string detail)
-            : base(message)
-        {
-            Error = new Error(status)
-            {
-                Title = message,
-                Detail = detail
             };
         }
     }
