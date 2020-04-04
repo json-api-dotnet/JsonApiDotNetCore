@@ -113,6 +113,52 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         }
 
         [Fact]
+        public async Task Cannot_Filter_Equality_If_Type_Mismatch()
+        {
+            // Arrange
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todoItems?filter[ordinal]=ABC";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Mismatch between query string parameter value and resource attribute type.", errorDocument.Errors[0].Title);
+            Assert.Equal("Failed to convert 'ABC' to 'Int64' for filtering on 'ordinal' attribute.", errorDocument.Errors[0].Detail);
+            Assert.Equal("filter", errorDocument.Errors[0].Source.Parameter);
+        }
+
+        [Fact]
+        public async Task Cannot_Filter_In_Set_If_Type_Mismatch()
+        {
+            // Arrange
+            var httpMethod = new HttpMethod("GET");
+            var route = $"/api/v1/todoItems?filter[ordinal]=in:1,ABC,2";
+            var request = new HttpRequestMessage(httpMethod, route);
+
+            // Act
+            var response = await _fixture.Client.SendAsync(request);
+
+            // Assert
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Mismatch between query string parameter value and resource attribute type.", errorDocument.Errors[0].Title);
+            Assert.Equal("Failed to convert 'ABC' in set '1,ABC,2' to 'Int64' for filtering on 'ordinal' attribute.", errorDocument.Errors[0].Detail);
+            Assert.Equal("filter", errorDocument.Errors[0].Source.Parameter);
+        }
+
+        [Fact]
         public async Task Can_Filter_On_Not_Equal_Values()
         {
             // Arrange

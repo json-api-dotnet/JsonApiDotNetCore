@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Internal
             }
             catch (Exception e)
             {
-                throw new FormatException($"{ typeOfValue } cannot be converted to { type }", e);
+                throw new FormatException($"{typeOfValue} cannot be converted to {type}", e);
             }
         }
 
