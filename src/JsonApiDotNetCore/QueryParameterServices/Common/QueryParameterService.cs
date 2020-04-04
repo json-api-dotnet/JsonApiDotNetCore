@@ -71,7 +71,9 @@ namespace JsonApiDotNetCore.Query
         {
             if (_requestResource != _mainRequestResource)
             {
-                throw new JsonApiException(HttpStatusCode.BadRequest, $"Query parameter {parameterName} is currently not supported on nested resource endpoints (i.e. of the form '/article/1/author?{parameterName}=...'");
+                throw new InvalidQueryStringParameterException(parameterName,
+                    "The specified query string parameter is currently not supported on nested resource endpoints.",
+                    $"Query string parameter '{parameterName}' is currently not supported on nested resource endpoints. (i.e. of the form '/article/1/author?parameterName=...')");
             }
         }
     }

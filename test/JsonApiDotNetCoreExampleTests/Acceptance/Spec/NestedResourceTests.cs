@@ -2,8 +2,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
+using Newtonsoft.Json;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -61,14 +63,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         [InlineData("sort=ordinal")]
         [InlineData("page[number]=1")]
         [InlineData("page[size]=10")]
-        public async Task NestedResourceRoute_RequestWithUnsupportedQueryParam_ReturnsBadRequest(string queryParam)
+        public async Task NestedResourceRoute_RequestWithUnsupportedQueryParam_ReturnsBadRequest(string queryParameter)
         {
+            string parameterName = queryParameter.Split('=')[0];
+
             // Act
-            var (body, response) = await Get($"/api/v1/people/1/assignedTodoItems?{queryParam}");
+            var (body, response) = await Get($"/api/v1/people/1/assignedTodoItems?{queryParameter}");
 
             // Assert
-            AssertEqualStatusCode(HttpStatusCode.BadRequest, response);
-            Assert.Contains("currently not supported", body);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The specified query string parameter is currently not supported on nested resource endpoints.", errorDocument.Errors[0].Title);
+            Assert.Equal($"Query string parameter '{parameterName}' is currently not supported on nested resource endpoints. (i.e. of the form '/article/1/author?parameterName=...')", errorDocument.Errors[0].Detail);
+            Assert.Equal(parameterName, errorDocument.Errors[0].Source.Parameter);
         }
     }
 }

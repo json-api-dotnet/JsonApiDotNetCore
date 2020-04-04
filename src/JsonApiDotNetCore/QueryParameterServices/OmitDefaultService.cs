@@ -38,7 +38,9 @@ namespace JsonApiDotNetCore.Query
         {
             if (!bool.TryParse(parameterValue, out var omitAttributeIfValueIsDefault))
             {
-                throw new JsonApiException(HttpStatusCode.BadRequest, "Value must be 'true' or 'false'.");
+                throw new InvalidQueryStringParameterException(parameterName,
+                    "The specified query string value must be 'true' or 'false'.",
+                    $"The value '{parameterValue}' for parameter '{parameterName}' is not a valid boolean value.");
             }
 
             OmitAttributeIfValueIsDefault = omitAttributeIfValueIsDefault;

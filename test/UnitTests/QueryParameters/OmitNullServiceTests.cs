@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Query;
 using Microsoft.Extensions.Primitives;
 using Xunit;
@@ -64,6 +66,23 @@ namespace UnitTests.QueryParameters
 
             // Assert
             Assert.Equal(expected, service.OmitAttributeIfValueIsNull);
+        }
+
+        [Fact]
+        public void Parse_OmitNullService_FailOnNonBooleanValue()
+        {
+            // Arrange
+            const string parameterName = "omit-null";
+            var service = GetService(true, true);
+
+            // Act, assert
+            var exception = Assert.Throws<InvalidQueryStringParameterException>(() => service.Parse(parameterName, "some"));
+
+            Assert.Equal(parameterName, exception.QueryParameterName);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
+            Assert.Equal("The specified query string value must be 'true' or 'false'.", exception.Error.Title);
+            Assert.Equal($"The value 'some' for parameter '{parameterName}' is not a valid boolean value.", exception.Error.Detail);
+            Assert.Equal(parameterName, exception.Error.Source.Parameter);
         }
     }
 }
