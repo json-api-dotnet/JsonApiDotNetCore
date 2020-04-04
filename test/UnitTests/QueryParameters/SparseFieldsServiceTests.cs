@@ -18,26 +18,26 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void CanParse_FilterService_SucceedOnMatch()
+        public void CanParse_SparseFieldsService_SucceedOnMatch()
         {
             // Arrange
-            var filterService = GetService();
+            var service = GetService();
 
             // Act
-            bool result = filterService.CanParse("fields[customer]");
+            bool result = service.CanParse("fields[customer]");
 
             // Assert
             Assert.True(result);
         }
 
         [Fact]
-        public void CanParse_FilterService_FailOnMismatch()
+        public void CanParse_SparseFieldsService_FailOnMismatch()
         {
             // Arrange
-            var filterService = GetService();
+            var service = GetService();
 
             // Act
-            bool result = filterService.CanParse("fieldset");
+            bool result = service.CanParse("fieldset");
 
             // Assert
             Assert.False(result);

@@ -18,26 +18,26 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void CanParse_FilterService_SucceedOnMatch()
+        public void CanParse_IncludeService_SucceedOnMatch()
         {
             // Arrange
-            var filterService = GetService();
+            var service = GetService();
 
             // Act
-            bool result = filterService.CanParse("include");
+            bool result = service.CanParse("include");
 
             // Assert
             Assert.True(result);
         }
 
         [Fact]
-        public void CanParse_FilterService_FailOnMismatch()
+        public void CanParse_IncludeService_FailOnMismatch()
         {
             // Arrange
-            var filterService = GetService();
+            var service = GetService();
 
             // Act
-            bool result = filterService.CanParse("includes");
+            bool result = service.CanParse("includes");
 
             // Assert
             Assert.False(result);

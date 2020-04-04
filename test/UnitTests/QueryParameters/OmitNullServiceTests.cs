@@ -20,26 +20,26 @@ namespace UnitTests.QueryParameters
         }
 
         [Fact]
-        public void CanParse_FilterService_SucceedOnMatch()
+        public void CanParse_OmitNullService_SucceedOnMatch()
         {
             // Arrange
-            var filterService = GetService(true, true);
+            var service = GetService(true, true);
 
             // Act
-            bool result = filterService.CanParse("omitNull");
+            bool result = service.CanParse("omitNull");
 
             // Assert
             Assert.True(result);
         }
 
         [Fact]
-        public void CanParse_FilterService_FailOnMismatch()
+        public void CanParse_OmitNullService_FailOnMismatch()
         {
             // Arrange
-            var filterService = GetService(true, true);
+            var service = GetService(true, true);
 
             // Act
-            bool result = filterService.CanParse("omit-null");
+            bool result = service.CanParse("omit-null");
 
             // Assert
             Assert.False(result);
