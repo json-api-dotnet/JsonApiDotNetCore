@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 namespace JsonApiDotNetCore.Exceptions
 {
     /// <summary>
-    /// The error that is thrown when parsing the request query string fails.
+    /// The error that is thrown when processing the request fails due to an error in the request query string.
     /// </summary>
     public sealed class InvalidQueryStringParameterException : JsonApiException
     {

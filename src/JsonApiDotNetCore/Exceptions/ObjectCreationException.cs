@@ -4,6 +4,9 @@ using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Exceptions
 {
+    /// <summary>
+    /// The error that is thrown of resource object creation fails.
+    /// </summary>
     public sealed class ObjectCreationException : JsonApiException
     {
         public Type Type { get; }
