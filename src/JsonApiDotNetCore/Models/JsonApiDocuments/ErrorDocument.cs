@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Models.JsonApiDocuments
 {
@@ -36,14 +35,6 @@ namespace JsonApiDotNetCore.Models.JsonApiDocuments
 
             var statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");
             return (HttpStatusCode)statusCode;
-        }
-
-        public IActionResult AsActionResult()
-        {
-            return new ObjectResult(this)
-            {
-                StatusCode = (int)GetErrorStatusCode()
-            };
         }
     }
 }

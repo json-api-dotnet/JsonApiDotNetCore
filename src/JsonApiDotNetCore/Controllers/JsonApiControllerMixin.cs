@@ -23,7 +23,11 @@ namespace JsonApiDotNetCore.Controllers
         protected IActionResult Errors(IEnumerable<Error> errors)
         {
             var document = new ErrorDocument(errors.ToList());
-            return document.AsActionResult();
+
+            return new ObjectResult(document)
+            {
+                StatusCode = (int) document.GetErrorStatusCode()
+            };
         }
     }
 }
