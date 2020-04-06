@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Formatters
             }
             catch (Exception exception)
             {
-                throw new InvalidRequestBodyException(exception);
+                throw new InvalidRequestBodyException(null, null, body, exception);
             }
 
             if (context.HttpContext.Request.Method == "PATCH")
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Formatters
                 var hasMissingId = model is IList list ? CheckForId(list) : CheckForId(model);
                 if (hasMissingId)
                 {
-                    throw new InvalidRequestBodyException("Payload must include id attribute.");
+                    throw new InvalidRequestBodyException("Payload must include id attribute.", null, body);
                 }
             }
 

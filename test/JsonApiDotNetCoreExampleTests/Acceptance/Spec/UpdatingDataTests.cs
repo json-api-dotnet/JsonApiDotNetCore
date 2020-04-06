@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body.", error.Title);
-            Assert.Equal("Property set method not found.", error.Detail);
+            Assert.StartsWith("Property set method not found." + Environment.NewLine + "Request body: <<", error.Detail);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body: Payload must include id attribute.", error.Title);
-            Assert.Null(error.Detail);
+            Assert.StartsWith("Request body: <<", error.Detail);
         }
         
         [Fact]

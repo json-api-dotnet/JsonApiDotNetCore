@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Serialization
                 throw new InvalidRequestBodyException("Payload includes unknown resource type.",
                     $"The resource '{data.Type}' is not registered on the resource graph. " +
                     "If you are using Entity Framework, make sure the DbSet matches the expected resource name. " +
-                    "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
+                    "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.", null);
             }
 
             var entity = resourceContext.ResourceType.New<IIdentifiable>();
