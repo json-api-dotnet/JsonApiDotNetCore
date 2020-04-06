@@ -1,8 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.Extensions.Logging;
 
@@ -30,7 +30,8 @@ namespace JsonApiDotNetCore.Middleware
         {
             var level = GetLogLevel(exception);
 
-            _logger.Log(level, exception, exception.Message);
+            Exception demystified = exception.Demystify();
+            _logger.Log(level, demystified, $"Intercepted {demystified.GetType().Name}: {demystified.Message}");
         }
 
         protected virtual LogLevel GetLogLevel(Exception exception)

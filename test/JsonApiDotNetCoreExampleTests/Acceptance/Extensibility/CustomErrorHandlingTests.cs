@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
 
             Assert.Single(loggerFactory.Logger.Messages);
             Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages[0].LogLevel);
-            Assert.Equal("Access is denied.", loggerFactory.Logger.Messages[0].Text);
+            Assert.Contains("Access is denied.", loggerFactory.Logger.Messages[0].Text);
         }
 
         public class CustomExceptionHandler : DefaultExceptionHandler

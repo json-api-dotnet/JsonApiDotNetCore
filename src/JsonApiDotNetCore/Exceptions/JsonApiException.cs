@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Exceptions
 {
@@ -22,5 +23,7 @@ namespace JsonApiDotNetCore.Exceptions
                 Title = message
             };
         }
+
+        public override string Message => "Error = " + JsonConvert.SerializeObject(Error, Formatting.Indented);
     }
 }
