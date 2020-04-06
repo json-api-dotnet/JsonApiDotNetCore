@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Serialization.Server
         /// </remarks>
         internal string SerializeSingle(IIdentifiable entity)
         {
-            if (RequestRelationship != null)
+            if (RequestRelationship != null && entity != null)
                return JsonConvert.SerializeObject(((ResponseResourceObjectBuilder)_resourceObjectBuilder).Build(entity, RequestRelationship));
 
             var (attributes, relationships) = GetFieldsToSerialize();

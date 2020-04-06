@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
@@ -54,6 +55,8 @@ namespace JsonApiDotNetCore.Formatters
                 {
                     var errorDocument = _exceptionHandler.HandleException(exception);
                     responseContent = _serializer.Serialize(errorDocument);
+
+                    response.StatusCode = (int)errorDocument.GetErrorStatusCode();
                 }
             }
 
@@ -78,6 +81,10 @@ namespace JsonApiDotNetCore.Formatters
             try
             {
                 return _serializer.Serialize(contextObject);
+            }
+            catch (TargetInvocationException exception)
+            {
+                throw new InvalidResponseBodyException(exception.InnerException);
             }
             catch (Exception exception)
             {
