@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (Exception exception)
             {
-                throw new ObjectCreationException(type, exception);
+                throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }
         }
 

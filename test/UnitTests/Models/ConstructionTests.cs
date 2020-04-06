@@ -35,12 +35,8 @@ namespace UnitTests.Models
             Action action = () => serializer.Deserialize(content);
 
             // Assert
-            var exception = Assert.Throws<ObjectCreationException>(action);
-
-            Assert.Equal(typeof(ResourceWithParameters), exception.Type);
-            Assert.Equal(HttpStatusCode.InternalServerError, exception.Error.StatusCode);
-            Assert.Equal("Failed to create an object instance using its default constructor.", exception.Error.Title);
-            Assert.Equal("Failed to create an instance of 'UnitTests.Models.ConstructionTests+ResourceWithParameters' using its default constructor.", exception.Error.Detail);
+            var exception = Assert.Throws<InvalidOperationException>(action);
+            Assert.Equal("Failed to create an instance of 'UnitTests.Models.ConstructionTests+ResourceWithParameters' using its default constructor.", exception.Message);
         }
 
         public class ResourceWithParameters : Identifiable

@@ -1,8 +1,7 @@
 using System;
-using System.Net;
-using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 
@@ -17,15 +16,14 @@ namespace UnitTests.Internal
             var provider = new RequestScopedServiceProvider(new HttpContextAccessor());
 
             // Act
-            Action action = () => provider.GetService(typeof(AppDbContext));
+            Action action = () => provider.GetService(typeof(IIdentifiable<Tag>));
 
             // Assert
-            var exception = Assert.Throws<ResolveScopedServiceRequiresHttpContextException>(action);
+            var exception = Assert.Throws<InvalidOperationException>(action);
 
-            Assert.Equal(HttpStatusCode.InternalServerError, exception.Error.StatusCode);
-            Assert.Equal("Cannot resolve scoped service outside the context of an HTTP request.", exception.Error.Title);
-            Assert.StartsWith("Type requested was 'JsonApiDotNetCoreExample.Data.AppDbContext'. If you are hitting this error in automated tests", exception.Error.Detail);
-            Assert.Equal(typeof(AppDbContext), exception.ServiceType);
+            Assert.StartsWith("Cannot resolve scoped service " +
+                "'JsonApiDotNetCore.Models.IIdentifiable`1[[JsonApiDotNetCoreExample.Models.Tag, JsonApiDotNetCoreExample, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]' " +
+                "outside the context of an HTTP request.", exception.Message);
         }
     }
 }
