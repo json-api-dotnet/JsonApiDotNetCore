@@ -33,8 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.InternalServerError, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("Failed to serialize response body.", errorDocument.Errors[0].Title);
-            Assert.Equal("The value for the 'FailsOnSerialize' property is currently unavailable.", errorDocument.Errors[0].Detail);
+            Assert.Equal("An unhandled error occurred while processing this request.", errorDocument.Errors[0].Title);
+            Assert.Equal("Exception has been thrown by the target of an invocation.", errorDocument.Errors[0].Detail);
 
             var stackTraceLines =
                 ((JArray) errorDocument.Errors[0].Meta.Data["stackTrace"]).Select(token => token.Value<string>());

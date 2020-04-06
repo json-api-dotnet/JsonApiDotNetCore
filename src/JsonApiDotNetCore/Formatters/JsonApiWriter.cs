@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
@@ -78,18 +77,7 @@ namespace JsonApiDotNetCore.Formatters
 
             contextObject = WrapErrors(contextObject);
 
-            try
-            {
-                return _serializer.Serialize(contextObject);
-            }
-            catch (TargetInvocationException exception)
-            {
-                throw new InvalidResponseBodyException(exception.InnerException);
-            }
-            catch (Exception exception)
-            {
-                throw new InvalidResponseBodyException(exception);
-            }
+            return _serializer.Serialize(contextObject);
         }
 
         private static object WrapErrors(object contextObject)
