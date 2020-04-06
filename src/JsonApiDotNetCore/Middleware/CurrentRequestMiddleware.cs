@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -7,9 +8,11 @@ using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Managers.Contracts;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -53,7 +56,7 @@ namespace JsonApiDotNetCore.Middleware
                 _currentRequest.RelationshipId = GetRelationshipId();
             }
 
-            if (IsValid())
+            if (await IsValidAsync())
             {
                 await _next(httpContext);
             }
@@ -63,16 +66,10 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (_routeValues.TryGetValue("id", out object stringId))
             {
-                if ((string)stringId == string.Empty)
-                {
-                    throw new JsonApiException(HttpStatusCode.BadRequest, "No empty string as id please.");
-                }
                 return (string)stringId;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         private string GetRelationshipId()
         {
@@ -140,23 +137,28 @@ namespace JsonApiDotNetCore.Middleware
             return actionName.ToLower().Contains("relationships");
         }
 
-        private bool IsValid()
+        private async Task<bool> IsValidAsync()
         {
-            return IsValidContentTypeHeader(_httpContext) && IsValidAcceptHeader(_httpContext);
+            return await IsValidContentTypeHeaderAsync(_httpContext) && await IsValidAcceptHeaderAsync(_httpContext);
         }
 
-        private bool IsValidContentTypeHeader(HttpContext context)
+        private static async Task<bool> IsValidContentTypeHeaderAsync(HttpContext context)
         {
             var contentType = context.Request.ContentType;
             if (contentType != null && ContainsMediaTypeParameters(contentType))
             {
-                FlushResponse(context, HttpStatusCode.UnsupportedMediaType);
+                await FlushResponseAsync(context, new Error(HttpStatusCode.UnsupportedMediaType)
+                {
+                    Title = "The specified Content-Type header value is not supported.",
+                    Detail = $"Please specify '{Constants.ContentType}' for the Content-Type header value."
+                });
+
                 return false;
             }
             return true;
         }
 
-        private bool IsValidAcceptHeader(HttpContext context)
+        private static async Task<bool> IsValidAcceptHeaderAsync(HttpContext context)
         {
             if (context.Request.Headers.TryGetValue(Constants.AcceptHeader, out StringValues acceptHeaders) == false)
                 return true;
@@ -168,7 +170,11 @@ namespace JsonApiDotNetCore.Middleware
                     continue;
                 }
 
-                FlushResponse(context, HttpStatusCode.NotAcceptable);
+                await FlushResponseAsync(context, new Error(HttpStatusCode.NotAcceptable)
+                {
+                    Title = "The specified Accept header value is not supported.",
+                    Detail = $"Please specify '{Constants.ContentType}' for the Accept header value."
+                });
                 return false;
             }
             return true;
@@ -195,9 +201,16 @@ namespace JsonApiDotNetCore.Middleware
             );
         }
 
-        private void FlushResponse(HttpContext context, HttpStatusCode statusCode)
+        private static async Task FlushResponseAsync(HttpContext context, Error error)
         {
-            context.Response.StatusCode = (int)statusCode;
+            context.Response.StatusCode = (int) error.StatusCode;
+
+            string responseBody = JsonConvert.SerializeObject(new ErrorDocument(error));
+            await using (var writer = new StreamWriter(context.Response.Body))
+            {
+                await writer.WriteAsync(responseBody);
+            }
+
             context.Response.Body.Flush();
         }
 

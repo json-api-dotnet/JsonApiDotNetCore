@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -327,19 +328,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var route = $"/api/v1/people/{person.Id}?include=nonExistentRelationship";
 
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
+            using var server = new TestServer(builder);
+            using var client = server.CreateClient();
+            using var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            server.Dispose();
-            request.Dispose();
-            response.Dispose();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested relationship to include does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("The relationship 'nonExistentRelationship' on 'people' does not exist.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -355,19 +359,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var route = $"/api/v1/people/{person.Id}?include=owner.name";
 
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
+            using var server = new TestServer(builder);
+            using var client = server.CreateClient();
+            using var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            server.Dispose();
-            request.Dispose();
-            response.Dispose();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested relationship to include does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("The relationship 'owner' on 'people' does not exist.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -383,19 +390,22 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             var route = $"/api/v1/people/{person.Id}?include=unincludeableItem";
 
-            var server = new TestServer(builder);
-            var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
+            using var server = new TestServer(builder);
+            using var client = server.CreateClient();
+            using var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            server.Dispose();
-            request.Dispose();
-            response.Dispose();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The requested relationship to include does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("The relationship 'unincludeableItem' on 'people' does not exist.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]

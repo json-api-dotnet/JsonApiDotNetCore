@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExample.Resources
                 {
                     throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                     {
-                        Title = "You are not allowed to update fields or relations of locked todo items."
+                        Title = "You are not allowed to update fields or relationships of locked todo items."
                     });
                 }
             }

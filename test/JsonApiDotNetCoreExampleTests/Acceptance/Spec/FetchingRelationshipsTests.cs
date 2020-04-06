@@ -2,11 +2,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -61,21 +63,11 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         public async Task Request_ForRelationshipLink_ThatDoesNotExist_Returns_404()
         {
             // Arrange
-            var context = _fixture.GetService<AppDbContext>();
-
-            var todoItem = _todoItemFaker.Generate();
-            context.TodoItems.Add(todoItem);
-            await context.SaveChangesAsync();
-
-            var todoItemId = todoItem.Id;
-            context.TodoItems.Remove(todoItem);
-            await context.SaveChangesAsync();
-
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems/{todoItemId}/owner";
+            var route = "/api/v1/todoItems/99998888/owner";
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -84,9 +76,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-            context.Dispose();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Relationship 'owner' not found.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
     }
 }

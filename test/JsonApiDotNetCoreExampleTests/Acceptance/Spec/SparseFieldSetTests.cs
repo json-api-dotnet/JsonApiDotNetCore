@@ -19,6 +19,7 @@ using JsonApiDotNetCore.Serialization.Client;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCoreExampleTests.Helpers.Models;
 using JsonApiDotNetCore.Internal.Contracts;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 {
@@ -131,12 +132,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Contains("relationships only", body);
 
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+            Assert.StartsWith("Square bracket notation in 'filter' is now reserved for relationships only", errorDocument.Errors[0].Title);
+            Assert.Equal("Use '?fields=...' instead of '?fields[todoItems]=...'.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]

@@ -73,27 +73,6 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
         }
 
-        [Theory]
-        [InlineData("", false)]
-        [InlineData("", true)]
-        public async Task ParseUrlBase_UrlHasIncorrectBaseIdSet_ShouldThrowException(string baseId, bool addSlash)
-        {
-            // Arrange
-            var url = addSlash ? $"/users/{baseId}/" : $"/users/{baseId}";
-            var configuration = GetConfiguration(url, id: baseId);
-
-            // Act
-            var task = RunMiddlewareTask(configuration);
-
-            // Assert
-            var exception = await Assert.ThrowsAsync<JsonApiException>(async () =>
-            {
-                await task;
-            });
-            Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
-            Assert.Contains(baseId, exception.Message);
-        }
-
         private sealed class InvokeConfiguration
         {
             public CurrentRequestMiddleware MiddleWare;

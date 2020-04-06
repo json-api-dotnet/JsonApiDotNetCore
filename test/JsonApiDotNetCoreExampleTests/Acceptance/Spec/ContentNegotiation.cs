@@ -2,9 +2,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
@@ -50,7 +52,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The specified Content-Type header value is not supported.", errorDocument.Errors[0].Title);
+            Assert.Equal("Please specify 'application/vnd.api+json' for the Content-Type header value.", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -73,7 +82,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var response = await client.SendAsync(request);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.NotAcceptable, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("The specified Accept header value is not supported.", errorDocument.Errors[0].Title);
+            Assert.Equal("Please specify 'application/vnd.api+json' for the Accept header value.", errorDocument.Errors[0].Detail);
         }
     }
 }

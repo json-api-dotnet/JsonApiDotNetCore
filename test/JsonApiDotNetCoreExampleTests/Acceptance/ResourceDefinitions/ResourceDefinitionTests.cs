@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -149,7 +150,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update the author of todo items.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -163,7 +170,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to include passports on individual persons.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -185,8 +198,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to see this article.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -300,10 +318,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            // should throw 403 in PersonResource implicit hook
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-        }
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked todo items.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
+        }
 
         [Fact]
         public async Task Cascade_Permission_Error_Updating_ToOne_Relationship()
@@ -348,8 +370,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked persons.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -395,11 +422,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked persons.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
-
-
 
         [Fact]
         public async Task Cascade_Permission_Error_Delete_ToOne_Relationship()
@@ -422,10 +452,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked todo items.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
-
-
 
         [Fact]
         public async Task Cascade_Permission_Error_Create_ToMany_Relationship()
@@ -473,7 +507,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked todo items.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -525,10 +565,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
-            // were unrelating a persons from a locked todo, so this should be unauthorized
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
-
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked todo items.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]
@@ -552,7 +595,13 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance
 
             // Assert
             var body = await response.Content.ReadAsStringAsync();
-            Assert.True(HttpStatusCode.Forbidden == response.StatusCode, $"{route} returned {response.StatusCode} status code with payload: {body}");
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("You are not allowed to update fields or relationships of locked todo items.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
     }
 }

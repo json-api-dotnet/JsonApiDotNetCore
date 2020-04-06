@@ -143,15 +143,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
 
             // Act
             var response = await client.SendAsync(request);
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
 
             // Assert
+            var body = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
             Assert.Equal("NotFound", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
     }
 }

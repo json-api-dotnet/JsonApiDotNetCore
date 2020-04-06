@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExample.Resources
                 {
                     throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                     {
-                        Title = "You are not allowed to update fields or relations of locked persons."
+                        Title = "You are not allowed to update fields or relationships of locked persons."
                     });
                 }
             }

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -90,21 +91,50 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // Act
             var response = await _fixture.Client.SendAsync(request);
             var body = await response.Content.ReadAsStringAsync();
-            var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
 
-            if (queryString.Length > 0 && !bool.TryParse(queryStringOverride, out _))
+            var isQueryStringMissing = queryString.Length > 0 && queryStringOverride == null;
+            var isQueryStringInvalid = queryString.Length > 0 && queryStringOverride != null && !bool.TryParse(queryStringOverride, out _);
+            var isDisallowedOverride = allowQueryStringOverride == false && queryStringOverride != null;
+
+            if (isDisallowedOverride)
             {
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+                Assert.Single(errorDocument.Errors);
+                Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+                Assert.Equal("Usage of one or more query string parameters is not allowed at the requested endpoint.", errorDocument.Errors[0].Title);
+                Assert.Equal("The parameter 'omitNull' cannot be used at this endpoint.", errorDocument.Errors[0].Detail);
+                Assert.Equal("omitNull", errorDocument.Errors[0].Source.Parameter);
             }
-            else if (allowQueryStringOverride == false && queryStringOverride != null)
+            else if (isQueryStringMissing)
             {
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+                Assert.Single(errorDocument.Errors);
+                Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+                Assert.Equal("Missing query string parameter value.", errorDocument.Errors[0].Title);
+                Assert.Equal("Missing value for 'omitNull' query string parameter.", errorDocument.Errors[0].Detail);
+                Assert.Equal("omitNull", errorDocument.Errors[0].Source.Parameter);
+            }
+            else if (isQueryStringInvalid)
+            {
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+                Assert.Single(errorDocument.Errors);
+                Assert.Equal(HttpStatusCode.BadRequest, errorDocument.Errors[0].StatusCode);
+                Assert.Equal("The specified query string value must be 'true' or 'false'.", errorDocument.Errors[0].Title);
+                Assert.Equal("The value 'this-is-not-a-boolean-value' for parameter 'omitNull' is not a valid boolean value.", errorDocument.Errors[0].Detail);
+                Assert.Equal("omitNull", errorDocument.Errors[0].Source.Parameter);
             }
             else
             {
                 // Assert: does response contain a null valued attribute?
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
+                var deserializeBody = JsonConvert.DeserializeObject<Document>(body);
                 Assert.Equal(expectNullsMissing, !deserializeBody.SingleData.Attributes.ContainsKey("description"));
                 Assert.Equal(expectNullsMissing, !deserializeBody.Included[0].Attributes.ContainsKey("lastName"));
             }
