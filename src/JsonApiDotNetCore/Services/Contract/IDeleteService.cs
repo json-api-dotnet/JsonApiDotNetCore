@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.Services
     public interface IDeleteService<T, in TId>
         where T : class, IIdentifiable<TId>
     {
-        Task<bool> DeleteAsync(TId id);
+        Task DeleteAsync(TId id);
     }
 }

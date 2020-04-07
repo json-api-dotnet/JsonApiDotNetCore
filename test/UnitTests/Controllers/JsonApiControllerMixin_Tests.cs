@@ -38,9 +38,9 @@ namespace UnitTests
             };
             
             // Act
-            var result422 = Errors(errors422);
-            var result400 = Errors(errors400);
-            var result500 = Errors(errors500);
+            var result422 = Error(errors422);
+            var result400 = Error(errors400);
+            var result500 = Error(errors500);
             
             // Assert
             var response422 = Assert.IsType<ObjectResult>(result422);

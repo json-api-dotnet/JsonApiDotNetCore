@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal.Contracts;
@@ -74,16 +73,22 @@ namespace JsonApiDotNetCore.Services
             return entity;
         }
 
-        public virtual async Task<bool> DeleteAsync(TId id)
+        public virtual async Task DeleteAsync(TId id)
         {
             _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
 
             var entity = typeof(TResource).New<TResource>();
             entity.Id = id;
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
+            
             var succeeded = await _repository.DeleteAsync(entity.Id);
+            if (!succeeded)
+            {
+                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
+            }
+
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.AfterDelete(AsList(entity), ResourcePipeline.Delete, succeeded);
-            return succeeded;
         }
         
         public virtual async Task<IEnumerable<TResource>> GetAsync()
@@ -125,11 +130,18 @@ namespace JsonApiDotNetCore.Services
             entityQuery = ApplySelect(entityQuery);
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
 
+            if (entity == null)
+            {
+                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
+            }
+
             if (!IsNull(_hookExecutor, entity))
             {
                 _hookExecutor.AfterRead(AsList(entity), pipeline);
                 entity = _hookExecutor.OnReturn(AsList(entity), pipeline).SingleOrDefault();
             }
+
             return entity;
         }
 
@@ -143,16 +155,13 @@ namespace JsonApiDotNetCore.Services
             // BeforeRead hook execution
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.GetRelationship, id.ToString());
 
-            // TODO: it would be better if we could distinguish whether or not the relationship was not found,
-            // vs the relationship not being set on the instance of T
-
             var entityQuery = ApplyInclude(_repository.Get(id), chainPrefix: new List<RelationshipAttribute> { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
+
             if (entity == null)
             {
-                // TODO: this does not make sense. If the **parent** entity is not found, this error is thrown?
-                // this error should be thrown when the relationship is not found.
-                throw new JsonApiException(HttpStatusCode.NotFound, $"Relationship '{relationshipName}' not found.");
+                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
             }
 
             if (!IsNull(_hookExecutor, entity))
@@ -180,6 +189,13 @@ namespace JsonApiDotNetCore.Services
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             entity = await _repository.UpdateAsync(entity);
+
+            if (entity == null)
+            {
+                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
+            }
+
             if (!IsNull(_hookExecutor, entity))
             {
                 _hookExecutor.AfterUpdate(AsList(entity), ResourcePipeline.Patch);
@@ -196,8 +212,12 @@ namespace JsonApiDotNetCore.Services
             var relationship = GetRelationship(relationshipName);
             var entityQuery = _repository.Include(_repository.Get(id), new[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
+
             if (entity == null)
-                throw new JsonApiException(HttpStatusCode.NotFound, $"Resource with id {id} could not be found.");
+            {
+                string resourceId = TypeExtensions.GetResourceStringId<TResource, TId>(id);
+                throw new ResourceNotFoundException(resourceId, _currentRequestResource.ResourceName);
+            }
 
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.PatchRelationship).SingleOrDefault();
 
@@ -349,9 +369,11 @@ namespace JsonApiDotNetCore.Services
 
         private RelationshipAttribute GetRelationship(string relationshipName)
         {
-            var relationship = _currentRequestResource.Relationships.Single(r => r.Is(relationshipName));
+            var relationship = _currentRequestResource.Relationships.SingleOrDefault(r => r.Is(relationshipName));
             if (relationship == null)
-                throw new JsonApiException(HttpStatusCode.UnprocessableEntity, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+            {
+                throw new RelationshipNotFoundException(relationshipName, _currentRequestResource.ResourceName);
+            }
             return relationship;
         }
 

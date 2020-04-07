@@ -160,7 +160,7 @@ namespace UnitTests.Extensions
         private class IntResourceService : IResourceService<IntResource>
         {
             public Task<IntResource> CreateAsync(IntResource entity) => throw new NotImplementedException();
-            public Task<bool> DeleteAsync(int id) => throw new NotImplementedException();
+            public Task DeleteAsync(int id) => throw new NotImplementedException();
             public Task<IEnumerable<IntResource>> GetAsync() => throw new NotImplementedException();
             public Task<IntResource> GetAsync(int id) => throw new NotImplementedException();
             public Task<object> GetRelationshipAsync(int id, string relationshipName) => throw new NotImplementedException();
@@ -172,7 +172,7 @@ namespace UnitTests.Extensions
         private class GuidResourceService : IResourceService<GuidResource, Guid>
         {
             public Task<GuidResource> CreateAsync(GuidResource entity) => throw new NotImplementedException();
-            public Task<bool> DeleteAsync(Guid id) => throw new NotImplementedException();
+            public Task DeleteAsync(Guid id) => throw new NotImplementedException();
             public Task<IEnumerable<GuidResource>> GetAsync() => throw new NotImplementedException();
             public Task<GuidResource> GetAsync(Guid id) => throw new NotImplementedException();
             public Task<object> GetRelationshipAsync(Guid id, string relationshipName) => throw new NotImplementedException();

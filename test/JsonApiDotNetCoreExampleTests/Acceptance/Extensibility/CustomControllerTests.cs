@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
@@ -137,12 +140,27 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
-            var httpMethod = new HttpMethod("GET");
             var route = "/custom/route/todoItems/99999999";
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "todoItems",
+                    id = "99999999",
+                    attributes = new Dictionary<string, object>
+                    {
+                        ["ordinal"] = 1
+                    }
+                }
+            };
+
+            var content = JsonConvert.SerializeObject(requestBody);
 
             var server = new TestServer(builder);
             var client = server.CreateClient();
-            var request = new HttpRequestMessage(httpMethod, route);
+            var request = new HttpRequestMessage(HttpMethod.Patch, route) {Content = new StringContent(content)};
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(Constants.ContentType);
 
             // Act
             var response = await client.SendAsync(request);
@@ -150,8 +168,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Extensibility
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-            var body = await response.Content.ReadAsStringAsync();
-            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(responseBody);
 
             Assert.Single(errorDocument.Errors);
             Assert.Equal("https://tools.ietf.org/html/rfc7231#section-6.5.4", errorDocument.Errors[0].Links.About);

@@ -154,8 +154,8 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
             Assert.Single(errorDocument.Errors);
             Assert.Equal(HttpStatusCode.NotFound, errorDocument.Errors[0].StatusCode);
-            Assert.Equal("NotFound", errorDocument.Errors[0].Title);
-            Assert.Null(errorDocument.Errors[0].Detail);
+            Assert.Equal("The requested resource does not exist.", errorDocument.Errors[0].Title);
+            Assert.Equal("Resource of type 'todoItems' with id '123' does not exist.", errorDocument.Errors[0].Detail);
         }
     }
 }

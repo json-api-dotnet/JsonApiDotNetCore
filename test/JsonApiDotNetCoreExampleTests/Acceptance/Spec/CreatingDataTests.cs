@@ -74,10 +74,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             todoItem.Id = clientDefinedId;
 
             // Act
-            var (_, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
+            var (body, response) = await Post("/api/v1/todoItems", serializer.Serialize(todoItem));
 
             // Assert
             AssertEqualStatusCode(HttpStatusCode.Forbidden, response);
+
+            var errorDocument = JsonConvert.DeserializeObject<ErrorDocument>(body);
+            Assert.Single(errorDocument.Errors);
+            Assert.Equal(HttpStatusCode.Forbidden, errorDocument.Errors[0].StatusCode);
+            Assert.Equal("Specifying the resource id in POST requests is not allowed.", errorDocument.Errors[0].Title);
+            Assert.Null(errorDocument.Errors[0].Detail);
         }
 
         [Fact]

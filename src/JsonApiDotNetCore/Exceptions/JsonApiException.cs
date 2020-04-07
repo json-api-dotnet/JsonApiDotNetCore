@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using Newtonsoft.Json;
 
@@ -24,15 +23,6 @@ namespace JsonApiDotNetCore.Exceptions
             : base(error.Title, innerException)
         {
             Error = error;
-        }
-
-        public JsonApiException(HttpStatusCode status, string message)
-            : base(message)
-        {
-            Error = new Error(status)
-            {
-                Title = message
-            };
         }
 
         public override string Message => "Error = " + JsonConvert.SerializeObject(Error, _errorSerializerSettings);

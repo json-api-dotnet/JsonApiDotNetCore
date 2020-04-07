@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
+using JsonApiDotNetCore.Models;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -81,6 +82,13 @@ namespace JsonApiDotNetCore.Extensions
             var listType = typeof(List<>).MakeGenericType(t);
             var list = (IEnumerable)CreateNewInstance(listType);
             return list;
+        }
+
+        public static string GetResourceStringId<TResource, TId>(TId id) where TResource : class, IIdentifiable<TId>
+        {
+            var tempResource = typeof(TResource).New<TResource>();
+            tempResource.Id = id;
+            return tempResource.StringId;
         }
 
         public static object New(this Type t)

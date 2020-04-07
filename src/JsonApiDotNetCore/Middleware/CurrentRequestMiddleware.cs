@@ -233,7 +233,7 @@ namespace JsonApiDotNetCore.Middleware
             }
             if (_routeValues.TryGetValue("relationshipName", out object relationshipName))
             {
-                _currentRequest.RequestRelationship = requestResource.Relationships.Single(r => r.PublicRelationshipName == (string)relationshipName);
+                _currentRequest.RequestRelationship = requestResource.Relationships.SingleOrDefault(r => r.PublicRelationshipName == (string)relationshipName);
             }
             return requestResource;
         }

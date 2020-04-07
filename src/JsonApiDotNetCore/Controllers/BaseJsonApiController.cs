@@ -78,11 +78,6 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var entity = await _getById.GetAsync(id);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-
             return Ok(entity);
         }
 
@@ -92,10 +87,6 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
-            if (relationship == null)
-            {
-                return NotFound();
-            }
 
             return Ok(relationship);
         }
@@ -117,17 +108,17 @@ namespace JsonApiDotNetCore.Controllers
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
 
             if (entity == null)
-                return UnprocessableEntity();
+                throw new InvalidRequestBodyException(null, null, null);
 
             if (!_jsonApiOptions.AllowClientGeneratedIds && !string.IsNullOrEmpty(entity.StringId))
-                return Forbidden();
+                throw new ResourceIdInPostRequestNotAllowedException();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
                 throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
 
             entity = await _create.CreateAsync(entity);
 
-            return Created($"{HttpContext.Request.Path}/{entity.Id}", entity);
+            return Created($"{HttpContext.Request.Path}/{entity.StringId}", entity);
         }
 
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
@@ -136,19 +127,12 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             if (entity == null)
-                return UnprocessableEntity();
+                throw new InvalidRequestBodyException(null, null, null);
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
                 throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
-
-            if (updatedEntity == null)
-            {
-                return NotFound();
-            }
-
-
             return Ok(updatedEntity);
         }
 
@@ -166,9 +150,8 @@ namespace JsonApiDotNetCore.Controllers
             _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}).");
 
             if (_delete == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
-            var wasDeleted = await _delete.DeleteAsync(id);
-            if (!wasDeleted)
-                return NotFound();
+            await _delete.DeleteAsync(id);
+
             return NoContent();
         }
     }
