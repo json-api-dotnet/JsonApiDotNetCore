@@ -11,6 +11,7 @@ using JsonApiDotNetCoreExample.Data;
 using System.Linq;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
+using Person = JsonApiDotNetCoreExample.Models.Person;
 
 namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 {
@@ -19,6 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
     {
         private readonly AppDbContext _context;
         private readonly Faker<TodoItem> _todoItemFaker;
+        private readonly Faker<Person> _personFaker;
 
         public Relationships(TestFixture<Startup> fixture)
         {
@@ -27,32 +29,36 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
                 .RuleFor(t => t.Description, f => f.Lorem.Sentence())
                 .RuleFor(t => t.Ordinal, f => f.Random.Number())
                 .RuleFor(t => t.CreatedDate, f => f.Date.Past());
+             _personFaker = new Faker<Person>()
+                 .RuleFor(p => p.FirstName, f => f.Name.FirstName())
+                 .RuleFor(p => p.LastName, f => f.Name.LastName());
         }
 
         [Fact]
         public async Task Correct_RelationshipObjects_For_ManyToOne_Relationships()
         {
             // Arrange
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            
+            _context.TodoItems.RemoveRange(_context.TodoItems);
+            await _context.SaveChangesAsync();
+
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/todoItems/{todoItem.Id}";
+            var route = "/api/v1/todoItems";
 
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
-            var document = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
-            var data = document.SingleData;
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/todoItems/{data.Id}/relationships/owner";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todoItems/{data.Id}/owner";
+            var responseString = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<Document>(responseString).ManyData[0];
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/todoItems/{todoItem.Id}/relationships/owner";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/todoItems/{todoItem.Id}/owner";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -64,9 +70,6 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_ManyToOne_Relationships_ById()
         {
             // Arrange
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            
             var todoItem = _todoItemFaker.Generate();
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
@@ -74,6 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var httpMethod = new HttpMethod("GET");
             var route = $"/api/v1/todoItems/{todoItem.Id}";
 
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -87,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(expectedOwnerSelfLink, data.Relationships["owner"].Links?.Self);
+            Assert.Equal(expectedOwnerSelfLink, data.Relationships["owner"].Links.Self);
             Assert.Equal(expectedOwnerRelatedLink, data.Relationships["owner"].Links.Related);
         }
 
@@ -95,22 +99,27 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_OneToMany_Relationships()
         {
             // Arrange
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+            _context.People.RemoveRange(_context.People);
+            await _context.SaveChangesAsync();
+
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+            await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
             var route = "/api/v1/people";
 
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
 
             // Act
             var response = await client.SendAsync(request);
-            var documents = JsonConvert.DeserializeObject<Document>(await response.Content.ReadAsStringAsync());
-            var data = documents.ManyData.First();
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{data.Id}/relationships/todoItems";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{data.Id}/todoItems";
+            var responseString = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<Document>(responseString).ManyData[0];
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{person.Id}/relationships/todoItems";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{person.Id}/todoItems";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -122,14 +131,14 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
         public async Task Correct_RelationshipObjects_For_OneToMany_Relationships_ById()
         {
             // Arrange
-            var personId = _context.People.AsEnumerable().Last().Id;
-
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
+            var person = _personFaker.Generate();
+            _context.People.Add(person);
+            await _context.SaveChangesAsync();
 
             var httpMethod = new HttpMethod("GET");
-            var route = $"/api/v1/people/{personId}";
+            var route = $"/api/v1/people/{person.Id}";
 
+            var builder = new WebHostBuilder().UseStartup<Startup>();
             var server = new TestServer(builder);
             var client = server.CreateClient();
             var request = new HttpRequestMessage(httpMethod, route);
@@ -138,12 +147,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec.DocumentTests
             var response = await client.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Document>(responseString).SingleData;
-            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{personId}/relationships/todoItems";
-            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{personId}/todoItems";
+            var expectedOwnerSelfLink = $"http://localhost/api/v1/people/{person.Id}/relationships/todoItems";
+            var expectedOwnerRelatedLink = $"http://localhost/api/v1/people/{person.Id}/todoItems";
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(expectedOwnerSelfLink, data.Relationships["todoItems"].Links?.Self);
+            Assert.Equal(expectedOwnerSelfLink, data.Relationships["todoItems"].Links.Self);
             Assert.Equal(expectedOwnerRelatedLink, data.Relationships["todoItems"].Links.Related);
         }
     }
