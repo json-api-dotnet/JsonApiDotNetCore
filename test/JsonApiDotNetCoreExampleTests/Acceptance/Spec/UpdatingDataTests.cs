@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var error = document.Errors.Single();
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body.", error.Title);
-            Assert.StartsWith("Property set method not found." + Environment.NewLine + "Request body: <<", error.Detail);
+            Assert.StartsWith("Property set method not found. - Request body: <<", error.Detail);
         }
 
         [Fact]

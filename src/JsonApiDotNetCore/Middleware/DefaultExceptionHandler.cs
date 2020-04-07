@@ -21,17 +21,19 @@ namespace JsonApiDotNetCore.Middleware
 
         public ErrorDocument HandleException(Exception exception)
         {
-            LogException(exception);
+            Exception demystified = exception.Demystify();
 
-            return CreateErrorDocument(exception);
+            LogException(demystified);
+
+            return CreateErrorDocument(demystified);
         }
 
         private void LogException(Exception exception)
         {
             var level = GetLogLevel(exception);
-
-            Exception demystified = exception.Demystify();
-            _logger.Log(level, demystified, $"Intercepted {demystified.GetType().Name}: {demystified.Message}");
+            var message = GetLogMessage(exception);
+            
+            _logger.Log(level, exception, message);
         }
 
         protected virtual LogLevel GetLogLevel(Exception exception)
@@ -42,6 +44,13 @@ namespace JsonApiDotNetCore.Middleware
             }
 
             return LogLevel.Error;
+        }
+
+        protected virtual string GetLogMessage(Exception exception)
+        {
+            return exception is JsonApiException jsonApiException
+                ? jsonApiException.Error.Title
+                : exception.Message;
         }
 
         protected virtual ErrorDocument CreateErrorDocument(Exception exception)

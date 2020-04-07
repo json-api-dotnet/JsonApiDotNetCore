@@ -7,6 +7,12 @@ namespace JsonApiDotNetCore.Exceptions
 {
     public class JsonApiException : Exception
     {
+        private static readonly JsonSerializerSettings _errorSerializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.Indented
+        };
+
         public Error Error { get; }
 
         public JsonApiException(Error error, Exception innerException = null)
@@ -24,6 +30,6 @@ namespace JsonApiDotNetCore.Exceptions
             };
         }
 
-        public override string Message => "Error = " + JsonConvert.SerializeObject(Error, Formatting.Indented);
+        public override string Message => "Error = " + JsonConvert.SerializeObject(Error, _errorSerializerSettings);
     }
 }

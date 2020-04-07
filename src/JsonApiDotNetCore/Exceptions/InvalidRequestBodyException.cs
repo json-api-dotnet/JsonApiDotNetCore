@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Text;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 
 namespace JsonApiDotNetCore.Exceptions
@@ -29,7 +28,7 @@ namespace JsonApiDotNetCore.Exceptions
             {
                 if (text != null)
                 {
-                    text += Environment.NewLine;
+                    text += " - ";
                 }
 
                 text += "Request body: <<" + requestBody + ">>";
