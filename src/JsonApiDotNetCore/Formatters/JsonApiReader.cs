@@ -3,9 +3,9 @@ using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization.Server;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 
@@ -22,8 +22,6 @@ namespace JsonApiDotNetCore.Formatters
         {
             _deserializer = deserializer;
             _logger = loggerFactory.CreateLogger<JsonApiReader>();
-
-            _logger.LogTrace("Executing constructor.");
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
@@ -38,6 +36,9 @@ namespace JsonApiDotNetCore.Formatters
             }
 
             string body = await GetRequestBody(context.HttpContext.Request.Body);
+
+            string url = context.HttpContext.Request.GetEncodedUrl();
+            _logger.LogTrace($"Received request at '{url}' with body: <<{body}>>");
 
             object model;
             try

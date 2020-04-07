@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Bogus;
+using JsonApiDotNetCore.Formatters;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCoreExample;
@@ -13,7 +14,9 @@ using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NLog.Extensions.Logging;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
@@ -64,6 +67,16 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var builder = new WebHostBuilder().UseStartup<Startup>();
+
+            var loggerFactory = new FakeLoggerFactory();
+            builder.ConfigureLogging(options =>
+            {
+                options.AddProvider(loggerFactory);
+                options.SetMinimumLevel(LogLevel.Trace);
+                options.AddFilter((category, level) => level == LogLevel.Trace && 
+                    (category == typeof(JsonApiReader).FullName || category == typeof(JsonApiWriter).FullName));
+            });
+
             var server = new TestServer(builder);
             var client = server.CreateClient();
 
@@ -89,6 +102,12 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.UnprocessableEntity, error.StatusCode);
             Assert.Equal("Failed to deserialize request body.", error.Title);
             Assert.StartsWith("Property set method not found. - Request body: <<", error.Detail);
+
+            Assert.NotEmpty(loggerFactory.Logger.Messages);
+            Assert.Contains(loggerFactory.Logger.Messages,
+                x => x.Text.StartsWith("Received request at ") && x.Text.Contains("with body:"));
+            Assert.Contains(loggerFactory.Logger.Messages,
+                x => x.Text.StartsWith("Sending 422 response for request at ") && x.Text.Contains("Failed to deserialize request body."));
         }
 
         [Fact]

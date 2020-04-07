@@ -9,8 +9,10 @@ using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Serialization.Server;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Formatters
@@ -23,11 +25,14 @@ namespace JsonApiDotNetCore.Formatters
     {
         private readonly IJsonApiSerializer _serializer;
         private readonly IExceptionHandler _exceptionHandler;
+        private readonly ILogger<JsonApiWriter> _logger;
 
-        public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler)
+        public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, ILoggerFactory loggerFactory)
         {
             _serializer = serializer;
             _exceptionHandler = exceptionHandler;
+
+            _logger = loggerFactory.CreateLogger<JsonApiWriter>();
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
@@ -58,6 +63,9 @@ namespace JsonApiDotNetCore.Formatters
                     response.StatusCode = (int)errorDocument.GetErrorStatusCode();
                 }
             }
+
+            var url = context.HttpContext.Request.GetEncodedUrl();
+            _logger.LogTrace($"Sending {response.StatusCode} response for request at '{url}' with body: <<{responseContent}>>");
 
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
