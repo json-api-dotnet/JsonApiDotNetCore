@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Net;
 using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Contracts;

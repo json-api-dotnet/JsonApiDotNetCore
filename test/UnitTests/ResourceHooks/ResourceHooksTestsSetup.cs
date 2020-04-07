@@ -13,7 +13,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Graph;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 using JsonApiDotNetCore.Internal.Contracts;
 using JsonApiDotNetCore.Serialization;

@@ -1,8 +1,6 @@
-using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Query

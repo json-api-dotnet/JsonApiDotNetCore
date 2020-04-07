@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using JsonApiDotNetCore.Builders;
-using JsonApiDotNetCore.Exceptions;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Server;

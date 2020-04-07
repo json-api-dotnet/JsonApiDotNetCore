@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Xunit;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCoreExample.Data;
-using System.Linq;
 using Bogus;
 using JsonApiDotNetCoreExample.Models;
 using Person = JsonApiDotNetCoreExample.Models.Person;

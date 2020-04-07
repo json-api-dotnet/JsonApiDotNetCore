@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCoreExample.Models;
 using JsonApiDotNetCore.Internal.Contracts;
