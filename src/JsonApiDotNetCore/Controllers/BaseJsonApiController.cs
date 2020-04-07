@@ -1,12 +1,8 @@
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Exceptions;
-using JsonApiDotNetCore.Extensions;
-using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
-using JsonApiDotNetCore.Models.JsonApiDocuments;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -65,12 +61,12 @@ namespace JsonApiDotNetCore.Controllers
             _update = update;
             _updateRelationships = updateRelationships;
             _delete = delete;
-
-            _logger.LogTrace("Executing constructor.");
         }
 
         public virtual async Task<IActionResult> GetAsync()
         {
+            _logger.LogTrace($"Entering {nameof(GetAsync)}().");
+
             if (_getAll == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var entities = await _getAll.GetAsync();
             return Ok(entities);
@@ -78,6 +74,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetAsync(TId id)
         {
+            _logger.LogTrace($"Entering {nameof(GetAsync)}('{id}').");
+
             if (_getById == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var entity = await _getById.GetAsync(id);
             if (entity == null)
@@ -90,6 +88,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipsAsync(TId id, string relationshipName)
         {
+            _logger.LogTrace($"Entering {nameof(GetRelationshipsAsync)}('{id}', '{relationshipName}').");
+
             if (_getRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationships.GetRelationshipsAsync(id, relationshipName);
             if (relationship == null)
@@ -102,6 +102,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName)
         {
+            _logger.LogTrace($"Entering {nameof(GetRelationshipAsync)}('{id}', '{relationshipName}').");
+
             if (_getRelationship == null) throw new RequestMethodNotAllowedException(HttpMethod.Get);
             var relationship = await _getRelationship.GetRelationshipAsync(id, relationshipName);
             return Ok(relationship);
@@ -109,6 +111,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PostAsync([FromBody] T entity)
         {
+            _logger.LogTrace($"Entering {nameof(PostAsync)}({(entity == null ? "null" : "object")}).");
+
             if (_create == null)
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
 
@@ -128,6 +132,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] T entity)
         {
+            _logger.LogTrace($"Entering {nameof(PatchAsync)}('{id}', {(entity == null ? "null" : "object")}).");
+
             if (_update == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             if (entity == null)
                 return UnprocessableEntity();
@@ -148,6 +154,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> PatchRelationshipsAsync(TId id, string relationshipName, [FromBody] object relationships)
         {
+            _logger.LogTrace($"Entering {nameof(PatchRelationshipsAsync)}('{id}', '{relationshipName}', {(relationships == null ? "null" : "object")}).");
+
             if (_updateRelationships == null) throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             await _updateRelationships.UpdateRelationshipsAsync(id, relationshipName, relationships);
             return Ok();
@@ -155,6 +163,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public virtual async Task<IActionResult> DeleteAsync(TId id)
         {
+            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}).");
+
             if (_delete == null) throw new RequestMethodNotAllowedException(HttpMethod.Delete);
             var wasDeleted = await _delete.DeleteAsync(id);
             if (!wasDeleted)

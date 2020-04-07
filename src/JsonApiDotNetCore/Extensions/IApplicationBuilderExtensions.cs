@@ -70,13 +70,7 @@ namespace JsonApiDotNetCore.Extensions
 
             if (logger != null)
             {
-                resourceGraph?.ValidationResults.ForEach((v) =>
-                    logger.Log(
-                        v.LogLevel,
-                        new EventId(),
-                        v.Message,
-                        exception: null,
-                        formatter: (m, e) => m));
+                resourceGraph?.ValidationResults.ForEach((v) => logger.Log(v.LogLevel, null, v.Message));
             }
         }
     }

@@ -54,12 +54,12 @@ namespace JsonApiDotNetCore.Services
             _repository = repository;
             _hookExecutor = hookExecutor;
             _currentRequestResource = provider.GetResourceContext<TResource>();
-
-            _logger.LogTrace("Executing constructor.");
         }
 
         public virtual async Task<TResource> CreateAsync(TResource entity)
         {
+            _logger.LogTrace($"Entering {nameof(CreateAsync)}({(entity == null ? "null" : "object")}).");
+            
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeCreate(AsList(entity), ResourcePipeline.Post).SingleOrDefault();
             entity = await _repository.CreateAsync(entity);
 
@@ -76,6 +76,8 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<bool> DeleteAsync(TId id)
         {
+            _logger.LogTrace($"Entering {nameof(DeleteAsync)}('{id}').");
+
             var entity = typeof(TResource).New<TResource>();
             entity.Id = id;
             if (!IsNull(_hookExecutor, entity)) _hookExecutor.BeforeDelete(AsList(entity), ResourcePipeline.Delete);
@@ -86,6 +88,8 @@ namespace JsonApiDotNetCore.Services
         
         public virtual async Task<IEnumerable<TResource>> GetAsync()
         {
+            _logger.LogTrace($"Entering {nameof(GetAsync)}().");
+
             _hookExecutor?.BeforeRead<TResource>(ResourcePipeline.Get);
 
             var entityQuery = _repository.Get();
@@ -111,6 +115,8 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> GetAsync(TId id)
         {
+            _logger.LogTrace($"Entering {nameof(GetAsync)}('{id}').");
+
             var pipeline = ResourcePipeline.GetSingle;
             _hookExecutor?.BeforeRead<TResource>(pipeline, id.ToString());
 
@@ -130,6 +136,8 @@ namespace JsonApiDotNetCore.Services
         // triggered by GET /articles/1/relationships/{relationshipName}
         public virtual async Task<TResource> GetRelationshipsAsync(TId id, string relationshipName)
         {
+            _logger.LogTrace($"Entering {nameof(GetRelationshipsAsync)}('{id}', '{relationshipName}').");
+
             var relationship = GetRelationship(relationshipName);
 
             // BeforeRead hook execution
@@ -159,6 +167,8 @@ namespace JsonApiDotNetCore.Services
         // triggered by GET /articles/1/{relationshipName}
         public virtual async Task<object> GetRelationshipAsync(TId id, string relationshipName)
         {
+            _logger.LogTrace($"Entering {nameof(GetRelationshipAsync)}('{id}', '{relationshipName}').");
+
             var relationship = GetRelationship(relationshipName);
             var resource = await GetRelationshipsAsync(id, relationshipName);
             return relationship.GetValue(resource);
@@ -166,6 +176,8 @@ namespace JsonApiDotNetCore.Services
 
         public virtual async Task<TResource> UpdateAsync(TId id, TResource entity)
         {
+            _logger.LogTrace($"Entering {nameof(UpdateAsync)}('{id}', {(entity == null ? "null" : "object")}).");
+
             entity = IsNull(_hookExecutor) ? entity : _hookExecutor.BeforeUpdate(AsList(entity), ResourcePipeline.Patch).SingleOrDefault();
             entity = await _repository.UpdateAsync(entity);
             if (!IsNull(_hookExecutor, entity))
@@ -179,6 +191,8 @@ namespace JsonApiDotNetCore.Services
         // triggered by PATCH /articles/1/relationships/{relationshipName}
         public virtual async Task UpdateRelationshipsAsync(TId id, string relationshipName, object related)
         {
+            _logger.LogTrace($"Entering {nameof(UpdateRelationshipsAsync)}('{id}', '{relationshipName}', {(related == null ? "null" : "object")}).");
+
             var relationship = GetRelationship(relationshipName);
             var entityQuery = _repository.Include(_repository.Get(id), new[] { relationship });
             var entity = await _repository.FirstOrDefaultAsync(entityQuery);
@@ -202,8 +216,10 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
         {
-            if (!(_pageService.PageSize > 0))
+            if (_pageService.PageSize <= 0)
             {
+                _logger.LogDebug("Fetching complete result set.");
+
                 return await _repository.ToListAsync(entities);
             }
 
@@ -213,8 +229,7 @@ namespace JsonApiDotNetCore.Services
                 pageOffset = -pageOffset;
             }
 
-            _logger.LogInformation($"Applying paging query. Fetching page {pageOffset} " + 
-                                   $"with {_pageService.PageSize} entities");
+            _logger.LogDebug($"Fetching paged result set at page {pageOffset} with size {_pageService.PageSize}.");
 
             return await _repository.PageAsync(entities, _pageService.PageSize, pageOffset);
         }
