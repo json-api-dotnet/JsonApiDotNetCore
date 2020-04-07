@@ -236,7 +236,7 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task<IEnumerable<TResource>> ApplyPageQueryAsync(IQueryable<TResource> entities)
         {
-            if (_pageService.PageSize <= 0)
+            if (_pageService.PageSize == 0)
             {
                 _logger.LogDebug("Fetching complete result set.");
 

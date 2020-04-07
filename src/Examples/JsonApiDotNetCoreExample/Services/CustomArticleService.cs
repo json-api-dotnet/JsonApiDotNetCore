@@ -26,12 +26,7 @@ namespace JsonApiDotNetCoreExample.Services
         public override async Task<Article> GetAsync(int id)
         {
             var newEntity = await base.GetAsync(id);
-
-            if (newEntity != null)
-            {
-                newEntity.Name = "None for you Glen Coco";
-            }
-
+            newEntity.Name = "None for you Glen Coco";
             return newEntity;
         }
     }

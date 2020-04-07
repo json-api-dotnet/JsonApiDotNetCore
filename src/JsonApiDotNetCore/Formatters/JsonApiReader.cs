@@ -45,8 +45,9 @@ namespace JsonApiDotNetCore.Formatters
             {
                 model = _deserializer.Deserialize(body);
             }
-            catch (InvalidRequestBodyException)
+            catch (InvalidRequestBodyException exception)
             {
+                exception.SetRequestBody(body);
                 throw;
             }
             catch (Exception exception)

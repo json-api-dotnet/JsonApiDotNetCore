@@ -266,6 +266,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             Assert.Equal(HttpStatusCode.UnprocessableEntity, errorDocument.Errors[0].StatusCode);
             Assert.Equal("Failed to deserialize request body: Payload includes unknown resource type.", errorDocument.Errors[0].Title);
             Assert.StartsWith("The resource 'something' is not registered on the resource graph.", errorDocument.Errors[0].Detail);
+            Assert.Contains("Request body: <<", errorDocument.Errors[0].Detail);
         }
 
         [Fact]
