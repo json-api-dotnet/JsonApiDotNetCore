@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using NLog.Extensions.Logging;
 using Xunit;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 

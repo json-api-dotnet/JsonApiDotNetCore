@@ -53,12 +53,12 @@ namespace JsonApiDotNetCore.Configuration
         public string Namespace { get; set; }
 
         /// <summary>
-        /// The default page size for all resources
+        /// The default page size for all resources. The value zero means: no paging.
         /// </summary>
         /// <example>
         /// <code>options.DefaultPageSize = 10;</code>
         /// </example>
-        public int DefaultPageSize { get; set; }
+        public int DefaultPageSize { get; set; } = 10;
 
         /// <summary>
         /// Optional. When set, limits the maximum page size for all resources.

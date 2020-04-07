@@ -104,6 +104,9 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
         {
             // Arrange
             var context = _fixture.GetService<AppDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            await context.SaveChangesAsync();
+
             var todoItems = _todoItemFaker.Generate(20).ToList();
             context.TodoItems.AddRange(todoItems);
             await context.SaveChangesAsync();
@@ -122,7 +125,7 @@ namespace JsonApiDotNetCoreExampleTests.Acceptance.Spec
             var result = _fixture.GetDeserializer().DeserializeList<TodoItem>(body);
 
             // Assert
-            Assert.True(result.Data.Count >= 20);
+            Assert.True(result.Data.Count == 20);
         }
 
         [Fact]

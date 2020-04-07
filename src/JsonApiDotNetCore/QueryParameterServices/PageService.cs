@@ -105,7 +105,9 @@ namespace JsonApiDotNetCore.Query
         private int ParsePageSize(string parameterValue, int? maxValue)
         {
             bool success = int.TryParse(parameterValue, out int number);
-            if (success && number >= 1)
+            int minValue = maxValue != null ? 1 : 0;
+
+            if (success && number >= minValue)
             {
                 if (maxValue == null || number <= maxValue)
                 {
@@ -115,7 +117,7 @@ namespace JsonApiDotNetCore.Query
 
             var message = maxValue == null
                 ? $"Value '{parameterValue}' is invalid, because it must be a whole number that is greater than zero."
-                : $"Value '{parameterValue}' is invalid, because it must be a whole number that is greater than zero and not higher than {maxValue}.";
+                : $"Value '{parameterValue}' is invalid, because it must be a whole number that is zero or greater and not higher than {maxValue}.";
 
             throw new InvalidQueryStringParameterException("page[size]",
                 "The specified value is not in the range of valid values.", message);

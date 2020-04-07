@@ -46,6 +46,8 @@ namespace UnitTests.QueryParameters
         }
 
         [Theory]
+        [InlineData("0", 0, null, false)]
+        [InlineData("0", 0, 50, true)]
         [InlineData("1", 1, null, false)]
         [InlineData("abcde", 0, null, true)]
         [InlineData("", 0, null, true)]
@@ -65,7 +67,7 @@ namespace UnitTests.QueryParameters
                 Assert.Equal("page[size]", exception.QueryParameterName);
                 Assert.Equal(HttpStatusCode.BadRequest, exception.Error.StatusCode);
                 Assert.Equal("The specified value is not in the range of valid values.", exception.Error.Title);
-                Assert.StartsWith($"Value '{value}' is invalid, because it must be a whole number that is greater than zero", exception.Error.Detail);
+                Assert.StartsWith($"Value '{value}' is invalid, because it must be a whole number that is", exception.Error.Detail);
                 Assert.Equal("page[size]", exception.Error.Source.Parameter);
             }
             else
