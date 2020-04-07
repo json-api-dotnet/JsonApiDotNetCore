@@ -17,7 +17,7 @@ namespace ReportsExample.Services
 
         public Task<IEnumerable<Report>> GetAsync()
         {
-            _logger.LogError("GetAsync");
+            _logger.LogWarning("GetAsync");
 
             var task = new Task<IEnumerable<Report>>(Get);
         
