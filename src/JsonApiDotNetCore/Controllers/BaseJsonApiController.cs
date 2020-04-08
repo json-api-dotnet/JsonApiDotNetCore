@@ -114,7 +114,7 @@ namespace JsonApiDotNetCore.Controllers
                 throw new ResourceIdInPostRequestNotAllowedException();
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
+                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors);
 
             entity = await _create.CreateAsync(entity);
 
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCore.Controllers
                 throw new InvalidRequestBodyException(null, null, null);
 
             if (_jsonApiOptions.ValidateModelState && !ModelState.IsValid)
-                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions);
+                throw new InvalidModelStateException(ModelState, typeof(T), _jsonApiOptions.IncludeExceptionStackTraceInErrors);
 
             var updatedEntity = await _update.UpdateAsync(id, entity);
             return Ok(updatedEntity);
